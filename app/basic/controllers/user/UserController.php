@@ -29,21 +29,17 @@ class UserController extends Controller
 		}
 	}
 
-	/*
 	public function actionLogout()
 	{
-		if (User::isLogin()) {
-			$session = \Yii::$app->session;
-			$session->remove('username');
-			$session->remove('uid');
+		if (!\Yii::$app->user->isGuest) {
+			\Yii::$app->user->logout();
 		}
 		return $this->goHome();
 	}
-	 */
 
 	public function actionReg()
 	{
-		$model = new User(['scenario'=>'reg']);
+		$model = new UserForm(['scenario'=>'reg']);
 		if ($model->load(\Yii::$app->request->post()) && $model->reg()) {
 			return $this->goHome();
 		} else {

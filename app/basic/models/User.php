@@ -17,12 +17,13 @@ class User extends \Yii\base\Object implements IdentityInterface
 
 	public static function findIdentity($uid)
 	{
-		return Users::findOne($uid);
+		$user = Users::findOne($uid);
+		return $user ? new static($user) : null;
 	}
 
 	public static function findIdentityByAccessToken($token, $type = null)
 	{
-		return Users::findOne(['password' => $token]);
+		//return Users::findOne(['password' => $token]);
 	}
 
 	public function getId()
@@ -32,12 +33,12 @@ class User extends \Yii\base\Object implements IdentityInterface
 
 	public function getAuthKey()
 	{
-		return $this->authKey;
+		//return $this->authKey;
 	}
 
 	public function validateAuthKey($authKey)
 	{
-		return $this->authKey === $authKey;
+		//return $this->authKey === $authKey;
 	}
 
 	static function findByUsername($username)

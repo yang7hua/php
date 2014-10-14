@@ -99,11 +99,8 @@ class UserForm extends Model
 
 	public function getUser()
 	{
-		if (!$this->_user) {
+		if (!$this->_user)
 			$this->_user = User::findByUsername($this->username);
-			//$this->_user = User::findByUsername('yanghua');
-		}
-		//print_r($this->_user->username);
 		return $this->_user;
 	}
 }
