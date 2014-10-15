@@ -9,6 +9,14 @@ use app\models\UserForm;
 class UserController extends Controller
 {
 	public $layout = 'user';
+	private $public_actions = ['login', 'logout', 'reg'];
+
+	public function beforeAction($action)
+	{
+		if (!in_array($action->id, $this->public_actions) && \Yii::$app->user->isGuest)
+			$this->redirect('/user/login');
+		return true;
+	}
 
 	public function actionIndex() {
 		$user = User::findByUsername('yanghua');
