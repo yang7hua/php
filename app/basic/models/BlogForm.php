@@ -3,6 +3,8 @@
 namespace app\models;
 
 use yii\base\Model;
+use app\models\Blog;
+use app\models\Tags;
 
 class BlogForm extends Model
 {
@@ -12,6 +14,7 @@ class BlogForm extends Model
 	public $content;
 	public $allow_review;
 	public $is_private;
+	public $status;
 
 	public function attributeLabels() 
 	{
@@ -23,5 +26,37 @@ class BlogForm extends Model
 			'allow_review'	=>	'允许评论',
 			'is_private'	=>	'仅自己可见'
 		];
+	}
+
+	public function rules()
+	{
+		return [
+			[['title', 'cid', 'content', 'tags'], 'required'],
+			['title', 'string', 'min'=>5, 'max'=>25],
+			['tags', 'validateTags']
+		];
+	}
+
+	public function validateTags($attribute, $params)
+	{
+		if (!Tags::validateTags($this->tags))
+			$this->addError($attribute, '标签格式不正确');
+	}
+
+	public function add()
+	{
+		if ($this->validate()) {
+			$data = [
+				'cid'	=>	$this->cid,
+				'title'	=>	$this->title,
+				'content'	=>	$this->content,
+				'status'	=>	'sketch',
+				'tags'	=>	$this->tags,
+				'allow_review'	=>	$this->allow_review ? $this-allow_review : 1,
+				'is_private'	=>	$this->is_private ? $this->is_private : 0
+			];
+			return Blog::add($this);
+		}
+		return false;
 	}
 }

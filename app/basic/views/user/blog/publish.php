@@ -45,10 +45,9 @@ $this->title = '博客发布';
 		<div class="col-lg-12">
 			<h5 class="form-group">分类</h5>
 <?php if ($category):?>
-			<?= $form->field($model, 'cid', ['template'=>"{input}\n{error}"])->dropDownList(['3'=>'php', '4'=>'mysql']) ?>
-<?php else: ?>
-			<a href="#addcategory" class="btn btn-link showmodal">添加分类</a>
+			<?= $form->field($model, 'cid', ['template'=>"{input}"])->dropDownList($category) ?>
 <?php endif; ?>
+			<a href="#addcategory" class="btn btn-link showmodal">添加分类</a>
 			<h5 class="form-group">设置</h5>
 <?= $form->field($model, 'allow_review', ['template'=>"{input}"])->label(false)->radioList(['允许评论', '不允许评论'], ['']) ?>
 <?= $form->field($model, 'is_private', ['template'=>"{input}<label>&nbsp;仅自己可见</lable>"])->checkbox(['允许', '不允许'], false) ?>

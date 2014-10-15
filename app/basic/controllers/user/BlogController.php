@@ -5,12 +5,22 @@ namespace app\controllers\user;
 use app\web\controllers\user;
 use app\models\BlogForm;
 use app\models\Category;
+use app\models\CategoryForm;
+use app\models\Tags;
 
 class BlogController extends UserController
 {
 	public function actionPublish()
 	{
 		$model = new BlogForm();
+
+		$post = \Yii::$app->request->post();
+		if ($post['blogform-content'])
+			$post['BlogForm']['content'] = $post['blogform-content'];
+		if ($model->load($post) && $model->add()) {
+			return $this->redirect('/user/blog/list');
+		}
+
 		$render = [
 			'model'	=>	$model,
 			'category'	=>	[]
@@ -28,9 +38,16 @@ class BlogController extends UserController
 		return $this->render('/user/blog/publish', $render);
 	}
 
-	public function addcategory()
+	public function actionAddcategory()
 	{
-		$js = '$("#addcategory").modal("show")';
-		$this->getView()->registerJs($js);
+		$model = new CategoryForm();
+		if ($model->load(\Yii::$app->request->post()) && $model->add()) {
+			return $this->redirect('/user/blog/publish');
+		}
+	}
+
+	public function actionTags()
+	{
+		Tags::add('php,mysql,apache', 1);
 	}
 }
