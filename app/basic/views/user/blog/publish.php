@@ -9,6 +9,7 @@ use yii\ueditor\Ueditor;
 $this->title = '博客发布';
 ?>
 
+<div class="container">
 <div class="row">
 <?php $form = ActiveForm::begin([
 	'id'	=>	'blog_publish',
@@ -37,7 +38,7 @@ $this->title = '博客发布';
 	</div>
 </div>
 <div class="col-lg-3">
-<div class="panel panel-primary">
+<div class="panel panel-default">
 	<div class="panel-heading">
 		发布
 	</div>
@@ -52,13 +53,14 @@ $this->title = '博客发布';
 <?= $form->field($model, 'allow_review', ['template'=>"{input}"])->label(false)->radioList(['允许评论', '不允许评论'], ['']) ?>
 <?= $form->field($model, 'is_private', ['template'=>"{input}<label>&nbsp;仅自己可见</lable>"])->checkbox(['允许', '不允许'], false) ?>
 			<div class="form-group">
-<?= Html::submitButton('发布', ['class'=>'btn btn-info btn-block', 'name'=>'login-button'])?>
+<?= Html::submitButton('发布', ['class'=>'btn btn-primary btn-block', 'name'=>'login-button'])?>
 			</div>
 		</div>
 	</div>
 </div>
 </div>
 <?php $form->end(); ?>
+</div>
 </div>
 
 <?php 

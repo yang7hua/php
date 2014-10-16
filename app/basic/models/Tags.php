@@ -9,6 +9,8 @@ class Tags extends ActiveRecord
 	//标签规则
 	static $pattern = '/^[\x{4E00}-\x{9Fa5}A-Za-z,]*$/u';
 
+	const ERROR_MSG = '标签只能包含字母或汉字，多个请用\',\'分隔';
+
 	public static function tableName()
 	{
 		return 'tags';

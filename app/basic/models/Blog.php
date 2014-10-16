@@ -5,9 +5,16 @@ namespace app\models;
 use yii\db\ActiveRecord;
 use app\models\BlogForm;
 use app\models\Tags;
+use yii\data\Pagination;
+use yii\web\UrlManager;
 
 class Blog extends ActiveRecord
 {
+	const STATUS_PUBLISH	= 'publish';
+	const STATUS_SKETCH		= 'sketch';
+	const STATUS_TRASH		= 'trash';
+	const STATUS_DELETED	= 'deleted';
+
 	public static function tableName()
 	{
 		return 'blogs';
@@ -33,5 +40,31 @@ class Blog extends ActiveRecord
 		} else {
 			return false;
 		}
+	}
+
+	public static function _list()
+	{
+		$query = Blog::find()->where(['status'=>Blog::STATUS_SKETCH]);
+		$countQuery = clone $query;
+		$pages = new Pagination([
+			'totalCount' => $countQuery->count(), 
+			'defaultPageSize' => 1,
+			/*
+			'route'	=>	'/user/?<:page>',
+			'urlManager'	=>	new UrlManager([
+				'enablePrettyUrl' => true,
+				'showScriptName'	=>	false,
+				'rules'	=>	[
+				]
+			])
+			*/
+		]);
+		$data = $query->offset($pages->offset)
+						->limit($pages->limit)
+						->all();
+		return [
+			'list'	=>	$data,
+			'pages'	=>	$pages
+		];
 	}
 }

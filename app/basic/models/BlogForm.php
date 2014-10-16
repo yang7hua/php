@@ -40,7 +40,7 @@ class BlogForm extends Model
 	public function validateTags($attribute, $params)
 	{
 		if (!Tags::validateTags($this->tags))
-			$this->addError($attribute, '标签格式不正确');
+			$this->addError($attribute, Tags::ERROR_MSG);
 	}
 
 	public function add()
@@ -50,7 +50,7 @@ class BlogForm extends Model
 				'cid'	=>	$this->cid,
 				'title'	=>	$this->title,
 				'content'	=>	$this->content,
-				'status'	=>	'sketch',
+				'status'	=>	'publish',
 				'tags'	=>	$this->tags,
 				'allow_review'	=>	$this->allow_review ? $this-allow_review : 1,
 				'is_private'	=>	$this->is_private ? $this->is_private : 0

@@ -28,6 +28,7 @@ $config = [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
         ],
+		'blog'	=>	'app\models\Blog',
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],

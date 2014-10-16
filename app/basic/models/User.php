@@ -14,6 +14,7 @@ class User extends \Yii\base\Object implements IdentityInterface
 	public $email;
 	public $ip;
 	public $phone;
+	public $avatar;
 
 	public static function findIdentity($uid)
 	{

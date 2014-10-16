@@ -46,8 +46,4 @@ class BlogController extends UserController
 		}
 	}
 
-	public function actionTags()
-	{
-		Tags::add('php,mysql,apache', 1);
-	}
 }

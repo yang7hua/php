@@ -19,10 +19,7 @@ class UserController extends Controller
 	}
 
 	public function actionIndex() {
-		$user = User::findByUsername('yanghua');
-		echo $user->password;
-		echo "<br/>";
-		echo User::createPassword('yanghua', $user->salt)['password'];
+		return $this->render('/user/index');
 	}
 
 	public function actionLogin()
