@@ -33,7 +33,7 @@ AppAsset::register($this);
                 ],
             ]);
 			if (Yii::$app->user->isGuest):
-                $items = ['label' => 'Login', 'url' => ['/user/login']];
+                $items = [['label' => 'Login', 'url' => ['/user/login']]];
 		?>
 		<?php
 			else:

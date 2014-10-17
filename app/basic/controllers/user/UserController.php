@@ -2,11 +2,11 @@
 
 namespace app\controllers\user;
 
-use yii\web\Controller;
+use app\controllers\BaseController;
 use app\models\User;
 use app\models\UserForm;
 
-class UserController extends Controller
+class UserController extends BaseController
 {
 	public $layout = 'user';
 	private $public_actions = ['login', 'logout', 'reg'];

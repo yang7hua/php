@@ -10,7 +10,7 @@ $this->title = '用户登录';
 <div class="row" id="user-login-box">
 	<?php $form = ActiveForm::begin([
 		'id'=>'user-login',
-		'options'	=>	['class'=>'col-lg-6'],
+		'options'	=>	['class'=>'col-lg-10'],
 		'fieldConfig'	=>	[
 			'options'	=>	['class'=>'col-lg-8']	
 		]

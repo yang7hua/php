@@ -2,7 +2,6 @@
 
 namespace app\controllers\user;
 
-use app\web\controllers\user;
 use app\models\BlogForm;
 use app\models\Category;
 use app\models\CategoryForm;
