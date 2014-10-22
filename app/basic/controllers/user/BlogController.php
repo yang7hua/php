@@ -6,6 +6,7 @@ use app\models\BlogForm;
 use app\models\Category;
 use app\models\CategoryForm;
 use app\models\Tags;
+use app\models\Blog;
 
 class BlogController extends UserController
 {
@@ -42,6 +43,14 @@ class BlogController extends UserController
 		$model = new CategoryForm();
 		if ($model->load(\Yii::$app->request->post()) && $model->add()) {
 			return $this->redirect('/user/blog/publish');
+		}
+	}
+
+	public function actionList()
+	{
+		if ($this->isAjax()) {
+			$data = Blog::_list();
+			return $this->ajaxReturn(['data'=>$data]);
 		}
 	}
 

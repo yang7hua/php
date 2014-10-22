@@ -5,6 +5,19 @@ use yii\web\Controller;
 
 class BaseController extends Controller
 {
+	public function init()
+	{
+		$this->getView()->params['keywords'] = ['博客'];
+		$this->getView()->title = '博客';
+	}
+
+	public function isAjax()
+	{
+		if (\Yii::$app->request->get('format') == 'json')
+			return true;
+		return \Yii::$app->request->isAjax;
+	}
+
 	public function ajaxReturn($data, $success=true)
 	{
 		$data['ret'] = $success ? 1 : 0;

@@ -17,50 +17,17 @@ AppAsset::register($this);
     <meta charset="<?= Yii::$app->charset ?>"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
-    <title><?= Html::encode($this->title) ?></title>
+	<?php $this->registerMetaTag(['name'=>'keywords', 'content'=>implode(',', $this->params['keywords'])]); ?>
+	<?php $this->registerMetaTag(['name'=>'description', 'content'=>$this->params['description']]); ?>
+    <title><?= Html::encode(($this->params['title'] ? $this->params['title'] . ' - ' : '')  . $this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body>
-
+<body class="site">
 <?php $this->beginBody() ?>
+	<?= $this->render('/site/widgets/topbar') ?>
     <div class="wrap">
-        <?php
-            NavBar::begin([
-                'brandLabel' => '首页',
-                'brandUrl' => Yii::$app->homeUrl,
-                'options' => [
-                    'class' => 'navbar-inverse navbar-fixed-top',
-                ],
-            ]);
-            echo Nav::widget([
-                'options' => ['class' => 'navbar-nav navbar-right'],
-                'items' => [
-                    Yii::$app->user->isGuest ?
-                        ['label' => '登录', 'url' => ['/user/login']] :
-						['label' => '个人中心', 'url' => ['/user']],
-                        ['label' => '登出 (' . Yii::$app->user->identity->username . ')',
-                            'url' => ['/user/logout'],
-                            'linkOptions' => ['data-method' => 'post']],
-                ],
-            ]);
-            NavBar::end();
-        ?>
-
-        <div class="container">
-            <?= Breadcrumbs::widget([
-                'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-            ]) ?>
-            <?= $content ?>
-        </div>
+        <?= $content ?>
     </div>
-
-    <footer class="footer">
-        <div class="container">
-            <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
-            <p class="pull-right"><?= Yii::powered() ?></p>
-        </div>
-    </footer>
-
 <?php $this->endBody() ?>
 </body>
 </html>

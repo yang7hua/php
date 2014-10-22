@@ -33,7 +33,7 @@ AppAsset::register($this);
                 ],
             ]);
 			if (Yii::$app->user->isGuest):
-                $items = [['label' => 'Login', 'url' => ['/user/login']]];
+                $items = [['label' => '登录', 'url' => ['/user/login']]];
 		?>
 		<?php
 			else:
@@ -68,21 +68,14 @@ AppAsset::register($this);
 		<div class="container">
 		<div class="row">
 			<div class="col-lg-8">
-				<?= $content ?>
+				<div class="row"><?= $content ?></div>
 			</div>
 			<div class="col-lg-3 col-lg-offset-1">
-				<?= $this->render('/user/widgets/sidebar'); ?>
+				<div class="row"><?= $this->render('/user/widgets/sidebar'); ?></div>
 			</div>
 		</div>
 		</div>
     </div>
-
-    <footer class="footer">
-        <div class="container">
-            <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
-            <p class="pull-right"><?= Yii::powered() ?></p>
-        </div>
-    </footer>
 
 <?php $this->endBody() ?>
 </body>

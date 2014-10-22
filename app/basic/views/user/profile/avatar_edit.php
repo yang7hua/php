@@ -14,7 +14,7 @@ $form = ActiveForm::begin([
 		'enctype'	=>	'multipart/form-data'
 	],
 	'fieldConfig'	=>	[
-		'template'	=>	"<div class='col-lg-2 text-right'>{label}</div><div class='col-lg-5'>{input}</div><div class='col-lg-5'>{error}</div>"
+		'template'	=>	"<div class='col-lg-2'>{label}</div><div class='col-lg-5'>{input}</div><div class='col-lg-5'>{error}</div>"
 	]
 ]);
 
@@ -31,7 +31,7 @@ $info = \Yii::$app->user->identity;
 		<div class="col-lg-8">
 			<div id="jcrop" class="row"><img src="<?=$info->avatar?>" id="jcrop-image"></div>
 		</div>
-		<div class="col-lg-4 text-right">
+		<div class="col-lg-4">
 			<div class="thumb thumb180"><img src="<?=$info->avatar?>"></div>
 			<br/>
 			<div class="thumb thumb80"><img src="<?=$info->avatar?>"></div>

@@ -24,10 +24,14 @@ $config = [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+		'config'	=>	[
+			'class'	=>	'app\models\config'
+		],
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
         ],
+		'site'	=>	'app\models\Site',
 		'blog'	=>	'app\models\Blog',
         'errorHandler' => [
             'errorAction' => 'site/error',

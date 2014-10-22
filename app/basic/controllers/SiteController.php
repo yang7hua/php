@@ -6,10 +6,11 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
+use app\controllers\BaseController;
 use app\models\LoginForm;
 use app\models\ContactForm;
 
-class SiteController extends Controller
+class SiteController extends BaseController
 {
     public function behaviors()
     {
@@ -97,5 +98,10 @@ class SiteController extends Controller
 	public function actionOffline()
 	{
 		echo Yii::$app->request->userIP;
+	}
+
+	public function actionBlog()
+	{
+		echo 3;
 	}
 }
