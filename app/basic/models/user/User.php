@@ -1,7 +1,8 @@
 <?php
 
-namespace app\models;
+namespace app\models\user;
 
+use app\models\Users;
 use yii\web\IdentityInterface;
 
 class User extends \Yii\base\Object implements IdentityInterface

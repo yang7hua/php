@@ -2,9 +2,9 @@
 
 namespace app\controllers\user;
 
-use app\models\Profile;
-use app\models\ProfileForm;
-use app\models\AvatarForm;
+use app\models\user\Profile;
+use app\models\user\ProfileForm;
+use app\models\user\AvatarForm;
 use yii\web\UploadedFile;
 use yii\imagine\Image;
 

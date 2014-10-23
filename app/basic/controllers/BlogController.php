@@ -12,9 +12,18 @@ class BlogController extends BaseController
 	{
 		$id = intval(\Yii::$app->request->get('id'));
 		$detail = Blog::detail($id);
+		$this->checkPermission($detail);
 		$detail['content'] = htmlspecialchars_decode($detail['content']);
 		Blog::readInc($id);
 		return $this->render('/site/detail', $detail);
+	}
+
+	public function checkPermission($detail)
+	{
+		if ($detail['is_private'] && $detail['uid'] != \Yii::$app->user->getId())
+			return $this->goBack();
+		if ($detail['status'] != Blog::STATUS_PUBLISH && $detail['uid'] != \Yii::$app->user->getId())
+			return $this->goBack();
 	}
 
 	public function actionTopic()

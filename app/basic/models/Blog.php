@@ -15,63 +15,23 @@ class Blog extends ActiveRecord
 	const STATUS_TRASH		= 'trash';
 	const STATUS_DELETED	= 'deleted';
 
-	static $select_fields_list = ['id', 'cid', 'uid', 'title', 'addtime', 'tags', 'read', 'comment', 'description', 'image'];
+	static $select_fields_list = ['id', 'cid', 'uid', 'title', 'addtime', 'tags', 
+		'read', 'comment', 'description', 'image', 'is_private', 'allow_review',
+		'status'];
 
 	public static function tableName()
 	{
 		return 'blogs';
 	}
 
-	public static function analyse($content)
+	public static function status()
 	{
-		$data = [
-			'image'	=>	'',
-			'description' => ''
+		return [
+			self::STATUS_PUBLISH => '发布',	
+			self::STATUS_SKETCH	=> '草稿',	
+			self::STATUS_TRASH => '回收站',	
+		//	self::STATUS_DELETED => '删除'
 		];
-
-		preg_match('/<img\s+src="([^"]+)"/', $content, $matches);
-		if ($matches[1])
-			$data['image'] = $matches[1];
-		$content = strip_tags($content);
-		if (($end = strpos($content, '。')) !== false) {
-			if ($end < 50)
-				$end = 100;
-			$content = mb_substr($content, 0, $end, 'utf-8');
-		}
-		$data['description'] = $content;
-
-		return $data;
-	}
-
-	public static function add(BlogForm $blogform)
-	{
-		$blog = new Blog();
-		$blog->uid = \Yii::$app->user->getId();
-		$blog->title = htmlspecialchars($blogform->title);
-		$blog->content = htmlspecialchars($blogform->content);
-		$blog->tags = $blogform->tags;
-		$blog->cid = $blogform->cid ? $blogform->cid : 0;
-
-		$blog->status = $blogform->status ? $blogform->status : self::STATUS_PUBLISH;
-		$blog->is_private = $blogform->is_private ? $blogform->is_private : 0;
-		$blog->allow_review = $blogform->allow_review ? $blogform->allow_review : 1;
-		$blog->addtime = $blog->uptime = time();
-
-		$analyse = self::analyse($blogform->content);
-		$blog->description = $analyse['description'];
-		//$blog->image = $blogform->image ? $blogform->image : $analyse['image'];
-		$blog->image = $analyse['image'];
-
-		$result = $blog->insert();
-
-		if ($result) {
-			Tags::add($blog->tags, $blog->id);
-			if ($blog->status == self::STATUS_PUBLISH)
-				Category::countInc($blog->cid);
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	public static function getListByCid($cid, $limit = 10, $status = Blog::STATUS_PUBLISH)
@@ -108,6 +68,7 @@ class Blog extends ActiveRecord
 	public static function getListByAddtime($limit = 10)
 	{
 		$where['status'] = Blog::STATUS_PUBLISH;
+		$where['is_private'] = 0;
 		$list = Blog::find()->where($where)
 							->select(self::$select_fields_list)
 							->limit($limit)
@@ -126,7 +87,7 @@ class Blog extends ActiveRecord
 		foreach ($category as &$c) {
 			$list = Blog::find()
 								->select(self::$select_fields_list)
-								->where(['status'=>self::STATUS_PUBLISH, 'cid'=>$c['cid']])
+								->where(['status'=>self::STATUS_PUBLISH, 'cid'=>$c['cid'], 'is_private'=>0])
 								->limit($limit)	
 								->orderBy(['addtime'=>SORT_DESC])
 								->asArray()
@@ -137,15 +98,19 @@ class Blog extends ActiveRecord
 	}
 
 	//文章详情
-	public static function detail($id)
+	public static function detail($id, array $condition = [])
 	{
-		return Blog::find()
+		$where['id'] = intval($id);
+		if ($condition)
+			$where = array_merge($where, $condition);
+		$info = Blog::find()
 					->from('blogs b')
-					->where(['id'=>$id])
+					->where($where)
 					->leftJoin('category c', 'c.cid = b.cid')	
 					->select('b.*, c.name, c.cid')
 					->asArray()
 					->one();
+		return self::format([$info])[0];
 	}
 
 	//点击+1
@@ -168,9 +133,9 @@ class Blog extends ActiveRecord
 	}
 
 	//所有分类
-	public static function categories($limit = 5)
+	public static function categories($uid = 0)
 	{
-		return Category::all();
+		return Category::all($uid);
 	}
 
 	//热门
@@ -179,9 +144,10 @@ class Blog extends ActiveRecord
 		$list = Blog::find()
 				->select('b.*, c.name')
 				->from('blogs b')
+				->where(['b.is_private'=>0, 'status'=>Blog::STATUS_PUBLISH])
 				->leftJoin('category c', 'c.cid=b.cid')
 				->limit($limit)
-				->orderBy(['read'=>SORT_DESC, 'addtime'=>SORT_DESC])
+				->orderBy(['read'=>SORT_DESC, 'uptime'=>SORT_DESC])
 				->asArray()
 				->all();
 		return [
@@ -204,11 +170,13 @@ class Blog extends ActiveRecord
 		$where = 'id < '.$id;
 		if ($cid)
 			$where .= ' and cid='.$cid;
+		$where .= ' and status=\''.self::STATUS_PUBLISH.'\' and is_private=0';
 
 		$info = Blog::find()
 					->select(['id', 'title'])
 					->where($where)
 					->asArray()
+					->orderBy(['id'=>SORT_DESC])
 					->one();
 		return $info ? self::format([$info])[0] : false;
 	}
@@ -218,11 +186,13 @@ class Blog extends ActiveRecord
 		$where = 'id > '.$id;
 		if ($cid)
 			$where .= ' and cid='.$cid;
+		$where .= ' and status=\''.self::STATUS_PUBLISH.'\' and is_private=0';
 
 		$info = Blog::find()
 					->select(['id', 'title'])
 					->where($where)
 					->asArray()
+					->orderBy(['id'=>SORT_ASC])
 					->one();
 		return $info ? self::format([$info])[0] : false;
 	}

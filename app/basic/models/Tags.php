@@ -32,6 +32,11 @@ class Tags extends ActiveRecord
 				->execute();
 	}
 
+	public static function removeByBlogId($blog_id)
+	{
+		return Tags::deleteAll(['blog_id'=>$blog_id]);
+	}
+
 	public static function validateTags($tags) 
 	{
 		return preg_match(self::$pattern, $tags);

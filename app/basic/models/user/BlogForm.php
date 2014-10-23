@@ -1,13 +1,14 @@
 <?php
 
-namespace app\models;
+namespace app\models\user;
 
 use yii\base\Model;
-use app\models\Blog;
+use app\models\user\Blog;
 use app\models\Tags;
 
 class BlogForm extends Model
 {
+	public $id;
 	public $title;
 	public $cid;
 	public $tags;
@@ -25,6 +26,13 @@ class BlogForm extends Model
 			'content'	=>	'内容',
 			'allow_review'	=>	'允许评论',
 			'is_private'	=>	'仅自己可见'
+		];
+	}
+
+	public function safeAttributes()
+	{
+		return [
+			'id','title','cid','tags','title','content','allow_review','is_private','status'
 		];
 	}
 
@@ -56,6 +64,14 @@ class BlogForm extends Model
 				'is_private'	=>	$this->is_private ? $this->is_private : 0
 			];
 			return Blog::add($this);
+		}
+		return false;
+	}
+
+	public function save($id)
+	{
+		if ($this->validate()) {
+			return Blog::edit($this);
 		}
 		return false;
 	}

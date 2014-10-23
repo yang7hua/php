@@ -3,12 +3,13 @@
 namespace app\controllers\user;
 
 use app\controllers\BaseController;
-use app\models\User;
-use app\models\UserForm;
+use app\models\user\User;
+use app\models\user\UserForm;
 
 class UserController extends BaseController
 {
 	public $layout = 'user';
+
 	private $public_actions = ['login', 'logout', 'reg'];
 
 	public function beforeAction($action)
@@ -24,6 +25,7 @@ class UserController extends BaseController
 
 	public function actionLogin()
 	{
+		$this->layout = 'main';
 		$model = new UserForm(['scenario'=>'login']);
 		if (!\Yii::$app->user->isGuest)
 			return $this->goHome();
@@ -50,5 +52,22 @@ class UserController extends BaseController
 		} else {
 			return $this->render('/user/reg', ['model'=>$model]);
 		}
+	}
+
+	public function noSidebar()
+	{
+		$this->getView()->params['noSidebar'] = true;
+	}
+
+
+	//网站设置相关菜单
+	public function siteMenus()
+	{
+		return [
+			['code'=>'info', 'label'=>'网站信息', 'url'=>'/user/site/info', 'modal'=>'siteinfo'],
+			['code'=>'banner', 'label'=>'导航管理', 'url'=>'/user/site/banner', 'modal'=>'sitebanner'],
+			['code'=>'slide', 'label'=>'幻灯片', 'url'=>'/user/site/slide', 'modal'=>'siteslide'],
+			['code'=>'category', 'label'=>'分类管理', 'url'=>'/user/site/category', 'modal'=>'sitecategory'],
+		];
 	}
 }

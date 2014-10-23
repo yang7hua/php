@@ -7,6 +7,8 @@ use yii\bootstrap\Button;
 use yii\ueditor\Ueditor;
 
 $this->title = '博客发布';
+
+$status = Yii::$app->blog->status();
 ?>
 
 <div class="container">
@@ -18,13 +20,32 @@ $this->title = '博客发布';
 		'labelOptions'	=>	['class'=>'col-lg-1 control-label'],
 		'template'	=>	"{label}<div class='col-lg-8'>{input}\n{error}</div>"
 	]
-]); ?>
+]); 
+
+$model->allow_review = 1;
+$model->is_private = 0;
+$model->status = 'publish';
+if (isset($do) && $do == 'edit'):
+	$model->id = $info['id'];
+	$model->title = $info['title'];
+	$model->tags = $info['tags'];
+	$model->content = $info['content'];
+	$model->cid = $info['cid'];
+	$model->allow_review = $info['allow_review'];
+	$model->is_private = $info['is_private'];
+	$model->status = $info['status'];
+?>
+<input type="hidden" name="do" value="edit">
+<input type="hidden" name="id" value="<?= $info['id'] ?>">
+<?php
+endif;
+?>
 <div class="col-lg-9">
 	<div class="panel panel-default">
 		<div class="panel-heading">博客</div>
 		<div class="panel-body">
-<?= $form->field($model, 'title') ?>
-<?= $form->field($model, 'tags') ?>
+<?= $form->field($model, 'title')->input('text') ?>
+<?= $form->field($model, 'tags')->input('text') ?>
 <?= Ueditor::widget([
 	'model'	=>	$model,
 	'attribute'	=> 'content',
@@ -50,10 +71,12 @@ $this->title = '博客发布';
 <?php endif; ?>
 			<a href="#addcategory" class="btn btn-link showmodal">添加分类</a>
 			<h5 class="form-group">设置</h5>
-<?= $form->field($model, 'allow_review', ['template'=>"{input}"])->label(false)->radioList(['允许评论', '不允许评论'], ['']) ?>
-<?= $form->field($model, 'is_private', ['template'=>"{input}<label>&nbsp;仅自己可见</lable>"])->checkbox(['允许', '不允许'], false) ?>
+<?= $form->field($model, 'allow_review', ['template'=>"{input}"])->label(false)->radioList([1=>'允许评论', 0=>'不允许评论']) ?>
+<?= $form->field($model, 'is_private', ['template'=>"{input}<label>&nbsp;仅自己可见</lable>"])->checkbox([], false) ?>
+			<h5 class="form-group">状态</h5>
+<?= $form->field($model, 'status', ['template'=>"{input}"])->label(false)->radioList($status) ?>
 			<div class="form-group">
-<?= Html::submitButton('发布', ['class'=>'btn btn-primary btn-block', 'name'=>'login-button'])?>
+<?= Html::submitButton('提交', ['class'=>'btn btn-primary btn-block', 'name'=>'login-button'])?>
 			</div>
 		</div>
 	</div>

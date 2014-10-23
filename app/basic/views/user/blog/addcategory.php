@@ -1,7 +1,7 @@
 <?php 
 use yii\bootstrap\Modal;
 use yii\widgets\ActiveForm;
-use app\models\CategoryForm;
+use app\models\user\CategoryForm;
 use yii\helpers\Html;
 
 Modal::begin([

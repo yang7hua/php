@@ -28,11 +28,12 @@ $config = [
 			'class'	=>	'app\models\config'
 		],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => 'app\models\user\User',
             'enableAutoLogin' => true,
         ],
 		'site'	=>	'app\models\Site',
 		'blog'	=>	'app\models\Blog',
+		'userblog'	=>	'app\models\user\Blog',
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],

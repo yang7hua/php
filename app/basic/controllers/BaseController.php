@@ -24,6 +24,11 @@ class BaseController extends Controller
 		return json_encode($data);
 	}
 
+	public function isSuper()
+	{
+		return \Yii::$app->user->getId() == \Yii::$app->config->superId;
+	}
+
 	public function thumb($source, $width, $height, $unlink=false)
 	{
 		$thumb = \yii\imagine\Image::thumbnail($this->getPath($source), $width, $height);
