@@ -4,6 +4,7 @@ namespace app\models\user;
 
 use app\models\user\BlogForm;
 use app\models\Tags;
+use app\models\Category;
 
 class Blog extends \app\models\Blog 
 {
@@ -59,6 +60,9 @@ class Blog extends \app\models\Blog
 		$blog = new Blog();
 		$blog->uid = \Yii::$app->user->getId();
 		$blog->title = htmlspecialchars($blogform->title);
+
+		$analyse = self::analyse($blogform->content);
+
 		$blog->content = htmlspecialchars($blogform->content);
 		$blog->tags = $blogform->tags;
 		$blog->cid = $blogform->cid ? $blogform->cid : 0;
@@ -68,7 +72,6 @@ class Blog extends \app\models\Blog
 		$blog->allow_review = $blogform->allow_review ? $blogform->allow_review : 1;
 		$blog->addtime = $blog->uptime = time();
 
-		$analyse = self::analyse($blogform->content);
 		$blog->description = $analyse['description'];
 		//$blog->image = $blogform->image ? $blogform->image : $analyse['image'];
 		$blog->image = $analyse['image'];

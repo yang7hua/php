@@ -17,7 +17,7 @@ class Blog extends ActiveRecord
 
 	static $select_fields_list = ['id', 'cid', 'uid', 'title', 'addtime', 'tags', 
 		'read', 'comment', 'description', 'image', 'is_private', 'allow_review',
-		'status'];
+		'status', 'is_focus'];
 
 	public static function tableName()
 	{
@@ -54,6 +54,7 @@ class Blog extends ActiveRecord
 	{
 		$where['status'] = Blog::STATUS_PUBLISH;
 		$where['image'] = ['!='=>''];
+		$where['is_private'] = 0;
 
 		$query = Blog::find()->where($where)->select(self::$select_fields_list);
 		$list = $query->limit($limit)
@@ -195,5 +196,15 @@ class Blog extends ActiveRecord
 					->orderBy(['id'=>SORT_ASC])
 					->one();
 		return $info ? self::format([$info])[0] : false;
+	}
+
+	public static function baseInfo($id)
+	{
+		$id = intval($id);
+		return Blog::find()
+				->where(['id'=>$id])
+				->select(self::$select_fields_list)
+				->asArray()
+				->one();
 	}
 }

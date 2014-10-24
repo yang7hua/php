@@ -83,7 +83,10 @@ AppAsset::register($this);
 		</div>
     </div>
 
-<?php $this->endBody() ?>
+<?php 
+	$this->registerJsFile('/js/user/common.js', ['depends'=>['app\assets\AppAsset']]);
+	$this->endBody(); 
+?>
 </body>
 </html>
 <?php $this->endPage() ?>

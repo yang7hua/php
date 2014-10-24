@@ -2,13 +2,16 @@
 namespace app\controllers;
 
 use yii\web\Controller;
+use app\models\Info;
 
 class BaseController extends Controller
 {
 	public function init()
 	{
-		$this->getView()->params['keywords'] = ['博客'];
-		$this->getView()->title = '博客';
+		$siteinfo = Info::siteInfo();
+		$this->getView()->title = $siteinfo['title'];
+		$this->getView()->params['keywords'] = explode(',', $siteinfo['keywords']);
+		$this->getView()->params['description'] = $siteinfo['description'];
 	}
 
 	public function isAjax()
@@ -20,8 +23,13 @@ class BaseController extends Controller
 
 	public function ajaxReturn($data, $success=true)
 	{
-		$data['ret'] = $success ? 1 : 0;
-		return json_encode($data);
+		$return = [];
+		if (is_string($data))
+			$return['msg'] = $data;
+		else if (is_array($data))
+			$return = array_merge($return, $data);
+		$return['ret'] = $success ? 1 : 0;
+		return json_encode($return);
 	}
 
 	public function isSuper()

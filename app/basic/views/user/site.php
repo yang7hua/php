@@ -1,3 +1,6 @@
+<?php
+$this->title = $menu['label'];
+?>
 <div class="sitesetting">
 
 <div class="col-lg-2 sidebar">	
@@ -6,9 +9,9 @@
 <?php 
 $menus = \Yii::$app->controller->siteMenus();
 
-	foreach ($menus as $menu):
+	foreach ($menus as $row):
 ?>
-		<li><a href="<?= $menu['url'] ?>"><?= $menu['label'] ?></a></li>
+		<li><a href="<?= $row['url'] ?>"><?= $row['label'] ?></a></li>
 <?php
 	endforeach;
 ?>
@@ -16,7 +19,7 @@ $menus = \Yii::$app->controller->siteMenus();
 </div>
 
 <div class="col-lg-10 info">
-	<?= $this->render('/user/site/'.$info['code'], $info) ?>	
+	<?= $this->render('/user/site/'.$menu['code'], ['menu'=>$menu, 'info'=>$info]) ?>	
 </div>
 
 </div>

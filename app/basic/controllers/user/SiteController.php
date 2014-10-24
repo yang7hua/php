@@ -3,6 +3,8 @@
 namespace app\controllers\user;
 
 use app\controllers\user\UserController;
+use app\models\Info;
+use app\models\user\site\InfoForm;
 
 class SiteController extends UserController
 {
@@ -16,7 +18,7 @@ class SiteController extends UserController
 		$this->menus = $this->siteMenus();
 	}
 
-	public function getInfoByCode($code = 'info')
+	public function getMenuByCode($code = 'info')
 	{
 		foreach ($this->menus as $menu) {
 			if ($menu['code'] == $code)
@@ -28,9 +30,15 @@ class SiteController extends UserController
 	public function actionIndex()
 	{
 		$code = \Yii::$app->request->get('code');
-		$info = $this->getInfoByCode($code ? $code : 'info');
+		$menu = $this->getMenuByCode($code ? $code : 'info');
 
-		return $this->render('/user/site', ['info'=>$info]);
+		$info = Info::siteInfo();
+
+		$model = new InfoForm();
+		if ($model->load(\Yii::$app->request->post()) && $model->edit()) {
+			return $this->redirect('/user/site');
+		}
+		return $this->render('/user/site', ['menu'=>$menu, 'info'=>$info]);
 	}
 
 }

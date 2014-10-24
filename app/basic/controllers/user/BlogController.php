@@ -7,9 +7,12 @@ use app\models\Category;
 use app\models\user\CategoryForm;
 use app\models\Tags;
 use app\models\user\Blog;
+use app\models\user\site\Focus;
+use app\models\user\site\FocusForm;
 
 class BlogController extends UserController
 {
+	//发布博客
 	public function actionPublish()
 	{
 		$model = new BlogForm();
@@ -30,6 +33,7 @@ class BlogController extends UserController
 		return $this->render('/user/blog/publish', $render);
 	}
 
+	//博客分类
 	public static function category()
 	{
 		$return = null;
@@ -42,6 +46,7 @@ class BlogController extends UserController
 		return $return;
 	}
 
+	//添加博客分类
 	public function actionAddcategory()
 	{
 		$model = new CategoryForm();
@@ -50,6 +55,7 @@ class BlogController extends UserController
 		}
 	}
 
+	//博客列表
 	public function actionList()
 	{
 		if ($this->isAjax()) {
@@ -60,6 +66,7 @@ class BlogController extends UserController
 		return $this->render('/user/blog/list', ['data'=>$data]);
 	}
 
+	//编辑博客
 	public function actionEdit()
 	{
 		$model = new BlogForm();
@@ -89,6 +96,46 @@ class BlogController extends UserController
 
 		$this->noSidebar();
 		return $this->render('/user/blog/publish', ['info'=>$info, 'do'=>'edit', 'model'=>$model, 'category'=>self::category()]);
+	}
+
+	//获取博客基本信息
+	public function actionBaseinfo()	
+	{
+		$id = \Yii::$app->request->post('id');
+		$info = Blog::baseinfo($id);
+		return $this->ajaxReturn(['data'=>$info]);
+	}
+
+	//添加到焦点图片
+	public function actionTofocus()
+	{
+		$post = \Yii::$app->request->post();
+		if (empty($post['blog_id']) || empty($post['title']) || empty($post['image']))
+			return $this->ajaxReturn('参数错误', false);
+			
+		$blog = Blog::findOne(intval($post['blog_id']));
+
+		if (!$blog)
+			return $this->ajaxReturn('此博客不存在', false);
+		if (!file_exists($post['image']))
+			return $this->ajaxReturn('图片不存在', false);
+		if ($blog->is_private == 1 || $blog->status != Blog::STATUS_PUBLISH)
+			return $this->ajaxReturn('此博客不能添加到焦点图', false);
+		if (Focus::exist($post['blog_id'], $post['type']))
+			return $this->ajaxReturn('此焦点图已存在', false);
+		
+		//先裁剪
+		$size = Focus::getSize();
+		$post['image'] = $this->thumb($post['image'], $size[0], $size[1]);
+
+		if (Focus::add($post)) {
+			$blog->is_focus = 1;
+			if ($blog->save())
+				return $this->ajaxReturn('操作成功');
+			else
+				return $this->ajaxReturn('操作失败', false);
+		}
+		return $this->ajaxReturn('操作失败', false);
 	}
 
 }
