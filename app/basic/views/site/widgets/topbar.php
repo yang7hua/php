@@ -12,7 +12,7 @@ else
 ?>
 		<div class="topbar">
 			<div class="container">
-				<div class="row">
+				<div class="">
 					<div class="topbar-left"><a href="/">首页</a></div>
 					<div class="topbar-right">
 					<?php if(Yii::$app->user->isGuest): ?>
