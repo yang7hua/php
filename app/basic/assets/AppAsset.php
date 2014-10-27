@@ -21,6 +21,8 @@ class AppAsset extends AssetBundle
         'css/site.css',
     ];
     public $js = [
+		'js/lib/jquery.flyout-1.2.min.js',
+		'js/common.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',

@@ -1,3 +1,6 @@
+<?php
+use yii\widgets\LinkPager;
+?>
 <div class="container list">
 	<div class="row">
 		<div class="col-lg-8">
@@ -20,12 +23,13 @@
 						</div>
 						<div class="description <?php if($row['image']): echo 'des-has-image';endif; ?>">
 							<?php if($row['image']): ?>
-							<div class="image"><img src="<?= $row['image'] ?>"></div>
+							<div class="image"><a href="<?=$row['image']?>" class="flyout"><img title="<?=$row['title']?>" src="<?= $row['image'] ?>"></a></div>
 							<?php endif; ?>
 							<?= $row['description'] ?>...
 						</div>
 					</div>
 					<?php endforeach; ?>
+					<?= LinkPager::widget(['pagination'=>$data['page']])?>
 			</div>
 		</div>
 	</div>

@@ -15,18 +15,7 @@ class Blog extends \app\models\Blog
 		if ($status != 'all')
 			$where['status'] = parent::STATUS_PUBLISH;
 
-		$query = Blog::find()
-					->select(parent::$select_fields_list)
-					->where($where);
-		$count = $query->count();
-		
-		$list = $query->asArray()
-					->orderBy(['uptime'=>SORT_DESC])
-					->all();
-	
-		return [
-			'list'	=>	parent::format($list)
-		];
+		return parent::_list($where, $limit);
 	}
 
 	public static function detail($id, array $condition = [])

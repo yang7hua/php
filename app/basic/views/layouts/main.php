@@ -28,7 +28,10 @@ AppAsset::register($this);
     <div class="wrap">
         <?= $content ?>
     </div>
-<?php $this->endBody() ?>
+<?php
+	$this->registerJsFile('/js/lib/bootstrap.min.js', ['depends'=>['app\assets\AppAsset']]);
+	$this->endBody();
+?>
 </body>
 </html>
 <?php $this->endPage() ?>

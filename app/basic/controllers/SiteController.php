@@ -100,8 +100,4 @@ class SiteController extends BaseController
 		echo Yii::$app->request->userIP;
 	}
 
-	public function actionBlog()
-	{
-		echo 3;
-	}
 }

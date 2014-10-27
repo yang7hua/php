@@ -34,51 +34,45 @@ class Blog extends ActiveRecord
 		];
 	}
 
+	public static function _list($where, $limit = 10, $orderBy = ['uptime'=>SORT_DESC], $select = [])
+	{
+		if (empty($select))
+			$select = self::$select_fields_list;
+		$query = Blog::find()->where($where)->select($select);
+
+		$count = $query->count();
+		$pagination = new Pagination([
+			'defaultPageSize'	=>	$limit,
+			'totalCount'	=>	$count
+		]);
+
+		$list = $query->offset($pagination->offset)
+					->limit($pagination->limit)
+					->orderBy($orderBy)
+					->asArray()
+					->all();
+		return [
+			'list'	=>	self::format($list),
+			'page'	=>	$pagination
+		];
+	}
+
+	//通过分类ID获取
 	public static function getListByCid($cid, $limit = 10, $status = Blog::STATUS_PUBLISH)
 	{
 		$where['status'] = $status;
 		$where['cid'] = $cid;
 		$where['is_private'] = 0;
 
-		$query = Blog::find()->where($where)->select(self::$select_fields_list);
-		$list = $query->limit($limit)
-						->orderBy(['addtime'=>SORT_DESC])
-						->asArray()
-						->all();
-		return [
-			'list'	=> self::format($list)
-		];
-	}
-
-	public static function getListByImg($limit = 5)
-	{
-		$where['status'] = Blog::STATUS_PUBLISH;
-		$where['image'] = ['!='=>''];
-		$where['is_private'] = 0;
-
-		$query = Blog::find()->where($where)->select(self::$select_fields_list);
-		$list = $query->limit($limit)
-						->orderBy(['addtime'=>SORT_DESC])
-						->asArray()
-						->all();
-		return [
-			'list'	=>	self::format($list)
-		];
+		return self::_list($where, $limit);
 	}
 
 	public static function getListByAddtime($limit = 10)
 	{
 		$where['status'] = Blog::STATUS_PUBLISH;
 		$where['is_private'] = 0;
-		$list = Blog::find()->where($where)
-							->select(self::$select_fields_list)
-							->limit($limit)
-							->orderBy(['addtime'=>SORT_DESC])
-							->asArray()
-							->all();
-		return [
-			'list' => self::format($list)
-		];
+
+		return self::_list($where, $limit);
 	}
 
 	//显示在主页的项目
@@ -86,14 +80,8 @@ class Blog extends ActiveRecord
 	{
 		$category = Category::homeList();
 		foreach ($category as &$c) {
-			$list = Blog::find()
-								->select(self::$select_fields_list)
-								->where(['status'=>self::STATUS_PUBLISH, 'cid'=>$c['cid'], 'is_private'=>0])
-								->limit($limit)	
-								->orderBy(['addtime'=>SORT_DESC])
-								->asArray()
-								->all();
-			$c['list'] = self::format($list);
+			$list = self::_list(['status'=>self::STATUS_PUBLISH, 'cid'=>$c['cid'], 'is_private'=>0], $limit)['list'];
+			$c['list'] = $list;
 		}
 		return $category;
 	}
@@ -142,6 +130,7 @@ class Blog extends ActiveRecord
 	//热门
 	public static function hotList($limit = 10)
 	{
+		/*
 		$list = Blog::find()
 				->select('b.*, c.name')
 				->from('blogs b')
@@ -154,6 +143,9 @@ class Blog extends ActiveRecord
 		return [
 			'list' => self::format($list)
 		];
+		*/
+
+		return self::_list(['is_private'=>0, 'status'=>self::STATUS_PUBLISH], 10, ['read'=>SORT_DESC, 'uptime'=>SORT_DESC]);
 	}
 
 	public static function format($data) 

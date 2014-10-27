@@ -9,11 +9,35 @@ else
 		'url' => '/user/logout',
 		],
 	];
+
+$banners = \app\models\Banner::getBanner();
 ?>
 		<div class="topbar">
 			<div class="container">
-				<div class="">
-					<div class="topbar-left"><a href="/">首页</a></div>
+				<div class="row">
+					<ul class="topbar-left">
+						<li><a href="/">首页</a></li>
+<?php 
+	foreach ($banners as $banner): 
+		if (is_array($banner['child'])):
+?>
+			<li class="dropdown">
+				<a class="dropdown-toggle" data-toggle="dropdown" href="#"><?= $banner['name']?><span class="caret"></span></a>
+				<ul class="dropdown-menu" role="menu">
+<?php foreach ($banner['child'] as $child): ?>
+					<li><a href="<?=$child['url']?>"><?=$child['name']?></a></li>
+<?php endforeach; ?>
+				</ul>
+			</li>
+<?php
+		else:
+?>
+			<li><a href="<?= $banner['url'] ?>"><?= $banner['name'] ?></a></li>
+<?php 
+		endif;
+	endforeach; 
+?>
+					</ul>
 					<div class="topbar-right">
 					<?php if(Yii::$app->user->isGuest): ?>
 						<a href="/user/login">登录</a>

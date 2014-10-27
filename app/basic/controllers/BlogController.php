@@ -30,6 +30,7 @@ class BlogController extends BaseController
 	{
 		static $topics = ['today', 'hot'];
 		$topic = \Yii::$app->request->get('topic');
+		$p = \Yii::$app->request->get('p', 1);
 		if (in_array($topic, $topics)) {
 			switch ($topic) {
 				case 'hot':
