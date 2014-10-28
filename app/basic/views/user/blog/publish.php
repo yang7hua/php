@@ -11,7 +11,7 @@ $this->title = '博客发布';
 $status = Yii::$app->blog->status();
 ?>
 
-<div class="container">
+<div class="container-fluid">
 <div class="row">
 <?php $form = ActiveForm::begin([
 	'id'	=>	'blog_publish',
@@ -58,13 +58,12 @@ endif;
 		</div>
 	</div>
 </div>
-<div class="col-lg-3">
+<div class="col-lg-3 publish-sidebar">
 <div class="panel panel-default">
 	<div class="panel-heading">
 		发布
 	</div>
 	<div class="panel-body">
-		<div class="col-lg-12">
 			<h5 class="form-group">分类</h5>
 <?php if ($category):?>
 			<?= $form->field($model, 'cid', ['template'=>"{input}"])->dropDownList($category) ?>
@@ -78,7 +77,6 @@ endif;
 			<div class="form-group">
 <?= Html::submitButton('提交', ['class'=>'btn btn-primary btn-block', 'name'=>'login-button'])?>
 			</div>
-		</div>
 	</div>
 </div>
 </div>

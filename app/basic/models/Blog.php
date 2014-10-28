@@ -60,8 +60,8 @@ class Blog extends ActiveRecord
 	//通过分类ID获取
 	public static function getListByCid($cid, $limit = 10, $status = Blog::STATUS_PUBLISH)
 	{
-		$where['status'] = $status;
 		$where['cid'] = $cid;
+		$where['status'] = $status;
 		$where['is_private'] = 0;
 
 		return self::_list($where, $limit);
@@ -116,7 +116,7 @@ class Blog extends ActiveRecord
 		$tags = explode(',', $tags);
 		$html = '标签:&nbsp;';
 		foreach ($tags as $tag) {
-			$html .= '&nbsp;<a href="/tags/'.$tag.'">'.$tag.'</a>';
+			$html .= '&nbsp;<a href="/tag/'.$tag.'">'.$tag.'</a>';
 		}
 		return $html;
 	}
@@ -130,22 +130,7 @@ class Blog extends ActiveRecord
 	//热门
 	public static function hotList($limit = 10)
 	{
-		/*
-		$list = Blog::find()
-				->select('b.*, c.name')
-				->from('blogs b')
-				->where(['b.is_private'=>0, 'status'=>Blog::STATUS_PUBLISH])
-				->leftJoin('category c', 'c.cid=b.cid')
-				->limit($limit)
-				->orderBy(['read'=>SORT_DESC, 'uptime'=>SORT_DESC])
-				->asArray()
-				->all();
-		return [
-			'list' => self::format($list)
-		];
-		*/
-
-		return self::_list(['is_private'=>0, 'status'=>self::STATUS_PUBLISH], 10, ['read'=>SORT_DESC, 'uptime'=>SORT_DESC]);
+		return self::_list(['status'=>self::STATUS_PUBLISH, 'is_private'=>0], 10, ['read'=>SORT_DESC, 'uptime'=>SORT_DESC]);
 	}
 
 	public static function format($data) 
@@ -198,5 +183,17 @@ class Blog extends ActiveRecord
 				->select(self::$select_fields_list)
 				->asArray()
 				->one();
+	}
+
+	public static function search($keyword)
+	{
+		$where = ['and', ['status'=>self::STATUS_PUBLISH, 'is_private'=>0], 'title like \'%'.$keyword.'%\''];
+		return self::_list($where);
+	}
+
+	public static function getByIds(array $ids)
+	{
+		$where = ['and', ['status'=>self::STATUS_PUBLISH, 'is_private'=>0], ['in', 'id', $ids]];
+		return self::_list($where);
 	}
 }

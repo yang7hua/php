@@ -4,6 +4,7 @@ $this->title = $menu['label'];
 <div class="sitesetting">
 
 <div class="col-lg-2 sidebar">	
+	<div class="row">
 	<h5>网站设置</h5>
 	<ul>
 <?php 
@@ -16,6 +17,7 @@ $menus = \Yii::$app->controller->siteMenus();
 	endforeach;
 ?>
 	</ul>
+	</div>
 </div>
 
 <div class="col-lg-10 info">

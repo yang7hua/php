@@ -31,9 +31,10 @@ $focus = app\models\Focus::getFocus();
 				<div u="prototype"></div>
 			</div>
 			</div>
-
 		</div>
-		<div class="col-lg-4 sidebar"><?= $this->render('widgets/bloglist', $list_today) ?></div>
+		<div class="col-lg-4 sidebar">
+			<?= $this->render('widgets/bloglist', $list_today) ?>
+		</div>
 	</div>
 </div>
 <div class="container categories">

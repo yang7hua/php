@@ -8,8 +8,8 @@ $categories = Yii::$app->blog->categories();
 ?>
 <div class="container blog-detail">
 	<div class="row">
-		<div class="col-lg-8">
-			<div class="row detail">
+		<div class="col-lg-9">
+			<div class="detail">
 				<div class="detail-title">
 					<h3><?= $title ?></h3>
 					<div class="info">
@@ -27,7 +27,7 @@ $categories = Yii::$app->blog->categories();
 				<div class="detail-content">
 					<?= $content ?>
 				</div>
-				<div class="detail-pn">
+				<div class="row detail-pn">
 <?php 
 $prev = Yii::$app->blog->prev($id, $cid);
 $next = Yii::$app->blog->next($id, $cid);
@@ -46,8 +46,8 @@ $next = Yii::$app->blog->next($id, $cid);
 			</div>
 		</div>
 
-		<div class="col-lg-4">
-			<div class="row">
+		<div class="col-lg-3">
+			<div class="">
 				<div class="sidebar">
 					<h5>相关博文</h5>
 					<ul>

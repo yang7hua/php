@@ -41,4 +41,25 @@ class Tags extends ActiveRecord
 	{
 		return preg_match(self::$pattern, $tags);
 	}
+
+	public static function getBlogsByTag($tag)
+	{
+		$list = Tags::find()
+					->where(['name'=>$tag])
+					->select(['blog_id'])
+					->asArray()
+					->all();
+		return self::format($list);
+	}
+
+	public static function format($data)
+	{
+		$return = [];
+		if (!is_array($data))
+			return $return;
+		foreach ($data as $row) {
+			$return[] = $row['blog_id'];
+		}
+		return $return;
+	}
 }

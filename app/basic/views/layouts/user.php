@@ -68,15 +68,13 @@ AppAsset::register($this);
 		<div class="container">
 		<div class="row">
 		<?php if (isset($this->params['noSidebar'])): ?>
-			<div class="col-lg-12">
-				<div class="row"><?= $content ?></div>
-			</div>
+			<div class=""><?= $content ?></div>
 		<?php else: ?>
 			<div class="col-lg-8">
-				<div class="row"><?= $content ?></div>
+				<div class=""><?= $content ?></div>
 			</div>
 			<div class="col-lg-3 col-lg-offset-1">
-				<div class="row"><?= $this->render('/user/widgets/sidebar'); ?></div>
+				<div class=""><?= $this->render('/user/widgets/sidebar'); ?></div>
 			</div>
 		<?php endif; ?>
 		</div>
