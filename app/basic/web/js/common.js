@@ -1,4 +1,7 @@
 $(function(){
+	$("img").lazyload({
+		effect : "fadeIn" 
+	});
 	$(".flyout").flyout({
 		outSpeed : 300,
 		inSpeed : 200,
@@ -12,4 +15,12 @@ $(function(){
 				location.href = '/search/' + keyword;
 		}
 	});
+	if ($("body").hasClass("show_welcome")) {
+		$(window).scroll(function(){
+			if ($("body").scrollTop() >= $(".welcome").height())
+				$(".topbar").addClass("topbar_show");
+			else
+				$(".topbar").removeClass("topbar_show");
+		})
+	}
 });

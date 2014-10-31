@@ -22,6 +22,7 @@ class AppAsset extends AssetBundle
     ];
     public $js = [
 		'js/lib/jquery.flyout-1.2.min.js',
+		'js/lib/jquery.lazyload.min.js',
 		'js/common.js'
     ];
     public $depends = [

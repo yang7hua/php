@@ -17,7 +17,7 @@ class Blog extends ActiveRecord
 
 	static $select_fields_list = ['id', 'cid', 'uid', 'title', 'addtime', 'tags', 
 		'read', 'comment', 'description', 'image', 'is_private', 'allow_review',
-		'status', 'is_focus'];
+		'status', 'is_focus', 'uptime'];
 
 	public static function tableName()
 	{

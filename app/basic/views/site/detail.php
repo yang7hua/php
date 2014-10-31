@@ -4,7 +4,6 @@ $this->params['keywords'] = array_merge($this->params['keywords'], explode(',', 
 $this->params['description'] = $description;
 
 $relate_list = Yii::$app->blog->getListByCid($cid)['list'];
-$categories = Yii::$app->blog->categories();
 ?>
 <div class="container blog-detail">
 	<div class="row">
@@ -49,6 +48,9 @@ $next = Yii::$app->blog->next($id, $cid);
 		<div class="col-lg-3">
 			<div class="">
 				<div class="sidebar">
+					<?=$this->render('/site/widgets/search')?>
+					<br/>
+					<br/>
 					<h5>相关博文</h5>
 					<ul>
 						<?php foreach ($relate_list as $row): 
@@ -58,12 +60,7 @@ $next = Yii::$app->blog->next($id, $cid);
 							<li><a href="<?= $row['url'] ?>"><?= $row['title'] ?></a></li>
 						<?php endforeach; ?>
 					</ul>
-					<h5>博文分类</h5>
-					<ul>
-						<?php foreach ($categories as $row): ?>
-						<li><a href="<?= $row['url'] ?>"><?= $row['name'] ?></a> <span>(<?= $row['count'] ?>)</span></li>
-						<?php endforeach; ?>
-					</ul>
+					<?=$this->render('/site/widgets/category')?>
 				</div>
 			</div>
 		</div>

@@ -50,6 +50,7 @@ class SiteController extends BaseController
 
     public function actionIndex()
     {
+		$this->getView()->params['welcome'] = false;
         return $this->render('index');
     }
 

@@ -39,7 +39,6 @@ $banners = \app\models\Banner::getBanner();
 ?>
 					</ul>
 					<div class="topbar-right">
-					<div class="search"><input type="search" name="keyword" placeholder="搜索"><span class="glyphicon glyphicon-search"></span></div>
 					<?php if(Yii::$app->user->isGuest): ?>
 						<a href="/user/login">登录</a>
 					<?php else:?>

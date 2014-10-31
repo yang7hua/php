@@ -22,9 +22,18 @@ AppAsset::register($this);
     <title><?= Html::encode(($this->params['title'] ? $this->params['title'] . ' - ' : '')  . $this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body class="site">
+
+<?php if ($this->params['welcome']): ?>
+	<body class="site show_welcome">
+<?php else:?>
+	<body class="site">
+<?php endif; ?>
+
 <?php $this->beginBody() ?>
 	<?= $this->render('/site/widgets/topbar') ?>
+	<?php if ($this->params['welcome']): ?>
+		<?=$this->render('/site/widgets/welcome') ?>
+	<?php endif; ?>
     <div class="wrap">
         <?= $content ?>
     </div>
