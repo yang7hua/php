@@ -33,4 +33,9 @@ $(function(){
 	};
 	var index_slider = new $JssorSlider$('index_slider', slider_options);
 */
+$("#waterfall li").wookmark({
+	container : $("#waterfall"),
+	itemWidth : 560,
+	offset : 25 
+});
 });
