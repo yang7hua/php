@@ -36,7 +36,7 @@ class Blog extends \app\models\Blog
 		$content = strip_tags($content);
 		if (($end = strpos($content, '。')) !== false) {
 			if ($end < 50)
-				$end = 100;
+				$end = 200;
 			$content = mb_substr($content, 0, $end, 'utf-8');
 		}
 		$data['description'] = $content;
@@ -50,8 +50,6 @@ class Blog extends \app\models\Blog
 		$blog->uid = \Yii::$app->user->getId();
 		$blog->title = htmlspecialchars($blogform->title);
 
-		$analyse = self::analyse($blogform->content);
-
 		$blog->content = htmlspecialchars($blogform->content);
 		$blog->tags = $blogform->tags;
 		$blog->cid = $blogform->cid ? $blogform->cid : 0;
@@ -61,7 +59,12 @@ class Blog extends \app\models\Blog
 		$blog->allow_review = $blogform->allow_review ? $blogform->allow_review : 1;
 		$blog->addtime = $blog->uptime = time();
 
-		$blog->description = $analyse['description'];
+		$analyse = self::analyse($blogform->content);
+		if (!$blogform->description) {
+			$blog->description = $analyse['description'];
+		} else {
+			$blog->description = $blogform->description;
+		}
 		//$blog->image = $blogform->image ? $blogform->image : $analyse['image'];
 		$blog->image = $analyse['image'];
 
@@ -84,6 +87,7 @@ class Blog extends \app\models\Blog
 		$blog = Blog::findOne(['id'=>$blogform->id, 'uid'=>$uid]);
 		$blog->title = htmlspecialchars($blogform->title);
 		$blog->content = htmlspecialchars($blogform->content);
+		$blog->description = htmlspecialchars($blogform->description);
 		if ($blog->tags != $blogform->tags) {
 			$updateTags = true;
 		}

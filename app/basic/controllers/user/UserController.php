@@ -25,7 +25,7 @@ class UserController extends BaseController
 
 	public function actionLogin()
 	{
-		$this->layout = 'main';
+		$this->layout = 'single';
 		$model = new UserForm(['scenario'=>'login']);
 		if (!\Yii::$app->user->isGuest)
 			return $this->goHome();

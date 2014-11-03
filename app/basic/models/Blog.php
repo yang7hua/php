@@ -116,7 +116,7 @@ class Blog extends ActiveRecord
 		$tags = explode(',', $tags);
 		$html = '标签:&nbsp;';
 		foreach ($tags as $tag) {
-			$html .= '&nbsp;<a href="/tag/'.$tag.'">'.$tag.'</a>';
+			$html .= '&nbsp;<a class="primary" href="/tag/'.$tag.'">'.$tag.'</a>';
 		}
 		return $html;
 	}
@@ -127,10 +127,20 @@ class Blog extends ActiveRecord
 		return Category::all($uid);
 	}
 
-	//热门
-	public static function hotList($limit = 10)
+	//最新
+	public static function newList($limit = 10)
 	{
-		return self::_list(['status'=>self::STATUS_PUBLISH, 'is_private'=>0], 10, ['read'=>SORT_DESC, 'uptime'=>SORT_DESC]);
+		//return self::_list(['status'=>self::STATUS_PUBLISH, 'is_private'=>0], 10, ['read'=>SORT_DESC, 'uptime'=>SORT_DESC]);
+		$list = Blog::find()
+				->from('blogs b')
+				->select('b.id, b.cid, b.title, b.description, b.image, b.uptime, b.comment, b.read, c.name')
+				->where(['b.status'=>self::STATUS_PUBLISH, 'b.is_private'=>0])	
+				->orderBy(['b.uptime'=>SORT_DESC])
+				->leftJoin('category c', 'c.cid=b.cid')
+				->limit($limit)
+				->asArray()
+				->all();
+		return self::format($list);
 	}
 
 	public static function format($data) 
@@ -138,9 +148,16 @@ class Blog extends ActiveRecord
 		foreach ($data as &$row) {
 			if ($row['content'])
 				$row['content'] = htmlspecialchars_decode($row['content']);
-			$row['url'] = '/blog/' . $row['id'];
+			$row['url'] = self::url($row['id']);
+			if ($row['cid'])
+				$row['c_url'] = Category::url($row['cid']);
 		}
 		return $data;
+	}
+
+	public static function url($id)
+	{
+		return '/blog/' . $id;
 	}
 
 	public static function prev($id, $cid = 0)

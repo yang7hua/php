@@ -16,7 +16,7 @@ $relate_list = Yii::$app->blog->getListByCid($cid)['list'];
 						<span><?= date('Y-m-d H:i', $addtime) ?></span>
 						&nbsp;&nbsp;<span>阅读: <?= $read ?></span>
 						&nbsp;&nbsp;<span>评论: <?= $comment ?></span>
-						&nbsp;&nbsp;<span>分类: <a href="/topic/<?= $cid ?>"><?= $name ?></a></span>
+						&nbsp;&nbsp;<span>分类: <a class="primary" href="/topic/<?= $cid ?>"><?= $name ?></a></span>
 						</div>
 						<div class="col-lg-6 text-right">
 							<?= Yii::$app->blog->showTags($tags) ?>
@@ -33,12 +33,12 @@ $next = Yii::$app->blog->next($id, $cid);
 ?>
 					<p class="col-lg-6">
 					<?php if ($prev):?>
-						上一篇: <a href="<?= $prev['url'] ?>"><?= $prev['title'] ?></a>
+						上一篇: <a class="primary" href="<?= $prev['url'] ?>"><?= $prev['title'] ?></a>
 					<?php endif; ?>
 					</p>
 					<p class="col-lg-6 text-right">
 					<?php if ($next):?>
-						下一篇: <a href="<?= $next['url'] ?>"><?= $next['title'] ?></a>
+						下一篇: <a class="primary" href="<?= $next['url'] ?>"><?= $next['title'] ?></a>
 					<?php endif; ?>
 					</p>
 				</div>

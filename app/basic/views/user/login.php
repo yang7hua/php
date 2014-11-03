@@ -4,10 +4,13 @@ use yii\helpers\Html;
 use yii\captcha\Captcha;
 
 $this->title = '用户登录';
+echo $this->render('/site/widgets/topbar');
 ?>
-<?php if (Yii::$app->session->hasFlash('contactFormSubmitted')): ?>
-<?php else: ?>
-<div class="row" id="user-login-box">
+<div class="login">
+<div class="bg"></div>
+<div class="container">
+<div class="col-lg-1"></div>
+<div class="col-lg-8" id="user-login-box">
 	<?php $form = ActiveForm::begin([
 		'id'=>'user-login',
 		'options'	=>	['class'=>'col-lg-10'],
@@ -21,10 +24,12 @@ $this->title = '用户登录';
 			'template'	=>	"<div class='row'><div class='col-lg-4'>{image}</div><div class='col-lg-8'>{input}</div></div>"
 		])?>
     <div class="form-group">
-        <div class="col-lg-12">
-		<?= Html::submitButton('登录', ['class'=>'btn btn-primary', 'name'=>'login-button'])?>
+        <div class="col-lg-8">
+		<?= Html::submitButton('登&nbsp;&nbsp;录', ['class'=>'btn btn-lg btn-block btn-primary', 'name'=>'login-button'])?>
 		</div>
 	</div>
 	<?php ActiveForm::end(); ?>
 </div>
-<?php endif; ?>
+</div>
+</div>
+<?php echo $this->render('/site/widgets/footer');?>

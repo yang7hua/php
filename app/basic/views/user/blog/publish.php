@@ -30,6 +30,7 @@ if (isset($do) && $do == 'edit'):
 	$model->title = $info['title'];
 	$model->tags = $info['tags'];
 	$model->content = $info['content'];
+	$model->description = $info['description'];
 	$model->cid = $info['cid'];
 	$model->allow_review = $info['allow_review'];
 	$model->is_private = $info['is_private'];
@@ -46,6 +47,7 @@ endif;
 		<div class="panel-body">
 <?= $form->field($model, 'title')->input('text') ?>
 <?= $form->field($model, 'tags')->input('text') ?>
+<?= $form->field($model, 'description')->textarea() ?>
 <?= Ueditor::widget([
 	'model'	=>	$model,
 	'attribute'	=> 'content',

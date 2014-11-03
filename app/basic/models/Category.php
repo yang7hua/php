@@ -58,10 +58,15 @@ class Category extends ActiveRecord
 		return self::format($list);
 	}
 
+	public static function url($cid)
+	{
+		return '/topic/' . $cid;
+	}
+
 	public static function format($data)
 	{
 		foreach ($data as &$row) {
-			$row['url'] = '/topic/' . $row['cid'];
+			$row['url'] = self::url($row['cid']);
 		}
 		return $data;
 	}

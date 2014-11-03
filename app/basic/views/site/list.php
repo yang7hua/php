@@ -4,8 +4,8 @@ use yii\widgets\LinkPager;
 <div class="container list">
 	<div class="row">
 		<div class="col-lg-9">
-					<?php foreach ($data['list'] as $row): ?>
-			<div class="blog-row">
+					<?php foreach ($data['list'] as $k=>$row): ?>
+			<div class="blog-row <?php if($k+1==count($data['list'])){?>noborder<?php }?>">
 				<div class="col-lg-2 text-right">
 					<h1><?=date('d', $row['uptime'])?></h1>
 					<p><?=date('m / Y', $row['uptime'])?></p>
@@ -21,7 +21,7 @@ use yii\widgets\LinkPager;
 							<?php if($row['image']): ?>
 							<div class="image"><a href="<?= $row['image']?>" title="" class="flyout"><img alt="" title="" src="<?= $row['image'] ?>"></a></div>
 							<?php endif; ?>
-							<?= $row['description'] ?>...<a href="<?=$row['url']?>" class="more">阅读更多</a>
+							<?= $row['description'] ?>...&nbsp;&nbsp;<a class="primary" href="<?=$row['url']?>" class="more">阅读更多</a>
 						</div>
 					</div>
 				</div>
@@ -31,12 +31,7 @@ use yii\widgets\LinkPager;
 			<div class="text-center"><?= LinkPager::widget(['pagination'=>$data['page']])?></div>
 		</div>
 		<div class="col-lg-3">
-			<div class="sidebar">
-			<?=$this->render('widgets/search')?>
-			<br/>
-			<br/>
-			<?=$this->render('widgets/category')?>
-			</div>
+			<?=$this->render('/site/widgets/sidebar')?>
 		</div>
 	</div>
 </div>

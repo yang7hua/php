@@ -2,7 +2,6 @@
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 
 /* @var $this \yii\web\View */
@@ -21,35 +20,22 @@ AppAsset::register($this);
 	<?php $this->registerMetaTag(['name'=>'description', 'content'=>$this->params['description']]); ?>
     <title><?= Html::encode(($this->params['title'] ? $this->params['title'] . ' - ' : '')  . $this->title) ?></title>
     <?php $this->head() ?>
-<?php 
+<?php
 $theme = $_COOKIE['themeColor'];
 if (!empty($theme))
 	echo $this->registerCssFile('/css/themes/' . $theme . '.css', ['id'=>'themecss', 'depends'=>['app\assets\AppAsset']]);
- ?>
+?>
 </head>
 
-<?php if ($this->params['welcome']): ?>
-	<body class="site show_welcome">
-<?php else:?>
-	<body class="site">
-<?php endif; ?>
-
+<body class="site single">
 <?php $this->beginBody() ?>
-	<?= $this->render('/site/widgets/topbar') ?>
-	<?php if ($this->params['welcome']): ?>
-		<?=$this->render('/site/widgets/welcome') ?>
-	<?php endif; ?>
-    <div class="wrap">
-        <?= $content ?>
-    </div>
-	<?= $this->render('/site/widgets/footer')?>
-	<?= $this->render('/site/widgets/quickmenu')?>
+    <?= $content ?>
 <?php
 	$this->registerJsFile('/js/lib/bootstrap.min.js', ['depends'=>['app\assets\AppAsset']]);
 	$this->endBody();
 ?>
 <!-- JiaThis Button BEGIN -->
-<!--	<script type="text/javascript" src="http://v3.jiathis.com/code_mini/jiathis_r.js?uid=1410501383202585&type=right&amp;move=0" charset="utf-8"></script>--->
+	<script type="text/javascript" src="http://v3.jiathis.com/code_mini/jiathis_r.js?uid=1410501383202585&type=right&amp;move=0" charset="utf-8"></script>
 <!-- JiaThis Button END -->
 </body>
 </html>

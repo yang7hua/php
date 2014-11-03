@@ -13,6 +13,7 @@ class BlogForm extends Model
 	public $cid;
 	public $tags;
 	public $content;
+	public $description;
 	public $allow_review;
 	public $is_private;
 	public $status;
@@ -24,6 +25,7 @@ class BlogForm extends Model
 			'cid'	=>	'分类',
 			'tags'	=>	'标签',
 			'content'	=>	'内容',
+			'description'	=>	'描述',
 			'allow_review'	=>	'允许评论',
 			'is_private'	=>	'仅自己可见'
 		];
@@ -32,7 +34,7 @@ class BlogForm extends Model
 	public function safeAttributes()
 	{
 		return [
-			'id','title','cid','tags','title','content','allow_review','is_private','status'
+			'id','title','cid','tags','title','content','description','allow_review','is_private','status'
 		];
 	}
 

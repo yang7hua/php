@@ -4,7 +4,7 @@ $this->title = $menu['label'];
 <div class="sitesetting">
 
 <div class="col-lg-2 sidebar">	
-	<div class="row">
+	<div class="">
 	<h5>网站设置</h5>
 	<ul>
 <?php 
