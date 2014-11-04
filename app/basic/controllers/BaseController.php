@@ -39,30 +39,21 @@ class BaseController extends Controller
 
 	public function thumb($source, $width, $height, $unlink=false)
 	{
-		$thumb = \yii\imagine\Image::thumbnail($this->getPath($source), $width, $height);
+		return \Yii::$app->util->thumb($source, $width, $height, $unlink);
+	}
 
-		$info = pathinfo($source);
-		$filename = "{$info['dirname']}/{$info['filename']}_{$width}x{$height}.{$info['extension']}";
-		$thumb->save($this->getPath($filename), ['quality' => 100]);
-
-		if ($unlink)
-			unlink($this->getPath($source));
-
-		return $filename;
+	public function thumbByWidth($source, $width)
+	{
+		return \Yii::$app->util->thumbByWidth($source, $width);
 	}
 
 	public function getPath($path)
 	{
-		return \Yii::$app->basePath . '/web/' . trim($path, '/');
+		return \Yii::$app->util->getPath($path);
 	}
 
 	public function crop($source, $width, $height, array $point)
 	{
-		$thumb = \yii\imagine\Image::crop($this->getPath($source), $width, $height, $point);
-
-		$info = pathinfo($source);
-		$filename = "{$info['dirname']}/crop_{$info['filename']}_{$width}x{$height}.{$info['extension']}";
-		$thumb->save($this->getPath($filename), ['quality' => 100]);
-		return $filename;
+		return \Yii::$app->util->crop($source, $width, $height, $point);
 	}
 }

@@ -18,8 +18,8 @@ use yii\widgets\LinkPager;
 						&nbsp;&nbsp;<span>回复: <?= $row['comment'] ?></span>
 						</p>
 						<div class="description <?php if($row['image']): echo 'des-has-image';endif; ?>">
-							<?php if($row['image']): ?>
-							<div class="image"><a href="<?= $row['image']?>" title="" class="flyout"><img alt="" title="" src="<?= $row['image'] ?>"></a></div>
+							<?php if($row['thumb']): ?>
+							<div class="image"><a href="<?= $row['image']?>" title="" class="flyout"><img alt="" title="" src="<?= $row['thumb'] ?>"></a></div>
 							<?php endif; ?>
 							<?= $row['description'] ?>...&nbsp;&nbsp;<a class="primary" href="<?=$row['url']?>" class="more">阅读更多</a>
 						</div>

@@ -34,6 +34,7 @@ $config = [
 		'site'	=>	'app\models\Site',
 		'blog'	=>	'app\models\Blog',
 		'userblog'	=>	'app\models\user\Blog',
+		'util'	=>	'app\vendor\util\util',
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],

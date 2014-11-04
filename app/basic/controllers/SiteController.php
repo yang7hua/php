@@ -51,6 +51,8 @@ class SiteController extends BaseController
     public function actionIndex()
     {
 		$this->getView()->params['welcome'] = false;
+		echo $this->thumbByWidth('/ueditor/php/upload/image/20141027/1414388230244828.jpg', 350);
+		//\Yii::$app->util->thumbByWidth();
         return $this->render('index');
     }
 

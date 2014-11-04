@@ -21,6 +21,8 @@ class WaterfallAsset extends AssetBundle
     ];
     public $js = [
 		'js/lib/jquery.wookmark.min.js',
+		//'js/lib/masonry.pkgd.min.js',
+		'js/lib/imagesloaded.pkgd.min.js'
     ];
     public $depends = [
         'yii\web\YiiAsset'

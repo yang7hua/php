@@ -17,7 +17,7 @@ class Blog extends ActiveRecord
 
 	static $select_fields_list = ['id', 'cid', 'uid', 'title', 'addtime', 'tags', 
 		'read', 'comment', 'description', 'image', 'is_private', 'allow_review',
-		'status', 'is_focus', 'uptime'];
+		'status', 'is_focus', 'uptime', 'thumb'];
 
 	public static function tableName()
 	{
@@ -133,7 +133,7 @@ class Blog extends ActiveRecord
 		//return self::_list(['status'=>self::STATUS_PUBLISH, 'is_private'=>0], 10, ['read'=>SORT_DESC, 'uptime'=>SORT_DESC]);
 		$list = Blog::find()
 				->from('blogs b')
-				->select('b.id, b.cid, b.title, b.description, b.image, b.uptime, b.comment, b.read, c.name')
+				->select('b.id, b.cid, b.title, b.description, b.image, b.thumb, b.uptime, b.comment, b.read, c.name')
 				->where(['b.status'=>self::STATUS_PUBLISH, 'b.is_private'=>0])	
 				->orderBy(['b.uptime'=>SORT_DESC])
 				->leftJoin('category c', 'c.cid=b.cid')

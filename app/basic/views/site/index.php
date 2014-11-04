@@ -18,7 +18,7 @@ $newList = Yii::$app->blog->newList(10);
 					<?php foreach ($newList as $k=>$row): ?>
 					<li>
 						<?php if($row['image']): ?>
-							<a href="<?= $row['image']?>" title=""><img alt="" title="" src="<?= $row['image'] ?>"></a>
+							<a href="<?= $row['url']?>"><img alt="" title="" src="<?= $row['thumb'] ?>"></a>
 						<?php endif; ?>
 						<h5><a href="<?= $row['url']?>"><?= $row['title'] ?></a></h5>
 						<div class="description <?php if($row['image']): echo 'des-has-image';endif; ?>">

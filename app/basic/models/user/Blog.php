@@ -8,6 +8,8 @@ use app\models\Category;
 
 class Blog extends \app\models\Blog 
 {
+	//博客图片裁剪宽度
+	const IMG_THUMB_WIDTH = 350;
 
 	public static function all($limit = 10, $status = 'all')
 	{
@@ -27,12 +29,15 @@ class Blog extends \app\models\Blog
 	{
 		$data = [
 			'image'	=>	'',
+			'thumb'	=>	'',
 			'description' => ''
 		];
 
 		preg_match('/<img\s+src="([^"]+)"/', $content, $matches);
-		if ($matches[1])
+		if ($matches[1]) {
 			$data['image'] = $matches[1];
+			$data['thumb'] = \Yii::$app->util->thumbByWidth($data['image'], self::IMG_THUMB_WIDTH);
+		}
 		$content = strip_tags($content);
 		if (($end = strpos($content, '。')) !== false) {
 			if ($end < 50)
@@ -67,6 +72,7 @@ class Blog extends \app\models\Blog
 		}
 		//$blog->image = $blogform->image ? $blogform->image : $analyse['image'];
 		$blog->image = $analyse['image'];
+		$blog->thumb = $analyse['thumb'];
 
 		$result = $blog->insert();
 
@@ -87,7 +93,6 @@ class Blog extends \app\models\Blog
 		$blog = Blog::findOne(['id'=>$blogform->id, 'uid'=>$uid]);
 		$blog->title = htmlspecialchars($blogform->title);
 		$blog->content = htmlspecialchars($blogform->content);
-		$blog->description = htmlspecialchars($blogform->description);
 		if ($blog->tags != $blogform->tags) {
 			$updateTags = true;
 		}
@@ -99,6 +104,16 @@ class Blog extends \app\models\Blog
 			$countDec = true;
 		}
 		 */
+		$analyse = self::analyse($blogform->content);
+		if (!$blogform->description) {
+			$blog->description = $analyse['description'];
+		} else {
+			$blog->description = $blogform->description;
+		}
+		//$blog->image = $blogform->image ? $blogform->image : $analyse['image'];
+		$blog->image = $analyse['image'];
+		$blog->thumb = $analyse['thumb'];
+
 		$blog->tags = $blogform->tags;
 		$blog->cid = $blogform->cid;
 

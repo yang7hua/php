@@ -33,9 +33,18 @@ $(function(){
 	};
 	var index_slider = new $JssorSlider$('index_slider', slider_options);
 */
-$("#waterfall li").wookmark({
-	container : $("#waterfall"),
-	itemWidth : 560,
-	offset : 25 
-});
+	var masonryNode = $("#waterfall");
+	imagesLoaded(masonryNode, function(){
+		/*
+		masonryNode.masonry({
+			itemSelector : "li",
+			isFitWidth : true
+		})	
+		*/
+		masonryNode.find("li").wookmark({
+			container : masonryNode,
+			offset : 20,
+			itemWidth : 370
+		});
+	});
 });
