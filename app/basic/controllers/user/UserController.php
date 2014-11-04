@@ -66,7 +66,7 @@ class UserController extends BaseController
 		return [
 			['code'=>'info', 'label'=>'网站信息', 'url'=>'/user/site/info', 'modal'=>'siteinfo'],
 			['code'=>'banner', 'label'=>'导航管理', 'url'=>'/user/site/banner', 'modal'=>'sitebanner'],
-			['code'=>'focus', 'label'=>'首页焦点图', 'url'=>'/user/site/focus', 'modal'=>'sitefocus'],
+			//['code'=>'focus', 'label'=>'首页焦点图', 'url'=>'/user/site/focus', 'modal'=>'sitefocus'],
 			['code'=>'category', 'label'=>'分类管理', 'url'=>'/user/site/category', 'modal'=>'sitecategory'],
 		];
 	}

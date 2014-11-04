@@ -29,12 +29,12 @@
 <?php
 	endif;
 ?>
+					<li><a href="/user/blog/publish">发博文</a></li>
 				</ul>
 				</div>
 			</div>
 			<div class="col-lg-3">
 				<div class="row btns">
-					<a href="/user/blog/publish" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-edit"></span>&nbsp;发博文</a>
 				</div>
 			</div>
 		</div>

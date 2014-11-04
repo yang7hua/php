@@ -36,7 +36,10 @@ class Blog extends \app\models\Blog
 		preg_match('/<img\s+src="([^"]+)"/', $content, $matches);
 		if ($matches[1]) {
 			$data['image'] = $matches[1];
-			$data['thumb'] = \Yii::$app->util->thumbByWidth($data['image'], self::IMG_THUMB_WIDTH);
+			$thumb = \Yii::$app->util->thumbByWidth($data['image'], self::IMG_THUMB_WIDTH);
+			if ($thumb) {
+				$data['thumb'] = serialize($thumb);
+			}
 		}
 		$content = strip_tags($content);
 		if (($end = strpos($content, '。')) !== false) {

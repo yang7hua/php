@@ -38,6 +38,7 @@ util = {
 };
 });
 
+
 $(function(){
 	$("img").lazyload({
 		effect : "fadeIn" 

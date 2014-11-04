@@ -22,8 +22,8 @@ use yii\widgets\LinkPager;
 							</div>
 						</div>
 						<div class="description <?php if($row['image']): echo 'des-has-image';endif; ?>">
-							<?php if($row['thumb']): ?>
-							<div class="image"><a href="<?=$row['image']?>" class="flyout"><img title="" src="<?= $row['thumb'] ?>"></a></div>
+							<?php if($row['thumb'] and isset($row['thumb']['img'])): ?>
+							<div class="image"><a href="<?=$row['image']?>" class="flyout"><img title="" data-original="<?= $row['thumb']['img'] ?>"></a></div>
 							<?php endif; ?>
 							<?= $row['description'] ?>...
 						</div>

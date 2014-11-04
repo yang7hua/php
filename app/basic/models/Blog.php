@@ -151,6 +151,9 @@ class Blog extends ActiveRecord
 			$row['url'] = self::url($row['id']);
 			if ($row['cid'])
 				$row['c_url'] = Category::url($row['cid']);
+			if ($row['thumb']) {
+				$row['thumb'] = unserialize($row['thumb']);
+			}
 		}
 		return $data;
 	}

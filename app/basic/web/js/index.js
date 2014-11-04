@@ -34,7 +34,7 @@ $(function(){
 	var index_slider = new $JssorSlider$('index_slider', slider_options);
 */
 	var masonryNode = $("#waterfall");
-	imagesLoaded(masonryNode, function(){
+	//imagesLoaded(masonryNode, function(){
 		/*
 		masonryNode.masonry({
 			itemSelector : "li",
@@ -44,7 +44,8 @@ $(function(){
 		masonryNode.find("li").wookmark({
 			container : masonryNode,
 			offset : 20,
-			itemWidth : 370
+			itemWidth : 370,
+			autoResize : true
 		});
-	});
+	//});
 });
