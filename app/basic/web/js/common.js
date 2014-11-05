@@ -34,34 +34,54 @@ util = {
 		var themecss = $("#themecss"),
 			href = "/css/themes/"+theme+".css";
 		themecss.attr("href", href);
+	},
+	shake : function(o) {
+			o.focus();
+			o.addClass('input-empty');
+			setTimeout(function(){
+				o.removeClass('input-empty');
+			}, 500);
+	},
+	bindEnter : function(o, callback) {
+		o.keydown(function(e){
+			if (e.keyCode == 13) {
+				if (typeof callback == 'function')
+					callback();
+			}
+		});
+	},
+	isCh : function(string) {
+		return string.match(/^[\u4e00-\u9fa5]+$/);
+	},
+	hasCh : function(string) {
+		return string.match(/[\u4e00-\u9fa5]+/);
 	}
 };
 });
 
 
 $(function(){
+
 	$("img").lazyload({
 		effect : "fadeIn" 
 	});
+
 	$(".flyout").flyout({
 		outSpeed : 300,
 		inSpeed : 200,
 		closeTip : "点击关闭" 
 	});	
-	$("[type=search]").keydown(function(e){
-		var input = $(this);
-		if (e.keyCode == 13) {
-			var keyword = input.val();	
-			if (keyword)
-				location.href = '/search/' + keyword;
-			else {
-				input.parent().addClass('search-empty');
-				setTimeout(function(){
-					input.parent().removeClass('search-empty');
-				}, 500);
-			}
+
+	var searchInput = $("[type=search]");
+	util.bindEnter(searchInput, function(){
+		var keyword = searchInput.val();	
+		if (keyword)
+			location.href = '/search/' + keyword;
+		else {
+			util.shake(searchInput.parent());
 		}
 	});
+
 	if ($("body").hasClass("show_welcome")) {
 		$(window).scroll(function(){
 			if ($("body").scrollTop() >= $(".welcome").height())
@@ -70,6 +90,7 @@ $(function(){
 				$(".topbar").removeClass("topbar_show");
 		})
 	}
+
 	if ($(".quickmenu").size() > 0) {
 		var quick = $(".quickmenu"),
 		colors = $(".quickmenu .colors");

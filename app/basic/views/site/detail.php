@@ -42,7 +42,12 @@ $next = Yii::$app->blog->next($id, $cid);
 					<?php endif; ?>
 					</p>
 				</div>
-			</div>
+			</div><!--./detail-->
+<?php 
+if ($allow_review): 
+	echo $this->render('/site/widgets/comment', ['id'=>$id]);
+endif; 
+?>
 		</div>
 
 		<div class="col-lg-3">

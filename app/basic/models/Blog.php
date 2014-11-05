@@ -34,6 +34,17 @@ class Blog extends ActiveRecord
 		];
 	}
 
+	public static function allowReview($id)
+	{
+		$info = Blog::find()
+						->where(['id'=>intval($id)])
+						->select(['is_private', 'allow_review'])
+						->one();
+		if (!$info or $info->is_private or $info->allow_review != 1)
+			return false;
+		return true;
+	}
+
 	public static function _list($where, $limit = 10, $orderBy = ['uptime'=>SORT_DESC], $select = [])
 	{
 		if (empty($select))
@@ -107,6 +118,13 @@ class Blog extends ActiveRecord
 	{
 		$blog = Blog::findOne($id);
 		$blog->read = $blog->read + $point;
+		$blog->save();
+	}
+
+	public static function reviewInc($id, $point = 1)
+	{
+		$blog = Blog::findOne($id);
+		$blog->comment = $blog->comment + $point;
 		$blog->save();
 	}
 
