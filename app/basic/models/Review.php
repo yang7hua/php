@@ -12,6 +12,10 @@ class Review extends ActiveRecord
 	{
 		$review = new Review();
 
+		$uid = \Yii::$app->user->getId();
+		if ($uid)
+			$review->uid = $uid;
+
 		$review->pid = $data['pid'];
 		$review->blog_id = $data['blog_id'];
 		$review->nickname = $data['nickname'];

@@ -32,9 +32,12 @@ class BaseController extends Controller
 		return json_encode($return);
 	}
 
-	public function isSuper()
+	public function isSuper($uid = null)
 	{
-		return \Yii::$app->user->getId() == \Yii::$app->config->superId;
+		if (is_null($uid))
+			return \Yii::$app->user->getId() == \Yii::$app->config->superId;
+		else
+			return intval($uid) == \Yii::$app->config->superId;
 	}
 
 	public function thumb($source, $width, $height, $unlink=false)

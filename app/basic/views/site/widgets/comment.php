@@ -1,7 +1,6 @@
 <?php
 use app\models\Review;
 $commentList = Review::getListByBlogId($id);
-echo \Yii::$app->controller->isSuper() ? 1 : 0;
 ?>
 <div class="comment">
 <div class="row">
@@ -21,12 +20,21 @@ echo \Yii::$app->controller->isSuper() ? 1 : 0;
 <?php 
 if ($commentList['list']):
 	foreach ($commentList['list'] as $key=>$row):
+		if (\Yii::$app->controller->isSuper($row['uid'])):
+?>
+		<div class="list list-super">
+			<div class="content"><span class="arrow arrow-right"></span><?=$row['content']?></div>
+			<div class="nickname"><span class="time"><?=date('y/m/d',$row['time'])?>,</span> <?=$row['nickname']?>:</div>
+		</div>	
+<?php
+		else:
 ?>
 		<div class="list">
 			<div class="nickname"><span class="time"><?=date('y/m/d',$row['time'])?>,</span> <?=$row['nickname']?>:</div>
-			<div class="content"><span class="arrow-left"></span><?=$row['content']?></div>
+			<div class="content"><span class="arrow arrow-left"></span><?=$row['content']?></div>
 		</div>	
 <?php
+		endif;
 	endforeach;
 endif;
 ?>
