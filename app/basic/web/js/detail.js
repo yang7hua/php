@@ -47,9 +47,7 @@ $(function(){
 		commentBox.append(html);
 	};
 
-	util.bindEnter(form, function(){
-		return false;
-	});
+	util.bindEnter(form, submit);
 
 	$("[name=submit]").on("click", submit);
 	content.on("focus", function(){
