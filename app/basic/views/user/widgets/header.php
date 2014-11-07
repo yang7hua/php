@@ -8,7 +8,6 @@
 				<img src="<?= $userinfo->avatar?>">
 			</div>
 			<div class="col-lg-4 info">
-				<div class="row">
 				<h3><a href="/user"><?= $userinfo->username ?></a></h3>	
 				<ul class="menu">
 					<li><a href="/user/blog/list">博文目录</a></li>
@@ -31,7 +30,6 @@
 ?>
 					<li><a href="/user/blog/publish">发博文</a></li>
 				</ul>
-				</div>
 			</div>
 			<div class="col-lg-3">
 				<div class="row btns">

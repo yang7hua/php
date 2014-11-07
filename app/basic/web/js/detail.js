@@ -1,4 +1,6 @@
 $(function(){
+	$(".sidebar").height($(".content").height() - 10);
+
 	var form = $("[name=comment]");
 	var nickname = form.find("[name=nickname]"),
 		content = form.find("[name=content]");
@@ -50,7 +52,4 @@ $(function(){
 	util.bindEnter(form, submit);
 
 	$("[name=submit]").on("click", submit);
-	content.on("focus", function(){
-		$(this).addClass("more-heigh");
-	})
 });

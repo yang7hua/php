@@ -23,15 +23,17 @@ AppAsset::register($this);
     <?php $this->head() ?>
 <?php 
 $theme = $_COOKIE['themeColor'];
-if (!empty($theme))
-	echo $this->registerCssFile('/css/themes/' . $theme . '.css', ['id'=>'themecss', 'depends'=>['app\assets\AppAsset']]);
+if (empty($theme))
+	$theme = 'default';
+//if (!empty($theme))
+	//echo $this->registerCssFile('/css/themes/' . $theme . '.css', ['id'=>'themecss', 'depends'=>['app\assets\AppAsset']]);
  ?>
 </head>
 
 <?php if ($this->params['welcome']): ?>
-	<body class="site show_welcome">
+	<body class="site <?=$theme?> show_welcome">
 <?php else:?>
-	<body class="site">
+	<body class="site <?=$theme?>">
 <?php endif; ?>
 
 <?php $this->beginBody() ?>

@@ -4,6 +4,7 @@ use yii\widgets\LinkPager;
 <div class="container list">
 	<div class="row">
 		<div class="col-lg-9">
+			<div class="listbox content">
 					<?php foreach ($data['list'] as $k=>$row): ?>
 			<div class="blog-row <?php if($k+1==count($data['list'])){?>noborder<?php }?>">
 				<div class="col-lg-2 text-right">
@@ -29,9 +30,18 @@ use yii\widgets\LinkPager;
 			</div>
 					<?php endforeach; ?>
 			<div class="text-center"><?= LinkPager::widget(['pagination'=>$data['page']])?></div>
+			</div>
 		</div>
 		<div class="col-lg-3">
 			<?=$this->render('/site/widgets/sidebar')?>
 		</div>
 	</div>
 </div>
+<?php
+$js = '
+	$(function(){
+		$(".sidebar").height($(".content").height() - 30);
+	});
+';
+$this->registerJs($js);
+?>

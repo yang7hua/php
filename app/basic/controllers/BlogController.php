@@ -59,8 +59,14 @@ class BlogController extends BaseController
 	public function actionReview()
 	{
 		$id = \Yii::$app->request->post('id');
+
+		$session_name = 'blog_review_'.$id;
+		if (!$this->defend($session_name))
+			return $this->ajaxReturn('评论过于频繁，稍后尝试', false);
+
 		if (!Blog::allowReview($id))
 			return $this->ajaxReturn('博客禁止评论', false);
+
 		$nickname = \Yii::$app->request->post('nickname');
 		$content = \Yii::$app->request->post('content');
 		if ($info = Review::add(['pid'=>0, 'blog_id'=>$id, 'nickname'=>$nickname, 'content'=>$content], true)) {

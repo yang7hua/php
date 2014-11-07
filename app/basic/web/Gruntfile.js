@@ -13,6 +13,7 @@ module.exports = function(grunt){
 				},
 				files : [
 					{dest : 'css/site.css', src: ['less/site.less']},
+					/*
 					{dest : 'css/themes/green.css', src: ['less/themes/green.less']},
 					{dest : 'css/themes/sky.css', src: ['less/themes/sky.less']},
 					{dest : 'css/themes/sunflower.css', src: ['less/themes/sunflower.less']},
@@ -22,6 +23,7 @@ module.exports = function(grunt){
 					{dest : 'css/themes/river.css', src: ['less/themes/river.less']},
 					{dest : 'css/themes/pumpkin.css', src: ['less/themes/pumpkin.less']},
 					{dest : 'css/themes/black.css', src: ['less/themes/black.less']},
+					*/
 				]
 			}
 		},

@@ -1,7 +1,7 @@
 <?php
 $colors = [
-'green'=>'green',
-'sky'	=>	'#4CDDF3',
+'green'=>'#234F32',
+'sky'	=>	'#afeadf',
 'sunflower'	=>	'#FDA527',
 'red'	=>	'red',
 'purple'	=>	'#D786FE',

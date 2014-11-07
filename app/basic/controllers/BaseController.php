@@ -59,4 +59,15 @@ class BaseController extends Controller
 	{
 		return \Yii::$app->util->crop($source, $width, $height, $point);
 	}
+
+	//session放灌水
+	public function defend($key, $time = 60)
+	{
+		$sess = \Yii::$app->session->get($key);
+		if ($sess + 60 > time())
+			return false;
+		else
+			\Yii::$app->session->set($key, time());
+		return true;
+	}
 }

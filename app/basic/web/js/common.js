@@ -29,11 +29,14 @@ util = {
     },
 
 	loadTheme : function(theme) {
+		/*
 		if ($("#themecss").size() < 1)
 			$("body").append("<link rel='stylesheet' id='themecss' type='text/css'>");
 		var themecss = $("#themecss"),
 			href = "/css/themes/"+theme+".css";
 		themecss.attr("href", href);
+		*/
+		$("body").removeClass().addClass("site "+theme);
 	},
 	shake : function(o) {
 			o.focus();
@@ -55,6 +58,9 @@ util = {
 	},
 	hasCh : function(string) {
 		return string.match(/[\u4e00-\u9fa5]+/);
+	},
+	moreheigh : function(box) {
+		box.addClass("more-heigh");
 	}
 };
 });
@@ -115,4 +121,9 @@ $(function(){
 	if (defaultTheme)
 		util.loadTheme(defaultTheme);
 	*/
+	$("textarea").on("focus", function(){
+		util.moreheigh($(this));
+	})
+
+
 });
