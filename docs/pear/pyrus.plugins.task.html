@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Pyrus plugins: custom file tasks</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="pyrus.plugins.html" title="Creating plugins for Pyrus" />
+  <link rel="prev" href="pyrus.plugins.role.html" title="Pyrus plugins: custom file roles" />
+  <link rel="next" href="pyrus.developers.html" title="Developer Tools for Pyrus" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Pyrus plugins: custom file tasks</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="pyrus.plugins.role.html" title="Pyrus plugins: custom file roles">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="pyrus.developers.html" title="Developer Tools for Pyrus">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="pyrus.plugins.task">
+ <div class="info"><h1>Pyrus plugins: custom file tasks</h1>
+</div>
+
+ <div class="section" id="pyrus.plugins.task.intro">
+  <div class="info"><h2 class="title">Introduction</h2></div>
+  <p class="para">
+   If you are not familiar with how file tasks work, read the
+   <a href="guide.users.concepts.filetasks.html" class="link">introduction to file tasks</a>
+   first.
+  </p>
+  <p class="para">
+   Custom file tasks can implement a single task, and are defined by
+   an xml file that is noted in package.xml with the <code class="literal">customtask</code>
+   file role.  The XML format is defined and validated by pyrus with the
+   <a href="https://github.com/pear2/PEAR2_Pyrus/blob/master/data/customtask-2.0.xsd" class="link external">customtask-2.0.xsd</a>
+   XSchema file.
+  </p>
+  <p class="para">
+   Here is a human-readable custom file task xml file definition.
+   Optional elements are enclosed in [brackets].
+  </p>
+  <div class="xmlcode">
+   <pre class="xmlcode">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;task version=&quot;2.0&quot; xmlns=&quot;http://pear2.php.net/dtd/customtask-2.0&quot;&gt;
+ &lt;name&gt;taskname&lt;/name&gt;
+ &lt;class&gt;MyPlugin_Taskname&lt;/class&gt;
+[&lt;autoloadpath&gt;relative/path/to/MyPlugin&lt;/autoloadpath&gt;]
+&lt;/task&gt;</pre>
+
+  </div>
+ </div>
+ <div class="section" id="pyrus.plugins.task.autoload">
+  <h2 class="title">Telling Pyrus how to load your task: &lt;class&gt; and &lt;autoloadpath&gt;</h2>
+  <p class="para">
+   This is the same method used for all plugins, and is documented
+   <a href="pyrus.plugins.autoload.html" class="link">here</a>.
+  </p>
+ </div>
+ <div class="section" id="pyrus.plugins.task.taskclass">
+  <h2 class="title">Defining the task: the task class</h2>
+  <p class="para">
+   A custom file task must extend the <code class="literal">\PEAR2\Pyrus\Task\Common</code>
+   class, and must implement a few methods:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara"><strong class="function">validateXml()</strong></span></li>
+    <li class="listitem"><span class="simpara"><strong class="function">startSession()</strong></span></li>
+   </ul>
+  
+  <p class="para">
+   Optionally, <strong class="function">__construct()</strong> may be used to do special
+   pre-processing, storing of information or other setup tasks.
+  </p>
+  <p class="para">
+   A task must also define two class constants, <strong class="constant">TYPE</strong>
+   and <strong class="constant">PHASE</strong>.  <strong class="constant">TYPE</strong> should be one of
+   <code class="literal">&#039;simple&#039;</code> or
+   <code class="literal">&#039;script&#039;</code>.  <code class="literal">&#039;script&#039;</code> tasks are
+   post-install scripts, and are executed by the
+   <a href="pyrus.commands.runscripts.html" class="link">run-scripts</a> command.
+   <code class="literal">&#039;simple&#039;</code> tasks are executed while installation is
+   in progress.
+  </p>
+  <p class="para">
+   <strong class="constant">PHASE</strong> should be one of:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara"><strong class="constant">\PEAR2\Pyrus\Task\Common::PACKAGE</strong></span></li>
+    <li class="listitem"><span class="simpara"><strong class="constant">\PEAR2\Pyrus\Task\Common::INSTALL</strong></span></li>
+    <li class="listitem"><span class="simpara"><strong class="constant">\PEAR2\Pyrus\Task\Common::PACKAGEANDINSTALL</strong></span></li>
+    <li class="listitem"><span class="simpara"><strong class="constant">\PEAR2\Pyrus\Task\Common::POSTINSTALL</strong></span></li>
+   </ul>
+   <p><strong class="constant">\PEAR2\Pyrus\Task\Common::POSTINSTALL</strong> is only used by
+   post-install scripts, the other 3 are used to determine at what time the
+   task should be called.  If your custom task only works at installation-time,
+   use <strong class="constant">\PEAR2\Pyrus\Task\Common::INSTALL</strong>.  If the task can
+   perform only at package time (this is exceedingly rare), use
+   <strong class="constant">\PEAR2\Pyrus\Task\Common::PACKAGE</strong>.  Most tasks should use
+   <strong class="constant">\PEAR2\Pyrus\Task\Common::PACKAGEANDINSTALL</strong>.  If your task
+   can perform its task at packaging time, then you should override the
+   <strong class="function">isPreProcessed()</strong> method and return true.  Some tasks, such
+   as the <code class="literal">replace</code> task, perform some of their actions at
+   package time, and the rest at install time.  The <strong class="function">isPreProcessed()</strong>
+   method should only return true if the XML of the specific task could be
+   processed at package time.
+  </p>
+  <p class="para">
+   The <strong class="function">startSession()</strong> method is used to actually execute the
+   task, and is passed a read/write file resource that is set to the beginning
+   of the file being installed.  The full path of the file&#039;s final installation
+   location is also passed in, and can be used for throwing exceptions.  All
+   errors should be handled by throwing a <code class="literal">PEAR2\Pyrus\Task\Exception</code>
+   or one of its descendants.
+  </p>
+  <p class="para">
+   The <strong class="function">validateXml()</strong> method should validate the XML as
+   represented in an array format.  The array uses associative arrays for tags,
+   the <code class="literal">attribs</code> index for attributes, and for a tag with both
+   attributes and content, the <code class="literal">_content</code> index contains the
+   content.  If present, the <code class="literal">tasks:</code> namespace is removed
+   from the tags prior to passing to <strong class="function">validateXml()</strong>.  On
+   encountering validation errors, the method should throw one of the four
+   exceptions in the example below.
+  </p>
+ </div>
+ <div class="section" id="pyrus.plugins.task.example">
+  <h2 class="title">Example Custom Task</h2>
+  <div class="phpcode">
+   <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">MyPlugin_Taskname&nbsp;</span><span style="color: #007700">extends&nbsp;\</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Task</span><span style="color: #007700">\</span><span style="color: #0000BB">Common<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;</span><span style="color: #0000BB">TYPE&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'simple'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;const&nbsp;</span><span style="color: #0000BB">PHASE&nbsp;</span><span style="color: #007700">=&nbsp;\</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Task</span><span style="color: #007700">\</span><span style="color: #0000BB">Common</span><span style="color: #007700">::</span><span style="color: #0000BB">PACKAGEANDINSTALL</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/**<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Initialize&nbsp;a&nbsp;task&nbsp;instance&nbsp;with&nbsp;the&nbsp;parameters<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;array&nbsp;raw,&nbsp;parsed&nbsp;xml<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;array&nbsp;attributes&nbsp;from&nbsp;the&nbsp;&lt;file&gt;&nbsp;tag&nbsp;containing&nbsp;this&nbsp;task<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;string|null&nbsp;last&nbsp;installed&nbsp;version&nbsp;of&nbsp;this&nbsp;package<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">__construct</span><span style="color: #007700">(</span><span style="color: #0000BB">$pkg</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$phase</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$xml</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$attribs</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$lastversion</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">parent</span><span style="color: #007700">::</span><span style="color: #0000BB">__construct</span><span style="color: #007700">(</span><span style="color: #0000BB">$pkg</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$phase</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$xml</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$attribs</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$lastversion</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;do&nbsp;any&nbsp;special&nbsp;parsing&nbsp;of&nbsp;attributes/contents&nbsp;here<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;phase&nbsp;is&nbsp;one&nbsp;of&nbsp;\PEAR2\Pyrus\Task\Common::PACKAGE,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;\PEAR2\Pyrus\Task\Common::INSTALL,&nbsp;or<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;\PEAR2\Pyrus\Task\Common::POSTINSTALL<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/**<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Validate&nbsp;the&nbsp;basic&nbsp;contents&nbsp;of&nbsp;a&nbsp;&lt;taskname&gt;&nbsp;tag<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;PEAR_Pyrus_IPackageFile<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;array<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;array&nbsp;the&nbsp;entire&nbsp;parsed&nbsp;&lt;file&gt;&nbsp;tag<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;string&nbsp;the&nbsp;filename&nbsp;of&nbsp;the&nbsp;package.xml<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@throws&nbsp;\PEAR2\Pyrus\Task\Exception\InvalidTask<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@throws&nbsp;\PEAR2\Pyrus\Task\Exception\NoAttributes<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@throws&nbsp;\PEAR2\Pyrus\Task\Exception\MissingAttribute<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@throws&nbsp;\PEAR2\Pyrus\Task\Exception\WrongAttributeValue<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">static&nbsp;function&nbsp;</span><span style="color: #0000BB">validateXml</span><span style="color: #007700">(</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">IPackage&nbsp;$pkg</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$xml</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$fileXml</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$file</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(!isset(</span><span style="color: #0000BB">$xml</span><span style="color: #007700">[</span><span style="color: #DD0000">'attribs'</span><span style="color: #007700">]))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;\</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Task</span><span style="color: #007700">\</span><span style="color: #0000BB">Exception</span><span style="color: #007700">\</span><span style="color: #0000BB">NoAttributes</span><span style="color: #007700">(</span><span style="color: #DD0000">'taskname'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$file</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(!isset(</span><span style="color: #0000BB">$xml</span><span style="color: #007700">[</span><span style="color: #DD0000">'attribs'</span><span style="color: #007700">][</span><span style="color: #DD0000">'attributename'</span><span style="color: #007700">]))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;\</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Task</span><span style="color: #007700">\</span><span style="color: #0000BB">Exception</span><span style="color: #007700">\</span><span style="color: #0000BB">MissingAttribute</span><span style="color: #007700">(</span><span style="color: #DD0000">'taskname'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$attrib</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$file</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$xml</span><span style="color: #007700">[</span><span style="color: #DD0000">'attribs'</span><span style="color: #007700">][</span><span style="color: #DD0000">'attributename'</span><span style="color: #007700">]&nbsp;!=&nbsp;</span><span style="color: #DD0000">'hi'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">&amp;&amp;&nbsp;</span><span style="color: #0000BB">$xml</span><span style="color: #007700">[</span><span style="color: #DD0000">'attribs'</span><span style="color: #007700">][</span><span style="color: #DD0000">'attributename'</span><span style="color: #007700">]&nbsp;!=&nbsp;</span><span style="color: #DD0000">'bye'</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;\</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Task</span><span style="color: #007700">\</span><span style="color: #0000BB">Exception</span><span style="color: #007700">\</span><span style="color: #0000BB">WrongAttributeValue</span><span style="color: #007700">(</span><span style="color: #DD0000">'taskname'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'attributename'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$xml</span><span style="color: #007700">[</span><span style="color: #DD0000">'attribs'</span><span style="color: #007700">][</span><span style="color: #DD0000">'attributename'</span><span style="color: #007700">],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$file</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'hi'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'bye'</span><span style="color: #007700">));<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">MyPlugin_Other_Class</span><span style="color: #007700">::</span><span style="color: #0000BB">somecondition</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;\</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Task</span><span style="color: #007700">\</span><span style="color: #0000BB">Exception</span><span style="color: #007700">\</span><span style="color: #0000BB">InvalidTask</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'general&nbsp;validation&nbsp;errors&nbsp;should&nbsp;use&nbsp;this&nbsp;exception'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/**<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Perform&nbsp;the&nbsp;taskname&nbsp;task<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;\PEAR2\Pyrus\IPackage<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;resource&nbsp;open&nbsp;file&nbsp;pointer,&nbsp;set&nbsp;to&nbsp;the&nbsp;beginning&nbsp;of&nbsp;the&nbsp;file<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;string&nbsp;the&nbsp;eventual&nbsp;final&nbsp;file&nbsp;location&nbsp;(informational&nbsp;only)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@return&nbsp;string|false<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">startSession</span><span style="color: #007700">(</span><span style="color: #0000BB">$fp</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$dest</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;use&nbsp;\PEAR2\Pyrus\Logger::log()&nbsp;to&nbsp;send&nbsp;messages&nbsp;to&nbsp;the&nbsp;user<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">\</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Logger</span><span style="color: #007700">::</span><span style="color: #0000BB">log</span><span style="color: #007700">(</span><span style="color: #0000BB">3</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'doing&nbsp;stuff'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Logger</span><span style="color: #007700">::</span><span style="color: #0000BB">log</span><span style="color: #007700">(</span><span style="color: #0000BB">0</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'doing&nbsp;more&nbsp;important&nbsp;stuff'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;operate&nbsp;directly&nbsp;on&nbsp;the&nbsp;file&nbsp;pointer<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$contents&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">stream_get_contents</span><span style="color: #007700">(</span><span style="color: #0000BB">$fp</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$contents&nbsp;</span><span style="color: #007700">.=&nbsp;</span><span style="color: #DD0000">'hi'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">rewind</span><span style="color: #007700">(</span><span style="color: #0000BB">$fp</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">ftruncate</span><span style="color: #007700">(</span><span style="color: #0000BB">$fp</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">fwrite</span><span style="color: #007700">(</span><span style="color: #0000BB">$fp</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$contents</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/**<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;This&nbsp;is&nbsp;used&nbsp;to&nbsp;tell&nbsp;the&nbsp;installer&nbsp;to&nbsp;skip&nbsp;a&nbsp;task&nbsp;that&nbsp;has&nbsp;already&nbsp;been<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;executed.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;For&nbsp;example,&nbsp;package-info&nbsp;replacement&nbsp;tasks&nbsp;are&nbsp;performed&nbsp;at&nbsp;packaging<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;time,&nbsp;and&nbsp;do&nbsp;not&nbsp;need&nbsp;to&nbsp;be&nbsp;re-applied&nbsp;on&nbsp;installation<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@return&nbsp;bool&nbsp;true&nbsp;if&nbsp;task&nbsp;has&nbsp;already&nbsp;been&nbsp;executed&nbsp;on&nbsp;the&nbsp;file&nbsp;at<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;packaging&nbsp;time<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">isPreProcessed</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;do&nbsp;not&nbsp;implement&nbsp;this&nbsp;method&nbsp;unless&nbsp;your&nbsp;task&nbsp;does&nbsp;its&nbsp;processing<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;at&nbsp;package-time!<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">return&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+  </div>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="pyrus.plugins.role.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="pyrus.plugins.html">Creating plugins for Pyrus</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="pyrus.developers.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Pyrus plugins: custom file roles</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Developer Tools for Pyrus</td>
+  </tr>
+ </table>
+</div>
+</body></html>

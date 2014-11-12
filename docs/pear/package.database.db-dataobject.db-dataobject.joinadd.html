@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>-&gt;joinAdd()</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.db-dataobject.html" title="DB_DataObject" />
+  <link rel="prev" href="package.database.db-dataobject.db-dataobject.selectas.html" title="-&gt;selectAs()" />
+  <link rel="next" href="package.database.db-dataobject.db-dataobject.settersgetters.html" title="-&gt;set*() and -&gt;get*()" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">-&gt;joinAdd()</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.db-dataobject.db-dataobject.selectas.html" title="-&gt;selectAs()">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.db-dataobject.db-dataobject.settersgetters.html" title="-&gt;set*() and -&gt;get*()">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.db-dataobject.db-dataobject.joinadd">
+   
+    <h1 class="refname">-&gt;joinAdd()</h1>
+    <div class="refnamediv">-&gt;joinAdd() &ndash; add another dataobject to build a create join query</div>
+
+   
+   <h2 class="refsynopsisdiv">Synopsis</h2>
+    <div class="funcsynopsis">
+ 
+     <p><code class="funcprototype">
+      void <strong class="function">$DB_DataObject-&gt;joinAdd</strong> ( 
+      
+      
+      object $dataobject
+      
+      
+        , 
+      string $joinType
+      
+                  
+       , 
+      string $joinAs
+                  
+      
+       , 
+      string $joinCol
+                        
+      
+     )</code></p>
+    </div>
+   
+   <div class="refsection" id="package.database.db-dataobject.db-dataobject.joinadd.desc">
+    <h1 class="title">Description</h1>
+    <p class="para">
+     Builds a Join Query, by adding another dataobject to this one. Be careful when using this,
+     raw queries may be clearer than using joinAdd. 
+    </p>
+    
+    <p class="para">
+     Thanks to Stijn de Reede for the implementation of this.
+    </p>
+    
+   </div>   
+   
+   <div class="refsection" id="package.database.db-dataobject.db-dataobject.joinadd.parameter">
+    <h1 class="title">Parameter</h1>
+    <p class="para">
+     </p><ul class="itemizedlist">
+      
+      <li class="listitem">
+       <p class="para">
+        <em><code class="parameter">object $obj</code></em> - joining object (no value resets the join)
+       </p>
+      </li>  
+      
+      
+         <li class="listitem">
+       <p class="para">
+         <em><code class="parameter">string $joinType</code></em> - &quot;LEFT&quot; | &quot;INNER &quot; | &quot;RIGHT&quot; | &quot;&quot; 
+       </p>
+       <p class="para">
+         INNER is default, &quot;&quot; indicates
+         just select ... from a,b,c with no join and
+         links are added as where items. 
+       </p>
+       <p class="para">
+         Note: &#039;LEFT&#039; is the same as LEFT OUTER.
+       </p>
+
+      </li> 
+      
+         <li class="listitem">
+       <p class="para">
+        <em><code class="parameter">string $joinAs</code></em> - if you want to select the table as anther name
+                        useful when you want to select multiple columns from a secondary table.
+                        
+       </p>
+      </li> 
+      
+         <li class="listitem">
+       <p class="para">
+        <em><code class="parameter">string $joinCol</code></em> - The column on This objects table to match,needed
+                                               if this table links to the child object in
+                                              multiple places eg.
+                                              
+                                               </p><div class="example"><div class="info"><p><strong> using specific join Columns </strong></p></div>
+                
+                <div class="inicode"><pre class="inicode">
+
+user-&gt;friend (is a id of a person)
+user-&gt;mother (is a id of another person)</pre>
+</div>
+                </div>
+                                            
+       
+      </li> 
+      
+            
+     </ul>
+    
+   </div>   
+      
+            
+               
+                
+   <div class="refsection" id="package.database.db-dataobject.db-dataobject.joinadd.note">
+    <h1 class="title">Note</h1>  
+                 
+    <p class="simpara">This function can not be called
+statically.</p>
+    <p class="simpara">The Examples below are not tested, use DB_DataObject::debugLevel(1), to see what
+    exactly is going on when you use this, and send the author some better examples..</p>
+                         
+  </div>                           
+ <div class="refsection" id="package.database.db-dataobject.db-dataobject.joinadd.example">
+    <h1 class="title">Example</h1>
+    <div class="example"><div class="info"><p><strong>Simple simple Join</strong></p></div>
+     
+      <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;(requires&nbsp;links.ini&nbsp;to&nbsp;be&nbsp;set&nbsp;up&nbsp;correctly)<br />//&nbsp;get&nbsp;all&nbsp;the&nbsp;images&nbsp;for&nbsp;product&nbsp;24<br /><br /></span><span style="color: #0000BB">$i&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">DataObject_Image</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$pi&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">DataObjects_Product_image</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$pi</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">product_id&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">24</span><span style="color: #007700">;&nbsp;</span><span style="color: #FF8000">//&nbsp;set&nbsp;the&nbsp;product&nbsp;id&nbsp;to&nbsp;24<br /></span><span style="color: #0000BB">$i</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">joinAdd</span><span style="color: #007700">(</span><span style="color: #0000BB">$pi</span><span style="color: #007700">);&nbsp;</span><span style="color: #FF8000">//&nbsp;add&nbsp;the&nbsp;product_image&nbsp;connectoin<br /></span><span style="color: #0000BB">$i</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">find</span><span style="color: #007700">();<br />while&nbsp;(</span><span style="color: #0000BB">$i</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch</span><span style="color: #007700">())&nbsp;{<br /></span><span style="color: #FF8000">//&nbsp;do&nbsp;stuff<br /></span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code> 
+ </div>
+    </div>
+    <div class="example"><div class="info"><p><strong>Resulting SQL</strong></p></div>
+     
+     <div class="programlisting">
+       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>SELECT&nbsp;*&nbsp;FROM&nbsp;image<br/>&nbsp;&nbsp;LEFT&nbsp;JOIN&nbsp;product_image&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;ON&nbsp;(image.id&nbsp;=&nbsp;product_image.image_id)<br/>&nbsp;&nbsp;WHERE&nbsp;product_image.id&nbsp;=&nbsp;24    
+     </div>
+    </div>    
+
+ <div class="example"><div class="info"><p><strong>More Complex Join query</strong></p></div>
+     
+  <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;an&nbsp;example&nbsp;with&nbsp;2&nbsp;joins<br />//&nbsp;get&nbsp;all&nbsp;the&nbsp;images&nbsp;linked&nbsp;with&nbsp;products&nbsp;or&nbsp;productgroups<br /></span><span style="color: #0000BB">$i&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">DataObject_Image</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$pi&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">DataObject_Product_image</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$pgi&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">DataObject_Productgroup_image</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$i</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">joinAdd</span><span style="color: #007700">(</span><span style="color: #0000BB">$pi</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$i</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">joinAdd</span><span style="color: #007700">(</span><span style="color: #0000BB">$pgi</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$i</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">find</span><span style="color: #007700">();<br />while&nbsp;(</span><span style="color: #0000BB">$i</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch</span><span style="color: #007700">())&nbsp;{<br /></span><span style="color: #FF8000">//&nbsp;do&nbsp;stuff<br /></span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>    
+     </div>
+    </div>
+    <div class="example"><div class="info"><p><strong>Resulting SQL</strong></p></div>
+     
+     <div class="programlisting">
+       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>SELECT&nbsp;*&nbsp;FROM&nbsp;image&nbsp;<br/>&nbsp;&nbsp;LEFT&nbsp;JOIN&nbsp;product_image&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ON&nbsp;(image.id&nbsp;=&nbsp;product_image.image_id)<br/>&nbsp;&nbsp;LEFT&nbsp;JOIN&nbsp;productgroup&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ON&nbsp;(image.id&nbsp;=&nbsp;productgroup_image.image_id);    
+     </div>
+    </div>    
+   </div>         
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.db-dataobject.db-dataobject.selectas.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.db-dataobject.html">DB_DataObject</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.db-dataobject.db-dataobject.settersgetters.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">-&gt;selectAs()</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">-&gt;set*() and -&gt;get*()</td>
+  </tr>
+ </table>
+</div>
+</body></html>

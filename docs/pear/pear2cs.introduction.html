@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="pear2cs.html" title="PEAR2 Coding Standards" />
+  <link rel="prev" href="pear2cs.html" title="PEAR2 Coding Standards" />
+  <link rel="next" href="pear2cs.rules.html" title="Rules" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="pear2cs.html" title="PEAR2 Coding Standards">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="pear2cs.rules.html" title="Rules">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="pear2cs.introduction"><div class="info"><h1>Introduction</h1>
+</div>
+   
+   <p class="para">
+    PEAR 1.x is very successful at managing the universe of PEAR-installable
+    code. The new Pyrus installer is designed to expand that universe to include
+    code that can also be easily embedded in non-PEAR applications and that runs
+    identically when simply unzipped and when installed. The PEAR2 repository
+    must adhere to different coding conventions than the PEAR repository to
+    make this possible.
+    This document itemizes all the changes to existing rules and coding
+    standards found <a href="standards.html" class="link">here</a>.  Any conflict between
+    these standards and the existing standards resolves in favor of the new standards.
+    These standards do not affect the coding standards for PEAR packages hosted
+    at pear.php.net, only PEAR2 packages hosted at pear2.php.net.
+   </p>
+
+   <p class="para">
+    <code class="methodname">require_once</code> introduces a rigidity to package
+    structure that limits the possible uses of a PEAR package.
+    Some of the problems:
+
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <span class="simpara">
+       <code class="methodname">require_once</code> can introduce up to a 10%
+       performance penalty on high-volume sites using multi-processor web
+       servers due to increased latency. However, most users would experience
+       at most 2% performance penalty on single-processor systems
+       (as measured by Yahoo! engineer Gopal Vijayaraghavan)
+      </span>
+     </li>
+     <li class="listitem">
+      <span class="simpara">
+      <code class="literal">include_path</code> is required in order to use a package.
+      This makes it difficult to bundle a PEAR package within another
+      application with its own <code class="literal">include_path</code>, to create a
+      single file containing needed classes, to move a PEAR package to a phar
+      archive without extensive source code modification.
+      </span>
+     </li>
+     <li class="listitem">
+      <span class="simpara">
+       When top-level <code class="methodname">require_once</code> is mixed with
+       conditional <code class="methodname">require_once</code>, this can result in
+       code that is uncacheable by opcode caches such as APC (to be
+       bundled with PHP 6).
+      </span>
+     </li>
+     <li class="listitem">
+      <span class="simpara">
+       Relative <code class="methodname">require_once</code> requires that
+       <code class="literal">include_path</code> already be set up to the correct value,
+       making it impossible to use a package without proper
+       <code class="literal">include_path</code>.
+      </span>
+     </li>
+    </ul>
+   
+
+   <p class="para">
+    Some of the benefits of <code class="methodname">require_once</code>:
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <span class="simpara">
+       You know right away if a file is missing, with a Fatal Error: missing
+       file X (this is mitigated by using <code class="methodname">__autoload()</code>
+       with <code class="methodname">PEAR2_Autoload()</code>).
+      </span>
+     </li>
+     <li class="listitem">
+      <span class="simpara">
+       End-users don&#039;t need to know what files are within a package to use it
+       (also mitigated by using <code class="methodname">__autoload()</code> with
+       <code class="methodname">PEAR2_Autoload()</code>).
+      </span>
+     </li>
+    </ul>
+   
+
+   <p class="para">
+    The removal of <code class="methodname">require_once</code> necessitates another method for loading
+    internal dependencies, both files within a package and external files.
+    This proposal introduces 2 possible methods for doing this:
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+      use <code class="methodname">__autoload()</code> in conjunction with PEAR2&#039;s custom autoload solution
+      (found
+      <a href="https://github.com/pear2/PEAR2_Autoload/blob/master/src/PEAR2/Autoload.php" class="link external">
+       here</a> in svn)
+      </p>
+     </li>
+     <li class="listitem">
+      <span class="simpara">
+      construct a customized solution for loading needed files
+      </span>
+     </li>
+    </ul>
+   
+
+   <p class="para">
+    In all cases, the onus of loading needed files is shifted to the end
+    user.  However, for beginning users, the only required step is to
+    load <code class="filename">PEAR2/Autoload.php</code>, which will be always bundled with new packages,
+    but only extracted if used as unzip-and-go (pyrus would simply install
+    the dependency on PEAR2, which would contain the needed base files
+    <strong class="classname">PEAR2_Exception</strong> and <strong class="classname">PEAR2_Autoload</strong>).
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />&nbsp;&nbsp;</span><span style="color: #007700">require&nbsp;</span><span style="color: #DD0000">'/full/path/to/PEAR2/Autoload.php'</span><span style="color: #007700">;<br />&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;now&nbsp;you&nbsp;can&nbsp;start&nbsp;using&nbsp;all&nbsp;PEAR2&nbsp;packages<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+    <p><code class="filename">PEAR2/Autoload.php</code> automatically sets up include_path if it does not
+    contain the correct value, and also automatically declares an autoloader
+    either using <code class="methodname">__autoload()</code>
+    or <code class="methodname">spl_autoload_register()</code>, preserving existing autoloaders set up by
+    the user.
+   </p>
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="pear2cs.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="pear2cs.html">PEAR2 Coding Standards</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="pear2cs.rules.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">PEAR2 Coding Standards</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Rules</td>
+  </tr>
+ </table>
+</div>
+</body></html>

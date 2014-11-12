@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Pyrus plugins: custom commands</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="pyrus.plugins.html" title="Creating plugins for Pyrus" />
+  <link rel="prev" href="pyrus.plugins.autoload.html" title="Telling Pyrus how to load your plugin: &lt;class&gt; and &lt;autoloadpath&gt;" />
+  <link rel="next" href="pyrus.plugins.role.html" title="Pyrus plugins: custom file roles" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Pyrus plugins: custom commands</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="pyrus.plugins.autoload.html" title="Telling Pyrus how to load your plugin: &lt;class&gt; and &lt;autoloadpath&gt;">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="pyrus.plugins.role.html" title="Pyrus plugins: custom file roles">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="pyrus.plugins.command">
+ <div class="info"><h1>Pyrus plugins: custom commands</h1>
+</div>
+
+ <div class="section" id="pyrus.plugins.command.intro">
+  <div class="info"><h2 class="title">Introduction</h2></div>
+  <p class="para">
+   Custom commands add new functionality to pyrus.phar.  An example of a
+   plugin that implements custom commands is the
+   <code class="literal">PEAR2_Pyrus_Developer</code> package, which implements the
+   <a href="pyrus.commands.make.html" class="link">make</a>,
+   <a href="pyrus.commands.package.html" class="link">package</a>,
+   <a href="pyrus.commands.pickle.html" class="link">pickle</a>, and
+   <a href="pyrus.commands.runphpt.html" class="link">run-phpt</a> commands.
+  </p>
+  <p class="para">
+   Custom command plugins can implement multiple commands, and are defined by
+   an xml file that is noted in package.xml with the <code class="literal">customcommand</code>
+   file role.  The XML format is defined and validated by pyrus with the
+   <a href="https://github.com/pear2/PEAR2_Pyrus/blob/master/data/customcommand-2.0.xsd" class="link external">customcommand.xsd</a>
+   XSchema file.
+  </p>
+  <div class="section" id="pyrus.plugins.command.intro.args">
+   <h3 class="title">Command Arguments and Options: a brief primer</h3>
+   <p class="para">
+    Commands can have arguments and options.  Here is an example of a command with
+    a single argument:
+   </p>
+   <pre class="screen">php pyrus.phar install PackageName</pre>
+
+   <p class="para">
+    The command is <code class="literal">install</code>, and the argument is
+    <code class="literal">PackageName</code>.
+   </p>
+   <p class="para">
+    Here is an example of a command with multiple arguments:
+   </p>
+   <pre class="screen">php pyrus.phar install PackageName package.xml http://example.com/Foo.tgz</pre>
+
+   <p class="para">
+    The command is <code class="literal">install</code>, and the arguments are
+    <code class="literal">PackageName</code>, <code class="literal">package.xml</code> and
+    <code class="literal">http://example.com/Foo.tgz</code>.
+   </p>
+   <p class="para">
+    An option is a special argument that is preceded by 1-2 dashes (<code class="literal">-</code> or
+    <code class="literal">--</code>).  Short arguments are single letters preceded by a dash,
+    and long arguments are words preceded by two dashes.  Here is an example
+    of a command with both a short and a long option
+   </p>
+   <pre class="screen">php pyrus.phar package -p --tar</pre>
+
+   <p class="para">
+    The command is <code class="literal">package</code>, the short option is
+    <code class="literal">-p</code> and the long option is <code class="literal">--tar</code>.  Short
+    options are aliases for long options.  For the <code class="literal">package</code> command,
+    the <code class="literal">-p</code> short
+    option is an alias to the <code class="literal">--phar</code> long option.
+   </p>
+   <p class="para">
+    Options can also accept arguments in 2 formats.  If an option accepts
+    an argument, there are two ways of passing that argument.  Short options
+    consider the next argument to be their argument:
+   </p>
+   <pre class="screen">php pyrus.phar install -r /path/to/packagingroot PackageName</pre>
+
+   <p class="para">
+    <code class="literal">/path/to/packagingroot</code> is the argument to the short
+    option <code class="literal">-r</code>, <code class="literal">PackageName</code> is the argument
+    to the <code class="literal">install</code> command.
+   </p>
+   <p class="para">
+    Long options require an <code class="literal">=</code> sign in between the option and
+    the argument as in:
+   </p>
+   <pre class="screen">php pyrus.phar install --packagingroot=/path/to/packagingroot PackageName</pre>
+
+   <p class="para">
+    <code class="literal">/path/to/packagingroot</code> is the argument to the long
+    option <code class="literal">--packagingroot</code>, <code class="literal">PackageName</code> is the argument
+    to the <code class="literal">install</code> command.
+   </p>
+  </div>
+ </div>
+ <div class="section" id="pyrus.plugins.command.xmloverview">
+  <h2 class="title">Overview of the Custom Command XML Format</h2>
+  <p class="para">
+   Here is a human-readable overview of a custom command&#039;s XML definition file.
+   Optional tags are enclosed in [brackets].  If there is a choice of
+   tags, they are separated by a vertical line <code class="literal">|</code> and
+   enclosed in parentheses like <code class="literal">(&lt;this&gt;|&lt;example&gt;)</code>.
+  </p>
+  <p class="para">
+   </p><div class="xmlcode">
+    <pre class="xmlcode">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;commands version=&quot;2.0&quot; xmlns=&quot;http://pear2.php.net/dtd/customcommand-2.0&quot;&gt;
+ &lt;command&gt;
+  &lt;name&gt;commandname&lt;/name&gt;
+  &lt;class&gt;CommandClass\Name&lt;/class&gt;
+  &lt;function&gt;makePackageXml&lt;/function&gt;
+[ &lt;webfunction&gt;webCommand&lt;/webfunction&gt;]
+[ &lt;gtkfunction&gt;gtkCommand&lt;/gtkfunction&gt;]
+[ &lt;autoloadpath&gt;CommandClass&lt;/autoloadpath&gt;]
+  &lt;summary&gt;Short description of command purpose&lt;/summary&gt;
+  &lt;shortcut&gt;CN&lt;/shortcut&gt;
+  &lt;options&gt;
+  [&lt;option&gt;
+    &lt;name&gt;optionname&lt;/name&gt;
+    &lt;shortopt&gt;O&lt;/shortopt&gt;
+    &lt;type&gt;(&lt;bool/&gt;|&lt;string/&gt;|&lt;int/&gt;|&lt;float/&gt;|&lt;counter/&gt;|
+           &lt;callback&gt;optionProcessorCallback&lt;/callback&gt;|
+           &lt;set&gt;&lt;value&gt;value1&lt;/value&gt;&lt;value&gt;value2&lt;/value&gt;...&lt;/set&gt;)&lt;/type&gt;
+   [&lt;default&gt;defaultvalue&lt;/default&gt;]
+    &lt;doc&gt;Short description of option purpose&lt;/doc&gt;
+   &lt;/option&gt;]
+  &lt;/options&gt;
+  &lt;arguments&gt;
+  [&lt;argument&gt;
+    &lt;name&gt;argname&lt;/name&gt;
+    &lt;multiple&gt;0&lt;/multiple&gt;
+    &lt;optional&gt;1&lt;/optional&gt;
+    &lt;doc&gt;Short argument description&lt;/doc&gt;
+   &lt;/argument&gt;]
+  &lt;/arguments&gt;
+  &lt;doc&gt;
+Long description of command usage for help output
+  &lt;/doc&gt;
+ &lt;/command&gt;
+&lt;/commands&gt;</pre>
+
+   </div>
+  
+  <p class="para">
+   A command need not require or accept any arguments or options, and can
+   accept multiple arguments and multiple options.  In addition, a custom command
+   definition XML file may declare multiple commands.
+  </p>
+  <p class="para">
+   Commands can also implement a shortcut, which is a shorter alias.  The
+   <code class="literal">upgrade</code> command, for instance, has a shortcut of
+   <code class="literal">up</code>.
+  </p>
+  <p class="para">
+   By convention, all command names of external projects should be prefixed with
+   the vendor name.  For instance, if the vendor is Zend Framework, commands should be
+   prefixed with something like <code class="literal">zf-</code> or with <code class="literal">zend-</code>.
+   An install command would be <code class="literal">zf-install</code>.
+  </p>
+  <p class="para">
+   In addition, all shortcuts from external vendors should be upper-cased and
+   consist of the first letter of the vendor, and the first two letters
+   of the command.  <code class="literal">zf-install</code> would have a shortcut of
+   <code class="literal">Zin</code>.  This helps to avoid name collisions between
+   vendors.
+  </p>
+ </div>
+ <div class="section" id="pyrus.plugins.command.autoload">
+  <h2 class="title">Telling Pyrus how to load your command: &lt;class&gt; and &lt;autoloadpath&gt;</h2>
+  <p class="para">
+   This is the same method used for all plugins, and is documented
+   <a href="pyrus.plugins.autoload.html" class="link">here</a>.
+  </p>
+  <p class="para">
+   The three frontend command handlers are discussed in the
+   <a href="pyrus.plugins.command.html#pyrus.plugins.command.cli" class="link">CLI</a> section,
+   <a href="pyrus.plugins.command.html#pyrus.plugins.command.web" class="link">Web</a> section, and the
+   <a href="pyrus.plugins.command.html#pyrus.plugins.command.gtk" class="link">Gtk</a> section.
+  </p>
+ </div>
+ <div class="section" id="pyrus.plugins.command.arguments">
+  <h2 class="title">Defining arguments</h2>
+  <p class="para">
+   Pyrus recognizes both optional and required arguments, as well as the ability
+   to specify repeating arguments.  The logic is very similar to function
+   signatures in PHP.  Each argument is placed by name into an associative
+   array and passed to the function.  Note that invalid input is not passed
+   to custom commands, so a command can assume valid input if it is called.
+  </p>
+  <p class="para">
+   Here is a sample argument definition and the way that Pyrus will handle
+   different valid inputs for the hypothetical foo command:
+  </p>
+  <div class="xmlcode">
+   <pre class="xmlcode">
+ &lt;arguments&gt;
+  &lt;argument&gt;
+   &lt;name&gt;argname&lt;/name&gt;
+   &lt;multiple&gt;0&lt;/multiple&gt;
+   &lt;optional&gt;0&lt;/optional&gt;
+   &lt;doc&gt;required arg&lt;/doc&gt;
+  &lt;/argument&gt;
+  &lt;argument&gt;
+   &lt;name&gt;argname2&lt;/name&gt;
+   &lt;multiple&gt;0&lt;/multiple&gt;
+   &lt;optional&gt;1&lt;/optional&gt;
+   &lt;doc&gt;optional arg&lt;/doc&gt;
+  &lt;/argument&gt;
+  &lt;argument&gt;
+   &lt;name&gt;argname3&lt;/name&gt;
+   &lt;multiple&gt;1&lt;/multiple&gt;
+   &lt;optional&gt;1&lt;/optional&gt;
+   &lt;doc&gt;optional arg, multiple&lt;/doc&gt;
+  &lt;/argument&gt;
+ &lt;/arguments&gt;</pre>
+
+  </div>
+  <pre class="screen">php pyrus.phar foo arg1</pre>
+
+  <div class="phpcode">
+   <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$args&nbsp;=&nbsp;array('argname'&nbsp;=&gt;&nbsp;'arg1')<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+  </div>
+  <pre class="screen">php pyrus.phar foo arg1 arg2</pre>
+
+  <div class="phpcode">
+   <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$args&nbsp;=&nbsp;array('argname'&nbsp;=&gt;&nbsp;'arg1',&nbsp;'argname2'&nbsp;=&gt;&nbsp;'arg2')<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+  </div>
+  <pre class="screen">php pyrus.phar foo arg1 arg2 arg3</pre>
+
+  <div class="phpcode">
+   <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$args&nbsp;=&nbsp;array('argname'&nbsp;=&gt;&nbsp;'arg1',&nbsp;'argname2'&nbsp;=&gt;&nbsp;'arg2',&nbsp;'argname3'&nbsp;=&gt;&nbsp;array('arg3'))<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+  </div>
+  <pre class="screen">php pyrus.phar foo arg1 arg2 arg3 arg4</pre>
+
+  <div class="phpcode">
+   <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$args&nbsp;=&nbsp;array('argname'&nbsp;=&gt;&nbsp;'arg1',&nbsp;'argname2'&nbsp;=&gt;&nbsp;'arg2',&nbsp;'argname3'&nbsp;=&gt;&nbsp;array('arg3',&nbsp;'arg4'))<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+  </div>
+ </div>
+ <div class="section" id="pyrus.plugins.command.options">
+  <h2 class="title">Defining options</h2>
+  <p class="para">
+   Options must define a short and a long option, a type for the option, and
+   a short description of the option for help text.
+  </p>
+  <p class="para">
+   Options fall into two categories, those that accept arguments, and those that don&#039;t.
+   Options that don&#039;t accept arguments are of type <code class="literal">&lt;bool/&gt;</code>
+   and <code class="literal">&lt;counter/&gt;</code>.
+  </p>
+  <p class="para">
+   The types recognized are:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara"><code class="literal">&lt;bool/&gt;</code></span></li>
+    <li class="listitem"><span class="simpara"><code class="literal">&lt;counter/&gt;</code></span></li>
+    <li class="listitem"><span class="simpara"><code class="literal">&lt;string/&gt;</code></span></li>
+    <li class="listitem"><span class="simpara"><code class="literal">&lt;int/&gt;</code></span></li>
+    <li class="listitem"><span class="simpara"><code class="literal">&lt;float/&gt;</code></span></li>
+    <li class="listitem"><span class="simpara"><code class="literal">&lt;callback&gt;&lt;/callback&gt;</code></span></li>
+    <li class="listitem"><span class="simpara"><code class="literal">&lt;set&gt;&lt;/set&gt;</code></span></li>
+   </ul>
+  
+  <div class="section" id="pyrus.plugins.command.options.bool">
+   <h3 class="title">&lt;bool/&gt;</h3>
+   <p class="para">
+    A <code class="literal">&lt;bool/&gt;</code> option sets its value to <strong class="constant">TRUE</strong> if
+    present, and <strong class="constant">FALSE</strong> if not.
+   </p>
+   <div class="xmlcode">
+    <pre class="xmlcode">
+  &lt;options&gt;
+   &lt;option&gt;
+    &lt;name&gt;nocompatible&lt;/name&gt;
+    &lt;shortopt&gt;n&lt;/shortopt&gt;
+    &lt;type&gt;&lt;bool/&gt;&lt;/type&gt;
+    &lt;doc&gt;Do not generate package_compatible.xml&lt;/doc&gt;
+   &lt;/option&gt;
+  &lt;/options&gt;</pre>
+
+   </div>
+   <pre class="screen">php pyrus.phar foo</pre>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$options&nbsp;=&nbsp;array('nocompatible'&nbsp;=&gt;&nbsp;false)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <pre class="screen">php pyrus.phar foo -n</pre>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$options&nbsp;=&nbsp;array('nocompatible'&nbsp;=&gt;&nbsp;true)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <pre class="screen">php pyrus.phar foo --nocompatible</pre>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$options&nbsp;=&nbsp;array('nocompatible'&nbsp;=&gt;&nbsp;true)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  <div class="section" id="pyrus.plugins.command.options.counter">
+   <h3 class="title">&lt;counter/&gt;</h3>
+   <p class="para">
+    A <code class="literal">&lt;counter/&gt;</code> option sets its value to <code class="literal">0</code>
+    if not present, and to the number of times the option is present if it is.
+    This is the only option type for which multiple occurrences of the option
+    are allowed.
+   </p>
+   <div class="xmlcode">
+    <pre class="xmlcode">
+  &lt;options&gt;
+   &lt;option&gt;
+    &lt;name&gt;verbose&lt;/name&gt;
+    &lt;shortopt&gt;v&lt;/shortopt&gt;
+    &lt;type&gt;&lt;counter/&gt;&lt;/type&gt;
+    &lt;doc&gt;How verbose to be with output&lt;/doc&gt;
+   &lt;/option&gt;
+  &lt;/options&gt;</pre>
+
+   </div>
+   <pre class="screen">php pyrus.phar foo</pre>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$options&nbsp;=&nbsp;array('verbose'&nbsp;=&gt;&nbsp;0)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <pre class="screen">php pyrus.phar foo -v</pre>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$options&nbsp;=&nbsp;array('verbose'&nbsp;=&gt;&nbsp;1)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <pre class="screen">php pyrus.phar foo --verbose -vv --verbose</pre>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$options&nbsp;=&nbsp;array('verbose'&nbsp;=&gt;&nbsp;4)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  <div class="section" id="pyrus.plugins.command.options.string">
+   <h3 class="title">&lt;string/&gt;</h3>
+   <p class="para">
+    A <code class="literal">&lt;string/&gt;</code> option sets its value to the
+    argument passed in if present, or to <strong class="constant">NULL</strong> if not present.
+   </p>
+   <div class="xmlcode">
+    <pre class="xmlcode">
+  &lt;options&gt;
+   &lt;option&gt;
+    &lt;name&gt;name&lt;/name&gt;
+    &lt;shortopt&gt;n&lt;/shortopt&gt;
+    &lt;type&gt;&lt;string/&gt;&lt;/type&gt;
+    &lt;doc&gt;Name of foo&lt;/doc&gt;
+   &lt;/option&gt;
+  &lt;/options&gt;</pre>
+
+   </div>
+   <pre class="screen">php pyrus.phar foo</pre>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$options&nbsp;=&nbsp;array('name'&nbsp;=&gt;&nbsp;null)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <pre class="screen">php pyrus.phar foo -n myname</pre>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$options&nbsp;=&nbsp;array('name'&nbsp;=&gt;&nbsp;'myname')<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <pre class="screen">php pyrus.phar foo --name=myname</pre>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$options&nbsp;=&nbsp;array('name'&nbsp;=&gt;&nbsp;'myname')<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  <div class="section" id="pyrus.plugins.command.options.int">
+   <h3 class="title">&lt;int/&gt;</h3>
+   <p class="para">
+    An <code class="literal">&lt;int/&gt;</code> option sets its value to the
+    integer argument passed in if present, or to <strong class="constant">NULL</strong> if not present.
+   </p>
+   <div class="xmlcode">
+    <pre class="xmlcode">
+  &lt;options&gt;
+   &lt;option&gt;
+    &lt;name&gt;namecount&lt;/name&gt;
+    &lt;shortopt&gt;n&lt;/shortopt&gt;
+    &lt;type&gt;&lt;int/&gt;&lt;/type&gt;
+    &lt;doc&gt;Number of foo names&lt;/doc&gt;
+   &lt;/option&gt;
+  &lt;/options&gt;</pre>
+
+   </div>
+   <pre class="screen">php pyrus.phar foo</pre>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$options&nbsp;=&nbsp;array('namecount'&nbsp;=&gt;&nbsp;null)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <pre class="screen">php pyrus.phar foo -n 3</pre>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$options&nbsp;=&nbsp;array('namecount'&nbsp;=&gt;&nbsp;3)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <pre class="screen">php pyrus.phar foo --namecount=3</pre>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$options&nbsp;=&nbsp;array('namecount'&nbsp;=&gt;&nbsp;3)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  <div class="section" id="pyrus.plugins.command.options.float">
+   <h3 class="title">&lt;float/&gt;</h3>
+   <p class="para">
+    A <code class="literal">&lt;float/&gt;</code> option sets its value to the
+    float argument passed in if present, or to <strong class="constant">NULL</strong> if not present.
+   </p>
+   <div class="xmlcode">
+    <pre class="xmlcode">
+  &lt;options&gt;
+   &lt;option&gt;
+    &lt;name&gt;foopercent&lt;/name&gt;
+    &lt;shortopt&gt;f&lt;/shortopt&gt;
+    &lt;type&gt;&lt;float/&gt;&lt;/type&gt;
+    &lt;doc&gt;Foo percent in decimal notation&lt;/doc&gt;
+   &lt;/option&gt;
+  &lt;/options&gt;</pre>
+
+   </div>
+   <pre class="screen">php pyrus.phar foo</pre>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$options&nbsp;=&nbsp;array('foopercent'&nbsp;=&gt;&nbsp;null)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <pre class="screen">php pyrus.phar foo -f .2</pre>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$options&nbsp;=&nbsp;array('foopercent'&nbsp;=&gt;&nbsp;0.2)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <pre class="screen">php pyrus.phar foo --foopercent=0.3</pre>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$options&nbsp;=&nbsp;array('foopercent'&nbsp;=&gt;&nbsp;0.3)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  <div class="section" id="pyrus.plugins.command.options.callback">
+   <h3 class="title">&lt;callback&gt;&lt;/callback&gt;</h3>
+   <p class="para">
+    A <code class="literal">&lt;callback/&gt;</code> option calls the specified
+    callback with the value passed in by the user as a string.
+    The callback must be a static method in the same class that
+    implements the command.
+   </p>
+   <div class="xmlcode">
+    <pre class="xmlcode">
+  &lt;options&gt;
+   &lt;option&gt;
+    &lt;name&gt;foocallback&lt;/name&gt;
+    &lt;shortopt&gt;f&lt;/shortopt&gt;
+    &lt;type&gt;&lt;callback&gt;processfoo&lt;/callback&gt;&lt;/type&gt;
+    &lt;doc&gt;Foo date&lt;/doc&gt;
+   &lt;/option&gt;
+  &lt;/options&gt;</pre>
+
+   </div>
+   <pre class="screen">php pyrus.phar foo</pre>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$options&nbsp;=&nbsp;array('foocallback'&nbsp;=&gt;&nbsp;null)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;function&nbsp;</span><span style="color: #0000BB">processfoo</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$value&nbsp;=&nbsp;null<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">return&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <pre class="screen">php pyrus.phar foo -f 2009-12-31</pre>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$options&nbsp;=&nbsp;array('foocallback'&nbsp;=&gt;&nbsp;new&nbsp;DateTime('2009-12-31',&nbsp;new&nbsp;DateTimeZone('UTC')))<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;function&nbsp;</span><span style="color: #0000BB">processfoo</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$value&nbsp;=&nbsp;'2009-12-31';<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$date&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">DateTime</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">,&nbsp;new&nbsp;</span><span style="color: #0000BB">DateTimeZone</span><span style="color: #007700">(</span><span style="color: #DD0000">'UTC'</span><span style="color: #007700">));<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$date</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <pre class="screen">php pyrus.phar foo --foocallback=2009-12-31</pre>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$options&nbsp;=&nbsp;array('foocallback'&nbsp;=&gt;&nbsp;new&nbsp;DateTime('2009-12-31',&nbsp;new&nbsp;DateTimeZone('UTC')))<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;function&nbsp;</span><span style="color: #0000BB">processfoo</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$value&nbsp;=&nbsp;'2009-12-31';<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$date&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">DateTime</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">,&nbsp;new&nbsp;</span><span style="color: #0000BB">DateTimeZone</span><span style="color: #007700">(</span><span style="color: #DD0000">'UTC'</span><span style="color: #007700">));<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$date</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  <div class="section" id="pyrus.plugins.command.options.set">
+   <h3 class="title">&lt;set&gt;&lt;/set&gt;</h3>
+   <p class="para">
+    A <code class="literal">&lt;set/&gt;</code> option sets its value to <strong class="constant">NULL</strong> if not
+    present.  Otherwise it ensures that the value passed in by the user is within
+    a pre-defined acceptable list of values.
+   </p>
+   <div class="xmlcode">
+    <pre class="xmlcode">
+  &lt;options&gt;
+   &lt;option&gt;
+    &lt;name&gt;numbah&lt;/name&gt;
+    &lt;shortopt&gt;n&lt;/shortopt&gt;
+    &lt;type&gt;
+     &lt;set&gt;
+      &lt;value&gt;one&lt;/value&gt;
+      &lt;value&gt;two&lt;/value&gt;
+      &lt;value&gt;three&lt;/value&gt;
+      &lt;value&gt;four&lt;/value&gt;
+     &lt;/set&gt;
+    &lt;/type&gt;
+    &lt;doc&gt;Numbers less than five&lt;/doc&gt;
+   &lt;/option&gt;
+  &lt;/options&gt;</pre>
+
+   </div>
+   <pre class="screen">php pyrus.phar foo</pre>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$options&nbsp;=&nbsp;array('numbah'&nbsp;=&gt;&nbsp;null)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <pre class="screen">php pyrus.phar foo -n four</pre>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$options&nbsp;=&nbsp;array('numbah'&nbsp;=&gt;&nbsp;'four')<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <pre class="screen">php pyrus.phar foo --numbah=one</pre>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$options&nbsp;=&nbsp;array('numbah'&nbsp;=&gt;&nbsp;'one')<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+ </div>
+ <div class="section" id="pyrus.plugins.command.cli">
+  <h2 class="title">Declaring CLI command method</h2>
+  <p class="para">
+   A class must implement a command-line handler, which should have this method
+   signature:
+  </p>
+  <div class="phpcode">
+   <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">commandhandler</span><span style="color: #007700">(</span><span style="color: #0000BB">$frontend</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;perform&nbsp;command&nbsp;here<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+  </div>
+  <p class="para">
+   The first argument is the CLI frontend, and can be used for asking the user
+   a question with the <strong class="function">ask()</strong> method, or passing control
+   to a built-in command.  <code class="literal">$args</code> is an associative array of
+   arguments.  Only required arguments are guaranteed to be present, all optional
+   arguments must be verified as present before using.  <code class="literal">$options</code>
+   is an associative array of options.  All options will be present, those not present
+   will be initialized to <strong class="constant">NULL</strong>.
+  </p>
+  <p class="para">
+   Options should be accessed using their long names, and arguments using their
+   names (see examples in the documentation sections for arguments and options
+   above).
+  </p>
+  <p class="para">
+   The <strong class="function">ask()</strong> method accepts 3 arguments:
+   </p><ol type="1">
+    <li class="listitem">
+     <p class="para">
+      string <code class="literal">$question</code> the question to ask the user.  It should end in a question mark
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      (optional) array <code class="literal">$choices</code> an array of possible answers
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      (optional) string <code class="literal">$default</code> the default answer
+     </p>
+    </li>
+   </ol>
+  
+ </div>
+ <div class="section" id="pyrus.plugins.command.web">
+  <h2 class="title">Declaring Web command method</h2>
+  <p class="para">
+   Although a Web frontend has not yet been written for Pyrus, the XML command
+   format supports the eventual addition of a Web frontend.  A separate method
+   should be used for the Web handling, and is named via the
+   <code class="literal">&lt;webfunction&gt;</code> tag.
+  </p>
+ </div>
+ <div class="section" id="pyrus.plugins.command.gtk">
+  <h2 class="title">Declaring GTK command method</h2>
+  <p class="para">
+   Although a GTK frontend has not yet been written for Pyrus, the XML command
+   format supports the eventual addition of a GTK frontend.  A separate method
+   should be used for the GTK handling, and is named via the
+   <code class="literal">&lt;gtkfunction&gt;</code> tag.
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="pyrus.plugins.autoload.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="pyrus.plugins.html">Creating plugins for Pyrus</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="pyrus.plugins.role.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Telling Pyrus how to load your plugin: &lt;class&gt; and &lt;autoloadpath&gt;</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Pyrus plugins: custom file roles</td>
+  </tr>
+ </table>
+</div>
+</body></html>

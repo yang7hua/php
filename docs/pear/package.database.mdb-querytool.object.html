@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Object</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.mdb-querytool.html" title="MDB_QueryTool" />
+  <link rel="prev" href="package.database.mdb-querytool.intro.html" title="Introduction" />
+  <link rel="next" href="package.database.mdb-querytool.api.html" title="Quick API reference" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Object</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.mdb-querytool.intro.html" title="Introduction">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.mdb-querytool.api.html" title="Quick API reference">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.mdb-querytool.object">
+    
+      <h1 class="refname">Object</h1>
+      <div class="refnamediv">Object &ndash; 
+        An introduction to the usage of Objects with MDB_QueryTool
+      </div>
+
+    
+    <div class="refsection" id="package.database.mdb-querytool.object.description"><div class="info"><h1>MDB_QueryTool Object Description</h1>
+</div>
+      
+      <p class="para">
+        It is possible to use objects as result. A comprehensive example may
+        be seen in the <a href="package.database.mdb-querytool.intro.html" class="link">
+        intro</a>.
+      </p>
+      <p class="para">
+        But using objects is not a simple alternative to using arrays as result.
+        It is also possible to register a custom Class to be returned instead of
+        the default <strong class="classname">MDB_QueryTool_Result_Row</strong>.
+        The new resulting class has to be child of the
+        <strong class="classname">MDB_QueryTool_Result_Row</strong> class.
+      </p>
+    </div>
+    <div class="refsection" id="package.database.mdb-querytool.object.example1"><div class="info"><h1>Example 1 - Change the default result class</h1>
+</div>
+      
+      <p class="para">
+        To change the resulting class the method <code class="methodname">setReturnClass</code>
+        is used.
+        </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'MDB/QueryTool.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'MDB/QueryTool/Result/Object.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">define</span><span style="color: #007700">(</span><span style="color: #DD0000">'TABLE_CARS'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'cars'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$dsn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'mysql://user:pass@host/dbname'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">/**<br />&nbsp;*&nbsp;Let's&nbsp;suppose&nbsp;the&nbsp;"cars"&nbsp;table&nbsp;has&nbsp;the&nbsp;following&nbsp;fields:<br />&nbsp;*&nbsp;(id,&nbsp;model,&nbsp;hp,&nbsp;color,&nbsp;clima,&nbsp;price)<br />&nbsp;*/<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">Car&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">MDB_QueryTool<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;</span><span style="color: #0000BB">$table&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">TABLE_CARS</span><span style="color: #007700">;<br />}<br /><br />class&nbsp;</span><span style="color: #0000BB">CarEntity&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">MDB_QueryTool_Result_Row<br /></span><span style="color: #007700">{<br />}<br /><br /></span><span style="color: #FF8000">//instanciate&nbsp;an&nbsp;object&nbsp;of&nbsp;the&nbsp;Car&nbsp;class<br /></span><span style="color: #0000BB">$car&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Car</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$car</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">useResult</span><span style="color: #007700">(</span><span style="color: #DD0000">'object'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$car</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setReturnClass</span><span style="color: #007700">(</span><span style="color: #DD0000">'CarEntity'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+      
+    </div>
+    <div class="refsection" id="package.database.mdb-querytool.object.controllingclassvariableaccess"><div class="info"><h1>Controlling class variable access</h1>
+</div>
+      
+      <p class="para">
+        This can now be used to implement getter and setter and thus regulate
+        the accessability to the values. In order to block the access to the
+        class variables from outside they have to be declared as protected.
+        Declaring them as private would result in also blocking the parent class,
+        which gets the data, of accessing them. Of course when doing so corresponding
+        methods have to be implemented to access the variables again.
+      </p>
+    </div>
+    <div class="refsection" id="package.database.mdb-querytool.object.example2"><div class="info"><h1>Example 2 - Restricting class variable access</h1>
+</div>
+      
+      <p class="para">
+        To keep the example short only methods for dealing with model,
+        hp and clima have been implemented.
+        </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'MDB/QueryTool.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'MDB/QueryTool/Result/Object.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">define</span><span style="color: #007700">(</span><span style="color: #DD0000">'TABLE_CARS'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'cars'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$dsn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'mysql://user:pass@host/dbname'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">/**<br />&nbsp;*&nbsp;Let's&nbsp;suppose&nbsp;the&nbsp;"cars"&nbsp;table&nbsp;has&nbsp;the&nbsp;following&nbsp;fields:<br />&nbsp;*&nbsp;(id,&nbsp;model,&nbsp;hp,&nbsp;color,&nbsp;clima,&nbsp;price)<br />&nbsp;*/<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">Car&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">MDB_QueryTool<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;</span><span style="color: #0000BB">$table&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">TABLE_CARS</span><span style="color: #007700">;<br />}<br /><br />class&nbsp;</span><span style="color: #0000BB">CarEntity&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">MDB_QueryTool_Result_Row<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;protected&nbsp;</span><span style="color: #0000BB">$id</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;protected&nbsp;</span><span style="color: #0000BB">$model</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;protected&nbsp;</span><span style="color: #0000BB">$hp</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;protected&nbsp;</span><span style="color: #0000BB">$color</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;protected&nbsp;</span><span style="color: #0000BB">$clima</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;protected&nbsp;</span><span style="color: #0000BB">$price</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;function&nbsp;</span><span style="color: #0000BB">getModel</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">model</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;function&nbsp;</span><span style="color: #0000BB">setModel</span><span style="color: #007700">(</span><span style="color: #0000BB">$model</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">model&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$model</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;function&nbsp;</span><span style="color: #0000BB">getHp</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">hp</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;function&nbsp;</span><span style="color: #0000BB">setHp</span><span style="color: #007700">(</span><span style="color: #0000BB">$hp</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">hp&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$hp</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;function&nbsp;</span><span style="color: #0000BB">getClima</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">clima</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;function&nbsp;</span><span style="color: #0000BB">setClima</span><span style="color: #007700">(</span><span style="color: #0000BB">$clima</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$clima</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">clima&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">clima&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /><br /></span><span style="color: #FF8000">//instantiate&nbsp;an&nbsp;object&nbsp;of&nbsp;the&nbsp;Car&nbsp;class<br /></span><span style="color: #0000BB">$car&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Car</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$car</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">useResult</span><span style="color: #007700">(</span><span style="color: #DD0000">'object'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$car</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setReturnClass</span><span style="color: #007700">(</span><span style="color: #DD0000">'CarEntity'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+      
+    </div>
+    <div class="refsection" id="package.database.mdb-querytool.object.outlook"><div class="info"><h1>Outlook</h1>
+</div>
+      
+      <p class="para">
+        This example only demonstrates a very basic feature. But it enables for
+        example the implementation of Decorators. Every feature of modern OOP is
+        now possible to implement.
+      </p>
+    </div>
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.mdb-querytool.intro.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.mdb-querytool.html">MDB_QueryTool</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.mdb-querytool.api.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Quick API reference</td>
+  </tr>
+ </table>
+</div>
+</body></html>

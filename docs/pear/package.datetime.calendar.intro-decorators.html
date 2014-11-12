@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Calendar Decorators</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.datetime.calendar.html" title="Calendar" />
+  <link rel="prev" href="package.datetime.calendar.intro-overview-methods.html" title="Method Overview" />
+  <link rel="next" href="package.datetime.calendar.faq.html" title="FAQ" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Calendar Decorators</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.datetime.calendar.intro-overview-methods.html" title="Method Overview">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.datetime.calendar.faq.html" title="FAQ">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.datetime.calendar.intro-decorators">
+    
+      <h1 class="refname">Calendar Decorators</h1>
+      <div class="refnamediv">Calendar Decorators &ndash; 
+        What <strong class="classname">Calendar_Decorator</strong> is for
+      </div>
+
+    
+    <div class="refsection"><div class="info"><h1>Calendar Decorators</h1>
+</div>
+      
+       <p class="para">
+        The <strong class="classname">Calendar_Decorator</strong> is provided to allow you
+        to attach functionality to existing Calendar objects without needing
+        to subclass them.
+        This helps in a number of situations, such as allowing results from,
+        say, a database query to be rendered in the calendar or to modify the
+        values returned from Calendar methods (perhaps converting a numeric month
+        into its textual name).
+       </p>
+       <p class="para">
+        Some concrete decorators are provided with PEAR::<strong class="classname">Calendar</strong>,
+        to address what may be common problems you encounter in using the library.
+        These are not designed to suit everyone but instead focus on solving
+        a more narrow problem domain.
+        They will only be parsed by the PHP engine should you explicitly include them
+        in your code. An example of why decorators can be useful:
+        </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Calendar/Day.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'Calendar/Decorator.php'</span><span style="color: #007700">;<br /><br />class&nbsp;</span><span style="color: #0000BB">WorkingDay&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">Calendar_Decorator&nbsp;</span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">WorkingDay</span><span style="color: #007700">(&amp;&nbsp;</span><span style="color: #0000BB">$Calendar</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">parent</span><span style="color: #007700">::</span><span style="color: #0000BB">Calendar_Decorator</span><span style="color: #007700">(</span><span style="color: #0000BB">$Calendar</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Overides&nbsp;the&nbsp;default&nbsp;fetch&nbsp;method&nbsp;of&nbsp;the&nbsp;calendar&nbsp;object<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">fetch</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$Hour&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">parent</span><span style="color: #007700">::</span><span style="color: #0000BB">fetch</span><span style="color: #007700">())&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Recursive&nbsp;fetch,&nbsp;return&nbsp;only&nbsp;hours&nbsp;between&nbsp;8am&nbsp;and&nbsp;6pm<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">$Hour</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">thisHour</span><span style="color: #007700">()&nbsp;&lt;&nbsp;</span><span style="color: #0000BB">8&nbsp;</span><span style="color: #007700">||&nbsp;</span><span style="color: #0000BB">$Hour</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">thisHour</span><span style="color: #007700">()&nbsp;&gt;&nbsp;</span><span style="color: #0000BB">18</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$Hour</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Make&nbsp;sure&nbsp;to&nbsp;return&nbsp;FALSE&nbsp;when&nbsp;the&nbsp;real&nbsp;fetch&nbsp;returned&nbsp;nothing<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;or&nbsp;you&nbsp;will&nbsp;get&nbsp;an&nbsp;infinite&nbsp;loop<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">return&nbsp;</span><span style="color: #0000BB">FALSE</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;Create&nbsp;a&nbsp;normal&nbsp;day&nbsp;and&nbsp;build&nbsp;the&nbsp;hours<br /></span><span style="color: #0000BB">$Day&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Calendar_Day</span><span style="color: #007700">(</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #DD0000">'Y'</span><span style="color: #007700">),&nbsp;</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #DD0000">'n'</span><span style="color: #007700">),&nbsp;</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #DD0000">'d'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$Day</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">build</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;Create&nbsp;the&nbsp;decorator,&nbsp;passing&nbsp;it&nbsp;the&nbsp;normal&nbsp;day<br /></span><span style="color: #0000BB">$WorkingDay&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">WorkingDay</span><span style="color: #007700">(</span><span style="color: #0000BB">$Day</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Only&nbsp;hours&nbsp;in&nbsp;a&nbsp;working&nbsp;day&nbsp;are&nbsp;displayed...<br /></span><span style="color: #007700">while&nbsp;(</span><span style="color: #0000BB">$Hour&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$WorkingDay</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$Hour</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">thisHour</span><span style="color: #007700">().</span><span style="color: #DD0000">'&lt;br&nbsp;/&gt;'</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+       
+   </div>
+   <div class="refsection"><div class="info"><h1>The base Calendar_Decorator</h1>
+</div>
+      
+       <p class="para">
+        The base class <strong class="classname">Calendar_Decorator</strong> &quot;mirrors&quot; the
+        combined API of all the subclasses of <strong class="classname">Calendar</strong>.
+        It accepts a Calendar object to its constructor then &quot;takes over&quot;
+        the API allowing you to make calls through it rather than directly
+        to the original calendar object.
+        The <strong class="classname">Calendar_Decorator</strong> simply routes calls
+        through to the calendar object it is decorating and returns values
+        where appropriate.
+       </p>
+   </div>
+   <div class="refsection"><div class="info"><h1>Decorators and Date Selection</h1>
+</div>
+      
+        <p class="para">
+        One important use of decorators is to help &quot;inject&quot; data into the loop
+        which renders the calendar. This helps with fetching data from some sort
+        of &quot;event&quot; table in a database. When passing a selection array to any
+        <strong class="function">build()</strong> method, the selected date objects will replace
+        the default built objects, allowing you to get them back as inside the
+        <strong class="function">fetch()</strong> loop, using the <strong class="function">isSelected()</strong>
+        method.
+        You&#039;ll find an example of this in the PEAR::<strong class="classname">Calendar</strong>
+        download. It should always be possible to fetch the event data you need
+        with a single database query...
+       </p>
+    </div>
+   <div class="refsection"><div class="info"><h1>The bundled Decorators</h1>
+</div>
+      
+       <p class="para">
+        PEAR::<strong class="classname">Calendar</strong> already provides a few decorators:
+        </p><ul class="itemizedlist">
+         <li class="listitem">
+          <p class="para"><strong class="classname">Calendar_Decorator_Textual</strong></p>
+          <p class="para">
+           Decorator to help with fetching textual representations of months and
+           days of the week. It has
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para"><strong class="classname">Calendar_Decorator_Uri</strong></p>
+          <p class="para">
+           Decorator to help with building HTML links for navigating the calendar.
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para"><strong class="classname">Calendar_Decorator_Weekday</strong></p>
+          <p class="para">
+           Decorator for fetching the day of the week.
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para"><strong class="classname">Calendar_Decorator_Wrapper</strong></p>
+          <p class="para">
+           Decorator to help with wrapping built children in another decorator.
+          </p>
+         </li>
+        </ul>
+       
+   </div>
+   <div class="refsection"><div class="info"><h1>Calendar_Decorator_Textual example</h1>
+</div>
+      
+       <p class="para">
+        This decorator defines a few methods that can be useful to handle
+        month and day names:
+        </p><ul class="itemizedlist">
+         <li class="listitem">
+          <p class="para">monthNames(<em><code class="parameter">$format</code></em>=&#039;long&#039;)</p>
+          <p class="para">
+           Returns an array with month names; the format of returned months
+           depends on the <em><code class="parameter">format</code></em> parameter
+           (one, two, short or long)
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para">weekdayNames(<em><code class="parameter">$format</code></em>=&#039;long&#039;)</p>
+          <p class="para">
+           Returns an array with day names; the format of returned days
+           depends on the <em><code class="parameter">format</code></em> parameter
+           (one, two, short or long)
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para">prevMonthName(<em><code class="parameter">$format</code></em>=&#039;long&#039;)</p>
+          <p class="para">
+           Returns textual representation of the previous month of the decorated
+           calendar object
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para">thisMonthName(<em><code class="parameter">$format</code></em>=&#039;long&#039;)</p>
+          <p class="para">
+           Returns textual representation of the month of the decorated calendar object
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para">nextMonthName(<em><code class="parameter">$format</code></em>=&#039;long&#039;)</p>
+          <p class="para">
+           Returns textual representation of the next month of the decorated
+           calendar object
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para">prevDayName(<em><code class="parameter">$format</code></em>=&#039;long&#039;)</p>
+          <p class="para">
+           Returns textual representation of the previous day of the decorated
+           calendar object
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para">thisDayName(<em><code class="parameter">$format</code></em>=&#039;long&#039;)</p>
+          <p class="para">
+           Returns textual representation of the day of the decorated
+           calendar object
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para">nextDayName(<em><code class="parameter">$format</code></em>=&#039;long&#039;)</p>
+          <p class="para">
+           Returns textual representation of the next day of the decorated
+           calendar object
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para">orderedWeekdays(<em><code class="parameter">$format</code></em>=&#039;long&#039;)</p>
+          <p class="para">
+           Returns the days of the week using the order defined in the decorated
+           calendar object. Only useful for <strong class="classname">Calendar_Month_Weekdays</strong>,
+           <strong class="classname">Calendar_Month_Weeks</strong> and <strong class="classname">Calendar_Week</strong>.
+           Otherwise the returned array will begin on Sunday.
+          </p>
+         </li>
+
+        </ul>
+       
+   </div>
+   <div class="refsection"><div class="info"><h1>Calendar_Decorator_Uri example</h1>
+</div>
+      
+       <p class="para">
+        Methods defined by this decorator:
+        </p><ul class="itemizedlist">
+         <li class="listitem">
+          <p class="para">setFragments($y, $m=null, $d=null, $h=null, $i=null, $s=null)</p>
+          <p class="para">
+           Set the names of the URI vars for each date element
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para">setSeparator(<em><code class="parameter">$separator</code></em>)</p>
+          <p class="para">
+           Set the fragments separator, for instance &#039;/&#039; (default: &amp;).
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para">setScalar(boolean <em><code class="parameter">$state</code></em>=<strong class="constant">TRUE</strong>)</p>
+          <p class="para">
+           Puts Uri decorator into &quot;scalar mode&quot; - URI variable names are not returned
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para">prev(<em><code class="parameter">$method</code></em>)</p>
+          <p class="para">
+           Gets the URI string for the previous calendar unit (year, month, week or day etc)
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para">this(<em><code class="parameter">$method</code></em>)</p>
+          <p class="para">
+           Gets the URI string for the current calendar unit (year, month, week or day etc)
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para">next(<em><code class="parameter">$method</code></em>)</p>
+          <p class="para">
+           Gets the URI string for the next calendar unit (year, month, week or day etc)
+          </p>
+         </li>
+        </ul>
+       
+
+       <p class="para">
+        A simple usage example:
+        </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$Day&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Calendar_Day</span><span style="color: #007700">(</span><span style="color: #0000BB">2003</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">23</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$Uri&nbsp;</span><span style="color: #007700">=&nbsp;&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">Calendar_Decorator_Uri</span><span style="color: #007700">(</span><span style="color: #0000BB">$Day</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$Uri</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setFragments</span><span style="color: #007700">(</span><span style="color: #DD0000">'year'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'month'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'day'</span><span style="color: #007700">);<br />echo&nbsp;</span><span style="color: #0000BB">$Uri</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">prev</span><span style="color: #007700">(</span><span style="color: #DD0000">'day'</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;Displays&nbsp;year=2003&amp;month=10&amp;day=22<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+       
+   </div>
+
+   <div class="refsection"><div class="info"><h1>Calendar_Decorator_Weekday example</h1>
+</div>
+      
+       <p class="para">
+        Methods defined by this decorator:
+        </p><ul class="itemizedlist">
+         <li class="listitem">
+          <p class="para">setFirstDay($firstDay)</p>
+          <p class="para">
+           Sets the first day of the week (0 = Sunday, 1 = Monday [default] etc)
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para">prevWeekDay($format=&#039;int&#039;)</p>
+          <p class="para">
+           Returns the previous weekday, formatted according the <em><code class="parameter">$format</code></em>
+           parameter (int, array, object, timestamp)
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para">thisWeekDay($format=&#039;int&#039;)</p>
+          <p class="para">
+           Returns the current weekday, formatted according the <em><code class="parameter">$format</code></em>
+           parameter (int, array, object, timestamp)
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para">nextWeekDay($format=&#039;int&#039;)</p>
+          <p class="para">
+           Returns the next weekday, formatted according the <em><code class="parameter">$format</code></em>
+           parameter (int, array, object, timestamp)
+          </p>
+         </li>
+        </ul>
+       
+       <p class="para">
+        Example:
+        </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$Day&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Calendar_Day</span><span style="color: #007700">(</span><span style="color: #0000BB">2003</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">23</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$Weekday&nbsp;</span><span style="color: #007700">=&nbsp;&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">Calendar_Decorator_Weekday</span><span style="color: #007700">(</span><span style="color: #0000BB">$Day</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$Weekday</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setFirstDay</span><span style="color: #007700">(</span><span style="color: #0000BB">0</span><span style="color: #007700">);&nbsp;</span><span style="color: #FF8000">//&nbsp;Set&nbsp;first&nbsp;day&nbsp;of&nbsp;week&nbsp;to&nbsp;Sunday&nbsp;(default&nbsp;Mon)<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$Weekday</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">thisWeekDay</span><span style="color: #007700">();&nbsp;</span><span style="color: #FF8000">//&nbsp;Displays&nbsp;5&nbsp;-&nbsp;fifth&nbsp;day&nbsp;of&nbsp;week&nbsp;relative&nbsp;to&nbsp;Sun<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+       
+   </div>
+
+   <div class="refsection"><div class="info"><h1>Calendar_Decorator_Wrapper example</h1>
+</div>
+      
+       <p class="para">
+        </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Calendar/Month.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'Calendar/Decorator.php'</span><span style="color: #007700">;&nbsp;</span><span style="color: #FF8000">//&nbsp;Not&nbsp;really&nbsp;needed&nbsp;but&nbsp;added&nbsp;to&nbsp;help&nbsp;this&nbsp;make&nbsp;sense<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Calendar/Decorator/Wrapper.php'</span><span style="color: #007700">;<br /><br />class&nbsp;</span><span style="color: #0000BB">MyBoldDecorator&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">Calendar_Decorator<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">MyBoldDecorator</span><span style="color: #007700">(&amp;</span><span style="color: #0000BB">$Calendar</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">parent</span><span style="color: #007700">::</span><span style="color: #0000BB">Calendar_Decorator</span><span style="color: #007700">(</span><span style="color: #0000BB">$Calendar</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">thisDay</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #DD0000">'&lt;b&gt;'</span><span style="color: #007700">.</span><span style="color: #0000BB">parent</span><span style="color: #007700">::</span><span style="color: #0000BB">thisDay</span><span style="color: #007700">().</span><span style="color: #DD0000">'&lt;/b&gt;'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /><br /></span><span style="color: #0000BB">$Month&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Calendar_Month</span><span style="color: #007700">(</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #DD0000">'Y'</span><span style="color: #007700">),&nbsp;</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #DD0000">'n'</span><span style="color: #007700">));<br /><br /></span><span style="color: #0000BB">$Wrapper&nbsp;</span><span style="color: #007700">=&nbsp;&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">Calendar_Decorator_Wrapper</span><span style="color: #007700">(</span><span style="color: #0000BB">$Month</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$Wrapper</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">build</span><span style="color: #007700">();<br /><br />echo&nbsp;</span><span style="color: #DD0000">'&lt;h2&gt;The&nbsp;Wrapper&nbsp;decorator&lt;/h2&gt;'</span><span style="color: #007700">;<br />echo&nbsp;</span><span style="color: #DD0000">'&lt;i&gt;Day&nbsp;numbers&nbsp;are&nbsp;rendered&nbsp;in&nbsp;bold&lt;/i&gt;&lt;br&nbsp;/&gt;&nbsp;&lt;br&nbsp;/&gt;'</span><span style="color: #007700">;<br />while&nbsp;(</span><span style="color: #0000BB">$DecoratedDay&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$Wrapper</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch</span><span style="color: #007700">(</span><span style="color: #DD0000">'MyBoldDecorator'</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$DecoratedDay</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">thisDay</span><span style="color: #007700">().</span><span style="color: #DD0000">'&lt;br&nbsp;/&gt;'</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+       
+   </div>
+
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.datetime.calendar.intro-overview-methods.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.datetime.calendar.html">Calendar</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.datetime.calendar.faq.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Method Overview</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">FAQ</td>
+  </tr>
+ </table>
+</div>
+</body></html>

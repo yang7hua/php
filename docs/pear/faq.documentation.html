@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Documentation/translation FAQ</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="faq.html" title="FAQ" />
+  <link rel="prev" href="faq.devs.html" title="Developer FAQ" />
+  <link rel="next" href="constitution.html" title="Constitution" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Documentation/translation FAQ</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="faq.devs.html" title="Developer FAQ">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="constitution.html" title="Constitution">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="faq.documentation"><div class="info"><h1>Documentation/translation FAQ</h1>
+</div>
+ 
+
+
+ <div class="section" id="faq.docs-pagedoesnotshowup"><div class="info"><h2 class="title">
+    I added some new package documentation, but the pages
+    don&#039;t show up in the compiled manual!
+  </h2></div>
+  
+  
+
+  <p class="para">
+   Most likely you forgot to <strong class="command">./configure</strong> again.
+   This will make sure that new pages are detected and included.
+  </p>
+
+  <p class="para">
+   Another reason could be that you did not add links in the parent page.
+   In <code class="filename">en/package/</code> are the category xml files that contain
+   links to the package documentation files. Add the link to your new pages
+   there.
+  </p>
+
+  <p class="para">
+   This also applies if you get a message stating
+   <code class="literal">cannot generate system identifier for general entity
+   &quot;package.networking.net-ldap.search&quot;</code>.
+  </p>
+ </div>
+
+
+ <div class="section" id="faq.docs-allonterminal"><div class="info"><h2 class="title">
+    Compiling the manual shows it on the terminal, but does
+    not generate files!
+  </h2></div>
+  
+  
+
+  <p class="para">
+   <code class="filename">configure</code> did not find the Docbook DSSSL or XSLT
+   stylesheets. Install them first.
+  </p>
+
+  <p class="para">
+   If the style sheets are installed, <strong class="command">./configure</strong> will
+   list the found directories like this:
+  </p>
+
+  <pre class="screen"><br/>checking&nbsp;for&nbsp;docbook.dsl...&nbsp;autodetected:&nbsp;/path/to/dsssl-stylesheets-x.yz<br/>checking&nbsp;for&nbsp;docbook.xsl...&nbsp;autodetected:&nbsp;/path/to/xsl-stylesheets-x.y.z<br/></pre>
+
+ </div>
+
+
+ <div class="section" id="faq.translators-revision-tracking"><div class="info"><h2 class="title">
+   Is there a tool to help PEAR manual translators to track files changes?
+  </h2></div>
+  
+  
+  <p class="para">
+   Working on the translations is not just translating an English file
+   and committing the results. Much of the work is needed to update
+   the already translated ones, to get in sync with the content of
+   the English files. To follow the modifications in the English tree,
+   you should <a href="mailto:pear-doc-subscribe@lists.php.net" class="link external">subscribe to the PEAR
+   documentation mailing list</a>
+   to get SVN commit messages, or read the archives. If you never update your
+   files, the translations can get useless.
+  </p>
+  <p class="para">
+   Updating a foreign language file can get difficult, as you may not
+   know when and who translated that file, so you may not know where
+   you should look for the updates needed. We have one system
+   for tracking the revisions and modification dates of the files
+   in <code class="literal">peardoc</code>.
+  </p>
+
+  <div class="section" id="faq.translators.revcheck-comments"><div class="info"><h3 class="title">The Revision Comments</h3></div>
+   
+   <p class="para">
+    Instead of storing all responsibilities in a central file, the revision
+    comment system stores them in the files they provide information about.
+    Information about translator, revision numbers, and status information
+    is stored in the revision comment.
+    Let&#039;s see what would be in the header of the example file
+    <code class="filename">bookinfo.xml</code> file in this case:
+    </p><div class="programlisting"><pre class="programlisting">&lt;!-- EN-Revision: 1.16 Maintainer: jane Status: ready --&gt;</pre>
+</div>
+   
+   <p class="para">
+    We can see the revision number for the last english file used to
+    update the translation (EN-Revision: 1.16), the translator cvs account
+    name.
+    But we can also add some other status information in the case it is
+    needed (eg. &quot;partial&quot; for incomplete translations). This revision
+    comment system is basically about storing the information in
+    the XML files, and not in a central place. This is extremely
+    convenient now, as there are more than 2400 files in the
+    English tree.
+   </p>
+   <p class="para">
+    Currently, all three fields (English revision, Maintainer, Status)
+    are needed. Maintainer is intended to be a SVN user name, or some
+    nickname without a space, status can be anything without a space.
+    Note, that this header is not updated by SVN (in contrast with
+    <code class="literal">$Revision</code>, which is updated automatically).
+    This is only updated when you edit the contents of the comment
+    yourself.
+   </p>
+   <p class="para">
+    You may see this as a good thing, but using these comments,
+    you lose the quick look on the whole list of your
+    files.
+    No, you do not lose this, but get much more!
+    If you would like to build a full list of you files, you
+    can go to the /peardoc/ directory and run:
+    </p><div class="programlisting"><pre class="programlisting">./scripts/revcheck_pear.php xx &gt; revcheck.html</pre>
+</div><p>
+    Here <code class="literal">xx</code> is the imaginary language code.
+    After running this script you&#039;ll get a
+    <code class="filename">revcheck.html</code> in the same directory.
+    You can find revision comparisons and links to diffs
+    for all the files in this language.
+    You can also add a further restriction parameter, the maintainer name,
+    so the script will only list the files corresponding to
+    the given maintainer.
+   </p>
+   <p class="para">
+    There are some optional extensions introduced for this script,
+    to be available in this generated HTML page.
+    This is why the <code class="filename">translation.xml</code> files are
+    introduced.
+    Here comes a simple <code class="filename">translation.xml</code> file
+    for the imaginary xx language :
+    </p><div class="programlisting"><br/>&lt;?xml&nbsp;version=&quot;1.0&quot;&nbsp;encoding=&quot;iso-8859-1&quot;&nbsp;?&gt;<br/>&lt;!DOCTYPE&nbsp;translation&nbsp;SYSTEM&nbsp;&quot;../dtds/translation.dtd&quot;&gt;<br/><br/>&lt;translation&gt;<br/><br/>&nbsp;&lt;intro&gt;<br/>&nbsp;&nbsp;This&nbsp;is&nbsp;some&nbsp;introductory&nbsp;text&nbsp;for&nbsp;the&nbsp;xx&nbsp;language&nbsp;translators<br/>&nbsp;&nbsp;about&nbsp;who&nbsp;is&nbsp;the&nbsp;manager&nbsp;of&nbsp;the&nbsp;translation,&nbsp;and&nbsp;where&nbsp;to&nbsp;find<br/>&nbsp;&nbsp;more&nbsp;information.&nbsp;This&nbsp;paragraph&nbsp;is&nbsp;printed&nbsp;on&nbsp;the&nbsp;top&nbsp;of&nbsp;the<br/>&nbsp;&nbsp;generated&nbsp;revcheck.html&nbsp;page.<br/>&nbsp;&lt;/intro&gt;<br/><br/>&nbsp;&lt;translators&gt;<br/>&nbsp;&nbsp;&lt;person&nbsp;name=&quot;Joe&nbsp;Doe&quot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;email=&quot;joe@hotmail.com&quot;<br/>&nbsp;&nbsp;&nbsp;nick=&quot;joedoe&quot;&nbsp;cvs=&quot;yes&quot;&nbsp;editor=&quot;yes&quot;/&gt;<br/>&nbsp;&nbsp;&lt;person&nbsp;name=&quot;Jane&nbsp;Smith&quot;&nbsp;&nbsp;email=&quot;jsmith@yahoo.com&quot;<br/>&nbsp;&nbsp;&nbsp;nick=&quot;jane&quot;&nbsp;&nbsp;&nbsp;cvs=&quot;yes&quot;/&gt;<br/>&nbsp;&nbsp;&lt;person&nbsp;name=&quot;Joe&nbsp;Forever&quot;&nbsp;email=&quot;joe@forever.net&quot;<br/>&nbsp;&nbsp;&nbsp;nick=&quot;joefo&quot;&nbsp;&nbsp;cvs=&quot;no&quot;/&gt;<br/>&nbsp;&lt;/translators&gt;<br/><br/>&nbsp;&lt;work-in-progress&gt;<br/>&nbsp;&nbsp;&lt;file&nbsp;name=&quot;appendices/aliases.xml&quot;&nbsp;person=&quot;joedoe&quot;<br/>&nbsp;&nbsp;&nbsp;type=&quot;working&quot;/&gt;<br/>&nbsp;&nbsp;&lt;file&nbsp;name=&quot;functions/dbx.xml&quot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;person=&quot;joefo&quot;<br/>&nbsp;&nbsp;&nbsp;type=&quot;working&quot;/&gt;<br/>&nbsp;&lt;/work-in-progress&gt;<br/><br/>&lt;/translation&gt;</div><p>
+    In this file, you can add users without a SVN account, and can
+    assign ready documents or work-in-progress files to them.
+    The biggest advantage of using this addon is that all this information
+    is used to generate dynamic tables of translators and files in
+    the <code class="filename">revcheck.html</code> file.
+    All translators are linked to from the individual files they are assigned
+    to, and there is a nice table showing the state of files for
+    all the translators.
+    Assigning ready files may be needed if a time consuming update is
+    in progress on that file.
+   </p>
+   <p class="para">
+    There are two optional parameters you can add to a &lt;file&gt;,
+    if you would like to record it: the <code class="literal">date</code>
+    and <code class="literal">revision</code>.
+    Date is assumed to be the date when the work was started, revision
+    is the checked out revision of the English file used to start the work
+    (denoted as CO-Revision in the generated table).
+    There is currently no fixed format for the <code class="literal">date</code>
+    parameter.
+   </p>
+   <p class="para">
+    Another addon to this system is just to give credit to all people
+    who worked on one file, and not just the current maintainer. To achieve
+    this goal, we added the credit comments. One credit comment in
+    eg. <code class="filename">history.xml</code> may look like this (in case
+    Joe Doe translated the file initially, but Jane followed him to
+    be the maintainer):
+    </p><div class="programlisting"><pre class="programlisting">&lt;!-- CREDITS: joedoe --&gt;</pre>
+</div><p>
+    The credits comment can contain a comma-separated list. These
+    comments only affect the display of the translators table in
+    <code class="filename">revcheck.html</code>.
+    </p>
+  </div>
+
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="faq.devs.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="faq.html">FAQ</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="constitution.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Developer FAQ</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Constitution</td>
+  </tr>
+ </table>
+</div>
+</body></html>

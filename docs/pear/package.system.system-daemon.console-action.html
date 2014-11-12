@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Console action</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.system.system-daemon.html" title="System_Daemon" />
+  <link rel="prev" href="package.system.system-daemon.examples.simple.html" title="System_Daemon examples" />
+  <link rel="next" href="package.system.system-daemon.troubleshooting.html" title="Troubleshooting" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Console action</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.system.system-daemon.examples.simple.html" title="System_Daemon examples">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.system.system-daemon.troubleshooting.html" title="Troubleshooting">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="chapter" id="package.system.system-daemon.console-action">
+ <div class="info">
+  <h1>Console action</h1>
+
+ </div>
+
+ <p class="para">
+    Now that we&#039;ve created an example daemon, it&#039;s time to fire
+    it up! I&#039;m going to assume the name of your daemon is logparser.
+    This can be changed with the statement:
+
+   </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />&nbsp;&nbsp;&nbsp;&nbsp;System_Daemon</span><span style="color: #007700">::</span><span style="color: #0000BB">setOption</span><span style="color: #007700">(</span><span style="color: #DD0000">"appName"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"logparser"</span><span style="color: #007700">)<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div><p>
+    But the name of the daemon is very important because it is also
+    used in filenames (like the logfile).
+
+ </p>
+<p class="para">
+    Execute
+
+    Just make your daemon script executable, and then execute it:
+
+   </p><div class="bashcode"><pre class="bashcode">
+    chmod a+x ./logparser.php
+    ./logparser.php</pre>
+</div>
+
+<p class="para">
+    Check
+
+    Your daemon has no way of communicating through your console, so check for messages in:
+
+   </p><div class="bashcode"><pre class="bashcode">
+    tail /var/log/logparser.log</pre>
+</div><p>
+
+    And see if it&#039;s still running:
+
+   </p><div class="bashcode"><pre class="bashcode">
+    ps uf -C logparser.php</pre>
+</div>
+
+
+<p class="para">
+    Kill
+
+    Without the start/stop files (see below for howto), you need to:
+
+   </p><div class="bashcode"><pre class="bashcode">
+    killall -9 logparser.php</pre>
+</div><p>
+
+    Autch.. Let&#039;s work on those start / stop files, right?
+</p>
+<p class="para">
+    Start / Stop files (Debian &amp; Ubuntu only)
+
+    Real daemons have an init.d file. Remember you can restart Apache with the following statement?
+
+   </p><div class="bashcode"><pre class="bashcode">
+    /etc/init.d/apache2 restart</pre>
+</div><p>
+
+
+    That&#039;s a lot better than killing. So you should be able to control your own daemon like this as well:
+
+   </p><div class="bashcode"><pre class="bashcode">
+    /etc/init.d/logparser stop
+    /etc/init.d/logparser start</pre>
+</div><p>
+
+    Well with System_Daemon you can write autostartup files using the writeAutoRun() method, look:
+
+   </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />&nbsp;&nbsp;&nbsp;&nbsp;$path&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">System_Daemon</span><span style="color: #007700">::</span><span style="color: #0000BB">writeAutoRun</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div><p>
+
+    On success, this will return the path to the autostartup file: /etc/init.d/logparser, and you&#039;re good to go!
+</p>
+<p class="para">
+    Run on boot
+
+        Surely you want your daemon to run at system boot..  So on Debian &amp; Ubuntu you could type:
+
+       </p><div class="bashcode"><pre class="bashcode">
+        update-rc.d logparser defaults</pre>
+</div><p>
+
+
+        Done your daemon now starts every time your server boots. Cancel it with:
+       </p><div class="bashcode"><pre class="bashcode">
+        update-rc.d -f logparser remove</pre>
+</div>
+
+
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.system.system-daemon.examples.simple.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.system.system-daemon.html">System_Daemon</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.system.system-daemon.troubleshooting.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">System_Daemon examples</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Troubleshooting</td>
+  </tr>
+ </table>
+</div>
+</body></html>

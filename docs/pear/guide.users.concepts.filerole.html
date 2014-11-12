@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>File roles</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="guide.users.concepts.html" title="Basic concepts all PEAR users should understand" />
+  <link rel="prev" href="guide.users.concepts.channel.html" title="PEAR Channels" />
+  <link rel="next" href="guide.users.concepts.filetasks.html" title="File tasks" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">File roles</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="guide.users.concepts.channel.html" title="PEAR Channels">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="guide.users.concepts.filetasks.html" title="File tasks">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="guide.users.concepts.filerole">
+ <div class="info"><h1>File roles</h1>
+</div>
+
+ <p class="para">
+  Pyrus and The PEAR Installer categorize file types by their <code class="literal">role</code>.
+  A file role is equivalent to the web&#039;s concept of <code class="literal">MIME type</code>,
+  a concept that allows web browsers to determine how a file should be displayed
+  or processed.  A file role allows Pyrus and the PEAR Installer to determine
+  where a file should be installed, the conditions under which the role can be
+  used, and even whether the file should be installed at all.  A file may only
+  have one role in a package.
+ </p>
+ <p class="para">
+  Generally speaking, each file role has its own installation location.  For
+  example, <code class="literal">php</code> files (files whose file role is
+  <code class="literal">php</code>) are installed into the location specified by the
+  <code class="literal">php_dir</code> configuration variable, <code class="literal">data</code>
+  files (files whose file role is <code class="literal">data</code>) are installed into
+  the location specified by the <code class="literal">data_dir</code> configuration
+  variable.  Some file roles do not have a direct mapping of role name
+  to configuration variable, such as Pyrus&#039;s <code class="literal">customcommand</code>
+  file role.  This file role is installed into the location specified by the
+  <code class="literal">data_dir</code> configuration variable.
+ </p>
+ <p class="para">
+  File roles also control how package.xml attributes are handled.  The
+  <code class="literal">php</code> file role installs files into the exact
+  relative path as specified in package.xml.  The <code class="literal">data</code>
+  file role always installs files into a subdirectory containing the package name
+  for PEAR packages, and both the channel and package name for packages designed
+  to be installed by Pyrus.
+ </p>
+ <p class="para">
+  Here is an example of the same file path in package.mxl as <code class="literal">php</code>
+  role and as <code class="literal">data</code> role.  All examples assume this is a
+  package named <code class="literal">PackageName</code> in the <code class="literal">pear2.php.net</code>
+  channel.
+ </p>
+ <div class="xmlcode">
+  <pre class="xmlcode">
+  &lt;contents&gt;
+   &lt;dir name=&quot;\&quot;&gt;
+    &lt;dir name=&quot;base&quot;&gt;
+     &lt;file name=&quot;foo&quot; role=&quot;php&quot;&gt;
+    &lt;/dir&gt;
+   &lt;/dir&gt;
+  &lt;/contents&gt;</pre>
+
+ </div>
+ <p class="para">
+  This installs as <code class="literal">base/foo</code> in the location specified
+  by <code class="literal">php_dir</code>.
+ </p>
+ <div class="xmlcode">
+  <pre class="xmlcode">
+  &lt;contents&gt;
+   &lt;dir name=&quot;\&quot;&gt;
+    &lt;dir name=&quot;base&quot;&gt;
+     &lt;file name=&quot;foo&quot; role=&quot;data&quot;&gt;
+    &lt;/dir&gt;
+   &lt;/dir&gt;
+  &lt;/contents&gt;</pre>
+
+ </div>
+ <p class="para">
+  For PEAR Installer packages, this installs as <code class="literal">PackageName/base/foo</code>
+  in the location specified by <code class="literal">php_dir</code>.  For Pyrus packages,
+  this installs as <code class="literal">pear2.php.net/PackageName/base/foo</code>.
+ </p>
+ <div class="section" id="guide.users.concepts.filerole.baseinstalldir">
+  <h2 class="title">How the baseinstalldir attribute is handled by different file roles</h2>
+  <p class="para">
+   The <code class="literal">baseinstalldir</code> (base installation directory) attribute
+   is a tool that can be used to install a file into a different directory than
+   its location in the source repository.
+  </p>
+  <p class="para">
+   As an example, the path in the subversion repository to the file
+   <code class="literal">PEAR2\Foo.php</code> is at
+   <code class="literal">Foo.php</code>.  To inform the installer to install this
+   package into the <code class="literal">PEAR2</code> directory, we would use a baseinstalldir
+   attribute:
+  </p>
+  <div class="xmlcode">
+   <pre class="xmlcode">
+   &lt;contents&gt;
+    &lt;dir name=&quot;\&quot;&gt;
+     &lt;file name=&quot;Foo.php&quot; role=&quot;php&quot; baseinstalldir=&quot;PEAR2&quot;&gt;
+    &lt;/dir&gt;
+   &lt;/contents&gt;</pre>
+
+  </div>
+  <p class="para">
+   The attribute can also be used on <code class="literal">&lt;dir&gt;</code> tags to apply
+   the base installation directory to all files within the directory:
+  </p>
+  <div class="xmlcode">
+   <pre class="xmlcode">
+   &lt;contents&gt;
+    &lt;dir name=&quot;\&quot; baseinstalldir=&quot;PEAR2&quot;&gt;
+     &lt;file name=&quot;Foo.php&quot; role=&quot;php&quot;&gt;
+    &lt;/dir&gt;
+   &lt;/contents&gt;</pre>
+
+  </div>
+  <p class="para">
+   The <code class="literal">baseinstalldir</code> role can also be used to inform
+   the PEAR Installer or Pyrus to strip all relative paths by using
+   <code class="literal">/</code> as the base installation directory.  Here is an
+   example from the PEAR package:
+  </p>
+  <div class="xmlcode">
+   <pre class="xmlcode">
+   &lt;dir name=&quot;scripts&quot; baseinstalldir=&quot;/&quot;&gt;
+    &lt;file name=&quot;pear.bat&quot; role=&quot;script&quot;/&gt;</pre>
+
+  </div>
+  <p class="para">
+   This file would be installed as <code class="literal">scripts/pear.bat</code>, but
+   the <code class="literal">baseinstalldir</code> attribute of <code class="literal">/</code>
+   informs the installer to instead install it to <code class="literal">pear.bat</code>.
+  </p>
+  <p class="para">
+   Each file role reacts differently to the <code class="literal">baseinstalldir</code>
+   attribute.  Packages designed to be installed by the PEAR Installer also
+   handle them differently from packages designed for installation by Pyrus.
+   The <code class="literal">php</code>, <code class="literal">script</code> and <code class="literal">www</code>
+   file roles react the
+   same way as documented above.  In packages designed for the PEAR Installer,
+   the other file roles do not honor the
+   <code class="literal">baseinstalldir</code> attribute, meaning they ignore it.  For
+   example:
+  </p>
+  <div class="xmlcode">
+   <pre class="xmlcode">
+   &lt;contents&gt;
+    &lt;dir name=&quot;\&quot; baseinstalldir=&quot;PEAR2&quot;&gt;
+     &lt;file name=&quot;Foo.dat&quot; role=&quot;data&quot;&gt;
+    &lt;/dir&gt;
+   &lt;/contents&gt;</pre>
+
+  </div>
+  <p class="para">
+   installs <code class="literal">Foo.dat</code> into the <code class="literal">PackageName/Foo.dat</code>
+   directory.  The same XML in a package designed for installation by Pyrus
+   will install the file into <code class="literal">pear2.php.net/PackageName/PEAR2/Foo.dat</code>.
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="guide.users.concepts.channel.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="guide.users.concepts.html">Basic concepts all PEAR users should understand</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="guide.users.concepts.filetasks.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">PEAR Channels</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">File tasks</td>
+  </tr>
+ </table>
+</div>
+</body></html>

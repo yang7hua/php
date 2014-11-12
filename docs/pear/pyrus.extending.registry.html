@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Working with installed packages and channels: The Registry API</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="pyrus.extending.html" title="Using Pyrus in your programs: Pyrus's Public API" />
+  <link rel="prev" href="pyrus.extending.installation.html" title="Leveraging Pyrus's installation API" />
+  <link rel="next" href="developers.html" title="PEAR Developer Guide" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Working with installed packages and channels: The Registry API</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="pyrus.extending.installation.html" title="Leveraging Pyrus's installation API">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="developers.html" title="PEAR Developer Guide">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="pyrus.extending.registry">
+ <div class="info"><h1>Working with installed packages and channels: The Registry API</h1>
+</div>
+
+ <div class="section" id="pyrus.extending.registry.intro">
+  <div class="info"><h2 class="title">Introduction</h2></div>
+  <p class="para">
+   Pyrus provides a very simple API for accessing its registry.  Pyrus stores
+   meta-information on installed packages in redundant registries.  There are
+   three kinds of registries that Pyrus recognizes, <code class="literal">Sqlite3</code>,
+   <code class="literal">Xml</code> and the legacy <code class="literal">Pear1</code> registry.  A
+   pyrus-based installation can have up to all three kinds of registries
+   redundantly storing the installed packages and the known channels.  By default
+   the <code class="literal">Sqlite3</code> registry is the primary registry used for
+   querying information, with the <code class="literal">Xml</code> registry as a backup.
+  </p>
+  <p class="para">
+   When Pyrus is used to manage an installation, it checks to see which
+   registries are already present, if any, and will use the existing registries.
+   This fact can be used to provide more flexible installation options.  For
+   instance, Pyrus can be used to manage an existing legacy PEAR installation
+   without any special configuration, it will simply detect that the legacy
+   registry is present and use it.  If a package is extracted into a bundled
+   location, Pyrus will detect its extracted package.xml as belonging to the
+   Xml registry, and will use only that registry for installation purposes,
+   which allows upgrading the extracted package and avoids placing any
+   absolute paths into the installation.
+  </p>
+  <p class="para">
+   Pyrus provides full atomic installation transactions for all of its
+   registry types, including the legacy Pear1 registry, unlike the PEAR
+   installer.  In addition, each registry provides a single method which
+   can be used to remove it from disk, and there is also a single method which
+   can be used for converting from one registry type to another.  Another method
+   is available for repairing a corrupted registry from one of its redundant
+   registries.
+  </p>
+  <p class="para">
+   Pyrus provides a separate logical registry for storing channels from the registry
+   that stores packages.  Each registry handles this slightly differently.  The
+   Sqlite3 registry, for instance, stores all information in a single database.
+   The Xml registry stores information in separate files, like the legacy Pear1
+   registry.
+  </p>
+ </div>
+ <div class="section" id="pyrus.extending.registry.basic">
+  <div class="info"><h2 class="title">Basic Registry principles</h2></div>
+  <p class="para">
+   All registry classes implement the <code class="literal">PEAR2\Pyrus\IChannel</code>
+   interface, and all channelregistry classes implement the
+   <code class="literal">PEAR2\Pyrus\ChannelRegistry</code> interface.  The
+   <code class="literal">PEAR2\Pyrus\Registry</code> class acts as an aggregator of
+   underlying registries, and implements the ability to cascade to parent
+   registries, as does the <code class="literal">PEAR2\Pyrus\ChannelRegistry</code>
+   class.
+  </p>
+  <p class="para">
+   The simplest way to retrieve a registry object is to use the one strongly
+   tied to the <a href="pyrus.extending.configuration.html" class="link">PEAR2\Pyrus\Config</a>
+   object:
+  </p>
+  <div class="phpcode">
+   <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$reg&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Config</span><span style="color: #007700">::</span><span style="color: #0000BB">current</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">registry</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$creg&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Config</span><span style="color: #007700">::</span><span style="color: #0000BB">current</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">channelregistry</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+  </div>
+  <p class="para">
+   Accessing a specific installed package retrieves an object that is
+   API-identical to a <a href="pyrus.extending.packagefile.html" class="link">PackageFile</a>
+   object.  The registry is implemented logically as an associative array.
+   By requesting a package&#039;s logical name, which is <code class="literal">channel/packagename</code>,
+   we get an object that can be manipulated just as if it were the package prior
+   to installation
+  </p>
+  <div class="phpcode">
+   <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$package&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Config</span><span style="color: #007700">::</span><span style="color: #0000BB">current</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">registry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">package</span><span style="color: #007700">[</span><span style="color: #DD0000">'pear2.php.net/PEAR2_Pyrus_Developer'</span><span style="color: #007700">];<br /></span><span style="color: #0000BB">$remotepackage&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Package</span><span style="color: #007700">(</span><span style="color: #DD0000">'pear2.php.net/PEAR2_Pyrus_Developer'</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;both&nbsp;packages&nbsp;can&nbsp;be&nbsp;queried&nbsp;with&nbsp;the&nbsp;same&nbsp;API<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+  </div>
+  <p class="para">
+   The same principle applies to channels:
+  </p>
+  <div class="phpcode">
+   <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$channel&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Config</span><span style="color: #007700">::</span><span style="color: #0000BB">current</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">channelregistry</span><span style="color: #007700">[</span><span style="color: #DD0000">'pear2.php.net'</span><span style="color: #007700">];<br /></span><span style="color: #0000BB">$localchannel&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">ChannelFile</span><span style="color: #007700">(</span><span style="color: #DD0000">'channel.xml'</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;both&nbsp;channels&nbsp;can&nbsp;be&nbsp;queried&nbsp;with&nbsp;the&nbsp;same&nbsp;API<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+  </div>
+  <p class="para">
+   Iteration also works with both just as it would for an array:
+  </p>
+  <div class="phpcode">
+   <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">foreach&nbsp;(</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Config</span><span style="color: #007700">::</span><span style="color: #0000BB">current</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">registry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">package&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$name&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$package</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$name&nbsp;is&nbsp;channel/package<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;$package&nbsp;is&nbsp;a&nbsp;packagefile&nbsp;object<br /></span><span style="color: #007700">}<br />foreach&nbsp;(</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Config</span><span style="color: #007700">::</span><span style="color: #0000BB">current</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">channelregistry&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$name&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$channel</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$name&nbsp;is&nbsp;the&nbsp;channel&nbsp;name<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;$channel&nbsp;is&nbsp;a&nbsp;channelfile&nbsp;object<br /></span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+  </div>
+ </div>
+ <div class="section" id="pyrus.extending.registry.installation">
+  <div class="info"><h2 class="title">Installation-related API tasks</h2></div>
+  <p class="para">
+   There are 4 installation-related methods, as well as 3 transaction methods.
+   These methods are:
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">install()</strong> and <strong class="function">replace()</strong>
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">uninstall()</strong>
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">exists()</strong>
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">begin()</strong>, <strong class="function">commit()</strong> and
+      <strong class="function">rollback()</strong>.
+     </span>
+    </li>
+   </ul><p>
+   The <strong class="function">install()</strong> method registers a package as installed,
+   and sets its date/time to the current time so that the installation time
+   can be tracked.  The <strong class="function">replace()</strong> method registers a package
+   as installed, but does not modify its date/time.  This is useful for
+   repairing a corrupted entry, or simply storing a package as it is.  Both
+   methods accept a <code class="literal">PEAR2\Pyrus\IPackageFile</code> object.  A
+   packagefile object can be retrieved from a <code class="literal">PEAR2\Pyrus\Package</code>
+   object by calling its <strong class="function">getPackageFileObject()</strong> method.
+   A <code class="literal">PEAR2\Pyrus\Registry\Exception</code> is thrown on any errors.
+  </p>
+  <p class="para">
+   The <strong class="function">uninstall()</strong> method accepts two parameters, the
+   name of the package, and the package&#039;s channel.  A
+   <code class="literal">PEAR2\Pyrus\Registry\Exception</code> is thrown on any errors.
+  </p>
+  <p class="para">
+   The <strong class="function">exists()</strong> method also accepts two parameters, and
+   returns <strong class="constant">TRUE</strong> or <strong class="constant">FALSE</strong> depending on whether the package exists.  If
+   severe errors occur such as registry corruption, a
+   <code class="literal">PEAR2\Pyrus\Registry\Exception</code> object is thrown.
+  </p>
+  <p class="para">
+   Note that array access can also be used to handle installation-related tasks:
+  </p>
+  <div class="phpcode">
+   <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$reg&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Config</span><span style="color: #007700">::</span><span style="color: #0000BB">current</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">registry</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$package&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Package</span><span style="color: #007700">(</span><span style="color: #DD0000">'/path/to/package.xml'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;equivalent&nbsp;to&nbsp;$reg-&gt;install($package)<br /></span><span style="color: #0000BB">$reg</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">package</span><span style="color: #007700">[]&nbsp;=&nbsp;</span><span style="color: #0000BB">$package</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;equivalent&nbsp;to&nbsp;$reg-&gt;uninstall('Foo',&nbsp;'pear2.php.net')<br /></span><span style="color: #007700">unset(</span><span style="color: #0000BB">$reg</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">package</span><span style="color: #007700">[</span><span style="color: #DD0000">'pear2.php.net/Foo'</span><span style="color: #007700">]);<br /><br /></span><span style="color: #FF8000">//&nbsp;equivalent&nbsp;to&nbsp;$reg-&gt;exists('Foo',&nbsp;'pear2.php.net');<br /></span><span style="color: #007700">isset(</span><span style="color: #0000BB">$reg</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">package</span><span style="color: #007700">[</span><span style="color: #DD0000">'pear2.php.net/Foo'</span><span style="color: #007700">]);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+  </div>
+  <p class="para">
+   When performing any installation or uninstallation task, it is recommended
+   to use the registry&#039;s built-in transaction support.  The
+   <code class="literal">Sqlite3</code> registry uses the database&#039;s native transaction
+   support.  Both the <code class="literal">Xml</code> and <code class="literal">Pear1</code>
+   registries use Pyrus&#039;s <code class="literal">PEAR2\Pyrus\AtomicFileTransaction</code>
+   for its transaction support.  Thus, it is always best to do a transaction
+   by first enabling the registry transaction, and then the atomic file transaction
+   within this registry transaction:
+  </p>
+  <div class="phpcode">
+   <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$reg&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Config</span><span style="color: #007700">::</span><span style="color: #0000BB">current</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">registry</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$package&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Package</span><span style="color: #007700">(</span><span style="color: #DD0000">'Whatever'</span><span style="color: #007700">);<br />try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$reg</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">begin</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">AtomicFileTransaction</span><span style="color: #007700">::</span><span style="color: #0000BB">begin</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$reg</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">install</span><span style="color: #007700">(</span><span style="color: #0000BB">$package</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">AtomicFileTransaction</span><span style="color: #007700">::</span><span style="color: #0000BB">commit</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$reg</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">commit</span><span style="color: #007700">();<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Exception&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$reg</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">rollback</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">AtomicFileTransaction</span><span style="color: #007700">::</span><span style="color: #0000BB">rollback</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+  </div>
+  <p class="para">
+   If using the <a href="pyrus.extending.installation.html" class="link">Installer API</a>,
+   the transactions and installation to registry is all automatic, this code is
+   only needed for customizing installation.
+  </p>
+ </div>
+ <div class="section" id="pyrus.extending.registry.querying">
+  <div class="info"><h2 class="title">Specialized querying of the registry</h2></div>
+  <p class="para">
+   Other methods for querying the registry include:
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">info()</strong>
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">listPackages()</strong>
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">getDependentPackages()</strong>
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">detectFileConflicts()</strong>
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">detectRegistries()</strong>
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">removeRegistry()</strong>
+     </span>
+    </li>
+   </ul>
+  
+  <div class="section" id="pyrus.extending.registry.querying.info">
+   <h3 class="title"><strong class="function">info()</strong></h3>
+   <p class="para">
+    The <strong class="function">info()</strong> method provides a way of peeking at
+    a single attribute of a package.  When used with the <code class="literal">Sqlite3</code>
+    registry, it is extremely efficient both in terms of memory use and speed.
+    Both the <code class="literal">Xml</code> and <code class="literal">Pear1</code> registries are
+    far slower because they must load the complete packagefile into memory for
+    every query.  For these registries, it is better to simply retrieve a
+    packagefile and query it using the
+    <a href="pyrus.extending.packagefile.html" class="link">PackageFile API</a>.
+   </p>
+   <p class="para">
+    Parameters to <strong class="function">info()</strong> are the package name, package channel,
+    and the field name to retrieve.
+   </p>
+   <p class="para">
+    All of the
+    <a href="pyrus.extending.packagefile.html#pyrus.extending.packagefile.basic" class="link">Basic package.xml properties</a>
+    can be directly accessed using <strong class="function">info()</strong>.  In addition, two
+    special properties, <code class="literal">installedfiles</code> and <code class="literal">dirtree</code>
+    are available.
+   </p>
+   <p class="para">
+    <code class="literal">installedfiles</code> returns a list of files and their properties
+    as they have been installed.  Here is a sample return value:
+   </p>
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'/full/path/todocs/PEAR2_SimpleChannelServer/pear2.php.net/examples/update_channel.php'&nbsp;</span><span style="color: #007700">=&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'role'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'doc'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'examples/update_channel.php'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'installed_as'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'/full/path/to/docs/PEAR2_SimpleChannelServer/pear2.php.net/examples/update_channel.php'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'relativepath'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'PEAR2_SimpleChannelServer/pear2.php.net/examples/update_channel.php'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'configpath'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'/full/path/to/docs'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;...&nbsp;and&nbsp;so&nbsp;on<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <p class="para">
+    <code class="literal">dirtree</code> returns a list of every directory that would have
+    been created if installing the package in a new installation.  This can
+    be used to prune empty directories after uninstalling.  Here is a sample
+    return value:
+   </p>
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">array&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'/full/path/to/php/PEAR2/SimpleChannelServer/REST'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'/full/path/to/php/PEAR2/SimpleChannelServer/Categories'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'/full/path/to/php/PEAR2/SimpleChannelServer'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'/full/path/to/php/PEAR2'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'/full/path/to/php'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'/full/path/to/docs/PEAR2_SimpleChannelServer/pear2.php.net/examples'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'/full/path/to/docs/PEAR2_SimpleChannelServer/pear2.php.net'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'/full/path/to/docs/PEAR2_SimpleChannelServer'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'/full/path/to/docs'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'/full/path/to/bin'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  <div class="section" id="pyrus.extending.registry.querying.listpackages">
+   <h3 class="title"><strong class="function">listPackages()</strong></h3>
+   <p class="para">
+    This method accepts a channel name as an argument, and returns an array
+    of the names of installed packages from that channel.
+   </p>
+  </div>
+  <div class="section" id="pyrus.extending.registry.querying.getdependentpackages">
+   <h3 class="title"><strong class="function">getDependentPackages()</strong></h3>
+   <p class="para">
+    <strong class="function">getDependentPackages()</strong> requires a single argument,
+    a <code class="literal">PEAR2\Pyrus\IPackageFile</code> object.
+    This method returns an array of <code class="literal">PEAR2\Pyrus\Package</code>
+    objects representing installed packages that depend upon the package
+    passed in.  If the optional second boolean parameter is set to true
+    (which it is by default), performance is improved when querying an
+    <code class="literal">Sqlite3</code> database by returning packages containing only
+    the name of the package and its dependencies.
+   </p>
+  </div>
+  <div class="section" id="pyrus.extending.registry.querying.detectfileconflicts">
+   <h3 class="title"><strong class="function">detectFileConflicts()</strong></h3>
+   <p class="para">
+    This method is used to implement file conflict detection to prevent
+    overwriting installed files with those from another package.  It accepts a
+    single argument, a <code class="literal">PEAR2\Pyrus\IPackageFile</code> object.
+    The <code class="literal">Pear1</code> registry is the most efficient at this
+    operation (at the expense of drastically decreased efficiency at installation or
+    uninstallation), the <code class="literal">Sqlite3</code> is the next most
+    efficient, and the <code class="literal">Xml</code> registry is the least efficient,
+    and in fact is so inefficient, this method should only be called
+    on an Xml registry that is for a very small installation.
+   </p>
+  </div>
+  <div class="section" id="pyrus.extending.registry.querying.detectregistries">
+   <h3 class="title"><strong class="function">detectRegistries()</strong></h3>
+   <p class="para">
+    This static method accepts a string containing the path to check for registries,
+    and returns an array containing the names of registries
+    found.  The possible return values include <code class="literal">Sqlite3</code>,
+    <code class="literal">Xml</code> and <code class="literal">Pear1</code>.  Note that only a call
+    to <strong class="function">PEAR2\Pyrus\Registry::detectRegistries()</strong> will return
+    a list of all registries found.  A call to
+    <strong class="function">PEAR2\Pyrus\Registry\Sqlite3::detectRegistries()</strong> will
+    only return either <code class="literal">array()</code> or
+    <code class="literal">array(&#039;Sqlite3&#039;)</code> depending on whether the registry exists.
+   </p>
+  </div>
+  <div class="section" id="pyrus.extending.registry.querying.removeregistry">
+   <h3 class="title"><strong class="function">removeRegistry()</strong></h3>
+   <p class="para">
+    This static method accepts a string containing the path to remove a registry
+    from.  A call to <strong class="function">PEAR2\Pyrus\Registry::removeRegistry()</strong>
+    will completely remove all traces of a PEAR installation.  A call to
+    an individual registry&#039;s removeRegistry, such as a call to
+    <strong class="function">PEAR2\Pyrus\Registry\Pear1::removeRegistry()</strong> will only
+    remove that registry from the installation path.
+   </p>
+  </div>
+ </div>
+ <div class="section" id="pyrus.extending.registry.channelregistry">
+  <div class="info"><h2 class="title">Channel registry</h2></div>
+  <p class="para">
+   
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="pyrus.extending.installation.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="pyrus.extending.html">Using Pyrus in your programs: Pyrus's Public API</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="developers.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Leveraging Pyrus's installation API</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">PEAR Developer Guide</td>
+  </tr>
+ </table>
+</div>
+</body></html>

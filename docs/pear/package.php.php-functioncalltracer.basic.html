@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Basic Use</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.php.php-functioncalltracer.html" title="PHP_FunctionCallTracer" />
+  <link rel="prev" href="package.php.php-fctcalltrac.intro.html" title="Introduction" />
+  <link rel="next" href="package.php.php-uml.html" title="PHP_UML" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Basic Use</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.php.php-fctcalltrac.intro.html" title="Introduction">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.php.php-uml.html" title="PHP_UML">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.php.php-functioncalltracer.basic">
+ 
+  <h1 class="refname">Basic Use</h1>
+  <div class="refnamediv">Basic Use &ndash; 
+   Simple trace of function arguments and returned variables.
+  </div>
+
+ 
+
+ <div class="refsection" id="package.php.php-functioncalltracer.basic.overview"><div class="info"><h1>Overview</h1>
+</div>
+  
+
+  <p class="para">
+   <strong class="function">traceArguments()</strong> is used to trace the function arguments.
+   There is no need to pass the function arguments to <strong class="function">traceArguments()</strong> 
+   to trace them.
+   Note that <strong class="function">traceArguments()</strong> may not be used, if the function does not 
+   call any other function or if the function calls functions that are not being traced. 
+  </p>
+  <p class="para">
+   <strong class="function">traceVariables()</strong> is used to trace variables within the function.
+   The variables to trace must be passed as arguments to <strong class="function">traceVariables()</strong>.
+   <strong class="function">traceVariables()</strong> may be called as many times as required to watch
+   variables value change.
+  </p>
+  <p class="para">
+   <strong class="function">traceReturn()</strong> is used to trace the variables returned by the function.
+   The variables to trace must be passed as arguments to <strong class="function">traceReturn()</strong>.
+  </p>
+  <p class="para">
+   <strong class="function">putTrace()</strong> is used to display the trace to the standard output or
+   to write it into a file.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.php.php-functioncalltracer.basic.usage"><div class="info"><h1>How to use PHP_FunctionCallTracer</h1>
+</div>
+  
+
+  <p class="para">
+   In this example, <code class="filename">package.php</code> contains two classes whose methods are traced.
+   The package is used by an application <code class="filename">trace.php</code>.
+   The trace is stored into <code class="filename">trace.txt</code>.
+   To generate the trace, run: #php trace.php.
+  </p>
+
+  <div class="example"><div class="info"><p><strong>The package <code class="filename">package.php</code></strong></p></div>
+   
+
+   <div class="example-contents"><p>
+    Note that testing if <strong class="classname">PHP_FunctionCallTracer</strong> is loaded: 
+    class_exists(&#039;PHP_FunctionCallTracer&#039;, false), is optional. It is useful only
+	if the tracing methods are meant to be left in the code. They will be called only if 
+	<strong class="classname">PHP_FunctionCallTracer</strong> is loaded. 
+   </p></div>
+
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">math&nbsp;</span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/**<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;tracing&nbsp;the&nbsp;arguments&nbsp;and&nbsp;the&nbsp;returned&nbsp;parameter<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;note&nbsp;that&nbsp;traceReturn()&nbsp;calls&nbsp;traceArguments()&nbsp;by&nbsp;default&nbsp;which&nbsp;is&nbsp;fine&nbsp;here<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;since&nbsp;this&nbsp;method&nbsp;does&nbsp;call&nbsp;other&nbsp;methods&nbsp;to&nbsp;trace<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">public&nbsp;static&nbsp;function&nbsp;</span><span style="color: #0000BB">prod</span><span style="color: #007700">(</span><span style="color: #0000BB">$x</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$y</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;class_exists('PHP_FunctionCallTracer',&nbsp;false)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;and&nbsp;PHP_FunctionCallTracer::traceArguments();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$p&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$x&nbsp;</span><span style="color: #007700">*&nbsp;</span><span style="color: #0000BB">$y</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">class_exists</span><span style="color: #007700">(</span><span style="color: #DD0000">'PHP_FunctionCallTracer'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">)&nbsp;and<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">PHP_FunctionCallTracer</span><span style="color: #007700">::</span><span style="color: #0000BB">traceReturn</span><span style="color: #007700">(</span><span style="color: #0000BB">$p</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$p</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/**<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;tracing&nbsp;the&nbsp;arguments&nbsp;and&nbsp;the&nbsp;returned&nbsp;parameter<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;traceArguments()&nbsp;must&nbsp;be&nbsp;called&nbsp;here&nbsp;since&nbsp;this&nbsp;method&nbsp;calls&nbsp;other&nbsp;methods<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;that&nbsp;may&nbsp;be&nbsp;traced,&nbsp;so&nbsp;that&nbsp;traced&nbsp;calls&nbsp;are&nbsp;displayed&nbsp;in&nbsp;the&nbsp;right&nbsp;order<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">public&nbsp;static&nbsp;function&nbsp;</span><span style="color: #0000BB">square</span><span style="color: #007700">(</span><span style="color: #0000BB">$x</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">class_exists</span><span style="color: #007700">(</span><span style="color: #DD0000">'PHP_FunctionCallTracer'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">)&nbsp;and<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">PHP_FunctionCallTracer</span><span style="color: #007700">::</span><span style="color: #0000BB">traceArguments</span><span style="color: #007700">();<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$x2&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">self</span><span style="color: #007700">::</span><span style="color: #0000BB">prod</span><span style="color: #007700">(</span><span style="color: #0000BB">$x</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$x</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">class_exists</span><span style="color: #007700">(</span><span style="color: #DD0000">'PHP_FunctionCallTracer'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">)&nbsp;and<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">PHP_FunctionCallTracer</span><span style="color: #007700">::</span><span style="color: #0000BB">traceReturn</span><span style="color: #007700">(</span><span style="color: #0000BB">$x2</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$x2</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /><br />class&nbsp;</span><span style="color: #0000BB">geometry&nbsp;</span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;</span><span style="color: #0000BB">$pi&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">3.14</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/**<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;tracing&nbsp;the&nbsp;arguments&nbsp;and&nbsp;the&nbsp;returned&nbsp;parameter<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;another&nbsp;variable&nbsp;is&nbsp;traced&nbsp;along&nbsp;with&nbsp;the&nbsp;returned&nbsp;parameter<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">public&nbsp;function&nbsp;</span><span style="color: #0000BB">circle</span><span style="color: #007700">(</span><span style="color: #0000BB">$r</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">class_exists</span><span style="color: #007700">(</span><span style="color: #DD0000">'PHP_FunctionCallTracer'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">)&nbsp;and<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">PHP_FunctionCallTracer</span><span style="color: #007700">::</span><span style="color: #0000BB">traceArguments</span><span style="color: #007700">();<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$pi2&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">2&nbsp;</span><span style="color: #007700">*&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">pi</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$c&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">math</span><span style="color: #007700">::</span><span style="color: #0000BB">prod</span><span style="color: #007700">(</span><span style="color: #0000BB">$r</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$pi2</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">class_exists</span><span style="color: #007700">(</span><span style="color: #DD0000">'PHP_FunctionCallTracer'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">)&nbsp;and<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">PHP_FunctionCallTracer</span><span style="color: #007700">::</span><span style="color: #0000BB">traceReturn</span><span style="color: #007700">(</span><span style="color: #0000BB">$c</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$pi2</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$c</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/**<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;tracing&nbsp;the&nbsp;arguments,&nbsp;some&nbsp;variables&nbsp;and&nbsp;the&nbsp;returned&nbsp;parameter<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">public&nbsp;function&nbsp;</span><span style="color: #0000BB">disk</span><span style="color: #007700">(</span><span style="color: #0000BB">$r</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">class_exists</span><span style="color: #007700">(</span><span style="color: #DD0000">'PHP_FunctionCallTracer'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">)&nbsp;and<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">PHP_FunctionCallTracer</span><span style="color: #007700">::</span><span style="color: #0000BB">traceArguments</span><span style="color: #007700">();<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$r2&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">math</span><span style="color: #007700">::</span><span style="color: #0000BB">square</span><span style="color: #007700">(</span><span style="color: #0000BB">$r</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">class_exists</span><span style="color: #007700">(</span><span style="color: #DD0000">'PHP_FunctionCallTracer'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">)&nbsp;and<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">PHP_FunctionCallTracer</span><span style="color: #007700">::</span><span style="color: #0000BB">traceVariables</span><span style="color: #007700">(</span><span style="color: #0000BB">$r2</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">pi</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$d&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">math</span><span style="color: #007700">::</span><span style="color: #0000BB">prod</span><span style="color: #007700">(</span><span style="color: #0000BB">$r2</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">pi</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">class_exists</span><span style="color: #007700">(</span><span style="color: #DD0000">'PHP_FunctionCallTracer'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">)&nbsp;and<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">PHP_FunctionCallTracer</span><span style="color: #007700">::</span><span style="color: #0000BB">traceReturn</span><span style="color: #007700">(</span><span style="color: #0000BB">$d</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$d</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+
+  <div class="example"><div class="info"><p><strong>The application <code class="filename">trace.php</code></strong></p></div>
+   
+
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/**<br />&nbsp;*&nbsp;adds&nbsp;the&nbsp;path&nbsp;of&nbsp;the&nbsp;package&nbsp;if&nbsp;this&nbsp;is&nbsp;a&nbsp;raw&nbsp;install<br />&nbsp;*&nbsp;includes&nbsp;the&nbsp;package&nbsp;(example)&nbsp;to&nbsp;debug&nbsp;and&nbsp;the&nbsp;tracer&nbsp;package<br />&nbsp;*/<br /></span><span style="color: #0000BB">file_exists</span><span style="color: #007700">(</span><span style="color: #DD0000">"../../../../PHP/"</span><span style="color: #007700">)&nbsp;and&nbsp;</span><span style="color: #0000BB">set_include_path</span><span style="color: #007700">(</span><span style="color: #DD0000">'../../../..'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">PATH_SEPARATOR&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">get_include_path</span><span style="color: #007700">());<br />require_once&nbsp;</span><span style="color: #DD0000">'package.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'PHP/FunctionCallTracer.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">/**<br />&nbsp;*&nbsp;creates&nbsp;an&nbsp;instance&nbsp;of&nbsp;the&nbsp;class&nbsp;to&nbsp;debug&nbsp;and&nbsp;calls&nbsp;a&nbsp;few&nbsp;methods<br />&nbsp;*&nbsp;writes&nbsp;the&nbsp;trace&nbsp;in&nbsp;a&nbsp;file<br />&nbsp;*/<br /></span><span style="color: #0000BB">$geometry&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">geometry</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$c&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$geometry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">circle</span><span style="color: #007700">(</span><span style="color: #0000BB">2</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$d&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$geometry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">disk</span><span style="color: #007700">(</span><span style="color: #0000BB">3</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$file&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">dirname</span><span style="color: #007700">(</span><span style="color: #0000BB">__FILE__</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">'/trace.txt'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">PHP_FunctionCallTracer</span><span style="color: #007700">::</span><span style="color: #0000BB">putTrace</span><span style="color: #007700">(</span><span style="color: #0000BB">$file</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+
+  <div class="example"><div class="info"><p><strong>The trace <code class="filename">trace.txt</code></strong></p></div>
+   
+
+   <pre class="screen">
+Array
+(
+    [php_uname] =&gt; Windows NT mybox 5.1 build 2600
+    [date] =&gt; Friday, 03-Aug-07 09:17:30 UTC
+    [calls] =&gt; Array
+        (
+            [0] =&gt; Array
+                (
+                    [call] =&gt; Array
+                        (
+                            [file] =&gt; trace.php
+                            [line] =&gt; 20
+                            [function] =&gt; geometry-&gt;circle
+                        )
+                    [in] =&gt; Array
+                        (
+                            [file] =&gt; package.php
+                            [line] =&gt; 55
+                            [args] =&gt; Array
+                                (
+                                    [0] =&gt; 2
+                                )
+                        )
+
+                    [out] =&gt; Array
+                        (
+                            [file] =&gt; package.php
+                            [line] =&gt; 61
+                            [args] =&gt; Array
+                                (
+                                    [0] =&gt; 12.56
+                                    [1] =&gt; 6.28
+                                )
+                        )
+
+                )
+
+            [1] =&gt; Array
+                (
+                    [call] =&gt; Array
+                        (
+                            [file] =&gt; package.php
+                            [line] =&gt; 58
+                            [function] =&gt; math::prod
+                        )
+
+                    [in] =&gt; Array
+                        (
+                            [file] =&gt; package.php
+                            [line] =&gt; 22
+                            [args] =&gt; Array
+                                (
+                                    [0] =&gt; 2
+                                    [1] =&gt; 6.28
+                                )
+                        )
+
+                    [out] =&gt; Array
+                        (
+                            [file] =&gt; package.php
+                            [line] =&gt; 22
+                            [args] =&gt; Array
+                                (
+                                    [0] =&gt; 12.56
+                                )
+                        )
+
+                )
+
+            [2] =&gt; Array
+                (
+                    [call] =&gt; Array
+                        (
+                            [file] =&gt; trace.php
+                            [line] =&gt; 21
+                            [function] =&gt; geometry-&gt;disk
+                        )
+
+                    [in] =&gt; Array
+                        (
+                            [file] =&gt; package.php
+                            [line] =&gt; 71
+                            [args] =&gt; Array
+                                (
+                                    [0] =&gt; 3
+                                )
+                        )
+
+                    [watches] =&gt; Array
+                        (
+                            [0] =&gt; Array
+                                (
+                                    [file] =&gt; package.php
+                                    [line] =&gt; 75
+                                    [args] =&gt; Array
+                                        (
+                                            [0] =&gt; 9
+                                            [1] =&gt; 3.14
+                                        )
+                                )
+
+                        )
+
+                    [out] =&gt; Array
+                        (
+                            [file] =&gt; package.php
+                            [line] =&gt; 80
+                            [args] =&gt; Array
+                                (
+                                    [0] =&gt; 28.26
+                                )
+                        )
+
+                )
+
+            [3] =&gt; Array
+                (
+                    [call] =&gt; Array
+                        (
+                            [file] =&gt; package.php
+                            [line] =&gt; 73
+                            [function] =&gt; math::square
+                        )
+
+                    [in] =&gt; Array
+                        (
+                            [file] =&gt; package.php
+                            [line] =&gt; 35
+                            [args] =&gt; Array
+                                (
+                                    [0] =&gt; 3
+                                )
+                        )
+
+                    [out] =&gt; Array
+                        (
+                            [file] =&gt; package.php
+                            [line] =&gt; 40
+                            [args] =&gt; Array
+                                (
+                                    [0] =&gt; 9
+                                )
+                        )
+
+                )
+
+            [4] =&gt; Array
+                (
+                    [call] =&gt; Array
+                        (
+                            [file] =&gt; package.php
+                            [line] =&gt; 37
+                            [function] =&gt; math::prod
+                        )
+
+                    [in] =&gt; Array
+                        (
+                            [file] =&gt; package.php
+                            [line] =&gt; 22
+                            [args] =&gt; Array
+                                (
+                                    [0] =&gt; 3
+                                    [1] =&gt; 3
+                                )
+                        )
+
+                    [out] =&gt; Array
+                        (
+                            [file] =&gt; package.php
+                            [line] =&gt; 22
+                            [args] =&gt; Array
+                                (
+                                    [0] =&gt; 9
+                                )
+
+                        )
+
+                )
+
+            [5] =&gt; Array
+                (
+                    [call] =&gt; Array
+                        (
+                            [file] =&gt; package.php
+                            [line] =&gt; 77
+                            [function] =&gt; math::prod
+                        )
+
+                    [in] =&gt; Array
+                        (
+                            [file] =&gt; package.php
+                            [line] =&gt; 22
+                            [args] =&gt; Array
+                                (
+                                    [0] =&gt; 9
+                                    [1] =&gt; 3.14
+                                )
+                        )
+
+                    [out] =&gt; Array
+                        (
+                            [file] =&gt; package.php
+                            [line] =&gt; 22
+                            [args] =&gt; Array
+                                (
+                                    [0] =&gt; 28.26
+                                )
+                        )
+                )
+        )
+
+    [objects] =&gt; Array
+        (
+            [0] =&gt; geometry Object
+                (
+                    [pi:private] =&gt; 3.14
+                )
+            [2] =&gt; same as #0
+        )
+
+)
+   </pre>
+
+  </div>
+
+  </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.php.php-fctcalltrac.intro.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.php.php-functioncalltracer.html">PHP_FunctionCallTracer</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.php.php-uml.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">PHP_UML</td>
+  </tr>
+ </table>
+</div>
+</body></html>

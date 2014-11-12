@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Pager &quot;Jumping&quot; vs. &quot;Sliding&quot;</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.pager.html" title="Pager" />
+  <link rel="prev" href="package.html.pager.intro.html" title="Introduction" />
+  <link rel="next" href="package.html.pager.factory.html" title="Pager::factory" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Pager &quot;Jumping&quot; vs. &quot;Sliding&quot;</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.pager.intro.html" title="Introduction">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.pager.factory.html" title="Pager::factory">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.pager.compare">
+   
+    <h1 class="refname"><strong class="classname">Pager</strong> &quot;Jumping&quot; vs. &quot;Sliding&quot;</h1>
+    <div class="refnamediv"><strong class="classname">Pager</strong>  &quot;Jumping&quot; vs. &quot;Sliding&quot; &ndash; Feature comparison of the two pager styles</div>
+
+   
+  <div class="refsection" id="package.html.pager.compare.intro"><div class="info"><h1>What are the differences between the two styles?</h1>
+</div>
+   
+   <p class="para">
+    Since an example is worth 1000 words:
+   </p>
+  </div>
+  <div class="refsection" id="package.html.pager.compare.example_jumping"><div class="info"><h1>&quot;Jumping&quot; Pager logic</h1>
+</div>
+   
+    <p class="para">
+     Let&#039;s suppose that the data spans on 15 pages, and the window width is 5 page links.
+     The links are built on &quot;frames&quot; of 5 pages each:  [1-5] [6-10] [11-15]
+     Pager in &quot;Jumping&quot; mode always shows the same 5 page links while you are on
+     one of these pages.
+     Here&#039;s a temporal succession of the links, starting from page 1 and moving forward.
+     There are brakets around current page number to highlight this:
+     </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />a</span><span style="color: #007700">)&nbsp;&nbsp;&nbsp;&nbsp;{</span><span style="color: #0000BB">1</span><span style="color: #007700">}&nbsp;</span><span style="color: #0000BB">2&nbsp;&nbsp;3&nbsp;&nbsp;4&nbsp;&nbsp;5&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;first&nbsp;frame:&nbsp;[1-5]<br /></span><span style="color: #0000BB">b</span><span style="color: #007700">)&nbsp;&lt;=&nbsp;&nbsp;</span><span style="color: #0000BB">1&nbsp;</span><span style="color: #007700">{</span><span style="color: #0000BB">2</span><span style="color: #007700">}&nbsp;</span><span style="color: #0000BB">3&nbsp;&nbsp;4&nbsp;&nbsp;5&nbsp;&nbsp;</span><span style="color: #007700">=&gt;<br /></span><span style="color: #0000BB">c</span><span style="color: #007700">)&nbsp;&lt;=&nbsp;&nbsp;</span><span style="color: #0000BB">1&nbsp;&nbsp;2&nbsp;</span><span style="color: #007700">{</span><span style="color: #0000BB">3</span><span style="color: #007700">}&nbsp;</span><span style="color: #0000BB">4&nbsp;&nbsp;5&nbsp;&nbsp;</span><span style="color: #007700">=&gt;<br /></span><span style="color: #0000BB">d</span><span style="color: #007700">)&nbsp;&lt;=&nbsp;&nbsp;</span><span style="color: #0000BB">1&nbsp;&nbsp;2&nbsp;&nbsp;3&nbsp;</span><span style="color: #007700">{</span><span style="color: #0000BB">4</span><span style="color: #007700">}&nbsp;</span><span style="color: #0000BB">5&nbsp;&nbsp;</span><span style="color: #007700">=&gt;<br /></span><span style="color: #0000BB">e</span><span style="color: #007700">)&nbsp;&lt;=&nbsp;&nbsp;</span><span style="color: #0000BB">1&nbsp;&nbsp;2&nbsp;&nbsp;3&nbsp;&nbsp;4&nbsp;</span><span style="color: #007700">{</span><span style="color: #0000BB">5</span><span style="color: #007700">}&nbsp;=&gt;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;HERE&nbsp;IT&nbsp;JUMPS&nbsp;TO&nbsp;THE&nbsp;NEXT&nbsp;FRAME<br /></span><span style="color: #0000BB">f</span><span style="color: #007700">)&nbsp;&lt;=&nbsp;{</span><span style="color: #0000BB">6</span><span style="color: #007700">}&nbsp;</span><span style="color: #0000BB">7&nbsp;&nbsp;8&nbsp;&nbsp;9&nbsp;10&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;second&nbsp;frame:&nbsp;[6-10]<br /></span><span style="color: #0000BB">g</span><span style="color: #007700">)&nbsp;&lt;=&nbsp;&nbsp;</span><span style="color: #0000BB">6&nbsp;</span><span style="color: #007700">{</span><span style="color: #0000BB">7</span><span style="color: #007700">}&nbsp;</span><span style="color: #0000BB">8&nbsp;&nbsp;9&nbsp;10&nbsp;&nbsp;</span><span style="color: #007700">=&gt;<br /></span><span style="color: #0000BB">h</span><span style="color: #007700">)&nbsp;&lt;=&nbsp;&nbsp;</span><span style="color: #0000BB">6&nbsp;&nbsp;7&nbsp;</span><span style="color: #007700">{</span><span style="color: #0000BB">8</span><span style="color: #007700">}&nbsp;</span><span style="color: #0000BB">9&nbsp;10&nbsp;&nbsp;</span><span style="color: #007700">=&gt;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div><p>
+     and so on. See what a &quot;jumping window&quot; frame is? When you reach a limit (in the
+     example, you go from page 5 to page 6), it &quot;jumps&quot; to next frame (links from page 6 to 10).
+    </p>
+   </div>
+
+  <div class="refsection" id="package.html.pager.compare.example_pager_sliding"><div class="info"><h1>&quot;Sliding&quot; Pager logic</h1>
+</div>
+   
+    <p class="para">
+     Instead of jumping from one frame to the other, with Pager in &quot;Sliding&quot; mode
+      the change is done smoothly, and the current page is always shown at the center of the
+      &quot;window&quot; (except of course for the first and the last pages):
+     </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />a</span><span style="color: #007700">)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</span><span style="color: #0000BB">1</span><span style="color: #007700">}&nbsp;</span><span style="color: #0000BB">2&nbsp;&nbsp;3&nbsp;&nbsp;4&nbsp;&nbsp;5&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[</span><span style="color: #0000BB">15</span><span style="color: #007700">]<br /></span><span style="color: #0000BB">b</span><span style="color: #007700">)&nbsp;[</span><span style="color: #0000BB">1</span><span style="color: #007700">]&nbsp;&lt;=&nbsp;</span><span style="color: #0000BB">1&nbsp;</span><span style="color: #007700">{</span><span style="color: #0000BB">2</span><span style="color: #007700">}&nbsp;</span><span style="color: #0000BB">3&nbsp;&nbsp;4&nbsp;&nbsp;5&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[</span><span style="color: #0000BB">15</span><span style="color: #007700">]<br /></span><span style="color: #0000BB">c</span><span style="color: #007700">)&nbsp;[</span><span style="color: #0000BB">1</span><span style="color: #007700">]&nbsp;&lt;=&nbsp;</span><span style="color: #0000BB">1&nbsp;&nbsp;2&nbsp;</span><span style="color: #007700">{</span><span style="color: #0000BB">3</span><span style="color: #007700">}&nbsp;</span><span style="color: #0000BB">4&nbsp;&nbsp;5&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[</span><span style="color: #0000BB">15</span><span style="color: #007700">]&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;HERE&nbsp;IT's&nbsp;STARTING&nbsp;WORKING&nbsp;AS&nbsp;DESIGNED<br /></span><span style="color: #0000BB">d</span><span style="color: #007700">)&nbsp;[</span><span style="color: #0000BB">1</span><span style="color: #007700">]&nbsp;&lt;=&nbsp;</span><span style="color: #0000BB">2&nbsp;&nbsp;3&nbsp;</span><span style="color: #007700">{</span><span style="color: #0000BB">4</span><span style="color: #007700">}&nbsp;</span><span style="color: #0000BB">5&nbsp;&nbsp;6&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[</span><span style="color: #0000BB">15</span><span style="color: #007700">]&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;see:&nbsp;current&nbsp;page&nbsp;number&nbsp;is&nbsp;at&nbsp;the&nbsp;center&nbsp;of&nbsp;the&nbsp;window<br /></span><span style="color: #0000BB">e</span><span style="color: #007700">)&nbsp;[</span><span style="color: #0000BB">1</span><span style="color: #007700">]&nbsp;&lt;=&nbsp;</span><span style="color: #0000BB">3&nbsp;&nbsp;4&nbsp;</span><span style="color: #007700">{</span><span style="color: #0000BB">5</span><span style="color: #007700">}&nbsp;</span><span style="color: #0000BB">6&nbsp;&nbsp;7&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[</span><span style="color: #0000BB">15</span><span style="color: #007700">]&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;and&nbsp;it&nbsp;stays&nbsp;there...<br /></span><span style="color: #0000BB">f</span><span style="color: #007700">)&nbsp;[</span><span style="color: #0000BB">1</span><span style="color: #007700">]&nbsp;&lt;=&nbsp;</span><span style="color: #0000BB">4&nbsp;&nbsp;5&nbsp;</span><span style="color: #007700">{</span><span style="color: #0000BB">6</span><span style="color: #007700">}&nbsp;</span><span style="color: #0000BB">7&nbsp;&nbsp;8&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[</span><span style="color: #0000BB">15</span><span style="color: #007700">]<br /></span><span style="color: #0000BB">g</span><span style="color: #007700">)&nbsp;[</span><span style="color: #0000BB">1</span><span style="color: #007700">]&nbsp;&lt;=&nbsp;</span><span style="color: #0000BB">5&nbsp;&nbsp;6&nbsp;</span><span style="color: #007700">{</span><span style="color: #0000BB">7</span><span style="color: #007700">}&nbsp;</span><span style="color: #0000BB">8&nbsp;&nbsp;9&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[</span><span style="color: #0000BB">15</span><span style="color: #007700">]<br /></span><span style="color: #0000BB">h</span><span style="color: #007700">)&nbsp;[</span><span style="color: #0000BB">1</span><span style="color: #007700">]&nbsp;&lt;=&nbsp;</span><span style="color: #0000BB">6&nbsp;&nbsp;7&nbsp;</span><span style="color: #007700">{</span><span style="color: #0000BB">8</span><span style="color: #007700">}&nbsp;</span><span style="color: #0000BB">9&nbsp;10&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;[</span><span style="color: #0000BB">15</span><span style="color: #007700">]<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div><p>
+     and so on.
+    </p>
+   </div>
+
+
+   <div class="refsection" id="package.html.pager.compare.other"><div class="info"><h1>Other differences</h1>
+</div>
+    
+    <p class="para">
+     Apart from the different &quot;philosophy&quot;, there is one difference in the
+     <em><code class="parameter">delta</code></em> parameter: in &quot;Jumping&quot; mode, it&#039;s the
+     number of page numbers to show; in &quot;Sliding&quot; mode it&#039;s the number of
+     page numbers to show before and after the current one.
+    </p>
+   </div>
+
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.pager.intro.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.pager.html">Pager</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.pager.factory.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Pager::factory</td>
+  </tr>
+ </table>
+</div>
+</body></html>

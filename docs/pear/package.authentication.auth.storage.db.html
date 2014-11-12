@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Auth_Container_DB</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.authentication.auth.html" title="Auth" />
+  <link rel="prev" href="package.authentication.auth.storage.array.html" title="Auth_Container_Array" />
+  <link rel="next" href="package.authentication.auth.storage.dblite.html" title="Auth_Container_DBLite" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Auth_Container_DB</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.authentication.auth.storage.array.html" title="Auth_Container_Array">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.authentication.auth.storage.dblite.html" title="Auth_Container_DBLite">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.authentication.auth.storage.db">
+ 
+  <h1 class="refname">Auth_Container_DB</h1>
+  <div class="refnamediv">Auth_Container_DB &ndash; Authenticate against a database using DB</div>
+
+ 
+ <div class="refsection" id="package.authentication.auth.storage.db.overview"><div class="info"><h1>DB Container</h1>
+</div>
+  
+  <p class="para">
+   This container makes use of
+   <a href="package.database.db.html" class="link"><strong class="classname">PEAR::DB</strong></a>
+   abstraction layer for database access. That means that you can
+   use all databases that are supported by the DB abstraction layer
+   to store the login data.
+  </p>
+  <p class="para">
+   The storage-specific argument for the 
+   <a href="package.authentication.auth.auth.auth.html" class="link">
+    <strong class="function">Auth constructor()</strong>
+   </a>
+   is an array of options.
+   </p><table class="doctable table"><caption>Available Options</caption>
+    
+    
+     <thead>
+      <tr>
+       <th>Option</th>
+       <th>Data Type</th>
+       <th>Default value</th>
+       <th>Description</th>
+      </tr>
+
+     </thead>
+
+     <tbody class="tbody">
+      <tr>
+       <td>
+        "<span class="quote">dsn</span>"
+       </td>
+       <td>
+        <span class="type">string</span>
+       </td>
+       <td>
+        "<span class="quote">
+       </td>        
+       <td>
+        A valid and well-formed 
+        <a href="package.database.db.intro-dsn.html" class="link">
+         DSN
+        </a>.
+       </td>
+      </tr>
+       
+      <tr>
+       <td>
+        "<span class="quote">table</span>"
+       </td>
+       <td>
+        <span class="type">string</span>
+       </td>
+       <td>
+        "<span class="quote">auth</span>"
+       </td>                 
+       <td>
+        The name of the database table, where the 
+        authorization data is stored.
+       </td>
+      </tr>
+               
+      <tr>
+       <td>"<span class="quote">usernamecol</span>"</td>
+       <td>
+        <span class="type">string</span>
+       </td>
+       <td>
+        "<span class="quote">username</span>"
+       </td>                 
+       <td>
+        The name of the column, where the username is stored
+       </td>
+      </tr>
+                       
+      <tr>
+       <td>"<span class="quote">passwordcol</span>"</td>
+       <td>
+        <span class="type">string</span>
+       </td>
+       <td>
+        "<span class="quote">password</span>"
+       </td>                 
+       <td>
+        The name of the column, where the crypted password is stored.
+       </td>
+      </tr>
+                               
+      <tr>
+       <td>"<span class="quote">db_fields</span>"</td>
+       <td>
+        <span class="type">array</span>
+       </td>
+       <td>
+        array()
+       </td>                 
+       <td>
+        An array of extra fields to retrieve when loading the user details.
+       </td>
+      </tr>
+                       
+      <tr>
+       <td>"<span class="quote">cryptType</span>"</td>
+       <td>
+        <span class="type">string</span>
+       </td>
+       <td>
+        "<span class="quote">md5</span>"
+       </td>                 
+       <td>
+        The encryption type the password is stored in.
+       </td>
+      </tr>
+                       
+      <tr>
+       <td>"<span class="quote">auto_quote</span>"</td>
+       <td>
+        <span class="type">boolean</span>
+       </td>
+       <td>
+        <strong class="constant">TRUE</strong>
+       </td>                 
+       <td>
+        Whether to enable automatic quoting of database table and field names.
+       </td>
+      </tr>
+                       
+      <tr>
+       <td>"<span class="quote">db_options</span>"</td>
+       <td>
+        <span class="type">array</span>
+       </td>
+       <td>
+        array()
+       </td>                 
+       <td>
+        An array of options to be passed to the
+        <strong class="classname">PEAR::DB</strong> constructor. See
+        <a href="package.database.db.db-common.setoption.html" class="link">
+         <strong class="classname">PEAR::DB</strong>::<strong class="function">setOption()</strong>
+        </a> for more information.
+       </td>
+      </tr>
+                       
+      <tr>
+       <td>"<span class="quote">db_where</span>"</td>
+       <td>
+        <span class="type">string</span>
+       </td>
+       <td>
+        "<span class="quote">
+       </td>
+       <td>
+        A string to be appended to the WHERE clause of queries against the
+        database. It is appended to the queries used in
+        <strong class="function">fetchData()</strong>, <strong class="function">listUsers()</strong>,
+        <strong class="function">removeUser()</strong> and
+        <strong class="function">changePassword()</strong>. Available since Auth 1.5.0.
+       </td>
+      </tr>
+
+     </tbody>
+    
+   </table>
+
+  
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.authentication.auth.storage.array.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.authentication.auth.html">Auth</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.authentication.auth.storage.dblite.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Auth_Container_Array</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Auth_Container_DBLite</td>
+  </tr>
+ </table>
+</div>
+</body></html>

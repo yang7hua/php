@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Pyrus user configuration variables</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="pyrus.configuration.html" title="Pyrus configuration" />
+  <link rel="prev" href="pyrus.configuration.html" title="Pyrus configuration" />
+  <link rel="next" href="pyrus.configuration.system.html" title="Pyrus system configuration variables" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Pyrus user configuration variables</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="pyrus.configuration.html" title="Pyrus configuration">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="pyrus.configuration.system.html" title="Pyrus system configuration variables">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="pyrus.configuration.user">
+ <div class="info"><h1>Pyrus user configuration variables</h1>
+</div>
+
+ <div class="section" id="pyrus.configuration.user.intro">
+  <div class="info"><h2 class="title">Introduction</h2></div>
+  <p class="para">
+   The user configuration file is always stored in the user&#039;s personal directory,
+   the home directory on unix, and <code class="literal">My Documents</code> on Windows.
+   For a unix user with username <code class="literal">user</code>, the user configuration
+   file is stored in <code class="literal">/home/user/.pear/pearconfig.xml</code>.  For
+   a Windows user, the configuration is stored in
+   <code class="literal">My Documents\pear\pearconfig.xml</code>.  The file is saved in
+   XML format and can be hand-edited if necessary.
+  </p>
+  <p class="para">
+   Unlike the system configuration file, the user configuration file is always
+   saved when an operation that writes to disk is called, such as installing
+   a package.  On startup, Pyrus uses the configuration file&#039;s existence to
+   determine whether it is being executed for the first time, and if so, prompts
+   the user to initialize a few default settings such as the PEAR path.
+  </p>
+  <p class="para">
+   There are two kinds of user configuration variables, installation-wide variables
+   such as <code class="literal">verbose</code>, and channel-specific variables such as
+   <code class="literal">openssl_cert</code>.  Channel-specific variables can have different
+   values for different channels.  This allows setting a different certificate
+   for each channel, for instance.  The channel name is used as a tag, with
+   non-XML friendly characters translated into simple mnemonics (such as
+   <code class="literal">.</code> becoming <code class="literal">DOT</code>).
+  </p>
+  <p class="para">
+   Here is a sample user configuration file (with line breaks added for readability):
+  </p>
+  <p class="para">
+   </p><div class="xmlcode">
+    <pre class="xmlcode">
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;pearconfig version=&quot;1.0&quot;&gt;
+ &lt;default_channel&gt;pear2.php.net&lt;/default_channel&gt;
+ &lt;auto_discover&gt;0&lt;/auto_discover&gt;
+ &lt;http_proxy&gt;&lt;/http_proxy&gt;
+ &lt;cache_dir&gt;/home/user/testpear/cache&lt;/cache_dir&gt;
+ &lt;temp_dir&gt;/home/user/testpear/temp&lt;/temp_dir&gt;
+ &lt;verbose&gt;1&lt;/verbose&gt;
+ &lt;paranoia&gt;2&lt;/paranoia&gt;
+ &lt;preferred_state&gt;stable&lt;/preferred_state&gt;
+ &lt;umask&gt;0022&lt;/umask&gt;
+ &lt;cache_ttl&gt;3600&lt;/cache_ttl&gt;
+ &lt;my_pear_path&gt;/home/user/testpear:/usr/local/lib/php&lt;/my_pear_path&gt;
+ &lt;plugins_dir&gt;/home/user/.pear&lt;/plugins_dir&gt;
+ &lt;openssl_cert&gt;
+  &lt;pear2DOTphpDOTnet&gt;/home/user/mykey.p12&lt;/pear2DOTphpDOTnet&gt;
+ &lt;/openssl_cert&gt;
+ &lt;handle&gt;
+  &lt;pear2DOTphpDOTnet&gt;cellog&lt;/pear2DOTphpDOTnet&gt;
+ &lt;/handle&gt;
+&lt;/pearconfig&gt;</pre>
+
+   </div>
+  
+ </div>
+ 
+ 
+<div class="section" id="pyrus.configuration.user.autodiscover">
+ <div class="info"><h2 class="title">auto_discover</h2></div>
+
+ <div class="section" id="pyrus.configuration.user.autodiscover.intro">
+  <div class="info"><h3 class="title">Introduction</h3></div>
+  <p class="para">
+   <code class="literal">auto_discover</code> is a flag (boolean), defaulting to
+   <code class="literal">0</code> or off.  If on, this flag instructs Pyrus
+   to automatically discover channels of dependencies (see
+   <a href="pyrus.commands.channeldiscover.html" class="link">channel-discover</a> for
+   a more in-depth description of what channel discovery means).
+  </p>
+  <p class="para">
+   For example, let&#039;s say we are installing Package <code class="literal">foo</code> from channel
+   <code class="literal">pear2.php.net</code>, and that <code class="literal">foo</code> depends on package
+   <code class="literal">bar</code> from channel <code class="literal">pear.example.com</code>.
+   If Pyrus does not know the <code class="literal">pear.example.com</code> channel, and
+   <code class="literal">auto_discover</code> is set to <code class="literal">1</code>, it will
+   attempt to discover information on the channel, and after successfully
+   adding its information to the registry, will then successfully download
+   and install the dependency <code class="literal">bar</code>.  However, if
+   <code class="literal">auto_discover</code> is disabled, Pyrus will simply fail
+   with an error explaining that nothing is known about the
+   <code class="literal">pear.example.com</code> channel, and that it must be
+   added prior to installation.
+  </p>
+ </div>
+</div>
+
+ 
+<div class="section" id="pyrus.configuration.user.cachedir">
+ <div class="info"><h2 class="title">cache_dir</h2></div>
+
+ <div class="section" id="pyrus.configuration.user.cachedir.intro">
+  <div class="info"><h3 class="title">Introduction</h3></div>
+  <p class="para">
+   <code class="literal">cache_dir</code> is the location where HTTP caching of
+   PEAR channel <a href="core.rest.html" class="link">REST</a> files is cached.
+  </p>
+ </div>
+</div>
+
+ 
+<div class="section" id="pyrus.configuration.user.cachettl">
+ <div class="info"><h2 class="title">cache_ttl</h2></div>
+
+ <div class="section" id="pyrus.configuration.user.cachettl.intro">
+  <div class="info"><h3 class="title">Introduction</h3></div>
+  <p class="para">
+   the <code class="literal">cache_ttl</code> configuration variable is used to determine
+   when to consider the PEAR Channel <a href="core.rest.html" class="link">REST</a>
+   cache to have been invalidated.  It is measured in seconds, and by default
+   is <code class="literal">3600</code>, or 1 hour.
+  </p>
+ </div>
+</div>
+
+ 
+<div class="section" id="pyrus.configuration.user.defaultchannel">
+ <div class="info"><h2 class="title">default_channel</h2></div>
+
+ <div class="section" id="pyrus.configuration.user.defaultchannel.intro">
+  <div class="info"><h3 class="title">Introduction</h3></div>
+  <p class="para">
+   The default channel is the channel that should be implied when an
+   <a href="guide.users.concepts.abstractpackage.html" class="link">Abstract Package</a>
+   is ambiguous.  By default, it is <code class="literal">pear2.php.net</code>.
+  </p>
+  <p class="para">
+   As an example, when executing:
+  </p>
+  <pre class="screen">php pyrus.phar install PEAR2_HTTP_Request</pre>
+
+  <p class="para">
+   The abstract package <code class="literal">PEAR2_HTTP_Request</code> is ambiguous - it
+   does not specify a channel.  Pyrus assumes, therefore, that the requested
+   package is from the default channel, and acts as if the user had in fact
+   typed:
+  </p>
+  <pre class="screen">php pyrus.phar install pear2.php.net/PEAR2_HTTP_Request</pre>
+
+  <p class="para">
+   The <code class="literal">default_channel</code> value is also used for all
+   channel-specific configuration values.
+  </p>
+ </div>
+</div>
+
+ 
+<div class="section" id="pyrus.configuration.user.downloaddir">
+ <div class="info"><h2 class="title">download_dir</h2></div>
+
+ <div class="section" id="pyrus.configuration.user.downloaddir.intro">
+  <div class="info"><h3 class="title">Introduction</h3></div>
+  <blockquote class="note"><span class="simpara">This is a channel-specific configuration value</span></blockquote>
+
+  <p class="para">
+   The <code class="literal">download_dir</code> is where downloaded packages are kept.
+   This can allow later repairing or easy cloning of an installation.  There is
+   no penalty if the files are removed, and they may be easily removed to
+   conserve space.
+  </p>
+ </div>
+</div>
+
+ 
+<div class="section" id="pyrus.configuration.user.handle">
+ <div class="info"><h2 class="title">handle</h2></div>
+
+ <div class="section" id="pyrus.configuration.user.handle.intro">
+  <div class="info"><h3 class="title">Introduction</h3></div>
+  <blockquote class="note"><span class="simpara">This is a channel-specific configuration value</span></blockquote>
+
+  <p class="para">
+   The <code class="literal">handle</code> variable should be set to the handle you use
+   to identify yourself in the <code class="literal">&lt;maintainers&gt;</code> section
+   of package.xml for packages in a specific channel.
+  </p>
+  <p class="para">
+   For example, if your <code class="literal">&lt;maintainer&gt;</code> entry in package.xml
+   is:
+  </p>
+  <p class="para">
+   </p><div class="xmlcode">
+    <pre class="xmlcode">
+ &lt;lead&gt;
+  &lt;name&gt;Greg Beaver&lt;/name&gt;
+  &lt;user&gt;cellog&lt;/user&gt;
+  &lt;email&gt;cellog@php.net&lt;/email&gt;
+  &lt;active&gt;no&lt;/active&gt;
+ &lt;/lead&gt;</pre>
+
+   </div>
+  
+  <p class="para">
+   Your handle is <code class="literal">cellog</code>.
+  </p>
+  <p class="para">
+   This configuration variable is used in conjunction with the
+   <a href="pyrus.configuration.user.html#pyrus.configuration.user.opensslcert" class="link">openssl_cert</a>
+   configuration variable to implement package signing.
+  </p>
+ </div>
+</div>
+
+ 
+<div class="section" id="pyrus.configuration.user.httpproxy">
+ <div class="info"><h2 class="title">http_proxy</h2></div>
+
+ <div class="section" id="pyrus.configuration.user.httpproxy.intro">
+  <div class="info"><h3 class="title">Introduction</h3></div>
+  <p class="para">
+   The <code class="literal">http_proxy</code> configuration variable should be set to the
+   full URI of your local HTTP proxy, or left blank for none.
+  </p>
+ </div>
+</div>
+
+ 
+<div class="section" id="pyrus.configuration.user.mypearpath">
+ <div class="info"><h2 class="title">my_pear_path</h2></div>
+
+ <div class="section" id="pyrus.configuration.user.mypearpath.intro">
+  <div class="info"><h3 class="title">Introduction</h3></div>
+  <p class="para">
+   The <code class="literal">my_pear_path</code> configuration value controls the order
+   in which Pyrus cascades PEAR installations.  The path should have the same
+   syntax as <code class="literal">include_path</code>, a
+   <strong class="constant">PATH_SEPARATOR</strong>-separated list of full paths to PEAR
+   installations.  The <code class="literal">my_pear_path</code> configuration variable
+   can be easily set with the <a href="pyrus.commands.mypear.html" class="link">mypear</a>
+   command.
+  </p>
+  <p class="para">
+   Only the first path is considered to be read/write, the others are only used
+   to validate package dependencies on download.
+  </p>
+  <p class="para">
+   For instance, the <code class="literal">my_pear_path</code>
+   <code class="literal">/home/user/testpear:/usr/local/lib/php</code> instructs Pyrus
+   to install all packages into the PEAR installation at
+   <code class="literal">/home/user/testpear</code>, and to also use the PEAR installation
+   in <code class="literal">/usr/local/lib/php</code> to validate dependencies.
+  </p>
+  <p class="para">
+   On Windows, an example <code class="literal">my_pear_path</code> is
+   <code class="literal">D:\customPear;C:\php5</code>.
+  </p>
+ </div>
+</div>
+
+ 
+<div class="section" id="pyrus.configuration.user.opensslcert">
+ <div class="info"><h2 class="title">openssl_cert</h2></div>
+
+ <div class="section" id="pyrus.configuration.user.opensslcert.intro">
+  <div class="info"><h3 class="title">Introduction</h3></div>
+  <blockquote class="note"><span class="simpara">This is a channel-specific configuration value</span></blockquote>
+
+  <p class="para">
+   The <code class="literal">openssl_cert</code> configuration variable should be set to
+   the full path to your personal PKCS#12 certificate, as signed by a recognized
+   certificate authority such as <a href="http://www.cacert.org" class="link external">CACert</a>.
+   Pyrus uses this certificate along with your
+   <a href="pyrus.configuration.user.html#pyrus.configuration.user.handle" class="link">handle</a> to implement
+   package signing.
+  </p>
+  <p class="para">
+   Your certificate must have the email address you use in package.xml as its
+   alternate name, otherwise Pyrus will refuse to use it.  Pyrus uses the
+   email address as stated in package.xml of the releasing maintainer of a
+   package to verify that the package was actually created by the maintainer.
+   This makes a man-in-the-middle attack far more difficult to execute, as well
+   as verifying package integrity.
+  </p>
+ </div>
+</div>
+
+ 
+<div class="section" id="pyrus.configuration.user.password">
+ <div class="info"><h2 class="title">password</h2></div>
+
+ <div class="section" id="pyrus.configuration.user.password.intro">
+  <div class="info"><h3 class="title">Introduction</h3></div>
+  <blockquote class="note"><span class="simpara">This is a channel-specific configuration value</span></blockquote>
+
+  <p class="para">
+   This configuration variable is a legacy variable from PEAR, is not yet
+   used in Pyrus, and may be removed before the stable release.
+  </p>
+ </div>
+</div>
+
+ 
+<div class="section" id="pyrus.configuration.user.pluginsdir">
+ <div class="info"><h2 class="title">plugins_dir</h2></div>
+
+ <div class="section" id="pyrus.configuration.user.pluginsdir.intro">
+  <div class="info"><h3 class="title">Introduction</h3></div>
+  <p class="para">
+   The <code class="literal">plugins_dir</code> directory is where all Pyrus plugins are
+   installed.  By default, it is the directory in which the user configuration
+   file is stored.
+  </p>
+ </div>
+</div>
+
+ 
+<div class="section" id="pyrus.configuration.user.preferredmirror">
+ <div class="info"><h2 class="title">preferred_mirror</h2></div>
+
+ <div class="section" id="pyrus.configuration.user.preferredmirror.intro">
+  <div class="info"><h3 class="title">Introduction</h3></div>
+  <blockquote class="note"><span class="simpara">This is a channel-specific configuration value</span></blockquote>
+
+  <p class="para">
+   This variable controls which mirror of a channel should be used
+   to retrieve package releases and PEAR Channel
+   <a href="core.rest.html" class="link">REST</a> information.  By default, it is
+   set to the main channel path.
+  </p>
+ </div>
+</div>
+
+ 
+<div class="section" id="pyrus.configuration.user.preferredstate">
+ <div class="info"><h2 class="title">preferred_state</h2></div>
+
+ <div class="section" id="pyrus.configuration.user.preferredstate.intro">
+  <div class="info"><h3 class="title">Introduction</h3></div>
+  <p class="para">
+   The <code class="literal">preferred_state</code> configuration variable controls the
+   release stability level of packages that will be installed.  By default it
+   is <code class="literal">stable</code>, which instructs Pyrus to ignore any releases
+   with lesser stabilities <code class="literal">beta</code>, <code class="literal">alpha</code>
+   or <code class="literal">devel</code> unless explicitly requested by the user.
+  </p>
+  <p class="para">
+   This can be changed to allow riskier installation of newer, less-tested
+   releases that are on the cutting edge of development.
+  </p>
+ </div>
+</div>
+
+ 
+<div class="section" id="pyrus.configuration.user.tempdir">
+ <div class="info"><h2 class="title">temp_dir</h2></div>
+
+ <div class="section" id="pyrus.configuration.user.tempdir.intro">
+  <div class="info"><h3 class="title">Introduction</h3></div>
+  <p class="para">
+   The <code class="literal">temp_dir</code> configuration directive is where all
+   temporary files are extracted by Pyrus.
+  </p>
+ </div>
+</div>
+
+ 
+<div class="section" id="pyrus.configuration.user.umask">
+ <div class="info"><h2 class="title">umask</h2></div>
+
+ <div class="section" id="pyrus.configuration.user.umask.intro">
+  <div class="info"><h3 class="title">Introduction</h3></div>
+  <p class="para">
+   The <code class="literal">umask</code> configuration value is used to control the
+   default file mask used when setting file permissions.  By default it is
+   octal value <code class="literal">0022</code>.  The value is a bitmask that is used
+   to clear any bits.  Thus, a <code class="literal">umask</code> of <code class="literal">0000</code>
+   will cause files to be installed with <code class="literal">0666</code> permissions.  A
+   <code class="literal">umask</code> of <code class="literal">0022</code> causes files to be installed
+   with <code class="literal">0644</code> permissions.
+  </p>
+ </div>
+</div>
+
+ 
+<div class="section" id="pyrus.configuration.user.username">
+ <div class="info"><h2 class="title">username</h2></div>
+
+ <div class="section" id="pyrus.configuration.user.username.intro">
+  <div class="info"><h3 class="title">Introduction</h3></div>
+  <blockquote class="note"><span class="simpara">This is a channel-specific configuration value</span></blockquote>
+
+  <p class="para">
+   This configuration variable is a legacy variable from PEAR, is not yet
+   used in Pyrus, and may be removed before the stable release.
+  </p>
+ </div>
+</div>
+
+ 
+<div class="section" id="pyrus.configuration.user.verbose">
+ <div class="info"><h2 class="title">verbose</h2></div>
+
+ <div class="section" id="pyrus.configuration.user.verbose.intro">
+  <div class="info"><h3 class="title">Introduction</h3></div>
+  <p class="para">
+   The <code class="literal">verbose</code> setting controls how much information Pyrus
+   echoes as it performs its task.  The higher the setting, the more information
+   Pyrus will spew.  By default, it is set to <code class="literal">1</code>.
+  </p>
+ </div>
+</div>
+
+ 
+<div class="section" id="pyrus.configuration.user.paranoia">
+ <div class="info"><h2 class="title">verbose</h2></div>
+
+ <div class="section" id="pyrus.configuration.user.paranoia.intro">
+  <div class="info"><h3 class="title">Introduction</h3></div>
+  <p class="para">
+   The <code class="literal">paranoia</code> setting controls how Pyrus handles automatic upgrades
+   to new versions of packages.  The <a href="guide.users.concepts.api.html" class="link">API</a>
+   version of the installed package is compared against the API version of remote
+   packages, and chooses a release that is compatible with the current version
+   based on the paranoia level.  This setting does not affect upgrades of
+   local packages, only those retrieved from a remote PEAR channel server.
+  </p>
+  <p class="para">
+   The paranoia setting is a numeric setting with levels <code class="literal">1</code>
+   to <code class="literal">4</code> supported, anything above <code class="literal">4</code> is
+   automatically converted to <code class="literal">4</code>.  The levels work as follows:
+  </p>
+  <p class="para">
+   </p><ol type="1">
+    <li class="listitem"> 
+     <p class="para">
+      API version is ignored, only package stability and PHP version compatibility
+      is used to determine which package to download for installation.
+     </p>
+    </li>
+    <li class="listitem"> 
+     <p class="para">
+      This is the default setting, and specifies that backwards compatibility
+      must be maintained.
+     </p>
+     <p class="para">
+      This is performed by checking that the
+      API version first digit does not change.  Thus a package with
+      API version of <code class="literal">1.2.3</code> cannot upgrade to a new package
+      with API version <code class="literal">2.0.0</code>.  Upgrades are allowed
+      to versions such as <code class="literal">1.2.4</code> or <code class="literal">1.3.0</code>.
+     </p>
+    </li>
+    <li class="listitem"> 
+     <p class="para">
+      This is a strict setting, only allowing security and other API bugfixes.
+     </p>
+     <p class="para">
+      This is performed by checking that the API version&#039;s first and second
+      digits do not change.  Thus a package with
+      API version of <code class="literal">1.2.3</code> cannot upgrade to a new package
+      with API version <code class="literal">2.0.0</code>.  Upgrades are allowed
+      to versions such as <code class="literal">1.2.4</code>, but not to
+      <code class="literal">1.3.0</code>.
+     </p>
+    </li>
+    <li class="listitem"> 
+     <p class="para">
+      Do not allow any API changes
+     </p>
+     <p class="para">
+      This is the most paranoid setting, and prevents upgrading to any package
+      that changes API version whatsoever.
+     </p>
+    </li>
+   </ol>
+  
+  <p class="para">
+   If using pyrus.phar, the setting can also be changed with the <code class="literal">-p</code>
+   command-line option.  This example sets paranoia temporarily to 1:
+   </p><pre class="screen">php pyrus.phar -p install PackageName</pre>
+<p>
+   This example sets paranoia temporarily to 4:
+   </p><pre class="screen">php pyrus.phar -pppp install PackageName</pre>
+
+  
+ </div>
+</div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="pyrus.configuration.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="pyrus.configuration.html">Pyrus configuration</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="pyrus.configuration.system.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Pyrus configuration</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Pyrus system configuration variables</td>
+  </tr>
+ </table>
+</div>
+</body></html>

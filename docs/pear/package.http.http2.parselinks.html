@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>HTTP2::parseLinks</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.http.http2.html" title="HTTP2" />
+  <link rel="prev" href="package.http.http2.negotiatelanguage.html" title="HTTP2::negotiateLanguage" />
+  <link rel="next" href="package.http.http2.redirect.html" title="HTTP2::redirect" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">HTTP2::parseLinks</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.http.http2.negotiatelanguage.html" title="HTTP2::negotiateLanguage">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.http.http2.redirect.html" title="HTTP2::redirect">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.http.http2.parselinks">
+   
+    <h1 class="refname">HTTP2::parseLinks</h1>
+    <div class="refnamediv">HTTP2::parseLinks &ndash; Parse HTTP Web Linking header values</div>
+
+   
+   <h2 class="refsynopsisdiv">Synopsis</h2>
+    <div class="funcsynopsis">
+     <div class="programlisting">
+      require_once &#039;HTTP.php&#039;;
+     </div>     
+     <p><code class="funcprototype">
+      array <strong class="function">HTTP2::parseLinks</strong> ( 
+      array|string $lines
+     )</code></p>     
+    </div>
+   
+   <div class="refsection" id="package.http.http2.parselinks.desc">
+    <h1 class="title">Description</h1>
+    <p class="para">
+     Parses <a href="http://www.faqs.org/rfcs/rfc5988" class="link external">RFC 5988</a> (&quot;Web Linking&quot;)
+     HTTP link headers and splits each of the links up into an array you
+     can then use further.
+    </p>
+   </div>   
+   <div class="refsection" id="package.http.http2.parselinks.example">
+    <h1 class="title">Example</h1>
+    <p class="para">
+     </p><div class="example">
+      <div class="info"><p><strong>Usage example</strong></p></div>
+      
+      <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTTP2.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//Link&nbsp;headers&nbsp;that&nbsp;we&nbsp;got&nbsp;from&nbsp;somewhere,&nbsp;e.g.<br />//&nbsp;HTTP_Request2_Response::getHeader('link')<br /></span><span style="color: #0000BB">$link&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'&lt;http://pear.php.net/webmention.php&gt;;&nbsp;rel="webmention"'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$http&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTTP2</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$links&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$http</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parseLinks</span><span style="color: #007700">(</span><span style="color: #0000BB">$link</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$links</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+      <div class="example-contents"><p>
+       The script produces this output:
+      </p></div>
+
+      <div class="textcode"><pre class="textcode">array(1) {
+  [0] =&gt;
+  array(2) {
+    &#039;_uri&#039; =&gt;
+    string(34) &quot;http://pear.php.net/webmention.php&quot;
+    &#039;rel&#039; =&gt;
+    array(1) {
+      [0] =&gt;
+      string(10) &quot;webmention&quot;
+    }
+  }
+}</pre>
+</div>
+     </div>
+    
+    <p class="para">
+     Note that a single link header may contain multiple links.
+     For that reason, the method returns an array of link arrays.
+    </p>
+   </div>
+   <div class="refsection" id="package.http.http2.parselinks.parameter">
+    <h1 class="title">Parameter</h1>
+    <p class="para">
+     </p><ul class="itemizedlist">
+      <li class="listitem">
+       <p class="para">
+        <em><code class="parameter">array|string $lines</code></em> - 
+        A single <code class="literal">Link:</code> header value, or an array
+        of multiple <code class="literal">Link:</code> header values, without
+        the <code class="literal">Link:</code>.
+       </p>
+      </li>
+     </ul>
+    
+   </div>         
+   <div class="refsection" id="package.http.http2.parselinks.return">
+    <h1 class="title">Return value</h1>
+    <p class="para">
+     <em><code class="parameter">array</code></em> - Array of arrays.
+     Each array describes a link.
+     The URI is the key <code class="literal">_uri</code>,
+     all parameters have their names as keys.
+    </p>
+    <p class="para">
+     The parameters <code class="literal">title*</code>,
+     <code class="literal">rel</code> and <code class="literal">rev</code> are multi-valued
+     and thus have an array as their value.
+    </p>
+   </div>      
+   <div class="refsection" id="package.http.http2.parselinks.note">
+    <h1 class="title">Note</h1>
+    <p class="simpara">This function can not be called
+statically.</p>
+   </div>         
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.http.http2.negotiatelanguage.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.http.http2.html">HTTP2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.http.http2.redirect.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">HTTP2::negotiateLanguage</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">HTTP2::redirect</td>
+  </tr>
+ </table>
+</div>
+</body></html>

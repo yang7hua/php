@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Overview of QuickForm2_Controller</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-quickform2.multipage.html" title="Multipage forms" />
+  <link rel="prev" href="package.html.html-quickform2.multipage.html" title="Multipage forms" />
+  <link rel="next" href="package.html.html-quickform2.controller-migration.html" title="Migration from HTML_QuickForm_Controller" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Overview of QuickForm2_Controller</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-quickform2.multipage.html" title="Multipage forms">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-quickform2.controller-migration.html" title="Migration from HTML_QuickForm_Controller">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-quickform2.controller-overview">
+ 
+  <h1 class="refname">Overview of QuickForm2_Controller</h1>
+  <div class="refnamediv">Overview of QuickForm2_Controller &ndash; Easy building of multipage forms</div>
+
+ 
+ <div class="refsection" id="package.html.html-quickform2.controller-overview.what">
+  <div class="info">
+   <h1>What is HTML_QuickForm2_Controller?</h1>
+
+  </div>
+  <p class="para">
+   If you are already familiar with MVC frameworks, then you probably know: controller is a
+   component that accepts user input and instructs other components to perform actions based on that
+   input. <strong class="package">HTML_QuickForm2_Controller</strong> is somewhat smaller in scope than a typical
+   framework controller since it only deals with forms. When using the Controller, an action name is
+   sent in <code class="literal">GET</code> or <code class="literal">POST</code> data, usually by clicking a specially
+   named button. This name contains <code class="varname">id</code> of one of the form pages added to
+   Controller and name of action handler to call (e.g. <code class="literal">&#039;next&#039;</code> for going forward
+   in a wizard), that data is extracted and an appropriate action handler is called.
+  </p>
+  <p class="para">
+   Key features:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara">
+     Allows forms spanning multiple pages, stores form data in session between HTTP requests;
+    </span></li>
+    <li class="listitem"><span class="simpara">
+     Binds OO action handlers to buttons that submit the form;
+    </span></li>
+    <li class="listitem"><span class="simpara">
+     Includes default action handlers that allow easy building of multipage forms;
+    </span></li>
+    <li class="listitem"><span class="simpara">
+     Even if you only use it for single-page forms, form-related logic is kept in classes rather
+     than in procedural code.
+    </span></li>
+   </ul>
+  
+  <p class="para">
+   Key classes and interfaces:
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term"><a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller.html" class="apidoclink">HTML_QuickForm2_Controller</a></dt>
+     <dd class="listitem"><span class="simpara">
+      Extracts the action name from request and calls the appropriate handler. Contains several
+      Pages and a <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_SessionContainer.html" class="apidoclink">wrapper for values stored in
+      session</a>.
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Page.html" class="apidoclink">HTML_QuickForm2_Controller_Page</a></dt>
+     <dd class="listitem"><span class="simpara">
+      Class representing a single page of the form. Contains an instance of <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2.html" class="apidoclink">HTML_QuickForm2</a>.
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Action.html" class="apidoclink">HTML_QuickForm2_Controller_Action</a></dt>
+     <dd class="listitem"><span class="simpara">
+      Action handlers implement this interface.
+     </span></dd>
+    </dl>
+   </div>
+  
+  <p class="para">
+   <strong class="classname">HTML_QuickForm2_Controller</strong> is a rewrite of PHP4 <a href="package.html.html-quickform-controller.html" class="link"><strong class="classname">HTML_QuickForm_Controller</strong></a>,
+   so if you are already using the latter you can go to <a href="package.html.html-quickform2.controller-migration.html" class="link">migration guide</a>
+   which contains step-by-step instructions for porting your scripts to new package.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.controller-overview.example">
+  <div class="info">
+   <h1>Basic usage example</h1>
+
+  </div>
+  <blockquote class="note">
+   <div class="info">
+    <strong>Session initialization</strong><br />
+   </div>
+   <p class="para">
+    This simple example does not use sessions since there is no need to pass data between pages.
+    You&#039;ll need to use sessions when dealing with a real multipage form, though.
+    <strong class="classname">HTML_QuickForm2_Controller</strong> <em class="emphasis">does not</em> start a session
+    automatically, you should explicitly call <a href="http://www.php.net/manual-lookup.php?pattern=session_start" class="link external"><strong class="function">session_start()</strong></a> before instantiating 
+    the controller class.
+   </p>
+  </blockquote>
+
+  <blockquote class="tip">
+   <p class="para">
+    More complex usage examples are <a href="package.html.html-quickform2.examples.html" class="link">installed
+    with the package</a>. Along with a form similar to the one below they include two multipage
+    forms: a tabbed form and a wizard. 
+   </p>
+  </blockquote>
+
+  <p class="para">
+   The same example form that was used in the <a href="package.html.html-quickform2.tutorial.html#package.html.html-quickform2.tutorial.example" class="link">package&#039;s tutorial</a> will now
+   be rewritten using the Controller:
+   </p><div class="example">
+    <div class="info">
+     <p><strong>Builds and processes a form with a single input field, using Controller</strong></p>
+    </div>
+    <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Load&nbsp;the&nbsp;main&nbsp;class<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/QuickForm2.php'</span><span style="color: #007700">;<br /></span><span style="color: #FF8000">//&nbsp;Load&nbsp;the&nbsp;controller<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/QuickForm2/Controller.php'</span><span style="color: #007700">;<br /></span><span style="color: #FF8000">//&nbsp;Load&nbsp;the&nbsp;Action&nbsp;interface&nbsp;(we&nbsp;will&nbsp;implement&nbsp;it)<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/QuickForm2/Controller/Action.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Class&nbsp;representing&nbsp;a&nbsp;form&nbsp;page<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">TutorialPage&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Controller_Page<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;protected&nbsp;function&nbsp;</span><span style="color: #0000BB">populateForm</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Add&nbsp;some&nbsp;elements&nbsp;to&nbsp;the&nbsp;form<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$fieldset&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'fieldset'</span><span style="color: #007700">)-&gt;</span><span style="color: #0000BB">setLabel</span><span style="color: #007700">(</span><span style="color: #DD0000">'QuickForm2_Controller&nbsp;tutorial&nbsp;example'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$name&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$fieldset</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'name'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">50</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'maxlength'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">255</span><span style="color: #007700">))<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">setLabel</span><span style="color: #007700">(</span><span style="color: #DD0000">'Enter&nbsp;your&nbsp;name:'</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;We&nbsp;set&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;submit&nbsp;button&nbsp;so&nbsp;that&nbsp;it&nbsp;binds&nbsp;to&nbsp;default&nbsp;'submit'&nbsp;handler<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$fieldset</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'submit'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getButtonName</span><span style="color: #007700">(</span><span style="color: #DD0000">'submit'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'value'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Send!'</span><span style="color: #007700">));<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;The&nbsp;action&nbsp;to&nbsp;call&nbsp;if&nbsp;a&nbsp;user&nbsp;presses&nbsp;Enter&nbsp;rather&nbsp;than&nbsp;clicks&nbsp;on&nbsp;a&nbsp;button<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setDefaultAction</span><span style="color: #007700">(</span><span style="color: #DD0000">'submit'</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Define&nbsp;filters&nbsp;and&nbsp;validation&nbsp;rules<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$name</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addFilter</span><span style="color: #007700">(</span><span style="color: #DD0000">'trim'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$name</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'required'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Please&nbsp;enter&nbsp;your&nbsp;name'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;Action&nbsp;to&nbsp;process&nbsp;the&nbsp;form&nbsp;after&nbsp;successful&nbsp;validation<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">TutorialProcess&nbsp;</span><span style="color: #007700">implements&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Controller_Action<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;function&nbsp;</span><span style="color: #0000BB">perform</span><span style="color: #007700">(</span><span style="color: #0000BB">HTML_QuickForm2_Controller_Page&nbsp;$page</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$name</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$values&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$page</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getController</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">getValue</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'&lt;h1&gt;Hello,&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">htmlspecialchars</span><span style="color: #007700">(</span><span style="color: #0000BB">$values</span><span style="color: #007700">[</span><span style="color: #DD0000">'name'</span><span style="color: #007700">])&nbsp;.&nbsp;</span><span style="color: #DD0000">'!&lt;/h1&gt;'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /><br /></span><span style="color: #0000BB">$page&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">TutorialPage</span><span style="color: #007700">(new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2</span><span style="color: #007700">(</span><span style="color: #DD0000">'tutorial'</span><span style="color: #007700">));<br /></span><span style="color: #FF8000">//&nbsp;We&nbsp;only&nbsp;add&nbsp;the&nbsp;custom&nbsp;'process'&nbsp;handler,&nbsp;Controller&nbsp;will&nbsp;care&nbsp;for&nbsp;default&nbsp;ones<br /></span><span style="color: #0000BB">$page</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addHandler</span><span style="color: #007700">(</span><span style="color: #DD0000">'process'</span><span style="color: #007700">,&nbsp;new&nbsp;</span><span style="color: #0000BB">TutorialProcess</span><span style="color: #007700">());<br /><br /></span><span style="color: #0000BB">$controller&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Controller</span><span style="color: #007700">(</span><span style="color: #DD0000">'tutorial'</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;Set&nbsp;defaults&nbsp;for&nbsp;the&nbsp;form&nbsp;elements<br /></span><span style="color: #0000BB">$controller</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addDataSource</span><span style="color: #007700">(new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_DataSource_Array</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Joe&nbsp;User'<br /></span><span style="color: #007700">)));<br /></span><span style="color: #0000BB">$controller</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addPage</span><span style="color: #007700">(</span><span style="color: #0000BB">$page</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;Process&nbsp;the&nbsp;request<br /></span><span style="color: #0000BB">$controller</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">run</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   </div>
+  
+  <p class="para">
+   You may note that the above code is more verbose than the original. While that is definitely
+   true, to make a three page wizard you&#039;ll only need to create three subclasses of <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Page.html" class="apidoclink">HTML_QuickForm2_Controller_Page</a>, a
+   <code class="literal">&#039;process&#039;</code> handler and add them to Controller, which already has default
+   handlers for typical <code class="literal">&#039;Back&#039;</code> and <code class="literal">&#039;Next&#039;</code> buttons. It will
+   require a non-trivial amount of programming without the Controller infrastructure.
+  </p>
+
+  <div class="refsection" id="package.html.html-quickform2.controller-overview.example.pages">
+   <div class="info">
+    <h1>Creating form pages</h1>
+
+   </div>
+   <p class="para">
+    To define pages for your controller you need to subclass <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Page.html" class="apidoclink">HTML_QuickForm2_Controller_Page</a> implementing
+    its abstract <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Page.html#methodpopulateForm" class="apidoclink">populateForm()</a>
+    method. Note that this method will be called on demand (i.e. only when the user sees the form in
+    question), so it is better performance-wise to keep all form-building code in it than to pass a
+    pre-populated instance of <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2.html" class="apidoclink">HTML_QuickForm2</a> to page&#039;s constructor. 
+   </p>
+   <p class="para">
+    Most of the code in the method just repeats what was done in the original tutorial, however some
+    of it requires explanation:
+    </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;We&nbsp;set&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;submit&nbsp;button&nbsp;so&nbsp;that&nbsp;it&nbsp;binds&nbsp;to&nbsp;default&nbsp;'submit'&nbsp;handler<br /></span><span style="color: #0000BB">$fieldset</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'submit'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getButtonName</span><span style="color: #007700">(</span><span style="color: #DD0000">'submit'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'value'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Send!'</span><span style="color: #007700">));<br /></span><span style="color: #FF8000">//&nbsp;The&nbsp;action&nbsp;to&nbsp;call&nbsp;if&nbsp;a&nbsp;user&nbsp;presses&nbsp;Enter&nbsp;rather&nbsp;than&nbsp;clicks&nbsp;on&nbsp;a&nbsp;button<br /></span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setDefaultAction</span><span style="color: #007700">(</span><span style="color: #DD0000">'submit'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div><p>
+    The first line uses <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Page.html#methodgetButtonName" class="apidoclink">getButtonName()</a> to
+    set a special name for form&#039;s submit button and thus trigger a <code class="literal">&#039;submit&#039;</code>
+    action on a <code class="literal">&#039;tutorial&#039;</code> form when that button is clicked (default handler for
+    such action is implemented in <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Action_Submit.html" class="apidoclink">HTML_QuickForm2_Controller_Action_Submit</a>). The second one sets an action to
+    trigger when no submit button is clicked (e.g. user presses <code class="literal">Enter</code> instead of
+    clicking). Under the hood this is done by adding an instance of <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_DefaultAction.html" class="apidoclink">HTML_QuickForm2_Controller_DefaultAction</a> to the form.
+   </p>
+  </div>
+
+  <div class="refsection" id="package.html.html-quickform2.controller-overview.example.actions">
+   <div class="info">
+    <h1>Creating custom action handlers</h1>
+
+   </div>
+   <p class="para">
+    You&#039;ll usually need custom handlers for only two actions:
+    </p><div class="variablelist">
+     <dl class="varlistentry">
+      <dt class="term"><code class="literal">&#039;process&#039;</code></dt>
+      <dd class="listitem"><span class="simpara">
+       Called when the form is submitted and passes validation. In case of multipage forms that
+       means that all the pages are valid.
+      </span></dd>
+     </dl>
+     <dl class="varlistentry">
+      <dt class="term">&#039;display&#039;</dt>
+      <dd class="listitem"><span class="simpara">
+       Called when a form page needs to be displayed. It does have a default handler, but usually
+       you&#039;ll want to tweak the output.
+      </span></dd>
+     </dl>
+    </div>
+   
+   <p class="para">
+    <code class="literal">&#039;process&#039;</code> handler is, obviously, completely application-specific and will
+    usually deal with storing the form values somewhere. When creating a custom
+    <code class="literal">&#039;display&#039;</code> handler it is easiest to subclass <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Action_Display.html" class="apidoclink">HTML_QuickForm2_Controller_Action_Display</a> and override its <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Action_Display.html#methodrenderForm" class="apidoclink">renderForm()</a>
+    method to use a Renderer or do any other tweaks you like.
+   </p>
+  </div>
+
+  <div class="refsection" id="package.html.html-quickform2.controller-overview.example.controller">
+   <div class="info">
+    <h1>Setting up the controller</h1>
+
+   </div>
+   <p class="para">
+    First we instantiate the custom Page class and add a custom action handler to it
+    </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$page&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">TutorialPage</span><span style="color: #007700">(new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2</span><span style="color: #007700">(</span><span style="color: #DD0000">'tutorial'</span><span style="color: #007700">));<br /></span><span style="color: #FF8000">//&nbsp;We&nbsp;only&nbsp;add&nbsp;the&nbsp;custom&nbsp;'process'&nbsp;handler,&nbsp;Controller&nbsp;will&nbsp;care&nbsp;for&nbsp;default&nbsp;ones<br /></span><span style="color: #0000BB">$page</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addHandler</span><span style="color: #007700">(</span><span style="color: #DD0000">'process'</span><span style="color: #007700">,&nbsp;new&nbsp;</span><span style="color: #0000BB">TutorialProcess</span><span style="color: #007700">());<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div><p>
+    We don&#039;t bother with other action handlers as Controller will automatically load and use them.
+   </p>
+   <p class="para">
+    Then we instantiate the controller
+    </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$controller&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Controller</span><span style="color: #007700">(</span><span style="color: #DD0000">'tutorial'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div><p>
+    Note that Controller needs an <code class="literal">id</code> and it should be unique if you have several
+    Controllers in application, as it is used for storing values in session.
+   </p>
+   <p class="para">
+    Then we add a <a href="package.html.html-quickform2.values-datasources.html#package.html.html-quickform2.values-datasources.datasources-overview" class="link">DataSource</a>
+    and the page to the Controller
+    </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Set&nbsp;defaults&nbsp;for&nbsp;the&nbsp;form&nbsp;elements<br /></span><span style="color: #0000BB">$controller</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addDataSource</span><span style="color: #007700">(new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_DataSource_Array</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Joe&nbsp;User'<br /></span><span style="color: #007700">)));<br /></span><span style="color: #0000BB">$controller</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addPage</span><span style="color: #007700">(</span><span style="color: #0000BB">$page</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div><p>
+    While it is possible to add DataSource to an instance of <strong class="classname">HTML_QuickForm2</strong>
+    within Page instead, the above code allows setting the default values for the whole (possibly
+    multipage) form. Note also that Controller&#039;s DataSources, unlike form&#039;s, are stored in session.   
+   </p>
+   <p class="para">
+    Finally we call the Controller&#039;s <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller.html#methodrun" class="apidoclink">run()</a> method
+    </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$controller</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">run</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div><p>
+    which takes care of finding the name of the current action and calling the necessary handler.
+   </p>
+  </div>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-quickform2.multipage.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-quickform2.multipage.html">Multipage forms</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-quickform2.controller-migration.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Multipage forms</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Migration from HTML_QuickForm_Controller</td>
+  </tr>
+ </table>
+</div>
+</body></html>

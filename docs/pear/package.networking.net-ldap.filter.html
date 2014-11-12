@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>LDAP filters</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.networking.net-ldap.html" title="Net_LDAP" />
+  <link rel="prev" href="package.networking.net-ldap.entries.html" title="Managing entries" />
+  <link rel="next" href="package.networking.net-ldap.ldif.html" title="LDIF files" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">LDAP filters</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.networking.net-ldap.entries.html" title="Managing entries">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.networking.net-ldap.ldif.html" title="LDIF files">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.networking.net-ldap.filter">
+    
+        <h1 class="refname">LDAP filters</h1>
+        <div class="refnamediv">LDAP filters &ndash; Introduction to and usage of LDAP filters</div>
+
+    
+    <div class="refsection"><div class="info"><h1>What are LDAP filters?</h1>
+</div>
+        
+        <p class="para">
+            LDAP filters are defined in <a href="http://www.ietf.org/rfc/rfc2254.txt" class="link external">RFC 2254</a>
+            and can be compared to the WHERE clause in SQL select statements - they filter
+            the data returned from some search request - in this case the entries returned from
+            the directory server. With Net_LDAP, you may use plain strings as filters, or preferably,
+            the <strong class="classname">Net_LDAP_Filter</strong> class which mostly releases you of the burden to escape yourself and
+            to remember all the various special characters needed for constructing and combining filters.
+        </p>
+        <p class="para">Where and how to use filters is described in chapter <a href="package.networking.net-ldap.search.html" class="link">Search</a>.</p>
+    </div>
+
+    <div class="refsection"><div class="info"><h1>Some LDIF filter basics</h1>
+</div>
+        
+        <p class="para">
+            Although you should preferably use the <strong class="classname">Net_LDAP_Filter</strong> class to
+            construct your LDAP filters, some theory may be interesting and helpful in understanding
+            how to construct LDAP filters and what they are capable of.
+        </p>
+        <p class="para">
+            Basic LDAP filters are composed of an &quot;[attribute][operator][value]&quot; pair enclosed by round brackets.
+            There are several comparison operators available: &quot;=&quot; (equal), &quot;&gt;&quot; (greater), &quot;&lt;&quot; (less),
+            &quot;&gt;=&quot; (greater or equal), &quot;&lt;=&quot; (less or equal) and &quot;=~&quot; (phonetical similar). The exact match behavior
+            is defined by the attribute syntax of the attribute to which the filter should apply.
+        </p>
+        <div class="example"><div class="info"><p><strong>Some basic string filters</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Filter&nbsp;entries&nbsp;whose&nbsp;first&nbsp;name&nbsp;is&nbsp;'Benedikt':<br /></span><span style="color: #0000BB">$filter&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'(givenName=Benedikt)'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Filter&nbsp;entries&nbsp;which&nbsp;have&nbsp;an&nbsp;employeenumber&nbsp;higher&nbsp;or&nbsp;equal&nbsp;than&nbsp;1424:<br /></span><span style="color: #0000BB">$filter&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'(employeeNumber&gt;=1424)'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Filter&nbsp;entries&nbsp;whose&nbsp;first&nbsp;name&nbsp;sounds&nbsp;similar&nbsp;to&nbsp;"Stephane"<br />//&nbsp;This&nbsp;should&nbsp;also&nbsp;find&nbsp;"Stephen"&nbsp;and&nbsp;"Stefan"&nbsp;(depending&nbsp;on&nbsp;implementation)<br /></span><span style="color: #0000BB">$filter&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'(givenName=~Stephane)'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+    </div>
+
+        <p class="para">
+                The value part of the basic filter construct could also include a special character: &quot;*&quot;.
+                The star acts as placeholder for none, one or several characters at that position.
+                &quot;V*lue&quot; would therefore match against &quot;Value&quot;, &quot;Vlue&quot;, &quot;VaaAaAalue&quot; and so on.
+                There are some special named combinations using the star, but they work exactly the same way:
+                </p><table class="doctable table"><caption>Special named placeholder combinations</caption>
+                    
+                    
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Filter</th>
+                                <th>Description</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody class="tbody">
+                            <tr><td>present</td><td>(attr=*)</td><td>Also refered to as &quot;any&quot;. Finds any entry containing any (unless empty) value for the named attribute.</td></tr>
+
+                            <tr><td>begins</td><td>(attr=value*)</td><td>value starts with some fixed string</td></tr>
+
+                            <tr><td>ends</td><td>(attr=*value)</td><td>value ends with some fixed string</td></tr>
+
+                            <tr><td>contains</td><td>(attr=*value*)</td><td>value contains some fixed string</td></tr>
+
+                        </tbody>
+                    
+                </table>
+
+        
+
+        <div class="refsection"><div class="info"><h1>Combining string filters</h1>
+</div>
+            
+            <p class="para">
+                Basic filters can be combined using the three logical operators &quot;&amp;&quot; (and),
+                &quot;|&quot; (or) and &quot;!&quot; (not). Note, that the smallest filter component,
+                the basic filter enclosed in round brackets, remains isolated: instead of just adding another
+                &quot;[attribute][operator][value]&quot; pair into the brackets, a new bracket level is introduced that
+                contains all filter components that should be combined. Note also, that the logical operator
+                does stand in front of all filter components, not between them as common in programming languages.
+            </p>
+            <div class="example"><div class="info"><p><strong>Combining string filters</strong></p></div>
+            
+            <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Search&nbsp;all&nbsp;'Benedikt's&nbsp;with&nbsp;phone&nbsp;number&nbsp;1234567890<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$filter&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'(&amp;(givenName=Benedikt)(telephoneNumber=1234567890))'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Search&nbsp;the&nbsp;same,&nbsp;but&nbsp;exclude&nbsp;person&nbsp;"Benedikt&nbsp;Foobar"<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;Note&nbsp;that&nbsp;the&nbsp;"not"&nbsp;is&nbsp;a&nbsp;logical&nbsp;operator&nbsp;and&nbsp;thus&nbsp;needs&nbsp;its&nbsp;own<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;surrounding&nbsp;bracket.&nbsp;This&nbsp;explains&nbsp;nicely,&nbsp;that&nbsp;each&nbsp;bracket&nbsp;level<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;is&nbsp;evaluated&nbsp;independently&nbsp;from&nbsp;surrounding&nbsp;brackets.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$filter&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'(&amp;(givenName=Benedikt)(telephoneNumber=1234567890)(!(sureName=Foobar)))'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="refsection"><div class="info"><h1>The Net_LDAP_Filter class</h1>
+</div>
+        
+        <p class="para">
+            As you will read below, there are some special characters inside the LDAP filter definition and thus must
+            be escaped. These are mainly the special characters used directly by the filter syntax like braces and
+            the logical operators. Despite those, there are some other cases which need special threatment.
+            Nearly all of this cases are hidden through the <strong class="classname">Net_LDAP_Filter</strong> class so you
+            should only consider using string filters if you need to or you know what you are doing.
+            If you need a filter string, you may also use <strong class="classname">Net_LDAP_Filter</strong>s <strong class="function">toString()</strong>
+            function after building the filter.
+        </p>
+        <p class="para">
+            The filter class has two different usage models: one for constructing basic filters and
+            another to combine them logically. This has to do with the syntax of LDAP filters you may read below.
+        </p>
+        
+        <div class="refsection"><div class="info"><h1>Creating filters</h1>
+</div>
+            
+            <p class="para">
+                For creating basic filter components, you need to use the <strong class="function">create()</strong> factory method.
+                There, you combine three items: an attribute to filter for, a matching rule for comparison and a value
+                that is beeing compared with the servers entries.
+                The given value is automatically escaped, so you need take care if you want to use the star placeholder.
+                In this case, you need to pass <code class="literal">FALSE</code> as fourth parameter to <strong class="function">create()</strong>
+                which causes <code class="literal">value</code> to be threaten as-is. This of course also means, that you need to
+                escape the parts of the value that may contain restricted characters yourself using
+                <strong class="classname">Net_LDAP_Util::</strong><strong class="function">escape_filter_value()</strong>. To learn what characters
+                are restricted, refer to <a href="http://www.ietf.org/rfc/rfc2254.txt" class="link external">RFC 2254</a> or the documentation of
+                <strong class="classname">Net_LDAP_Util::</strong><strong class="function">escape_filter_value()</strong>; otherwise its safe to always escape.
+            </p>
+            <p class="para">
+                The matching rules partly follow the basic filter matching rules described above, but are enhanced to
+                make your life easier:
+                </p><table class="doctable table"><caption>create()s matching rules</caption>
+                    
+                    
+                        <thead>
+                            <tr>
+                                <th>Rule</th>
+                                <th>Description</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody class="tbody">
+                            <tr><td>equals</td><td>One of <code class="literal">attribute</code>s values is exactly <code class="literal">value</code>. Please note that case sensitiviness depends on the matching rule defined in the attributes schema syntax.</td></tr>
+
+                            <tr><td>begins</td><td>One of <code class="literal">attribute</code>s values must begin with <code class="literal">value</code></td></tr>
+
+                            <tr><td>ends</td><td>One of <code class="literal">attribute</code>s values must end with <code class="literal">value</code></td></tr>
+
+                            <tr><td>contains</td><td>One of <code class="literal">attribute</code>s values must contain <code class="literal">value</code></td></tr>
+
+                            <tr><td>present | any</td><td>The <code class="literal">attribute</code> can contain any value but must be existent</td></tr>
+
+                            <tr><td>greater</td><td>The <code class="literal">attribute</code>s value is greater than <code class="literal">value</code></td></tr>
+
+                            <tr><td>less</td><td>The <code class="literal">attribute</code>s value is less than <code class="literal">value</code></td></tr>
+
+                            <tr><td>greaterOrEqual</td><td>The <code class="literal">attribute</code>s value is greater or equal than <code class="literal">value</code></td></tr>
+
+                            <tr><td>lessOrEqual</td><td>The <code class="literal">attribute</code>s value is less or equal than <code class="literal">value</code></td></tr>
+
+                            <tr><td>approx</td><td>One of <code class="literal">attribute</code>s values sounds similar to <code class="literal">value</code>. The matching behavior depends on the server implementation.</td></tr>
+
+                        </tbody>
+                    
+                </table>
+
+            
+            <div class="example"><div class="info"><p><strong>Creating LDAP filters</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Filter&nbsp;entries&nbsp;whose&nbsp;first&nbsp;name&nbsp;is&nbsp;'Benedikt':<br /></span><span style="color: #0000BB">$filter&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Net_LDAP_Filter</span><span style="color: #007700">::</span><span style="color: #0000BB">create</span><span style="color: #007700">(</span><span style="color: #DD0000">'givenName'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'equals'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Benedikt'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Filter&nbsp;entries&nbsp;whose&nbsp;first&nbsp;name&nbsp;starts&nbsp;with&nbsp;'Steph':<br /></span><span style="color: #0000BB">$filter&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Net_LDAP_Filter</span><span style="color: #007700">::</span><span style="color: #0000BB">create</span><span style="color: #007700">(</span><span style="color: #DD0000">'givenName'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'begins'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Steph'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Filter&nbsp;entries&nbsp;containing&nbsp;'Lone*';&nbsp;matching&nbsp;the&nbsp;star&nbsp;character.<br />//&nbsp;The&nbsp;automatic&nbsp;escaping&nbsp;of&nbsp;$value&nbsp;will&nbsp;conveniently&nbsp;escape&nbsp;the&nbsp;star&nbsp;for&nbsp;us.<br /></span><span style="color: #0000BB">$filter&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Net_LDAP_Filter</span><span style="color: #007700">::</span><span style="color: #0000BB">create</span><span style="color: #007700">(</span><span style="color: #DD0000">'givenName'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'contains'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Lone*'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Filter&nbsp;entries&nbsp;containing&nbsp;'Foo[something]Bar';&nbsp;not&nbsp;matching&nbsp;the&nbsp;star&nbsp;character.<br />//&nbsp;For&nbsp;this&nbsp;to&nbsp;work,&nbsp;we&nbsp;need&nbsp;to&nbsp;disable&nbsp;automatic&nbsp;escaping&nbsp;of&nbsp;$value&nbsp;by&nbsp;passing<br />//&nbsp;false&nbsp;as&nbsp;fourth&nbsp;parameter.&nbsp;This&nbsp;however&nbsp;implies,&nbsp;that&nbsp;we&nbsp;take&nbsp;care&nbsp;of<br />//&nbsp;proper&nbsp;escaping,&nbsp;which&nbsp;is&nbsp;showed&nbsp;in&nbsp;the&nbsp;example.<br /></span><span style="color: #0000BB">$escaped_values&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Net_LDAP_Util</span><span style="color: #007700">::</span><span style="color: #0000BB">escape_filter_value</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'Foo'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Bar'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$foo&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$escaped_values</span><span style="color: #007700">[</span><span style="color: #0000BB">0</span><span style="color: #007700">];<br /></span><span style="color: #0000BB">$bar&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$escaped_values</span><span style="color: #007700">[</span><span style="color: #0000BB">1</span><span style="color: #007700">];<br /></span><span style="color: #0000BB">$filter&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Net_LDAP_Filter</span><span style="color: #007700">::</span><span style="color: #0000BB">create</span><span style="color: #007700">(</span><span style="color: #DD0000">'givenName'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'contains'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"</span><span style="color: #0000BB">$foo</span><span style="color: #DD0000">*</span><span style="color: #0000BB">$bar</span><span style="color: #DD0000">"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Filter&nbsp;entries&nbsp;whose&nbsp;first&nbsp;name&nbsp;sounds&nbsp;similar&nbsp;to&nbsp;"Stephane"<br />//&nbsp;This&nbsp;should&nbsp;also&nbsp;find&nbsp;"Stephen"&nbsp;and&nbsp;"Stefan"&nbsp;(depending&nbsp;on&nbsp;implementation)<br /></span><span style="color: #0000BB">$filter&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'(givenName=~Stephane)'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+    </div>
+        </div>
+
+        <div class="refsection"><div class="info"><h1>Combining filters</h1>
+</div>
+            
+            <p class="para">
+                Although the filters can be used stand alone, they can be combined to match sophisticated
+                search requiremets. This is done by using the <strong class="function">combine()</strong> to combine
+                several present <strong class="classname">Net_LDAP_Filter</strong> objects using a logical operator.
+                The execption is the <code class="literal">not</code> operator since it only allows one filter
+                object to be negated.
+                </p><table class="doctable table"><caption>combine()s operators</caption>
+                    
+                    
+                        <thead>
+                            <tr>
+                                <th>Rule</th>
+                                <th>Description</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody class="tbody">
+                            <tr><td>and</td><td>All filter components must evaluate to <code class="literal">true</code> for the combined filter to be <code class="literal">true</code></td></tr>
+
+                            <tr><td>or</td><td>At least one filter component must evaluate to <code class="literal">true</code> for the combined filter to be <code class="literal">true</code></td></tr>
+
+                            <tr><td>not</td><td>The result of the filter component is inversed (<code class="literal">true</code> becomes <code class="literal">false</code> and vice versa).
+                                    Note that this operator only accepts one filter object.</td></tr>
+
+                        </tbody>
+                    
+                </table>
+
+
+                <div class="example"><div class="info"><p><strong>Combining LDAP filters</strong></p></div>
+                
+                    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Create&nbsp;some&nbsp;test&nbsp;filters<br /></span><span style="color: #0000BB">$filter_benedikt&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Net_LDAP_Filter</span><span style="color: #007700">::</span><span style="color: #0000BB">create</span><span style="color: #007700">(</span><span style="color: #DD0000">'givenName'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'equals'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Benedikt'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$filter_steph&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Net_LDAP_Filter</span><span style="color: #007700">::</span><span style="color: #0000BB">create</span><span style="color: #007700">(</span><span style="color: #DD0000">'givenName'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'begins'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Steph'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$filter_foobar&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Net_LDAP_Filter</span><span style="color: #007700">::</span><span style="color: #0000BB">create</span><span style="color: #007700">(</span><span style="color: #DD0000">'sureName'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'equals'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Foobar'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$filter_height&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Net_LDAP_Filter</span><span style="color: #007700">::</span><span style="color: #0000BB">create</span><span style="color: #007700">(</span><span style="color: #DD0000">'personHeight'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'greater'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'175'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Negate&nbsp;'foobar'&nbsp;filter.<br />//&nbsp;This&nbsp;filters&nbsp;every&nbsp;entry&nbsp;whose&nbsp;sure&nbsp;name&nbsp;is&nbsp;not&nbsp;'Foobar'<br /></span><span style="color: #0000BB">$filter_not_foobar&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Net_LDAP_Filter</span><span style="color: #007700">::</span><span style="color: #0000BB">combine</span><span style="color: #007700">(</span><span style="color: #DD0000">'not'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$filter_foobar</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Build&nbsp;a&nbsp;'and'&nbsp;combination&nbsp;to&nbsp;be&nbsp;able&nbsp;to&nbsp;search&nbsp;for&nbsp;people&nbsp;whose<br />//&nbsp;first&nbsp;names&nbsp;start&nbsp;with&nbsp;'Steph'&nbsp;and&nbsp;who&nbsp;are&nbsp;are&nbsp;taller&nbsp;than&nbsp;175<br />//&nbsp;except&nbsp;those&nbsp;whose&nbsp;surname&nbsp;is&nbsp;'Foobar'<br /></span><span style="color: #0000BB">$filter_stephs_tall&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Net_LDAP_Filter</span><span style="color: #007700">::</span><span style="color: #0000BB">combine</span><span style="color: #007700">(</span><span style="color: #DD0000">'and'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">$filter_steph</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$filter_height</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$filter_not_foobar</span><span style="color: #007700">));<br /><br /></span><span style="color: #FF8000">//&nbsp;In&nbsp;any&nbsp;case,&nbsp;add&nbsp;every&nbsp;person&nbsp;whose&nbsp;first&nbsp;name&nbsp;is<br />//&nbsp;'Benedikt'&nbsp;to&nbsp;the&nbsp;search&nbsp;result.<br /></span><span style="color: #0000BB">$filter_add_benedikt&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Net_LDAP_Filter</span><span style="color: #007700">::</span><span style="color: #0000BB">combine</span><span style="color: #007700">(</span><span style="color: #DD0000">'or'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #0000BB">$filter_benedikt</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$filter_stephs_tall</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+                </div>
+            
+        </div>
+
+        <div class="refsection"><div class="info"><h1>Advanced features</h1>
+</div>
+            
+            <p class="para">
+                You may need some advanced functionality if you have to deal with string representation of filters.
+                </p><table class="doctable table"><caption>Advanced methods</caption>
+                    
+                    
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>Description</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody class="tbody">
+                            <tr><td><strong class="function">parse()</strong></td><td>Takes an filter string and parses it into a <strong class="classname">Net_LDAP_Filter</strong> object. It also verifies, that the filter syntax is correct.</td></tr>
+
+                            <tr><td><strong class="function">printMe()</strong></td><td>In PERLs interface, this method is called &quot;print&quot; but due to language constraints, we cannot use that name. Prints the string representation of this filter object to standard output or to an optional filehandle passed as parameter.</td></tr>
+
+                            <tr><td><strong class="function">toString()</strong></td><td>Returns the string representation of the filter object.</td></tr>
+
+                        </tbody>
+                    
+                </table>
+
+            
+        </div>
+
+    </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.networking.net-ldap.entries.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.networking.net-ldap.html">Net_LDAP</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.networking.net-ldap.ldif.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Managing entries</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">LDIF files</td>
+  </tr>
+ </table>
+</div>
+</body></html>

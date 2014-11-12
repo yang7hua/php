@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>run-phpt - execute PHPT tests</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="pyrus.commands.html" title="Commands available in Pyrus" />
+  <link rel="prev" href="pyrus.commands.mypear.html" title="mypear - set the pear path: location of PEAR installations to manage by default" />
+  <link rel="next" href="pyrus.commands.generatepear2.html" title="generate-pear2 - Create the subversion source layout for a PEAR2 package" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">run-phpt - execute PHPT tests</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="pyrus.commands.mypear.html" title="mypear - set the pear path: location of PEAR installations to manage by default">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="pyrus.commands.generatepear2.html" title="generate-pear2 - Create the subversion source layout for a PEAR2 package">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="pyrus.commands.runphpt">
+ <div class="info"><h1>run-phpt - execute PHPT tests</h1>
+</div>
+
+ <div class="section" id="pyrus.commands.runphpt.intro">
+  <div class="info"><h2 class="title">Introduction</h2></div>
+  <p class="para">
+   The <code class="literal">run-phpt</code> command is used to execute tests in the
+   <code class="literal">PHPT</code> format.  If the <code class="literal">xdebug</code> extension
+   is present, the command can also be used to generate code coverage.  This
+   coverage can then be used to construct a coverage report and even to
+   intelligently detect both modified tests and tests that are affected by
+   changes to the source code in between test runs.
+  </p>
+  <p class="para">
+   The command takes as arguments a list of paths containing tests to execute,
+   unless the <code class="literal">--modified</code> option is specified, then it takes
+   as arguments the path to the tests directory and the path to the source
+   directory.  If the <code class="literal">--modified</code> option is not specified,
+   and no arguments are passed, the command searches for tests in the current
+   working directory.
+  </p>
+ </div>
+ <div class="section" id="pyrus.commands.runphpt.modified">
+  <h2 class="title">--modified</h2>
+  <p class="para">
+   The <code class="literal">--modified</code> or <code class="literal">-m</code> option, if present,
+   implies both the <code class="literal">--recursive</code> and <code class="literal">--coverage</code>
+   options, and is used to generate a coverage database and to use that database
+   to detect modifications in the tests and the source.  These modified tests are
+   then executed.
+  </p>
+  <p class="para">
+   The command places a file named <code class="literal">pear2coverage.db</code> in the
+   tests directory, which is an Sqlite3 database containing the coverage information.
+   The coverage can be viewed as a web-based report by taking the
+   <code class="literal">pear2coverage.phar.php</code> file installed with the developer
+   tools and placing it in a web server directory, and then browsing to it.
+   The web server must have the <code class="literal">phar</code> and <code class="literal">sqlite3</code>
+   extensions enabled in order to function properly.
+  </p>
+  <p class="para">
+   To illustrate how powerful this option is, imagine a hypothetical directory
+   structure as follows:
+  </p>
+  <p class="para">
+   </p><pre class="screen">
+  src/
+      File1.php
+      File2.php
+      File3.php
+  tests/
+      test1.phpt
+      test2.phpt
+      test3.phpt
+      test4.phpt
+   </pre>
+
+  
+  <p class="para">
+   Here are the source files:
+  </p>
+  <p class="para">
+   File1.php:
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">File1<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$a&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">__construct</span><span style="color: #007700">(</span><span style="color: #0000BB">$a&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">a&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$a</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">setInternalThing</span><span style="color: #007700">(</span><span style="color: #0000BB">$thing</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">internal&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$thing</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">internal</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">initialize</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   File2.php:
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">File2<br /></span><span style="color: #007700">{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">initialize</span><span style="color: #007700">(</span><span style="color: #0000BB">File1&nbsp;$parent</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$parent</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">a&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   File3.php:
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">File3&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">File2<br /></span><span style="color: #007700">{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">initialize</span><span style="color: #007700">(</span><span style="color: #0000BB">File1&nbsp;$parent</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$parent</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">a&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">3</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   test1.phpt:
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+--TEST--<br />test&nbsp;1<br />--FILE--<br /><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">__autoload</span><span style="color: #007700">(</span><span style="color: #0000BB">$class</span><span style="color: #007700">)&nbsp;{&nbsp;include&nbsp;</span><span style="color: #0000BB">__DIR__&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">'/../src/'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$class&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">'.php'</span><span style="color: #007700">;&nbsp;}<br /><br /></span><span style="color: #0000BB">$test&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">File1</span><span style="color: #007700">(</span><span style="color: #0000BB">6</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">$test</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">a&nbsp;</span><span style="color: #007700">!=&nbsp;</span><span style="color: #0000BB">6</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'$a&nbsp;is&nbsp;not&nbsp;6,&nbsp;it&nbsp;is&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$test</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">a</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;<br /></span>===DONE===<br />--EXPECT--<br />===DONE===</span>
+</code>
+   </div>
+  
+  <p class="para">
+   test2.phpt:
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+--TEST--<br />test&nbsp;2<br />--FILE--<br /><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">__autoload</span><span style="color: #007700">(</span><span style="color: #0000BB">$class</span><span style="color: #007700">)&nbsp;{&nbsp;include&nbsp;</span><span style="color: #0000BB">__DIR__&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">'/../src/'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$class&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">'.php'</span><span style="color: #007700">;&nbsp;}<br /><br /></span><span style="color: #0000BB">$test2&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">File2</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$test&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">File1</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$test</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setInternalThing</span><span style="color: #007700">(</span><span style="color: #0000BB">$test2</span><span style="color: #007700">);<br /><br />if&nbsp;(</span><span style="color: #0000BB">$test</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">a&nbsp;</span><span style="color: #007700">!=&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'$a&nbsp;is&nbsp;not&nbsp;2,&nbsp;it&nbsp;is&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$test</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">a</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;<br /></span>===DONE===<br />--EXPECT--<br />===DONE===</span>
+</code>
+   </div>
+  
+  <p class="para">
+   test3.phpt:
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+--TEST--<br />test&nbsp;3<br />--FILE--<br /><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">__autoload</span><span style="color: #007700">(</span><span style="color: #0000BB">$class</span><span style="color: #007700">)&nbsp;{&nbsp;include&nbsp;</span><span style="color: #0000BB">__DIR__&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">'/../src/'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$class&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">'.php'</span><span style="color: #007700">;&nbsp;}<br /><br /></span><span style="color: #0000BB">$test2&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">File2</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$test&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">stdClass</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$test2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">initialize</span><span style="color: #007700">(</span><span style="color: #0000BB">$test</span><span style="color: #007700">);<br /><br />if&nbsp;(</span><span style="color: #0000BB">$test</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">a&nbsp;</span><span style="color: #007700">!=&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'$a&nbsp;is&nbsp;not&nbsp;2,&nbsp;it&nbsp;is&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$test</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">a</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;<br /></span>===DONE===<br />--EXPECT--<br />===DONE===</span>
+</code>
+   </div>
+  
+  <p class="para">
+   test4.phpt:
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+--TEST--<br />test&nbsp;4<br />--FILE--<br /><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">__autoload</span><span style="color: #007700">(</span><span style="color: #0000BB">$class</span><span style="color: #007700">)&nbsp;{&nbsp;include&nbsp;</span><span style="color: #0000BB">__DIR__&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">'/../src/'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$class&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">'.php'</span><span style="color: #007700">;&nbsp;}<br /><br /></span><span style="color: #0000BB">$test3&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">File3</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$test&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">File1</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$test</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setInternalThing</span><span style="color: #007700">(</span><span style="color: #0000BB">$test3</span><span style="color: #007700">);<br /><br />if&nbsp;(</span><span style="color: #0000BB">$test</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">a&nbsp;</span><span style="color: #007700">!=&nbsp;</span><span style="color: #0000BB">3</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'$a&nbsp;is&nbsp;not&nbsp;3,&nbsp;it&nbsp;is&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$test</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">a</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;<br /></span>===DONE===<br />--EXPECT--<br />===DONE===</span>
+</code>
+   </div>
+  
+  <p class="para">
+   If a modification is made to <code class="literal">File3.php</code>, the
+   run-phpt command will detect that only <code class="literal">test4.phpt</code> uses
+   this file, and will run that test.  If a modification is made to
+   <code class="literal">File2.php</code>, <code class="literal">test2.phpt</code>,
+   <code class="literal">test3.phpt</code> and <code class="literal">test4.phpt</code> will all be
+   executed, even though <code class="literal">test4.phpt</code> does not directly
+   use the <code class="literal">File2</code> class, because <code class="literal">File3</code>
+   extends <code class="literal">File2</code> and so the file is loaded.  If a modification
+   is made to <code class="literal">File1.php</code>, <code class="literal">test1.phpt</code>,
+   <code class="literal">test2.phpt</code> and <code class="literal">test4.phpt</code> will all
+   be executed.  Finally, if any of the phpt test files are executed, or any
+   external files that they include are modified, they will be run again.  If a
+   new test, <code class="literal">test5.phpt</code> is added, the run-phpt command will
+   also detect the test and run it.
+  </p>
+  <p class="para">
+   This allows extremely efficient development, as surgically running only
+   tests that are affected by source code changes allows assurance that even
+   the most remote file dependencies are validated, and irrelevant tests are not
+   executed unnecessarily.  By relying upon the coverage report, it is also
+   easy to catch subtle logic bugs preventing code blocks from being
+   executed, resulting in far more robust code much faster.  Pyrus itself
+   was developed using this technique.
+  </p>
+ </div>
+ <div class="section" id="pyrus.commands.runphpt.recursive">
+  <h2 class="title">--recursive</h2>
+  <p class="para">
+   The <code class="literal">--recursive</code> or <code class="literal">-r</code> option causes Pyrus
+   to recursively traverse directories specified
+  </p>
+ </div>
+ <div class="section" id="pyrus.commands.runphpt.coverage">
+  <h2 class="title">--coverage</h2>
+  <p class="para">
+   the <code class="literal">--coverage</code> or <code class="literal">-x</code> option causes
+   Pyrus to record coverage using the <code class="literal">xdebug</code> extension&#039;s
+   code coverage capabilities.
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="pyrus.commands.mypear.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="pyrus.commands.html">Commands available in Pyrus</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="pyrus.commands.generatepear2.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">mypear - set the pear path: location of PEAR installations to manage by default</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">generate-pear2 - Create the subversion source layout for a PEAR2 package</td>
+  </tr>
+ </table>
+</div>
+</body></html>

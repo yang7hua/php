@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Tutorial</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.php.phpunit.html" title="PHPUnit" />
+  <link rel="prev" href="package.php.phpunit.html" title="PHPUnit" />
+  <link rel="next" href="package.php.phpunit.run.html" title="PHPUnit::run()" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Tutorial</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.php.phpunit.html" title="PHPUnit">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.php.phpunit.run.html" title="PHPUnit::run()">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.php.phpunit.intro">
+   
+    <h1 class="refname">Tutorial</h1>
+    <div class="refnamediv">Tutorial &ndash; 
+     A short tutorial about PHPUnit
+    </div>
+
+   
+   <div class="refsection"><div class="info"><h1>A short introduction to the test framework</h1>
+</div>
+    
+    <p class="para">
+     <strong class="classname">PHPUnit</strong> provides a simple
+    framework for creating a test suite to
+    automate testing of functions and classes.
+    PHPUnit is inspired by
+    <a href="http://www.junit.org/" class="link external">JUnit</a> which was created by
+    Kent Beck and Erich Gamma as a tool for <a href="http://xprogramming.com/" class="link external">
+    eXtreme Programming</a>. One of the rules of XP
+    is to test small software components as often and early
+    as possible, this way you will not have to fix bugs and errors in the API
+    while setting up and testing larger applications which depend on the class.
+    While unit testing is one of the fundimental rules in XP, you don&#039;t have
+    to switch to XP to benefit from PHPUnit. PHPUnit stands alone as a good 
+    tool for testing classes or a set of functions and will ease your
+    development cycle and help you to avoid endless debug sessions.
+    </p>
+   </div>
+  <div class="refsection" id="package.php.phpunit.intro.workroutine"><div class="info"><h1>Work routine</h1>
+</div>
+   
+   <p class="para">
+    Normally, you would write a class, do some unsystematic tests
+    using <strong class="function">echo()</strong> or <strong class="function">var_dump()</strong>.
+    After this, you use the class in your application and hope everything
+    is ok.
+    To benefit from PHPUnit you should rethink the flow. The best way is
+    to do this:
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">1. design your class/API</p>
+     </li>
+     <li class="listitem">
+      <p class="para">2. create a test suite</p>
+     </li>
+     <li class="listitem">
+      <p class="para">3. implement the class/API</p>
+     </li>
+     <li class="listitem">
+      <p class="para">4. run the test suite</p>
+     </li>
+     <li class="listitem">
+      <p class="para">5. fix failures or errors and go to #4 again</p>
+     </li>
+    </ul><p>
+    It may seem that this will require a lot of time, but this impression is
+    wrong. Creating the test suite using PHPUnit needs only a few minutes
+    and running the test suite only seconds.
+   </p>
+  </div>
+  <div class="refsection" id="package.php.phpunit.intro.design"><div class="info"><h1>Design a class</h1>
+</div>
+   
+   <p class="para">
+    Let&#039;s start with a small example: a string class. First we create
+    a bunch of functions declarations to work on a string:
+    </p><div class="phpcode">
+    <code><span style="color: #000000">
+----&nbsp;string.php&nbsp;----<br /><br /><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">String<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//contains&nbsp;the&nbsp;internal&nbsp;data<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;constructor<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">String</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">data&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;creates&nbsp;a&nbsp;deep&nbsp;copy&nbsp;of&nbsp;the&nbsp;string&nbsp;object<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">copy</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;adds&nbsp;another&nbsp;string&nbsp;object&nbsp;to&nbsp;this&nbsp;class<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">add</span><span style="color: #007700">(</span><span style="color: #0000BB">$string</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;returns&nbsp;the&nbsp;formated&nbsp;string<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">toString</span><span style="color: #007700">(</span><span style="color: #0000BB">$format</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+  </div>
+  <div class="refsection" id="package.php.phpunit.intro.testsuite"><div class="info"><h1>Creating test suite</h1>
+</div>
+   
+   <p class="para">
+    Now we can create a test suite, which checks every
+    function of your string class. A test suite is normal
+    PHP class inherited from <strong class="classname">PHPUnit_TestCase
+    </strong> containing test functions,
+    identified by a leading &#039;test&#039; in the function name.
+    In the test function an expected value has to be compared
+    with the result of the function to test.
+    The result of this compare must delegate to a function
+    of the <strong class="function">assert*()</strong>-family, which decides
+    if a function passes or fails the test.
+    </p><div class="phpcode">
+    <code><span style="color: #000000">
+----&nbsp;testcase.php&nbsp;----<br /><br /><span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'string.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'PHPUnit.php'</span><span style="color: #007700">;<br /><br />class&nbsp;</span><span style="color: #0000BB">StringTest&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">PHPUnit_TestCase<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;contains&nbsp;the&nbsp;object&nbsp;handle&nbsp;of&nbsp;the&nbsp;string&nbsp;class<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$abc</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;constructor&nbsp;of&nbsp;the&nbsp;test&nbsp;suite<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">StringTest</span><span style="color: #007700">(</span><span style="color: #0000BB">$name</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">PHPUnit_TestCase</span><span style="color: #007700">(</span><span style="color: #0000BB">$name</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;called&nbsp;before&nbsp;the&nbsp;test&nbsp;functions&nbsp;will&nbsp;be&nbsp;executed<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;this&nbsp;function&nbsp;is&nbsp;defined&nbsp;in&nbsp;PHPUnit_TestCase&nbsp;and&nbsp;overwritten<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;here<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">setUp</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;create&nbsp;a&nbsp;new&nbsp;instance&nbsp;of&nbsp;String&nbsp;with&nbsp;the<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;string&nbsp;'abc'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">abc&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">String</span><span style="color: #007700">(</span><span style="color: #DD0000">"abc"</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;called&nbsp;after&nbsp;the&nbsp;test&nbsp;functions&nbsp;are&nbsp;executed<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;this&nbsp;function&nbsp;is&nbsp;defined&nbsp;in&nbsp;PHPUnit_TestCase&nbsp;and&nbsp;overwritten<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;here<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">tearDown</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;delete&nbsp;your&nbsp;instance<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">unset(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">abc</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;test&nbsp;the&nbsp;toString&nbsp;function<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">testToString</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">abc</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">toString</span><span style="color: #007700">(</span><span style="color: #DD0000">'contains&nbsp;%s'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$expected&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'contains&nbsp;abc'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">assertTrue</span><span style="color: #007700">(</span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">==&nbsp;</span><span style="color: #0000BB">$expected</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;test&nbsp;the&nbsp;copy&nbsp;function<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">testCopy</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$abc2&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">abc</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">copy</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">assertEquals</span><span style="color: #007700">(</span><span style="color: #0000BB">$abc2</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">abc</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;test&nbsp;the&nbsp;add&nbsp;function<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">testAdd</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$abc2&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">String</span><span style="color: #007700">(</span><span style="color: #DD0000">'123'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">abc</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">add</span><span style="color: #007700">(</span><span style="color: #0000BB">$abc2</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">abc</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">toString</span><span style="color: #007700">(</span><span style="color: #DD0000">"%s"</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$expected&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"abc123"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">assertTrue</span><span style="color: #007700">(</span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">==&nbsp;</span><span style="color: #0000BB">$expected</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+  </div>
+  <div class="refsection" id="package.php.phpunit.intro.firstrun"><div class="info"><h1>The first test run</h1>
+</div>
+   
+   <p class="para">
+    Now, we can run a first test. Make sure that all the paths are correct and
+    then execute this PHP program.
+    </p><div class="phpcode">
+    <code><span style="color: #000000">
+----&nbsp;stringtest.php&nbsp;----<br /><br /><span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'testcase.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'PHPUnit.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$suite&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">PHPUnit_TestSuite</span><span style="color: #007700">(</span><span style="color: #DD0000">"StringTest"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">PHPUnit</span><span style="color: #007700">::</span><span style="color: #0000BB">run</span><span style="color: #007700">(</span><span style="color: #0000BB">$suite</span><span style="color: #007700">);<br /><br />echo&nbsp;</span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">-&gt;&nbsp;</span><span style="color: #0000BB">toString</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+   <p class="para">
+    If you call this script from the commandline, you will get
+    the following output:
+    </p><div class="programlisting">
+    <br/>TestCase&nbsp;stringtest-&gt;testtostring()&nbsp;failed:&nbsp;expected&nbsp;true,&nbsp;actual&nbsp;false<br/>TestCase&nbsp;stringtest-&gt;testcopy()&nbsp;failed:&nbsp;expected&nbsp;,&nbsp;actual&nbsp;Object<br/>TestCase&nbsp;stringtest-&gt;testadd()&nbsp;failed:&nbsp;expected&nbsp;true,&nbsp;actual&nbsp;false
+    </div><p>
+    Every function fails the test, because your string functions
+    didn&#039;t returned what we defined as the expected value.
+   </p>
+   <p class="para">
+    If you want to call the script through your browser, you have to put
+    the script in a correct html page and call <strong class="function">$result-&gt;toHTML
+    ()</strong> instead of <strong class="function">$result-&gt;toString()</strong>.
+   </p>
+  </div>
+
+  <div class="refsection" id="package.php.phpunit.intro.implement"><div class="info"><h1>Implementation</h1>
+</div>
+   
+   <p class="para">
+    Ok, let&#039;s start with implementation of the our string class.
+    </p><div class="phpcode">
+    <code><span style="color: #000000">
+----&nbsp;string.php&nbsp;----<br /><br /><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">String<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//contains&nbsp;the&nbsp;internal&nbsp;data<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;constructor<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">String</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">data&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;creates&nbsp;a&nbsp;deep&nbsp;copy&nbsp;of&nbsp;the&nbsp;string&nbsp;object<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">copy</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$ret&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">String</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">data</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$ret</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;adds&nbsp;another&nbsp;string&nbsp;object&nbsp;to&nbsp;this&nbsp;class<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">add</span><span style="color: #007700">(</span><span style="color: #0000BB">$string</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">data&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">data</span><span style="color: #007700">.</span><span style="color: #0000BB">$string</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">toString</span><span style="color: #007700">(</span><span style="color: #DD0000">"%ss"</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;returns&nbsp;the&nbsp;formated&nbsp;string<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">toString</span><span style="color: #007700">(</span><span style="color: #0000BB">$format</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$ret&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">sprintf</span><span style="color: #007700">(</span><span style="color: #0000BB">$format</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">data</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$ret</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+   <p class="para">
+    The implementation is complete and we can run the test again:
+    </p><div class="programlisting"><pre class="programlisting">~&gt;</pre>
+<strong class="command">php -f stringtest.php</strong><pre class="programlisting">TestCase stringtest-&gt;testtostring() passed
+TestCase stringtest-&gt;testcopy() passed
+TestCase stringtest-&gt;testadd() failed: expected true, actual false</pre>
+</div><p>
+    D&#039;oh! the last test failed! We made a typing mistake. Change
+    line 16 in <code class="filename">string.php</code> to
+    </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">data&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">data</span><span style="color: #007700">.</span><span style="color: #0000BB">$string</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">toString</span><span style="color: #007700">(</span><span style="color: #DD0000">"%s"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div><p>
+    and run the test again:
+    </p><div class="programlisting"><pre class="programlisting">~&gt;</pre>
+<strong class="command">php -f stringtest.php</strong><pre class="programlisting">TestCase stringtest-&gt;testtostring() passed
+TestCase stringtest-&gt;testcopy() passed
+TestCase stringtest-&gt;testadd() passed</pre>
+</div><p>
+    Everything is now OK!
+   </p>
+  </div>
+  <div class="refsection" id="package.php.phpunit.intro.conclusion"><div class="info"><h1>Conclusion</h1>
+</div>
+   
+   <p class="para">
+    Does it seem like a lot of work for testing three simple
+    functions? Don&#039;t forget, this is a small example.
+    Think about bigger, more complex API&#039;s like database
+    abstraction or basket classes in a shop application.
+    PHPUnit is an excellent tool to detect errors in the
+    implementation of your class. 
+   </p>
+   <p class="para">
+    Often you will want to reimplement or refactor a large class which is
+    used in several different applications. Without a test suite the
+    likeliness of you breaking something in one of the applications that
+    depends on your class is very high. Thanks to unit tests, you can create
+    a test suite for your class, and then reimplement your class with the 
+    security of knowing that as long as the new class passes the tests,
+    applications that depend on the class will work.
+   </p>
+  </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.php.phpunit.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.php.phpunit.html">PHPUnit</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.php.phpunit.run.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">PHPUnit</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">PHPUnit::run()</td>
+  </tr>
+ </table>
+</div>
+</body></html>

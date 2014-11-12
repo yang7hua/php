@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Pyrus: Improvements from the PEAR Installer</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="pyrus.differences.html" title="Differences from the PEAR Installer" />
+  <link rel="prev" href="pyrus.differences.html" title="Differences from the PEAR Installer" />
+  <link rel="next" href="pyrus.differences.postinstallscripts.html" title="Pyrus Post-install scripts: differences from PEAR" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Pyrus: Improvements from the PEAR Installer</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="pyrus.differences.html" title="Differences from the PEAR Installer">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="pyrus.differences.postinstallscripts.html" title="Pyrus Post-install scripts: differences from PEAR">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="pyrus.differences.frompear">
+ <div class="info"><h1>Pyrus: Improvements from the PEAR Installer</h1>
+</div>
+
+ <div class="section" id="pyrus.differences.frompear.overview">
+  <div class="info"><h2 class="title">Overview</h2></div>
+  <p class="para">
+   Pyrus is a re-factored version of the PEAR installer, re-designed for new features
+   available in PHP 5.3 and newer.  As a result, Pyrus is more robust than PEAR
+   as well as faster.  Several of the subtle design flaws in the PEAR Installer
+   have been fixed, and so Pyrus is more stable than the PEAR Installer for
+   handling an existing PEAR repository.
+  </p>
+  <p class="para">
+   Here is a brief summary of the differences from PEAR:
+  </p>
+  <div class="section" id="pyrus.differences.frompear.overview.simpler">
+   <h3 class="title">Simpler to use than PEAR</h3>
+   <p class="para">
+    Pyrus is distributed as a single file, pyrus.phar.  Because of PHP&#039;s new
+    phar extension, Pyrus does not need to be installed, and can run directly
+    from the file pyrus.phar.
+   </p>
+   <p class="para">
+    Pyrus also simplifies the command-line options available, and provides a
+    far greater range of developer tools for creating, managing and
+    distributing packages through tools such as the simple channel server and
+    package.xml creation command <code class="literal">make</code>.
+   </p>
+  </div>
+  <div class="section" id="pyrus.differences.frompear.overview.secure">
+   <h3 class="title">More secure than PEAR</h3>
+   <p class="para">
+    Several security vulnerabilities in the design of PEAR were discovered due
+    to the particular Command Pattern implementation used to detect file roles,
+    commands, and other plugins.  Pyrus fixes this by requiring that all plugins
+    be installed into a centralized location separate from the actual PEAR
+    installation.  In addition, installation of plugins cannot happen at the same
+    time as installation of packages, thus the enforced separation ensures a level
+    of security that is much higher than PEAR supports, while preserving the
+    flexibility that extending the installer provides.
+   </p>
+   <p class="para">
+    Pyrus also feaures true package signing and signature verification
+    using OpenSSL PKCS#12 and X.509 certificates.  This allows users
+    to directly verify the validity of a package, protecting from
+    man-in-the-middle attacks and other potential disruptions of a package
+    release.  This feature requires the openssl extension, which is not
+    enabled by default.
+   </p>
+   <p class="para">
+    PEAR supports signing packages using PGP keys, but has no mechanism
+    in place to verify the signed packages.  Pyrus will refuse to install
+    a signed package without verifying the signature even if the openssl
+    extension is not enabled.
+   </p>
+   <p class="para">
+    In addition, the new <a href="pyrus.configuration.user.html#pyrus.configuration.user.paranoia" class="link">paranoia</a>
+    setting can be used to control how upgrades are performed to releases that
+    change the <a href="guide.users.concepts.api.html" class="link">API</a>, helping
+    to guarantee safe upgrades to future releases.
+   </p>
+  </div>
+  <div class="section" id="pyrus.differences.frompear.overview.smaller">
+   <h3 class="title">Smaller than PEAR</h3>
+   <p class="para">
+    Because Pyrus takes advantage of PHP 5.3&#039;s built in support for XML processing,
+    archive handling, and advanced structures through the simplexml, libxml2,
+    phar, sqlite3, and spl extensions, Pyrus is significantly smaller than PEAR, and
+    as a result consumes far less memory to accomplish its tasks.
+   </p>
+  </div>
+  <div class="section" id="pyrus.differences.frompear.overview.faster">
+   <h3 class="title">Faster than PEAR</h3>
+   <p class="para">
+    Pyrus is also faster than PEAR because of its reliance on built-in features
+    of PHP 5.3 and a more structured object-oriented design.
+   </p>
+  </div>
+  <div class="section" id="pyrus.differences.frompear.overview.robust">
+   <h3 class="title">More robust than PEAR</h3>
+   <p class="para">
+    Pyrus has redundant registries in XML and Sqlite3 database formats, as well
+    as support for the existing PEAR registry.  Reconstruction of a corrupted
+    registry is simple and fully supported.
+   </p>
+   <p class="para">
+    In addition, all installation tasks
+    occur within an atomic transaction, including file installation and removal,
+    so that if an installation or uninstall command fails mid-stream, or something
+    as drastic as a power failure occurs, the PEAR installation will be not be
+    left in a half-installed state.
+   </p>
+  </div>
+  <div class="section" id="pyrus.differences.frompear.overview.flexible">
+   <h3 class="title">More flexible than PEAR</h3>
+   <p class="para">
+    Pyrus supports cascading installations, so that a system-wide installation
+    of core packages can be recognized.  By default, include_path is used to
+    detect PEAR installations, but a different location for a PEAR installation
+    can be passed directly to Pyrus as its first argument.
+   </p>
+   <p class="para">
+    Convention over configuration allows packages constructed with the new PEAR2
+    coding standards to be installed simply by extracting the archive, and then
+    later upgraded using Pyrus without the intermediate step of using Pyrus to
+    install the packages.  For the first time, this allows a try-before-you-buy
+    approach to be possible.
+   </p>
+   <p class="para">
+    The same principle also makes bundling a PEAR2 package in another package&#039;s
+    source repository possible, and Pyrus can be used to easily upgrade the
+    package or revert to a previous version.
+   </p>
+  </div>
+  <div class="section" id="pyrus.differences.frompear.overview.tested">
+   <h3 class="title">More tested than PEAR</h3>
+   <p class="para">
+    Pyrus has been developed with extensive unit testing and xdebug coverage
+    data has been used to verify that the code is being executed.  As a result,
+    the first alpha release of Pyrus has 10% higher code coverage than the most
+    recent stable version of the PEAR Installer.
+   </p>
+  </div>
+ </div>
+ <div class="section" id="pyrus.differences.frompear.configuration">
+  <div class="info"><h2 class="title">Configuration files</h2></div>
+  <p class="para">
+   One of the most important conceptual changes in Pyrus is how configuration
+   is handled.  PEAR was designed to handle at most 2 installations by default,
+   a system and a user PEAR installation, and it excels at this.  As soon as
+   PEAR is used on multiple installations, a separate configuration file must
+   be specified (as in <code class="literal">pear -c /path/to/another/pear.conf install
+   blah</code>).  This leads to what is colloquially referred to as
+   "<span class="quote">config hell</span>", where it is easy to accidentally install
+   things into the wrong place without realizing it.  Pyrus&#039;s configuration
+   handling is specifically engineered to eliminate config hell, and to make
+   handling multiple PEAR installations simple.
+  </p>
+  <p class="para">
+   PEAR stores all configuration values in a single configuration file, and allows
+   specifying a different configuration file for different setups.  In addition,
+   PEAR supports automatic cascade of a system configuration file and a user
+   configuration file.  The configuration values are used when installing applications,
+   and for customizing things like the path to php in the PEAR Installer&#039;s
+   <code class="literal">pear</code> command.  Configuration files are stored separate
+   from the PEAR installations that they represent.
+  </p>
+  <p class="para">
+   Pyrus instead splits up configuration files into two separate components: one
+   file contains user customizations such as the preferred stability of packages
+   to install, the username and password for logging into a channel, the verbose
+   setting and so on.  Configuration variables that affect where to install files
+   are stored in a separate configuration that is tightly bound to the PEAR
+   installation.
+  </p>
+  <p class="para">
+   Thus, a PEAR configuration setup might look like:
+  </p>
+  <p class="para">
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <span class="simpara">
+      System configuration in <code class="literal">/etc/pear.conf</code>, defines
+      <code class="literal">php_dir</code> as <code class="literal">/usr/local/lib/php</code>
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      User configuration in <code class="literal">/home/username/.pearrc</code>, defines
+      <code class="literal">php_dir</code> as <code class="literal">/home/username/pear</code>.
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">include_path</code> is set to <code class="literal">/home/username/pear:/usr/local/lib/php</code>.
+     </span>
+    </li>
+   </ul>
+  
+  <p class="para">
+   The equivalent configuration setup with Pyrus would look like:
+  </p>
+  <p class="para">
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <span class="simpara">
+      Pyrus-based installation in <code class="literal">/usr/local/lib/pear</code>, system configuration
+      stored in <code class="literal">/usr/local/pear/.config</code> and php files in
+      <code class="literal">/usr/local/lib/pear/php</code>.
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      Another Pyrus-based installation in <code class="literal">/home/username/pear</code>, system
+      configuration stored in <code class="literal">/home/username/pear/.config</code> and php
+      files in <code class="literal">/home/username/pear/php</code>.
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      User configuration in <code class="literal">/home/username/.pear/pearconfig.xml</code>.
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">include_path</code> is set to <code class="literal">/home/username/pear:/usr/local/lib/pear/php</code>.
+     </span>
+    </li>
+   </ul>
+  
+  <p class="para">
+   By default, Pyrus uses the <code class="literal">include_path</code> to locate PEAR
+   installations, but this is configurable with the new user configuration
+   variable <code class="literal">my_pear_path</code>, which is a <strong class="constant">PATH_SEPARATOR</strong>
+   separated list of paths to PEAR installations.
+  </p>
+  <p class="para">
+   In addition, an explicit path can be directly passed to Pyrus:
+  </p>
+  <p class="para">
+   <code class="literal">php pyrus.phar /home/username/pear:/usr/local/lib/pear list-packages</code>
+  </p>
+  <p class="para">
+   The above command will list the installed packages in both registries in
+   <code class="literal">/home/username/pear</code> and in <code class="literal">/usr/local/lib/pear/php</code>.
+  </p>
+  <p class="para">
+   A detailed reference of Pyrus&#039;s handling of configuration files is
+   <a href="pyrus.configuration.html" class="link">here</a>
+  </p>
+ </div>
+ <div class="section" id="pyrus.differences.frompear.registry">
+  <div class="info"><h2 class="title">Registries</h2></div>
+  <p class="para">
+   Pyrus fully supports PEAR&#039;s registry format, but introduces 2 new registry formats,
+   an sqlite3 database-based registry, and an XML file-based registry.  These
+   registries are fully redundant, and can be used to repair or reconstruct a corrupt
+   registry.
+  </p>
+  <p class="para">
+   In addition, unlike PEAR, which stores the registry in the same directory as
+   the PHP source files, Pyrus stores the registry in its parent directory.
+   Thus, PHP files stored in <code class="literal">/usr/local/lib/php</code> have their
+   registry in <code class="literal">/usr/local/lib</code>.
+  </p>
+  <blockquote class="note">
+   <span class="simpara">
+    For backwards compatibility, an older PEAR registry is always
+    stored in the location the PEAR Installer expects it to be stored.
+   </span>
+  </blockquote>
+
+  <p class="para">
+   Pyrus is intelligent enough to detect which registries are present, and
+   to use them.  If only an older PEAR registry exists, Pyrus will not
+   automatically upgrade to the newer format.  However, the
+   <code class="literal">upgrade-registries</code> command is available to convert from
+   an older registry to the newer format.
+  </p>
+  <p class="para">
+   Some of the benefits of the newer registry format include much speedier
+   processing of a large registry at installation time due to Sqlite3&#039;s
+   speedy processing.  Additionally, truly safe uninstall-time resolution of
+   dependencies is possible, something that PEAR can only do for relatively
+   simple package dependency trees.
+  </p>
+  <p class="para">
+   In addition, the XML registry consists of storing the package.xml and
+   channel.xml files for package releases in the same location that they
+   are packaged.  This is what makes it possible to extract a package
+   created with Pyrus and then later use Pyrus to upgrade it.
+  </p>
+  <p class="para">
+   For instance, the hypothetical <code class="literal">PEAR2_Foo</code> package from
+   channel <code class="literal">pear2.php.net</code> version <code class="literal">1.2.3</code>
+   will store its package.xml in path
+   <code class="literal">.xmlregistry/packages/pear2.php.net/PEAR2_Foo/1.2.3-package.xml</code>
+   inside the archive, so that when it is extracted, it lines up exactly with how
+   the package would look on disk when installed with the XML registry.
+  </p>
+ </div>
+ <div class="section" id="pyrus.differences.frompear.packagexml">
+  <div class="info"><h2 class="title">package.xml changes</h2></div>
+  <p class="para">
+   Pyrus no longer supports
+   <a href="developers.packagedef.intro.html" class="link">package.xml version 1.0</a>,
+   although it will include a package.xml version 1.0 in an archive designed
+   to support both earlier PEAR versions and the more recent versions.  It does
+   not validate the package.xml, however, and so it is important to validate
+   any older package.xml format using PEAR and not Pyrus.
+  </p>
+  <p class="para">
+   In addition, Pyrus has introduced support for PEAR2 packages that can
+   be extracted to disk and then later upgraded using Pyrus.  To implement
+   this feature, Pyrus transforms paths in a different way from PEAR.
+  </p>
+  <p class="para">
+   For example, this entry from a package.xml:
+  </p>
+  <p class="para">
+   </p><div class="xmlcode">
+    <pre class="xmlcode">
+   &lt;dir name=&quot;php&quot; baseinstalldir=&quot;PEAR2&quot;&gt;
+    &lt;dir name=&quot;Pyrus&quot;&gt;
+     &lt;dir name=&quot;Developer&quot;&gt;
+      &lt;dir name=&quot;CoverageAnalyzer&quot;&gt;
+       &lt;dir name=&quot;SourceFile&quot;&gt;
+        &lt;file role=&quot;php&quot; name=&quot;PerTest.php&quot;/&gt;
+       &lt;/dir&gt;
+      &lt;/dir&gt;
+     &lt;/dir&gt;
+    &lt;/dir&gt;
+   &lt;/dir&gt;</pre>
+
+   </div>
+  
+  <p class="para">
+   would cause PEAR to install <code class="literal">PerTest.php</code> into the
+   relative path <code class="literal">PEAR2/php/Pyrus/Developer/CoverageAnalyzer/SourceFile/PerTest.php</code>.
+   Pyrus, however, recognizes that <code class="literal">php</code> is actually the default value of
+   the <a href="pyrus.configuration.system.html#pyrus.configuration.system.phpdir" class="link">php_dir</a> system
+   configuration variable, and strips it from the path, resulting in
+   <code class="literal">PerTest.php</code> being installed into the path:
+   <code class="literal">PEAR2/Pyrus/Developer/CoverageAnalyzer/SourceFile/PerTest.php</code>.
+  </p>
+  <p class="para">
+   To enable this handling, one need only set the &lt;pearinstaller&gt;
+   dependency to version <code class="literal">2.0.0a1</code> or newer.  Pyrus will
+   automatically recognize any package.xml with a &lt;pearinstaller&gt;
+   dependency on any version of the PEAR Installer as an older package.xml, and
+   will not perform the magic removal of configuration values from
+   directories.
+  </p>
+  <p class="para">
+   No other changes have been made to package.xml handling, except that the
+   default version of package.xml used when generating a package.xml is
+   version 2.1, which has been supported by the PEAR Installer since
+   version <code class="literal">1.5.0</code>.
+  </p>
+ </div>
+ <div class="section" id="pyrus.differences.frompear.plugins">
+  <div class="info"><h2 class="title">Extending Pyrus: plugins</h2></div>
+  <p class="para">
+   The PEAR Installer allowed packages to install custom commands as well as
+   custom file roles and custom file tasks that are used in package.xml.  Pyrus
+   also allows this, but the format of plugins is very different.  If you are
+   simply a user of PEAR, you probably won&#039;t notice the difference, except that
+   some packages that use custom file roles or tasks will not be installable by
+   Pyrus until the maintainer releases an update that will work with both PEAR
+   and Pyrus.
+  </p>
+  <p class="para">
+   PEAR extensions are installed directly into the location where the PEAR
+   installer is located.  Thus, if PEAR is located in
+   <code class="literal">/usr/local/lib/php/PEAR</code>, a custom command must install
+   its XML information file and PHP script into
+   <code class="literal">/usr/local/lib/php/PEAR/Command</code>,
+   a custom file role must install its XML information file and PHP script into
+   <code class="literal">/usr/local/lib/php/PEAR/Installer/Role</code> and a custom file
+   task must install its PHP script into
+   <code class="literal">/usr/local/lib/php/PEAR/Task</code>.
+  </p>
+  <p class="para">
+   Pyrus is distributed as a phar archive, so this model is no longer physically
+   possible, one cannot just magically insert files into the phar archive without
+   considerable pain and annoyance (the phar.readonly INI setting must be disabled
+   by hand).  Instead, Pyrus installs all plugins into a location specified
+   by the new <code class="literal">plugins_dir</code> user configuration variable.
+   By default, this installs plugins into <code class="literal">$HOME/.pear/plugins</code>
+   on unix systems, and <code class="literal">My Documents\pear\plugins</code> on Windows.
+  </p>
+  <p class="para">
+   All plugins to Pyrus now must provide an xml file with one of the three
+   new file roles <code class="literal">customcommand</code>, <code class="literal">customrole</code>
+   or <code class="literal">customtask</code> in package.xml.  Pyrus uses the information
+   in the XML file to locate the PHP script that will execute the plugin.  In
+   addition, only one plugin is allowed per package, and the first one Pyrus
+   encounters is the one that will be used.  More information on custom plugins
+   is provided in the <a href="pyrus.plugins.html" class="link">Pyrus plugins</a> section
+   of the manual.
+  </p>
+  <p class="para">
+   For developers of existing PEAR custom roles/tasks and post-install scripts,
+   a special kind of file role that allows configuration of your package after
+   installation, making your work compatible with Pyrus can be accomplished.
+   See the documentation
+   on <a href="pyrus.differences.customroles.html" class="link">Custom Roles</a>,
+   <a href="pyrus.differences.customtasks.html" class="link">Custom Tasks</a>, and
+   <a href="pyrus.differences.postinstallscripts.html" class="link">Post-install scripts</a>.
+  </p>
+ </div>
+ <div class="section" id="pyrus.differences.frompear.pecl">
+  <div class="info"><h2 class="title">Installing and Building PECL extensions</h2></div>
+  <p class="para">
+   PEAR&#039;s handling of PECL extensions has been somewhat dodgy, with reports of
+   issues with phpize failing, and other problems.
+   Pyrus attempts to fix this through two major changes to the way PECL packages
+   are built and installed.
+  </p>
+  <p class="para">
+   </p><ol type="1">
+    <li class="listitem">
+     <span class="simpara">
+      PECL packages are installed into a new location <code class="literal">src/</code>
+      and then built directly inside this location.
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      The same tool process used to build extensions by hand is used verbatim
+      by pyrus to build the extension
+     </span>
+    </li>
+   </ol>
+  
+  <div class="section">
+   <h3 class="title">PECL installation changes</h3>
+   <p class="para">
+    PEAR builds PECL packages by creating a temporary directory, installing all of
+    the source files into this directory, building the extension, harvesting
+    built files, and finally removes the temporary directory.  This system works
+    most of the time, but if there is a problem, it is impossible to debug because
+    the sources are removed.
+   </p>
+   <p class="para">
+    Pyrus solves this by splitting PECL package installation into two components,
+    installation and build.  The installation process simply places the
+    source files into a sub-directory of the <code class="literal">src_dir</code> configuration
+    variable, and thus makes it possible to debug problems or even apply patches
+    to the source and re-build.
+   </p>
+   <p class="para">
+    In addition, because installation is separate from the actual building, PECL
+    packages can now implement post-install scripts to handle truly complex
+    configuration of extensions beyond what configure options can handle.
+   </p>
+  </div>
+  <div class="section">
+   <h3 class="title">PECL build</h3>
+   <p class="para">
+    The new <code class="literal">build</code> command enhances PEAR&#039;s package building by
+    directly calling this sequence:
+   </p>
+   <p class="para">
+    </p><pre class="screen">
+     <br/>phpize&nbsp;--clean<br/>phpize<br/>./configure&nbsp;[any&nbsp;options&nbsp;specified&nbsp;by&nbsp;&lt;configureoptions&gt;]<br/>make<br/>make&nbsp;install<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </pre>
+
+   
+   <p class="para">
+    This is the same sequence one would use to build a PECL extension by hand.
+    In addition, <strong class="function">proc_open()</strong> is used instead of
+    <strong class="function">popen()</strong>, which allows better monitoring and control of
+    the processes in question.
+   </p>
+   <p class="para">
+    Lastly, Pyrus is more cross-platform than PEAR, as it replaces a
+    call to <code class="literal">find</code> and <code class="literal">xargs</code> with native
+    PHP iteration over the modules directory when listing extension components
+    that were built.
+   </p>
+  </div>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="pyrus.differences.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="pyrus.differences.html">Differences from the PEAR Installer</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="pyrus.differences.postinstallscripts.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Differences from the PEAR Installer</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Pyrus Post-install scripts: differences from PEAR</td>
+  </tr>
+ </table>
+</div>
+</body></html>

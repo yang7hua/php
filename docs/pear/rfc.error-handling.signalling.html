@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Error Signaling in PHP5 PEAR packages</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="rfc.error-handling.html" title="Error Handling Guidelines for PHP5 packages" />
+  <link rel="prev" href="rfc.error-handling.definition.html" title="Definition of error" />
+  <link rel="next" href="rfc.error-handling.flow.html" title="Exceptions and normal program flow" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Error Signaling in PHP5 PEAR packages</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="rfc.error-handling.definition.html" title="Definition of error">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="rfc.error-handling.flow.html" title="Exceptions and normal program flow">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="rfc.error-handling.signalling">
+    <h1>Error Signaling in PHP5 PEAR packages</h1>
+
+
+    <p class="para">Error conditions in PEAR packages written for PHP5 must be signaled
+    using exceptions. Usage of return codes or return PEAR_Error objects is
+    deprecated in favor of exceptions. Naturally, packages providing
+    compatibility with PHP4 do not fall under these coding guidelines, and may
+    thus use the error handling mechanisms defined in the PHP4 PEAR coding
+    guidelines.</p>
+
+    <p class="para">An exception should be thrown whenever an error condition is met,
+    according to the definition provided in the previous section. The thrown
+    exception should contain enough information to debug the error and quickly
+    identify the error cause. Note that, during production runs, no exception
+    should reach the end-user, so there is no need for concern about technical
+    complexity in the exception error messages.</p>
+
+    <p class="para">The basic PEAR_Exception contains a textual error, describing the
+    program state that led to the throw and, optionally, a wrapped lower level
+    exception, containing more info on the lower level causes of the
+    error.</p>
+
+    <p class="para">The kind of information to be included in the Exception is dependent
+    on the error condition. From the point of view of exception throwing,
+    there are three classes of error conditions:</p>
+
+    <ol type="1">
+      <li class="listitem">
+        <p class="para">Errors detected during precondition checks</p>
+      </li>
+
+      <li class="listitem">
+        <p class="para">Lower level library errors signaled via error return codes or
+        error return objects.</p>
+      </li>
+
+      <li class="listitem">
+        <p class="para">Uncorrectable lower library exceptions.</p>
+      </li>
+    </ol>
+
+    <p class="para">Errors detected during precondition checks should contain a
+    description of the failed check. If possible, the description should
+    contain the violating value. Naturally, no wrapped exception can be
+    included, as there isn&#039;t a lower level cause of the error. Example:</p>
+
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">divide</span><span style="color: #007700">(</span><span style="color: #0000BB">$x</span><span style="color: #007700">,</span><span style="color: #0000BB">$y</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$y&nbsp;</span><span style="color: #007700">==&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;</span><span style="color: #0000BB">Example_Aritmetic_Exception</span><span style="color: #007700">(</span><span style="color: #DD0000">'Divide&nbsp;by&nbsp;zero'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$x</span><span style="color: #007700">/</span><span style="color: #0000BB">$y</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+    <p class="para">Errors signaled via return codes by lower level libraries, if
+    unrecoverable, should be turned into exceptions. The error description
+    should try to convey all information contained in the original error. One
+    example, is the connect method previously presented:</p>
+
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/**<br />&nbsp;*&nbsp;Connect&nbsp;to&nbsp;Specified&nbsp;Database<br />&nbsp;*<br />&nbsp;*&nbsp;@throws&nbsp;Example_Datasource_Exception&nbsp;when&nbsp;it&nbsp;can't&nbsp;connect&nbsp;to&nbsp;specified&nbsp;DSN.<br />&nbsp;*/<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">connectDB</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">db&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">DB</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">DB</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">db</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;</span><span style="color: #0000BB">Example_Datasource_Exception</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"Unable&nbsp;to&nbsp;connect&nbsp;to&nbsp;</span><span style="color: #0000BB">$dsn</span><span style="color: #DD0000">:"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+    <p class="para">Lower library exceptions, if they can&#039;t be corrected, should either
+    be rethrown or bubbled up. When rethrowing, the original exception must be
+    wrapped inside the one being thrown. When letting the exception bubble up,
+    the exception just isn&#039;t handled and will continue up the call stack in
+    search of a handler.</p>
+
+    <p class="para">One example for rethrowing:</p>
+
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">preTaxPrice</span><span style="color: #007700">(</span><span style="color: #0000BB">$retailPrice</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$taxRate</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">divide</span><span style="color: #007700">(</span><span style="color: #0000BB">$retailPrice</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1&nbsp;</span><span style="color: #007700">+&nbsp;</span><span style="color: #0000BB">$taxRate</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Example_Aritmetic_Exception&nbsp;e</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;</span><span style="color: #0000BB">Example_Tax_Exception</span><span style="color: #007700">(</span><span style="color: #DD0000">'Invalid&nbsp;tax&nbsp;rate.'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">e</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+    <p class="para">And the same example for bubbling up:</p>
+
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">preTaxPrice</span><span style="color: #007700">(</span><span style="color: #0000BB">$retailPrice</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$taxRate</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">divide</span><span style="color: #007700">(</span><span style="color: #0000BB">$retailPrice</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1&nbsp;</span><span style="color: #007700">+&nbsp;</span><span style="color: #0000BB">$taxRate</span><span style="color: #007700">);<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+    <p class="para">The case between rethrowing or bubbling up is one of software
+    architecture: Exceptions should be bubbled up, except in these two
+    cases:</p>
+
+    <ol type="1">
+      <li class="listitem">
+        <p class="para">The original exception is from another package. Letting it
+        bubble up would cause implementation details to be exposed, violating
+        layer abstraction, conducing to poor design.</p>
+      </li>
+
+      <li class="listitem">
+        <p class="para">The current method can add useful debugging information to the
+        received error before rethrowing.</p>
+      </li>
+    </ol>
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="rfc.error-handling.definition.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="rfc.error-handling.html">Error Handling Guidelines for PHP5 packages</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="rfc.error-handling.flow.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Definition of error</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Exceptions and normal program flow</td>
+  </tr>
+ </table>
+</div>
+</body></html>

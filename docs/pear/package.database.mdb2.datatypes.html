@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Datatypes</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.mdb2.html" title="MDB2" />
+  <link rel="prev" href="package.database.mdb2.intro-quote.html" title="Quoting and escaping" />
+  <link rel="next" href="package.database.mdb2.intro-fetch.html" title="Results" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Datatypes</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.mdb2.intro-quote.html" title="Quoting and escaping">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.mdb2.intro-fetch.html" title="Results">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.mdb2.datatypes">
+ 
+  <h1 class="refname">Datatypes</h1>
+  <div class="refnamediv">Datatypes &ndash; An overview of datatype handling</div>
+
+ 
+ <div class="refsection"><div class="info"><h1>Introduction</h1>
+</div> 
+  
+ 
+  <p class="para">
+    All DBMS provide multiple choice of data types for the information that can be
+    stored in their database table fields. However, the set of data types made
+    available varies from DBMS to DBMS.
+  </p>
+  <p class="para">
+    To simplify the interface with the DBMS supported by <strong class="classname">MDB2</strong>,
+    it was defined a base set of data types that applications may access
+    independently of the underlying DBMS.
+  </p>
+  <p class="para">
+    The <strong class="classname">MDB2</strong> applications programming interface takes care
+    of mapping data types when managing database options. It is also able to
+    convert that is sent to and received from the underlying DBMS using the
+    respective driver.
+  </p>
+  <p class="para">
+    The following data type examples should be used with MDB2&#039;s <strong class="function">createTable()</strong>
+    method. The example array at the end of the data types section may be used
+    with <strong class="function">createTable()</strong> to create a portable table on the DBMS
+    of choice (please refer to the main MDB2 documentation to find out what DBMS
+    back ends are properly supported). It should also be noted that the following
+    examples do not cover the creation and maintenance of indices, this chapter
+    is only concerned with data types and the proper usage thereof.
+  </p>
+ </div>
+
+ <div class="refsection"><div class="info"><h1>&quot;Global&quot; table type modifiers</h1>
+</div>
+  
+  <p class="para">
+    Within the MDB2 API there are a few modifiers that have been designed to aid
+    in optimal table design. These are:
+    </p><ul class="itemizedlist">
+        <li class="listitem">
+        <p class="para">The <em><code class="parameter">notnull</code></em> modifiers</p>
+        </li>
+        <li class="listitem">
+        <p class="para">The <em><code class="parameter">length</code></em> modifiers</p>
+        </li>
+        <li class="listitem">
+        <p class="para">The <em><code class="parameter">default</code></em> modifiers</p>
+        </li>
+        <li class="listitem">
+        <p class="para"><em><code class="parameter">unsigned</code></em> modifiers for some field definitions,
+            although not all DBMS&#039;s support this modifier for integer field types.
+        </p>
+        </li>
+        <li class="listitem">
+        <p class="para"><em><code class="parameter">fixed</code></em> length modifiers for some field definitions.
+        </p>
+        </li>
+    </ul><p>
+    Building upon the above, we can say that the modifiers alter the field definition
+    to create more specific field types for specific usage scenarios.
+    The <em><code class="parameter">notnull</code></em> modifier will be used in the following way
+    to set the default DBMS NOT NULL Flag on the field to true or false, depending
+    on the DBMS&#039;s definition of the field value:
+    In PostgreSQL the &quot;NOT NULL&quot; definition will be set to &quot;NOT NULL&quot;, whilst in
+    MySQL (for example) the &quot;NULL&quot; option will be set to &quot;NO&quot;.
+    In order to define a &quot;NOT NULL&quot; field type, we simply add an extra parameter
+    to our definition array (See the examples in the following section)
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #DD0000">'sometime'&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'time'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'default'&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'12:34:05'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'notnull'&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,<br />),<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div><p>
+    Using the above example, we can also explore the <em><code class="parameter">default</code></em>
+    field operator. Default is set in the same way as the <em><code class="parameter">notnull</code></em>
+    operator to set a default value for the field. This value may be set in any
+    character set that the DBMS supports for text fields, and any other valid
+    data for the field&#039;s data type. In the above example, we have specified a
+    valid time for the &quot;Time&quot; data type, &#039;12:34:05&#039;.
+    Remember that when setting default dates and times, as well as datetimes,
+    you should research and stay within the epoch of your chosen DBMS, otherwise
+    you will encounter difficult to diagnose errors!
+  </p>
+  <p class="para">
+    </p><div class="example"><div class="info"><p><strong>Example of the <em><code class="parameter">length</code></em> modifier</strong></p></div>
+     
+     <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #DD0000">'sometext'&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'length'&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">12</span><span style="color: #007700">,<br />),<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    </div>
+  
+  <p class="para">
+    The above example will create a character varying field of length 12 characters
+    in the database table. If the length definition is left out, MDB2 will create
+    a length of the maximum allowable length for the data type specified, which
+    may create a problem with some field types and indexing. Best practice is to
+    define lengths for all or most of your fields.
+  </p>
+ </div>
+ 
+ <div class="refsection"><div class="info"><h1>Text data type</h1>
+</div>
+  
+  <p class="para">
+    The text data type is available with two options for the length: one that is
+    explicitly length limited and another of undefined length that should be as
+    large as the database allows.
+  </p>
+  <p class="para">
+    The length limited option is the most recommended for efficiency reasons.
+    The undefined length option allows very large fields but may prevent the use
+    of indexes, nullability and may not allow sorting on fields of its type.
+  </p>
+  <p class="para">
+    The fields of this type should be able to handle 8 bit characters. Drivers
+    take care of DBMS specific escaping of characters of special meaning with
+    the values of the strings to be converted to this type.
+  </p>
+  <p class="para">
+    By default MDB2 will use variable length character types. If fixed length
+    types should be used can be controlled via the fixed modifier.
+  </p>
+  <p class="para">
+    </p><div class="example"><div class="info"><p><strong>Example of text data type with <em><code class="parameter">length</code></em>
+     and <em><code class="parameter">fixed</code></em> option</strong></p></div>
+     
+     <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #DD0000">'sometext'&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'length'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">12</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'fixed'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'fixed'</span><span style="color: #007700">,<br />),<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    </div>
+  
+ </div>
+
+ <div class="refsection"><div class="info"><h1>Boolean data type</h1>
+</div>
+  
+  <p class="para">
+    The boolean data type represents only two values that can be either 1 or 0.
+    Do not assume that these data types are stored as integers because some DBMS
+    drivers may implement this type with single character text fields for a
+    matter of efficiency. Ternary logic is possible by using null as the third
+    possible value that may be assigned to fields of this type.
+  </p>
+  <p class="para">
+    </p><div class="example"><div class="info"><p><strong>Example of boolean data type</strong></p></div>
+     
+     <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #DD0000">'someboolean'&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'boolean'</span><span style="color: #007700">,<br />),<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    </div>
+  
+ </div>
+
+ <div class="refsection"><div class="info"><h1>Integer data type</h1>
+</div>
+  
+  <p class="para">
+    The integer data type may store integer values as large as each DBMS may handle.
+    Fields of this type may be created optionally as unsigned integers but not
+    all DBMS support it. Therefore, such option may be ignored. Truly portable
+    applications should not rely on the availability of this option.
+  </p>
+  <p class="para">
+    </p><div class="example"><div class="info"><p><strong>Example of integer data type</strong></p></div>
+     
+     <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #DD0000">'someint'&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'integer'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'length'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'unsigned'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,<br />),<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    </div>
+  
+ </div>
+
+ <div class="refsection"><div class="info"><h1>Decimal data type</h1>
+</div>
+  
+  <p class="para">
+    The decimal data type may store decimal numbers accurately with a fixed number
+    of decimal places. This data type is suitable for representing accurate values
+    like currency amounts.
+  </p>
+  <p class="para">
+    Some DBMS drivers may emulate the decimal data type using integers.
+    Such drivers need to know in advance how many decimal places that should be
+    used to perform eventual scale conversion when storing and retrieving values
+    from a database. Despite this, applications may use arithmetic expressions
+    and functions with the values stored on decimal type fields as long as any
+    constant values that are used in the expressions are also converted with the
+    respective MDB2 conversion functions.
+  </p>
+  <p class="para">
+    The number of places that are used to the left and the right of the decimal
+    point is pre-determined and fixed for all decimal values stored in the same
+    database. By default, MDB2 uses 2 places to the right of the decimal point,
+    but this may be changed when setting the database connection. The number of
+    places available to the right of the decimal point depend on the DBMS.
+  </p>
+  <p class="para">
+    It is not recommended to change the number places used to represent decimal
+    values in database after it is installed. MDB2 does not keep track of changes
+    in the number of decimal places. The number of decimal places can be set
+    using the <strong class="function">setOption()</strong> method.
+  </p>
+  <p class="para">
+    </p><div class="example"><div class="info"><p><strong>Example of decimal data type</strong></p></div>
+     
+     <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #DD0000">'somedecimal'&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'decimal'</span><span style="color: #007700">,<br />),<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    </div>
+  
+ </div>
+
+ <div class="refsection"><div class="info"><h1>Float data type</h1>
+</div>
+  
+  <p class="para">
+    The float data type may store floating point decimal numbers. This data type
+    is suitable for representing numbers within a large scale range that do not
+    require high accuracy. The scale and the precision limits of the values that
+    may be stored in a database depends on the DBMS that it is used.
+  </p>
+  <p class="para">
+    </p><div class="example"><div class="info"><p><strong>Example of float data type</strong></p></div>
+     
+     <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #DD0000">'somefloat'&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'float'</span><span style="color: #007700">,<br />),<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    </div>
+  
+ </div>
+
+ <div class="refsection"><div class="info"><h1>Date data type</h1>
+</div>
+  
+  <p class="para">
+    The date data type may represent dates with year, month and day.
+    DBMS independent representation of dates is accomplished by using text
+    strings formatted according to the <em class="emphasis">IS0-8601</em> standard.
+  </p>
+  <p class="para">
+    The format defined by the <em class="emphasis">ISO-8601</em> standard for dates is
+    <code class="literal">YYYY-MM-DD</code> where <code class="literal">YYYY</code> is the number of
+    the year (Gregorian calendar), <code class="literal">MM</code> is the number of the
+    month from 01 to 12 and <code class="literal">DD</code> is the number of the day from
+    01 to 31. Months or days numbered below 10 should be padded on the left with 0.
+  </p>
+  <p class="para">
+    Some DBMS have native support for date formats, but for others the DBMS
+    driver may have to represent them as integers or text values. In any case,
+    it is always possible to make comparisons between date values as well sort
+    query results by fields of this type.
+  </p>
+  <p class="para">
+    </p><div class="example"><div class="info"><p><strong>Example of date data type</strong></p></div>
+     
+     <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #DD0000">'somedate'&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'date'</span><span style="color: #007700">,<br />),<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    </div>
+  
+ </div>
+
+ <div class="refsection"><div class="info"><h1>Time data type</h1>
+</div>
+  
+  <p class="para">
+    The time data type may represent the time of a given moment of the day.
+    DBMS independent representation of the time of the day is also accomplished
+    by using text strings formatted according to the <em class="emphasis">ISO-8601</em>
+    standard.
+  </p>
+  <p class="para">
+    The format defined by the <em class="emphasis">ISO-8601</em> standard for the time
+    of the day is <code class="literal">HH:MI:SS</code> where <code class="literal">HH</code> is the
+    number of hour the day from 00 to 23 and <code class="literal">MI</code> and
+    <code class="literal">SS</code> are respectively the number of the minute and of the
+    second from 00 to 59. Hours, minutes and seconds numbered below 10 should be
+    padded on the left with 0.
+  </p>
+  <p class="para">
+    Some DBMS have native support for time of the day formats, but for others
+    the DBMS driver may have to represent them as integers or text values.
+    In any case, it is always possible to make comparisons between time values
+    as well sort query results by fields of this type.
+  </p>
+  <p class="para">
+    </p><div class="example"><div class="info"><p><strong>Example of time data type</strong></p></div>
+     
+     <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #DD0000">'sometime'&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'time'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'default'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'12:34:05'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'notnull'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,<br />),<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    </div>
+  
+ </div>
+
+ <div class="refsection"><div class="info"><h1>Timestamp data type</h1>
+</div>
+  
+  <p class="para">
+    The timestamp data type is a mere combination of the date and the time of
+    the day data types. The representation of values of the time stamp type is
+    accomplished by joining the date and time string values in a single string
+    joined by a space. Therefore, the format template is <code class="literal">YYYY-MM-DD HH:MI:SS</code>.
+    The represented values obey the same rules and ranges described for the
+    date and time data types
+  </p>
+  <p class="para">
+    </p><div class="example"><div class="info"><p><strong>Example of timestamp data type</strong></p></div>
+     
+     <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #DD0000">'sometimestamp'&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'timestamp'</span><span style="color: #007700">,<br />),<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    </div>
+  
+ </div>
+
+ <div class="refsection"><div class="info"><h1>Large object (file) data types</h1>
+</div>
+  
+  <p class="para">
+    The large object data types are meant to store data of undefined length that
+    may be too large to store in text fields, like data that is usually stored
+    in files.
+  </p>
+  <p class="para">
+    <strong class="classname">MDB2</strong> supports two types of large object fields:
+    Character Large OBjects (<em class="emphasis">CLOBs</em>) and Binary Large OBjects
+    (<em class="emphasis">BLOBs</em>). <em class="emphasis">CLOB</em> fields are meant to
+    store only data made of printable ASCII characters. <em class="emphasis">BLOB</em>
+    fields are meant to store all types of data.
+  </p>
+  <p class="para">
+    Large object fields are usually not meant to be used as parameters of query
+    search clause (<code class="literal">WHERE</code>) unless the underlying DBMS supports
+    a feature usually known as <em class="emphasis">&quot;full text search&quot;</em>
+  </p>
+  <p class="para">
+    </p><div class="example"><div class="info"><p><strong>Example of large object data types</strong></p></div>
+     
+     <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #DD0000">'someblob'&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'blob'</span><span style="color: #007700">,<br />),<br /></span><span style="color: #FF8000">//&nbsp;or<br /></span><span style="color: #DD0000">'someclob'&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'clob'</span><span style="color: #007700">,<br />),<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    </div>
+  
+ </div>
+
+ <div class="refsection"><div class="info"><h1>Putting it all together</h1>
+</div>
+  
+  <p class="para">
+    </p><div class="example"><div class="info"><p><strong>Example of field definition</strong></p></div>
+     
+     <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$fields&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'id'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'length'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">32</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'fixed'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'someint'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'integer'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'length'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'unsigned'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'sometext'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'length'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">12</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'somedate'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'date'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'sometimestamp'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'timestamp'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'someboolean'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'boolean'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'somedecimal'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'decimal'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'somefloat'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'float'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'sometime'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'time'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'default'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'12:34:05'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'notnull'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'somedate'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'date'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'someclob'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'clob'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'someblob'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'blob'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    </div>
+  
+  <p class="para">
+    The above example will create a database table as such:
+  </p><table class="doctable table"><caption>PostgreSQL</caption>
+    
+    
+     <thead>
+      <tr>
+       <th>Column</th>
+       <th>Type</th>
+       <th>Not Null</th>
+       <th>Default</th>
+       <th>comment</th>
+      </tr>
+
+     </thead>
+
+     <tbody class="tbody">
+      <tr>
+       <td>id</td>
+       <td>character(32)</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>someint</td>
+       <td>bigint</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>sometext</td>
+       <td>character varying(12)</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>somedate</td>
+       <td>date</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>sometimestamp</td>
+       <td>timestamp without time zone</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>someboolean</td>
+       <td>boolean</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>somedecimal</td>
+       <td>numeric(18,2)</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>somefloat</td>
+       <td>double precision</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>sometime</td>
+       <td>time without time zone</td>
+       <td>NOT NULL</td>
+       <td>&#039;12:34:05&#039;::time without time zone</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>someclob</td>
+       <td>text</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>someblob</td>
+       <td>bytea</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+     </tbody>
+    
+   </table>
+
+  
+
+  <p class="para">
+  </p><table class="doctable table"><caption>MySQL</caption>
+    
+     <thead>
+      <tr>
+       <th>Field</th>
+       <th>Type</th>
+       <th>Collation</th>
+       <th>Attributes</th>
+       <th>Null</th>
+       <th>Default</th>
+       <th>comment</th>
+      </tr>
+
+     </thead>
+
+     <tbody class="tbody">
+      <tr>
+       <td>id</td>
+       <td>char(32)</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+       <td>YES</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>someint</td>
+       <td>bigint(20) unsigned</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>sometext</td>
+       <td>varchar(12)</td>
+       <td>latin1_swedish_ci</td>
+       <td class="empty">&nbsp;</td>
+       <td>YES</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>somedate</td>
+       <td>date</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+       <td>YES</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>sometimestamp</td>
+       <td>timestamp without time zone</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+       <td>YES</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>someboolean</td>
+       <td>tinyint(1)</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+       <td>YES</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>somedecimal</td>
+       <td>decimal(18,2)</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+       <td>YES</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>somefloat</td>
+       <td>double</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+       <td>YES</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>sometime</td>
+       <td>time</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+       <td>NO</td>
+       <td>12:34:05</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>someclob</td>
+       <td>longtext</td>
+       <td>latin1_swedish_ci</td>
+       <td class="empty">&nbsp;</td>
+       <td>YES</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>someblob</td>
+       <td>longblob</td>
+       <td class="empty">&nbsp;</td>
+       <td>binary</td>
+       <td>YES</td>
+       <td class="empty">&nbsp;</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+     </tbody>
+    
+   </table>
+
+  
+ </div>
+
+ <div class="refsection"><div class="info"><h1>Custom Data Types and Further reading</h1>
+</div>
+  
+  <p class="para">
+    Custom data types can be defined. This will be explored soon. For now
+    you can refer to these blog posts:
+    </p><ul class="itemizedlist">
+   <li class="listitem">
+    <span class="simpara">
+     <a href="http://pooteeweet.org/blog/413" class="link external">To serialize or to not serialize?</a>
+    </span>
+   </li>
+   <li class="listitem">
+    <span class="simpara">
+     <a href="http://www.fornax.net/blog/archives/96-Custom-Types-in-PEARMDB2.html" class="link external">Custom Types in PEAR::MDB2</a>
+    </span>
+   </li>
+   </ul>
+  
+  <p class="para">
+    Further reading should be done at the following URL&#039;s:
+    <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Datatype_Common.html#methodgetTypeDeclaration" class="link external">getTypeDeclaration</a>,
+    <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Datatype_Common.html#methodgetDeclaration" class="link external">getDeclaration</a>.
+  </p>
+ </div>
+ 
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.mdb2.intro-quote.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.mdb2.html">MDB2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.mdb2.intro-fetch.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Quoting and escaping</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Results</td>
+  </tr>
+ </table>
+</div>
+</body></html>

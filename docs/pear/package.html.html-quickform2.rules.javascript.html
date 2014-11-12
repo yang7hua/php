@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Javascript validation library</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-quickform2.values.html" title="Element values and validation" />
+  <link rel="prev" href="package.html.html-quickform2.rules.list.html" title="Built-in validation Rules" />
+  <link rel="next" href="package.html.html-quickform2.output.html" title="Form output and Javascript support" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Javascript validation library</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-quickform2.rules.list.html" title="Built-in validation Rules">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-quickform2.output.html" title="Form output and Javascript support">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-quickform2.rules.javascript">
+ 
+  <h1 class="refname">Javascript validation library</h1>
+  <div class="refnamediv">Javascript validation library &ndash; Library API and customization possibilities for client-side validation</div>
+
+ 
+  
+ <div class="refsection" id="package.html.html-quickform2.rules.javascript.tip">
+  <div class="info">
+   <h1>API docs generation</h1>
+
+  </div>
+  <p class="para">
+   Javascript code has API documentation comments that can be extracted with <a href="http://code.google.com/p/jsdoc-toolkit/" class="link external">JsDoc toolkit</a>.
+   <span class="acronym">SVN</span> checkout of <strong class="package">HTML_QuickForm2</strong> contains <a href="http://phing.info/" class="link external">Phing</a> build file for
+   this.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.rules.javascript.helpers">
+  <div class="info">
+   <h1>Helper objects and functions</h1>
+
+  </div>
+  
+  <p class="para">
+   All Javascript code defined in <strong class="package">HTML_QuickForm2</strong> lives in <code class="varname">qf</code>
+   &quot;namespace&quot;. Deeper namespaces are used to group related functionality.
+  </p>
+  <p class="para">
+   <code class="varname">qf.Map</code> is a class for Hash Map data structure. It is used internally to store
+   validation errors and Container values.
+   </p><div class="javascriptcode">
+    <pre class="javascriptcode">
+var map = new qf.Map();
+map.set(&#039;a key&#039;, &#039;a value&#039;);
+alert(map.get(&#039;a key&#039;)); // a value
+alert(map.hasKey(&#039;another key&#039;) ? &#039;true&#039; : &#039;false&#039;); // false
+alert(map.length()); // 1
+
+var map2 = new qf.Map({foo: &#039;foo value&#039;, bar: &#039;bar value&#039;});
+map.merge(map2);
+map.remove(&#039;foo&#039;);
+alert(map.getKeys().join(&#039;, &#039;)); // a key, bar
+alert(map.getValues().join(&#039;, &#039;)); // a value, bar value
+map.clear();
+alert(map.isEmpty() ? &#039;true&#039; : &#039;false&#039;); // true</pre>
+
+   </div>
+  
+  <p class="para">
+   <code class="varname">qf.form</code> namespace contains methods for getting and setting elements&#039; values:
+   <strong class="function">qf.form.getValue()</strong>, <strong class="function">qf.form.getSubmitValue()</strong> (shorthand
+   <strong class="function">qf.$v()</strong>), <strong class="function">qf.form.getContainerSubmitValue()</strong> (shorthand
+   <strong class="function">qf.$cv()</strong>), <strong class="function">qf.form.setValue()</strong>.
+  </p>
+  <p class="para">
+   Methods for handling CSS classes on elements live in <code class="varname">qf.classes</code> namespace:
+   <strong class="function">qf.classes.add()</strong>, <strong class="function">qf.classes.remove()</strong>,
+   <strong class="function">qf.classes.has()</strong>.
+  </p>
+  <p class="para">
+   <code class="varname">qf.events</code> namespace contains helper methods for crossbrowser events support:
+   <strong class="function">qf.events.addListener()</strong>, <strong class="function">qf.events.removeListener()</strong>,
+   <strong class="function">qf.events.fixEvent()</strong>. The latter is expected to be used in event handlers in
+   the following way
+   </p><div class="javascriptcode">
+    <pre class="javascriptcode">
+qf.Validator.submitHandler = function(event)
+{
+    event = qf.events.fixEvent(event);
+    // ...
+};</pre>
+
+   </div>
+  
+  <blockquote class="note">
+   <p class="para">
+    <strong class="package">HTML_QuickForm2</strong> does not contain a full-blown crossbrowser event library
+    because it does not need one, the above are simple convenience methods. There are numerous
+    well-known JS frameworks with good crossbrowser events support, use one if needed.
+   </p>
+  </blockquote>
+
+  <p class="para">
+   <code class="varname">qf.rules</code> and <code class="varname">qf.elements</code> namespaces are intended for rule
+   implementations and element support methods, respectively. For example, Hierselect element puts
+   its code into <code class="varname">qf.elements.hierselect</code>.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.rules.javascript.validator">
+  <div class="info">
+   <h1>qf.Validator object</h1>
+
+  </div> 
+  <p class="para">
+   Client-side validation is performed by an instance of <code class="varname">qf.Validator</code>. Its
+   constructor accepts <span class="acronym">DOM</span> object of a form it needs to validate, sets up
+   necessary event handlers on that object and adds itself as a <code class="varname">validator</code>
+   property of it. 
+  </p>
+  <blockquote class="tip">
+   <p class="para">
+    It is easiest to disable client-side validation for a form by clearing
+    <code class="varname">validator</code> property from form&#039;s <span class="acronym">DOM</span> object:
+    </p><div class="javascriptcode">
+<pre class="javascriptcode">
+document.getElementById(formId).validator = null;</pre>
+
+    </div>
+   
+  </blockquote>
+
+  <p class="para">
+   <code class="varname">qf.Validator</code> exposes several methods which can be overriden to change the way
+   validation results are presented to user:   
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term"><strong class="function">onStart()</strong></dt>
+     <dd class="listitem"><span class="simpara">
+      Called before starting the validation. May be used e.g. to clear the errors from form
+      elements.
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><strong class="function">onFieldError()</strong></dt>
+     <dd class="listitem"><span class="simpara">
+      Called on setting the element error.
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><strong class="function">onFieldValid()</strong></dt>
+     <dd class="listitem"><span class="simpara">
+      Called on successfully validating the element.
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><strong class="function">onFormValid()</strong></dt>
+     <dd class="listitem"><span class="simpara">
+      Called on successfully validating the whole form.
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><strong class="function">onFormError()</strong></dt>
+     <dd class="listitem"><span class="simpara">
+      Called on failed form validation. List of errors is available in
+      <code class="varname">this.errors</code> property, which is an instance of <code class="varname">qf.Map</code>.
+     </span></dd>
+    </dl>
+   </div><p>
+   These can be overriden either for a particular instance of <code class="varname">qf.Validator</code> or for
+   all its instances if <code class="varname">qf.Validator.prototype</code> is changed.
+  </p>
+  <p class="para">
+   For example, if you want to display a list of validation errors in an <strong class="function">alert()</strong>
+   (as was done in <strong class="package">HTML_QuickForm</strong> and pre-0.6.0
+   <strong class="package">HTML_QuickForm2</strong>) you can do the following:
+   </p><div class="javascriptcode">
+<pre class="javascriptcode">
+var form = document.getElementById(formId);
+form.validator.onFormError = function() {
+    alert(&#039;Invalid information entered:\n - &#039; +
+          this.errors.getValues().join(&#039;\n - &#039;) +
+          &#039;\nPlease correct these fields.&#039;);
+};
+// don&#039;t set errors on elements
+form.validator.onFieldError = function() {};
+form.validator.onFieldValid = function() {};</pre>
+
+   </div><p>
+   If you want to disable submit button to prevent duplicate form submits:
+   </p><div class="javascriptcode">
+<pre class="javascriptcode">
+document.getElementById(formId).validator.onFormValid = function() {
+    document.getElementById(submitId).disabled = true;
+};</pre>
+
+   </div>
+  
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-quickform2.rules.list.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-quickform2.values.html">Element values and validation</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-quickform2.output.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Built-in validation Rules</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Form output and Javascript support</td>
+  </tr>
+ </table>
+</div>
+</body></html>

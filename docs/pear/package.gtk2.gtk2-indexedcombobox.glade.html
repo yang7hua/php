@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Conquering Glade combo boxes</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.gtk2.gtk2-indexedcombobox.html" title="Gtk2_IndexedComboBox" />
+  <link rel="prev" href="package.gtk2.gtk2-indexedcombobox.example.html" title="Simple example" />
+  <link rel="next" href="package.gtk2.gtk2-indexedcombobox.gtk2-indexedcombobox.html" title="Gtk2_IndexedComboBox" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Conquering Glade combo boxes</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.gtk2.gtk2-indexedcombobox.example.html" title="Simple example">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.gtk2.gtk2-indexedcombobox.gtk2-indexedcombobox.html" title="Gtk2_IndexedComboBox">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.gtk2.gtk2-indexedcombobox.glade">
+ 
+  <h1 class="refname">Conquering Glade combo boxes</h1>
+  <div class="refnamediv">Conquering Glade combo boxes &ndash; How to use glade combos with this class</div>
+
+ 
+
+ <div class="refsection"><div class="info"><h1>Conquering Glade combo boxes</h1>
+</div>
+ 
+
+ <p class="para">
+  While designing your user interface with Glade is really convenient and
+  easy, it doesn&#039;t allow you to use custom classes as this combo here.
+  Thanks to the MVC model in Gtk2, you still can use this class&#039;s power
+  by using the same model as <strong class="classname">Gtk2_IndexedComboBox</strong> uses
+  internally: <strong class="classname">Gtk2_IndexedComboBox_Model</strong>.
+ </p>
+
+ <div class="example"><div class="info"><p><strong>Glade file to use</strong></p></div>
+  
+  <div class="xmlcode"><pre class="xmlcode">
+&lt;?xml version=&quot;1.0&quot; standalone=&quot;no&quot;?&gt; &lt;!--*- mode: xml -*--&gt;
+&lt;!DOCTYPE glade-interface SYSTEM &quot;http://glade.gnome.org/glade-2.0.dtd&quot;&gt;
+
+&lt;glade-interface&gt;
+
+&lt;widget class=&quot;GtkWindow&quot; id=&quot;wndTest&quot;&gt;
+  &lt;property name=&quot;visible&quot;&gt;True&lt;/property&gt;
+  &lt;property name=&quot;title&quot; translatable=&quot;yes&quot;&gt;Gtk2_IndexedComboBox_Model test&lt;/property&gt;
+  &lt;property name=&quot;type&quot;&gt;GTK_WINDOW_TOPLEVEL&lt;/property&gt;
+  &lt;property name=&quot;window_position&quot;&gt;GTK_WIN_POS_NONE&lt;/property&gt;
+  &lt;property name=&quot;modal&quot;&gt;False&lt;/property&gt;
+  &lt;property name=&quot;resizable&quot;&gt;True&lt;/property&gt;
+  &lt;property name=&quot;destroy_with_parent&quot;&gt;False&lt;/property&gt;
+  &lt;property name=&quot;decorated&quot;&gt;True&lt;/property&gt;
+  &lt;property name=&quot;skip_taskbar_hint&quot;&gt;False&lt;/property&gt;
+  &lt;property name=&quot;skip_pager_hint&quot;&gt;False&lt;/property&gt;
+  &lt;property name=&quot;type_hint&quot;&gt;GDK_WINDOW_TYPE_HINT_NORMAL&lt;/property&gt;
+  &lt;property name=&quot;gravity&quot;&gt;GDK_GRAVITY_NORTH_WEST&lt;/property&gt;
+  &lt;signal name=&quot;destroy&quot; handler=&quot;Gtk::main_quit&quot;/&gt;
+
+  &lt;child&gt;
+    &lt;widget class=&quot;GtkComboBox&quot; id=&quot;cmbNormal&quot;&gt;
+      &lt;property name=&quot;visible&quot;&gt;True&lt;/property&gt;
+    &lt;/widget&gt;
+  &lt;/child&gt;
+&lt;/widget&gt;
+
+&lt;/glade-interface&gt;</pre>
+</div>
+ </div>
+
+ <div class="example"><div class="info"><p><strong>PHP code</strong></p></div>
+  
+  <div class="programlisting"><br/>&lt;?php<br/>require_once&nbsp;&#039;Gtk2/IndexedComboBox/Model.php&#039;;<br/><br/>$glade&nbsp;=&nbsp;new&nbsp;GladeXML(dirname(__FILE__)&nbsp;.&nbsp;&#039;/glade.glade&#039;);<br/>$glade-&gt;signal_autoconnect();<br/><br/>$combo&nbsp;=&nbsp;$glade-&gt;get_widget(&#039;cmbNormal&#039;);<br/>$combo-&gt;connect(&#039;changed&#039;,&nbsp;&#039;comboChanged&#039;);<br/>//show&nbsp;the&nbsp;second&nbsp;column&nbsp;only<br/>$renderer&nbsp;=&nbsp;new&nbsp;GtkCellRendererText();<br/>$combo-&gt;pack_start($renderer);<br/>$combo-&gt;set_attributes($renderer,&nbsp;&#039;text&#039;,&nbsp;1);<br/><br/>$mod&nbsp;=&nbsp;new&nbsp;Gtk2_IndexedComboBox_Model();<br/>$combo-&gt;set_model($mod);<br/><br/>$mod-&gt;append(1,&nbsp;&#039;One&#039;);<br/>$mod-&gt;append_array(array(2&nbsp;=&gt;&nbsp;&#039;Two&#039;,&nbsp;3&nbsp;=&gt;&nbsp;&#039;Three&#039;));<br/>$mod-&gt;prepend(4,&nbsp;&#039;Four&#039;);<br/><br/>function&nbsp;comboChanged($combo)<br/>{<br/>&nbsp;&nbsp;&nbsp;&nbsp;$nActive&nbsp;=&nbsp;$combo-&gt;get_active();<br/>&nbsp;&nbsp;&nbsp;&nbsp;$iter&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;$combo-&gt;get_model()-&gt;get_iter($nActive);<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;$key&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;$combo-&gt;get_model()-&gt;get_key($iter);<br/>&nbsp;&nbsp;&nbsp;&nbsp;$text&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;$combo-&gt;get_model()-&gt;get_text($iter);<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;&#039;Selected:&nbsp;&#039;&nbsp;.&nbsp;$key&nbsp;.&nbsp;&#039;&nbsp;=&gt;&nbsp;&#039;&nbsp;.&nbsp;$text&nbsp;.&nbsp;&quot;\r\n&quot;;<br/>}<br/><br/>Gtk::main();<br/>?&gt;</div>
+ </div>
+
+ <p class="para">
+  The important thing to remember is that you need to
+  setup your own cell renderer, and tell it which column
+  in the model shall be displayed. Beside that, you just do
+  the normal model-creation-and-setting via <strong class="function">set_model()</strong>.
+ </p>
+ <p class="para">
+  All data manipulation methods of <strong class="classname">Gtk2_IndexedComboBox</strong>
+  you saw in the previous example are available in the model,
+  <strong class="classname">Gtk2_IndexedComboBox_Model</strong>.
+  Only <strong class="function">get_active_key()</strong> and
+  <strong class="function">get_active_text()</strong> cannot be used on the model,
+  since this doesn&#039;t know anything about selections. Retrieve
+  the selected <strong class="classname">GtkTreeIter</strong> by combining the
+  calls of <strong class="function">get_active()</strong> and <strong class="function">get_iter()</strong>,
+  and pass this <code class="literal">iter</code> object to
+  <strong class="function">get_key()</strong> and <strong class="function">get_text()</strong>.
+ </p>
+
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.gtk2.gtk2-indexedcombobox.example.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.gtk2.gtk2-indexedcombobox.html">Gtk2_IndexedComboBox</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.gtk2.gtk2-indexedcombobox.gtk2-indexedcombobox.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Simple example</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Gtk2_IndexedComboBox</td>
+  </tr>
+ </table>
+</div>
+</body></html>

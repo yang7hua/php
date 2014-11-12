@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>API</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.php.php-uml.html" title="PHP_UML" />
+  <link rel="prev" href="package.php.php-uml.about-the-parser.html" title="About the parser" />
+  <link rel="next" href="package.php.php-uml.extension.html" title="Extension" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">API</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.php.php-uml.about-the-parser.html" title="About the parser">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.php.php-uml.extension.html" title="Extension">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.php.php-uml.api">
+ 
+  <h1 class="refname">API</h1>
+  <div class="refnamediv">API &ndash; How to use PHP_UML from its API?</div>
+
+ 
+
+ <div class="refsection"><div class="info"><h1>Principles</h1>
+</div>
+  <p class="para"><code class="literal">PHP_UML</code> is structured in 4 packages:</p>
+  <p class="para">
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <span class="simpara">
+      The host package, which contains the main class (<code class="literal">PHP_UML</code>) and some utility classes
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      The <code class="literal">Input</code> package, where the PHP and XMI parser reside (they are the <code class="literal">Importer</code> objects).
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      The <code class="literal">Metamodel</code> package, which contains the data structures that <code class="literal">PHP_UML</code> is using to modelize the code parsed  
+     </span>
+    </li>
+     <li class="listitem">
+     	<span class="simpara">
+     	The <code class="literal">Output</code> package, which contains all the objects (called <code class="literal">Exporter</code>) to transform the UML model stored into memory into an output format (like XMI, HTML, or PHP)
+     	</span>
+    </li>
+   </ul>
+  
+  <p class="para">
+   If the default settings suit your needs, the only single class you need to know about is <code class="literal">PHP_UML</code>.
+   For more advanced operations, you must use the <code class="literal">Importer</code> and <code class="literal">Exporter</code> hierarchies of objects,
+   whose roles, respectively, are to import
+   data into the UML model, and export data out from the UML model.
+  </p>
+ </div>
+
+ <div class="refsection"><div class="info"><h1>Examples</h1>
+</div>
+  
+  <div class="example"><div class="info"><p><strong>Parsing of a single file <code class="filename">test.php</code>, and generation of its XMI file:</strong></p></div>
+   
+   <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'PHP/UML.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$uml&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">PHP_UML</span><span style="color: #007700">();&nbsp;&nbsp;&nbsp;<br /></span><span style="color: #0000BB">$uml</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setInput</span><span style="color: #007700">(</span><span style="color: #DD0000">'test.php'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$uml</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parse</span><span style="color: #007700">(</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;parses,&nbsp;and&nbsp;sets&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;root&nbsp;package<br /></span><span style="color: #0000BB">$uml</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">export</span><span style="color: #007700">(</span><span style="color: #DD0000">'xmi'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'test.xmi'</span><span style="color: #007700">);&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;first&nbsp;param&nbsp;is&nbsp;the&nbsp;format&nbsp;(html,&nbsp;php,&nbsp;htmlnew&nbsp;or&nbsp;xmi),&nbsp;second&nbsp;param&nbsp;is&nbsp;the&nbsp;output&nbsp;folder<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+
+  
+  <div class="example"><div class="info"><p><strong>Parsing of two directories, ignoring the <code class="filename">CSV</code> folders, and generation of HTML documentation</strong></p></div>
+   <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'PHP/UML.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$uml&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">PHP_UML</span><span style="color: #007700">();&nbsp;<br /></span><span style="color: #0000BB">$uml</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setInput</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'C:\Inetpub\foo'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'C:\Inetpub\libraries'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$uml</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parse</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$uml</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">export</span><span style="color: #007700">(</span><span style="color: #DD0000">'html'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'C:\Inetpub\api'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  
+<div class="example"><div class="info"><p><strong>Import of an XMI file, and generation of PHP code templates</strong></p></div>
+   
+   <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'PHP/UML.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$uml&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">PHP_UML</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">$uml</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setInput</span><span style="color: #007700">(</span><span style="color: #DD0000">'foo.xmi'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$uml</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setImporter</span><span style="color: #007700">(new&nbsp;</span><span style="color: #0000BB">PHP_UML_Input_XMI_FileScanner</span><span style="color: #007700">());&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;by&nbsp;default,&nbsp;PHP_UML&nbsp;uses&nbsp;a&nbsp;PHP_UML_Input_PHP_FileScanner<br /><br /></span><span style="color: #0000BB">$uml</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parse</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">$exporter&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">PHP_UML_Output_Php_Exporter</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$exporter</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setModel</span><span style="color: #007700">(</span><span style="color: #0000BB">$uml</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getModel</span><span style="color: #007700">());<br /></span><span style="color: #0000BB">$exporter</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">export</span><span style="color: #007700">(</span><span style="color: #DD0000">'./'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+ 
+  <div class="example"><div class="info"><p><strong>Parsing of a PHP directory, followed by an XMI generation, without relying on a PHP_UML object</strong></p></div>
+   <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'PHP/UML.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$importer&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">PHP_UML_Input_PHP_FileScanner</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$importer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setDirectories</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'somewhere/'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$importer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">import</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">$exporter&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">PHP_UML_Output_Xmi_Exporter</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$exporter</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setModel</span><span style="color: #007700">(</span><span style="color: #0000BB">$importer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getModel</span><span style="color: #007700">());<br /></span><span style="color: #0000BB">$exporter</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setXmiVersion</span><span style="color: #007700">(</span><span style="color: #0000BB">1</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$exporter</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setEncoding</span><span style="color: #007700">(</span><span style="color: #DD0000">'utf-8'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$exporter</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setDeploymentView</span><span style="color: #007700">(</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$exporter</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setComponentView</span><span style="color: #007700">(</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$exporter</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">export</span><span style="color: #007700">(</span><span style="color: #DD0000">'somewhere/else/'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  <p class="para">Note how the model is transfered from the importer object to the exporter object, with the 
+  methods <code class="literal">getModel()</code> and <code class="literal">setModel()</code>.</p>
+  <p class="para">You can use the factory method <code class="literal">PHP_UML_Output_Exporter::getInstance($format)</code> to get an exporter object given a format name,
+  instead of instantiating the objects by yourself.</p>
+  
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.php.php-uml.about-the-parser.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.php.php-uml.html">PHP_UML</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.php.php-uml.extension.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">About the parser</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Extension</td>
+  </tr>
+ </table>
+</div>
+</body></html>

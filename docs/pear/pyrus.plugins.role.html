@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Pyrus plugins: custom file roles</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="pyrus.plugins.html" title="Creating plugins for Pyrus" />
+  <link rel="prev" href="pyrus.plugins.command.html" title="Pyrus plugins: custom commands" />
+  <link rel="next" href="pyrus.plugins.task.html" title="Pyrus plugins: custom file tasks" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Pyrus plugins: custom file roles</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="pyrus.plugins.command.html" title="Pyrus plugins: custom commands">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="pyrus.plugins.task.html" title="Pyrus plugins: custom file tasks">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="pyrus.plugins.role">
+ <div class="info"><h1>Pyrus plugins: custom file roles</h1>
+</div>
+
+ <div class="section" id="pyrus.plugins.role.intro">
+  <div class="info"><h2 class="title">Introduction</h2></div>
+  <p class="para">
+   If you are not familiar with how file roles install, read the
+   <a href="guide.users.concepts.filerole.html" class="link">introduction to file roles</a>
+   first.  This segment of the documentation assumes you are familiar with
+   concepts such as <code class="literal">baseinstalldir</code> and with what a file
+   role means in terms of installation location.
+  </p>
+  <p class="para">
+   Custom file roles can implement a single role, and are defined by
+   an xml file that is noted in package.xml with the <code class="literal">customrole</code>
+   file role.  The XML format is defined and validated by pyrus with the
+   <a href="https://github.com/pear2/PEAR2_Pyrus/blob/master/data/customrole-2.0.xsd" class="link external">customrole-2.0.xsd</a>
+   XSchema file.
+  </p>
+  <p class="para">
+   Here is a human-readable custom file role xml file definition.
+   Optional elements are enclosed in [brackets], and if there is a choice of
+   values, they are delimited with a vertical bar <code class="literal">|</code> and
+   enclosed in (parentheses).
+  </p>
+  <div class="xmlcode">
+   <pre class="xmlcode">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;role version=&quot;2.0&quot; xmlns=&quot;http://pear2.php.net/dtd/customrole-2.0&quot;&gt;
+ &lt;name&gt;rolename&lt;/name&gt;
+ &lt;class&gt;MyPlugin_Rolename&lt;/class&gt;
+[&lt;validationmethod&gt;validate&lt;/validationmethod&gt;]
+[&lt;autoloadpath&gt;relative/path/to/MyPlugin&lt;/autoloadpath&gt;]
+(&lt;releasetype&gt;php&lt;/releasetype&gt;|&lt;releasetype&gt;extsrc&lt;/releasetype&gt;|
+ &lt;releasetype&gt;extbin&lt;/releasetype&gt;|&lt;releasetype&gt;zendextsrc&lt;/releasetype&gt;|
+ &lt;releasetype&gt;zendextbin&lt;/releasetype&gt;)
+ &lt;installable&gt;(1|0)&lt;/installable&gt;
+ &lt;locationconfig&gt;config_var&lt;/locationconfig&gt;
+ &lt;honorsbaseinstall&gt;(1|0)&lt;/honorsbaseinstall&gt;
+ &lt;unusualbaseinstall&gt;(1|0)&lt;/unusualbaseinstall&gt;
+ &lt;executable&gt;(1|0)&lt;/executable&gt;
+[&lt;configvar&gt;
+  &lt;name&gt;config_name&lt;/name&gt;
+  &lt;type&gt;string&lt;/type&gt;
+  &lt;default&gt;
+   &lt;![CDATA[
+    &lt;?php $default = &#039;hi&#039;; ?&gt;
+   ]]&gt;
+  &lt;/default&gt;
+  &lt;doc&gt;Extensive, multi-line documentation&lt;/doc&gt;
+ [&lt;validset&gt;val1&lt;/validset&gt;&lt;validset&gt;val2&lt;/validset&gt;...]
+  &lt;prompt&gt;summary documentation&lt;/prompt&gt;
+  &lt;group&gt;Custom&lt;/group&gt;
+  &lt;configtype&gt;(system|user|channel-specific)&lt;/configtype&gt;
+ &lt;/configvar&gt;]*
+&lt;/role&gt;</pre>
+
+  </div>
+ </div>
+ <div class="section" id="pyrus.plugins.role.autoload">
+  <h2 class="title">Telling Pyrus how to load your role: &lt;class&gt; and &lt;autoloadpath&gt;</h2>
+  <p class="para">
+   This is the same method used for all plugins, and is documented
+   <a href="pyrus.plugins.autoload.html" class="link">here</a>.
+  </p>
+ </div>
+ <div class="section" id="pyrus.plugins.role.packagetimevalidation">
+  <h2 class="title">Validating your custom role at packaging time</h2>
+  <p class="para">
+   Some roles benefit from the ability to validate the files they represent
+   at packaging time.  For instance, a <code class="literal">customcommand</code> file
+   is checked to ensure it conforms to its XML schema, so that a custom command
+   with invalid XML cannot be distributed by mistake.
+  </p>
+  <p class="para">
+   By convention, a validation method should be named <code class="literal">validate</code>,
+   although the xml supports any name.  The method name should be placed in
+   the <code class="literal">&lt;validationmethod</code> tag, and the method itself should
+   have the same method signature as this example from Pyrus&#039;s
+   <code class="literal">customrole</code> validation:
+  </p>
+  <div class="phpcode">
+   <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">validate</span><span style="color: #007700">(\</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">IPackage&nbsp;$package</span><span style="color: #007700">,&nbsp;array&nbsp;</span><span style="color: #0000BB">$file</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$parser&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;\</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">XMLParser</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$schemapath&nbsp;</span><span style="color: #007700">=&nbsp;\</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Main</span><span style="color: #007700">::</span><span style="color: #0000BB">getDataPath</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(!</span><span style="color: #0000BB">file_exists</span><span style="color: #007700">(\</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Main</span><span style="color: #007700">::</span><span style="color: #0000BB">getDataPath</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">'/customrole-2.0.xsd'</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$schemapath&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">realpath</span><span style="color: #007700">(</span><span style="color: #0000BB">__DIR__&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">'/../../../../data'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$taskschema&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$schemapath&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">'/customrole-2.0.xsd'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$taskinfo&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parse</span><span style="color: #007700">(</span><span style="color: #0000BB">$package</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getFilePath</span><span style="color: #007700">(</span><span style="color: #0000BB">$file</span><span style="color: #007700">[</span><span style="color: #DD0000">'attribs'</span><span style="color: #007700">][</span><span style="color: #DD0000">'name'</span><span style="color: #007700">]),&nbsp;</span><span style="color: #0000BB">$taskschema</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(\</span><span style="color: #0000BB">Exception&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;\</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Installer</span><span style="color: #007700">\</span><span style="color: #0000BB">Role</span><span style="color: #007700">\</span><span style="color: #0000BB">Exception</span><span style="color: #007700">(</span><span style="color: #DD0000">'Invalid&nbsp;custom&nbsp;role&nbsp;definition&nbsp;file,'&nbsp;</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'&nbsp;file&nbsp;does&nbsp;not&nbsp;conform&nbsp;to&nbsp;the&nbsp;schema'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+  </div>
+  <p class="para">
+   A custom file role package-time validator should throw a
+   <code class="literal">PEAR2_Pyrus_Installer_Role_Exception</code> exception object
+   with an error message describing the reason for validation failure, or simply
+   return on success.
+  </p>
+ </div>
+ <div class="section" id="pyrus.plugins.role.releasetype">
+  <h2 class="title">Release Types and file roles</h2>
+  <p class="para">
+   The <code class="literal">&lt;releasetype&gt;</code> element is used to tell Pyrus
+   which releases can contain a file with this role.  For instance, the
+   <code class="literal">src</code> role only has meaning in a PHP extension source release,
+   and is only allowed in <code class="literal">extsrc</code> and <code class="literal">zendextsrc</code>
+   release types.
+  </p>
+  <p class="para">
+   There are 5 release types that Pyrus recognizes:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><p class="para"><code class="literal">php</code> - this is for PEAR-style packages distributing PHP code</p></li>
+    <li class="listitem"><p class="para"><code class="literal">extsrc</code> - this is for PHP extension source packages</p></li>
+    <li class="listitem"><p class="para"><code class="literal">extbin</code> - this is for PHP extension binary packages</p></li>
+    <li class="listitem"><p class="para"><code class="literal">zendextsrc</code> - this is for PHP Zend extension source packages</p></li>
+    <li class="listitem"><p class="para"><code class="literal">zendextbin</code> - this is for PHP Zend extension binary packages</p></li>
+   </ul>
+  
+ </div>
+ <div class="section" id="pyrus.plugins.role.installable">
+  <h2 class="title">&lt;installable&gt;</h2>
+  <p class="para">
+   If set to <code class="literal">0</code>, the file will not actually be installed onto
+   the system.  Most file roles should set this to <code class="literal">1</code>.
+  </p>
+ </div>
+ <div class="section" id="pyrus.plugins.role.locationconfig">
+  <h2 class="title">&lt;locationconfig&gt;</h2>
+  <p class="para">
+   This element is used to tell Pyrus which configuration variable should be
+   used to determine where to install the file.  This can be a
+   <a href="pyrus.plugins.role.html#pyrus.plugins.role.configvar" class="link">custom configuration variable</a>.
+  </p>
+ </div>
+ <div class="section" id="pyrus.plugins.role.baseinstall">
+  <h2 class="title">&lt;honorsbaseinstall&gt; and &lt;unusualbaseinstall&gt;</h2>
+  <p class="para">
+   The <code class="literal">&lt;honorsbaseinstall&gt;</code> element tells Pyrus to
+   honor the <code class="literal">baseinstalldir</code> attribute (documentation on
+   baseinstalldir is <a href="guide.users.concepts.filerole.html#guide.users.concepts.filerole.baseinstalldir" class="link">here</a>)
+   for roles like <code class="literal">php</code>.
+  </p>
+  <p class="para">
+   The <code class="literal">&lt;unusualbaseinstall&gt;</code> element tells Pyrus to
+   honor the <code class="literal">baseinstalldir</code> attribute for roles like
+   <code class="literal">data</code> that also prepend channel/package name to the
+   installation location.
+  </p>
+ </div>
+ <div class="section" id="pyrus.plugins.role.executable">
+  <h2 class="title">&lt;executable&gt;</h2>
+  <p class="para">
+   If <code class="literal">&lt;executable&gt;</code> is set to <code class="literal">1</code>,
+   Pyrus will make the installed file an executable file on unix systems
+   (the equivalent of </p><pre class="screen">chmod +x filename</pre>
+<p>).
+  </p>
+ </div>
+ <div class="section" id="pyrus.plugins.role.configvar">
+  <h2 class="title">Defining custom configuration variables</h2>
+  <p class="para">
+   A custom file role can optionally define a single or multiple custom
+   configuration variables.  There are 3 kinds of configuration variables
+   that Pyrus supports, <code class="literal">system</code>, <code class="literal">user</code> and
+   <code class="literal">channel-specific</code>.  Documentation on configuration is
+   available <a href="pyrus.configuration.html" class="link">here</a>.  Read that before
+   continuing in order to understand how different configuration variables work.
+  </p>
+  <p class="para">
+   Pyrus supports one type of configuration variable: <code class="literal">string</code>.
+   The values can be restricted to a specific set of values with the
+   <code class="literal">&lt;validset&gt;</code> element.
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="pyrus.plugins.command.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="pyrus.plugins.html">Creating plugins for Pyrus</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="pyrus.plugins.task.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Pyrus plugins: custom commands</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Pyrus plugins: custom file tasks</td>
+  </tr>
+ </table>
+</div>
+</body></html>

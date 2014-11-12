@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Archive modification</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.fileformats.file-archive.html" title="File_Archive" />
+  <link rel="prev" href="package.fileformats.file-archive.predicates.html" title="Predicates" />
+  <link rel="next" href="package.fileformats.file-archive.cache.html" title="Cache" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Archive modification</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.fileformats.file-archive.predicates.html" title="Predicates">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.fileformats.file-archive.cache.html" title="Cache">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.fileformats.file-archive.archmod">
+ 
+  <h1 class="refname">Archive modification</h1>
+  <div class="refnamediv">Archive modification &ndash; Remove and append files</div>
+
+ 
+
+
+ <div class="refsection" id="package.fileformats.file-archive.archmod.intro"><div class="info"><h1>Introduction</h1>
+</div>
+  
+  <p class="para">
+   <strong class="classname">File_Archive</strong> version 1.3 introduces some new
+   functions to edit existing archives.
+   These functions will allow you to remove or append files to
+   an existing archive.
+  </p>
+  <p class="para">
+   Since for <strong class="classname">File_Archive</strong>, the file system is just
+   another reader / writer, those modifications can be done on &quot;real&quot;
+   archives (real files), or on nested archives
+   (an archive inside another archive).
+  </p>
+ </div>
+
+
+ <div class="refsection" id="package.fileformats.file-archive.archmod.remove"><div class="info"><h1>Remove files from an existing archive</h1>
+</div>
+  
+  <p class="para">
+   To remove files from an archive, you&#039;ll use one of the following functions
+   from <strong class="classname">File_Archive</strong> class:
+  </p>
+  <ul class="itemizedlist">
+   <li class="listitem">
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      
+       <strong class="function">remove</strong>
+       ( 
+      &amp;$pred
+       , $URL
+     )</code></p>
+    </div>
+    <p class="para">
+     Removes all the files that follow a given predicate from file
+     <code class="varname">$URL</code>.
+     Note that the URL is the same as in the
+     <strong class="function">File_Archive::read()</strong> function.
+     You can use nested archives.
+    </p>
+   </li>
+
+   <li class="listitem">
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      
+       <strong class="function">removeFromSource</strong>
+       ( 
+      &amp;$pred
+       , &amp;$source
+       , $URL = null
+     )</code></p>
+    </div>
+    <p class="para">
+     Same as remove, but use <code class="varname">$source</code> instead of the default
+      file system reader.
+     If no URL is specified, <code class="varname">$source</code> must be an archive,
+     and the files will be removed from here.
+    </p>
+   </li>
+
+   <li class="listitem">
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      
+       <strong class="function">removeDuplicates</strong>
+       ( 
+      $URL
+     )</code></p>
+    </div>
+    <p class="para">
+     This function will remove all the doublons from the archive at
+     <code class="varname">$URL</code>; only the most recent file will be kept.
+    </p>
+    <p class="para">
+     If the modification date is not specified for a file, it will be considered
+      infinitely old.
+    </p>
+    <p class="para">
+     If two files have the same modification date, the one that has highest
+     position in the archive (usually the one that was added to the archive
+     at last) will be kept.
+    </p>
+   </li>
+
+   <li class="listitem">
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      
+       <strong class="function">removeDuplicatesFromSource</strong>
+       ( 
+      &amp;$source
+       , $URL = null
+     )</code></p>
+    </div>
+    <p class="para">
+     Same as <strong class="function">removeDuplicate()</strong>, but use
+     <code class="varname">$source</code> instead of the default file system reader.
+     If no URL is specified, the duplicates will be removed from
+     <code class="varname">$source</code> itself.
+    </p>
+   </li>
+  </ul>
+
+  <p class="para">
+   Note that those functions will not recursively uncompress archives.
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Remove Jpg, gif and Bmp from a zip archive</strong></p></div>
+   
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"File/Archive.php"</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">remove</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">predExtension</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'jpg'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'jpeg'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'bmp'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'gif'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'archive.zip'<br /></span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+
+  <div class="example"><div class="info"><p><strong>Remove image files from a nested archive</strong></p></div>
+   
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'File/Archive.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">remove</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">predMIME</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'image/*'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'archive.zip/data.tgz'<br /></span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+ </div>
+
+
+
+ <div class="refsection" id="package.fileformats.file-archive.archmod.add"><div class="info"><h1>Appending files to an archive</h1>
+</div>
+  
+  <p class="para">
+   To append files to an archive, you&#039;ll use one of the following functions
+   from <strong class="classname">File_Archive</strong> class:
+  </p>
+
+  <ul class="itemizedlist">
+   <li class="listitem">
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      
+       <strong class="function">appender</strong>
+       ( 
+      $URL
+       , $unique = null
+       , $type = null
+       , $stat = array()
+     )</code></p>
+    </div>
+    <p class="para">
+     Allows to append to the archive specified by the URL.
+    </p>
+    <p class="para">
+     If unique is set to <code class="literal">true</code>, the eventual duplicates
+     created by the insertion of new files will be automatically removed.
+     If set to <code class="literal">null</code>, the default value
+     (that you can change using
+     <strong class="command">File_Archive::setOption(&#039;appendRemoveDuplicates&#039;, true/false))</strong>
+     is used (<code class="literal">false</code> by default).
+    </p>
+    <p class="para">
+     If the archive does not exist, it will be created using the type
+     specified in parameter
+     (or looking at the extension in the URL if the type is not specified),
+     and the stat array.
+    </p>
+   </li>
+
+   <li class="listitem">
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      
+       <strong class="function">appenderFromSource</strong>
+       ( 
+      &amp;$source
+       , $URL = null
+       , $unique = null
+       , $type = null
+       , $stat = array()
+     )</code></p>
+    </div>
+    <p class="para">
+     Same as appender, but using <code class="varname">$source</code> instead of the
+     default file system reader.
+    </p>
+   </li>
+  </ul>
+
+  <p class="para">
+   Both of these functions return a writer that you can use as in the previous
+   examples, using the extract function
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Add a folder to an archive</strong></p></div>
+   
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"File/Archive.php"</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">extract</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">read</span><span style="color: #007700">(</span><span style="color: #DD0000">'folder'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">appender</span><span style="color: #007700">(</span><span style="color: #DD0000">'archive.zip'</span><span style="color: #007700">)<br />);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+
+  <p class="para">
+   Note that if you use a string instead of a writer in a function, the string
+   will be converted using
+   <strong class="function">File_Archive::appender()</strong>.
+   Thus the previous example could be rewritten to:
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Add a folder to an archive</strong></p></div>
+   
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"File/Archive.php"</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">extract</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$src&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'folder'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$dest</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'archive.zip'<br /></span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.fileformats.file-archive.predicates.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.fileformats.file-archive.html">File_Archive</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.fileformats.file-archive.cache.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Predicates</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Cache</td>
+  </tr>
+ </table>
+</div>
+</body></html>

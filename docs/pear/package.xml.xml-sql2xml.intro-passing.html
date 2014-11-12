@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.xml.xml-sql2xml.html" title="XML_sql2xml" />
+  <link rel="prev" href="package.xml.xml-sql2xml.intro-simple.html" title="Introduction" />
+  <link rel="next" href="package.xml.xml-sql2xml.intro-xpath.html" title="Introduction" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.xml.xml-sql2xml.intro-simple.html" title="Introduction">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.xml.xml-sql2xml.intro-xpath.html" title="Introduction">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.xml.xml-sql2xml.intro-passing">
+   
+    <h1 class="refname">Introduction</h1>
+    <div class="refnamediv">Introduction &ndash; Passing the data to transform</div>
+
+  
+ 
+  <div class="refsection" id="package.xml.xml-sql2xml.intro-passing.overview"><div class="info"><h1>Overview</h1>
+</div>
+   
+   
+   <p class="para">
+    There are three ways to pass the data for transforming to the object:
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+       <em class="emphasis">with a direct query</em>
+      </p>
+      <p class="para">
+       This way you see in the <a href="package.xml.xml-sql2xml.intro-simple.html" class="link">first part</a> of the introduction already.
+
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <em class="emphasis">with an existing <a href="package.database.db.db-result.html" class="link"><strong class="classname">DB_result</strong></a> object</em>      
+      </p>
+      <p class="para">
+       If you need the full power of the <a href="package.database.db.html" class="link"><strong class="classname">PEAR::DB</strong></a>
+       or <strong class="classname">PEAR::MDB</strong> API, you should choose this way. 
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <em class="emphasis">with an array</em>
+      </p>
+      <p class="para">
+       This is not directly an SQL to XML transformation; if you pass an
+       indice array to the instance, the keys of the array are transformed
+       into XML tags, their values into the tag content.
+       This feature his helpful for adding data to an XML transformed result set.
+      </p>
+     </li>
+     
+    </ul>
+   
+  </div>
+  <div class="refsection" id="package.xml.xml-sql2xml.intro-passing.query"><div class="info"><h1>Direct query</h1>
+</div>
+   
+   <p class="para">
+    This behavoir does connecting to the DBMS, quering and
+    fetching he result automatically. 
+    <strong class="classname">XML_sql2xml</strong> requires an valid
+    <a href="package.database.db.intro-dsn.html" class="link">DSN</a> as <a href="package.xml.xml-sql2xml.xml-sql2xml.xml-sql2xml.html" class="link">construtor</a> parameter. 
+    The query has to be passed to the <a href="package.xml.xml-sql2xml.xml-sql2xml.getxml.html" class="link"><strong class="function">getXML()</strong></a>
+    or <a href="package.xml.xml-sql2xml.xml-sql2xml.getxml.html" class="link"><strong class="function">add()</strong></a>
+    method.
+   </p>
+   <p class="para">
+    Take a look into the <a href="package.xml.xml-sql2xml.intro-simple.html" class="link">first part</a> of the introduction
+    for examples.
+   </p>
+  </div>
+  
+  <div class="refsection" id="package.xml.xml-sql2xml.intro-passing.db-result"><div class="info"><h1>Passing an DB_Result object</h1>
+</div>
+   
+   <p class="para">
+    <a href="package.database.db.html" class="link"><strong class="classname">PEAR::DB</strong></a>
+    and <strong class="classname">PEAR::MDB</strong> return the result set of a query
+    as <a href="package.database.db.db-result.html" class="link"><strong class="classname">DB_result</strong></a> object. You have to provide a <a href="package.database.db.db-common.html" class="link"><strong class="classname">DB_common</strong></a>
+    instance to the <a href="package.xml.xml-sql2xml.xml-sql2xml.xml-sql2xml.html" class="link">construtor</a>
+    and the <a href="package.database.db.db-result.html" class="link"><strong class="classname">DB_result</strong></a> instance to <a href="package.xml.xml-sql2xml.xml-sql2xml.getxml.html" class="link"><strong class="function">getXML()</strong></a>
+    or <a href="package.xml.xml-sql2xml.xml-sql2xml.getxml.html" class="link"><strong class="function">add()</strong></a>.
+   </p>   
+   <div class="example"><div class="info"><p><strong>Passing a DB_Result object</strong></p></div>
+    
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"XML/sql2xml.php"</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">"DB.php"</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$db&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">db</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #DD0000">"mysql://username:password@localhost/xmltest"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">"select&nbsp;*&nbsp;from&nbsp;bands"</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$sql2xmlclass&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">xml_sql2xml</span><span style="color: #007700">(</span><span style="color: #0000BB">$db</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$xmlstring&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$sql2xmlclass</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getxml</span><span style="color: #007700">(</span><span style="color: #0000BB">$result</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   </div>
+   <p class="para">
+    The XML output in <em><code class="parameter">$xmlstring</code></em> is equal to the
+    example in
+    <a href="package.xml.xml-sql2xml.intro-simple.html#package.xml.xml-sql2xml.intro-simple.simple" class="link">
+    &quot;The typical using&quot;</a>.
+   </p>
+   <p class="para">
+    This way is the only one, if you want to benefit from all the 
+    features of the database APIs.
+   </p>
+  </div>
+
+  <div class="refsection" id="package.xml.xml-sql2xml.intro-passing.array"><div class="info"><h1>Passing an array</h1>
+</div>
+   
+   <p class="para">
+    If you pass an nested array to <a href="package.xml.xml-sql2xml.xml-sql2xml.getxml.html" class="link"><strong class="function">getXML()</strong></a>
+    or <a href="package.xml.xml-sql2xml.xml-sql2xml.getxml.html" class="link"><strong class="function">add()</strong></a>,
+    it will be transformed into an XML document.
+   </p>
+   <div class="example"><div class="info"><p><strong>Passing an array</strong></p></div>
+    
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"XML/sql2xml.php"</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$sql2xmlclass&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">xml_sql2xml</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">$array&nbsp;</span><span style="color: #007700">=&nbsp;array&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">"name"</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">"The&nbsp;Blabbers"</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"birth_year"</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">"1998"</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"birth_place"</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">"London"</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"genre"</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">"Rock'n'Roll"</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">"name"</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">"Only&nbsp;Stupids"</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"birth_year"</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">"1997"</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"birth_place"</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">"New&nbsp;York"</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"genre"</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">"hiphop"</span><span style="color: #007700">)<br />);<br /><br /></span><span style="color: #0000BB">$xmlstring&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$sql2xmlclass</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getXML</span><span style="color: #007700">(</span><span style="color: #0000BB">$array</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   <div class="example-contents"><p>The XML output in <em><code class="parameter">$xmlstring</code></em>:</p></div>
+   <div class="phpcode">
+    <code><span style="color: #000000">
+&lt;?xml&nbsp;version="1.0"?&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&lt;root&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;result&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;row&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;name&gt;The&nbsp;Blabbers&lt;/name&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;birth_year&gt;1998&lt;/birth_year&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;birth_place&gt;London&lt;/birth_place&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;genre&gt;Rock'n'Roll&lt;/genre&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/row&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;row&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;name&gt;Only&nbsp;Stupids&lt;/name&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;birth_year&gt;1997&lt;/birth_year&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;birth_place&gt;New&nbsp;York&lt;/birth_place&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;genre&gt;hiphop&lt;/genre&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/row&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/result&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&lt;/root&gt;</span>
+</code>
+   </div>
+  </div>
+ </div>
+ <div class="refsection" id="package.xml.xml-sql2xml.intro-passing.passcount"><div class="info"><h1>Passing more then one result set</h1>
+</div>
+  
+   <p class="para">
+    You can call <a href="package.xml.xml-sql2xml.xml-sql2xml.add.html" class="link"><strong class="function">add()</strong></a>
+    several result sets to XML document. Just
+    call the method for every result set; if you have added all result sets,
+    call <a href="package.xml.xml-sql2xml.xml-sql2xml.getxml.html" class="link"><strong class="function">getXml()</strong></a>
+    without any arguments to get the XML document.
+   </p>
+   <div class="example"><div class="info"><p><strong>Adding result sets</strong></p></div>
+    
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$sql2xmlclass</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">add</span><span style="color: #007700">(</span><span style="color: #DD0000">"select&nbsp;*&nbsp;from&nbsp;bands"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$sql2xmlclass</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">add</span><span style="color: #007700">(</span><span style="color: #DD0000">"select&nbsp;*&nbsp;from&nbsp;albums"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$xmlstring</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$sql2xmlclass</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getxml</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+ 
+
+  </div>
+  </div>
+ </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.xml.xml-sql2xml.intro-simple.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.xml.xml-sql2xml.html">XML_sql2xml</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.xml.xml-sql2xml.intro-xpath.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Introduction</td>
+  </tr>
+ </table>
+</div>
+</body></html>

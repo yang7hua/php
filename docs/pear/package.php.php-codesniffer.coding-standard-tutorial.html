@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Coding Standard Tutorial</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.php.php-codesniffer.html" title="PHP_CodeSniffer" />
+  <link rel="prev" href="package.php.php-codesniffer.config-options.html" title="Configuration Options" />
+  <link rel="next" href="package.php.php-codesniffer.annotated-ruleset.html" title="Annotated ruleset.xml" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Coding Standard Tutorial</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.php.php-codesniffer.config-options.html" title="Configuration Options">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.php.php-codesniffer.annotated-ruleset.html" title="Annotated ruleset.xml">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.php.php-codesniffer.coding-standard-tutorial">
+ 
+  <h1 class="refname">Coding Standard Tutorial</h1>
+  <div class="refnamediv">Coding Standard Tutorial &ndash; A guide to writing your own code sniffs</div>
+
+ 
+
+ <div class="refsection"><div class="info"><h1>Introduction</h1>
+</div>
+  <p class="para">
+   In this tutorial, we will create a new coding standard with a single sniff. Our sniff will prohibit the use of Perl style hash comments.
+  </p>
+ </div>
+
+ <div class="refsection"><div class="info"><h1>Creating the Coding Standard Directory</h1>
+</div>
+  <p class="para">
+   All sniffs in PHP_CodeSniffer must belong to a coding standard. A coding standard is a directory with a specific sub-directory structure and a ruleset.xml file, so we can create one very easily. Let&#039;s call our coding standard <em class="emphasis">MyStandard</em>. Run the following commands to create the coding standard directory structure:
+  </p>
+  <p class="para">
+   </p><pre class="screen">
+    <strong class="userinput"><code>
+<br/>$&nbsp;mkdir&nbsp;MyStandard<br/>$&nbsp;mkdir&nbsp;MyStandard/Sniffs<br/>
+    </code></strong>
+   </pre>
+
+  
+  <blockquote class="note">
+   <span class="simpara">
+    As this coding standard directory sits outside the main PHP_CodeSniffer directory structure, PHP_CodeSniffer will not show it as an installed standard when using the <code class="literal">-i</code> command line argument. If you want your standard to be shown as installed, create the MyStandard directory inside the PHP_CodeSniffer install:
+   </span>
+   <p class="para">
+   </p><pre class="screen">
+    <strong class="userinput"><code>
+<br/>$&nbsp;cd&nbsp;/path/to/PHP_CodeSniffer/CodeSniffer/Standards<br/>$&nbsp;mkdir&nbsp;MyStandard<br/>$&nbsp;mkdir&nbsp;MyStandard/Sniffs<br/>
+    </code></strong>
+   </pre>
+
+  
+  </blockquote>
+
+  <p class="para">
+   The <code class="filename">MyStandard</code> directory represents our coding standard. The <code class="filename">Sniffs</code> sub-directory is used to store all the sniff files for this coding standard.
+  </p>
+  <p class="para">
+   Now that our directory structure is created, we need to add our ruleset.xml file. This file will allow PHP_CodeSniffer to ask our coding standard for information about itself, and also identify this directory as one that contains code sniffs.
+  </p>
+  <p class="para">
+   </p><pre class="screen">
+    <strong class="userinput"><code>
+<br/>$&nbsp;cd&nbsp;MyStandard<br/>$&nbsp;touch&nbsp;ruleset.xml<br/>
+    </code></strong>
+   </pre>
+
+  
+  <p class="para">
+   The content of the <code class="filename">ruleset.xml</code> file should be the following:
+  </p>
+  <p class="para">
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+&lt;?xml&nbsp;version="1.0"?&gt;<br />&lt;ruleset&nbsp;name="MyStandard"&gt;<br />&nbsp;&lt;description&gt;A&nbsp;custom&nbsp;coding&nbsp;standard.&lt;/description&gt;<br />&lt;/ruleset&gt;</span>
+</code>
+   </div>
+  
+  <blockquote class="note">
+   <span class="simpara">
+    The ruleset.xml can be left quite small, as it is in this example coding standard. For information about the other features that the ruleset.xml provides, see the <a href="package.php.php-codesniffer.annotated-ruleset.html" class="link">annotated ruleset.xml</a>.
+   </span>
+  </blockquote>
+
+ </div>
+
+ <div class="refsection"><div class="info"><h1>Creating the Sniff</h1>
+</div>
+  <p class="para">
+   A sniff requires a single PHP file. It&#039;s name should clearly describe the standard that we are enforcing and must end with <code class="literal">Sniff.php</code>. For our sniff, we will name the PHP file <code class="filename">DisallowHashCommentsSniff.php</code> and place it into a <code class="filename">Commenting</code> sub-directory to categorise this sniff as relating to commenting. Run the following commands to create the category and the sniff:
+  </p>
+  <p class="para">
+   </p><pre class="screen">
+    <strong class="userinput"><code>
+<br/>$&nbsp;cd&nbsp;Sniffs<br/>$&nbsp;mkdir&nbsp;Commenting<br/>$&nbsp;touch&nbsp;Commenting/DisallowHashCommentsSniff.php<br/>
+    </code></strong>
+   </pre>
+
+  
+  <blockquote class="note">
+   <span class="simpara">
+    It does not matter what sub-directories you use for categorising your sniffs. Just make them descriptive enough so you can find your sniffs again later when you want to modify them.
+   </span>
+  </blockquote>
+
+  <p class="para">
+   Each sniff must implement the <code class="literal">PHP_CodeSniffer_Sniff</code> interface so that PHP_CodeSniffer knows that it should instantiate the sniff once it&#039;s invoked. The <code class="literal">PHP_CodeSniffer_Sniff</code> interface defines two methods that must be implemented; <strong class="function">register()</strong> and <strong class="function">process()</strong>.
+  </p>
+
+  <div class="refsection"><div class="info"><h1>The <strong class="function">register()</strong> and <strong class="function">process()</strong> Methods</h1>
+</div>
+   <p class="para">
+    The <strong class="function">register()</strong> method allows a sniff to subscribe to one or more token types that it wants to process. Once PHP_CodeSniffer encounters one of those tokens, it calls the <strong class="function">process()</strong> method with the <code class="literal">PHP_CodeSniffer_File</code> object (a representation of the current file being checked) and the position in the stack where the token was found.
+   </p>
+   <p class="para">
+    For our sniff, we are interested in single line comments. The <strong class="function">token_get_all()</strong> method that PHP_CodeSniffer uses to acquire the tokens within a file distinguishes doc comments and normal comments as two separate token types. Therefore, we don&#039;t have to worry about doc comments interfering with our test. The <strong class="function">register()</strong> method only needs to return one token type, <strong class="constant">T_COMMENT</strong>.
+   </p>
+  </div>
+
+  <div class="refsection"><div class="info"><h1>The Token Stack</h1>
+</div>
+   <p class="para">
+    A sniff can gather more information about a token by acquiring the token stack with a call to the <strong class="function">getTokens()</strong> method on the <code class="literal">PHP_CodeSniffer_File</code> object. This method returns an array and is indexed by the position where the token occurs in the token stack. Each element in the array represents a token. All tokens have a <code class="literal">code</code>, <code class="literal">type</code> and a <code class="literal">content</code> index in their array. The <code class="literal">code</code> value is a unique integer for the type of token. The <code class="literal">type</code> value is a string representation of the token (e.g., &#039;T_COMMENT&#039; for comment tokens). The <code class="literal">type</code> has a corresponding globally defined integer with the same name. Finally, the <code class="literal">content</code> value contains the content of the token as it appears in the code.
+   </p>
+   <blockquote class="note">
+    <span class="simpara">
+     Some tokens have more indexes than those described above. Have a look in the <code class="filename">PHP/CodeSniffer/File.php</code> class comment for a full list of token indexes.
+    </span>
+   </blockquote>
+
+  </div>
+
+  <div class="refsection"><div class="info"><h1>Reporting Errors</h1>
+</div>
+   <p class="para">
+    Once an error is detected, a sniff should indicate that an error has occurred by calling the <strong class="function">addError()</strong> method on the <code class="literal">PHP_CodeSniffer_File</code> object, passing in an appropriate error message as the first argument, the position in the stack where the error was detected as the second, a code to uniquely identify the error within this sniff and an array of data used inside the error message. Alternatively, if the violation is considered not as critical as an error, the <strong class="function">addWarning()</strong> method can be used.
+   </p>
+  </div>
+ </div>
+
+ <div class="refsection"><div class="info"><h1>DisallowHashCommentsSniff.php</h1>
+</div>
+  <p class="para">
+   We now have to write the content of our sniff. The content of the <code class="filename">DisallowHashCommentsSniff.php</code> file should be the following:
+  </p>
+  <p class="para">
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/**<br />&nbsp;*&nbsp;This&nbsp;sniff&nbsp;prohibits&nbsp;the&nbsp;use&nbsp;of&nbsp;Perl&nbsp;style&nbsp;hash&nbsp;comments.<br />&nbsp;*<br />&nbsp;*&nbsp;PHP&nbsp;version&nbsp;5<br />&nbsp;*<br />&nbsp;*&nbsp;@category&nbsp;&nbsp;PHP<br />&nbsp;*&nbsp;@package&nbsp;&nbsp;&nbsp;PHP_CodeSniffer<br />&nbsp;*&nbsp;@author&nbsp;&nbsp;&nbsp;&nbsp;Your&nbsp;Name&nbsp;&lt;you@domain.net&gt;<br />&nbsp;*&nbsp;@license&nbsp;&nbsp;&nbsp;http://matrix.squiz.net/developer/tools/php_cs/licence&nbsp;BSD&nbsp;Licence<br />&nbsp;*&nbsp;@version&nbsp;&nbsp;&nbsp;SVN:&nbsp;$Id:&nbsp;coding-standard-tutorial.xml,v&nbsp;1.9&nbsp;2008-10-09&nbsp;15:16:47&nbsp;cweiske&nbsp;Exp&nbsp;$<br />&nbsp;*&nbsp;@link&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://pear.php.net/package/PHP_CodeSniffer<br />&nbsp;*/<br /><br />/**<br />&nbsp;*&nbsp;This&nbsp;sniff&nbsp;prohibits&nbsp;the&nbsp;use&nbsp;of&nbsp;Perl&nbsp;style&nbsp;hash&nbsp;comments.<br />&nbsp;*<br />&nbsp;*&nbsp;An&nbsp;example&nbsp;of&nbsp;a&nbsp;hash&nbsp;comment&nbsp;is:<br />&nbsp;*<br />&nbsp;*&nbsp;&lt;code&gt;<br />&nbsp;*&nbsp;&nbsp;#&nbsp;This&nbsp;is&nbsp;a&nbsp;hash&nbsp;comment,&nbsp;which&nbsp;is&nbsp;prohibited.<br />&nbsp;*&nbsp;&nbsp;$hello&nbsp;=&nbsp;'hello';<br />&nbsp;*&nbsp;&lt;/code&gt;<br />&nbsp;*&nbsp;<br />&nbsp;*&nbsp;@category&nbsp;&nbsp;PHP<br />&nbsp;*&nbsp;@package&nbsp;&nbsp;&nbsp;PHP_CodeSniffer<br />&nbsp;*&nbsp;@author&nbsp;&nbsp;&nbsp;&nbsp;Your&nbsp;Name&nbsp;&lt;you@domain.net&gt;<br />&nbsp;*&nbsp;@license&nbsp;&nbsp;&nbsp;http://matrix.squiz.net/developer/tools/php_cs/licence&nbsp;BSD&nbsp;Licence<br />&nbsp;*&nbsp;@version&nbsp;&nbsp;&nbsp;Release:&nbsp;@package_version@<br />&nbsp;*&nbsp;@link&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://pear.php.net/package/PHP_CodeSniffer<br />&nbsp;*/<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">MyStandard_Sniffs_Commenting_DisallowHashCommentsSniff&nbsp;</span><span style="color: #007700">implements&nbsp;</span><span style="color: #0000BB">PHP_CodeSniffer_Sniff<br /></span><span style="color: #007700">{<br /><br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/**<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Returns&nbsp;the&nbsp;token&nbsp;types&nbsp;that&nbsp;this&nbsp;sniff&nbsp;is&nbsp;interested&nbsp;in.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@return&nbsp;array(int)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">public&nbsp;function&nbsp;</span><span style="color: #0000BB">register</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;array(</span><span style="color: #0000BB">T_COMMENT</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;}</span><span style="color: #FF8000">//end&nbsp;register()<br /><br /><br />&nbsp;&nbsp;&nbsp;&nbsp;/**<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Processes&nbsp;the&nbsp;tokens&nbsp;that&nbsp;this&nbsp;sniff&nbsp;is&nbsp;interested&nbsp;in.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;PHP_CodeSniffer_File&nbsp;$phpcsFile&nbsp;The&nbsp;file&nbsp;where&nbsp;the&nbsp;token&nbsp;was&nbsp;found.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;int&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$stackPtr&nbsp;&nbsp;The&nbsp;position&nbsp;in&nbsp;the&nbsp;stack&nbsp;where<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;token&nbsp;was&nbsp;found.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@return&nbsp;void<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">public&nbsp;function&nbsp;</span><span style="color: #0000BB">process</span><span style="color: #007700">(</span><span style="color: #0000BB">PHP_CodeSniffer_File&nbsp;$phpcsFile</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$stackPtr</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$tokens&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$phpcsFile</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getTokens</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$tokens</span><span style="color: #007700">[</span><span style="color: #0000BB">$stackPtr</span><span style="color: #007700">][</span><span style="color: #DD0000">'content'</span><span style="color: #007700">]{</span><span style="color: #0000BB">0</span><span style="color: #007700">}&nbsp;===&nbsp;</span><span style="color: #DD0000">'#'</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$error&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'Hash&nbsp;comments&nbsp;are&nbsp;prohibited;&nbsp;found&nbsp;%s'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$data&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #0000BB">trim</span><span style="color: #007700">(</span><span style="color: #0000BB">$tokens</span><span style="color: #007700">[</span><span style="color: #0000BB">$stackPtr</span><span style="color: #007700">][</span><span style="color: #DD0000">'content'</span><span style="color: #007700">]));<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$phpcsFile</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addError</span><span style="color: #007700">(</span><span style="color: #0000BB">$error</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$stackPtr</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Found'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;}</span><span style="color: #FF8000">//end&nbsp;process()<br /><br /><br /></span><span style="color: #007700">}</span><span style="color: #FF8000">//end&nbsp;class<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <blockquote class="note">
+   <span class="simpara">
+    By default, PHP_CodeSniffer assumes all sniffs are designed to check PHP code only. You can specify a list of tokenizers that your sniff supports, allowing it to be used wth PHP, JavaScript or XML files, or any combination of the three. You do this by setting the <code class="literal">$supportedTokenizers</code> member variable in your sniff. Adding the following code to your sniff will tell PHP_CodeSniffer that it can be used to check both PHP and JavaScript code:
+   </span>
+   <p class="para">
+    </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/**<br />&nbsp;*&nbsp;A&nbsp;list&nbsp;of&nbsp;tokenizers&nbsp;this&nbsp;sniff&nbsp;supports.<br />&nbsp;*<br />&nbsp;*&nbsp;@var&nbsp;array<br />&nbsp;*/<br /></span><span style="color: #007700">public&nbsp;</span><span style="color: #0000BB">$supportedTokenizers&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'PHP'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'JS'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+  </blockquote>
+
+ </div>
+
+
+ <div class="refsection"><div class="info"><h1>Results</h1>
+</div>
+  <p class="para">
+   Now that we have defined a coding standard, let&#039;s validate a file that contains hash comments.
+  </p>
+  <p class="para">
+   The test file we are using has the following contents:
+  </p>
+  <p class="para">
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">#&nbsp;Check&nbsp;for&nbsp;valid&nbsp;contents.<br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">$obj</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">contentsAreValid</span><span style="color: #007700">(</span><span style="color: #0000BB">$array</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$value&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$obj</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getValue</span><span style="color: #007700">();<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">#&nbsp;Value&nbsp;needs&nbsp;to&nbsp;be&nbsp;an&nbsp;array.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">is_array</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">)&nbsp;===&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">#&nbsp;Error.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$obj</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">throwError</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit();<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+   <p class="para">
+    When PHP_CodeSniffer is run on the file using our new coding standard, 3 errors will be reported:
+   </p>
+   <p class="para">
+    </p><pre class="screen">
+<br/>$&nbsp;phpcs&nbsp;--standard=/path/to/MyStandard&nbsp;test.php<br/><br/>FILE:&nbsp;test.php<br/>--------------------------------------------------------------------------------<br/>FOUND&nbsp;3&nbsp;ERROR(S)&nbsp;AFFECTING&nbsp;3&nbsp;LINE(S)<br/>--------------------------------------------------------------------------------<br/>&nbsp;3&nbsp;|&nbsp;ERROR&nbsp;|&nbsp;Hash&nbsp;comments&nbsp;are&nbsp;prohibited;&nbsp;found&nbsp;#&nbsp;Check&nbsp;for&nbsp;valid&nbsp;contents.<br/>&nbsp;7&nbsp;|&nbsp;ERROR&nbsp;|&nbsp;Hash&nbsp;comments&nbsp;are&nbsp;prohibited;&nbsp;found&nbsp;#&nbsp;Value&nbsp;needs&nbsp;to&nbsp;be&nbsp;an&nbsp;array.<br/>&nbsp;9&nbsp;|&nbsp;ERROR&nbsp;|&nbsp;Hash&nbsp;comments&nbsp;are&nbsp;prohibited;&nbsp;found&nbsp;#&nbsp;Error.<br/>--------------------------------------------------------------------------------<br/>
+   </pre>
+
+  
+  <blockquote class="note">
+   <span class="simpara">
+    Note that we pass the absolute path to our coding standard directory on the command line because our standard is not installed inside the main PHP_CodeSniffer directory structure. If you have created your standard inside PHP_CodeSniffer, you can simply pass the name of the standard:
+   </span>
+   <p class="para">
+   </p><pre class="screen">
+    <strong class="userinput"><code>
+<br/>$&nbsp;phpcs&nbsp;--standard=MyStandard&nbsp;Test.php<br/>
+    </code></strong>
+   </pre>
+
+  
+  </blockquote>
+
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.php.php-codesniffer.config-options.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.php.php-codesniffer.html">PHP_CodeSniffer</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.php.php-codesniffer.annotated-ruleset.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Configuration Options</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Annotated ruleset.xml</td>
+  </tr>
+ </table>
+</div>
+</body></html>

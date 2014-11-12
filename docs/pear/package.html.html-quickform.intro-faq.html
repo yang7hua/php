@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>QuickHelp</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-quickform.introduction.html" title="Introduction" />
+  <link rel="prev" href="package.html.html-quickform.tutorial.html" title="QuickStart" />
+  <link rel="next" href="package.html.html-quickform.intro-elements.html" title="QuickForm element types" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">QuickHelp</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-quickform.tutorial.html" title="QuickStart">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-quickform.intro-elements.html" title="QuickForm element types">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-quickform.intro-faq">
+   
+    <h1 class="refname">QuickHelp</h1>
+    <div class="refnamediv">QuickHelp &ndash; Answers to most Frequently Asked Questions</div>
+
+   
+   <div class="refsection" id="package.html.html-quickform.intro-faq.desc">
+    <h1 class="title">Description</h1>
+    <p class="para">
+      This document is based on questions asked on <a href="mailto:pear-general@lists.php.net" class="link external">PEAR 
+      general mailing list</a>. You are encouraged to search the list archives to find more 
+      verbose answers and examples.
+    </p>
+   </div>
+   <div class="refsection" id="package.html.html-quickform.intro-faq.content"><div class="info"><h1>HTML_QuickForm FAQ</h1>
+</div>
+    
+    <div class="qandaset"><ol class="qandaset_questions"><li><a href="#phd5461fadf87404">
+          
+            The forms I generate with HTML_QuickForm cannot be submitted. When I look at the 
+            page&#039;s HTML source, I see something like &lt;formArray&gt;.
+          
+        </a></li><li><a href="#phd5461fadf87bd4">
+          
+            When I pass some GET parameters to the script containing a form, QuickForm thinks
+            that the form was already submitted, displaying validation errors.
+          
+        </a></li><li><a href="#phd5461fadf883a0">
+          
+            How do I set default/constant values for &#039;date&#039; element?
+          
+        </a></li><li><a href="#phd5461fadf88b72">
+          
+            I receive weird &quot;Call to a member function on a non-object&quot;
+            or &quot;Undefined function&quot; errors, especially when dealing with groups.
+          
+        </a></li><li><a href="#phd5461fadf89343">
+          
+            QuickForm generates code which does not validate as XHTML Strict!
+          
+        </a></li><li><a href="#phd5461fadf89b10">
+          
+            The &#039;required&#039; rule does not work for my elements!
+          
+        </a></li><li><a href="#phd5461fadf8a2e3">
+          
+            How do I change * denotes required field and Invalid information entered. / Please correct these fields.
+            validation messages?
+          
+        </a></li></ol></div>
+      <dl class="qandaentry">
+        <dt><strong>
+          
+            The forms I generate with HTML_QuickForm cannot be submitted. When I look at the 
+            page&#039;s HTML source, I see something like <code class="literal">&lt;formArray&gt;</code>.
+          
+        </strong></dt>
+        <dd class="answer">
+          <p class="para">
+            Recent versions of HTML_QuickForm package require HTML_Common package version 1.2.1
+            (CVS revision 1.8 in <code class="filename">HTML/Common.php</code>) to work properly. If 
+            (and only if) an older version of HTML_Common is loaded, these symptoms occur.
+          </p>
+          <p class="para">
+            Please note that 
+            </p><pre class="screen">
+              <strong class="userinput"><code>
+$ pear list
+              </code></strong>
+            </pre>
+<p>
+            command may tell you that you <em class="emphasis">have</em> HTML_Common 1.2.1 installed.
+            In this case you also have an older version of HTML_Common somewhere and are including it instead 
+            of the proper one. Check your <code class="varname">include_path</code> setting in <code class="filename">php.ini</code> 
+            and/or use PHP&#039;s <a href="http://www.php.net/manual-lookup.php?pattern=get_included_files" class="link external"><strong class="function">get_included_files()</strong></a>
+            function to find out which file you are <em class="emphasis">really</em> including.
+          </p>
+        </dd>
+      </dl>
+      
+      <dl class="qandaentry">
+        <dt><strong>
+          
+            When I pass some GET parameters to the script containing a form, QuickForm thinks
+            that the form was already submitted, displaying validation errors.
+          
+        </strong></dt>
+        <dd class="answer">
+          <p class="para">
+            <a href="package.html.html-quickform.html-quickform.html-quickform.html" class="link">Constructor</a> 
+            of <strong class="classname">HTML_QuickForm</strong> accepts a <em><code class="parameter">$trackSubmit</code></em> parameter.
+            Setting this to <strong class="constant">TRUE</strong> will make QuickForm check whether the form was actually submitted. 
+            This also helps if you have several forms defined on one page.
+          </p>
+        </dd>
+      </dl>
+      
+      <dl class="qandaentry">
+        <dt><strong>
+          
+            How do I set default/constant values for <code class="literal">&#039;date&#039;</code> element?
+          
+        </strong></dt>
+        <dd class="answer">
+          <p class="para">
+            <a href="package.html.html-quickform.html-quickform-date.html" class="link">Date</a> element is essentially a <a href="package.html.html-quickform.html-quickform-group.html" class="link">group</a>
+            of selects, you define the structure of this group
+            in the <code class="literal">&#039;format&#039;</code> option when 
+            <a href="package.html.html-quickform.html-quickform-date.html-quickform-date.html" class="link">creating the element</a>:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'date'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'The&nbsp;date:'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'format'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Y&nbsp;m&nbsp;d'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+            Thus you pass the defaults as an array, just like you do with any other group:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setDefaults</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'foo'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'Y'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">2004</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'m'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">9</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'d'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">29</span><span style="color: #007700">)<br />));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+          
+          <p class="para">
+            To ease using it with database-backed applications, date element also accepts Unix timestamps
+            (generated by <a href="http://www.php.net/manual-lookup.php?pattern=mktime" class="link external"><strong class="function">mktime()</strong></a>) and
+            strings. The strings are processed by <a href="http://www.php.net/manual-lookup.php?pattern=strtotime" class="link external"><strong class="function">strtotime()</strong></a>
+            functions, so consider its limitations.
+          </p>
+        </dd>
+      </dl>
+      
+      <dl class="qandaentry">
+        <dt><strong>
+          
+            I receive weird <code class="literal">&quot;Call to a member function on a non-object&quot;</code>
+            or <code class="literal">&quot;Undefined function&quot;</code> errors, especially when dealing with groups.
+          
+        </strong></dt>
+        <dd class="answer">
+          <p class="para">
+            These errors tend to appear when you have something which is not a 
+            <strong class="classname">HTML_QuickForm_element</strong> in the <em><code class="parameter">$elements</code></em> array 
+            passed to <a href="package.html.html-quickform.html-quickform.addgroup.html" class="link"><strong class="function">addGroup()</strong></a>.
+            This &quot;something&quot; is usually either a <strong class="classname">PEAR_Error</strong> instance (check for these 
+            or setup a handler) or, if <code class="varname">register_globals</code> is switched on in <code class="filename">php.ini</code>, 
+            some submitted values (clear the array before adding elements to it).
+          </p>
+        </dd>
+      </dl>
+
+      <dl class="qandaentry">
+        <dt><strong>
+          
+            QuickForm generates code which does not validate as XHTML Strict!
+          
+        </strong></dt>
+        <dd class="answer">
+          <p class="para">
+            QuickForm does add a <code class="literal">&#039;name&#039;</code> attribute to the <code class="literal">&lt;form&gt;</code> tag,
+            which is invalid in XHTML Strict. Quickform does not depend on that attribute since release 3.2.2, and it&#039;s only
+            kept for backwards compatibility. If you desire XHTML Strict compliance and <em class="emphasis">your</em> code does not depend 
+            on said attribute, you can remove it via <strong class="function">removeAttribute()</strong> method.
+          </p>
+        </dd>
+      </dl>
+
+      <dl class="qandaentry">
+        <dt><strong>
+          
+            The <code class="literal">&#039;required&#039;</code> rule does not work for my elements!
+          
+        </strong></dt>
+        <dd class="answer">
+          <p class="para">
+            </p><ul class="itemizedlist">
+              <li class="listitem">
+                <span class="simpara">
+                  If your element is a file upload, you should use <code class="literal">&#039;uploadedfile&#039;</code> rule instead.
+                </span>
+              </li>
+              <li class="listitem">
+                <span class="simpara">
+                  If your element is a group, you should use 
+                  <a href="package.html.html-quickform.html-quickform.addgrouprule.html" class="link"><strong class="function">addGroupRule()</strong></a>
+                  method instead of
+                  <a href="package.html.html-quickform.html-quickform.addrule.html" class="link"><strong class="function">addRule()</strong></a>.
+                  This applies to group-based elements like <code class="literal">&#039;date&#039;</code> and <code class="literal">&#039;hierselect&#039;</code>
+                  as well.
+                </span>
+              </li>
+            </ul>
+            
+          
+        </dd>
+      </dl>
+
+
+      <dl class="qandaentry">
+        <dt><strong>
+          
+            How do I change <code class="literal">* denotes required field</code> and <code class="literal">Invalid information entered. / Please correct these fields.</code>
+            validation messages?
+          
+        </strong></dt>
+        <dd class="answer">
+          <p class="para">
+            You should use <a href="package.html.html-quickform.html-quickform.setrequirednote.html" class="link"><strong class="function">setRequiredNote()</strong></a> 
+            and <a href="package.html.html-quickform.html-quickform.setjswarnings.html" class="link"><strong class="function">setJsWarnings()</strong></a>
+            methods, respectively.
+          </p>
+        </dd>
+      </dl>
+
+
+    
+   </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-quickform.tutorial.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-quickform.introduction.html">Introduction</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-quickform.intro-elements.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">QuickStart</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">QuickForm element types</td>
+  </tr>
+ </table>
+</div>
+</body></html>

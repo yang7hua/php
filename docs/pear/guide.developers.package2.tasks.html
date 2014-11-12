@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>tasks for &lt;file&gt;s</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="guide.developers.package2.tags.html" title="Detailed Tag Reference for package.xml version 2.0" />
+  <link rel="prev" href="guide.developers.package2.file.html" title="&lt;file&gt;" />
+  <link rel="next" href="guide.developers.package2.compatible.html" title="&lt;compatible&gt;" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">tasks for &lt;file&gt;s</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="guide.developers.package2.file.html" title="&lt;file&gt;">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="guide.developers.package2.compatible.html" title="&lt;compatible&gt;">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="guide.developers.package2.tasks">
+ 
+  <h1 class="refname">tasks for &lt;file&gt;s</h1>
+  <div class="refnamediv">tasks for &lt;file&gt;s &ndash; specialized file installation and manipulation</div>
+
+ 
+ <div class="refsection" id="guide.developers.package2.tasks.overview"><div class="info"><h1>Using tasks to customize file installation</h1>
+</div>
+  
+  <p class="para">
+   Tasks provide a flexible and customizable way to manipulate file contents or to perform
+   complex installation tasks (hence the name &quot;tasks&quot;).  By default, PEAR comes
+   with 4 tasks, but customized tasks can be added simply by adding a file into the
+   PEAR/Tasks directory that follows the conventions of existing tasks.  This page does
+   not describe how to create a custom task, only how to use them in package.xml.
+  </p>
+  <p class="para">
+   There are 3 basic tasks and 1 complex task distributed with PEAR.  The basic tasks are
+   &quot;tasks:replace&quot;, &quot;tasks:windowseol&quot;, and &quot;tasks:unixeol&quot;.  The complex task
+   is &quot;tasks:postinstallscript&quot;.  &quot;tasks:replace&quot; is nearly identical to the old
+   &lt;replace&gt; tag from package.xml 1.0, and does a text search-and-replace of a file&#039;s
+   contents.  &quot;tasks:windowseol&quot; and &quot;tasks:unixeol&quot; manipulate the line endings of
+   a file to ensure that the correct line endings are in place for critical files like DOS
+   .bat batch files and unix shell scripts.  &quot;tasks:postinstallscript&quot; allows users to
+   choose to run a script to perform further installation functions.
+  </p>
+  <div class="refsection" id="guide.developers.package2.tasks.replace"><div class="info"><h1>&lt;tasks:replace&gt; - customizing file contents</h1>
+</div>
+   
+   <p class="para">
+    The replace task has 3 required attributes:
+   </p>
+   <p class="para">
+    </p><ol type="1">
+     <li class="listitem">
+      <p class="para">
+       <em class="emphasis">type</em> - This must be either package-info or pear-config.  package-info
+       replacements extract information from package.xml itself to use as the replacement text.
+       pear-config replacements use the value of a configuration variable (as displayed by 
+       </p><pre class="screen">pear config-show</pre>
+<p>) as the text for replacement.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <em class="emphasis">from</em> - Text to search for in a file.  Traditionally, this text
+       is enclosed in &quot;@&quot; to differentiate it from normal text, as in from=&quot;@version@&quot;
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <em class="emphasis">to</em> - Abstract item to use as a replacement for all occurrences of
+       &quot;from&quot;.  package-info replacements can be one of api-state, api-version, channel,
+       date, description, license, license-uri, name, notes, release_date, release-license, release_notes,
+       state, summary, time, version, and for some packages extends, providesextension, srcpackage, and srcuri.
+      </p>
+     </li>
+    </ol>
+   
+   <p class="para">
+    Note that package-info replacements are performed at packaging time, so files contain
+    package-info replacements inside a .tgz/.tar release.  pear-config replacements can only
+    occur on the installation system, and are performed at install-time.
+   </p>
+  </div>
+  <div class="refsection" id="guide.developers.package2.tasks.windowseol"><div class="info"><h1>&lt;tasks:windowseol&gt; - converting line endings to \r\n</h1>
+</div>
+   
+   <p class="para">
+    This task can be used to enable packaging of windows-specific files (like DOS batch files)
+    on a non-windows system, such as unix systems that convert line endings to \n.  Note that this task
+    is performed at package-time, as well as at install-time, so files will contain the correct line
+    endings inside a .tgz/.tar release.
+   </p>
+  </div>
+  <div class="refsection" id="guide.developers.package2.tasks.unixeol"><div class="info"><h1>&lt;tasks:unixeol&gt; - converting line endings to \n</h1>
+</div>
+   
+   <p class="para">
+    This task can be used to enable packaging of unix-specific files (like sh shell scripts)
+    on a non-unix system, such as windows systems that convert line endings to \r\n.  Note that this task
+    is performed at package-time, as well as at install-time, so files will contain the correct line
+    endings inside a .tgz/.tar release.
+   </p>
+  </div>
+  <div class="refsection" id="guide.developers.package2.tasks.postinstallscript"><div class="info"><h1>&lt;tasks:postinstallscript&gt; - extreme customization</h1>
+</div>
+   
+   <p class="para">
+    The postinstallscript task informs the installer that the file it references is a post-installation
+    script.
+   </p>
+   <p class="para">
+    For security reasons, post-install scripts must be manually executed by the users, and as such
+    the installer has special code that is separate from other tasks.
+   </p>
+   <p class="para">
+    The &lt;postinstallscript&gt; tag may define parameters that are used by the installer to
+    retrieve user input.  In order to support both the web installer and the command-line installer,
+    all processing of input is performed by PEAR and passed to the post-install script in a
+    strict format.  All you need to do is define the parameters using xml inside the
+    &lt;postinstallscript&gt; tag.
+   </p>
+   <p class="para">
+    Here is the xml representing a simple post-install script with parameters:
+   </p>
+   <p class="para">
+    </p><div class="xmlcode">
+    <pre class="xmlcode">
+&lt;tasks:postinstallscript&gt;
+ &lt;tasks:paramgroup&gt;
+  &lt;tasks:id&gt;first&lt;/tasks:id&gt;
+  &lt;tasks:param&gt;
+   &lt;tasks:name&gt;test&lt;/tasks:name&gt;
+   &lt;tasks:prompt&gt;Testing Thingy&lt;/tasks:prompt&gt;
+   &lt;tasks:type&gt;string&lt;/tasks:type&gt;
+  &lt;/tasks:param&gt;
+ &lt;/tasks:paramgroup&gt;
+&lt;/tasks:postinstallscript&gt;</pre>
+
+    </div>
+   
+   <p class="para">
+    Note that the only type recognized at this stage is &quot;string&quot; but others will follow.
+    A more complex example follows:
+   </p>
+   <p class="para">
+    </p><div class="xmlcode">
+    <pre class="xmlcode">
+&lt;tasks:postinstallscript&gt;
+ &lt;tasks:paramgroup&gt;
+  &lt;tasks:id&gt;first&lt;/tasks:id&gt;
+  &lt;tasks:instructions&gt;The first group of questions relates
+   primarily to your favorite color.  Answer wisely.
+  &lt;/tasks:instructions&gt;
+  &lt;tasks:param&gt;
+   &lt;tasks:name&gt;test&lt;/tasks:name&gt;
+   &lt;tasks:prompt&gt;Testing Thingy&lt;/tasks:prompt&gt;
+   &lt;tasks:type&gt;string&lt;/tasks:type&gt;
+   &lt;tasks:default&gt;hi&lt;/tasks:default&gt;
+  &lt;/tasks:param&gt;
+  &lt;tasks:param&gt;
+   &lt;tasks:name&gt;test2&lt;/tasks:name&gt;
+   &lt;tasks:prompt&gt;Testing Thingy 2&lt;/tasks:prompt&gt;
+   &lt;tasks:type&gt;string&lt;/tasks:type&gt;
+  &lt;/tasks:param&gt;
+ &lt;/tasks:paramgroup&gt;
+ &lt;tasks:paramgroup&gt;
+  &lt;tasks:id&gt;second&lt;/tasks:id&gt;
+  &lt;tasks:name&gt;first::test&lt;/tasks:name&gt;
+  &lt;tasks:conditiontype&gt;preg_match&lt;/tasks:conditiontype&gt;
+  &lt;tasks:value&gt;g+&lt;/tasks:value&gt;
+  &lt;tasks:param&gt;
+   &lt;tasks:name&gt;test&lt;/tasks:name&gt;
+   &lt;tasks:prompt&gt;Testing Thingy a&lt;/tasks:prompt&gt;
+   &lt;tasks:type&gt;string&lt;/tasks:type&gt;
+   &lt;tasks:default&gt;hi&lt;/tasks:default&gt;
+  &lt;/tasks:param&gt;
+  &lt;tasks:param&gt;
+   &lt;tasks:name&gt;test2&lt;/tasks:name&gt;
+   &lt;tasks:prompt&gt;Testing Thingy b&lt;/tasks:prompt&gt;
+   &lt;tasks:type&gt;string&lt;/tasks:type&gt;
+  &lt;/tasks:param&gt;
+ &lt;/tasks:paramgroup&gt;
+&lt;/tasks:postinstallscript&gt;</pre>
+
+    </div>
+   
+   <p class="para">
+    This post-installation script has two parameter groups.  The first parameter group
+    has special instructions that are displayed to the user to assist in answering the
+    required prompts.  After the first group is processed,
+    the second group is processed (naturally). However, in this case, the second group is a
+    conditional parameter group. A conditional parameter group examines the user input from
+    previous parameter groups and only displays its parameter prompts if a single parameter
+    fits a test. The condition is defined by three tags, &lt;tasks:name&gt;, &lt;tasks:conditiontype&gt;,
+    and &lt;tasks:value&gt;.  Note that all three tags are required or xml validation will fail.
+   </p>
+   <p class="para">
+    &lt;tasks:name&gt; is the parameter name from a previous parameter group. The format of name is
+    groupID::parameterName, so as you see above, &quot;first::test&quot; refers to the
+    &lt;tasks:param&gt; test from the &lt;tasks:paramgroup&gt; first.
+   </p>
+   <p class="para">
+    &lt;tasks:conditiontype&gt; determines how the parameter input function will process the value of
+    the parameter specified in &lt;tasks:name&gt;, and can be one of three values, &quot;=&quot; &quot;!=&quot;
+    or &quot;preg_match&quot;.
+   </p>
+   <p class="para">
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+       =: This (obviously) tests whether the parameters value is equal to the &lt;tasks:value&gt; tag
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       !=: This (obviously) tests whether the parameters value is not equal to the &lt;tasks:value&gt; tag
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       preg_match: This uses the content of the &lt;tasks:value&gt; tag as if it were the stuff between
+       / and / in a <a href="http://www.php.net/preg_match" class="link external"><strong class="function">preg_match()</strong></a>
+       function call. Do NOT include // brackets in
+       the regular expression.  In the &lt;tasks:paramgroup&gt; second, the value &quot;g+&quot; will become:
+       </p><div class="phpcode">
+       <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />preg_match</span><span style="color: #007700">(</span><span style="color: #DD0000">'/g+/'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">first</span><span style="color: #007700">::</span><span style="color: #0000BB">test&nbsp;value</span><span style="color: #007700">)<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+       </div>
+      
+     </li>
+    </ul>
+   
+  </div>
+ </div>
+ </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="guide.developers.package2.file.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="guide.developers.package2.tags.html">Detailed Tag Reference for package.xml version 2.0</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="guide.developers.package2.compatible.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">&lt;file&gt;</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">&lt;compatible&gt;</td>
+  </tr>
+ </table>
+</div>
+</body></html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Using the Subversion pre-commit Hook</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.php.php-codesniffer.html" title="PHP_CodeSniffer" />
+  <link rel="prev" href="package.php.php-codesniffer.annotated-ruleset.html" title="Annotated ruleset.xml" />
+  <link rel="next" href="package.php.php-codesniffer.faq.html" title="FAQ" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Using the Subversion pre-commit Hook</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.php.php-codesniffer.annotated-ruleset.html" title="Annotated ruleset.xml">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.php.php-codesniffer.faq.html" title="FAQ">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.php.php-codesniffer.svn-pre-commit">
+ 
+  <h1 class="refname">Using the Subversion pre-commit Hook</h1>
+  <div class="refnamediv">Using the Subversion pre-commit Hook &ndash; How to configure the Subversion pre-commit hook</div>
+
+ 
+
+ <div class="refsection" id="package.php.php-codesniffer.svn-pre-commit.introduction"><div class="info"><h1>What Does the Subversion pre-commit Hook Do?</h1>
+</div>
+  <blockquote class="note">
+   <span class="simpara">
+   The SVN pre-commit hook has different requirements than the main PHP_CodeSniffer package. See the <a href="package.php.php-codesniffer.requirements.html" class="link">Requirements</a> page for more information.
+   </span>
+  </blockquote>
+
+  <p class="para">
+   A pre-commit hook is a feature available in the <a href="http://subversion.tigris.org" class="link external">Subversion</a> version control system that allows code to be validated before it is committed to the repository. The PHP_CodeSniffer pre-commit hook allows you to check code for coding standard errors and stop the commit process if errors are found. This ensures developers are not able to commit code that violates your coding standard. Instead, they are presented with the list of errors they need to correct before committing.
+  </p>
+  <div class="example"><div class="info"><p><strong>Sample pre-commit output</strong></p></div>
+   
+   <pre class="screen">
+<br/>$&nbsp;svn&nbsp;commit&nbsp;-m&nbsp;&quot;Test&quot;&nbsp;temp.php<br/>Sending&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;temp.php<br/>Transmitting&nbsp;file&nbsp;data&nbsp;.svn:&nbsp;Commit&nbsp;failed&nbsp;(details&nbsp;follow):<br/>svn:&nbsp;&#039;pre-commit&#039;&nbsp;hook&nbsp;failed&nbsp;with&nbsp;error&nbsp;output:<br/><br/>FILE:&nbsp;temp.php<br/>---------------------------------------------------------------<br/>FOUND&nbsp;1&nbsp;ERROR(S)&nbsp;AND&nbsp;0&nbsp;WARNING(S)&nbsp;AFFECTING&nbsp;1&nbsp;LINE(S)<br/>---------------------------------------------------------------<br/>&nbsp;2&nbsp;|&nbsp;ERROR&nbsp;|&nbsp;Missing&nbsp;file&nbsp;doc&nbsp;comment<br/>--------------------------------------------------------------<br/>
+   </pre>
+
+  </div>
+ </div>
+
+
+
+
+ <div class="refsection" id="package.php.php-codesniffer.svn-pre-commit.setup"><div class="info"><h1>Configuring the pre-commit Hook</h1>
+</div>
+  
+  <p class="para">
+   Edit <code class="filename">/path/to/PHP_CodeSniffer/scripts/phpcs-svn-pre-commit</code> and replace <code class="literal">@php_bin@</code> in the first line with the path to the PHP CLI. For example, <code class="literal">#!@php_bin@</code> becomes <code class="literal">#!/usr/bin/php</code>.
+  </p>
+  <p class="para">
+   Now ensure the path to <code class="literal">svnlook</code> is correct by modifying the following line, if required:
+  </p>
+  <div class="example"><div class="info"><p><strong>Changing the path to <code class="literal">svnlook</code></strong></p></div>
+   
+   <pre class="screen">
+<br/>define(&#039;PHP_CODESNIFFER_SVNLOOK&#039;,&nbsp;&#039;/usr/bin/svnlook&#039;);<br/>
+   </pre>
+
+  </div>
+  <p class="para">
+   Now add the following line to your pre-commit file in the Subversion hooks directory:
+  </p>
+  <div class="example"><div class="info"><p><strong>Adding the pre-commit hook to the Subversion config file</strong></p></div>
+   
+   <pre class="screen">
+<br/>/path/to/PHP_CodeSniffer/scripts/phpcs-svn-pre-commit&nbsp;&quot;$REPOS&quot;&nbsp;-t&nbsp;&quot;$TXN&quot;&nbsp;&gt;&amp;2&nbsp;||&nbsp;exit&nbsp;1<br/>
+   </pre>
+
+  </div>
+  <p class="para">
+  You can also use all the standard <code class="literal">phpcs</code> command line options to do things like set the standard to use, the tab width and the error report format:
+  </p>
+  <div class="example"><div class="info"><p><strong>Adding the pre-commit hook to the Subversion config file</strong></p></div>
+   
+   <pre class="screen">
+<br/>/path/to/PHP_CodeSniffer/scripts/phpcs-svn-pre-commit&nbsp;--standard=Squiz&nbsp;--tab-width=4&nbsp;&quot;$REPOS&quot;&nbsp;-t&nbsp;&quot;$TXN&quot;&nbsp;&gt;&amp;2&nbsp;||&nbsp;exit&nbsp;1<br/>
+   </pre>
+
+  </div>
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.php.php-codesniffer.annotated-ruleset.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.php.php-codesniffer.html">PHP_CodeSniffer</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.php.php-codesniffer.faq.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Annotated ruleset.xml</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">FAQ</td>
+  </tr>
+ </table>
+</div>
+</body></html>

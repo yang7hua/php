@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Migration from HTML_QuickForm_Controller</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-quickform2.multipage.html" title="Multipage forms" />
+  <link rel="prev" href="package.html.html-quickform2.controller-overview.html" title="Overview of QuickForm2_Controller" />
+  <link rel="next" href="package.html.html-quickform2.controller-actions.html" title="Controller action handlers" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Migration from HTML_QuickForm_Controller</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-quickform2.controller-overview.html" title="Overview of QuickForm2_Controller">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-quickform2.controller-actions.html" title="Controller action handlers">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-quickform2.controller-migration">
+ 
+  <h1 class="refname">Migration from HTML_QuickForm_Controller</h1>
+  <div class="refnamediv">Migration from HTML_QuickForm_Controller &ndash; Step-by-step guide for porting your scripts to HTML_QuickForm2_Controller</div>
+
+ 
+ <div class="refsection" id="package.html.html-quickform2.controller-migration.overview">
+  <div class="info">
+   <h1>Overview</h1>
+
+  </div>
+  <p class="para">
+   This guide is intended for current users of <a href="package.html.html-quickform-controller.html" class="link"><strong class="classname">HTML_QuickForm_Controller</strong></a>
+   who want to update their scripts to <strong class="classname">HTML_QuickForm2</strong>, which now includes a
+   rewrite of older controller package. It covers major API changes and provides links to further
+   documentation. 
+  </p>
+  <p class="para">
+   It should be noted that API of <strong class="classname">HTML_QuickForm2_Controller</strong> is more similar
+   to API of <strong class="classname">HTML_QuickForm_Controller</strong> than that of
+   <strong class="classname">HTML_QuickForm2</strong> and <strong class="classname">HTML_QuickForm</strong>. That being
+   said, there are some important differences in method names and behaviour.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.controller-migration.controller">
+  <div class="info">
+   <h1>Controller class and session data</h1>
+
+  </div>
+  <p class="para">
+   Of the methods you are most likely to use in your applications, former <a href="http://pear.php.net/package/HTML_QuickForm_Controller/docs/latest/HTML_QuickForm_Controller/HTML_QuickForm_Controller.html#methodaddAction" class="apidoclink">HTML_QuickForm_Controller::addAction()</a> is
+   now <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller.html#methodaddHandler" class="apidoclink">HTML_QuickForm2_Controller::addHandler()</a> and <a href="http://pear.php.net/package/HTML_QuickForm_Controller/docs/latest/HTML_QuickForm_Controller/HTML_QuickForm_Controller.html#methodexportValues" class="apidoclink">HTML_QuickForm_Controller::exportValues()</a>
+   is now <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller.html#methodgetValue" class="apidoclink">HTML_QuickForm2_Controller::getValue()</a>.
+  </p>
+  <p class="para">
+   As is the case with <a href="package.html.html-quickform2.qf-migration.html#package.html.html-quickform2.qf-migration.defaults" class="link"><strong class="classname">HTML_QuickForm2</strong>
+    itself</a>, <strong class="classname">HTML_QuickForm2_Controller</strong> no longer has
+   <strong class="function">setDefaults()</strong> and <strong class="function">setConstants()</strong> methods. So instead of
+   former call to <a href="http://pear.php.net/package/HTML_QuickForm_Controller/docs/latest/HTML_QuickForm_Controller/HTML_QuickForm_Controller.html#methodsetDefaults" class="apidoclink">HTML_QuickForm_Controller::setDefaults()</a>
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$controller</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setDefaults</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'foo'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'default&nbsp;foo&nbsp;value'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'bar'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'default&nbsp;bar&nbsp;value'<br /></span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   you should use <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller.html#methodaddDataSource" class="apidoclink">HTML_QuickForm2_Controller::addDataSource()</a>:
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$controller</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addDataSource</span><span style="color: #007700">(new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_DataSource_Array</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'foo'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'default&nbsp;foo&nbsp;value'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'bar'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'default&nbsp;bar&nbsp;value'<br /></span><span style="color: #007700">)));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   Like with older defaults and constants, Controller DataSources are stored in session. Note that
+   Controller itself does not have a method for replacing the DataSource array similar to <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2.html#methodsetDataSources" class="apidoclink">HTML_QuickForm2::setDataSources()</a>, use <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_SessionContainer.html#methodstoreDatasources" class="apidoclink">HTML_QuickForm2_Controller_SessionContainer::storeDatasources()</a>.
+  </p>
+  <p class="para">
+   Instead of the former <a href="http://pear.php.net/package/HTML_QuickForm_Controller/docs/latest/HTML_QuickForm_Controller/HTML_QuickForm_Controller.html#methodcontainer" class="apidoclink">HTML_QuickForm_Controller::container()</a> method that both returned a reference to a
+   session variable storing Controller data and cleared this variable if requested, there is now
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller.html#methodgetSessionContainer" class="apidoclink">getSessionContainer()</a>
+   method that returns an instance of <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_SessionContainer.html" class="apidoclink">HTML_QuickForm2_Controller_SessionContainer</a> wrapping around session variable
+   and <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller.html#methoddestroySessionContainer" class="apidoclink">destroySessionContainer()</a>
+   method that clears the session variable.
+  </p>
+  <p class="para">
+   You no longer need to directly access the session variable to store some custom values:
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Note&nbsp;the&nbsp;references<br />//&nbsp;on&nbsp;source&nbsp;page:<br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$controller</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">container</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$data</span><span style="color: #007700">[</span><span style="color: #DD0000">'_my_stuff'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #0000BB">$stuff</span><span style="color: #007700">;<br /></span><span style="color: #FF8000">//&nbsp;later&nbsp;on&nbsp;target&nbsp;page:<br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$controller</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">container</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$stuff&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">[</span><span style="color: #DD0000">'_my_stuff'</span><span style="color: #007700">];<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>    
+   </div><p>
+   you should use instead the <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_SessionContainer.html#methodstoreOpaque" class="apidoclink">storeOpaque()</a>
+   and <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_SessionContainer.html#methodgetOpaque" class="apidoclink">getOpaque()</a>
+   methods of <strong class="classname">HTML_QuickForm2_Controller_SessionContainer</strong>:
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;on&nbsp;source&nbsp;page:<br /></span><span style="color: #0000BB">$controller</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getSessionContainer</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">storeOpaque</span><span style="color: #007700">(</span><span style="color: #DD0000">'my_stuff'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$stuff</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;later&nbsp;on&nbsp;target&nbsp;page:<br /></span><span style="color: #0000BB">$stuff&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$controller</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getSessionContainer</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">getOpaque</span><span style="color: #007700">(</span><span style="color: #DD0000">'my_stuff'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   SessionContainer also has methods for storing and getting Controller DataSources, form values and form
+   validation statuses, these should be used when writing custom action handlers.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.controller-migration.page">
+  <div class="info">
+   <h1>Form page class</h1>
+
+  </div>
+  <p class="para">
+   The main difference between <a href="http://pear.php.net/package/HTML_QuickForm_Controller/docs/latest/HTML_QuickForm_Controller/HTML_QuickForm_Page.html" class="apidoclink">HTML_QuickForm_Page</a> and <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Page.html" class="apidoclink">HTML_QuickForm2_Controller_Page</a> is that the latter no longer extends the form
+   class, its constructor accepting an instance of <strong class="classname">HTML_QuickForm2</strong>:
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">TutorialPage&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Controller_Page<br /></span><span style="color: #007700">{<br /></span><span style="color: #FF8000">//&nbsp;...<br /></span><span style="color: #007700">}<br /><br /></span><span style="color: #0000BB">$page&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">TutorialPage</span><span style="color: #007700">(new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2</span><span style="color: #007700">(</span><span style="color: #DD0000">'tutorial'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   This allows using custom subclasses of <strong class="classname">HTML_QuickForm2</strong> with Controller and
+   prevents problems like <a href="package.html.html-quickform-dhtmlrulestableless.html" class="link">HTML_QuickForm_DHTMLRulesTableless</a>
+   faced, having to include both <a href="http://pear.php.net/package/HTML_QuickForm_DHTMLRulesTableless/docs/latest/HTML_QuickForm_DHTMLRulesTableless/HTML_QuickForm_DHTMLRulesTableless.html" class="apidoclink">HTML_QuickForm_DHTMLRulesTableless</a> and <a href="http://pear.php.net/package/HTML_QuickForm_DHTMLRulesTableless/docs/latest/HTML_QuickForm_DHTMLRulesTableless/HTML_QuickForm_PageDHTMLRulesTableless.html" class="apidoclink">HTML_QuickForm_PageDHTMLRulesTableless</a> the former extending
+   <strong class="classname">HTML_QuickForm</strong> and the latter <strong class="classname">HTML_QuickForm_Page</strong>.
+  </p>
+  <p class="para">
+   <code class="varname">$controller</code> is no longer a public property of Page, use <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Page.html#methodgetController" class="apidoclink">getController()</a> to
+   access it. Similarly, use <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Page.html#methodgetForm" class="apidoclink">getForm()</a> to access the
+   instance of <strong class="classname">HTML_QuickForm2</strong>.
+  </p>
+  <p class="para">
+   As with <strong class="classname">HTML_QuickForm_Controller</strong>, former <a href="http://pear.php.net/package/HTML_QuickForm_Controller/docs/latest/HTML_QuickForm_Controller/HTML_QuickForm_Page.html#methodaddAction" class="apidoclink">HTML_QuickForm_Page::addAction()</a> is
+   now <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Page.html#methodaddHandler" class="apidoclink">HTML_QuickForm2_Controller_Page::addHandler()</a>, old <a href="http://pear.php.net/package/HTML_QuickForm_Controller/docs/latest/HTML_QuickForm_Controller/HTML_QuickForm_Page.html#methodbuildForm" class="apidoclink">HTML_QuickForm_Page::buildForm()</a> is renamed to <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Page.html#methodpopulateForm" class="apidoclink">HTML_QuickForm2_Controller_Page::populateForm()</a>.
+  </p>
+  <p class="para">
+   In new <strong class="function">HTML_QuickForm2_Controller_Page::populateForm()</strong> one no longer has to do
+   something like
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_formBuilt&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   as was needed in old <strong class="function">HTML_QuickForm_Page::buildForm()</strong>, the Page itself now
+   makes sure that <strong class="function">populateForm()</strong> is called only once.
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-quickform2.controller-overview.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-quickform2.multipage.html">Multipage forms</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-quickform2.controller-actions.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Overview of QuickForm2_Controller</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Controller action handlers</td>
+  </tr>
+ </table>
+</div>
+</body></html>

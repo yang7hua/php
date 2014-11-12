@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Attributes</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.networking.net-ldap2.html" title="Net_LDAP2" />
+  <link rel="prev" href="package.networking.net-ldap2.fetching.html" title="Fetching entries" />
+  <link rel="next" href="package.networking.net-ldap2.entries.html" title="Managing entries" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Attributes</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.networking.net-ldap2.fetching.html" title="Fetching entries">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.networking.net-ldap2.entries.html" title="Managing entries">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.networking.net-ldap2.attributes">
+    
+        <h1 class="refname">Attributes</h1>
+        <div class="refnamediv">Attributes &ndash; Reading/adding/changing/deleting attributes from entries</div>
+
+    
+
+   <div class="refsection"><div class="info"><h1>Reading attributes</h1>
+</div>
+        <p class="para">
+           Reading attribute values depends on the selection of those attributes at search time. You can only access attributes that where selected!
+           You can read attribute values using either <strong class="classname">Net_LDAP2_Entry</strong>&#039;s <strong class="function">getValues()</strong> or <strong class="function">getValue()</strong> method.
+           <strong class="function">getValue()</strong> will return an array where the keys are the attributes names.
+           If you use <strong class="function">getValues()</strong> you may pass an option:
+           </p><ul class="itemizedlist">
+              <li class="listitem">
+                <p class="para">
+                  <code class="literal">&#039;single&#039;</code>: only the first value is returned as string
+                </p>
+              </li>
+              <li class="listitem">
+                <p class="para">
+                  <code class="literal">&#039;all&#039;</code>: all values including the value count are returned in an array
+                </p>
+              </li>
+              <li class="listitem">
+                <p class="para">
+                  <code class="literal">&#039;default&#039;</code>: in all other cases an attribute value with a single value is
+                                             returned as string, if it has multiple values it is returned
+                                             as an array (without value count)
+                </p>
+              </li>
+           </ul><p>
+           Also note that if you try to fetch an attribute, that is not set at the entry, an empty string will be returned.
+           </p>
+        <div class="example"><div class="info"><p><strong>Reading attributes</strong></p></div>
+
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;read&nbsp;Surename,&nbsp;singlevalued<br /></span><span style="color: #0000BB">$surename&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$entry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getValue</span><span style="color: #007700">(</span><span style="color: #DD0000">'sn'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'single'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;read&nbsp;mail&nbsp;adress&nbsp;which&nbsp;may&nbsp;be&nbsp;multivalued<br /></span><span style="color: #0000BB">$mail&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$entry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getValue</span><span style="color: #007700">(</span><span style="color: #DD0000">'mail'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'all'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+
+
+   <p class="para">
+       If you want to read the distinguished name of an Entry (DN), you must use a different method: <strong class="function">dn()</strong>
+      </p><div class="example"><div class="info"><p><strong>Reading an entries DN</strong></p></div>
+
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$dn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$entry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">dn</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+    
+
+    </div>
+
+    <div class="refsection"><div class="info"><h1>Regular expressions on attributes</h1>
+</div>
+        <p class="para">
+          PEAR::Net_LDAP2 has the unique feature to apply a regular expression match directly against attributes, so
+          you do not need to manually fetch all values and run the regex against them.
+          Instead, you can use <strong class="classname">Net_LDAP2_Entry</strong>&#039;s <strong class="function">preg_match()</strong> function.
+          The behavior of this function is the same as PHPs preg_match(), but the $matches array is slightly different.
+          It features one dimension more, since it may match for several attribute values if the attribute is multivalued.
+          If you pass $matches, be sure to do it via REFERENCE, because otherwise $matches remains empty.
+          <strong class="function">preg_match()</strong> returns true or false, depending on match.
+        </p>
+        <div class="example"><div class="info"><p><strong>Performing preg_match on attribute values</strong></p></div>
+
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Look,&nbsp;if&nbsp;the&nbsp;user&nbsp;has&nbsp;an&nbsp;emailadress&nbsp;for&nbsp;'example',&nbsp;if&nbsp;so,<br />//&nbsp;we&nbsp;want&nbsp;to&nbsp;display&nbsp;the&nbsp;tld:<br />//&nbsp;(be&nbsp;sure&nbsp;to&nbsp;pass&nbsp;$matches&nbsp;as&nbsp;reference!)<br /></span><span style="color: #0000BB">$matches&nbsp;</span><span style="color: #007700">=&nbsp;array();<br />if&nbsp;(&nbsp;</span><span style="color: #0000BB">$entry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">preg_match</span><span style="color: #007700">(</span><span style="color: #DD0000">'mail'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'/example\.(.+)/'</span><span style="color: #007700">,&nbsp;&amp;</span><span style="color: #0000BB">$matches</span><span style="color: #007700">)&nbsp;)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;print&nbsp;every&nbsp;TLD&nbsp;found&nbsp;for&nbsp;'example':<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">foreach&nbsp;(</span><span style="color: #0000BB">$matches&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$match</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$match</span><span style="color: #007700">[</span><span style="color: #0000BB">1</span><span style="color: #007700">];<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+
+    </div>
+
+    <div class="refsection"><div class="info"><h1>General information regarding attribute changing</h1>
+</div>
+        <p class="para">
+            It is important to know how attribute changing works. Modifications to an entry
+            through the <strong class="classname">Net_LDAP2_Entry</strong>-object are local only.
+            After you have made all changes and want to transfer them to the directory server, you must
+            call <strong class="function">update()</strong> of the <strong class="classname">Net_LDAP2_Entry</strong> object.
+            This will return either <code class="literal">TRUE</code> or an <strong class="classname">Net_LDAP2_Error</strong>.
+            Another good information is, that you must select attributes at search time
+            if you want to add/change/delete attribute values. Otherwise Net_LDAP2 will most likely fail
+            silently giving you the wrong assumtion that everything was okay - Net_LDAP2 needs knowledge
+            of the attributes it should work with!
+        </p>
+        <p class="para">Modification of attributes is also possible through <strong class="classname">Net_LDAP2</strong>&#039;s <strong class="function">modify()</strong> method.
+              This method will call the methods described here on the <strong class="classname">Net_LDAP2_Entry</strong> object given, and
+              directly calls an <strong class="function">update()</strong> after that, thus performing the changes directly on the server.
+              The parameter is an complex array describing the changes to be performed. It is considered for more advanced users,
+              because it is more compact, so please refer to the latest API documentation for more information.</p>
+    </div>
+
+    <div class="refsection"><div class="info"><h1>Adding attributes</h1>
+</div>
+        <p class="para">
+          Adding attrbiute values to an entry is an easy task. You just need to call <strong class="function">add()</strong>!
+          The parameter is an array whose keys are the attribute names and values the attributes values.
+          If only one attribute value should be added, the second level may be a string.
+          If the attribute doesn&#039;t exist so far, it will be added, if it exists, the attributes values will be added.
+        </p>
+        <div class="example"><div class="info"><p><strong>Adding attributes</strong></p></div>
+
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Adding&nbsp;several&nbsp;attributes:<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$entry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">add</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'sn'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Doe'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'gn'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'John'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'mail'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'john@doe.org'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'j.doe@example.org'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;)<br />);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+
+    </div>
+
+    <div class="refsection"><div class="info"><h1>Changing attributes</h1>
+</div>
+        <p class="para">
+           Changing values is with the <strong class="function">replace()</strong> method as easy as adding values. However, you have to be a little more careful.
+           The expected parameter is an array describing the new absolute state of the named
+           attributes. This means, if you specify a <code class="literal">NULL</code> value for an attribute,
+           this attribute will get deleted!
+           You may specify single values as string too.
+           The keys of the array are expected to be the attributes names.
+        </p>
+        <div class="example"><div class="info"><p><strong>Changing attributes</strong></p></div>
+
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Changing&nbsp;several&nbsp;attributes:<br />//&nbsp;'sn'&nbsp;is&nbsp;changed&nbsp;to&nbsp;"Smith",&nbsp;'gn'&nbsp;gets&nbsp;deleted&nbsp;and&nbsp;mail&nbsp;will<br />//&nbsp;be&nbsp;changed&nbsp;to&nbsp;te&nbsp;two&nbsp;new&nbsp;adresses<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$entry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">replace</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'sn'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Smith'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'gn'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'mail'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'smith@example.org'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'smith@example.de'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;)<br />);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+
+    </div>
+
+    <div class="refsection"><div class="info"><h1>Deleting attributes</h1>
+</div>
+        <p class="para">
+          Using the <strong class="function">delete()</strong> method you are able to delete specific attributes values as well
+          as delete a whole attribute.
+          You need to specify the attribute names as array keys, the array values are the values you want to delete.
+          If you want to delete whole attributes, specify them as single level array.
+          Special care must be taken not to delete the whole entry which will be the case if the parameter array is 
+          omitted or set to <code class="literal">NULL</code>!
+          Also, don&#039;t mix syntax modes. If you want to delete whole attributes you can&#039;t delete specific values from another attribute
+          in the same function call.
+        </p>
+        <div class="example"><div class="info"><p><strong>Deleting attributes</strong></p></div>
+
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Delete&nbsp;the&nbsp;whole&nbsp;entry:<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$entry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">delete</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;Delete&nbsp;the&nbsp;whole&nbsp;telephone&nbsp;number&nbsp;attribute:<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$entry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">delete</span><span style="color: #007700">(</span><span style="color: #DD0000">'telephoneNumber'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Delete&nbsp;one&nbsp;specific&nbsp;mail&nbsp;attributes&nbsp;value:<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$entry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">delete</span><span style="color: #007700">(&nbsp;array(</span><span style="color: #DD0000">'mail'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'j.doe@example.org'</span><span style="color: #007700">)&nbsp;);<br /><br /></span><span style="color: #FF8000">//&nbsp;Delete&nbsp;mail&nbsp;and&nbsp;telephone&nbsp;attributes&nbsp;as&nbsp;a&nbsp;whole:<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$entry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">delete</span><span style="color: #007700">(&nbsp;array(</span><span style="color: #DD0000">'mail'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'telephoneNumber'</span><span style="color: #007700">)&nbsp;);<br /><br /></span><span style="color: #FF8000">//&nbsp;Delete&nbsp;two&nbsp;specific&nbsp;mail&nbsp;adresses:<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$entry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">delete</span><span style="color: #007700">(&nbsp;array(</span><span style="color: #DD0000">'mail'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'smith@example.org'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'smith@example.de'</span><span style="color: #007700">))&nbsp;);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+    </div>
+
+    <div class="refsection">
+        <h1 class="title">Changing Objectclasses</h1>
+        <p class="para">
+            Object classes describe the attribute set of an entry with this objectclass set.
+            The entry stores the objectclass in a special attribute named &quot;objectClass&quot;,
+            and of course you may alter that attribute like any other attribute.
+        </p>
+        <p class="para">
+            However, special care must be taken if changing this attribute since
+            most directory servers impose rules on the other attributes the object class define.
+            For example, it is usually not possible to delete an objectclass if some of the attributes
+            the class describes are still in use by the entry.
+            This should be not much of a problem with optional attributes, but
+            sometimes objectclasses have mandatory attributes set. Also structural objectclasses
+            can only be added when creating new entrys. Because of the internal
+            architecture of Net_LDAP2 it is currently not possible to resolve those cases.
+        </p>
+        <p class="para">
+            To add or remove objectclasses with mandatory attributes or new structural object classes,
+            you need to delete the old entry from the directory server and add the new one with the
+            new objectclass and attributes as fresh entry.
+        </p>
+        <div class="example">
+        <p><strong>Changing complex objectclasses</strong></p>
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Let's&nbsp;assume&nbsp;that&nbsp;the&nbsp;objectclass&nbsp;myClass&nbsp;enforce&nbsp;the&nbsp;attribute&nbsp;"fooattr"<br />//&nbsp;Take&nbsp;care&nbsp;that&nbsp;you&nbsp;have&nbsp;all&nbsp;attributes&nbsp;requested,&nbsp;otherwise&nbsp;the&nbsp;new<br />//&nbsp;entry&nbsp;will&nbsp;not&nbsp;have&nbsp;all&nbsp;attributes&nbsp;set!<br /></span><span style="color: #0000BB">$entry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">add</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'objectClass'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'myClass'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'fooatrr'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'someotherattr'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'bar'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'baz'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;));<br /><br /></span><span style="color: #FF8000">//&nbsp;Calling&nbsp;$entry-&gt;update()&nbsp;now&nbsp;will&nbsp;not&nbsp;succeed&nbsp;under&nbsp;some&nbsp;circumstances!<br />//&nbsp;We&nbsp;construct&nbsp;a&nbsp;fresh&nbsp;entry&nbsp;object&nbsp;which&nbsp;is&nbsp;in&nbsp;fact&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;already<br />//&nbsp;existing&nbsp;entry&nbsp;with&nbsp;all&nbsp;changes&nbsp;already&nbsp;applied&nbsp;(the&nbsp;local&nbsp;copy).<br />//&nbsp;It&nbsp;is&nbsp;important,&nbsp;that&nbsp;at&nbsp;fetching&nbsp;time&nbsp;of&nbsp;$entry&nbsp;all&nbsp;attributes&nbsp;where&nbsp;selected!<br />//&nbsp;Only&nbsp;the&nbsp;selected&nbsp;attributes&nbsp;will&nbsp;get&nbsp;copied.<br /></span><span style="color: #0000BB">$changed_entry&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Net_LDAP2_Entry</span><span style="color: #007700">::</span><span style="color: #0000BB">createFresh</span><span style="color: #007700">(</span><span style="color: #0000BB">$entry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">dn</span><span style="color: #007700">(),&nbsp;</span><span style="color: #0000BB">$entry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getValues</span><span style="color: #007700">());<br /><br /></span><span style="color: #FF8000">//&nbsp;Now&nbsp;delete&nbsp;the&nbsp;old&nbsp;entry&nbsp;and&nbsp;add&nbsp;the&nbsp;new&nbsp;one:<br /></span><span style="color: #0000BB">$ldap</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">delete</span><span style="color: #007700">(</span><span style="color: #0000BB">$entry</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$ldap</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">add</span><span style="color: #007700">(</span><span style="color: #0000BB">$changed_entry</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+    </div>
+
+    <div class="refsection">
+        <h1 class="title">Schema checks</h1>
+        <p class="para">
+            When operating on an LDAP connection, you might want to retrieve informations
+            regarding the directory servers schema. Often this is the case to verify that
+            your program only querys attributes that are valid for an entry or to ensure
+            that you only try to write such attributes to the server.
+        </p>
+        <p class="para">
+            To get that inforamtion, you can use the <strong class="classname">Net_LDAP2_Schema</strong> which is
+            retrieved via the <strong class="classname">Net_LDAP2</strong> object. It allows you to perform
+            various querys, not only on attributes and object classes, but also on DIT
+            content rules, for example. For often needed functionality, shorthand
+            methods are implemented since version 2.0.10 like <strong class="function">attributeExists()</strong>, 
+            <strong class="function">objectClassExists()</strong>, <strong class="function">getAssignedOCLs()</strong>
+            and <strong class="function">checkAttribute()</strong>.
+        </p>
+        <div class="example">
+        <p><strong>Performing basic schema checks</strong></p>
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Fetch&nbsp;the&nbsp;schema&nbsp;object&nbsp;for&nbsp;the&nbsp;connected&nbsp;directory&nbsp;server.<br /></span><span style="color: #0000BB">$schema&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$ldap</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">schema</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;this&nbsp;may&nbsp;have&nbsp;failed&nbsp;since&nbsp;not&nbsp;every&nbsp;server&nbsp;allows&nbsp;us<br />//&nbsp;to&nbsp;fetch&nbsp;the&nbsp;schema&nbsp;without&nbsp;permission.&nbsp;Also&nbsp;technical<br />//&nbsp;problems&nbsp;may&nbsp;prevent&nbsp;us&nbsp;from&nbsp;this.<br /></span><span style="color: #007700">if&nbsp;(&nbsp;</span><span style="color: #0000BB">Net_LDAP2</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$schema</span><span style="color: #007700">)&nbsp;)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #DD0000">'SCHEMA&nbsp;ERROR:&nbsp;'</span><span style="color: #007700">.</span><span style="color: #0000BB">$schema</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">().</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">);<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;lets&nbsp;see,&nbsp;if&nbsp;an&nbsp;attribute&nbsp;is&nbsp;defined&nbsp;in&nbsp;the&nbsp;schema:<br /></span><span style="color: #007700">if&nbsp;(&nbsp;</span><span style="color: #0000BB">$schema</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">attributeExists</span><span style="color: #007700">(</span><span style="color: #DD0000">'myCoolAttribute'</span><span style="color: #007700">)&nbsp;)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Attribute&nbsp;'myCoolAttribute'&nbsp;is&nbsp;defined&nbsp;in&nbsp;the&nbsp;schema!"</span><span style="color: #007700">;<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;lets&nbsp;see,&nbsp;if&nbsp;an&nbsp;object&nbsp;class&nbsp;is&nbsp;defined&nbsp;in&nbsp;the&nbsp;schema:<br /></span><span style="color: #007700">if&nbsp;(&nbsp;</span><span style="color: #0000BB">$schema</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">attributeExists</span><span style="color: #007700">(</span><span style="color: #DD0000">'myCoolOCL'</span><span style="color: #007700">)&nbsp;)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Object&nbsp;class&nbsp;'myCoolOCL'&nbsp;is&nbsp;defined&nbsp;in&nbsp;the&nbsp;schema!"</span><span style="color: #007700">;<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;Check,&nbsp;if&nbsp;the&nbsp;attribute&nbsp;is&nbsp;defined&nbsp;in&nbsp;objectClasses.<br />//&nbsp;This&nbsp;is&nbsp;especially&nbsp;useful&nbsp;if&nbsp;you&nbsp;want&nbsp;to&nbsp;know&nbsp;if<br />//&nbsp;attributes&nbsp;are&nbsp;valid&nbsp;for&nbsp;a&nbsp;given&nbsp;set&nbsp;of&nbsp;object&nbsp;classes.<br /></span><span style="color: #007700">if&nbsp;(&nbsp;</span><span style="color: #0000BB">$schema</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">checkAttribute</span><span style="color: #007700">(</span><span style="color: #DD0000">'myCoolAttribute'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'person'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'myCoolOCL'</span><span style="color: #007700">))&nbsp;)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Attribute&nbsp;'myCoolAttribute'&nbsp;is&nbsp;defined&nbsp;for&nbsp;the&nbsp;given&nbsp;OCLs!"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.networking.net-ldap2.fetching.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.networking.net-ldap2.html">Net_LDAP2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.networking.net-ldap2.entries.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Fetching entries</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Managing entries</td>
+  </tr>
+ </table>
+</div>
+</body></html>

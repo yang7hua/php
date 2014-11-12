@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>DB_common::tableInfo()</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.db.html" title="DB" />
+  <link rel="prev" href="package.database.db.db-common.setoption.html" title="DB_common::setOption()" />
+  <link rel="next" href="package.database.db.db-result.html" title="DB_result" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">DB_common::tableInfo()</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.db.db-common.setoption.html" title="DB_common::setOption()">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.db.db-result.html" title="DB_result">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.db.db-common.tableinfo">
+ 
+  <h1 class="refname">DB_common::tableInfo()</h1>
+  <div class="refnamediv">DB_common::tableInfo() &ndash; Gets info about columns in a table or a query result</div>
+
+ 
+
+ <h2 class="refsynopsisdiv">Synopsis</h2>
+  <div class="funcsynopsis">
+   <p><code class="funcprototype">
+    array <strong class="function">tableInfo</strong> ( 
+    
+     mixed $result
+    
+     , 
+     integer $mode
+     <span class="initializer"> = null</span>
+    
+   )</code></p>
+  </div>
+ 
+
+ <div class="refsection" id="package.database.db.db-common.tableinfo.desc">
+  <h1 class="title">Description</h1>
+  <p class="para">
+   Get information about columns in a table or a query result.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.tableinfo.parameter">
+  <h1 class="title">Parameter</h1>
+  <p class="para">
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term">
+      <span class="type">mixed</span>
+      <em><code class="parameter">$result</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       <a href="package.database.db.db-result.html" class="link"><strong class="classname">DB_result</strong></a> object from a query
+       or a string containing the name of a table
+      </p>
+      <p class="para">
+       If the name of the table needs to be delimited (ie: the
+       name is a reserved word or has spaces in it), use the
+       <a href="package.database.db.db-common.quoteidentifier.html" class="link">
+        <strong class="function">quoteIdentifier()</strong></a> method
+       on the table name when passing it.
+      </p>
+      <p class="para">
+       This can also be a query result resource identifier,
+       but doing so is deprecated.
+      </p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      <span class="type">integer</span>
+      <em><code class="parameter">$mode</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       one of the tableInfo mode constants
+      </p>
+     </dd>
+    </dl>
+   </div>
+  
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.tableinfo.return">
+  <h1 class="title">Return value</h1>
+  <p class="para">
+   <span class="type">array</span> - an associative array of the table&#039;s information
+   or a <a href="package.database.db.db-error.html" class="link"><strong class="classname">DB_Error</strong></a> object on failure
+  </p>
+  <p class="para">
+   The array&#039;s contents depends on the <em><code class="parameter">$mode</code></em>
+   parameter.
+  </p>
+  <p class="para">
+   The names of tables and columns will be lowercased if the
+   <strong class="constant">DB_PORTABILITY_LOWERCASE</strong>
+   <a href="package.database.db.intro-portability.html" class="link">portability
+    mode</a> is enabled.
+  </p>
+  <p class="para">
+   The <code class="varname">flags</code> element contains a space
+   separated list of extra information about the column.
+   If the DBMS is able to report a column&#039;s default value,
+   the value is passed through <strong class="function">rawurlencode()</strong>
+   to avoid problems caused by potential spaces in the value.
+  </p>
+  <p class="para">
+   Most DBMS&#039;s only provide the <code class="varname">table</code> and
+   <code class="varname">flags</code> elements if <em><code class="parameter">$result</code></em>
+   is a table name.  Only fbsql and mysql provide full
+   information from queries.
+  </p>
+  <p class="para">
+   The <code class="varname">type</code> element contains the type returned
+   by the DBMS. It varies from DBMS to DBMS.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.tableinfo.modes"><div class="info"><h1>tableInfo Modes</h1>
+</div>
+
+  <p class="para">
+   This section describes the format of the returned array and how
+   it varies depending on which <em><code class="parameter">$mode</code></em> was used
+   when the function was called.
+  </p>
+  <p class="para">
+   The sample output below is based on this query:
+   </p><div class="sqlcode">
+    <pre class="sqlcode">
+SELECT tblFoo.fldID, tblFoo.fldPhone, tblBar.fldId
+  FROM tblFoo
+  JOIN tblBar ON tblFoo.fldId = tblBar.fldId;</pre>
+
+   </div>
+  
+  <p class="para">
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term">
+      <strong class="constant">NULL</strong> or <code class="literal">0</code>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+      </p>
+      <p class="para">
+       </p><div class="programlisting">
+        <br/>[0]&nbsp;=&gt;&nbsp;Array&nbsp;(<br/>&nbsp;&nbsp;[table]&nbsp;=&gt;&nbsp;tblFoo<br/>&nbsp;&nbsp;[name]&nbsp;=&gt;&nbsp;fldId<br/>&nbsp;&nbsp;[type]&nbsp;=&gt;&nbsp;int<br/>&nbsp;&nbsp;[len]&nbsp;=&gt;&nbsp;11<br/>&nbsp;&nbsp;[flags]&nbsp;=&gt;&nbsp;primary_key&nbsp;not_null<br/>)<br/>[1]&nbsp;=&gt;&nbsp;Array&nbsp;(<br/>&nbsp;&nbsp;[table]&nbsp;=&gt;&nbsp;tblFoo<br/>&nbsp;&nbsp;[name]&nbsp;=&gt;&nbsp;fldPhone<br/>&nbsp;&nbsp;[type]&nbsp;=&gt;&nbsp;string<br/>&nbsp;&nbsp;[len]&nbsp;=&gt;&nbsp;20<br/>&nbsp;&nbsp;[flags]&nbsp;=&gt;<br/>)<br/>[2]&nbsp;=&gt;&nbsp;Array&nbsp;(<br/>&nbsp;&nbsp;[table]&nbsp;=&gt;&nbsp;tblBar<br/>&nbsp;&nbsp;[name]&nbsp;=&gt;&nbsp;fldId<br/>&nbsp;&nbsp;[type]&nbsp;=&gt;&nbsp;int<br/>&nbsp;&nbsp;[len]&nbsp;=&gt;&nbsp;11<br/>&nbsp;&nbsp;[flags]&nbsp;=&gt;&nbsp;primary_key&nbsp;not_null<br/>)
+       </div>
+      
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      <strong class="constant">DB_TABLEINFO_ORDER</strong>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       In addition to the information found in the default output,
+       a notation of the number of columns is provided by the
+       <code class="varname">num_fields</code> element while the
+       <code class="varname">order</code>
+       element provides an array with the column names as the keys and
+       their location index number (corresponding to the keys in the
+       default output) as the values.
+      </p>
+      <p class="para">
+       If a result set has identical field names, the last one is
+       used.
+      </p>
+      <p class="para">
+       </p><div class="programlisting">
+        <br/>[num_fields]&nbsp;=&gt;&nbsp;3<br/>[order]&nbsp;=&gt;&nbsp;Array&nbsp;(<br/>&nbsp;&nbsp;[fldId]&nbsp;=&gt;&nbsp;2<br/>&nbsp;&nbsp;[fldTrans]&nbsp;=&gt;&nbsp;1<br/>)
+       </div>
+      
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      <strong class="constant">DB_TABLEINFO_ORDERTABLE</strong>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       Similar to <strong class="constant">DB_TABLEINFO_ORDER</strong> but adds more
+       dimensions to the array in which the table names are keys and
+       the field names are sub-keys.  This is helpful for queries that
+       join tables which have identical field names.
+      </p>
+      <p class="para">
+       </p><div class="programlisting">
+        <br/>[num_fields]&nbsp;=&gt;&nbsp;3<br/>[ordertable]&nbsp;=&gt;&nbsp;Array&nbsp;(<br/>&nbsp;&nbsp;[tblFoo]&nbsp;=&gt;&nbsp;Array&nbsp;(<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[fldId]&nbsp;=&gt;&nbsp;0<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[fldPhone]&nbsp;=&gt;&nbsp;1<br/>&nbsp;&nbsp;)<br/>&nbsp;&nbsp;[tblBar]&nbsp;=&gt;&nbsp;Array&nbsp;(<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[fldId]&nbsp;=&gt;&nbsp;2<br/>&nbsp;&nbsp;)<br/>)
+       </div>
+      
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      <strong class="constant">DB_TABLEINFO_FULL</strong>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       Contains the information from both
+       <strong class="constant">DB_TABLEINFO_ORDER</strong> and
+       <strong class="constant">DB_TABLEINFO_ORDERTABLE</strong>
+      </p>
+     </dd>
+    </dl>
+   </div>
+  
+  <p class="para">
+   The tableInfo mode constants are bitwised, so they can be
+   combined using <code class="literal">|</code>.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.tableinfo.throws">
+  <h1 class="title">Throws</h1>
+  <p class="para">
+   </p><table class="doctable table"><caption>Possible PEAR_Error values</caption>
+
+    
+     <thead>
+      <tr>
+       <th>Error code</th>
+       <th>Error message</th>
+       <th>Reason</th>
+       <th>Solution</th>
+      </tr>
+
+     </thead>
+
+     <tbody class="tbody">
+      <tr>
+       <td><strong class="constant">DB_ERROR_NOT_CAPABLE</strong></td>
+       <td>
+        DB backend not capable
+       </td>
+       <td>
+        Driver doesn&#039;t support this feature.
+       </td>
+       <td>
+        Switch to another database system, if you really
+        need this feature.
+       </td>
+      </tr>
+
+      <tr>
+       <td><strong class="constant">DB_ERROR_NEED_MORE_DATA</strong></td>
+       <td>
+        insufficient data supplied
+       </td>
+       <td>
+        The data passed in the <em><code class="parameter">$result</code></em> parameter
+        was not a valid table name or result identifier.
+       </td>
+       <td>
+        Check the table name for typographical errors or that the query
+        ran correctly.
+       </td>
+      </tr>
+
+      <tr>
+       <td><strong class="constant">DB_ERROR_NODBSELECTED</strong></td>
+       <td>
+        no database selected
+       </td>
+       <td>
+        No database was chosen.
+       </td>
+       <td>
+        Check the <a href="package.database.db.intro-dsn.html" class="link">DSN</a>
+        in <a href="package.database.db.db.connect.html" class="link">
+         <strong class="function">connect()</strong></a>.
+       </td>
+      </tr>
+
+      <tr>
+       <td>
+        <span class="computeroutput">can&#039;t distinguish duplicate field names</span>
+       </td>
+       <td class="empty">&nbsp;</td>
+       <td>
+        The query result has multiple columns with the same name.
+        PHP&#039;s Informix extension deals with columns having the same names
+        by overwriting the prior columns information.  Therefore,
+        <strong class="function">tableInfo()</strong> is unable to properly represent
+        these result sets.
+       </td>
+       <td>
+        Use aliases for columns that have the same names.
+       </td>
+      </tr>
+
+     </tbody>
+    
+   </table>
+
+  
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.tableinfo.note">
+  <h1 class="title">Note</h1>
+  <p class="simpara">This function can not be called
+statically.</p>
+  <p class="para">
+   <strong class="function">tableInfo()</strong> is not portable because not all drivers
+   have this method, many DBMS&#039;s are unable to determine
+   table names from query results and the metadata returned
+   by each database system varies dramatically.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.tableinfo.example">
+  <h1 class="title">Example</h1>
+  <div class="example"><div class="info"><p><strong>Finding information about a table</strong></p></div>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /></span><span style="color: #0000BB">$info&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">tableInfo</span><span style="color: #007700">(</span><span style="color: #DD0000">'tablename'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$info</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+
+  <div class="example"><div class="info"><p><strong>Finding information about a query result</strong></p></div>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /></span><span style="color: #0000BB">$res&nbsp;&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;*&nbsp;FROM&nbsp;tablename'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$info&nbsp;</span><span style="color: #007700">=&nbsp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">tableInfo</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$info</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <div class="example-contents"><p>
+    </p><blockquote class="warning">
+
+     <p class="para">
+      Prior to version 1.6.0, <strong class="function">tableInfo()</strong>
+      was a part of the <a href="package.database.db.db-result.html" class="link"><strong class="classname">DB_result</strong></a> class, so had
+      to be called like this:
+     </p>
+     <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /></span><span style="color: #0000BB">$res&nbsp;&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;*&nbsp;FROM&nbsp;tablename'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$info&nbsp;</span><span style="color: #007700">=&nbsp;&nbsp;</span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">tableInfo</span><span style="color: #007700">();&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;&lt;----&nbsp;DEPRECATED<br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$info</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    </blockquote>
+
+   </p></div>
+  </div>
+
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.db.db-common.setoption.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.db.html">DB</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.db.db-result.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">DB_common::setOption()</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">DB_result</td>
+  </tr>
+ </table>
+</div>
+</body></html>

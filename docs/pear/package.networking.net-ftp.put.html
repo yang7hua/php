@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Net_FTP::put()</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.networking.net-ftp.html" title="Net_FTP" />
+  <link rel="prev" href="package.networking.net-ftp.get.html" title="Net_FTP::get()" />
+  <link rel="next" href="package.networking.net-ftp.getrecursive.html" title="Net_FTP::getRecursive()" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Net_FTP::put()</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.networking.net-ftp.get.html" title="Net_FTP::get()">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.networking.net-ftp.getrecursive.html" title="Net_FTP::getRecursive()">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.networking.net-ftp.put">
+ 
+  <h1 class="refname">Net_FTP::put()</h1>
+  <div class="refnamediv">Net_FTP::put() &ndash; upload a file to the FTP server.</div>
+
+ 
+ <h2 class="refsynopsisdiv">Synopsis</h2>
+  <div class="funcsynopsis">
+   <div class="programlisting">
+    require_once &#039;Net/FTP.php&#039;;
+   </div>
+   <p><code class="funcprototype">
+    mixed <strong class="function">Net_FTP::put</strong> ( 
+    
+     string $local_file
+    
+     , 
+     string $remote_file
+    
+     , 
+     bool $overwrite = false
+    
+     , 
+     int $mode = null
+    
+   )</code></p>
+  </div>
+ 
+ <div class="refsection" id="package.networking.net-ftp.put.desc">
+  <h1 class="title">Description</h1>
+  <p class="para">
+   This uploads a file to the FTP server
+   from the computer your script runs on.
+  </p>
+ </div>
+ <div class="refsection" id="package.networking.net-finger.put.parameter">
+  <h1 class="title">Parameter</h1>
+  <p class="para">
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para">
+      <em><code class="parameter">string $local_file</code></em>
+      - The source file you&#039;d like to upload.
+
+      You can specify this with either an absolute path
+      or a path relative to the scripts directory.
+
+      (Beware: The script directory is determined by the called script,
+      if you use includes!)
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <em><code class="parameter">string $remote_file</code></em>
+      - The path (including filename) you&#039;d like to upload to.
+
+      This could either be an absolute or relative path to a file
+
+      (not a directory! see:
+      <a href="package.networking.net-ftp.putrecursive.html" class="link">Net_FTP::putRecursive()</a>).
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <em><code class="parameter">bool $overwrite = false</code></em>
+      - Whether to overwrite the remote file, if it exists or not.
+
+      If not set the file will not be overwritten.
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <em><code class="parameter">
+       int $mode = null
+      </code></em>
+      - This has to be one of the constants
+      <strong class="constant">FTP_ASCII</strong> or
+      <strong class="constant">FTP_BINARY</strong>.
+
+      If not specified,
+      the class will try to determine the mode
+      from the file extension
+      (from extensions.ini)
+      or fall back to the standard transfer mode (attribute).
+     </p>
+    </li>
+   </ul>
+  
+ </div>
+ <div class="refsection" id="package.networking.net-ftp.put.return">
+  <h1 class="title">Return value</h1>
+  <p class="para">
+   <em><code class="parameter">mixed</code></em> - true on success, otherwise PEAR::Error.
+  </p>
+ </div>
+ <div class="refsection" id="package.networking.net-ftp.put.throws">
+  <h1 class="title">Throws</h1>
+  <p class="para">
+   Several errors may be returned by put.
+
+   The errornumber is unspecific (until now) and will not
+   tell you anything about the errormessage.
+
+   Possible errors are:
+  </p>
+  <p class="para">
+   </p><table class="doctable table"><caption>Possible PEAR_Error values</caption>
+    
+    
+     <thead>
+      <tr>
+       <th>Error message</th>
+       <th>Description</th>
+       <th>Solution</th>
+      </tr>
+
+     </thead>
+
+
+     <tbody class="tbody">
+      <tr>
+       <td>
+        Local file &#039;$local_file&#039; does not exist.
+       </td>
+       <td>
+        The local file you specified does not exist.
+       </td>
+       <td>
+        Correct the local file path.
+       </td>
+      </tr>
+
+      <tr>
+       <td>
+        Remote file &#039;$remote_file&#039; exists and may not be overwriten.
+       </td>
+       <td>
+        The specified remote file exists but may not be overwritten.
+       </td>
+       <td>
+        Maybe you don&#039;t have the permission to overwrite the file.
+
+        Check the filepermissions.
+       </td>
+      </tr>
+
+      <tr>
+       <td>
+        File &#039;$local_file&#039; could not be uploaded to &#039;$remote_file&#039;.
+       </td>
+       <td>
+        The upload of the local file failed.
+       </td>
+       <td>
+        This may have several reasons:
+        Maybe the local file does not exist or the remote
+        directory you wanted to upload
+        to does not exist or is not writeable.
+       </td>
+      </tr>
+
+     </tbody>
+    
+   </table>
+
+  
+ </div>
+ <div class="refsection" id="package.networking.net-ftp.put.note">
+  <h1 class="title">Note</h1>
+  <p class="simpara">This function can not be called
+statically.</p>
+ </div>
+ <div class="refsection" id="package.networking.net-ftp.put.example">
+  <h1 class="title">Example</h1>
+  <div class="example"><div class="info"><p><strong>Using <strong class="function">put()</strong></strong></p></div>
+   
+    <div class="phpcode">
+   <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br />&nbsp;&nbsp;var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$test</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">put</span><span style="color: #007700">(</span><span style="color: #DD0000">'/tmp/downloaded.zip'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'foo/bar.zip'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">FTP_BINARY</span><span style="color: #007700">));<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.networking.net-ftp.get.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.networking.net-ftp.html">Net_FTP</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.networking.net-ftp.getrecursive.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Net_FTP::get()</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Net_FTP::getRecursive()</td>
+  </tr>
+ </table>
+</div>
+</body></html>

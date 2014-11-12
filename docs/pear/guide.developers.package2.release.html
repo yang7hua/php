@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>&lt;phprelease&gt;, &lt;extbinrelease&gt;, &lt;extsrcrelease&gt;, &lt;bundle&gt;</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="guide.developers.package2.tags.html" title="Detailed Tag Reference for package.xml version 2.0" />
+  <link rel="prev" href="guide.developers.package2.usestask.html" title="&lt;usestask&gt;" />
+  <link rel="next" href="developers.release.html" title="Releasing A Package" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">&lt;phprelease&gt;, &lt;extbinrelease&gt;, &lt;extsrcrelease&gt;, &lt;bundle&gt;</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="guide.developers.package2.usestask.html" title="&lt;usestask&gt;">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="developers.release.html" title="Releasing A Package">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="guide.developers.package2.release">
+ 
+  <h1 class="refname">&lt;phprelease&gt;, &lt;extbinrelease&gt;, &lt;extsrcrelease&gt;, &lt;bundle&gt;</h1>
+  <div class="refnamediv">&lt;phprelease&gt;, &lt;extbinrelease&gt;, &lt;extsrcrelease&gt;, &lt;bundle&gt; &ndash; specifying the content type of a release</div>
+
+ 
+ <div class="refsection" id="guide.developers.package2.release.purpose"><div class="info"><h1>Documenting release type</h1>
+</div>
+  
+  <p class="para">
+   In package.xml 1.0, there was one release type.  package.xml 2.0 provides much finer
+   control over the kind of release in order to provide three new release types: extension
+   binary release, extension source release, and package bundle release.
+  </p>
+  <p class="para">
+   All of the normal release tags (phprelease, extsrcrelease, extbinrelease) may contain
+   two optional sections, &lt;installconditions&gt; and &lt;filelist&gt;.  The purpose of these
+   sections is to allow specification of different file install groups based on the target OS
+   for installation, or other common install conditions.
+  </p>
+  <p class="para">
+   To be clear: in package.xml, there was 1 &lt;release&gt; tag.  package.xml 2.0 allows
+   several adjacent release tags, each specifying a different install set.  This actually
+   simplifies complex installation filesets by separating the contents listing of the tarball
+   from how the installer should manipulate this listing.  Debugging installation file sets
+   should be much simpler with this change.
+  </p>
+  <p class="para">
+   The &lt;filelist&gt; tag can contain only two possible tags, &lt;install&gt; and &lt;ignore&gt;.
+   install has two required attributes, &quot;name&quot; and &quot;as&quot;.  The install tag is used
+   in the same manner as package.xml&#039;s install-as attribute for the &lt;file&gt;, to specify a new
+   installation location for a file in the contents list.  The ignore tag is used to completely
+   ignore a file.
+  </p>
+  <p class="para">
+   The &lt;installconditions&gt; tag can contain 4 tags whose format can be found in the
+   &lt;dependencies&gt; section: &lt;php&gt;, &lt;extension&gt;, &lt;os&gt;, and &lt;arch&gt;.
+   Each tag can appear exactly once except for the extension tag, which can appear limitless times.
+  </p>
+  <p class="para">
+   The php tag is used to specify a php version or range of versions that an install set should
+   be valid with.
+  </p>
+  <p class="para">
+   The extension tag is used to specify extensions that must be present for an install set to
+   be valid.
+  </p>
+  <p class="para">
+   The os tag is used to specify an OS that must be present for an install set to be valid.  Note
+   that unix can be used to match all flavors, and linux can be used to match all linux-based OSes.
+   Darwin should be used for Mac OS X, and * can be used to match all operating systems.
+  </p>
+  <p class="para">
+   The arch tag is used to specify a uname string or portion of a uname string that must match
+   in order for the install set to be valid.
+  </p>
+  <div class="refsection" id="guide.developers.package2.release.phprelease"><div class="info"><h1>&lt;phprelease&gt;</h1>
+</div>
+   
+   <p class="para">
+    The phprelease release type is designed for PEAR-style PHP script package releases.
+    It causes a few specific validation changes.  First of all,
+    the <a href="guide.developers.package2.contents.html" class="link">&lt;contents&gt;</a> tag must
+    contain &lt;file&gt; and &lt;dir&gt; tags.  The only valid roles for files are role=&quot;php&quot;,
+    role=&quot;data&quot;, role=&quot;doc&quot;, and role=&quot;test&quot; plus any custom roles
+    that the user has installed for use in php releases.
+   </p>
+  </div>
+  <div class="refsection" id="guide.developers.package2.release.extsrcrelease"><div class="info"><h1>&lt;extsrcrelease&gt;</h1>
+</div>
+   
+   <p class="para">
+    The extsrcrelease release type is for PECL-style PHP extension releases that must be compiled
+    in order to be useable.  It causes a few specific validation changes.  First of all,
+    the <a href="guide.developers.package2.contents.html" class="link">&lt;contents&gt;</a> tag must
+    contain &lt;file&gt; and &lt;dir&gt; tags.  The only valid roles for files are role=&quot;src&quot;,
+    role=&quot;data&quot;, role=&quot;doc&quot;, and role=&quot;test&quot; plus any custom roles
+    that the user has installed for use in extension source releases.
+   </p>
+   <p class="para">
+    In addition, the &lt;providesextension&gt; tag must be present in order to document the name of
+    the extension this package provides must be in the package.xml as well.
+   </p>
+  </div>
+  <div class="refsection" id="guide.developers.package2.release.extbinrelease"><div class="info"><h1>&lt;extbinrelease&gt;</h1>
+</div>
+   
+   <p class="para">
+    The extbinrelease release type is for PECL-style PHP Extension binary releases that are pre-compiled.
+    It causes a few specific validation changes.  First of all,
+    the <a href="guide.developers.package2.contents.html" class="link">&lt;contents&gt;</a> tag must
+    contain &lt;file&gt; and &lt;dir&gt; tags.  The only valid roles for files are role=&quot;ext&quot;,
+    role=&quot;data&quot;, role=&quot;doc&quot;, and role=&quot;test&quot; plus any custom roles
+    that the user has installed for use in extension binary releases.
+   </p>
+   <p class="para">
+    In addition, the &lt;srcpackage&gt; or &lt;srcuri&gt; and the &lt;providesextension&gt; tags
+    must be present in order to document the package that provides extension source for this
+    binary release, and the name of the extension this package provides must be in the package.xml as
+    well.
+   </p>
+  </div>
+  <div class="refsection" id="guide.developers.package2.release.bundle"><div class="info"><h1>&lt;bundle&gt;</h1>
+</div>
+   
+   <p class="para">
+    The bundle release type is designed to allow packaging several other package releases into a
+    single bundle of packages that will all be installed at the same time.  This can be used to
+    distribute a complete application as one tarball, or to distribute a library of packages in a
+    single tarball.
+   </p>
+   <p class="para">
+    Unlike the other release types, a bundle release&#039;s
+    <a href="guide.developers.package2.contents.html" class="link">&lt;contents&gt;</a> tag must contain
+    only the &lt;bundledpackage&gt; tag.  The contents of the bundledpackage should be release names
+    like &quot;Foo-1.2.3.tgz&quot;
+   </p>
+   <p class="para">
+    In addition, the &lt;bundle/&gt; tag must be empty.
+   </p>
+  </div>
+ </div>
+ </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="guide.developers.package2.usestask.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="guide.developers.package2.tags.html">Detailed Tag Reference for package.xml version 2.0</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="developers.release.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">&lt;usestask&gt;</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Releasing A Package</td>
+  </tr>
+ </table>
+</div>
+</body></html>

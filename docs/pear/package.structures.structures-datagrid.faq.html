@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>FAQ</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.structures.structures-datagrid.intro-and-features.html" title="Introduction and Features" />
+  <link rel="prev" href="package.structures.structures-datagrid.intro.html" title="Introduction" />
+  <link rel="next" href="package.structures.structures-datagrid.installation.html" title="Installation" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">FAQ</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.structures.structures-datagrid.intro.html" title="Introduction">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.structures.structures-datagrid.installation.html" title="Installation">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.structures.structures-datagrid.faq">
+ 
+  <h1 class="refname">FAQ</h1>
+  <div class="refnamediv">FAQ &ndash; Answers to most Frequently Asked Questions</div>
+
+ 
+ <div class="refsection" id="package.structures.structures-datagrid.faq.desc">
+  <h1 class="title">Description</h1>
+  <p class="para">
+   This document is based on questions asked on <a href="mailto:pear-general@lists.php.net" class="link external">PEAR 
+   general mailing list</a> and other mailing lists and forums.
+  </p>
+ </div>
+ <div class="refsection" id="package.structures.structures-datagrid.faq.content"><div class="info"><h1>Structures_DataGrid FAQ</h1>
+</div>
+  
+  <div class="qandaset"><ol class="qandaset_questions"><li><a href="#phd5461fb1621251">
+     
+      I&#039;m using the HTML_Table Renderer. How can I use multiple grids on the
+      same page?
+     
+    </a></li><li><a href="#phd5461fb16219d6">
+     
+      Which DataSource drivers are recommended?
+     
+    </a></li><li><a href="#phd5461fb1622586">
+     
+      I&#039;d like to add row numbers to my DataGrid. How can I do this?
+     
+    </a></li><li><a href="#phd5461fb1622d5f">
+     
+      I&#039;m using the Excel Renderer and would like to have the &euro; sign in
+      the resulting Excel file, but I always get only a box or some funny
+      characters. How can I get the right &euro; sign?
+     
+    </a></li><li><a href="#phd5461fb162353e">
+     
+      Streaming is a nice feature. Why isn&#039;t streaming the default behaviour?
+     
+    </a></li><li><a href="#phd5461fb1623cf8">
+     
+      I have used $renderer-&gt;toHtml(); with older versions of
+      Structures_DataGrid, but this does not work anymore. How can I fix my
+      code?
+     
+    </a></li><li><a href="#phd5461fb16244c5">
+     
+      All the rows are displayed on one page. Why isn&#039;t it paging the data?
+     
+    </a></li><li><a href="#phd5461fb1624c95">
+     
+      Sorting doesn&#039;t work with MDB2 DataSource driver if I have column
+      names in uppercase letters. Why?
+     
+    </a></li></ol></div>
+   <dl class="qandaentry">
+    <dt><strong>
+     
+      I&#039;m using the HTML_Table Renderer. How can I use multiple grids on the
+      same page?
+     
+    </strong></dt>
+    <dd class="answer">
+     <p class="para">
+      The <a href="package.structures.structures-datagrid.structures-datagrid.setrequestprefix.html" class="link"><strong class="function">setRequestPrefix()</strong></a>
+      method is the solution for this problem. Each DataGrid for the page needs
+      such a prefix that is internally used before the GET parameters for sorting
+      and paging. An example of the usage:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Structures/DataGrid.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$datagrid1&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Structures_DataGrid</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$datagrid2&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Structures_DataGrid</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">$datagrid1</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setRequestPrefix</span><span style="color: #007700">(</span><span style="color: #DD0000">'trade_'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$datagrid2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setRequestPrefix</span><span style="color: #007700">(</span><span style="color: #DD0000">'stock_'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$datagrid1</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">bind</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;*&nbsp;FROM&nbsp;trade'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'dsn'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">DSN</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$datagrid2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">bind</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;*&nbsp;FROM&nbsp;stock'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'dsn'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">DSN</span><span style="color: #007700">));<br /><br /></span><span style="color: #0000BB">$datagrid1</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">render</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$datagrid2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">render</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+     
+     <blockquote class="note">
+      <p class="para">
+       You need to call <strong class="function">setRequestPrefix()</strong>
+       before calling
+       <a href="package.structures.structures-datagrid.structures-datagrid.bind.html" class="link"><strong class="function">bind()</strong></a>.
+      </p>
+     </blockquote>
+
+    </dd>
+   </dl>
+   <dl class="qandaentry">
+    <dt><strong>
+     
+      Which DataSource drivers are recommended?
+     
+    </strong></dt>
+    <dd class="answer">
+     <p class="para">
+      Currently there are five DataSource drivers that are recommended in the
+      sense of efficiency:
+     </p>
+     <ul class="itemizedlist">
+      <li class="listitem">
+       <p class="para">
+        DB_DataObject
+       </p>
+      </li>
+      <li class="listitem">
+       <p class="para">
+        DB_Table
+       </p>
+      </li>
+      <li class="listitem">
+       <p class="para">
+        DBQuery
+       </p>
+      </li>
+      <li class="listitem">
+       <p class="para">
+        MDB2
+       </p>
+      </li>
+      <li class="listitem">
+       <p class="para">
+        PDO
+       </p>
+      </li>
+     </ul>
+     <p class="para">
+      These four drivers will only fetch the needed records from the database.
+      For example, if you have a row limit of 15 records per page, they will
+      only fetch (up to) 15 records.
+     </p>
+     <p class="para">
+      All other DataSource drivers can, of course, also be used. But there is
+      no logic implemented (better said: implementable) to avoid fetching (or
+      keeping in memory) unneeded records.
+     </p>
+    </dd>
+   </dl>
+   <dl class="qandaentry">
+    <dt><strong>
+     
+      I&#039;d like to add row numbers to my DataGrid. How can I do this?
+     
+    </strong></dt>
+    <dd class="answer">
+     <p class="para">
+      You need a <a href="package.structures.structures-datagrid.formatter.html" class="link">formatter</a>
+      for the new column that should hold the row number. The first parameter
+      that is passed to such a formatter function contains a
+      <em class="emphasis">currRow</em> value with the row number per page. For
+      calculating the row number relative to the whole table, you need to take
+      also the <a href="package.structures.structures-datagrid.structures-datagrid.getcurrentrecordnumberstart.html" class="link"><strong class="function">getCurrentRecordNumberStart()</strong></a>
+      method into account.
+     </p>
+     <p class="para">
+      The following code snippet shows you how to define the formatter function
+      and how to add the column (with <em class="emphasis">#</em> as the column label
+      and right aligned values):
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">formatRowNumber</span><span style="color: #007700">(</span><span style="color: #0000BB">$params</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$recordNumberStart</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$params</span><span style="color: #007700">[</span><span style="color: #DD0000">'currRow'</span><span style="color: #007700">]&nbsp;+&nbsp;</span><span style="color: #0000BB">$recordNumberStart</span><span style="color: #007700">;<br />}<br /><br /></span><span style="color: #0000BB">$datagrid</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addColumn</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;new&nbsp;</span><span style="color: #0000BB">Structures_DataGrid_Column</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'#'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'style'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'text-align:&nbsp;right;'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'formatRowNumber'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$datagrid</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getCurrentRecordNumberStart</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+     
+    </dd>
+   </dl>
+   <dl class="qandaentry">
+    <dt><strong>
+     
+      I&#039;m using the Excel Renderer and would like to have the € sign in
+      the resulting Excel file, but I always get only a box or some funny
+      characters. How can I get the right € sign?
+     
+    </strong></dt>
+    <dd class="answer">
+     <p class="para">
+      Instead of using an encoding like ISO-8859-15, you need to use
+      Windows-1252.
+     </p>
+    </dd>
+   </dl>
+   <dl class="qandaentry">
+    <dt><strong>
+     
+      Streaming is a nice feature. Why isn&#039;t streaming the default behaviour?
+     
+    </strong></dt>
+    <dd class="answer">
+     <p class="para">
+      Streaming support in Structures_DataGrid is intended to be used with
+      large datasets. But it can also be used with very small datasets without
+      loss of performance.
+     </p>
+     <p class="para">
+      As always, there is an exception to this rule: When you&#039;re using one of the
+      DataSource drivers that fetch data from a database and you have queries that
+      need a lot of time for computation of the results, you should not use
+      streaming, as running such a complex query multiple times will need even
+      more time, of course.
+     </p>
+    </dd>
+   </dl>
+   <dl class="qandaentry">
+    <dt><strong>
+     
+      I have used $renderer-&gt;toHtml(); with older versions of
+      Structures_DataGrid, but this does not work anymore. How can I fix my
+      code?
+     
+    </strong></dt>
+    <dd class="answer">
+     <p class="para">
+      If you just want to output the HTML code, use the following line of code:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$datagrid</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">render</span><span style="color: #007700">()<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+      If you want to get the generated HTML code, e.g. for using it within a
+      template, use the following line of code:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$html&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$datagrid</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getOutput</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+     
+    </dd>
+   </dl>
+   <dl class="qandaentry">
+    <dt><strong>
+     
+      All the rows are displayed on one page. Why isn&#039;t it paging the data?
+     
+    </strong></dt>
+    <dd class="answer">
+     <p class="para">
+      Don&#039;t forget to pass the number of rows per page to the constructor:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$datagrid&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">Structures_DataGrid</span><span style="color: #007700">(</span><span style="color: #0000BB">10</span><span style="color: #007700">);&nbsp;</span><span style="color: #FF8000">//&nbsp;10&nbsp;rows&nbsp;per&nbsp;page<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+     
+    </dd>
+   </dl>
+   <dl class="qandaentry">
+    <dt><strong>
+     
+      Sorting doesn&#039;t work with MDB2 DataSource driver if I have column
+      names in uppercase letters. Why?
+     
+    </strong></dt>
+    <dd class="answer">
+     <p class="para">
+      This is caused by <a href="package.database.mdb2.intro-portability.html" class="link">MDB2&#039;s
+      portability settings</a> that are enabled by default. The
+      <strong class="constant">MDB2_PORTABILITY_FIX_CASE</strong> setting is set to
+      <strong class="constant">CASE_LOWER</strong>, resulting in lowercased letters
+      for all column names. Disable this or all portability settings of
+      MDB2 to avoid sorting problem with Structures_DataGrid.
+     </p>
+    </dd>
+   </dl>
+  
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.structures.structures-datagrid.intro.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.structures.structures-datagrid.intro-and-features.html">Introduction and Features</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.structures.structures-datagrid.installation.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Installation</td>
+  </tr>
+ </table>
+</div>
+</body></html>

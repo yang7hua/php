@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Auth_HTTP Example 2</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.authentication.auth-http.html" title="Auth_HTTP" />
+  <link rel="prev" href="package.authentication.auth-http.auth-http.example.html" title="Auth_HTTP Example" />
+  <link rel="next" href="package.authentication.auth-http.auth-http.getauth.html" title="Auth_HTTP::getAuth()" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Auth_HTTP Example 2</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.authentication.auth-http.auth-http.example.html" title="Auth_HTTP Example">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.authentication.auth-http.auth-http.getauth.html" title="Auth_HTTP::getAuth()">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.authentication.auth-http.auth-http.example2">
+ 
+  <h1 class="refname">Auth_HTTP Example 2</h1>
+  <div class="refnamediv">Auth_HTTP Example 2 &ndash; Example: A password protected page with multiple rows fetch and md5 password</div>
+
+ 
+ <div class="refsection">
+  <h1 class="title">Example</h1>
+ <div class="phpcode">
+  <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php&nbsp;&nbsp;<br /></span><span style="color: #FF8000">//&nbsp;example&nbsp;of&nbsp;Auth_HTTP&nbsp;implementation&nbsp;with&nbsp;encrypted&nbsp;password&nbsp;and&nbsp;multiple&nbsp;columns&nbsp;fetch<br /><br /></span><span style="color: #007700">require_once(</span><span style="color: #DD0000">"Auth/HTTP.php"</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;setting&nbsp;the&nbsp;database&nbsp;connection&nbsp;options<br /></span><span style="color: #0000BB">$AuthOptions&nbsp;</span><span style="color: #007700">=&nbsp;array(<br /></span><span style="color: #DD0000">'dsn'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">"pgsql://test:test@localhost/testdb"</span><span style="color: #007700">,<br /></span><span style="color: #DD0000">'table'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">"testable"</span><span style="color: #007700">,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;your&nbsp;table&nbsp;name&nbsp;<br /></span><span style="color: #DD0000">'usernamecol'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">"username"</span><span style="color: #007700">,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;the&nbsp;table&nbsp;username&nbsp;column<br /></span><span style="color: #DD0000">'passwordcol'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">"password"</span><span style="color: #007700">,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;the&nbsp;table&nbsp;password&nbsp;column<br /></span><span style="color: #DD0000">'cryptType'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">"md5"</span><span style="color: #007700">,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;password&nbsp;encryption&nbsp;type&nbsp;in&nbsp;your&nbsp;db<br /></span><span style="color: #DD0000">'db_fields'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">"*"</span><span style="color: #007700">,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;enabling&nbsp;fetch&nbsp;for&nbsp;other&nbsp;db&nbsp;columns<br /></span><span style="color: #007700">);<br /><br /><br /></span><span style="color: #0000BB">$a&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Auth_HTTP</span><span style="color: #007700">(</span><span style="color: #DD0000">"DB"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$AuthOptions</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$a</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setRealm</span><span style="color: #007700">(</span><span style="color: #DD0000">'yourrealm'</span><span style="color: #007700">);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;realm&nbsp;name<br /></span><span style="color: #0000BB">$a</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setCancelText</span><span style="color: #007700">(</span><span style="color: #DD0000">'&lt;h2&gt;Error&nbsp;401&lt;/h2&gt;'</span><span style="color: #007700">);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;error&nbsp;message&nbsp;if&nbsp;authentication&nbsp;fails<br /></span><span style="color: #0000BB">$a</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">start</span><span style="color: #007700">();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;starting&nbsp;the&nbsp;authentication&nbsp;process<br /><br /><br /></span><span style="color: #007700">if(</span><span style="color: #0000BB">$a</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAuth</span><span style="color: #007700">())&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;checking&nbsp;for&nbsp;autenticated&nbsp;user&nbsp;<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Hello&nbsp;</span><span style="color: #0000BB">$a</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">username</span><span style="color: #DD0000">&nbsp;welcome&nbsp;to&nbsp;my&nbsp;secret&nbsp;page&nbsp;&lt;BR&gt;"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Your&nbsp;details&nbsp;on&nbsp;file&nbsp;are:&nbsp;&lt;BR&gt;"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$a</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAuthData</span><span style="color: #007700">(</span><span style="color: #DD0000">'userid'</span><span style="color: #007700">);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;retriving&nbsp;other&nbsp;details&nbsp;from&nbsp;the&nbsp;database&nbsp;row<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$a</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAuthData</span><span style="color: #007700">(</span><span style="color: #DD0000">'telephone'</span><span style="color: #007700">);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;in&nbsp;this&nbsp;example&nbsp;the&nbsp;user&nbsp;id,&nbsp;telephone&nbsp;number<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$a</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAuthData</span><span style="color: #007700">(</span><span style="color: #DD0000">'email'</span><span style="color: #007700">);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;and&nbsp;email&nbsp;address<br /></span><span style="color: #007700">};<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+  </div>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.authentication.auth-http.auth-http.example.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.authentication.auth-http.html">Auth_HTTP</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.authentication.auth-http.auth-http.getauth.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Auth_HTTP Example</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Auth_HTTP::getAuth()</td>
+  </tr>
+ </table>
+</div>
+</body></html>

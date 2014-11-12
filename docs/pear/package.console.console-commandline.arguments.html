@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Managing command line arguments</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.console.console-commandline.html" title="Console_CommandLine" />
+  <link rel="prev" href="package.console.console-commandline.options.html" title="Managing command line options" />
+  <link rel="next" href="package.console.console-commandline.sub-commands.html" title="Managing command line sub-commands" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Managing command line arguments</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.console.console-commandline.options.html" title="Managing command line options">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.console.console-commandline.sub-commands.html" title="Managing command line sub-commands">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.console.console-commandline.arguments">
+ 
+  <h1 class="refname">Managing command line arguments</h1>
+  <div class="refnamediv">Managing command line arguments &ndash; 
+    how to add arguments to the parser and use them
+  </div>
+
+ 
+ <div class="refsection" id="package.console.console-commandline.arguments.background"><div class="info"><h1>Some background</h1>
+</div>
+
+   <p class="para">
+     Arguments are for those pieces of information that your program
+     absolutely, positively requires to run.
+   </p>
+   <p class="para">
+     A good user interface should have as few absolute requirements as
+     possible. If your program requires 17 distinct pieces of information in
+     order to run successfully, it doesn&#039;t much matter how you get that
+     information from the user, most people will give up and walk away before
+     they successfully run the program. This applies whether the user
+     interface is a command-line, a configuration file, or a GUI: if you make
+     that many demands on your users, most of them will simply give up.
+   </p>
+   <p class="para">
+     In short, try to minimize the amount of information that users are
+     absolutely required to supply and use sensible defaults whenever
+     possible. Of course, you also want to make your programs reasonably
+     flexible. That&#039;s what options are for.
+   </p>
+ </div>
+ <div class="refsection" id="package.console.console-commandline.arguments.adding"><div class="info"><h1>Adding arguments with <strong class="classname">Console_CommandLine</strong></h1>
+</div>
+
+   <p class="para">
+     To add arguments to your parser, just create the parser as explained in
+     the previous section and use the
+     <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine.html#methodaddArgument" class="apidoclink">Console_CommandLine::addArgument()</a>
+     method.
+   </p>
+   <p class="para">
+     The
+     <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine.html#methodaddArgument" class="apidoclink">Console_CommandLine::addArgument()</a>
+     method takes two arguments:
+     </p><ul class="itemizedlist">
+       <li class="listitem">
+         <span class="simpara">the argument name: a string that will be used to access the
+           argument in the result object. For example if you name your
+           argument foo, you will access to the result object like this:
+           <code class="varname">$result-&gt;args[&#039;foo&#039;]</code>;</span>
+       </li>
+       <li class="listitem">
+         <span class="simpara">the arguments parameters: an array of various informations
+          as explained below.</span>
+       </li>
+     </ul>
+   
+   <p class="para">
+     </p><table class="doctable table"><caption>Available arguments parameters</caption>
+
+       
+         <thead>
+           <tr>
+             <th>name</th>
+             <th>type</th>
+             <th>required</th>
+             <th>description</th>
+             <th>example</th>
+           </tr>
+
+         </thead>
+
+         <tbody class="tbody">
+           <tr>
+             <td>description</td>
+             <td>string</td>
+             <td>no, but recommended for the help message</td>
+             <td>a description for the argument</td>
+             <td>entry list of input files separated by spaces</td>
+           </tr>
+
+           <tr>
+             <td>multiple</td>
+             <td>boolean</td>
+             <td>no, default to <strong class="constant">FALSE</strong></td>
+             <td>tells the parser that the argument expects multiples values</td>
+             <td><strong class="constant">TRUE</strong></td>
+           </tr>
+
+           <tr>
+             <td>optional</td>
+             <td>boolean</td>
+             <td>no, default to <strong class="constant">FALSE</strong></td>
+             <td>tells the parser that the argument is optional</td>
+             <td><strong class="constant">TRUE</strong></td>
+           </tr>
+
+           <tr>
+             <td>help_name</td>
+             <td>string</td>
+             <td>no, if not given it will default to the argument name</td>
+             <td>the name to display in the argument help line</td>
+             <td>files</td>
+           </tr>
+
+         </tbody>
+       
+     </table>
+
+   
+   <p class="para">
+     </p><div class="example"><div class="info"><p><strong>Adding commandline arguments</strong></p></div>
+
+       <div class="phpcode">
+         <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Console/CommandLine.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$parser&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Console_CommandLine</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;add&nbsp;an&nbsp;array&nbsp;argument<br /></span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addArgument</span><span style="color: #007700">(</span><span style="color: #DD0000">'input_files'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'multiple'</span><span style="color: #007700">=&gt;</span><span style="color: #0000BB">true</span><span style="color: #007700">));<br /><br /></span><span style="color: #FF8000">//&nbsp;add&nbsp;a&nbsp;simple&nbsp;argument<br /></span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addArgument</span><span style="color: #007700">(</span><span style="color: #DD0000">'output_file'</span><span style="color: #007700">);<br /><br />try&nbsp;{<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parse</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$result</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">args</span><span style="color: #007700">);<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Exception&nbsp;$exc</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">displayError</span><span style="color: #007700">(</span><span style="color: #0000BB">$exc</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+       </div>
+     </div>
+   
+   <p class="para">If the user type:</p>
+   <p class="para">
+     </p><div class="textcode">
+       <pre class="textcode">
+$ &lt;yourprogram&gt; file1 file2 file3</pre>
+
+     </div>
+   
+   <p class="para">The output of the above script will be:</p>
+   <p class="para">
+     </p><div class="textcode">
+       <pre class="textcode">
+Array
+(
+   [input_files] =&gt; Array
+       (
+           [0] =&gt; file1
+           [1] =&gt; file2
+       )
+
+   [output_file] =&gt; file3
+)</pre>
+
+     </div>
+   
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.console.console-commandline.options.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.console.console-commandline.html">Console_CommandLine</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.console.console-commandline.sub-commands.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Managing command line options</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Managing command line sub-commands</td>
+  </tr>
+ </table>
+</div>
+</body></html>

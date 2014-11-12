@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>(deprecated) XML-RPC functions</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="channels.whatarethey.html" title="channel.xml, REST, XML-RPC" />
+  <link rel="prev" href="core.rest.html" title="PEAR channel server REST interface" />
+  <link rel="next" href="channels.scs.html" title="Creating your own channel with Pyrus and PEAR2_SimpleChannelServer" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">(deprecated) XML-RPC functions</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="core.rest.html" title="PEAR channel server REST interface">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="channels.scs.html" title="Creating your own channel with Pyrus and PEAR2_SimpleChannelServer">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="guide.migrating.channels.xmlrpcfunctions">
+ <h1>(deprecated) XML-RPC functions</h1>
+
+ <div class="section" id="guide.migrating.channels.xmlrpcfunctions.intro">
+ <h2 class="title">What XML-RPC functions are available in a standard channel?</h2> 
+  
+  <p class="para">
+   A standard PEAR channel should support this list of XML-RPC functions:
+  </p>
+  <p class="para">
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para">
+      <a href="guide.migrating.channels.xmlrpcfunctions.html#guide.migrating.channels.xmlrpcfunctions.logintest" class="link">logintest</a>
+       - a stub function
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <a href="guide.migrating.channels.xmlrpcfunctions.html#guide.migrating.channels.xmlrpcfunctions.getdownloadurl" class="link">package.getDownloadURL</a>
+       - retrieve a URL to download a package
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <a href="guide.migrating.channels.xmlrpcfunctions.html#guide.migrating.channels.xmlrpcfunctions.getdepdownloadurl" class="link">package.getDepDownloadURL</a>
+       - retrieve a URL to download a package dependency
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <a href="guide.migrating.channels.xmlrpcfunctions.html#guide.migrating.channels.xmlrpcfunctions.info" class="link">package.info</a>
+       - retrieve information on a package
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <a href="guide.migrating.channels.xmlrpcfunctions.html#guide.migrating.channels.xmlrpcfunctions.listall" class="link">package.listAll</a>
+       - list all packages and verbose information on each package
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <a href="guide.migrating.channels.xmlrpcfunctions.html#guide.migrating.channels.xmlrpcfunctions.listlatestreleases" class="link">package.listLatestReleases</a>
+       - list all packages and their latest release versions
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <a href="guide.migrating.channels.xmlrpcfunctions.html#guide.migrating.channels.xmlrpcfunctions.search" class="link">package.search</a>
+       - search all packages for a match
+     </p>
+    </li>
+   </ul>
+  
+  <p class="para">
+   Channels can also implement channel.listAll, but we recommend that this only be implemented
+   by pear.php.net and pecl.php.net channels, as the command is utilized by the update-channels
+   command to retrieve an official list of channels.
+  </p>
+ </div>
+ <div class="section" id="guide.migrating.channels.xmlrpcfunctions.logintest"><h2 class="title">logintest</h2>
+  
+  <p class="para">
+   The logintest xml-rpc function is called by the login command, and should return a boolean
+   <strong class="constant">TRUE</strong>
+  </p>
+ </div>
+ <div class="section" id="guide.migrating.channels.xmlrpcfunctions.getdownloadurl"><h2 class="title">package.getDownloadURL</h2>
+  
+  <p class="para">
+   </p><div class="funcsynopsis">
+    <p><code class="funcprototype">
+     false|struct <strong class="function">package.getDownloadURL</strong> ( 
+     struct packageinfo
+      , string preferred_state = stable
+      , (v1.1) string installed_version = false
+    )</code></p>
+   </div>
+  </p>
+  <p class="para">
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term">
+      false|struct <em><code class="parameter">packageinfo</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       an array of format:
+      </p>
+      <p class="para">
+       </p><pre class="screen">
+        <br/>array(<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#039;channel&#039;&nbsp;=&gt;&nbsp;channel&nbsp;name,<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#039;package&#039;&nbsp;=&gt;&nbsp;package&nbsp;name,<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&#039;version&#039;&nbsp;=&gt;&nbsp;specific&nbsp;version&nbsp;to&nbsp;retrieve,]<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&#039;state&#039;&nbsp;=&gt;&nbsp;specific&nbsp;state&nbsp;to&nbsp;retrieve,]<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       </pre>
+
+      
+      <p class="para">
+       if both version and state are set, the version index should be ignored.
+      </p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      <span class="type">string</span> <em><code class="parameter">preferred_state = stable</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       The client-side preferred_state.  This should be used to exclude releases
+       that are too unstable.
+      </p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      <span class="type">string</span> <em><code class="parameter">installed_version = false</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       The current installed version of the package on the client-side.  This will either
+       be a version string, or false if the package is not installed.  Use this to
+       ensure that older versions are never returned (as defined by
+       version_compare(possible_version, installed_version, &quot;&lt;&quot;)).
+      </p>
+     </dd>
+    </dl>
+   </div>
+  
+  <p class="para">
+   The package.getDownloadURL function should return an array with either two or three
+   indices.
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para">
+      &quot;version&quot; =&gt; version of the release returned
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      &quot;info&quot; =&gt; the complete package.xml contents from the release
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      &quot;url&quot; =&gt; a URL from which to download this release.  If no releases
+      exist that fit the constraints defined by preferred_state, installed_version,
+      and the version/state indices of packageinfo, then do not return this index, and
+      instead return the version and package.xml of the latest release.
+     </p>
+     <p class="para">
+      The url entry should NOT append .tgz or .tar, but should be something like
+      &quot;http://pear.php.net/get/PEAR-1.4.0&quot; instead of
+      &quot;http://pear.php.net/get/PEAR-1.4.0.tgz&quot;
+     </p>
+    </li>
+   </ul>
+  
+  <p class="para">
+   Note that version 1.0 of package.getDownloadURL did not have the installed_version
+   parameter.  Version 1.1 of package.getDownloadURL does - that is the only difference
+   between the two versions.
+  </p>
+ </div>
+ <div class="section" id="guide.migrating.channels.xmlrpcfunctions.getdepdownloadurl"><h2 class="title">package.getDepDownloadURL</h2>
+  
+  <p class="para">
+   </p><div class="funcsynopsis">
+    <p><code class="funcprototype">
+     false|struct <strong class="function">package.getDepDownloadURL</strong> ( 
+     string xsdversion
+      , struct dependency
+      , struct parentpackage
+      , string preferred_state = stable
+      , (v1.1) string installed_version = false
+    )</code></p>
+   </div>
+  </p>
+  <p class="para">
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term">
+      string <em><code class="parameter">xsdversion</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       This should be either &#039;1.0&#039; or &#039;2.0&#039;, and should match the version attribute
+       from the top-level &lt;package version=&quot;X.0&quot;&gt; tag.  This should be used
+       to determine how to process the second parameter.
+      </p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      struct <em><code class="parameter">dependency</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       if the first parameter xsdversion is &#039;1.0&#039;, this should be an array of format:
+      </p>
+      <p class="para">
+       </p><pre class="screen">
+        <br/>array(<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#039;name&#039;&nbsp;=&gt;&nbsp;package&nbsp;name<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#039;type&#039;&nbsp;=&gt;&nbsp;&#039;pkg&#039;&nbsp;-&nbsp;anything&nbsp;else&nbsp;is&nbsp;an&nbsp;error<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#039;rel&#039;&nbsp;=&gt;&nbsp;&#039;has&#039;,&nbsp;&#039;ge&#039;,&nbsp;&#039;le&#039;,&nbsp;&#039;lt&#039;,&nbsp;&#039;le&#039;,&nbsp;&#039;not&#039;,&nbsp;&#039;ne&#039;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&#039;version&#039;&nbsp;=&gt;&nbsp;specific&nbsp;version&nbsp;to&nbsp;retrieve,]<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       </pre>
+
+      
+      <p class="para">
+       if xsdversion is &#039;2.0&#039;, this should be an array of format:
+      </p>
+      <p class="para">
+       </p><pre class="screen">
+        <br/>array(<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#039;name&#039;&nbsp;=&gt;&nbsp;package&nbsp;name<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#039;channel&#039;&nbsp;=&gt;&nbsp;package&nbsp;channel&nbsp;-&nbsp;see&nbsp;notes&nbsp;below<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&#039;min&#039;&nbsp;=&gt;&nbsp;minimum&nbsp;version&nbsp;(inclusive),]<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&#039;max&#039;&nbsp;=&gt;&nbsp;maximum&nbsp;version&nbsp;(inclusive),]<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&#039;exclude&#039;&nbsp;=&gt;&nbsp;single&nbsp;version&nbsp;to&nbsp;exclude&nbsp;(string),<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;array&nbsp;of&nbsp;versions&nbsp;to&nbsp;exclude,]<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       </pre>
+
+      
+      <p class="para">
+       Note that you must always verify that the channel matches your channel.  If
+       your channel server is not at pear.php.net or pecl.php.net, you must reject
+       all xsdversion=&#039;1.0&#039; requests, and all xsdversion=&#039;2.0&#039; requests where
+       the channel is not your channel.
+      </p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      struct <em><code class="parameter">parentpackage</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       This is information on the parent package, and is an array of format:
+      </p>
+      <p class="para">
+       </p><pre class="screen">
+        <br/>array(<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#039;channel&#039;&nbsp;=&gt;&nbsp;channel&nbsp;name,<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#039;package&#039;&nbsp;=&gt;&nbsp;package&nbsp;name,<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#039;version&#039;&nbsp;=&gt;&nbsp;specific&nbsp;version&nbsp;to&nbsp;retrieve,<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       </pre>
+
+      
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      <span class="type">string</span> <em><code class="parameter">preferred_state = stable</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       The client-side preferred_state.  This should be used to exclude releases
+       that are too unstable.
+      </p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      <span class="type">string</span> <em><code class="parameter">installed_version = false</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       The current installed version of the dependency on the client-side.  This will either
+       be a version string, or false if the package is not installed.  Use this to
+       ensure that older versions are never returned (as defined by
+       version_compare(possible_version, installed_version, &quot;&lt;&quot;)).
+      </p>
+     </dd>
+    </dl>
+   </div>
+  
+  <p class="para">
+   Like package.getDownloadURL, package.getDepDownloadURL should return an
+   array with either two or three indices.
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para">
+      &quot;version&quot; =&gt; version of the release returned
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      &quot;info&quot; =&gt; the complete package.xml contents from the release
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      &quot;url&quot; =&gt; a URL from which to download this release.  If no releases
+      exist that fit the constraints defined by preferred_state, installed_version,
+      and the version/state indices of packageinfo, then do not return this index, and
+      instead return the version and package.xml of the latest release.
+     </p>
+     <p class="para">
+      The url entry should NOT append .tgz or .tar, but should be something like
+      &quot;http://pear.php.net/get/PEAR-1.4.0&quot; instead of
+      &quot;http://pear.php.net/get/PEAR-1.4.0.tgz&quot;
+     </p>
+    </li>
+   </ul>
+  
+  <p class="para">
+   Note that version 1.0 of package.getDepDownloadURL did not have the installed_version
+   parameter.  Version 1.1 of package.getDepDownloadURL does - that is the only difference
+   between the two versions.
+  </p>
+ </div>
+ <div class="section" id="guide.migrating.channels.xmlrpcfunctions.info"><h2 class="title">package.info</h2>
+  
+  <p class="para">
+   </p><div class="funcsynopsis">
+    <p><code class="funcprototype">
+     false|struct <strong class="function">package.info</strong> ( 
+     string package
+      , string field = null
+    )</code></p>
+   </div>
+  </p>
+  <p class="para">
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term">
+      string <em><code class="parameter">package</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       Package name to retrieve information about
+      </p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      string <em><code class="parameter">field = null</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       specific field to retrieve information about.  If null, this should return an
+       array with this indices, although others could be set as well:
+      </p>
+      <p class="para">
+       </p><div class="phpcode">
+        <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'package&nbsp;name'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'category'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'category&nbsp;name'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'license'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'package&nbsp;license'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'summary'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'package&nbsp;summary'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'description'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'package&nbsp;description'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'releases'&nbsp;</span><span style="color: #007700">=&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;array(&nbsp;</span><span style="color: #FF8000">//&nbsp;all&nbsp;releases&nbsp;indexed&nbsp;by&nbsp;version<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'0.1'&nbsp;</span><span style="color: #007700">=&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'license'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'release&nbsp;license'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'summary'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'release&nbsp;summary'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'description'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'release&nbsp;description'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'releasedate'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'date&nbsp;of&nbsp;release'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'releasenotes'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'release&nbsp;notes'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'state'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'release&nbsp;stability'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;the&nbsp;next&nbsp;index&nbsp;is&nbsp;optional<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'deps'&nbsp;</span><span style="color: #007700">=&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(&nbsp;</span><span style="color: #FF8000">//&nbsp;release&nbsp;dependencies&nbsp;of&nbsp;latest&nbsp;release<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'dep&nbsp;type&nbsp;from&nbsp;package.xml&nbsp;&lt;dep&gt;'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'relation'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'rel&nbsp;from&nbsp;package.xml&nbsp;&lt;dep&gt;'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'version'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'version&nbsp;from&nbsp;package.xml&nbsp;&lt;dep&gt;,&nbsp;or&nbsp;empty&nbsp;string'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'name&nbsp;from&nbsp;package.xml&nbsp;&lt;dep&gt;'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'optional'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'yes&nbsp;or&nbsp;no'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;and&nbsp;so&nbsp;on&nbsp;with&nbsp;all&nbsp;deps<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;and&nbsp;so&nbsp;on&nbsp;with&nbsp;all&nbsp;releases<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;releases&nbsp;should&nbsp;be&nbsp;ordered&nbsp;by&nbsp;releasedate&nbsp;DESC<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">),<br />);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+       </div>
+      
+      <p class="para">
+       The second parameter, if set, must be one of these choices:
+      </p>
+      <p class="para">
+       </p><ul class="itemizedlist">
+        <li class="listitem">
+         <p class="para">
+          authors - a current list of package maintainers in format:
+         </p>
+         <p class="para">
+          </p><div class="phpcode">
+           <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'handle1'&nbsp;</span><span style="color: #007700">=&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Maintainer&nbsp;Name'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'email'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'maintainer@example.com'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'role'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'role&nbsp;from&nbsp;package.xml&nbsp;(lead,&nbsp;developer,&nbsp;contributor,&nbsp;helper)'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'handle2'&nbsp;</span><span style="color: #007700">=&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Maintainer&nbsp;Name&nbsp;2'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'email'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'maintainer2@example.com'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'role'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'role&nbsp;from&nbsp;package.xml&nbsp;(lead,&nbsp;developer,&nbsp;contributor,&nbsp;helper)'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;etc.<br /></span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+          </div>
+         
+        </li>
+        <li class="listitem">
+         <p class="para">
+          category - the category this package is in
+         </p>
+        </li>
+        <li class="listitem">
+         <p class="para">
+          description - the description of the latest release
+         </p>
+        </li>
+        <li class="listitem">
+         <p class="para">
+          license - package license of latest release
+         </p>
+        </li>
+        <li class="listitem">
+         <p class="para">
+          notes - release notes of the latest release
+         </p>
+        </li>
+        <li class="listitem">
+         <p class="para">
+          releases - an array of the format documented above, containing information
+          on all releases
+         </p>
+        </li>
+        <li class="listitem">
+         <p class="para">
+          summary - summary from latest release
+         </p>
+        </li>
+       </ul>
+      
+     </dd>
+    </dl>
+   </div>
+  
+ </div>
+ <div class="section" id="guide.migrating.channels.xmlrpcfunctions.listall"><h2 class="title">package.listAll</h2>
+  
+  <p class="para">
+   </p><div class="funcsynopsis">
+    <p><code class="funcprototype">
+     struct <strong class="function">package.listAll</strong> ( 
+     bool released_only = true
+      , bool stable_only = true
+    )</code></p>
+   </div>
+  </p>
+  <p class="para">
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term">
+      bool <em><code class="parameter">released_only</code></em>
+      <span class="initializer"> = true</span>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       If <strong class="constant">TRUE</strong>, then packages that have no releases should not be returned in the
+       listing of available packages
+      </p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      bool <em><code class="parameter">stable_only</code></em>
+      <span class="initializer"> = true</span>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       If <strong class="constant">TRUE</strong>, then packages that have no stable releases should not be returned in the
+       listing of available packages
+      </p>
+     </dd>
+    </dl>
+   </div>
+  
+  <p class="para">
+   This function should return an array of this format for all packages that match the
+   constraints defined above:
+  </p>
+  <p class="para">
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">array(<br />&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'packagename'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'category'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'category&nbsp;name'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'license'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'release&nbsp;license'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'summary'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'package&nbsp;summary'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'description'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'package&nbsp;description'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'stable'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'latest&nbsp;release&nbsp;version&nbsp;that&nbsp;matches&nbsp;constraints'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'unstable'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'latest&nbsp;unstable&nbsp;release&nbsp;version&nbsp;or&nbsp;false&nbsp;if&nbsp;stable_only'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'state'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'release&nbsp;state&nbsp;of&nbsp;latest&nbsp;release&nbsp;that&nbsp;matches&nbsp;constraints'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'deps'&nbsp;</span><span style="color: #007700">=&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;array(&nbsp;</span><span style="color: #FF8000">//&nbsp;same&nbsp;format&nbsp;as&nbsp;for&nbsp;package.info<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">)<br />&nbsp;&nbsp;),<br />&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;etc.<br /></span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+ </div>
+ <div class="section" id="guide.migrating.channels.xmlrpcfunctions.listlatestreleases"><h2 class="title">package.listLatestReleases</h2>
+  
+  <p class="para">
+   </p><div class="funcsynopsis">
+    <p><code class="funcprototype">
+     struct <strong class="function">package.listLatestReleases</strong> ( 
+     string state = &#039;&#039;
+    )</code></p>
+   </div>
+  </p>
+  <p class="para">
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term">
+      string <em><code class="parameter">state = &#039;&#039;</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       If &#039;&#039;, then the newest release will be returned for all packages.  Otherwise, it
+       must be one of &#039;snapshot&#039;, &#039;devel&#039;, &#039;alpha&#039;, &#039;beta&#039;, or &#039;stable&#039;, and the function
+       should return the newest release that is more stable than state.
+      </p>
+      <p class="para">
+       If state is &#039;beta&#039;, then the function should return the latest release that is
+       beta or stable.  If state is &#039;devel&#039;, the function should return the latest release
+       that is devel, alpha, beta, or stable, and so on.
+      </p>
+     </dd>
+    </dl>
+   </div>
+  
+  <p class="para">
+   This function should return an array of this format for all packages that have a release
+   within the constraint defined by the &quot;state&quot; parameter:
+  </p>
+  <p class="para">
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">array(<br />&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'package'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'packagename'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'version'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'release&nbsp;version'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'state'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'release&nbsp;stability'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'filesize'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'size&nbsp;of&nbsp;the&nbsp;.tgz&nbsp;file&nbsp;to&nbsp;download'</span><span style="color: #007700">,<br />&nbsp;&nbsp;),<br />&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;etc.<br /></span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+ </div>
+ <div class="section" id="guide.migrating.channels.xmlrpcfunctions.search"><h2 class="title">package.search</h2>
+  
+  <p class="para">
+   </p><div class="funcsynopsis">
+    <p><code class="funcprototype">
+     struct <strong class="function">package.listAll</strong> ( 
+     string fragment
+      , string|bool  summary = false
+      , bool released_only = true
+      , bool stable_only = true
+    )</code></p>
+   </div>
+  </p>
+  <p class="para">
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term">
+      string <em><code class="parameter">fragment</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       A text fragment to use when searching for packages by name
+      </p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      string|bool <em><code class="parameter">summary</code></em>
+      <span class="initializer"> = false</span>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       If set to false, this should be ignored.  Otherwise, this should be used to
+       search through the summaries of packages that match the first parameter to limit
+       the list of returned packages.
+      </p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      bool <em><code class="parameter">released_only</code></em>
+      <span class="initializer"> = true</span>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       If <strong class="constant">TRUE</strong>, then packages that have no releases should not be returned in the
+       listing of available packages
+      </p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      bool <em><code class="parameter">stable_only</code></em>
+      <span class="initializer"> = true</span>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       If <strong class="constant">TRUE</strong>, then packages that have no stable releases should not be returned in the
+       listing of available packages
+      </p>
+     </dd>
+    </dl>
+   </div>
+  
+  <p class="para">
+   This function should return an array of this format for all packages that match the
+   constraints defined above:
+  </p>
+  <p class="para">
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">array(<br />&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'packagename'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'category'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'category&nbsp;name'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'license'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'release&nbsp;license'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'summary'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'package&nbsp;summary'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'description'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'package&nbsp;description'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'stable'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'latest&nbsp;release&nbsp;version&nbsp;that&nbsp;matches&nbsp;constraints'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'unstable'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'latest&nbsp;unstable&nbsp;release&nbsp;version&nbsp;or&nbsp;false&nbsp;if&nbsp;stable_only'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'state'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'release&nbsp;state&nbsp;of&nbsp;latest&nbsp;release&nbsp;that&nbsp;matches&nbsp;constraints'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'deps'&nbsp;</span><span style="color: #007700">=&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;array(&nbsp;</span><span style="color: #FF8000">//&nbsp;same&nbsp;format&nbsp;as&nbsp;for&nbsp;package.info<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">)<br />&nbsp;&nbsp;),<br />&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;etc.<br /></span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="core.rest.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="channels.whatarethey.html">channel.xml, REST, XML-RPC</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="channels.scs.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">PEAR channel server REST interface</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Creating your own channel with Pyrus and PEAR2_SimpleChannelServer</td>
+  </tr>
+ </table>
+</div>
+</body></html>

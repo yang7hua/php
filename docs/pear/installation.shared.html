@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Installation of a local PEAR copy on a shared host</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="installation.html" title="Installation (PEAR)" />
+  <link rel="prev" href="installation.getting.html" title="Getting and installing the PEAR package manager" />
+  <link rel="next" href="installation.checking.html" title="Checking if PEAR works" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Installation of a local PEAR copy on a shared host</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="installation.getting.html" title="Getting and installing the PEAR package manager">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="installation.checking.html" title="Checking if PEAR works">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="installation.shared">
+  <div class="info">
+    <h1>Installation of a local PEAR copy on a shared host</h1>
+
+  </div>
+
+
+  <p class="para">
+    Many users have a shared provider that grants access to a system-wide PEAR installation.
+    However, in many cases, it is advantageous to have a local copy of PEAR that can be used
+    for packages that are not installed by the host provider.  There are ways of installing
+    PEAR both for users with a telnet/ssh shell access and users who only have ftp access.
+  </p>
+
+  <div class="section" id="installation.shared.shell">
+    <div class="info">
+      <h2 class="title">Installing a local copy of PEAR through SSH</h2>
+    </div>
+
+    <p class="para">
+     To install PEAR through SSH, you can use this command sequence to set up a local copy of PEAR:
+    </p>
+    <p class="para">
+    The following instructions are for PEAR 1.4+, older pear installations should be <a href="http://pear.php.net/group/docs/20051104-sa.php" class="link external">upgraded immediately</a>.
+     </p><pre class="screen">
+      <strong class="userinput"><code>
+$ pear config-create /home/user/pear .pearrc
+      </code></strong>
+     </pre>
+
+    
+    <p class="para">
+     This will create a local configuration file in a file in your home directory named <code class="filename">.pearrc</code>.
+    </p>
+    <p class="para">
+     Then, if you add ~/pear/bin to your path as the first entry in .bashrc
+     (or whatever your startup file is), and run the command:
+     </p><pre class="screen">
+      <strong class="userinput"><code>
+$ pear install -o PEAR
+      </code></strong>
+     </pre>
+
+    
+    <p class="para">
+     This will create a directory structure based on a subdirectory of your home directory
+     named <code class="filename">pear</code> that contains all of the packages that you install.
+     You will have a local version of PEAR that supersedes the system&#039;s copy.  To use the files you have installed,
+     you should set your PHP include_path in either the code that uses your PEAR packages like so:
+    </p>
+    <p class="para">
+     </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />ini_set</span><span style="color: #007700">(</span><span style="color: #DD0000">'include_path'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'~/pear/lib'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">PATH_SEPARATOR<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">ini_get</span><span style="color: #007700">(</span><span style="color: #DD0000">'include_path'</span><span style="color: #007700">));<br /><br /></span><span style="color: #FF8000">//&nbsp;From&nbsp;PHP&nbsp;4.3.0&nbsp;onward,&nbsp;you&nbsp;can&nbsp;use&nbsp;the&nbsp;following,<br />//&nbsp;which&nbsp;especially&nbsp;useful&nbsp;on&nbsp;shared&nbsp;hosts:<br /></span><span style="color: #0000BB">set_include_path</span><span style="color: #007700">(</span><span style="color: #DD0000">'~/pear/lib'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">PATH_SEPARATOR<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">get_include_path</span><span style="color: #007700">());<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    
+    <p class="para">
+     Or, in an .htaccess file for apache using php_value.
+    </p>
+  </div>
+
+
+  <div class="section" id="installation.shared.ftp"><div class="info"><h2 class="title">Installing a local copy of PEAR through ftp/ftps/sftp</h2></div>
+
+    <p class="para">
+     There are two ways to install a local copy of PEAR through ftp: the old, difficult way,
+     and the new, easy way.  The new, easy way requires an upgrade to version 1.4.3 or newer
+     of PEAR.
+    </p>
+    <div class="section"><div class="info"><h3 class="title">New improved method using PEAR 1.4.3+ and PEAR_RemoteInstaller</h3></div>
+
+     <p class="para">
+      Installing a local copy of PEAR through ftp has become a piece of cake in PEAR 1.4.3+.
+     </p>
+     <p class="para">
+      One of the banes of many user&#039;s existence is trying to install PEAR on a remote host
+      that does not have shell access. Often, the only choice is to use FTP, but even this
+      is a problem for more complex packages that take advantage of installer features like replacements.
+     </p>
+     <p class="para">
+      Here is the sequence necessary to get things running:
+     </p>
+     <p class="para">
+      </p><ol type="1">
+       <li class="listitem">
+        <p class="para">
+         Make sure you are running PHP 5.0 or newer on your local computer
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         If you wish to use ftps, make sure you have enabled the openssl extension
+         on your local computer in php.ini.
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         If you wish to use sftp, make sure you have enabled the ssh2 extension
+         on your local computer in php.ini.
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         Make sure you have a working copy of the CLI version of PEAR on your local computer
+         (the &quot;pear&quot; command, not the web interface)
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         Make sure you have ftp access to the remote host, and write access through ftp.
+         (sftp or ftps is <em class="emphasis">highly</em> recommended for security reasons).
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         Note the full path to your home directory
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         Create a customized configuration file for both the local and remote host
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         Upload the remote configuration file to the remote host
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         Using the local configuration file, set the remote_config value to the location
+         of the configuration file on the remote host
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         Manage packages at will using the remote-install, remote-uninstall,
+         remote-upgrade and remote-upgrade-all commands.
+        </p>
+       </li>
+      </ol>
+     
+     <p class="para">
+      <em class="emphasis">
+       1. Make sure you have a working copy of the CLI version of PEAR (the &quot;pear&quot;
+       command, not the web interface)
+      </em>
+     </p>
+     <p class="para">
+      Read <a href="installation.getting.html" class="link">The installation instructions.</a>
+     </p>
+
+     <p class="para">
+      <em class="emphasis">
+       2. Install package PEAR_RemoteInstaller locally if not already done.
+      </em>
+     </p>
+
+     <p class="para">
+      <em class="emphasis">
+       3. Make sure you have ftp access to the remote host, and write access through ftp
+      </em>
+     </p>
+     <p class="para">
+      This is pretty straightforward - if you can login using the ftp command in a DOS
+      prompt or from a unix shell, you have ftp access.
+     </p>
+     <p class="para">
+      Write down the user and password that you need to login.
+     </p>
+     <p class="para">
+      Testing write access is easy.  If you can upload a file, you have write access.
+     </p>
+
+     <p class="para">
+      <em class="emphasis">
+       4. Note the full path to your home directory
+      </em>
+     </p>
+     <p class="para">
+      This is also pretty straightforward. Upload this script to the root directory of
+      your web host to find out:
+     </p>
+     <p class="para">
+      </p><div class="programlisting">
+       <br/>&lt;?php<br/>echo&nbsp;dirname(__FILE__);<br/>?&gt;
+      </div>
+     
+     <p class="para">
+      Chances are, it will be something like: <code class="filename">/home/username/htdocs</code>
+      or <code class="filename">/home/username/public_html</code>.
+      When you log into ftp, if you can change directory to /home/username, that&#039;s great.
+     </p>
+
+     <p class="para">
+      <em class="emphasis">
+       5. create a customized config file for both the local and the remote host
+      </em>
+     </p>
+     <p class="para">
+      This is also quite simple. Here is how to do this on windows and unix.
+     </p>
+     <p class="para">
+      Windows first:
+     </p>
+     <p class="para">
+      Pick a location to store your local copy of the remote code. For example,
+      <code class="filename">C:\remote\pear</code>. From a Command prompt (click Start here =&gt;
+      Programs and search for the Command Prompt), type:
+     </p>
+     <p class="para">
+      </p><pre class="screen">
+       <br/>C:\&gt;&nbsp;mkdir&nbsp;remote<br/>C:\&gt;&nbsp;cd&nbsp;remote<br/>C:\remote\&gt;&nbsp;mkdir&nbsp;pear<br/>C:\remote\&gt;&nbsp;cd&nbsp;pear<br/>C:\remote\pear&gt;&nbsp;pear&nbsp;config-create&nbsp;-w&nbsp;C:\remote\pear&nbsp;remote.ini<br/>C:\remote\pear&gt;&nbsp;pear&nbsp;config-create&nbsp;/home/username/pear&nbsp;.pearrc<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </pre>
+
+     
+     <p class="para">
+      In Unix, follow a similar process:
+     </p>
+     <p class="para">
+      </p><pre class="screen">
+       <br/>$&nbsp;cd<br/>$&nbsp;mkdir&nbsp;remote<br/>$&nbsp;cd&nbsp;remote<br/>$&nbsp;mkdir&nbsp;pear<br/>$&nbsp;cd&nbsp;pear<br/>$&nbsp;pear&nbsp;config-create&nbsp;/home/mylocaluser&nbsp;remote.conf<br/>$&nbsp;pear&nbsp;config-create&nbsp;/home/username/pear&nbsp;.pearrc<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </pre>
+
+     
+
+     <p class="para">
+      <em class="emphasis">
+       6. upload the remote configuration file to the remote host
+      </em>
+     </p>
+     <p class="para">
+      This is straightforward - in both operating systems, use ftp to upload
+      <code class="filename">.pearrc</code> to <code class="filename">/home/username/pear/.pearrc</code>
+     </p>
+
+     <p class="para">
+      <em class="emphasis">
+       7. using the local configuration file, set the remote_config value to the
+       location of the configuration file on the remote host
+      </em>
+     </p>
+     <p class="para">
+      If you wish to use unencrypted ftp (remember: this is inherently insecure), then
+      use <code class="literal">ftp://</code> as your stream.  If you wish to use ftps, then use
+      <code class="literal">ftps://</code> as your stream.  If you wish to use sftp, then use
+      <code class="literal">ssh2.sftp</code> as your stream.
+     </p>
+     <p class="para">
+      The path you use for the <code class="literal">remote_config</code> variable may need to be
+      a full pathname, as in:
+     </p>
+     <p class="para">
+      </p><pre class="screen">
+       <br/>ssh2.sftp://user:pass@myremotehost.com/home/username/.pearrc<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </pre>
+
+     
+     <p class="para">
+      If the initial connection attempt fails, try a relative path as in:
+     </p>
+     <p class="para">
+      </p><pre class="screen">
+       <br/>ftps://user:pass@myremotehost.com/.pearrc<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </pre>
+
+     
+     <p class="para">
+      To set the value of the <code class="literal">remote_config</code> configuration variable,
+      use this syntax:
+     </p>
+     <p class="para">
+      In windows:
+     </p>
+     <p class="para">
+      </p><pre class="screen">
+       <br/>C:\remote\pear\&gt;&nbsp;pear&nbsp;-c&nbsp;remote.ini&nbsp;config-set&nbsp;remote_config&nbsp;\<br/>&nbsp;&nbsp;&nbsp;&nbsp;ftp://user:pass@myremotehost.com/.pearrc<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </pre>
+
+     
+     <p class="para">
+      In Unix:
+     </p>
+     <p class="para">
+      </p><pre class="screen">
+       <br/>$&nbsp;pear&nbsp;-c&nbsp;remote.conf&nbsp;config-set&nbsp;remote_config&nbsp;\<br/>&nbsp;&nbsp;&nbsp;&nbsp;ftp://user:pass@myremotehost.com/.pearrc<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </pre>
+
+     
+
+     <p class="para">
+      <em class="emphasis">
+       8. Manage packages at will using the remote-install, remote-uninstall,
+         remote-upgrade and remote-upgrade-all commands.
+      </em>
+     </p>
+     <p class="para">
+      From this point on, you can synchronize the local and the remote repositories.
+     </p>
+     <p class="para">
+      <em class="emphasis">
+       How does it work?
+      </em>
+     </p>
+     <p class="para">
+      The installer installs the package locally, and then uses ftp streams and uploads
+      a copy of each locally installed file to its equivalent location remotely.
+      All commands that affect installation (install, uninstall, upgrade, and upgrade-all)
+      have corresponding remote- commands (remote-install, remote-uninstall,
+      remote-upgrade, remote-upgrade-all).  The &quot;remote_config&quot; option tells the
+      installer how to retrieve the remote configuration file containing absolute paths
+      where packages should be installed.
+     </p>
+     <p class="para">
+      The remote configuration file is used for any special tasks such as replacements. In
+      other words, if a file expects to get the path to data files through the data_dir
+      configuration directive, then it will have the path on the remote host
+      (<code class="filename">/home/username/pear/data</code>) rather than the local copy (
+      <code class="filename">C:\remote\pear\data</code>).  Note that packages installed this way
+      will not work on the local machine, and should be thought of as a backup copy.
+      In an emergency, you can always just upload the entire contents
+      to the remote host using ftp or scp.
+     </p>
+     <p class="para">
+      It is important to note that some packages install themselves differently on
+      windows and on unix.  Be sure you know whether this is the case before installing,
+      or ensure that your local and remote systems are the same kind of operating system.
+      In addition, your local packages may depend on PHP extensions.  To ensure these
+      are available on the remote server, use the output of phpinfo(); to determine
+      which extensions are available.
+     </p>
+    </div>
+
+    <div class="section"><div class="info"><h3 class="title">The traditional way of installing a local copy of PEAR through ftp</h3></div>
+
+     <p class="para">
+      In order to install a local copy of PEAR through ftp, you must have an ftp client that can set permissions
+      on upload.  First, create a directory that is NOT in your publicly accessible web space, and name it
+      anything you&#039;d like.  Set it to be readable and writable by any user (permissions 0777).  Then, download
+      a copy of http://pear.php.net/go-pear.phar and save it as go-pear.php.  Upload go-pear.php to a subdirectory of your
+      publicly accessible web space.  It is a very good idea to password-protect the directory containing
+      go-pear.php with an .htaccess file.
+     </p>
+     <p class="para">
+      Next, browse to the go-pear.php file.  If your web address is http://www.example.com/, you have placed
+      go-pear.php in public_html/install/go-pear.php, and http://www.example.com/ will browse to public_html/,
+      then browse to http://www.example.com/install/go-pear.php.  Follow the installation prompts.  When asked
+      where to install PEAR, choose the directory you created to be readable and writable by any user.  You will
+      need to know the location of the cli version of PHP.  To find this, browse to this script and copy the output:
+     </p>
+     <p class="para">
+      </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">echo&nbsp;`</span><span style="color: #DD0000">which&nbsp;php</span><span style="color: #007700">`;<br /></span><span style="color: #FF8000">//&nbsp;if&nbsp;this&nbsp;does&nbsp;not&nbsp;work,&nbsp;also&nbsp;try&nbsp;echo&nbsp;PHP_BIN;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+      </div>
+     
+     <p class="para">
+      After PEAR has been installed, you can use the web installer to install and upgrade packages just as you would
+      with any other PEAR installation.  To use the files, you must set the include path in scripts on the website.
+     </p>
+     <p class="para">
+      </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />ini_set</span><span style="color: #007700">(</span><span style="color: #DD0000">'include_path'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'~/pear/lib'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">PATH_SEPARATOR<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">ini_get</span><span style="color: #007700">(</span><span style="color: #DD0000">'include_path'</span><span style="color: #007700">));<br /><br /></span><span style="color: #FF8000">//&nbsp;From&nbsp;PHP&nbsp;4.3.0&nbsp;onward,&nbsp;you&nbsp;can&nbsp;use&nbsp;the&nbsp;following,<br />//&nbsp;which&nbsp;especially&nbsp;useful&nbsp;on&nbsp;shared&nbsp;hosts:<br /></span><span style="color: #0000BB">set_include_path</span><span style="color: #007700">(</span><span style="color: #DD0000">'~/pear/lib'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">PATH_SEPARATOR<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">get_include_path</span><span style="color: #007700">());<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+      </div>
+     
+    </div>
+   </div>
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="installation.getting.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="installation.html">Installation (PEAR)</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="installation.checking.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Getting and installing the PEAR package manager</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Checking if PEAR works</td>
+  </tr>
+ </table>
+</div>
+</body></html>

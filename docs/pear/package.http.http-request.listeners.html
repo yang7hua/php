@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>HTTP_Request_Listener</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.http.http-request.html" title="HTTP_Request" />
+  <link rel="prev" href="package.http.http-request.response-eval.html" title="Response Evaluation" />
+  <link rel="next" href="package.http.http-request2.html" title="HTTP_Request2" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">HTTP_Request_Listener</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.http.http-request.response-eval.html" title="Response Evaluation">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.http.http-request2.html" title="HTTP_Request2">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.http.http-request.listeners">
+ 
+  <h1 class="refname">HTTP_Request_Listener</h1>
+  <div class="refnamediv">HTTP_Request_Listener &ndash; 
+   attaching listeners to HTTP_Request operations
+  </div>
+
+ 
+
+ <div class="refsection" id="package.http.http-request.listeners.intro"><div class="info"><h1>Introduction to HTTP_Request_Listener</h1>
+</div>
+  
+  
+
+  <p class="para">
+   <strong class="classname">HTTP_Request_Listener</strong> is an abstract class that can be
+   extended to capture events and respond to them as they occur.  Included
+   with HTTP_Request is an example of a console-based progress bar.  To implement
+   this, the <strong class="classname">HTTP_Request_DownloadListener</strong>
+   class is used, which uses the <a href="package.console.console-progressbar.html" class="link">Console_ProgressBar</a>
+   package to display a download progress meter.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.http.http-request.listeners.usage"><div class="info"><h1>Example usage of HTTP_Request_Listener</h1>
+</div>
+  
+
+  <p class="para">
+   In order to use a listener, it must attach to the specific
+   <strong class="classname">HTTP_Request</strong> or <strong class="classname">HTTP_Response</strong> object
+   that you want to monitor.  The attach code is shown at the bottom of the
+   example.  As you can see, the event listener is propagated from the <strong class="classname">HTTP_Request</strong>
+   object to any child <strong class="classname">HTTP_Response</strong> objects, and attaching only need happen
+   to the first <strong class="classname">HTTP_Request</strong> object.
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Download progress bar with HTTP_Request_Listener</strong></p></div>
+   
+
+   <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/**<br />&nbsp;*&nbsp;An&nbsp;example&nbsp;of&nbsp;Listener&nbsp;usage&nbsp;with&nbsp;HTTP_Request.&nbsp;This&nbsp;downloads&nbsp;and&nbsp;saves&nbsp;<br />&nbsp;*&nbsp;the&nbsp;file&nbsp;displaying&nbsp;the&nbsp;progress&nbsp;bar&nbsp;in&nbsp;the&nbsp;process.<br />&nbsp;*&nbsp;<br />&nbsp;*&nbsp;Note&nbsp;two&nbsp;things:<br />&nbsp;*&nbsp;1)&nbsp;The&nbsp;file&nbsp;should&nbsp;be&nbsp;run&nbsp;in&nbsp;console,&nbsp;not&nbsp;in&nbsp;browser;<br />&nbsp;*&nbsp;2)&nbsp;You&nbsp;should&nbsp;turn&nbsp;output&nbsp;buffering&nbsp;OFF&nbsp;for&nbsp;this&nbsp;to&nbsp;work&nbsp;properly.<br />&nbsp;*/<br /><br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTTP/Request.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'HTTP/Request/Listener.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'Console/ProgressBar.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">setErrorHandling</span><span style="color: #007700">(</span><span style="color: #0000BB">PEAR_ERROR_DIE</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">set_time_limit</span><span style="color: #007700">(</span><span style="color: #0000BB">0</span><span style="color: #007700">);<br /><br />class&nbsp;</span><span style="color: #0000BB">HTTP_Request_DownloadListener&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">HTTP_Request_Listener<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/**<br />&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Handle&nbsp;for&nbsp;the&nbsp;target&nbsp;file<br />&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@var&nbsp;int<br />&nbsp;&nbsp;&nbsp;&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$_fp</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/**<br />&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Console_ProgressBar&nbsp;intance&nbsp;used&nbsp;to&nbsp;display&nbsp;the&nbsp;indicator<br />&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@var&nbsp;object<br />&nbsp;&nbsp;&nbsp;&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$_bar</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/**<br />&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Name&nbsp;of&nbsp;the&nbsp;target&nbsp;file<br />&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@var&nbsp;string<br />&nbsp;&nbsp;&nbsp;&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$_target</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/**<br />&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Number&nbsp;of&nbsp;bytes&nbsp;received&nbsp;so&nbsp;far<br />&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@var&nbsp;int<br />&nbsp;&nbsp;&nbsp;&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$_size&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">HTTP_Request_DownloadListener</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">HTTP_Request_Listener</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/**<br />&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Opens&nbsp;the&nbsp;target&nbsp;file<br />&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;string&nbsp;Target&nbsp;file&nbsp;name<br />&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@throws&nbsp;PEAR_Error<br />&nbsp;&nbsp;&nbsp;&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">setTarget</span><span style="color: #007700">(</span><span style="color: #0000BB">$target</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_target&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$target</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_fp&nbsp;</span><span style="color: #007700">=&nbsp;@</span><span style="color: #0000BB">fopen</span><span style="color: #007700">(</span><span style="color: #0000BB">$target</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'wb'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(!</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_fp</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">raiseError</span><span style="color: #007700">(</span><span style="color: #DD0000">"Cannot&nbsp;open&nbsp;'</span><span style="color: #007700">{</span><span style="color: #0000BB">$target</span><span style="color: #007700">}</span><span style="color: #DD0000">'"</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">update</span><span style="color: #007700">(&amp;</span><span style="color: #0000BB">$subject</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$event</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;switch&nbsp;(</span><span style="color: #0000BB">$event</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;</span><span style="color: #DD0000">'sentRequest'</span><span style="color: #007700">:&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_target&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">basename</span><span style="color: #007700">(</span><span style="color: #0000BB">$subject</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_url</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">path</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;</span><span style="color: #DD0000">'gotHeaders'</span><span style="color: #007700">:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(isset(</span><span style="color: #0000BB">$data</span><span style="color: #007700">[</span><span style="color: #DD0000">'content-disposition'</span><span style="color: #007700">])&nbsp;&amp;&amp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">preg_match</span><span style="color: #007700">(</span><span style="color: #DD0000">'/filename="([^"]+)"/'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">[</span><span style="color: #DD0000">'content-disposition'</span><span style="color: #007700">],&nbsp;</span><span style="color: #0000BB">$matches</span><span style="color: #007700">))&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setTarget</span><span style="color: #007700">(</span><span style="color: #0000BB">basename</span><span style="color: #007700">(</span><span style="color: #0000BB">$matches</span><span style="color: #007700">[</span><span style="color: #0000BB">1</span><span style="color: #007700">]));<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setTarget</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_target</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_bar&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">Console_ProgressBar</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'*&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_target&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">'&nbsp;%fraction%&nbsp;KB&nbsp;[%bar%]&nbsp;%percent%'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'=&gt;'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'-'</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">79</span><span style="color: #007700">,&nbsp;(isset(</span><span style="color: #0000BB">$data</span><span style="color: #007700">[</span><span style="color: #DD0000">'content-length'</span><span style="color: #007700">])?&nbsp;</span><span style="color: #0000BB">round</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">[</span><span style="color: #DD0000">'content-length'</span><span style="color: #007700">]&nbsp;/&nbsp;</span><span style="color: #0000BB">1024</span><span style="color: #007700">):&nbsp;</span><span style="color: #0000BB">100</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_size&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;</span><span style="color: #DD0000">'tick'</span><span style="color: #007700">:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_size&nbsp;</span><span style="color: #007700">+=&nbsp;</span><span style="color: #0000BB">strlen</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_bar</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">update</span><span style="color: #007700">(</span><span style="color: #0000BB">round</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_size&nbsp;</span><span style="color: #007700">/&nbsp;</span><span style="color: #0000BB">1024</span><span style="color: #007700">));<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">fwrite</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_fp</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;</span><span style="color: #DD0000">'gotBody'</span><span style="color: #007700">:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">fclose</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_fp</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;</span><span style="color: #DD0000">'connect'</span><span style="color: #007700">:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;</span><span style="color: #DD0000">'disconnect'</span><span style="color: #007700">:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">raiseError</span><span style="color: #007700">(</span><span style="color: #DD0000">"Unhandled&nbsp;event&nbsp;'</span><span style="color: #007700">{</span><span style="color: #0000BB">$event</span><span style="color: #007700">}</span><span style="color: #DD0000">'"</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;</span><span style="color: #FF8000">//&nbsp;switch<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;Try&nbsp;using&nbsp;any&nbsp;other&nbsp;package&nbsp;if&nbsp;you&nbsp;like,&nbsp;but&nbsp;choose&nbsp;the&nbsp;bigger&nbsp;ones<br />//&nbsp;to&nbsp;be&nbsp;able&nbsp;to&nbsp;see&nbsp;the&nbsp;progress&nbsp;bar<br /></span><span style="color: #0000BB">$url&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'http://pear.php.net/get/HTML_QuickForm-stable'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$req&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">HTTP_Request</span><span style="color: #007700">(</span><span style="color: #0000BB">$url</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$download&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">HTTP_Request_DownloadListener</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$req</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">attach</span><span style="color: #007700">(</span><span style="color: #0000BB">$download</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$req</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">sendRequest</span><span style="color: #007700">(</span><span style="color: #0000BB">false</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+ </div>
+ <div class="refsection" id="package.http.http-request.listeners.detail"><div class="info"><h1>Events that can be caught</h1>
+</div>
+  
+  <p class="para">
+   The <strong class="classname">HTTP_Request</strong> class sends these events:
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para">
+      <code class="literal">connect</code> - upon server connection, this event is sent
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <code class="literal">sentRequest</code> - after the request was sent, this event is sent
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <code class="literal">disconnect</code> - after server disconnect, this event is sent
+     </p>
+    </li>
+   </ul>
+  
+  <p class="para">
+   The <strong class="classname">HTTP_Response</strong> class sends these events:
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para">
+      <code class="literal">gotHeaders</code> - this event is sent after receiving response headers
+      (headers are passed in $data as an associative array)
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <code class="literal">tick</code> - this event is sent on receiving a part of response body
+      (the part is passed in $data as a string)
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <code class="literal">gzTick</code> - this event is sent on receiving a part of response body
+      that is gzip-compressed (the part is passed in $data as a string)
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <code class="literal">gotBody</code> - this event is sent on after receiving the
+      complete response body (the decoded body is passed as a string in $data if it was gzipped)
+     </p>
+    </li>
+   </ul>
+  
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.http.http-request.response-eval.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.http.http-request.html">HTTP_Request</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.http.http-request2.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Response Evaluation</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">HTTP_Request2</td>
+  </tr>
+ </table>
+</div>
+</body></html>

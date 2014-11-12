@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Pyrus Custom Commands: differences from PEAR</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="pyrus.differences.html" title="Differences from the PEAR Installer" />
+  <link rel="prev" href="pyrus.differences.postinstallscripts.html" title="Pyrus Post-install scripts: differences from PEAR" />
+  <link rel="next" href="pyrus.differences.customroles.html" title="Pyrus Custom File Roles: differences from PEAR" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Pyrus Custom Commands: differences from PEAR</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="pyrus.differences.postinstallscripts.html" title="Pyrus Post-install scripts: differences from PEAR">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="pyrus.differences.customroles.html" title="Pyrus Custom File Roles: differences from PEAR">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="pyrus.differences.customcommands">
+ <div class="info"><h1>Pyrus Custom Commands: differences from PEAR</h1>
+</div>
+
+ <div class="section" id="pyrus.differences.customcommands.overview">
+  <div class="info"><h2 class="title">Overview</h2></div>
+  <p class="para">
+   Custom commands
+   have changed substantially in Pyrus.  PEAR commands draw their information
+   from Xml files located in the directory <code class="literal">PEAR/Command</code> and
+   require all commands to be implemented in a single file.  Pyrus is much
+   more flexible on this account, and extends the custom XML format used to
+   define commands.  Because of this difference, it is theoretically possible
+   to create custom commands that will work in both the PEAR Installer and in
+   Pyrus, although the internal implementation of these commands will necessarily
+   be quite different.
+  </p>
+  <p class="para">
+   The biggest difference between how a custom command is implemented in Pyrus has
+   to do with the new plugin system (documented <a href="pyrus.plugins.html" class="link">here</a>).
+   Before reading any further, it may be a good idea to familiarize yourself with
+   the way that plugins work in Pyrus by reading the documentation on plugins,
+   then return back to finish reading about custom commands.
+  </p>
+  <p class="para">
+   Here is PEAR&#039;s version of the xml for the <code class="literal">install</code> command:
+  </p>
+  <p class="para">
+   </p><div class="xmlcode">
+    <pre class="xmlcode">
+&lt;commands version=&quot;1.0&quot;&gt;
+ &lt;install&gt;
+  &lt;summary&gt;Install Package&lt;/summary&gt;
+  &lt;function&gt;doInstall&lt;/function&gt;
+  &lt;shortcut&gt;i&lt;/shortcut&gt;
+  &lt;options&gt;
+   &lt;force&gt;
+    &lt;shortopt&gt;f&lt;/shortopt&gt;
+    &lt;doc&gt;will overwrite newer installed packages&lt;/doc&gt;
+   &lt;/force&gt;
+   &lt;loose&gt;
+    &lt;shortopt&gt;l&lt;/shortopt&gt;
+    &lt;doc&gt;do not check for recommended dependency version&lt;/doc&gt;
+   &lt;/loose&gt;
+   &lt;nodeps&gt;
+    &lt;shortopt&gt;n&lt;/shortopt&gt;
+    &lt;doc&gt;ignore dependencies, install anyway&lt;/doc&gt;
+   &lt;/nodeps&gt;
+   &lt;register-only&gt;
+    &lt;shortopt&gt;r&lt;/shortopt&gt;
+    &lt;doc&gt;do not install files, only register the package as installed&lt;/doc&gt;
+   &lt;/register-only&gt;
+   &lt;soft&gt;
+    &lt;shortopt&gt;s&lt;/shortopt&gt;
+    &lt;doc&gt;soft install, fail silently, or upgrade if already installed&lt;/doc&gt;
+   &lt;/soft&gt;
+   &lt;nobuild&gt;
+    &lt;shortopt&gt;B&lt;/shortopt&gt;
+    &lt;doc&gt;don&amp;#039;t build C extensions&lt;/doc&gt;
+   &lt;/nobuild&gt;
+   &lt;nocompress&gt;
+    &lt;shortopt&gt;Z&lt;/shortopt&gt;
+    &lt;doc&gt;request uncompressed files when downloading&lt;/doc&gt;
+   &lt;/nocompress&gt;
+   &lt;installroot&gt;
+    &lt;shortopt&gt;R&lt;/shortopt&gt;
+    &lt;doc&gt;root directory used when installing files (ala PHP&amp;#039;s INSTALL_ROOT), use packagingroot for RPM&lt;/doc&gt;
+    &lt;arg&gt;DIR&lt;/arg&gt;
+   &lt;/installroot&gt;
+   &lt;packagingroot&gt;
+    &lt;shortopt&gt;P&lt;/shortopt&gt;
+    &lt;doc&gt;root directory used when packaging files, like RPM packaging&lt;/doc&gt;
+    &lt;arg&gt;DIR&lt;/arg&gt;
+   &lt;/packagingroot&gt;
+   &lt;ignore-errors&gt;
+    &lt;shortopt&gt;&lt;/shortopt&gt;
+    &lt;doc&gt;force install even if there were errors&lt;/doc&gt;
+   &lt;/ignore-errors&gt;
+   &lt;alldeps&gt;
+    &lt;shortopt&gt;a&lt;/shortopt&gt;
+    &lt;doc&gt;install all required and optional dependencies&lt;/doc&gt;
+   &lt;/alldeps&gt;
+   &lt;onlyreqdeps&gt;
+    &lt;shortopt&gt;o&lt;/shortopt&gt;
+    &lt;doc&gt;install all required dependencies&lt;/doc&gt;
+   &lt;/onlyreqdeps&gt;
+   &lt;offline&gt;
+    &lt;shortopt&gt;O&lt;/shortopt&gt;
+    &lt;doc&gt;do not attempt to download any urls or contact channels&lt;/doc&gt;
+   &lt;/offline&gt;
+   &lt;pretend&gt;
+    &lt;shortopt&gt;p&lt;/shortopt&gt;
+    &lt;doc&gt;Only list the packages that would be downloaded&lt;/doc&gt;
+   &lt;/pretend&gt;
+  &lt;/options&gt;
+  &lt;doc&gt;[channel/]&amp;lt;package&amp;gt; ...
+Installs one or more PEAR packages.  You can specify a package to
+install in four ways:
+
+&amp;quot;Package-1.0.tgz&amp;quot; : installs from a local file
+
+&amp;quot;http://example.com/Package-1.0.tgz&amp;quot; : installs from
+anywhere on the net.
+
+&amp;quot;package.xml&amp;quot; : installs the package described in
+package.xml.  Useful for testing, or for wrapping a PEAR package in
+another package manager such as RPM.
+
+&amp;quot;Package[-version/state][.tar]&amp;quot; : queries your default channel&amp;#039;s server
+({config master_server}) and downloads the newest package with
+the preferred quality/state ({config preferred_state}).
+
+To retrieve Package version 1.1, use &amp;quot;Package-1.1,&amp;quot; to retrieve
+Package state beta, use &amp;quot;Package-beta.&amp;quot;  To retrieve an uncompressed
+file, append .tar (make sure there is no file by the same name first)
+
+To download a package from another channel, prefix with the channel name like
+&amp;quot;channel/Package&amp;quot;
+
+More than one package may be specified at once.  It is ok to mix these
+four ways of specifying packages.
+&lt;/doc&gt;
+ &lt;/install&gt;
+  &lt;/commands&gt;</pre>
+
+   </div>
+  
+  <p class="para">
+   And the same command as implemented in Pyrus:
+  </p>
+  <p class="para">
+   </p><div class="xmlcode">
+    <pre class="xmlcode">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;commands version=&quot;2.0&quot; xmlns=&quot;http://pear2.php.net/dtd/customcommand-2.0&quot;&gt;
+ &lt;command&gt;
+  &lt;name&gt;install&lt;/name&gt;
+  &lt;class&gt;PEAR2\Pyrus\ScriptFrontend\Commands&lt;/class&gt;
+  &lt;function&gt;install&lt;/function&gt;
+  &lt;summary&gt;Install a package.  Use install --plugin to install plugins&lt;/summary&gt;
+  &lt;shortcut&gt;i&lt;/shortcut&gt;
+  &lt;options&gt;
+   &lt;option&gt;
+    &lt;name&gt;plugin&lt;/name&gt;
+    &lt;shortopt&gt;p&lt;/shortopt&gt;
+    &lt;type&gt;&lt;bool/&gt;&lt;/type&gt;
+    &lt;doc&gt;Manage plugin installation only&lt;/doc&gt;
+   &lt;/option&gt;
+   &lt;option&gt;
+    &lt;name&gt;packagingroot&lt;/name&gt;
+    &lt;shortopt&gt;r&lt;/shortopt&gt;
+    &lt;type&gt;&lt;string/&gt;&lt;/type&gt;
+    &lt;doc&gt;Install the package in a directory in preparation for packaging with tools like RPM&lt;/doc&gt;
+   &lt;/option&gt;
+   &lt;option&gt;
+    &lt;name&gt;optionaldeps&lt;/name&gt;
+    &lt;shortopt&gt;o&lt;/shortopt&gt;
+    &lt;type&gt;&lt;bool/&gt;&lt;/type&gt;
+    &lt;doc&gt;Automatically download and install all optional dependencies&lt;/doc&gt;
+   &lt;/option&gt;
+   &lt;option&gt;
+    &lt;name&gt;force&lt;/name&gt;
+    &lt;shortopt&gt;f&lt;/shortopt&gt;
+    &lt;type&gt;&lt;bool/&gt;&lt;/type&gt;
+    &lt;doc&gt;Force the installation to proceed independent of errors.  USE SPARINGLY.&lt;/doc&gt;
+   &lt;/option&gt;
+  &lt;/options&gt;
+  &lt;arguments&gt;
+   &lt;argument&gt;
+    &lt;name&gt;package&lt;/name&gt;
+    &lt;multiple&gt;1&lt;/multiple&gt;
+    &lt;optional&gt;0&lt;/optional&gt;
+    &lt;doc&gt;package.xml, local package archive, remove package archive, or abstract package.&lt;/doc&gt;
+   &lt;/argument&gt;
+  &lt;/arguments&gt;
+  &lt;doc&gt;Installs listed packages.
+
+local package.xml example:
+php pyrus.phar install package.xml
+
+local package archive example:
+php pyrus.phar install PackageName-1.2.0.tar
+
+remote package archive example:
+php pyrus.phar install http://www.example.com/PackageName-1.2.0.tgz
+
+Examples of an abstract package:
+php pyrus.phar install PackageName
+ installs PackageName from the default channel with stability preferred_state
+php pyrus.phar pear/PackageName
+ installs PackageName from the pear.php.net channel with stability preferred_state
+php pyrus.phar install channel://doc.php.net/PackageName
+ installs PackageName from the doc.php.net channel with stability preferred_state
+php pyrus.phar install PackageName-beta
+ installs PackageName from the default channel, beta or stable stability
+php pyrus.phar install PackageName-1.2.0
+ installs PackageName from the default channel, version 1.2.0&lt;/doc&gt;
+ &lt;/command&gt;
+&lt;/commands&gt;</pre>
+
+   </div>
+  
+  <p class="para">
+   The format for commands in Pyrus is much more fine-grained, and provides both
+   better validation and better presentation of options and arguments as passed
+   in from the user.  In addition, Pyrus allows fine-grained specification of
+   where a command is located, and automatically registers an autoloader to
+   load the class implementing the command, and any dependent classes in the
+   same location.
+  </p>
+  <p class="para">
+   The details of new tags like &lt;classprefix&gt; and &lt;autoloadpath&gt; are
+   documented in the full documentation of custom roles
+   <a href="pyrus.plugins.command.html" class="link">here</a>.
+  </p>
+  <p class="para">
+   This XML metadata file is identified by Pyrus through the use of the file role
+   <code class="literal">customcommand</code>, which is used in the custom command&#039;s package.xml.
+   Here is an example from the &lt;contents&gt; of a package.xml:
+  </p>
+  <p class="para">
+   </p><div class="xmlcode">
+    <pre class="xmlcode">
+...
+  &lt;contents&gt;
+   &lt;dir name=&quot;data&quot;&gt;
+    &lt;file name=&quot;commands.xml&quot; role=&quot;customcommand&quot;/&gt;
+    &lt;file name=&quot;someotherdata.csv&quot; role=&quot;data&quot;/&gt;
+   &lt;/dir&gt;
+  &lt;/contents&gt;
+...</pre>
+
+   </div>
+  
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="pyrus.differences.postinstallscripts.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="pyrus.differences.html">Differences from the PEAR Installer</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="pyrus.differences.customroles.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Pyrus Post-install scripts: differences from PEAR</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Pyrus Custom File Roles: differences from PEAR</td>
+  </tr>
+ </table>
+</div>
+</body></html>

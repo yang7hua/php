@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction - Sequences</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.db.html" title="DB" />
+  <link rel="prev" href="package.database.db.intro-portability.html" title="Introduction - Portability" />
+  <link rel="next" href="package.database.db.overview-get.html" title="Overview - get* methods" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction - Sequences</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.db.intro-portability.html" title="Introduction - Portability">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.db.overview-get.html" title="Overview - get* methods">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.db.intro-sequences">
+ 
+  <h1 class="refname">Introduction - Sequences</h1>
+  <div class="refnamediv">Introduction - Sequences &ndash; Sequences and auto-incrementing</div>
+
+ 
+
+ <div class="refsection" id="package.database.db.intro-sequences.desc">
+  <h1 class="title">Description</h1>
+  <p class="para">
+   Sequences are a way of offering unique IDs for data rows. If you
+   do most of your work with e.g. MySQL, think of sequences as
+   another way of doing <strong class="command">AUTO_INCREMENT</strong>.
+  </p>
+
+  <p class="para">
+   It&#039;s quite simple, first you
+   request an ID, and then you insert that value in the ID field of
+   the new row you&#039;re creating. You can have more than one sequence
+   for all your tables, just be sure that you always use the same
+   sequence for any particular table. To get the value of this
+   unique ID use <a href="package.database.db.db-common.nextid.html" class="link">
+    <strong class="function">nextId()</strong></a>, if a sequence doesn&#039;t
+   exists, it will be created automatically.
+  </p>
+
+  <p class="para">
+   The sequence is automatically incremented each time
+   <a href="package.database.db.db-common.nextid.html" class="link">
+    <strong class="function">nextId()</strong></a> is called.
+  </p>
+
+  <p class="para">
+   </p><div class="example"><div class="info"><p><strong>Using a sequence</strong></p></div>
+    
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /></span><span style="color: #0000BB">$id&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">nextId</span><span style="color: #007700">(</span><span style="color: #DD0000">'mySequence'</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$id</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$id</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;Use&nbsp;the&nbsp;ID&nbsp;in&nbsp;your&nbsp;INSERT&nbsp;query<br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">"INSERT&nbsp;INTO&nbsp;myTable&nbsp;(id,&nbsp;text)&nbsp;VALUES&nbsp;(</span><span style="color: #0000BB">$id</span><span style="color: #DD0000">,&nbsp;'foo')"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   </div>
+  
+ </div>
+
+ <div class="refsection" id="package.database.db.intro-sequences.note">
+  <h1 class="title">Note</h1>
+  <blockquote class="warning">
+
+   <p class="para">
+    When using PEAR DB&#039;s sequence methods, we strongly advise using
+    these methods for all procedures, including the creation of the
+    sequences.  Do not use PEAR DB&#039;s methods to access
+    sequences that were created directly in the DBMS.
+   </p>
+   <p class="para">
+    If you have a compelling reason to ignore this advice, be aware
+    that the <em><code class="parameter">$seq_name</code></em> argument given to all of
+    PEAR DB&#039;s sequence methods are modified before DB calls the
+    underlying DBMS.
+   </p>
+   <p class="para">
+    <em><code class="parameter">$seq_name</code></em> is passed through PHP&#039;s
+    <strong class="function">sprintf()</strong> function using the value from the
+    <code class="varname">seqname_format</code> option as
+    <strong class="function">sprintf()</strong>&#039;s format argument.
+    The default <code class="varname">seqname_format</code> is
+    <code class="literal">%s_seq</code>. So, for example, if you use
+    <code class="literal">person_id_sequence</code> as the
+    <em><code class="parameter">$seq_name</code></em>, PEAR DB will change that
+    name to <code class="literal">person_id_sequence_seq</code> when
+    querying the DBMS about creating/accessing/updating the sequence.
+   </p>
+   <p class="para">
+    The <code class="varname">seqname_format</code> can be modified when
+    <a href="package.database.db.db.connect.html" class="link">
+     <strong class="function">connect()</strong></a>&#039;ing or via
+    <a href="package.database.db.db-common.setoption.html" class="link">
+     <strong class="function">setOption()</strong></a>.
+   </p>
+   <p class="para">
+    Please note that you may need to change the
+    <code class="varname">seqname_format</code> option to represent a quoted form of the
+    sequence name if the sequence names contain characters that cannot be used
+    unquoted within queries. For example, PostgreSQL users with uppercase
+    table names will probably need to use <code class="literal">&quot;%s_seq&quot;</code> (note
+    the quotes) for queries to work as expected.
+   </p>
+  </blockquote>
+
+ </div>
+
+ <div class="refsection" id="package.database.db.intro-sequences.see">
+  <h1 class="title">See</h1>
+  <p class="para">
+   <a href="package.database.db.db-common.createsequence.html" class="link">
+    <strong class="function">createSequence()</strong></a>,
+   <a href="package.database.db.db-common.nextid.html" class="link">
+    <strong class="function">nextId()</strong></a>,
+   <a href="package.database.db.db-common.dropsequence.html" class="link">
+    <strong class="function">dropSequence()</strong></a>
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.db.intro-portability.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.db.html">DB</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.db.overview-get.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction - Portability</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Overview - get* methods</td>
+  </tr>
+ </table>
+</div>
+</body></html>

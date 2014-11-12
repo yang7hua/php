@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Advanced detection</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.php.php-compatinfo.tutorial.html" title="Getting started" />
+  <link rel="prev" href="package.php.php-compatinfo.basic.html" title="Basic detection" />
+  <link rel="next" href="package.php.php-compatinfo.condition.html" title="Conditional Code Analysis" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Advanced detection</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.php.php-compatinfo.basic.html" title="Basic detection">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.php.php-compatinfo.condition.html" title="Conditional Code Analysis">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.php.php-compatinfo.advanced">
+ 
+  <h1 class="refname">Advanced detection</h1>
+  <div class="refnamediv">Advanced detection &ndash; parse data source with additional options</div>
+
+ 
+
+ <div class="refsection" id="package.php.php-compatinfo.advanced.file"><div class="info"><h1>Detection of a single file</h1>
+</div>
+
+   <p class="para">
+    If your file implement code condition that is optional and don&#039;t break main goal,
+    such as, for example :
+    if <code class="methodname">function_exists</code> then I do something, else I do something else.
+   </p>
+   <p class="simpara">
+    Solution is very easy: You have to specify what function required should be considered
+    as optional.
+   </p>
+   <p class="para">
+     Suppose we have to detect which PHP version we need to run this chunk of script
+     named &quot;errorHandler.php&quot;. With standard behavior, PCI returns
+     PHP 4.3.0 (because <code class="methodname">debug_backtrace</code> came with version 4.3.0).
+     So, if we ignore function <code class="methodname">debug_backtrace</code> to find out
+     the minimum version, we will get the real and true result.
+   </p>
+   <p class="para">
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;...<br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">function_exists</span><span style="color: #007700">(</span><span style="color: #DD0000">'debug_backtrace'</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$backtrace&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">debug_backtrace</span><span style="color: #007700">();<br />}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$backtrace&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">;<br />}<br /></span><span style="color: #FF8000">//&nbsp;...<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+   <p class="para">
+    We will use another very simple detection script. Have a look on options array
+    given as second parameter (here is the magic).
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'PHP/CompatInfo.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$source&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">dirname</span><span style="color: #007700">(</span><span style="color: #0000BB">__FILE__</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #0000BB">DIRECTORY_SEPARATOR&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">'errorHandler.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'ignore_functions'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'debug_backtrace'</span><span style="color: #007700">));<br /><br /></span><span style="color: #0000BB">$info&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">PHP_CompatInfo</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$info</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parseFile</span><span style="color: #007700">(</span><span style="color: #0000BB">$source</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;you&nbsp;may&nbsp;also&nbsp;use&nbsp;unified&nbsp;method:&nbsp;&nbsp;$info-&gt;parseData($source,&nbsp;$options);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+   <p class="para">
+    And displayed results are :
+    </p><pre class="screen">
+array (
+  &#039;ignored_files&#039; =&gt;
+  array (
+  ),
+  &#039;ignored_functions&#039; =&gt;
+  array (
+    0 =&gt; &#039;debug_backtrace&#039;,
+  ),
+  &#039;ignored_extensions&#039; =&gt;
+  array (
+  ),
+  &#039;ignored_constants&#039; =&gt;
+  array (
+  ),
+  &#039;max_version&#039; =&gt; &#039;&#039;,
+  &#039;version&#039; =&gt; &#039;4.0.0&#039;,
+  &#039;classes&#039; =&gt;
+  array (
+  ),
+  &#039;extensions&#039; =&gt;
+  array (
+  ),
+  &#039;constants&#039; =&gt;
+  array (
+    0 =&gt; &#039;FALSE&#039;,
+  ),
+  &#039;tokens&#039; =&gt;
+  array (
+  ),
+  &#039;cond_code&#039; =&gt;
+  array (
+    0 =&gt; 1,
+  ),
+)
+    </pre>
+<p>
+    that means chunk of script named &quot;errorHandler.php&quot; need PHP 4.0.0,
+    have condition code (function condition : cond_code = 1), and php
+    <a href="http://www.php.net/debug_backtrace" class="link external">debug_backtrace</a> function
+    was excluded from scope.
+   </p>
+   <p class="para">
+    </p><blockquote class="note">
+     <p class="para">
+      Since version 1.7.0, you may catch this situation (more easily),
+      and exclude from scope all functions that are conditionned
+      by a <em class="emphasis">function_exists</em>. See example that follow.
+     </p>
+    </blockquote>
+
+   
+   <p class="para">
+    Other alternative is to use <strong class="emphasis">ignore_functions_match</strong> option.
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'PHP/CompatInfo.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$source&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">dirname</span><span style="color: #007700">(</span><span style="color: #0000BB">__FILE__</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #0000BB">DIRECTORY_SEPARATOR&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">'errorHandler.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'ignore_functions_match'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'function_exists'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'/.*/'</span><span style="color: #007700">)));<br /><br /></span><span style="color: #0000BB">$info&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">PHP_CompatInfo</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$info</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parseFile</span><span style="color: #007700">(</span><span style="color: #0000BB">$source</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;you&nbsp;may&nbsp;also&nbsp;use&nbsp;unified&nbsp;method:&nbsp;&nbsp;$info-&gt;parseData($source,&nbsp;$options);;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+   <p class="para">
+    The string <strong class="emphasis">function_exists</strong> as first parameter,
+    tell to ignore function(s) that match only conditionnal code with php function_exists().
+   </p>
+   <p class="para">
+    The other possibility is string <strong class="emphasis">preg_match</strong>,
+    that give more freedom, and catch function that match the pattern (without condition).
+   </p>
+   <p class="para">
+    While array as second parameter, gave a list of pattern (function name)
+    that must be catch and ignored.
+   </p>
+ </div>
+
+ <div class="refsection" id="package.php.php-compatinfo.advanced.dir"><div class="info"><h1>Detection of a directory</h1>
+</div>
+
+   <p class="simpara">
+    Parsing a full directory, recursively or not, is no more difficult than
+    detect PHP version of a single file.
+   </p>
+   <p class="simpara">
+    This new example is based on auto detection of HTML_CSS 1.5.1 distribution.
+    As we will see, basic detection is not accurate as it should be. But with an option
+    we can get the real result (PHP minimum = 4.3.0).
+   </p>
+   <p class="para">
+    First begin to download the archive from
+    <a href="http://pear.php.net/package/HTML_CSS/download/1.5.1" class="link external">
+     http://pear.php.net/package/HTML_CSS/download/1.5.1
+    </a>
+    and extract the full contents to a temporary directory (in our example its &#039;/tmp&#039;)
+   </p>
+   <p class="para">
+    We will focus on two important files:
+    <code class="filename">CSS.php</code> and <code class="filename">CSS/Error.php</code>.
+    So we will indicate to PCI to ignore
+    <code class="filename">examples/</code>, and
+    <code class="filename">tests/</code> directories.
+   </p>
+   <p class="para">
+    Here is the detection script:
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'PHP/CompatInfo.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$source&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'/tmp/HTML_CSS-1.5.1'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'ignore_dirs'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'examples'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'tests'</span><span style="color: #007700">));<br /><br /></span><span style="color: #0000BB">$info&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">PHP_CompatInfo</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$info</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parseDir</span><span style="color: #007700">(</span><span style="color: #0000BB">$source</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;you&nbsp;may&nbsp;also&nbsp;use&nbsp;unified&nbsp;method:&nbsp;&nbsp;$info-&gt;parseData($source,&nbsp;$options);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+   <p class="para">
+    And displayed results are :
+    </p><pre class="screen">
+array (
+  &#039;ignored_files&#039; =&gt;
+  array (
+    0 =&gt; &#039;/tmp/HTML_CSS-1.5.1/ChangeLog&#039;,
+    1 =&gt; &#039;/tmp/HTML_CSS-1.5.1/package.xml&#039;,
+    2 =&gt; &#039;/tmp/HTML_CSS-1.5.1/tests/AllTests.php&#039;,
+    3 =&gt; &#039;/tmp/HTML_CSS-1.5.1/tests/HTML_CSS_TestSuite_Bugs.php&#039;,
+    4 =&gt; &#039;/tmp/HTML_CSS-1.5.1/tests/HTML_CSS_TestSuite_Standard.php&#039;,
+    5 =&gt; &#039;/tmp/HTML_CSS-1.5.1/tests/stylesheet.css&#039;,
+    6 =&gt; &#039;/tmp/HTML_CSS-1.5.1/examples/CSS_Advanced.php&#039;,
+    7 =&gt; &#039;/tmp/HTML_CSS-1.5.1/examples/CSS_DisplayOnline.php&#039;,
+    8 =&gt; &#039;/tmp/HTML_CSS-1.5.1/examples/css_errorstack_custom.php&#039;,
+    9 =&gt; &#039;/tmp/HTML_CSS-1.5.1/examples/css_errorstack_logger.php&#039;,
+    10 =&gt; &#039;/tmp/HTML_CSS-1.5.1/examples/css_error_custom.php&#039;,
+    11 =&gt; &#039;/tmp/HTML_CSS-1.5.1/examples/css_error_ignore.php&#039;,
+    12 =&gt; &#039;/tmp/HTML_CSS-1.5.1/examples/css_error_logger.php&#039;,
+    13 =&gt; &#039;/tmp/HTML_CSS-1.5.1/examples/CSS_grepStyles.php&#039;,
+    14 =&gt; &#039;/tmp/HTML_CSS-1.5.1/examples/CSS_InHeader.php&#039;,
+    15 =&gt; &#039;/tmp/HTML_CSS-1.5.1/examples/CSS_Inline.php&#039;,
+    16 =&gt; &#039;/tmp/HTML_CSS-1.5.1/examples/CSS_Logger.php&#039;,
+    17 =&gt; &#039;/tmp/HTML_CSS-1.5.1/examples/CSS_parseData.php&#039;,
+    18 =&gt; &#039;/tmp/HTML_CSS-1.5.1/examples/CSS_req12194_atrule_api.php&#039;,
+    19 =&gt; &#039;/tmp/HTML_CSS-1.5.1/examples/CSS_req12194_atrule_parser.php&#039;,
+    20 =&gt; &#039;/tmp/HTML_CSS-1.5.1/examples/CSS_Stylesheet.php&#039;,
+    21 =&gt; &#039;/tmp/HTML_CSS-1.5.1/examples/CSS_validate.php&#039;,
+  ),
+  &#039;ignored_functions&#039; =&gt;
+  array (
+  ),
+  &#039;ignored_extensions&#039; =&gt;
+  array (
+  ),
+  &#039;ignored_constants&#039; =&gt;
+  array (
+  ),
+  &#039;max_version&#039; =&gt; &#039;&#039;,
+  &#039;version&#039; =&gt; &#039;5.0.0&#039;,
+  &#039;classes&#039; =&gt;
+  array (
+    0 =&gt; &#039;Services_W3C_CSSValidator&#039;,
+  ),
+  &#039;extensions&#039; =&gt;
+  array (
+    0 =&gt; &#039;date&#039;,
+    1 =&gt; &#039;pcre&#039;,
+  ),
+  &#039;constants&#039; =&gt;
+  array (
+    0 =&gt; &#039;E_USER_ERROR&#039;,
+    1 =&gt; &#039;E_USER_NOTICE&#039;,
+    2 =&gt; &#039;E_USER_WARNING&#039;,
+    3 =&gt; &#039;FALSE&#039;,
+    4 =&gt; &#039;NULL&#039;,
+    5 =&gt; &#039;PHP_OS&#039;,
+    6 =&gt; &#039;PREG_SET_ORDER&#039;,
+    7 =&gt; &#039;PREG_SPLIT_DELIM_CAPTURE&#039;,
+    8 =&gt; &#039;TRUE&#039;,
+  ),
+  &#039;tokens&#039; =&gt;
+  array (
+  ),
+  &#039;cond_code&#039; =&gt;
+  array (
+    0 =&gt; 1,
+  ),
+  &#039;/tmp/HTML_CSS-1.5.1/CSS.php&#039; =&gt;
+  array (
+    &#039;ignored_functions&#039; =&gt;
+    array (
+    ),
+    &#039;ignored_extensions&#039; =&gt;
+    array (
+    ),
+    &#039;ignored_constants&#039; =&gt;
+    array (
+    ),
+    &#039;max_version&#039; =&gt; &#039;&#039;,
+    &#039;version&#039; =&gt; &#039;5.0.0&#039;,
+    &#039;classes&#039; =&gt;
+    array (
+      0 =&gt; &#039;Services_W3C_CSSValidator&#039;,
+    ),
+    &#039;extensions&#039; =&gt;
+    array (
+      0 =&gt; &#039;date&#039;,
+      1 =&gt; &#039;pcre&#039;,
+    ),
+    &#039;constants&#039; =&gt;
+    array (
+      0 =&gt; &#039;FALSE&#039;,
+      1 =&gt; &#039;NULL&#039;,
+      2 =&gt; &#039;PHP_OS&#039;,
+      3 =&gt; &#039;PREG_SET_ORDER&#039;,
+      4 =&gt; &#039;PREG_SPLIT_DELIM_CAPTURE&#039;,
+      5 =&gt; &#039;TRUE&#039;,
+    ),
+    &#039;tokens&#039; =&gt;
+    array (
+    ),
+    &#039;cond_code&#039; =&gt;
+    array (
+      0 =&gt; 1,
+    ),
+  ),
+  &#039;/tmp/HTML_CSS-1.5.1/CSS/Error.php&#039; =&gt;
+  array (
+    &#039;ignored_functions&#039; =&gt;
+    array (
+    ),
+    &#039;ignored_extensions&#039; =&gt;
+    array (
+    ),
+    &#039;ignored_constants&#039; =&gt;
+    array (
+    ),
+    &#039;max_version&#039; =&gt; &#039;&#039;,
+    &#039;version&#039; =&gt; &#039;4.3.0&#039;,
+    &#039;classes&#039; =&gt;
+    array (
+    ),
+    &#039;extensions&#039; =&gt;
+    array (
+      0 =&gt; &#039;date&#039;,
+    ),
+    &#039;constants&#039; =&gt;
+    array (
+      0 =&gt; &#039;E_USER_ERROR&#039;,
+      1 =&gt; &#039;E_USER_NOTICE&#039;,
+      2 =&gt; &#039;E_USER_WARNING&#039;,
+      3 =&gt; &#039;FALSE&#039;,
+      4 =&gt; &#039;NULL&#039;,
+      5 =&gt; &#039;TRUE&#039;,
+    ),
+    &#039;tokens&#039; =&gt;
+    array (
+    ),
+    &#039;cond_code&#039; =&gt;
+    array (
+      0 =&gt; 0,
+    ),
+  ),
+)
+    </pre>
+<p>
+    As we can read, PHP 5.0.0 is required to run the package.
+   </p>
+   <p class="para">
+    Yes, but its the wrong result. HTML_CSS 1.5.1 require only PHP 4.3.0 to run.
+    </p><blockquote class="tip">
+     <p class="para">
+      If you have <code class="literal">cond_code</code> offset with a value different
+      than zero, you are almost sure that the version given is wrong.
+     </p>
+    </blockquote>
+<p>
+    So why we get such result ?
+   </p>
+   <p class="para">
+    Package PEAR::HTML_CSS 1.5.1 as many application/extension use conditional code
+    to emulate function that are unavailable for previous PHP versions. Its means that
+    HTML_CSS use the php function function_exists() to implement such alternative.
+   </p>
+   <p class="para">
+    To illustrate our purpose, we can find in source code (CSS.php) :
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;...<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">function_exists</span><span style="color: #007700">(</span><span style="color: #DD0000">'file_put_contents'</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">file_put_contents</span><span style="color: #007700">(</span><span style="color: #0000BB">$filename</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">toString</span><span style="color: #007700">());<br />&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$file&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">fopen</span><span style="color: #007700">(</span><span style="color: #0000BB">$filename</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'wb'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">fwrite</span><span style="color: #007700">(</span><span style="color: #0000BB">$file</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">toString</span><span style="color: #007700">());<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">fclose</span><span style="color: #007700">(</span><span style="color: #0000BB">$file</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /></span><span style="color: #FF8000">//&nbsp;...<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div><p>
+    PHP function file_put_contents() came with version 5.0.0; That is the reason
+    of wrong parsing result. But we can catch such conditional code.
+   </p>
+
+   <p class="para">
+    Let&#039;s see now how to set the good accuracy with
+    conditional code analysis.
+   </p>
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.php.php-compatinfo.basic.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.php.php-compatinfo.tutorial.html">Getting started</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.php.php-compatinfo.condition.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Basic detection</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Conditional Code Analysis</td>
+  </tr>
+ </table>
+</div>
+</body></html>

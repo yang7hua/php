@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Custom Renderers</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.structures.structures-datagrid.intro-and-features.html" title="Introduction and Features" />
+  <link rel="prev" href="package.structures.structures-datagrid.custom-datasources.html" title="Custom DataSources" />
+  <link rel="next" href="package.structures.structures-datagrid.class-structures-datagrid.html" title="Class Structures_DataGrid" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Custom Renderers</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.structures.structures-datagrid.custom-datasources.html" title="Custom DataSources">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.structures.structures-datagrid.class-structures-datagrid.html" title="Class Structures_DataGrid">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.structures.structures-datagrid.custom-renderers">
+ 
+  <h1 class="refname">Custom Renderers</h1>
+  <div class="refnamediv">Custom Renderers &ndash; 
+    How to write your own Rendering driver.
+  </div>
+
+ 
+
+ <div class="refsection" id="package.structures.structures-datagrid.custom-renderers.intro"><div class="info"><h1>Introduction</h1>
+</div>
+  
+  <p class="para">Writing your own Renderer allows you to 
+  fine tune every aspect of <strong class="classname">Structures_DataGrid</strong>
+  output.</p>
+
+  <p class="para">You may need to output the datagrid in a completely unsupported
+  format. Then writing your own Renderer is the only
+  option</p>
+
+  <p class="para">But you may also need a unsupported variant of an existing renderer,
+  say, for example, a very specific HTML output. In this case, you generally
+  have two options : either writing a Rendering driver from scratch, or 
+  customizing (subclassing) an existing one.</p>
+ 
+  <p class="para">This document will present you the Rendering driver
+  interface, and how to implement it. You will certainly see how flexible 
+  Structures_DataGrid can become with custom Renderers, but 
+  also how easy we have to tried to make this process.</p>
+  
+ </div>
+ <div class="refsection" id="package.structures.structures-datagrid.custom-renderers.def"><div class="info"><h1>Definitions</h1>
+</div>
+  
+  
+  <p class="para">A <em class="emphasis">Rendering driver</em> is a descendent of
+  the <strong class="classname">Structures_DataGrid_Renderer</strong> class, which
+  implements the <em class="emphasis">Renderer interface</em>.</p>
+  
+  <p class="para"><em class="emphasis">Renderer</em> is a synomym for 
+  <em class="emphasis">Rendering driver</em>.</p>
+  
+  <p class="para">The <em class="emphasis">Renderer interface</em> consists in a
+  set of methods that drivers must or may overload and protected properties 
+  that drivers can use, as well as recommended practices.</p>
+
+  <p class="para">A <em class="emphasis">Rendering container</em> is either an object that
+  contain a sort of rendering engine, or a variable of any type (string, array, 
+  object, etc...) that can contain the output of a <em class="emphasis">Renderer</em>.
+  </p>
+
+  <p class="para">A <em class="emphasis">Renderer</em> with <em class="emphasis">Container Support</em> 
+  driver is specific to, and knows how to handle, a given 
+  type of <em class="emphasis">Rendering container</em>.</p>
+
+  <p class="para">A driver is said to provide <em class="emphasis">Container Support</em> when it
+  is able to handle a given type of <em class="emphasis">Rendering
+  container</em>. Drivers with <em class="emphasis">Container Support</em> must
+  implement the <strong class="function">setContainer()</strong> and
+  <strong class="function">getContainer()</strong> public methods. They must be able
+  to use a <em class="emphasis">Rendering container</em> provided by the user with
+  <strong class="function">setContainer()</strong>. They must also be able to create and intialize
+  a <em class="emphasis">Rendering container</em> if the user does not provide
+  any.</p>
+
+  <p class="para">A driver is said to provide <em class="emphasis">Output Buffering</em> when
+  it buffers the output that it generates, implements the
+  <strong class="function">flatten()</strong> method and is able to return the generated 
+  output from <strong class="function">flatten()</strong>.</p>  
+
+  <p class="para">A <em class="emphasis">Direct Rendering</em> driver is the simplest form of
+  Renderer. It directs all of its output to standard output. By definition,
+  a such driver neither provide <em class="emphasis">Container support</em> nor 
+  <em class="emphasis">Output Buffering</em></p>
+
+ </div>
+ <div class="refsection" id="package.structures.structures-datagrid.custom-renderers.interface"><div class="info"><h1>The Renderer interface</h1>
+</div>
+  
+ <div class="refsection" id="package.structures.structures-datagrid.custom-renderers.interface.properties"><div class="info"><h1>Protected properties available to drivers</h1>
+</div>
+  
+  
+    <p class="para">All of the following properties are <em class="emphasis">read-only</em> :
+    drivers can access their content but must not change it directly.</p>
+    
+    <p class="para"><em><code class="parameter">array $_options</code></em> -Common and driver-specific
+    options</p>
+
+    <p class="para"><em><code class="parameter">array $_columns</code></em> - Columns fields names and
+    labels</p>
+    
+    <p class="para"><em><code class="parameter">int $_columnsNum</code></em> - Number of columns</p>
+
+    <p class="para"><em><code class="parameter">array $_records</code></em> - Records content</p>
+
+    <p class="para"><em><code class="parameter">int $_recordsNum</code></em> - Number of records
+    in the current page</p>
+
+    <p class="para"><em><code class="parameter">int $_totalRecordsNum</code></em> -  Total number of
+    records as reported by the datasource</p>
+
+    <p class="para"><em><code class="parameter">int $_firstRecord</code></em> - First record number (starting from 1), in the current page</p>
+    
+    <p class="para"><em><code class="parameter">int $_lastRecord</code></em> - Last record number (starting from 1), in the current page</p>
+
+    <p class="para"><em><code class="parameter">int $_page</code></em> - Current page number (starting
+    from 1)</p>
+
+    <p class="para"><em><code class="parameter">int $_pageLimit</code></em> - Number of records per page</p>
+
+    <p class="para"><em><code class="parameter">int $_pagesNum</code></em> - Number of pages</p>
+
+    <p class="para"><em><code class="parameter">string $_requestPrefix</code></em> - GET/POST/Cookie
+    parameters prefix</p>
+
+    <p class="para"><em><code class="parameter">array $_currentSort</code></em> - Fields/directions
+    the data is currently sorted by</p>
+   
+    <p class="para"><em><code class="parameter">array $_sortableFields</code></em> - Which fields the
+    datagrid may be sorted by</p>
+  
+  </div>   
+ <div class="refsection" id="package.structures.structures-datagrid.custom-renderers.interface.methods"><div class="info"><h1>Methods that must or may be implemented in drivers</h1>
+</div>
+  
+     <p class="para">All of the following methods are <em class="emphasis">optional</em>.</p>
+     <p class="para">
+     </p><div class="funcsynopsis">
+     <p><code class="funcprototype">
+      <strong class="function">constructor</strong> ( 
+      <span class="type"><span class="type void">void</span></span>
+     )</code></p>
+     </div>
+     The constructor must set default options via
+     <strong class="function">_addDefaultOptions()</strong>, if any, and call the parent
+     constructor.
+     </p>
+     <p class="para">
+     </p><div class="funcsynopsis">
+     <p><code class="funcprototype">
+      object <strong class="function">setContainer</strong> ( 
+      mixed container
+     )</code></p>
+     </div>
+     <strong class="function">setContainer()</strong> is responsible for attaching a rendering
+     <em><code class="parameter">container</code></em> provided by the user. It must
+     return a <strong class="classname">PEAR_Error</strong> object in case of failure.
+     </p>
+     <p class="para">
+     </p><div class="funcsynopsis">
+     <p><code class="funcprototype">
+      object <strong class="function">getContainer</strong> ( 
+      <span class="type"><span class="type void">void</span></span>
+     )</code></p>
+     </div>
+     <strong class="function">getContainer()</strong> must return a reference to the
+     container used by the driver. 
+     It must return a <strong class="classname">PEAR_Error</strong> object in case of failure.
+     </p>
+     <p class="para">
+     </p><div class="funcsynopsis">
+     <p><code class="funcprototype">
+      void <strong class="function">init</strong> ( 
+      <span class="type"><span class="type void">void</span></span>
+     )</code></p>
+     </div>
+     <strong class="function">init()</strong> must initialize the rendering process.
+     This method is also responsible for creating the container if it has not 
+     already been provided with <strong class="function">setContainer()</strong>.
+     </p>
+     <p class="para">
+     </p><div class="funcsynopsis">
+     <p><code class="funcprototype">
+      void <strong class="function">buildHeader</strong> ( 
+      array columns
+     )</code></p>
+     </div>
+     <strong class="function">buildHeader()</strong> must build the header.
+     <em><code class="parameter">$columns</code></em> is a convenient reference to the
+     <code class="varname">$_columns</code> property. 
+     </p>
+  </div>   
+ <div class="refsection" id="package.structures.structures-datagrid.custom-renderers.interface.methods-avail"><div class="info"><h1>Protected methods that drivers can use</h1>
+</div>
+  
+     <p class="para">
+     </p><div class="funcsynopsis">
+     <p><code class="funcprototype">
+      void <strong class="function">_addDefaultOptions</strong> ( 
+      array options
+     )</code></p>
+     </div>
+     <strong class="function">_addDefaultOptions()</strong> is used to declare the
+     driver-specific options, if any, as well as their default values. 
+     It must be called from the constructor.
+     </p>
+     <p class="para">
+     </p><div class="funcsynopsis">
+     <p><code class="funcprototype">
+      void <strong class="function">setOptions</strong> ( 
+      array options
+     )</code></p>
+     </div>
+     <strong class="function">setOptions()</strong> is a public method used to set
+     options. If they ever need to change options, drivers should use this
+     method. 
+     </p>
+ </div>
+ </div>
+ <div class="refsection"><div class="info"><h1>A simple driver</h1>
+</div>
+ 
+ <p class="para">Soon</p>
+ </div>
+ <div class="refsection" id="package.structures.structures-datagrid.custom-renderers.test"><div class="info"><h1>Testing your driver</h1>
+</div>
+ 
+ <p class="para">Soon</p>
+ </div>
+ <div class="refsection" id="package.structures.structures-datagrid.custom-renderers.use"><div class="info"><h1>Using your new driver</h1>
+</div>
+ 
+ <p class="para">Soon</p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.structures.structures-datagrid.custom-datasources.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.structures.structures-datagrid.intro-and-features.html">Introduction and Features</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.structures.structures-datagrid.class-structures-datagrid.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Custom DataSources</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Class Structures_DataGrid</td>
+  </tr>
+ </table>
+</div>
+</body></html>

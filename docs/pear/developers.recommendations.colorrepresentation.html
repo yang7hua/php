@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Color Representation</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="developers.recommendations.html" title="Recommendations" />
+  <link rel="prev" href="developers.recommendations.introduction.html" title="Why recommendations?" />
+  <link rel="next" href="developers.recommendations.drivercheck.html" title="Checking if a driver can be loaded" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Color Representation</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="developers.recommendations.introduction.html" title="Why recommendations?">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="developers.recommendations.drivercheck.html" title="Checking if a driver can be loaded">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="developers.recommendations.colorrepresentation"><div class="info"><h1>
+    Color Representation inside PEAR Packages
+   </h1>
+</div>
+   
+   
+
+   <p class="para">
+    In case a package has to deal with colors, it is recommended that
+    developers store and use an array representation of the color values
+    in their PEAR packages. All values are in the range of 0..255.
+   </p>
+
+   <div class="section"><div class="info"><h2 class="title">RGB representation</h2></div>
+    
+    <p class="para">
+     The following snippet defines an array that holds the RGB
+     definition of the green coloring that is used in the official PEAR
+     logo.
+
+     </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$color&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #0000BB">0x33</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0x99</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0x00</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div><p>
+
+     or
+
+     </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$color&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #0000BB">51</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">153</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div><p>
+
+     Please note that the internal, numerical representation of both forms
+     of the example are equal. The values represent the RGB (red, green,
+     blue) values. It was decided not to use &quot;r&quot;, &quot;g&quot; and &quot;b&quot; as indices
+     for the array, because numerical indices allow easier creation of
+     color arrays in the sourcecode, make handling less complicated and
+     are an already commonly used array representation for colors.
+    </p>
+   </div>
+
+   <div class="section"><div class="info"><h2 class="title">RGB representation with alpha-values</h2></div>
+    
+    <p class="para">
+     Since this an extension of the RGB representation above, it is
+     recommended to use a fourth value for alpha-channel-presentation.
+     An example of the "<span class="quote">PEAR-green</span>" with approximately 80%
+     intensity would be:
+
+     </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$color&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #0000BB">0x33</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0x99</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0x00</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0xCC</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div><p>
+
+     For consistency the alpha-value is also from the range 0..255. A
+     value of 255 means fully opaque (full color-intensity, same as in RGB-
+     notation), 0 means fully transparent.
+    </p>
+    <p class="para">
+     Please note this is in contrast to the alpha-value used by
+     imagecolorallocate(). The alpha-representation used in PEAR was
+     chosen for consistency with the other RGB values and because it is
+     commonly accepted practice in many other applications
+     (image-processing tools, etc.).
+    </p>
+   </div>
+
+   <div class="section"><div class="info"><h2 class="title">Other color representations than RGB(A)</h2></div>
+    
+    <p class="para">
+     Since RGB/RGBA will used for graphic generation on a computer we
+     decided to leave out an optional type-identifier classifying colors
+     as RGB/RGBA. However for different color-representations an
+     identifier is needed. The optional identifier &quot;type&quot; can be added to
+     the color array.
+
+     </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$color&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #0000BB">0x33</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0x99</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0x00</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0xCC</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"type"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">"RGB"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div><p>
+
+     Currently the following types are defined, with array-indices from
+     0..n following the color names listed beside them:
+    </p>
+
+    <ul class="itemizedlist">
+     <li class="listitem">
+      <span class="simpara">RGB - red, green, blue</span>
+     </li>
+     <li class="listitem">
+      <span class="simpara">CYMK - cyan, yellow, magenta, black (key)</span>
+     </li>
+    </ul>
+
+    <p class="para">
+     Please note that also the RGBA representation has the type &quot;RGB&quot;
+     since it&#039;s closely related.
+    </p>
+   </div>
+
+   <div class="section"><div class="info"><h2 class="title">Conversion to/between the color-representations</h2></div>
+    
+    <p class="para">
+     The PEAR-package <a href="http://pear.php.net/package/Image_Color" class="link external">Image_Color</a>
+     will (hopefully soon) contain all needed functions to convert arbitrary
+     color formats to the internal RGBA representation and convert different
+     color representations.
+    </p>
+    <p class="para">
+     Status: Currently Image_Color already offers functions to convert
+     color-names (e.g. &quot;green&quot;) and hex-representations-strings (e.g.
+     &quot;#339900&quot;) to the PEAR-RGBA-format. We are working to get alpha-
+     channel support added hopefully soon and will later add functions for
+     CYMK-conversion as well.
+    </p>
+   </div>
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="developers.recommendations.introduction.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="developers.recommendations.html">Recommendations</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="developers.recommendations.drivercheck.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Why recommendations?</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Checking if a driver can be loaded</td>
+  </tr>
+ </table>
+</div>
+</body></html>

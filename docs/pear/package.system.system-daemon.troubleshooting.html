@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Troubleshooting</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.system.system-daemon.html" title="System_Daemon" />
+  <link rel="prev" href="package.system.system-daemon.console-action.html" title="Console action" />
+  <link rel="next" href="package.system.system-procwatch.html" title="System_ProcWatch" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Troubleshooting</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.system.system-daemon.console-action.html" title="Console action">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.system.system-procwatch.html" title="System_ProcWatch">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="chapter" id="package.system.system-daemon.troubleshooting">
+ <div class="info">
+  <h1>Troubleshooting</h1>
+
+ </div>
+
+ <p class="para">
+   Here are some issues you may encounter down the road.
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para">
+      Connect to MySQL after you start() the daemon.
+      Otherwise only the parent process will have a MySQL connection, and 
+      since that dies.. It&#039;s lost and you will get a &#039;MySQL has gone away&#039;
+      error.
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      Error handling
+      Good error handling is imperative. Daemons are often mission critical 
+      applications and you don&#039;t want an uncatched error to bring it to it&#039;s
+      knees.
+
+       </p><ul class="itemizedlist">
+        <li class="listitem">
+         <p class="para">
+            Reconnect to MySQL
+            A connection may be interrupted. Think about network downtime or
+            lock-ups when your database server makes backups. Whatever the
+            cause: You don&#039;t want your daemon to die for this, let it try
+            again later.
+         </p>
+        </li>
+        <li class="listitem">
+          <p class="para">
+            Write your own php error handler
+            It should forward all the PHP errors to the log() method, so they end 
+            up in your logfile. Otherwise it&#039;s very hard to spot errors, since the
+            daemon has no way of writing to your console anymore! See
+            set_error_handler.
+          </p>
+         </li>
+       </ul>
+     
+    </li>
+    <li class="listitem">
+     <p class="para">
+        Monit
+        Monit is a standalone program that can kickstart any daemon,
+        based on your parameters. Should your daemon fail, monit will
+        mail you and try to restart it.
+     </p>
+    </li>
+   </ul>
+ 
+
+ <p class="para">
+  I know I&#039;m saying MySQL a lot, but you can obviously replace that
+  with Oracle, MSSQL, PostgreSQL, etc.
+ </p>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.system.system-daemon.console-action.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.system.system-daemon.html">System_Daemon</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.system.system-procwatch.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Console action</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">System_ProcWatch</td>
+  </tr>
+ </table>
+</div>
+</body></html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Entries</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.fileformats.file-fstab.html" title="File_Fstab" />
+  <link rel="prev" href="package.fileformats.file-fstab.intro.html" title="Introduction" />
+  <link rel="next" href="package.fileformats.file-fstab.saving.html" title="Saving" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Entries</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.fileformats.file-fstab.intro.html" title="Introduction">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.fileformats.file-fstab.saving.html" title="Saving">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.fileformats.file-fstab.entries">
+ 
+  <h1 class="refname">Entries</h1>
+  <div class="refnamediv">Entries &ndash; 
+   Working with entries
+  </div>
+
+ 
+
+ <div class="refsection" id="package.fileformats.file-fstab.entries.overview"><div class="info"><h1>Entry overview</h1>
+</div>
+  
+
+  <p class="para">
+   The <strong class="classname">File_Fstab_Entry</strong> class represents all the
+   information available about a particular entry in a Fstab file.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.fileformats.file-fstab.entries.properties"><div class="info"><h1>Entry properties</h1>
+</div>
+    
+
+    <p class="para">
+     The entry has a number of properties which represent the information
+     in the fstab file.
+    </p>
+
+    <p class="para">
+        </p><div class="variablelist">
+            <dl class="varlistentry">
+                <dt class="term">$device</dt>
+                <dd class="listitem">
+                    <span class="simpara">
+                        This is the path to the block device for this entry.
+                        <code class="literal">$device</code>, <code class="literal">$uuid</code>,
+                        and <code class="literal">$label</code> are mutually exclusive;
+                        only one of the three may be set.
+                    </span>
+                </dd>
+            </dl>
+            <dl class="varlistentry">
+                <dt class="term">$uuid</dt>
+                <dd class="listitem">
+                    <span class="simpara">
+                        The UUID of the device.
+                    </span>
+                </dd>
+            </dl>
+            <dl class="varlistentry">
+                <dt class="term">$label</dt>
+                <dd class="listitem">
+                    <span class="simpara">
+                        The label for this device.
+                    </span>
+                </dd>
+            </dl>
+            <dl class="varlistentry">
+                <dt class="term">$mountPoint</dt>
+                <dd class="listitem">
+                    <span class="simpara">
+                        The directory this device is mounted on.
+                    </span>
+                </dd>
+            </dl>
+            <dl class="varlistentry">
+                <dt class="term">$fsType</dt>
+                <dd class="listitem">
+                    <span class="simpara">
+                        The type of filesystem on <code class="literal">$device</code>.
+                    </span>
+                </dd>
+            </dl>
+            <dl class="varlistentry">
+                <dt class="term">$mountOptions</dt>
+                <dd class="listitem">
+                    <span class="simpara">
+                        Array of mount options for this device.
+                    </span>
+                </dd>
+            </dl>
+            <dl class="varlistentry">
+                <dt class="term">$dumpFrequency</dt>
+                <dd class="listitem">
+                    <span class="simpara">
+                        How often / if this filesystem should be backed up by
+                        <code class="literal">dump</code>.
+                    </span>
+                </dd>
+            </dl>
+            <dl class="varlistentry">
+                <dt class="term">$fsckPassNo</dt>
+                <dd class="listitem">
+                    <span class="simpara">
+                        Order of / if this device should be checked by <code class="literal">fsck</code>
+                        when the system boots.
+                    </span>
+                </dd>
+            </dl>
+        </div>
+    
+
+    <p class="para">
+      You may want to read <code class="literal">fstab(5)</code> for more information about
+      what these fields mean.
+    </p>
+    
+ </div>
+
+ <div class="refsection" id="package.fileformats.file-fstab.entries.finding"><div class="info"><h1>Finding entries</h1>
+</div>
+    
+
+    <p class="para">
+     There are a number of ways of finding a specific entry from the fstab.
+     You may find based on device, mountpoint, filesystem label, or UUID.
+    </p>
+ </div>
+
+    <div class="refsection" id="package.fileformats.file-fstab.entries.finding.device"><div class="info"><h1>Finding by device</h1>
+</div>
+      
+
+      <p class="para">
+       To find by device, you want to use the <strong class="function">getEntryForDevice()</strong>
+       function. The single argument this function accepts is the path to the block
+       device for an entry.
+      </p>
+
+      <div class="example"><div class="info"><p><strong>Get entry by device</strong></p></div>
+       
+
+       <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'File/Fstab.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$fstab&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">File_Fstab</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$dev&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$fstab</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getEntryForDevice</span><span style="color: #007700">(</span><span style="color: #DD0000">'/dev/hda1'</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$dev</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$dev</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+      </div>
+    </div>
+
+    <div class="refsection" id="package.fileformats.file-fstab.entries.finding.path"><div class="info"><h1>Finding by path (mountpoint)</h1>
+</div>
+      
+
+      <p class="para">
+       You may want to find a device based on the path it is mounted on;
+       for example, you may want to get the entry for <code class="filename">/cdrom</code>,
+       without caring if the CD device is <code class="filename">/dev/hdb</code>,
+       <code class="filename">/dev/cdrom</code>, or some other device. To do this, use
+       the <strong class="function">getEntryForPath()</strong> function.
+      </p>
+
+      <div class="example"><div class="info"><p><strong>Get entry by path</strong></p></div>
+       
+
+       <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'File/Fstab.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$fstab&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">File_Fstab</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$dev&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$fstab</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getEntryForPath</span><span style="color: #007700">(</span><span style="color: #DD0000">'/cdrom'</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$dev</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$dev</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+       </div>
+    </div>
+
+    <div class="refsection" id="package.fileformats.file-fstab.entries.finding.uuid"><div class="info"><h1>Finding by UUID</h1>
+</div>
+      
+
+      <p class="para">
+       Some systems use a filesystem <span class="acronym">UUID</span> to specify the
+       device to mount. A <span class="acronym">UUID</span> may look like this:
+       <code class="literal">b46ad2ee-01f3-4041-96ca-91d35d059417</code>. The
+       <strong class="function">getEntryForUUID()</strong> function handles this.
+      </p>
+
+      <div class="example"><div class="info"><p><strong>Get entry by UUID</strong></p></div>
+       
+
+       <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'File/Fstab.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$fstab&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">File_Fstab</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$dev&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$fstab</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getEntryForUUID</span><span style="color: #007700">(</span><span style="color: #DD0000">'b46ad2ee-01f3-4041-96ca-91d35d059417'</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$dev</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$dev</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+       </div>
+    </div>
+
+    <div class="refsection" id="package.fileformats.file-fstab.entries.finding.label"><div class="info"><h1>Finding by label</h1>
+</div>
+      
+
+      <p class="para">
+       Some filesystems allow you to specify a textual label to a filesystem.
+       For example, you may label your root device <code class="literal">rootdev</code>,
+       the device you mount on <code class="filename">/home</code> could be named
+       <code class="literal">homedirs</code> and so forth. <strong class="classname">File_Fstab</strong>
+       supports getting entries based on the device label. This is accomplished
+       by using the <strong class="function">getEntryForLabel()</strong> function.
+      </p>
+
+      <div class="example"><div class="info"><p><strong>Get entry by label</strong></p></div>
+       
+
+       <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'File/Fstab.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$fstab&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">File_Fstab</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$dev&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$fstab</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getEntryForLabel</span><span style="color: #007700">(</span><span style="color: #DD0000">'homedirs'</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$dev</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$dev</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+       </div>
+    </div>
+
+    <div class="refsection" id="package.fileformats.file-fstab.entries.adding"><div class="info"><h1>Adding entries</h1>
+</div>
+        
+
+        <p class="para">
+            In addition to reading fstab files, you may modify them as well.
+        </p>
+
+        <div class="example"><div class="info"><p><strong>Add an entry for a floppy disk</strong></p></div>
+            
+
+            <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'File/Fstab.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$fstab&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">File_Fstab</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$floppy&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">File_Fstab_Entry</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$floppy</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fsType&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'vfat'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$floppy</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">device&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'/dev/fd0'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$floppy</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">mountPoint&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'/floppy'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$fstab</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addEntry</span><span style="color: #007700">(</span><span style="color: #0000BB">$floppy</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+    </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.fileformats.file-fstab.intro.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.fileformats.file-fstab.html">File_Fstab</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.fileformats.file-fstab.saving.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Saving</td>
+  </tr>
+ </table>
+</div>
+</body></html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Usage</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.encryption.crypt-gpg.html" title="Crypt_GPG" />
+  <link rel="prev" href="package.encryption.crypt-gpg.generate-key.html" title="Generating a GnuPG Key" />
+  <link rel="next" href="package.encryption.crypt-gpg.referring-to-keys.html" title="Referring to Keys" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Usage</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.encryption.crypt-gpg.generate-key.html" title="Generating a GnuPG Key">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.encryption.crypt-gpg.referring-to-keys.html" title="Referring to Keys">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="package.encryption.crypt-gpg.usage">
+
+ <div class="info">
+  <h1>Usage</h1>
+
+ </div>
+
+ <div class="section" id="package.encryption.crypt-gpg.usage.creating">
+
+ <div class="info">
+  <h2 class="title">Creating The <strong class="classname">Crypt_GPG</strong> Object</h2>
+ </div>
+
+  <p class="para">
+   The <strong class="classname">Crypt_GPG</strong> class is the main entry point for using
+   <strong class="package">Crypt_GPG</strong>. To use GnuPG in your project, create an
+   instance of <strong class="classname">Crypt_GPG</strong> and then call methods on the
+   object to perform GPG actions.
+  </p>
+
+  <p class="para">
+   The <strong class="classname">Crypt_GPG</strong> class supports several options, which
+   may be specified in the constructor. Options may be used for the following:
+  </p>
+
+  <div class="section">
+
+   <div class="info">
+    <h3 class="title">Specifying Keyring Location</h3>
+   </div>
+
+   <p class="para">
+    Sometimes, specifying the location of the keyring is required. One such
+    case case is when using <strong class="classname">Crypt_GPG</strong> from the context
+    of a Web page when the Web-server&#039;s user does not have a home directory, or
+    does not have write access to its home directory. This is often the case on
+    shared hosts. In this case, you should specify the GnuPG keyring location
+    as an existing writeable directory. This is done using the
+    <code class="literal">homedir</code> option. For example:
+    </p><div class="informalexample">
+     <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Crypt/GPG.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Specify&nbsp;homedir&nbsp;as&nbsp;an&nbsp;existing&nbsp;writeable&nbsp;directory&nbsp;if&nbsp;the&nbsp;web&nbsp;user<br />//&nbsp;does&nbsp;not&nbsp;have&nbsp;a&nbsp;home&nbsp;directory,&nbsp;or&nbsp;if&nbsp;the&nbsp;web&nbsp;user's&nbsp;home&nbsp;directory<br />//&nbsp;is&nbsp;not&nbsp;writeable.<br /></span><span style="color: #0000BB">$gpg&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Crypt_GPG</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'homedir'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'/my/writeable/directory'</span><span style="color: #007700">));<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+    </div>
+   
+
+  </div>
+
+  <div class="section">
+
+   <div class="info">
+    <h3 class="title">Showing Debug Information</h3>
+   </div>
+
+   <p class="para">
+    If, for some reason, <strong class="package">Crypt_GPG</strong> does not seem to work
+    correctly, detailed debugging information may be turned on. This is done
+    using the <code class="literal">debug</code> option. When providing bug reports for
+    the <strong class="package">Crypt_GPG</strong> package, you may be asked to turn on deubg
+    mode. Example:
+    </p><div class="informalexample">
+     <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Crypt/GPG.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Enable&nbsp;debug&nbsp;mode.&nbsp;This&nbsp;will&nbsp;dump&nbsp;a&nbsp;lot&nbsp;of&nbsp;output&nbsp;when&nbsp;Crypt_GPG<br />//&nbsp;actions&nbsp;are&nbsp;performed.<br /></span><span style="color: #0000BB">$gpg&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Crypt_GPG</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'debug'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">));<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+    </div>
+   
+
+  </div>
+
+  <div class="section">
+
+   <div class="info">
+    <h3 class="title">Specifying the GnuPG Binary Location</h3>
+   </div>
+
+   <p class="para">
+    <strong class="package">Crypt_GPG</strong> works by talking to the GnuPG subprocess. As a
+    result, it needs to know the location of the GnuPG binary to work properly.
+    In most cases, <strong class="package">Crypt_GPG</strong> will detect the location of the
+    GnuPG binary automatically. If the location is detected incorrectly, or if
+    the GnuPG binary is installed in a custom location, the
+    <code class="literal">binary</code> option may be used. For example:
+    </p><div class="informalexample">
+     <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Crypt/GPG.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Specify&nbsp;custom&nbsp;location&nbsp;of&nbsp;GnuPG&nbsp;binary.<br /></span><span style="color: #0000BB">$gpg&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Crypt_GPG</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'binary'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'/home/joe/bin/gpg'</span><span style="color: #007700">));<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+    </div>
+   
+   <p class="para">
+    If an invalid binary location is specified, <strong class="classname">Crypt_GPG</strong>
+    will throw an exception.
+   </p>
+
+  </div>
+
+ </div>
+
+ 
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.encryption.crypt-gpg.generate-key.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.encryption.crypt-gpg.html">Crypt_GPG</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.encryption.crypt-gpg.referring-to-keys.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Generating a GnuPG Key</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Referring to Keys</td>
+  </tr>
+ </table>
+</div>
+</body></html>

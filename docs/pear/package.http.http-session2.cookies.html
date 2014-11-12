@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Making a session persistent</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.http.http-session2.html" title="HTTP_Session2" />
+  <link rel="prev" href="package.http.http-session2.database.html" title="Using a database container" />
+  <link rel="next" href="package.http.http-upload.html" title="HTTP_Upload" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Making a session persistent</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.http.http-session2.database.html" title="Using a database container">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.http.http-upload.html" title="HTTP_Upload">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.http.http-session2.cookies">
+ 
+  <h1 class="refname">Making a session persistent</h1>
+  <div class="refnamediv">Making a session persistent &ndash; 
+   This example illustrates how to make a session persist over multiple browser
+   sessions using a so called &quot;session cookie&quot;.
+  </div>
+
+ 
+
+ <div class="refsection" id="package.http.http-session2.cookies.intro"><div class="info"><h1>Explanation</h1>
+</div>
+  
+
+  <p class="para">
+   When you create a session it needs to be referenced using a sessionID. This
+   sessionID is generally saved either into a cookie or passed along in the URI.
+  </p>
+
+  <p class="para">
+   To remember the sessionID across browser sessions, the cookie method is favoured.
+  </p>
+
+  <p class="para">
+   To extend the lifetime of this cookie (the standard is
+   that it&#039;s only valid until the browser is closed) we use PHP&#039;s
+   <a href="http://www.php.net/session_set_cookie_params" class="link external">session_set_cookie_params()</a>.
+  </p>
+
+ </div>
+
+ <div class="refsection" id="package.http.http-session2.cookies.examples"><div class="info"><h1>Example</h1>
+</div>
+  
+
+  <div class="example"><div class="info"><p><strong>Use of session_set_cookie_params</strong></p></div>
+   
+
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTTP/Session2.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">/**<br />&nbsp;*&nbsp;set&nbsp;cookie&nbsp;params<br />&nbsp;*/<br /></span><span style="color: #0000BB">session_set_cookie_params</span><span style="color: #007700">(</span><span style="color: #0000BB">60</span><span style="color: #007700">*</span><span style="color: #0000BB">60</span><span style="color: #007700">*</span><span style="color: #0000BB">24</span><span style="color: #007700">,&nbsp;</span><span style="color: #FF8000">//&nbsp;expire&nbsp;in&nbsp;24&nbsp;hours<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'/'</span><span style="color: #007700">,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;path<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'.example.org'</span><span style="color: #007700">,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;domain<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;"secure&nbsp;only"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;only&nbsp;over&nbsp;http<br /><br /></span><span style="color: #0000BB">HTTP_Session2</span><span style="color: #007700">::</span><span style="color: #0000BB">useCookies</span><span style="color: #007700">(</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">HTTP_Session2</span><span style="color: #007700">::</span><span style="color: #0000BB">start</span><span style="color: #007700">(</span><span style="color: #DD0000">'s'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">HTTP_Session2</span><span style="color: #007700">::</span><span style="color: #0000BB">setExpire</span><span style="color: #007700">(</span><span style="color: #0000BB">60</span><span style="color: #007700">*</span><span style="color: #0000BB">60</span><span style="color: #007700">*</span><span style="color: #0000BB">24</span><span style="color: #007700">);&nbsp;</span><span style="color: #FF8000">//&nbsp;set&nbsp;expire&nbsp;in&nbsp;24&nbsp;hours<br /></span><span style="color: #0000BB">HTTP_Session2</span><span style="color: #007700">::</span><span style="color: #0000BB">setIdle</span><span style="color: #007700">(</span><span style="color: #0000BB">60</span><span style="color: #007700">*</span><span style="color: #0000BB">60</span><span style="color: #007700">);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;set&nbsp;idle&nbsp;to&nbsp;1&nbsp;hour<br /><br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">HTTP_Session2</span><span style="color: #007700">::</span><span style="color: #0000BB">isExpired</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">HTTP_Session2</span><span style="color: #007700">::</span><span style="color: #0000BB">destroy</span><span style="color: #007700">();<br />}<br /><br />if&nbsp;(</span><span style="color: #0000BB">HTTP_Session2</span><span style="color: #007700">::</span><span style="color: #0000BB">isIdle</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">HTTP_Session2</span><span style="color: #007700">::</span><span style="color: #0000BB">destroy</span><span style="color: #007700">();<br />}<br /><br /></span><span style="color: #0000BB">HTTP_Session2</span><span style="color: #007700">::</span><span style="color: #0000BB">updateIdle</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.http.http-session2.database.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.http.http-session2.html">HTTP_Session2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.http.http-upload.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Using a database container</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">HTTP_Upload</td>
+  </tr>
+ </table>
+</div>
+</body></html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Split long if statements onto several lines</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="rfc.cs-enhancements.html" title="Coding standard enhancements" />
+  <link rel="prev" href="rfc.cs-enhancements.splitlongassignments.html" title="Split long assigments onto several lines" />
+  <link rel="next" href="rfc.cs-enhancements.ternaryoperators.html" title="Ternary operators" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Split long if statements onto several lines</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="rfc.cs-enhancements.splitlongassignments.html" title="Split long assigments onto several lines">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="rfc.cs-enhancements.ternaryoperators.html" title="Ternary operators">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="rfc.cs-enhancements.splitlongstatements">
+    <h1>Split long if statements onto several lines</h1>
+
+
+    <p class="para">Long if statements may be split onto several lines when the
+    character/line limit would be exceeded. The conditions have to be
+    positioned onto the following line, and indented 4 characters. The logical
+    operators (<code class="literal">&amp;&amp;</code>, <code class="literal">||</code>, etc.)
+    should be at the beginning of the line to make it easier to comment (and
+    exclude) the condition. The closing parenthesis and opening brace get
+    their own line at the end of the conditions.</p>
+
+    <p class="para">Keeping the operators at the beginning of the line has two
+    advantages: It is trivial to comment out a particular line during
+    development while keeping syntactically correct code (except of course the
+    first line). Further is the logic kept at the front where it&#039;s not
+    forgotten. Scanning such conditions is very easy since they are aligned
+    below each other.</p>
+
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">if&nbsp;((</span><span style="color: #0000BB">$condition1<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">||&nbsp;</span><span style="color: #0000BB">$condition2</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&amp;&amp;&nbsp;</span><span style="color: #0000BB">$condition3<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">&amp;&amp;&nbsp;</span><span style="color: #0000BB">$condition4<br /></span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//code&nbsp;here<br /></span><span style="color: #007700">}&nbsp;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+    <p class="para">The first condition may be aligned to the others.</p>
+
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">if&nbsp;(&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$condition1<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">||&nbsp;</span><span style="color: #0000BB">$condition2<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">||&nbsp;</span><span style="color: #0000BB">$condition3<br /></span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//code&nbsp;here<br /></span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+    <p class="para">The best case is of course when the line does not need to be split.
+    When the if clause is really long enough to be split, it might be better
+    to simplify it. In such cases, you could express conditions as variables
+    an compare them in the <code class="literal">if()</code> condition. This has the
+    benefit of &quot;naming&quot; and splitting the condition sets into smaller, better
+    understandable chunks:</p>
+
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br />$is_foo&nbsp;</span><span style="color: #007700">=&nbsp;(</span><span style="color: #0000BB">$condition1&nbsp;</span><span style="color: #007700">||&nbsp;</span><span style="color: #0000BB">$condition2</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$is_bar&nbsp;</span><span style="color: #007700">=&nbsp;(</span><span style="color: #0000BB">$condition3&nbsp;</span><span style="color: #007700">&amp;&amp;&nbsp;</span><span style="color: #0000BB">$condtion4</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">$is_foo&nbsp;</span><span style="color: #007700">&amp;&amp;&nbsp;</span><span style="color: #0000BB">$is_bar</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;....<br /></span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+    <blockquote class="note">
+      <p class="para">There were suggestions to indent the parantheses &quot;groups&quot; by 1
+      space for each grouping. This is too hard to achieve in your coding
+      flow, since your tab key always produces 4 spaces. Indenting the if
+      clauses would take too much finetuning.</p>
+    </blockquote>
+
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="rfc.cs-enhancements.splitlongassignments.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="rfc.cs-enhancements.html">Coding standard enhancements</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="rfc.cs-enhancements.ternaryoperators.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Split long assigments onto several lines</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Ternary operators</td>
+  </tr>
+ </table>
+</div>
+</body></html>

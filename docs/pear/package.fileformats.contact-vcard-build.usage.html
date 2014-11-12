@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Usage</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.fileformats.contact-vcard-build.html" title="Contact_Vcard_Build" />
+  <link rel="prev" href="package.fileformats.contact-vcard-build.intro.html" title="Introduction" />
+  <link rel="next" href="package.fileformats.contact-vcard-parse.html" title="Contact_Vcard_Parse" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Usage</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.fileformats.contact-vcard-build.intro.html" title="Introduction">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.fileformats.contact-vcard-parse.html" title="Contact_Vcard_Parse">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.fileformats.contact-vcard-build.usage">
+ 
+  <h1 class="refname">Usage</h1>
+  <div class="refnamediv">Usage &ndash; 
+   How to use Contact_VCard_Build
+  </div>
+
+ 
+
+ <div class="refsection" id="package.fileformats.contact-vcard-build.usage.desc"><div class="info"><h1>Description</h1>
+</div>
+  
+  <p class="para">
+   The basic use of <strong class="classname">Contact_Vcard_Build</strong> is straightforward:
+   instantiate a builder object, add values and parameters,
+   then fetch the resulting vCard.
+  </p>
+ </div>
+
+
+ <div class="refsection" id="package.fileformats.contact-vcard-build.usage.instantiation"><div class="info"><h1>Instantiation</h1>
+</div>
+  
+  <p class="para">
+   To create an instance of a <strong class="classname">Contact_Vcard_Build</strong>
+   (&quot;builder&quot;) object, include the class file and issue a new directive:
+  </p>
+  <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Contact/Vcard/Build.php'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Contact_Vcard_Build</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+  <p class="para">
+   By default, this creates a builder object that will allow you to fetch a
+   version 3.0 vCard.
+   If you want to build a version 2.1 vCard, pass &#039;<code class="literal">2.1</code>&#039;
+   as the only constructor argument:
+  </p>
+  <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />&nbsp;&nbsp;&nbsp;&nbsp;$vcard&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Contact_Vcard_Build</span><span style="color: #007700">(</span><span style="color: #DD0000">'2.1'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+ </div>
+
+
+ <div class="refsection" id="package.fileformats.contact-vcard-build.usage.setcomponent"><div class="info"><h1>How To Set A Component Value</h1>
+</div>
+  
+  <p class="para">
+   There are two ways to set the value of a component: use the method
+   specifically for the component you want to add, or use the generic
+   <strong class="function">setValue()</strong> and <strong class="function">addValue()</strong> methods.
+   While the generic methods allow you direct control over every individual
+   component, iteration, structured part, and value repetition,
+   the component-specific methods are often easier to use.
+  </p>
+  <blockquote class="note">
+   <p class="para">
+    You must set the <code class="literal">FN</code> (formatted name) and
+    <code class="literal">N</code> (personal name) components;
+    these are required by both 2.1 and 3.0 version vCards.
+   </p>
+  </blockquote>
+
+  <p class="para">
+   For example, if you want to add two <code class="literal">ADR</code> components
+   to the vCard, you can do it with the ADR-specific method...
+  </p>
+  <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;add&nbsp;first&nbsp;address&nbsp;iteration<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addAddress</span><span style="color: #007700">(</span><span style="color: #0000BB">$pobox0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$extend0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$street0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$city0</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$state0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$zip0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$country0</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;add&nbsp;second&nbsp;address&nbsp;iteration<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addAddress</span><span style="color: #007700">(</span><span style="color: #0000BB">$pobox1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$extend1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$street1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$city1</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$state1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$zip1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$country1</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+  <p class="para">
+   ...or you can use the generic methods:
+  </p>
+  <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;add&nbsp;first&nbsp;address&nbsp;(iteration&nbsp;=&nbsp;0)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addValue</span><span style="color: #007700">(</span><span style="color: #DD0000">'ADR'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">VCARD_ADR_POB</span><span style="color: #007700">,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$pobox0</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addValue</span><span style="color: #007700">(</span><span style="color: #DD0000">'ADR'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">VCARD_ADR_EXTEND</span><span style="color: #007700">,&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$extend0</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addValue</span><span style="color: #007700">(</span><span style="color: #DD0000">'ADR'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">VCARD_ADR_STREET</span><span style="color: #007700">,&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$street0</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addValue</span><span style="color: #007700">(</span><span style="color: #DD0000">'ADR'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">VCARD_ADR_LOCALITY</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$city0</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addValue</span><span style="color: #007700">(</span><span style="color: #DD0000">'ADR'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">VCARD_ADR_REGION</span><span style="color: #007700">,&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$state0</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addValue</span><span style="color: #007700">(</span><span style="color: #DD0000">'ADR'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">VCARD_ADR_POSTCODE</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$zip0</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addValue</span><span style="color: #007700">(</span><span style="color: #DD0000">'ADR'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">VCARD_ADR_COUNTRY</span><span style="color: #007700">,&nbsp;&nbsp;</span><span style="color: #0000BB">$country0</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;add&nbsp;second&nbsp;address&nbsp;(iteration&nbsp;=&nbsp;1)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addValue</span><span style="color: #007700">(</span><span style="color: #DD0000">'ADR'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">VCARD_ADR_POB</span><span style="color: #007700">,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$pobox1</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addValue</span><span style="color: #007700">(</span><span style="color: #DD0000">'ADR'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">VCARD_ADR_EXTEND</span><span style="color: #007700">,&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$extend1</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addValue</span><span style="color: #007700">(</span><span style="color: #DD0000">'ADR'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">VCARD_ADR_STREET</span><span style="color: #007700">,&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$street1</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addValue</span><span style="color: #007700">(</span><span style="color: #DD0000">'ADR'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">VCARD_ADR_LOCALITY</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$city1</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addValue</span><span style="color: #007700">(</span><span style="color: #DD0000">'ADR'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">VCARD_ADR_REGION</span><span style="color: #007700">,&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$state1</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addValue</span><span style="color: #007700">(</span><span style="color: #DD0000">'ADR'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">VCARD_ADR_POSTCODE</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$zip1</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addValue</span><span style="color: #007700">(</span><span style="color: #DD0000">'ADR'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">VCARD_ADR_COUNTRY</span><span style="color: #007700">,&nbsp;&nbsp;</span><span style="color: #0000BB">$country1</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  <p class="para">
+   Please see the <code class="filename">Contact_Vcard_Build.php</code> inline
+   comments for descriptions of how to use each component-specific method.
+  </p>
+ </div>
+
+
+ <div class="refsection" id="package.fileformats.contact-vcard-build.usage.setparameter"><div class="info"><h1>How To Set A Parameter Value</h1>
+</div>
+  
+  <p class="para">
+   There is only one way to add a parameter: use the
+   <strong class="function">addParam()</strong> method.
+   Unlike with adding values, there are no component-specifc methods
+   to add parameters.
+  </p>
+  <p class="para">
+   In general, you should add the parameters of a component immediately
+   after you add the complete value of a component,
+   because the builder object keeps track of what was the last component
+   value added.
+   (This is why there are no component-specific add-parameter methods.)
+  </p>
+  <p class="para">
+   For example, we can set the params for the <code class="literal">ADR</code>
+   components as in the above code:
+  </p>
+  <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;add&nbsp;first&nbsp;address&nbsp;iteration<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addAddress</span><span style="color: #007700">(</span><span style="color: #0000BB">$pobox0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$extend0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$street0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$city0</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$state0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$zip0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$country0</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;add&nbsp;parameters&nbsp;to&nbsp;the&nbsp;first&nbsp;address<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addParam</span><span style="color: #007700">(</span><span style="color: #DD0000">'TYPE'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'HOME'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addParam</span><span style="color: #007700">(</span><span style="color: #DD0000">'TYPE'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'PREF'</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;add&nbsp;second&nbsp;address&nbsp;iteration<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addAddress</span><span style="color: #007700">(</span><span style="color: #0000BB">$pobox1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$extend1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$street1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$city1</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$state1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$zip1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$country1</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;add&nbsp;parameters&nbsp;to&nbsp;the&nbsp;second&nbsp;address<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addParam</span><span style="color: #007700">(</span><span style="color: #DD0000">'TYPE'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'WORK'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+  <p class="para">
+   Thus, the first address will have <code class="literal">TYPE=HOME,PREF</code>
+   and the second will have <code class="literal">TYPE=WORK</code> as their parameters.
+  </p>
+  <p class="para">
+   Alternatively, you can add parameters directly using the same
+   <strong class="function">addParam()</strong> method,
+   with some additional arguments:
+  </p>
+  <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;add&nbsp;parameters&nbsp;to&nbsp;the&nbsp;first&nbsp;address&nbsp;iteration<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;(component&nbsp;=&nbsp;ADR,&nbsp;iteration&nbsp;=&nbsp;0)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addParam</span><span style="color: #007700">(</span><span style="color: #DD0000">'TYPE'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'HOME'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'ADR'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addParam</span><span style="color: #007700">(</span><span style="color: #DD0000">'TYPE'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'PREF'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'ADR'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;add&nbsp;parameters&nbsp;to&nbsp;the&nbsp;second&nbsp;address&nbsp;iteration<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;(component&nbsp;=&nbsp;ADR,&nbsp;iteration&nbsp;=&nbsp;1)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addParam</span><span style="color: #007700">(</span><span style="color: #DD0000">'TYPE'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'WORK'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'ADR'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  <p class="para">
+   This does the same thing as the earlier <strong class="function">addParam()</strong>
+   code.
+  </p>
+  <blockquote class="note">
+   <p class="para">
+    Although the version 2.1 specification optionally allows parameter
+    values to be indicated without without specified types
+    (i.e, &quot;<code class="literal">HOME</code>&quot; instead of &quot;<code class="literal">TYPE=HOME</code>&quot;)
+    the <strong class="classname">Contact_Vcard_Build</strong> class is not so lenient.
+    With Contact_Vcard_Builder, you must set both the parameter kind and
+    parameter value.
+   </p>
+  </blockquote>
+
+ </div>
+
+
+ <div class="refsection" id="package.fileformats.contact-vcard-build.usage.fetch"><div class="info"><h1>How To Fetch A vCard</h1>
+</div>
+  
+  <p class="para">
+   After you have added all the values and parameters that you want,
+   you get back the vCard using the <strong class="function">fetch()</strong> method.
+   This will return the components, parameters, and values
+   (including <code class="literal">BEGIN:VCARD</code> and <code class="literal">END:VCARD</code>)
+    in proper format for the vCard version.
+  </p>
+  <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />&nbsp;&nbsp;&nbsp;&nbsp;$text&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$vcard</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+  <blockquote class="note">
+   <p class="para">
+    If you set values and parameters for components that are not part
+    of the selected vCard version, they will not be included in the
+    fetched vCard text.
+   </p>
+  </blockquote>
+
+  <blockquote class="note">
+   <p class="para">
+    You must have set the <code class="literal">FN</code> (formatted name) and
+    <code class="literal">N</code> (personal name) components, or the
+    <strong class="function">fetch()</strong> method will return a
+    <strong class="classname">PEAR_Error</strong> object.
+    The <code class="literal">FN</code> and <code class="literal">N</code> components are required
+    by both 2.1 and 3.0 version vCards.
+   </p>
+  </blockquote>
+
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.fileformats.contact-vcard-build.intro.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.fileformats.contact-vcard-build.html">Contact_Vcard_Build</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.fileformats.contact-vcard-parse.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Contact_Vcard_Parse</td>
+  </tr>
+ </table>
+</div>
+</body></html>

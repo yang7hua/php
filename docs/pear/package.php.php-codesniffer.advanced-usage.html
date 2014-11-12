@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Advanced Usage</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.php.php-codesniffer.html" title="PHP_CodeSniffer" />
+  <link rel="prev" href="package.php.php-codesniffer.usage.html" title="Usage" />
+  <link rel="next" href="package.php.php-codesniffer.reporting.html" title="Reporting" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Advanced Usage</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.php.php-codesniffer.usage.html" title="Usage">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.php.php-codesniffer.reporting.html" title="Reporting">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.php.php-codesniffer.advanced-usage">
+ 
+  <h1 class="refname">Advanced Usage</h1>
+  <div class="refnamediv">Advanced Usage &ndash; Advanced usage information</div>
+
+ 
+
+ <div class="refsection" id="package.php.php-codesniffer.advanced-usage.valid-file-extensions"><div class="info"><h1>Specifying Valid File Extensions</h1>
+</div>
+  <p class="para">
+   By default, PHP_CodeSniffer will check any file it finds with a <code class="literal">.inc</code> or <code class="literal">.php</code> extension. Sometimes, this means that PHP_CodeSniffer is not checking enough of your files. Sometimes, the opposite is true. PHP_CodeSniffer allows you to specify a list of valid file extensions using the <code class="literal">--extensions</code> command line argument. Extensions are separated by commas.
+  </p>
+  <div class="example"><div class="info"><p><strong>Checking <code class="literal">.php</code> files only</strong></p></div>
+   <pre class="screen">
+<br/>$&nbsp;phpcs&nbsp;--extensions=php&nbsp;/path/to/code<br/>
+   </pre>
+
+  </div>
+  <div class="example"><div class="info"><p><strong>Checking <code class="literal">.php</code>, <code class="literal">.inc</code> and <code class="literal">.lib</code> files only</strong></p></div>
+   <pre class="screen">
+<br/>$&nbsp;phpcs&nbsp;--extensions=php,inc,lib&nbsp;/path/to/code<br/>
+   </pre>
+
+  </div>
+  <blockquote class="note">
+   <span class="simpara">
+    If you have asked PHP_CodeSniffer to check a specific file rather than an entire directory, the extension of the specified file will be ignored. The file will be checked even if it has an invalid extension or no extension at all.
+   </span>
+   <span class="simpara">
+    In the following example, the main.inc file will be checked by PHP_CodeSniffer even though the <code class="literal">--extensions</code> command line argument specifies that only <code class="literal">.php</code> files should be checked.
+   </span>
+   <div class="example"><div class="info"><p><strong>Extension ignored when checking specific file</strong></p></div>
+   <pre class="screen">
+<br/>$&nbsp;phpcs&nbsp;--extensions=php&nbsp;/path/to/code/main.inc<br/>
+   </pre>
+
+  </div>
+  </blockquote>
+
+  <blockquote class="note">
+   <span class="simpara">
+    The ignoring of file extensions for specific files is a feature of PHP_CodeSniffer and is the only way to check files without an extension. If you check an entire directory of files, all files without extensions will be ignored, so you must check each of these file separately.
+   </span>
+  </blockquote>
+
+ </div>
+
+
+ <div class="refsection" id="package.php.php-codesniffer.advanced-usage.ignore-files-folders"><div class="info"><h1>Ignoring Files and Folders</h1>
+</div>
+  <p class="para">
+   Sometimes you want PHP_CodeSniffer to run over a very large number of files, but you want some files and folders to be skipped. The <code class="literal">--ignore</code> command line argument can be used to tell PHP_CodeSniffer to skip files and folders that match one or more patterns.
+  </p>
+  <p class="para">
+   In the following example, PHP_CodeSniffer will skip all files inside the package&#039;s <code class="filename">tests</code> and <code class="filename">data</code> directories. This is useful if you are checking a PEAR package but don&#039;t want your test or data files to conform to your coding standard.
+  </p>
+  <div class="example"><div class="info"><p><strong>Ignoring test and data files</strong></p></div>
+   <pre class="screen">
+<br/>$&nbsp;phpcs&nbsp;--ignore=*/tests/*,*/data/*&nbsp;/path/to/code<br/>
+   </pre>
+
+  </div>
+  <blockquote class="note">
+   <span class="simpara">
+    You can also tell PHP_CodeSniffer to ignore a file using a special comment inserted at the top of the file. This will stop the file being checked even if it does not match the ignore pattern.
+   </span>
+   <div class="example"><div class="info"><p><strong>Ignoring a file using a comment</strong></p></div>
+    <pre class="screen">
+<br/>&lt;?php<br/>//&nbsp;@codingStandardsIgnoreFile<br/>$xmlPackage&nbsp;=&nbsp;new&nbsp;XMLPackage;<br/>$xmlPackage[&#039;error_code&#039;]&nbsp;=&nbsp;get_default_error_code_value();<br/>$xmlPackage-&gt;send();<br/>?&gt;<br/>
+    </pre>
+
+   </div>
+  </blockquote>
+
+ </div>
+
+
+ <div class="refsection" id="package.php.php-codesniffer.advanced-usage.ignore-file-parts"><div class="info"><h1>Ignoring Parts of a File</h1>
+</div>
+  <p class="para">
+   Some parts of your code may be unable to conform to your coding standard. For example, you might have to break your standard to integrate with an external library or web service. To stop PHP_CodeSniffer generating errors for this code, you can wrap it in special comments. PHP_CodeSniffer will then hide all errors and warnings that are generated for these lines of code.
+  </p>
+  <div class="example"><div class="info"><p><strong>Ignoring parts of a file using comments</strong></p></div>
+   <pre class="screen">
+<br/>$xmlPackage&nbsp;=&nbsp;new&nbsp;XMLPackage;<br/>//&nbsp;@codingStandardsIgnoreStart<br/>$xmlPackage[&#039;error_code&#039;]&nbsp;=&nbsp;get_default_error_code_value();<br/>//&nbsp;@codingStandardsIgnoreEnd<br/>$xmlPackage-&gt;send();<br/>
+   </pre>
+
+  </div>
+ </div>
+
+
+ <div class="refsection" id="package.php.php-codesniffer.advanced-usage.sniffs"><div class="info"><h1>Limiting Results to Specific Sniffs</h1>
+</div>
+  <p class="para">
+   By default, PHP_CodeSniffer will check your code using all sniffs in the specified standard. Sometimes you may want to find all occurrences of an error to eliminate it more quickly or understand the scope of the problem. PHP_CodeSniffer allows you to specify a list of sniffs to limit results to using the <code class="literal">--sniffs</code> command line argument. Sniffs are separated by commas.
+  </p>
+  <div class="example"><div class="info"><p><strong>Checking files for two specific sniffs only</strong></p></div>
+   <pre class="screen">
+<br/>$&nbsp;phpcs&nbsp;--standard=PEAR&nbsp;--sniffs=Generic.PHP.LowerCaseConstant,PEAR.WhiteSpace.ScopeIndent&nbsp;/path/to/code<br/>
+   </pre>
+
+  </div>
+  <blockquote class="note">
+   <span class="simpara">
+    This feature is a message filter and not a quick way to define a custom coding standard. All sniffs specified on the command line in this way must be used in the coding standard you are using to check your files. You can&#039;t, for example, limit results to Squiz sniffs while using the PEAR standard as the PEAR standard does not include these sniffs.
+   </span>
+  </blockquote>
+
+  <blockquote class="note">
+   <span class="simpara">
+    To view source codes for error messages, use the <code class="literal">-s</code> command line argument. This will print source codes in the full, summary and source reports.
+   </span>
+  </blockquote>
+
+ </div>
+
+
+ <div class="refsection" id="package.php.php-codesniffer.advanced-usage.severity"><div class="info"><h1>Filtering Errors and Warnings Based on Severity</h1>
+</div>
+  <p class="para">
+   By default, PHP_CodeSniffer assigns a severity of <code class="literal">5</code> to all errors and warnings. Standards, especially custom standards, may change the severity of some messages so they are hidden by default or even so that they are raised to indicate greater importance. PHP_CodeSniffer allows you to decide what the minimum severity level must be to show a message in its report using the <code class="literal">--severity</code> command line argument.
+  </p>
+  <div class="example"><div class="info"><p><strong>Hiding errors and warnings with a severity less than 3</strong></p></div>
+   <pre class="screen">
+<br/>$&nbsp;phpcs&nbsp;--severity=3&nbsp;/path/to/code<br/>
+   </pre>
+
+  </div>
+  <p class="para">
+   You can specify different values for errors and warnings using the <code class="literal">--error-severity</code> and <code class="literal">--warning-severity</code> command line arguments.
+  </p>
+  <div class="example"><div class="info"><p><strong>Showing all errors but only warnings with a severity of 8 or more</strong></p></div>
+   <pre class="screen">
+<br/>$&nbsp;phpcs&nbsp;--error-severity=1&nbsp;--warning-severity=8&nbsp;/path/to/code<br/>
+   </pre>
+
+  </div>
+  <blockquote class="note">
+   <span class="simpara">
+    Setting the severity of warnings to <code class="literal">0</code> is the same as using the <code class="literal">-n</code> command line argument. If you set the severity of errors to <code class="literal">0</code> PHP_CodeSniffer will not show any errors, which may be useful if you just want to show the warnings.
+   </span>
+  </blockquote>
+
+  <blockquote class="note">
+   <span class="simpara">
+    This feature is particularly useful during manual code reviews. During normal development or an automated build, you may want to only check code formatting issues while during a code review you may wish to show less severe errors and warnings that may need manual peer review.
+   </span>
+  </blockquote>
+
+ </div>
+
+
+ <div class="refsection" id="package.php.php-codesniffer.advanced-usage.replace-tabs-spaces"><div class="info"><h1>Replacing Tabs with Spaces</h1>
+</div>
+  <p class="para">
+   Most of the sniffs written for PHP_CodeSniffer do not support the usage of tabs for indentation and alignment. You can write your own sniffs that check for tabs instead of spaces, but you can also get PHP_CodeSniffer to convert your tabs into spaces before a file is checked. This allows you to use the existing space-based sniffs on your tab-based files.
+  </p>
+  <p class="para">
+   In the following example, PHP_CodeSniffer will replace all tabs in the files being checked with between 1 and 4 spaces, depending on the column the tab indents to.
+  </p>
+  <div class="example"><div class="info"><p><strong>Converting tabs to spaces</strong></p></div>
+   <pre class="screen">
+<br/>$&nbsp;phpcs&nbsp;--tab-width=4&nbsp;/path/to/code<br/>
+   </pre>
+
+  </div>
+ </div>
+
+
+ <div class="refsection" id="package.php.php-codesniffer.advanced-usage.encoding"><div class="info"><h1>Specifying an Encoding</h1>
+</div>
+  <p class="para">
+   Some PHP_CodeSniffer reports output UTF-8 encoded XML, which can cause problems if your files are already UTF-8 encoded. In this case, some content from your files (generally comments) are used within error messages and may be double-encoded. To help PHP_CodeSniffer encode reports correctly, you can specify the encoding of your source files using the <code class="literal">--encoding</code> command line argument.
+  </p>
+  <div class="example"><div class="info"><p><strong>Specifying UTF-8 encoding</strong></p></div>
+   <pre class="screen">
+<br/>$&nbsp;phpcs&nbsp;--encoding=utf-8&nbsp;/path/to/code<br/>
+   </pre>
+
+  </div>
+  <blockquote class="note">
+   <span class="simpara">
+    The default encoding used by PHP_CodeSniffer is ISO-8859-1.
+   </span>
+  </blockquote>
+
+ </div>
+
+
+ <div class="refsection" id="package.php.php-codesniffer.advanced-usage.phpini"><div class="info"><h1>Specifying php.ini Settings</h1>
+</div>
+  <p class="para">
+   PHP_CodeSniffer allows you to set temporary php.ini settings during a run using the <code class="literal">-d</code> command line argument. The name of the php.ini setting must be specified on the command line, but the value is optional. If no value is set, the php.ini setting will be given a value of TRUE.
+  </p>
+  <div class="example"><div class="info"><p><strong>Specifying a memory limit</strong></p></div>
+   <pre class="screen">
+<br/>$&nbsp;phpcs&nbsp;-d&nbsp;memory_limit=32M&nbsp;/path/to/code<br/>
+   </pre>
+
+  </div>
+  <div class="example"><div class="info"><p><strong>Specifying multiple values</strong></p></div>
+   <pre class="screen">
+<br/>$&nbsp;phpcs&nbsp;-d&nbsp;memory_limit=32M&nbsp;-d&nbsp;include_path=.:/php/includes&nbsp;/path/to/code<br/>
+   </pre>
+
+  </div>
+ </div>
+
+
+ <div class="refsection" id="package.php.php-codesniffer.advanced-usage.config-set"><div class="info"><h1>Setting Configuration Options</h1>
+</div>
+  <p class="para">
+   PHP_CodeSniffer has some configuration options that can be set. Individual coding standards may also require configuration options to be set before functionality can be used. <a href="package.php.php-codesniffer.config-options.html" class="link">View a full list of configuration options.</a>
+  </p>
+  <p class="para">
+   To set a configuration option, use the <code class="literal">--config-set</code> command line argument.
+  </p>
+  <div class="example"><div class="info"><p><strong>Setting a configuration option</strong></p></div>
+   <pre class="screen">
+<br/>$&nbsp;phpcs&nbsp;--config-set&nbsp;&lt;option&gt;&nbsp;&lt;value&gt;<br/>
+   </pre>
+
+  </div>
+ </div>
+
+
+ <div class="refsection" id="package.php.php-codesniffer.advanced-usage.config-delete"><div class="info"><h1>Deleting Configuration Options</h1>
+</div>
+  <p class="para">
+   PHP_CodeSniffer allows you to delete any configuration option, 
+   reverting it to its default value. 
+   <a href="package.php.php-codesniffer.config-options.html" class="link">View a full list of configuration options.</a>
+  </p>
+  <p class="para">
+   To delete a configuration option, use the <code class="literal">--config-delete</code> command line argument.
+  </p>
+  <div class="example"><div class="info"><p><strong>Deleting a configuration option</strong></p></div>
+   <pre class="screen">
+<br/>$&nbsp;phpcs&nbsp;--config-delete&nbsp;&lt;option&gt;<br/>
+   </pre>
+
+  </div>
+ </div>
+
+
+  <div class="refsection" id="package.php.php-codesniffer.advanced-usage.config-show"><div class="info"><h1>Viewing Configuration Options</h1>
+</div>
+  <p class="para">
+   To view the currently set configuration options, use the <code class="literal">--config-show</code> command line argument.
+  </p>
+  <div class="example"><div class="info"><p><strong>Viewing configuration options</strong></p></div>
+   <pre class="screen">
+<br/>$&nbsp;phpcs&nbsp;--config-show<br/>Array<br/>(<br/>&nbsp;&nbsp;&nbsp;&nbsp;[default_standard]&nbsp;=&gt;&nbsp;PEAR<br/>&nbsp;&nbsp;&nbsp;&nbsp;[zend_ca_path]&nbsp;=&gt;&nbsp;/path/to/ZendCodeAnalyzer<br/>)<br/>
+   </pre>
+
+  </div>
+ </div>
+
+
+ <div class="refsection" id="package.php.php-codesniffer.advanced-usage.verbose-tokeniser-output"><div class="info"><h1>Printing Verbose Tokeniser Output</h1>
+</div>
+  <blockquote class="note">
+   <span class="simpara">
+    This feature is provided for debugging purposes only. Using this feature will dramatically increase screen output and script running time.
+   </span>
+  </blockquote>
+
+  <p class="para">
+   PHP_CodeSniffer contains multiple verbosity levels. Level 2 (indicated by the command line argument <code class="literal">-vv</code>) will print all verbosity information for level 1 (file specific token and line counts with running times) as well as verbose tokeniser output.
+  </p>
+  <p class="para">
+   The output of the PHP_CodeSniffer tokeniser shows the step-by-step creation of the <em class="emphasis">scope map</em> and the <em class="emphasis">level map</em>.
+  </p>
+  <div class="refsection" id="package.php.php-codesniffer.advanced-usage.verbose-tokeniser-output.scope-map"><div class="info"><h1>The Scope Map</h1>
+</div>
+   <p class="para">
+    The scope map is best explained with an example. For the following file:
+   </p>
+   <p class="para">
+    </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">$condition</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Condition&nbsp;was&nbsp;true'</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+   <p class="para">
+    The scope map output is:
+   </p>
+   <div class="example"><div class="info"><p><strong>Sample scope map output</strong></p></div>
+    <pre class="screen">
+<br/>***&nbsp;START&nbsp;SCOPE&nbsp;MAP&nbsp;***<br/>Start&nbsp;scope&nbsp;map&nbsp;at&nbsp;1:&nbsp;T_IF&nbsp;=&gt;&nbsp;if<br/>Process&nbsp;token&nbsp;2&nbsp;[]:&nbsp;T_WHITESPACE&nbsp;=&gt;&nbsp;&nbsp;<br/>Process&nbsp;token&nbsp;3&nbsp;[]:&nbsp;T_OPEN_PARENTHESIS&nbsp;=&gt;&nbsp;(<br/>Process&nbsp;token&nbsp;6&nbsp;[]:&nbsp;T_WHITESPACE&nbsp;=&gt;&nbsp;&nbsp;<br/>Process&nbsp;token&nbsp;7&nbsp;[]:&nbsp;T_OPEN_CURLY_BRACKET&nbsp;=&gt;&nbsp;{<br/>=&gt;&nbsp;Found&nbsp;scope&nbsp;opener&nbsp;for&nbsp;1&nbsp;(T_IF)<br/>Process&nbsp;token&nbsp;8&nbsp;[opener:7;]:&nbsp;T_WHITESPACE&nbsp;=&gt;&nbsp;\n<br/>Process&nbsp;token&nbsp;9&nbsp;[opener:7;]:&nbsp;T_WHITESPACE&nbsp;=&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>Process&nbsp;token&nbsp;10&nbsp;[opener:7;]:&nbsp;T_ECHO&nbsp;=&gt;&nbsp;echo<br/>Process&nbsp;token&nbsp;11&nbsp;[opener:7;]:&nbsp;T_WHITESPACE&nbsp;=&gt;&nbsp;&nbsp;<br/>Process&nbsp;token&nbsp;12&nbsp;[opener:7;]:&nbsp;T_CONSTANT_ENCAPSED_STRING&nbsp;=&gt;&nbsp;&#039;Condition&nbsp;was&nbsp;true&#039;<br/>Process&nbsp;token&nbsp;13&nbsp;[opener:7;]:&nbsp;T_SEMICOLON&nbsp;=&gt;&nbsp;;<br/>Process&nbsp;token&nbsp;14&nbsp;[opener:7;]:&nbsp;T_WHITESPACE&nbsp;=&gt;&nbsp;\n<br/>Process&nbsp;token&nbsp;15&nbsp;[opener:7;]:&nbsp;T_CLOSE_CURLY_BRACKET&nbsp;=&gt;&nbsp;}<br/>=&gt;&nbsp;Found&nbsp;scope&nbsp;closer&nbsp;for&nbsp;1&nbsp;(T_IF)<br/>***&nbsp;END&nbsp;SCOPE&nbsp;MAP&nbsp;***<br/>
+    </pre>
+
+   </div>
+   <p class="para">
+    The scope map output above shows the following pieces of information about the file:
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">A scope token, <code class="literal">if</code>, was found at token 1 (note that token 0 is the open PHP tag).</p>
+     </li>
+     <li class="listitem">
+      <p class="para">The opener for the <code class="literal">if</code> statement, the open curly brace, was found at token 7.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">The closer for the <code class="literal">if</code> statement, the close curly brace, was found at token 15.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">Tokens 8 - 15 are all included in the scope set by the scope opener at token 7, the open curly brace. This indicates that these tokens are all within the <code class="literal">if</code> statement.</p>
+     </li>
+    </ul>
+   
+   <p class="para">
+    The scope map output is most useful when debugging PHP_CodeSniffer&#039;s scope map, which is critically important to the successful checking of a file, but is also useful for checking the type of a particular token. For example, if you are unsure of the token type for an opening curly brace, the scope map output shows you that the type is <strong class="constant">T_OPEN_CURLY_BRACKET</strong> and not, for example, <strong class="constant">T_OPEN_CURLY_BRACE</strong>.
+   </p>
+  </div>
+  <div class="refsection" id="package.php.php-codesniffer.advanced-usage.verbose-tokeniser-output.level-map"><div class="info"><h1>The Level Map</h1>
+</div>
+   <p class="para">
+    The level map is best explained with an example. For the following file:
+   </p>
+   <p class="para">
+    </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">$condition</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Condition&nbsp;was&nbsp;true'</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+   <p class="para">
+    The level map output is:
+   </p>
+   <div class="example"><div class="info"><p><strong>Sample level map output</strong></p></div>
+    <pre class="screen">
+<br/>&nbsp;***&nbsp;START&nbsp;LEVEL&nbsp;MAP&nbsp;***<br/>Process&nbsp;token&nbsp;0&nbsp;on&nbsp;line&nbsp;1&nbsp;[lvl:0;]:&nbsp;T_OPEN_TAG&nbsp;=&gt;&nbsp;&lt;?php\n<br/>Process&nbsp;token&nbsp;1&nbsp;on&nbsp;line&nbsp;2&nbsp;[lvl:0;]:&nbsp;T_IF&nbsp;=&gt;&nbsp;if<br/>Process&nbsp;token&nbsp;2&nbsp;on&nbsp;line&nbsp;2&nbsp;[lvl:0;]:&nbsp;T_WHITESPACE&nbsp;=&gt;&nbsp;&nbsp;<br/>Process&nbsp;token&nbsp;3&nbsp;on&nbsp;line&nbsp;2&nbsp;[lvl:0;]:&nbsp;T_OPEN_PARENTHESIS&nbsp;=&gt;&nbsp;(<br/>Process&nbsp;token&nbsp;4&nbsp;on&nbsp;line&nbsp;2&nbsp;[lvl:0;]:&nbsp;T_VARIABLE&nbsp;=&gt;&nbsp;$condition<br/>Process&nbsp;token&nbsp;5&nbsp;on&nbsp;line&nbsp;2&nbsp;[lvl:0;]:&nbsp;T_CLOSE_PARENTHESIS&nbsp;=&gt;&nbsp;)<br/>Process&nbsp;token&nbsp;6&nbsp;on&nbsp;line&nbsp;2&nbsp;[lvl:0;]:&nbsp;T_WHITESPACE&nbsp;=&gt;&nbsp;&nbsp;<br/>Process&nbsp;token&nbsp;7&nbsp;on&nbsp;line&nbsp;2&nbsp;[lvl:0;]:&nbsp;T_OPEN_CURLY_BRACKET&nbsp;=&gt;&nbsp;{<br/>=&gt;&nbsp;Found&nbsp;scope&nbsp;opener&nbsp;for&nbsp;1&nbsp;(T_IF)<br/>&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;level&nbsp;increased&nbsp;*<br/>&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;token&nbsp;1&nbsp;(T_IF)&nbsp;added&nbsp;to&nbsp;conditions&nbsp;array&nbsp;*<br/>&nbsp;&nbsp;&nbsp;&nbsp;Process&nbsp;token&nbsp;8&nbsp;on&nbsp;line&nbsp;2&nbsp;[lvl:1;conds;T_IF;]:&nbsp;T_WHITESPACE&nbsp;=&gt;&nbsp;\n<br/>&nbsp;&nbsp;&nbsp;&nbsp;Process&nbsp;token&nbsp;9&nbsp;on&nbsp;line&nbsp;3&nbsp;[lvl:1;conds;T_IF;]:&nbsp;T_WHITESPACE&nbsp;=&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;Process&nbsp;token&nbsp;10&nbsp;on&nbsp;line&nbsp;3&nbsp;[lvl:1;conds;T_IF;]:&nbsp;T_ECHO&nbsp;=&gt;&nbsp;echo<br/>&nbsp;&nbsp;&nbsp;&nbsp;Process&nbsp;token&nbsp;11&nbsp;on&nbsp;line&nbsp;3&nbsp;[lvl:1;conds;T_IF;]:&nbsp;T_WHITESPACE&nbsp;=&gt;&nbsp;&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;Process&nbsp;token&nbsp;12&nbsp;on&nbsp;line&nbsp;3&nbsp;[lvl:1;conds;T_IF;]:&nbsp;T_CONSTANT_ENCAPSED_STRING&nbsp;=&gt;&nbsp;&#039;Condition&nbsp;was&nbsp;true&#039;<br/>&nbsp;&nbsp;&nbsp;&nbsp;Process&nbsp;token&nbsp;13&nbsp;on&nbsp;line&nbsp;3&nbsp;[lvl:1;conds;T_IF;]:&nbsp;T_SEMICOLON&nbsp;=&gt;&nbsp;;<br/>&nbsp;&nbsp;&nbsp;&nbsp;Process&nbsp;token&nbsp;14&nbsp;on&nbsp;line&nbsp;3&nbsp;[lvl:1;conds;T_IF;]:&nbsp;T_WHITESPACE&nbsp;=&gt;&nbsp;\n<br/>&nbsp;&nbsp;&nbsp;&nbsp;Process&nbsp;token&nbsp;15&nbsp;on&nbsp;line&nbsp;4&nbsp;[lvl:1;conds;T_IF;]:&nbsp;T_CLOSE_CURLY_BRACKET&nbsp;=&gt;&nbsp;}<br/>&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;Found&nbsp;scope&nbsp;closer&nbsp;for&nbsp;7&nbsp;(T_OPEN_CURLY_BRACKET)<br/>&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;token&nbsp;T_IF&nbsp;removed&nbsp;from&nbsp;conditions&nbsp;array&nbsp;*<br/>&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;level&nbsp;decreased&nbsp;*<br/>Process&nbsp;token&nbsp;16&nbsp;on&nbsp;line&nbsp;4&nbsp;[lvl:0;]:&nbsp;T_WHITESPACE&nbsp;=&gt;&nbsp;\n<br/>Process&nbsp;token&nbsp;17&nbsp;on&nbsp;line&nbsp;5&nbsp;[lvl:0;]:&nbsp;T_CLOSE_TAG&nbsp;=&gt;&nbsp;?&gt;\n<br/>***&nbsp;END&nbsp;LEVEL&nbsp;MAP&nbsp;***<br/>
+    </pre>
+
+   </div>
+   <p class="para">
+    The level map output above shows the following pieces of information about the file:
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">A scope opener, an open curly brace, was found at token 7 and opened the scope for an <code class="literal">if</code> statement, defined at token 1.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">Tokens 8 - 15 are all included in the scope set by the scope opener at token 7, the open curly brace. All these tokens are at level 1, indicating that they are enclosed in 1 scope condition, and all these tokens are enclosed in a single condition; an <code class="literal">if</code> statement.</p>
+     </li>
+    </ul>
+   
+   <p class="para">
+    The level map is most commonly used to determine indentation rules (e.g., a token 4 levels deep requires 16 spaces of indentation) or to determine if a particular token is within a particular scope (eg. a <code class="literal">function</code> keyword is within a class scope, making it a method).
+   </p>
+  </div>
+ </div>
+
+
+ <div class="refsection" id="package.php.php-codesniffer.advanced-usage.verbose-token-processing-output"><div class="info"><h1>Printing Verbose Token Processing Output</h1>
+</div>
+  <blockquote class="note">
+   <span class="simpara">
+    This feature is provided for debugging purposes only. Using this feature will dramatically increase screen output and script running time.
+   </span>
+  </blockquote>
+
+  <p class="para">
+   PHP_CodeSniffer contains multiple verbosity levels. Level 3 (indicated by the command line argument <code class="literal">-vvv</code>) will print all verbosity information for level 1 (file specific token and line counts with running times), level 2 (tokeniser output) as well as token processing output with sniff running times.
+  </p>
+  <p class="para">
+    The token processing output is best explained with an example. For the following file:
+   </p>
+   <p class="para">
+    </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">$condition</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Condition&nbsp;was&nbsp;true'</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+   <p class="para">
+    The token processing output is:
+   </p>
+   <p class="para">
+    </p><div class="example"><div class="info"><p><strong>Sample token processing output</strong></p></div>
+     <pre class="screen">
+<br/>***&nbsp;START&nbsp;TOKEN&nbsp;PROCESSING&nbsp;***<br/>Process&nbsp;token&nbsp;0:&nbsp;T_OPEN_TAG&nbsp;=&gt;&nbsp;&lt;?php\n<br/>&nbsp;&nbsp;&nbsp;&nbsp;Processing&nbsp;PEAR_Sniffs_Commenting_FileCommentSniff...&nbsp;DONE&nbsp;in&nbsp;0.001&nbsp;seconds<br/>&nbsp;&nbsp;&nbsp;&nbsp;Processing&nbsp;PEAR_Sniffs_Files_LineLengthSniff...&nbsp;DONE&nbsp;in&nbsp;0.0004&nbsp;seconds<br/>&nbsp;&nbsp;&nbsp;&nbsp;Processing&nbsp;PEAR_Sniffs_PHP_DisallowShortOpenTagSniff...&nbsp;DONE&nbsp;in&nbsp;0.0001&nbsp;seconds<br/>Process&nbsp;token&nbsp;1:&nbsp;T_IF&nbsp;=&gt;&nbsp;if<br/>&nbsp;&nbsp;&nbsp;&nbsp;Processing&nbsp;PEAR_Sniffs_ControlStructures_ControlSignatureSniff...&nbsp;DONE&nbsp;in&nbsp;0.0008&nbsp;seconds<br/>&nbsp;&nbsp;&nbsp;&nbsp;Processing&nbsp;PEAR_Sniffs_WhiteSpace_ScopeClosingBraceSniff...&nbsp;DONE&nbsp;in&nbsp;0.0248&nbsp;seconds<br/>&nbsp;&nbsp;&nbsp;&nbsp;Processing&nbsp;PEAR_Sniffs_WhiteSpace_ScopeIndentSniff...&nbsp;DONE&nbsp;in&nbsp;0.0004&nbsp;seconds<br/>Process&nbsp;token&nbsp;2:&nbsp;T_WHITESPACE&nbsp;=&gt;&nbsp;&nbsp;<br/>Process&nbsp;token&nbsp;3:&nbsp;T_OPEN_PARENTHESIS&nbsp;=&gt;&nbsp;(<br/>Process&nbsp;token&nbsp;4:&nbsp;T_VARIABLE&nbsp;=&gt;&nbsp;$condition<br/>Process&nbsp;token&nbsp;5:&nbsp;T_CLOSE_PARENTHESIS&nbsp;=&gt;&nbsp;)<br/>Process&nbsp;token&nbsp;6:&nbsp;T_WHITESPACE&nbsp;=&gt;&nbsp;&nbsp;<br/>Process&nbsp;token&nbsp;7:&nbsp;T_OPEN_CURLY_BRACKET&nbsp;=&gt;&nbsp;{<br/>Process&nbsp;token&nbsp;8:&nbsp;T_WHITESPACE&nbsp;=&gt;&nbsp;\n<br/>Process&nbsp;token&nbsp;9:&nbsp;T_WHITESPACE&nbsp;=&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>Process&nbsp;token&nbsp;10:&nbsp;T_ECHO&nbsp;=&gt;&nbsp;echo<br/>Process&nbsp;token&nbsp;11:&nbsp;T_WHITESPACE&nbsp;=&gt;&nbsp;&nbsp;<br/>Process&nbsp;token&nbsp;12:&nbsp;T_CONSTANT_ENCAPSED_STRING&nbsp;=&gt;&nbsp;&#039;Condition&nbsp;was&nbsp;true&#039;<br/>Process&nbsp;token&nbsp;13:&nbsp;T_SEMICOLON&nbsp;=&gt;&nbsp;;<br/>Process&nbsp;token&nbsp;14:&nbsp;T_WHITESPACE&nbsp;=&gt;&nbsp;\n<br/>Process&nbsp;token&nbsp;15:&nbsp;T_CLOSE_CURLY_BRACKET&nbsp;=&gt;&nbsp;}<br/>Process&nbsp;token&nbsp;16:&nbsp;T_WHITESPACE&nbsp;=&gt;&nbsp;\n<br/>Process&nbsp;token&nbsp;17:&nbsp;T_CLOSE_TAG&nbsp;=&gt;&nbsp;?&gt;\n<br/>***&nbsp;END&nbsp;TOKEN&nbsp;PROCESSING&nbsp;***<br/>
+     </pre>
+
+    </div>
+   
+   <p class="para">
+    Every token processed is shown, along with its ID, type and contents. For each token, all sniffs that were executed on the token are displayed, along with the running time.
+   </p>
+   <p class="para">
+    For example, the output above shows us that token 1, an <code class="literal">if</code> keyword, had 3 sniffs executed on it; the ControlSignature sniff, the ScopeClosingBrace sniff and the ScopeIndent sniff. Each was executed fairly quickly, but the slowest was the ScopeClosingBrace sniff, taking 0.0248 seconds to process that token.
+   </p>
+   <p class="para">
+    The other interesting piece of information we get from the output above is that only 2 tokens in the whole file had sniffs executed on them; tokens 0 and 1. This is normal behavior for PHP_CodeSniffer as most sniffs listen for a very specific and rarely used token and then execute on it and a number of tokens following it.
+    </p>
+    <p class="para">
+     For example, the ScopeIndentSniff executes on the <code class="literal">if</code> statement&#039;s token only, but actually checks the indentation of every line within the <code class="literal">if</code> statement. The sniff uses the <a href="package.php.php-codesniffer.advanced-usage.html#package.php.php-codesniffer.advanced-usage.verbose-tokeniser-output.scope-map" class="link">scope map</a> to find all tokens within the <code class="literal">if</code> statement.
+   </p>
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.php.php-codesniffer.usage.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.php.php-codesniffer.html">PHP_CodeSniffer</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.php.php-codesniffer.reporting.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Usage</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Reporting</td>
+  </tr>
+ </table>
+</div>
+</body></html>

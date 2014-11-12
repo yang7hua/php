@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Reverse Module</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.mdb2.html" title="MDB2" />
+  <link rel="prev" href="package.database.mdb2.intro-manager-module.html" title="Manager Module" />
+  <link rel="next" href="package.database.mdb2.intro-auto.html" title="autoPrepare &amp; autoExecute" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Reverse Module</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.mdb2.intro-manager-module.html" title="Manager Module">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.mdb2.intro-auto.html" title="autoPrepare &amp; autoExecute">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.mdb2.intro-reverse-module">
+ 
+  <h1 class="refname">Reverse Module</h1>
+  <div class="refnamediv">Reverse Module &ndash; Module for managing database structure</div>
+
+ 
+
+ <div class="refsection" id="package.database.mdb2.intro-reverse-module.desc">
+  <h1 class="title">Description</h1>
+  <p class="para">
+   The Reverse module is an extension of the
+   <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Module_Common.html" class="link external">Common Module driver</a>,
+   and is made up in the following structure:
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <span class="simpara">
+     <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Reverse_Common.html" class="link external">Common driver file</a>
+     that encapsulates an API that can be used to execute the reverse driver queries.
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+     A set of DBMS specific drivers that are specifically written against the
+     supported database back end (e.g. mysql.php for MySQL, and pgsql.php for PostgreSQL)
+     </span>
+    </li>
+   </ul>
+  
+ </div>
+
+ <div class="refsection" id="package.database.mdb2.intro-reverse-module.usage"><div class="info"><h1>Usage</h1>
+</div>
+ 
+  <p class="para">
+    In order to use the MDB2 Reverse drivers, it is necessary to first load the
+    Reverse driver into your MDB2 instance.
+    Let&#039;s start a MDB2 instance and set up our connection:
+  </p><div class="example"><div class="info"><p><strong>Loading the Reverse module</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Load&nbsp;up&nbsp;the&nbsp;MDB2&nbsp;Base&nbsp;class<br /></span><span style="color: #007700">require&nbsp;</span><span style="color: #DD0000">'MDB2.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;define&nbsp;a&nbsp;DSN&nbsp;to&nbsp;connect&nbsp;to&nbsp;our&nbsp;database<br /></span><span style="color: #0000BB">$dsn&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'phptype'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'mysql'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'username'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'someuser'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'password'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'somepass'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'hostspec'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'somehost'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'database'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'somedb'</span><span style="color: #007700">,<br />);<br /><br /></span><span style="color: #FF8000">//&nbsp;create&nbsp;MDB2&nbsp;instance<br />//&nbsp;MDB2&nbsp;has&nbsp;a&nbsp;number&nbsp;of&nbsp;connection&nbsp;options&nbsp;-&nbsp;singleton(),&nbsp;factory()&nbsp;and&nbsp;connect()<br /></span><span style="color: #0000BB">$mdb2&nbsp;</span><span style="color: #007700">=&nbsp;&amp;</span><span style="color: #0000BB">MDB2</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">);<br />if(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Die&nbsp;with&nbsp;the&nbsp;user&nbsp;info&nbsp;message&nbsp;on&nbsp;failure&nbsp;for&nbsp;any&nbsp;reason<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">die(</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getuserinfo</span><span style="color: #007700">());<br />}<br /></span><span style="color: #FF8000">//&nbsp;We&nbsp;have&nbsp;a&nbsp;valid&nbsp;connection,&nbsp;so&nbsp;let's&nbsp;do&nbsp;some&nbsp;magic!<br />//&nbsp;Load&nbsp;the&nbsp;Reverse&nbsp;Module&nbsp;using&nbsp;MDB2's&nbsp;loadModule&nbsp;method<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">loadModule</span><span style="color: #007700">(</span><span style="color: #DD0000">'Reverse'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div><p>
+  In the above example, we have created a valid connection to a database that does
+  exist, using a valid user and password for our database server.
+  We now have access to all of the MDB2 Reverse functionality within our example
+  application. For the purposes of this document, we will set up an example table
+  as such:
+  </p><div class="example"><div class="info"><p><strong>Create a table</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Define&nbsp;a&nbsp;table&nbsp;name&nbsp;that&nbsp;we&nbsp;will&nbsp;be&nbsp;working&nbsp;with<br /></span><span style="color: #0000BB">$fields&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'id'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'integer'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'unsigned'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'autoincrement'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'somename'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'length'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">12</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'somedate'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'date'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />);<br /></span><span style="color: #0000BB">$table&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'sometable'</span><span style="color: #007700">;<br /></span><span style="color: #FF8000">//&nbsp;Create&nbsp;the&nbsp;table<br />//Load&nbsp;the&nbsp;Manager&nbsp;Module<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">loadModule</span><span style="color: #007700">(</span><span style="color: #DD0000">'Manager'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//create&nbsp;the&nbsp;table&nbsp;with&nbsp;the&nbsp;manager&nbsp;module<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">manager</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createTable</span><span style="color: #007700">(</span><span style="color: #0000BB">$table</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$fields</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  
+  
+  <div class="refsection" id="package.database.mdb2.intro-reverse-module.usage.gettablefielddefinition"><div class="info"><h1><strong class="function">getTableFieldDefinition()</strong> Method</h1>
+</div>
+   
+  <p class="para">
+  The <strong class="function">getTableFieldDefinition()</strong> Method exists primarily to get
+  an array that defines a table field. This array can then be used to re-create
+  the table elsewhere, or for any other purpose that may be necessary.
+  Using the MDB2 instance defined above, we will connect to a database, define a
+  table that we want to work with, and reverse engineer a specific field that
+  we are interested in. First, we need to define the table and field that we want
+  to work with; then, it is as easy as a single line of code to get the table
+  definition back as an array of mixed values, then using var_dump to view the results:
+  </p><div class="example"><div class="info"><p><strong>Get the table definition</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Set&nbsp;the&nbsp;field&nbsp;that&nbsp;we&nbsp;would&nbsp;like&nbsp;to&nbsp;reverse&nbsp;engineer&nbsp;(get&nbsp;definition&nbsp;of)<br /></span><span style="color: #0000BB">$field&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'somedate'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Here&nbsp;we&nbsp;get&nbsp;the&nbsp;definition&nbsp;of&nbsp;the&nbsp;table&nbsp;field&nbsp;and&nbsp;return&nbsp;it&nbsp;to&nbsp;a&nbsp;variable<br />//&nbsp;The&nbsp;return&nbsp;will&nbsp;either&nbsp;be&nbsp;a&nbsp;mixed&nbsp;array&nbsp;on&nbsp;success,&nbsp;or&nbsp;an&nbsp;MDB2&nbsp;error&nbsp;on&nbsp;failure,<br />//so&nbsp;we&nbsp;don't&nbsp;need&nbsp;additional&nbsp;checks<br /></span><span style="color: #0000BB">$def&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getTableFieldDefinition</span><span style="color: #007700">(</span><span style="color: #0000BB">$table</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$field</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;finally&nbsp;dumping&nbsp;the&nbsp;variable&nbsp;to&nbsp;screen<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$def</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div><p>
+  The return will look something like the following, depending on your field definition:
+  </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">array(</span><span style="color: #0000BB">1</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;[</span><span style="color: #0000BB">0</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;array(</span><span style="color: #0000BB">5</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'notnull'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">bool</span><span style="color: #007700">(</span><span style="color: #0000BB">false</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'nativetype'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">4</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"date"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'default'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">NULL<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'type'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">4</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"date"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'mdb2type'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">4</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"date"<br />&nbsp;&nbsp;</span><span style="color: #007700">}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  </div>
+  
+  <div class="refsection" id="package.database.mdb2.intro-reverse-module.usage.additional-table-info"><div class="info"><h1>Additional table information</h1>
+</div>
+   
+  <p class="para">
+  A number of other methods exist to gain information about a selected table.
+  You may use any of the following methods according to the information needed:
+  </p><ul class="itemizedlist">
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">getTableIndexDefinition()</strong>: - requires a table name and an
+      index name to return information about the table index as an array
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">getTableConstraintDefinition()</strong>: requires a table name and
+      a constraint to query against. This will return any constraint definitions
+      that exist on the table. A constraint as is defined here is usually a
+      Primary Key, an Unique Key or a Foreign Key. The returned array has the
+      same structure as the one used in the <a href="package.database.mdb2.intro-manager-module.html" class="link">Manager module</a> with
+      <a href="package.database.mdb2.intro-manager-module.html#package.database.mdb2.intro-manager-module.create-elements.create-constraints" class="link"><strong class="function">createConstraint()</strong></a>.
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">getSequenceDefinition()</strong>: requires a sequence name. It will
+      return information about the existing table sequence. The method will return
+      an array on success or an MDB2 error on failure.
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">getTriggerDefinition()</strong>: takes a trigger name as an
+      argument, and will return information as an array on the trigger queried.
+     </span>
+    </li>
+   </ul>
+  
+  </div>
+  
+  <div class="refsection" id="package.database.mdb2.intro-reverse-module.usage.tableinfo"><div class="info"><h1><strong class="function">tableInfo()</strong> Method</h1>
+</div>
+   
+  <p class="para">
+   This method will return a lot of information regarding a table, and can be
+   used in a number of different ways. The information that it returns will differ
+   slightly across different RDBM&#039;s and may give some variance in results.
+   This method can be used to query either a table definition, or a resultset,
+   which makes it great for creating optimized tables.
+   The <strong class="function">tableInfo()</strong> method allows you to pass a parameter for
+   the mode that you would like to see the results presented as.
+   In order to demonstrate the results more effectively, we will use a series of
+   examples to do some queries and return the results in different modes.
+   NOTE: Either a table OR a resultset can be passed as the first parameter to
+   get information on the table. In these examples, we will be using the table
+   that we defined above.
+  </p><div class="example"><div class="info"><p><strong><strong class="function">tableinfo()</strong> usage 1</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Default&nbsp;Mode&nbsp;-&nbsp;NULL<br /></span><span style="color: #0000BB">$tableInfo&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">tableInfo</span><span style="color: #007700">(</span><span style="color: #0000BB">$table</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">NULL</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$tableInfo</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//will&nbsp;produce:<br /></span><span style="color: #007700">array(</span><span style="color: #0000BB">3</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;[</span><span style="color: #0000BB">0</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;array(</span><span style="color: #0000BB">11</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'notnull'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">bool</span><span style="color: #007700">(</span><span style="color: #0000BB">true</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'nativetype'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">3</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"int"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'length'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">int</span><span style="color: #007700">(</span><span style="color: #0000BB">4</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'unsigned'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">int</span><span style="color: #007700">(</span><span style="color: #0000BB">1</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'default'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">0</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">""<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'autoincrement'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">bool</span><span style="color: #007700">(</span><span style="color: #0000BB">true</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'type'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">3</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"int"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'mdb2type'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">7</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"integer"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'name'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">2</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"id"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'table'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">9</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"sometable"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'flags'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">29</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"primary_key&nbsp;not_null&nbsp;unsigned"<br />&nbsp;&nbsp;</span><span style="color: #007700">}<br />&nbsp;&nbsp;[</span><span style="color: #0000BB">1</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;array(</span><span style="color: #0000BB">10</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'notnull'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">bool</span><span style="color: #007700">(</span><span style="color: #0000BB">false</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'nativetype'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">7</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"varchar"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'length'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">2</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"12"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'fixed'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">bool</span><span style="color: #007700">(</span><span style="color: #0000BB">false</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'default'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">NULL<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'type'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">7</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"varchar"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'mdb2type'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">4</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"text"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'name'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">8</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"somename"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'table'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">9</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"sometable"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'flags'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">0</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">""<br />&nbsp;&nbsp;</span><span style="color: #007700">}<br />&nbsp;&nbsp;[</span><span style="color: #0000BB">2</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;array(</span><span style="color: #0000BB">8</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'notnull'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">bool</span><span style="color: #007700">(</span><span style="color: #0000BB">false</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'nativetype'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">4</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"date"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'default'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">NULL<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'type'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">4</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"date"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'mdb2type'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">4</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"date"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'name'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">8</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"somedate"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'table'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">9</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"sometable"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'flags'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">0</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">""<br />&nbsp;&nbsp;</span><span style="color: #007700">}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div><p>
+  In the subsequent examples, we will only include the first table field definition,
+  as it effectively illustrates the differences in modes.
+  Now, let&#039;s change the mode to <em><code class="parameter">MDB2_TABLEINFO_ORDER</code></em>.
+  In addition to the information found in the default output, a notation of the
+  number of columns is provided by the <em><code class="parameter">num_fields</code></em> element
+  while the order element provides an array with the column names as the keys
+  and their location index number (corresponding to the keys in the default
+  output) as the values.
+
+  </p><div class="example"><div class="info"><p><strong><strong class="function">tableinfo()</strong> usage 2</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$tableInfo&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">tableInfo</span><span style="color: #007700">(</span><span style="color: #0000BB">$table</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">MDB2_TABLEINFO_ORDER</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$tableInfo</span><span style="color: #007700">);<br /><br />array(</span><span style="color: #0000BB">5</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;[</span><span style="color: #DD0000">'num_fields'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">int</span><span style="color: #007700">(</span><span style="color: #0000BB">3</span><span style="color: #007700">)<br />&nbsp;&nbsp;[</span><span style="color: #0000BB">0</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;array(</span><span style="color: #0000BB">11</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'notnull'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">bool</span><span style="color: #007700">(</span><span style="color: #0000BB">true</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'nativetype'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">3</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"int"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'length'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">int</span><span style="color: #007700">(</span><span style="color: #0000BB">4</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'unsigned'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">int</span><span style="color: #007700">(</span><span style="color: #0000BB">1</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'default'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">0</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">""<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'autoincrement'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">bool</span><span style="color: #007700">(</span><span style="color: #0000BB">true</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'type'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">3</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"int"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'mdb2type'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">7</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"integer"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'name'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">2</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"id"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'table'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">9</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"sometable"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'flags'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">29</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"primary_key&nbsp;not_null&nbsp;unsigned"<br />&nbsp;&nbsp;</span><span style="color: #007700">}<br />&nbsp;&nbsp;[</span><span style="color: #0000BB">1</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;array(</span><span style="color: #0000BB">10</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'notnull'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">bool</span><span style="color: #007700">(</span><span style="color: #0000BB">false</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'nativetype'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">7</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"varchar"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'length'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">2</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"12"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'fixed'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">bool</span><span style="color: #007700">(</span><span style="color: #0000BB">false</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'default'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">NULL<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'type'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">7</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"varchar"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'mdb2type'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">4</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"text"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'name'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">8</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"somename"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'table'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">9</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"sometable"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'flags'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">0</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">""<br />&nbsp;&nbsp;</span><span style="color: #007700">}<br />&nbsp;&nbsp;[</span><span style="color: #0000BB">2</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;array(</span><span style="color: #0000BB">8</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'notnull'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">bool</span><span style="color: #007700">(</span><span style="color: #0000BB">false</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'nativetype'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">4</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"date"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'default'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">NULL<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'type'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">4</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"date"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'mdb2type'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">4</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"date"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'name'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">8</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"somedate"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'table'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">9</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">"sometable"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">[</span><span style="color: #DD0000">'flags'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">0</span><span style="color: #007700">)&nbsp;</span><span style="color: #DD0000">""<br />&nbsp;&nbsp;</span><span style="color: #007700">}<br />&nbsp;&nbsp;[</span><span style="color: #DD0000">'order'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;array(</span><span style="color: #0000BB">3</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'id'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">int</span><span style="color: #007700">(</span><span style="color: #0000BB">0</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'somename'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">int</span><span style="color: #007700">(</span><span style="color: #0000BB">1</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;[</span><span style="color: #DD0000">'somedate'</span><span style="color: #007700">]&nbsp;=&gt;&nbsp;</span><span style="color: #0000BB">int</span><span style="color: #007700">(</span><span style="color: #0000BB">2</span><span style="color: #007700">)<br />&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div><p>
+   Changing the mode to <em><code class="parameter">MDB2_TABLEINFO_ORDERTABLE</code></em> will give
+   us some additional information by adding additional dimensions to the array
+   in which the table names are keys, and the field names are sub keys.
+   This type of query can be useful when querying complex joins, where some field
+   names may be the same.
+   </p>
+   <p class="para">
+   NOTE: The <em><code class="parameter">flags</code></em> element will contain a space-separated
+   list of additional information about the field. This data is inconsistent
+   between RDBMS&#039;s due to the way each RDBMS works:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara"><em><code class="parameter">primary_key</code></em></span></li>
+    <li class="listitem"><span class="simpara"><em><code class="parameter">unique_key</code></em></span></li>
+    <li class="listitem"><span class="simpara"><em><code class="parameter">multiple_key</code></em></span></li>
+    <li class="listitem"><span class="simpara"><em><code class="parameter">not_null</code></em></span></li>
+    <li class="listitem"><span class="simpara"><em><code class="parameter">unsigned</code></em></span></li>
+   </ul><p>
+   Most RDBMS&#039;s only provide the <em><code class="parameter">table</code></em> and <em><code class="parameter">flags</code></em>
+   elements if the result is a table name. 
+   If the <em><code class="parameter">portability</code></em> option is set to <em><code class="parameter">MDB2_PORTABILITY_FIX_CASE</code></em>,
+   the names of tables and fields will be lower- or upper-cased.
+   If the case is set to <em><code class="parameter">CASE_UPPER</code></em> all tables and fields
+   will be uppercased, as is seen in Oracle and Firebird/Interbase, while
+   <em><code class="parameter">CASE_LOWER</code></em> will lower case all field and table names;
+   this is the default setting.
+  </p>
+  </div>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.mdb2.intro-manager-module.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.mdb2.html">MDB2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.mdb2.intro-auto.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Manager Module</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">autoPrepare &amp; autoExecute</td>
+  </tr>
+ </table>
+</div>
+</body></html>

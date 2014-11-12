@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Apache</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.configuration.config.avail-container.html" title="Available Containers" />
+  <link rel="prev" href="package.configuration.config.avail-container.html" title="Available Containers" />
+  <link rel="next" href="package.configuration.config.avail-container.generic-conf.html" title="GenericConf" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Apache</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.configuration.config.avail-container.html" title="Available Containers">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.configuration.config.avail-container.generic-conf.html" title="GenericConf">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="package.configuration.config.avail-container.apache">
+ <div class="info">
+  <h1>Apache</h1>
+
+ </div>
+ <p class="para">
+   Parses and saves Apache configuration files. No options are provided by
+   this container.
+ </p>
+
+
+ <div class="section">
+  <div class="info">
+   <h2 class="title">Writing an apache configuration file</h2>
+  </div>
+
+  <p class="para">
+   This example script will create a new apache configuration file
+   for a virtual host. It first adds a
+   <code class="literal">Listen</code> directive
+   and then a virtual host section containing its settings.
+  </p>
+
+  <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Config.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$conf&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Config</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$root&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$conf</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getRoot</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">$root</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createDirective</span><span style="color: #007700">(</span><span style="color: #DD0000">'Listen'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'82'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$root</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createBlank</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">$root</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createComment</span><span style="color: #007700">(</span><span style="color: #DD0000">'My&nbsp;virtual&nbsp;host'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$vhost&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$root</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createSection</span><span style="color: #007700">(</span><span style="color: #DD0000">'VirtualHost'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'127.0.0.1:82'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$vhost</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createDirective</span><span style="color: #007700">(</span><span style="color: #DD0000">'DocumentRoot'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'/usr/share/www'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$vhost</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createDirective</span><span style="color: #007700">(</span><span style="color: #DD0000">'ServerName'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'my-pear.example.org'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$conf</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">writeConfig</span><span style="color: #007700">(</span><span style="color: #0000BB">sys_get_temp_dir</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">'/dummy-apache.conf'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'apache'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+  <div class="example">
+   <p><strong>Generated configuration file</strong></p>
+   <div class="inicode"><pre class="inicode"># My virtual host
+&lt;VirtualHost 127.0.0.1:82&gt;
+  DocumentRoot /usr/share/www
+  ServerName my-pear.example.org
+&lt;/VirtualHost&gt;</pre>
+</div>
+  </div>
+
+ </div>
+
+
+
+ <div class="section">
+  <div class="info">
+   <h2 class="title">Reading an existing config file</h2>
+  </div>
+
+  <p class="para">
+   Our task is to open an existing Apache configuration file and
+   extract all <code class="literal">Listen</code> directives from it, using
+   the container&#039;s
+   <a href="package.configuration.config.config-container.getitem.html" class="link">getItem</a>
+   method.
+  </p>
+
+  <div class="example">
+   <p><strong>Config file</strong></p>
+   <div class="inicode"><pre class="inicode"># If you just change the port or add more ports here, you will likely also
+# have to change the VirtualHost statement in
+# /etc/apache2/sites-enabled/000-default
+# This is also true if you have upgraded from before 2.2.9-3 (i.e. from
+# Debian etch). See /usr/share/doc/apache2.2-common/NEWS.Debian.gz and
+# README.Debian.gz
+
+NameVirtualHost *:80
+Listen 80
+Listen 82
+
+&lt;IfModule mod_ssl.c&gt;
+    # If you add NameVirtualHost *:443 here, you will also have to change
+    # the VirtualHost statement in /etc/apache2/sites-available/default-ssl
+    # to &lt;VirtualHost *:443&gt;
+    # Server Name Indication for SSL named virtual hosts is currently not
+    # supported by MSIE on Windows XP.
+    Listen 443
+&lt;/IfModule&gt;
+
+&lt;IfModule mod_gnutls.c&gt;
+    Listen 443
+&lt;/IfModule&gt;</pre>
+</div>
+  </div>
+
+  <div class="example">
+   <p><strong>PHP script</strong></p>
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Config.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$file&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">dirname</span><span style="color: #007700">(</span><span style="color: #0000BB">__FILE__</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">'/apache-read-config.txt'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$conf&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Config</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$root&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$conf</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parseConfig</span><span style="color: #007700">(</span><span style="color: #0000BB">$file</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'apache'</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$root</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Error&nbsp;reading&nbsp;config:&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$root</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;exit(</span><span style="color: #0000BB">1</span><span style="color: #007700">);<br />}<br /><br /></span><span style="color: #0000BB">$i&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">;<br />while&nbsp;(</span><span style="color: #0000BB">$item&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$root</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getItem</span><span style="color: #007700">(</span><span style="color: #DD0000">'directive'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Listen'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$i</span><span style="color: #007700">++))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$item</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">name&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">':&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$item</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">content&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.configuration.config.avail-container.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.configuration.config.avail-container.html">Available Containers</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.configuration.config.avail-container.generic-conf.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Available Containers</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">GenericConf</td>
+  </tr>
+ </table>
+</div>
+</body></html>

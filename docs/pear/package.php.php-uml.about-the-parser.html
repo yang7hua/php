@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>About the parser</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.php.php-uml.html" title="PHP_UML" />
+  <link rel="prev" href="package.php.php-uml.command-line.html" title="Command line interface" />
+  <link rel="next" href="package.php.php-uml.api.html" title="API" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">About the parser</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.php.php-uml.command-line.html" title="Command line interface">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.php.php-uml.api.html" title="API">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.php.php-uml.about-the-parser">
+ 
+  <h1 class="refname">About the parser</h1>
+  <div class="refnamediv">About the parser &ndash; Things to know about how PHP_UML parses PHP code</div>
+
+ 
+
+ <div class="refsection"><div class="info"><h1>Types</h1>
+</div>
+  <p class="para">
+   Even though PHP is not a &quot;strong typed language&quot;, PHP_UML relies a set of predefined types (integer, float, string, mixed, etc.) and tries to use
+   them as much as it can guess. By inspecting the default values, the type hints in the functions parameters (when they are present), as well as the
+   docblocks @param, PHP_UML can detect the types of the parameters, constants and properties. When it cannot guess, it assumes that it is the <em class="emphasis">mixed</em> type.
+   </p>
+   <p class="para">PHP_UML is also aware of a couple of internal PHP classifiers, such as Exception or Iterator (that&#039;s why you might see them appear in the API
+   documentation).
+   </p>
+   <p class="para">What happens if the parser has not been able to resolve a type/class/interface? (for example, when a class implements an interface whose source code has not been provided)
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <span class="simpara">
+      With the export formats <em class="emphasis">xmi</em> and <em class="emphasis">html</em>, the target type does not appear at all.
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      With the export format <em class="emphasis">htmlnew</em>, the type is displayed, but is not clickable.
+     </span>
+    </li>
+   </ul>
+  
+ </div>
+
+ <div class="refsection"><div class="info"><h1>Packages and namespaces </h1>
+</div>
+   <p class="para">Even if packages don&#039;t exist by themselves in PHP, PHP_UML reconstitutes them by using the PHP namespaces (from PHP 5.3), or by using
+   the docblock @package (if the source code has some).
+   As for the &quot;top package&quot;, it is nothing else than the &quot;global namespace&quot; of PHP.
+  </p>
+ </div>
+
+ <div class="refsection"><div class="info"><h1>Procedural code</h1>
+</div>
+  <p class="para">Although this is not very UML style, PHP_UML can parse procedural code. The output format <em class="emphasis">htmlnew</em> is currently the only format
+  to benefit from this new capability (the XMI format cannot, since it is a strict object-oriented XML vocabulary).</p>
+  <p class="para">In the API documentation, the procedural functions will appear under <em class="emphasis">Functions</em> and the procedural constants under <em class="emphasis">Properties</em>, inside the
+  package that matches the namespace that these elements belong to.</p>
+ </div>
+
+ <div class="refsection"><div class="info"><h1>Special switches</h1>
+</div>
+  <p class="para">By default, the parser will ignore all the elements that have a docblock @internal. If you want to have them parsed anyway, use the switch --show-internal</p>
+  <p class="para">Similarly, the switch --only-api forces PHP_UML to parse only the elements that are annotated with an @api.</p>
+  <p class="para">With the switch --no-dollar, the parser removes the $ at the beginning of the property names (this character can cause problems with some UML tools).</p>
+  <p class="para">Set the error reporting level to 2 with &quot;--error-level 2&quot; to display a list of the types/classes/interfaces that PHP_UML has not been able to resolve.</p>
+ </div>
+
+ <div class="refsection"><div class="info"><h1>How do PHP elements map to UML concepts? (logical view)</h1>
+</div>
+  <p class="para">
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <span class="simpara">
+      A PHP class (or interface) maps to an UML Class (or Interface).
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      A PHP function maps to an UML Operation.
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      A PHP property, or class constant, maps to an UML Attribute.
+     </span>
+    </li>
+   </ul>
+  
+  <p class="para">
+   Packages do not exist in PHP, like they do in Java. There are two possible ways to mimic them:
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <span class="simpara">
+      by using the PHP <a href="http://www.php.net/manual/en/language.namespaces.php" class="link external">namespace</a> instruction
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      by using the docblock <code class="literal">@package</code> in the comment of a class (or of a file)
+     </span>
+    </li>
+   </ul><p>
+   Note that the <code class="literal">namespace</code> and <code class="literal">use</code> instructions will be parsed only if you run PHP_UML with PHP from version 5.3.
+  </p>
+ </div>
+
+ <div class="refsection"><div class="info"><h1>How do PHP elements map to UML concepts? (deployment view)</h1>
+</div>
+  <p class="para">
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <span class="simpara">
+      A PHP file maps to an UML Artifact.
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      A physical folder maps to an UML Package.
+     </span>
+    </li>
+   </ul>
+  
+ </div>
+ 
+ <div class="refsection"><div class="info"><h1>How do PHP elements map to UML concepts? (component view)</h1>
+</div>
+  <p class="para">
+   In UML 1.4:
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <span class="simpara">
+      A class (or an interface) maps to an UML Component.
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      A logical package maps to an UML Subpackage.
+     </span>
+    </li>
+   </ul>
+  
+  <p class="para">
+   In UML 2.1:
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <span class="simpara">
+      A class (or an interface) maps to an UML Component.
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      A logical package maps to a nesting UML Component.
+     </span>
+    </li>
+   </ul>
+  
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.php.php-uml.command-line.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.php.php-uml.html">PHP_UML</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.php.php-uml.api.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Command line interface</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">API</td>
+  </tr>
+ </table>
+</div>
+</body></html>

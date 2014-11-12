@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Grouping selectors</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-css.tutorial.html" title="Getting started" />
+  <link rel="prev" href="package.html.html-css.intro.html" title="Overview" />
+  <link rel="next" href="package.html.html-css.parse.html" title="Parsing data sources" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Grouping selectors</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-css.intro.html" title="Overview">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-css.parse.html" title="Parsing data sources">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-css.group">
+ 
+  <h1 class="refname">Grouping selectors</h1>
+  <div class="refnamediv">Grouping selectors &ndash; how to handle multiple selector at once</div>
+
+ 
+
+ <div class="refsection" id="package.html.html-css.group.purpose">
+  <div class="info"><h1>In brief</h1>
+</div>
+
+   <p class="simpara">
+    Remember, when several selectors share the same declarations, they may be grouped
+    together to save writing the same rule more than once. Each selector must be
+    separated by a comma.
+   </p>
+   <p class="para">
+    Two cases exists to handle group of selector. The quick and limited solution
+    (accept only two selectors in a same group) with :
+    <code class="methodname">HTML_CSS::setSameStyle()</code>.
+    And the extended/common solution with :
+    <code class="methodname">HTML_CSS::createGroup()</code>,
+    <code class="methodname">HTML_CSS::setGroupStyle()</code>,
+    <code class="methodname">HTML_CSS::addGroupSelector()</code> and
+    <code class="methodname">HTML_CSS::removeGroupSelector()</code>.
+   </p>
+  </div>
+
+  <div class="refsection" id="package.html.html-css.group.create">
+   <div class="info"><h1>Create group</h1>
+</div>
+   <p class="para">
+    <code class="methodname">HTML_CSS::createGroup()</code> creates basically
+    a group for selectors given as first argument. You can identify this group
+    by an identifier (alphanumeric) or let HTML_CSS manage an internal numeric
+    identifier itself.
+   </p>
+   <p class="para">
+     Let creates this group of selectors :
+     </p><div class="csscode"><pre class="csscode">#main p, #main ul { padding-top: 1em; color: red; }</pre>
+</div>
+   
+
+   <div class="refsection" id="package.html.html-css.group.create.id">
+    <div class="info"><h1>Identify the group yourself</h1>
+</div>
+    <p class="para">
+     Identifier is named <strong class="emphasis">myGroupID</strong> in this example:
+     </p><div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/CSS.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$css&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_CSS</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">$g1&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createGroup</span><span style="color: #007700">(</span><span style="color: #DD0000">'#main&nbsp;p,&nbsp;#main&nbsp;ul'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'myGroupID'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setGroupStyle</span><span style="color: #007700">(</span><span style="color: #0000BB">$g1</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'padding-top'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'1em'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setGroupStyle</span><span style="color: #007700">(</span><span style="color: #0000BB">$g1</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'color'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'red'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">display</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    
+   </div>
+
+   <div class="refsection" id="package.html.html-css.group.create.self">
+    <div class="info"><h1>Let HTML_CSS do it itself</h1>
+</div>
+    <p class="para">
+     </p><blockquote class="note">
+      <span class="simpara">
+       This is the default behavior.
+      </span>
+     </blockquote>
+
+     <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/CSS.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$css&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_CSS</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">$g1&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createGroup</span><span style="color: #007700">(</span><span style="color: #DD0000">'#main&nbsp;p,&nbsp;#main&nbsp;ul'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setGroupStyle</span><span style="color: #007700">(</span><span style="color: #0000BB">$g1</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'padding-top'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'1em'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setGroupStyle</span><span style="color: #007700">(</span><span style="color: #0000BB">$g1</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'color'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'red'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">display</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    
+   </div>
+  </div>
+
+  <div class="refsection" id="package.html.html-css.group.selectors">
+   <div class="info"><h1>Handle group selector</h1>
+</div>
+   <p class="para">
+    With
+    <code class="methodname">HTML_CSS::addGroupSelector()</code> and
+    <code class="methodname">HTML_CSS::removeGroupSelector()</code>, we have ability to
+    add or remove one selector from a selectors list (of a group).
+   </p>
+   <p class="para">
+     Suppose we have these selectors :
+     </p><div class="csscode"><pre class="csscode">html, body { margin: 2px; padding: 0; border: 0; }</pre>
+</div><p>
+     and we want to apply same share properties to new class &#039;large&#039; and do not anymore
+     apply it to &#039;body&#039;.
+   </p>
+   <p class="para">
+     Here are how to do :
+     </p><div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/CSS.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$css&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_CSS</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;1.&nbsp;create&nbsp;the&nbsp;pre-requires&nbsp;data<br /></span><span style="color: #0000BB">$g1&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createGroup</span><span style="color: #007700">(</span><span style="color: #DD0000">'html,&nbsp;body'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setGroupStyle</span><span style="color: #007700">(</span><span style="color: #0000BB">$g1</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'margin'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'2px'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setGroupStyle</span><span style="color: #007700">(</span><span style="color: #0000BB">$g1</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'padding'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'0'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setGroupStyle</span><span style="color: #007700">(</span><span style="color: #0000BB">$g1</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'border'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'0'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;2.&nbsp;remove&nbsp;the&nbsp;body&nbsp;selector<br /></span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">removeGroupSelector</span><span style="color: #007700">(</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'body'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;3.&nbsp;add&nbsp;the&nbsp;new&nbsp;'large'&nbsp;class<br /></span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addGroupSelector</span><span style="color: #007700">(</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'.large'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">display</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+     <blockquote class="note">
+      <span class="simpara">
+       Remember that HTML_CSS handle group (numeric) identifier itself (begin at 1,
+       and go to 2, 3, and more).
+      </span>
+     </blockquote>
+
+   
+  </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-css.intro.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-css.tutorial.html">Getting started</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-css.parse.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Overview</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Parsing data sources</td>
+  </tr>
+ </table>
+</div>
+</body></html>

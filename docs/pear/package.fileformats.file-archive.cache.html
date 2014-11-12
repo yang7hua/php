@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Cache</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.fileformats.file-archive.html" title="File_Archive" />
+  <link rel="prev" href="package.fileformats.file-archive.archmod.html" title="Archive modification" />
+  <link rel="next" href="package.fileformats.file-cabinet.html" title="File_Cabinet" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Cache</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.fileformats.file-archive.archmod.html" title="Archive modification">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.fileformats.file-cabinet.html" title="File_Cabinet">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.fileformats.file-archive.cache">
+ 
+  <h1 class="refname">Cache</h1>
+  <div class="refnamediv">Cache &ndash; Caching compressed files</div>
+
+ 
+
+
+ <div class="refsection" id="package.fileformats.file-archive.cache.intro"><div class="info"><h1>Introduction</h1>
+</div>
+  
+  <p class="para">
+   <strong class="classname">File_Archive</strong> 1.4 introduce the possibility to use a
+   cache to store intermediate result of a zip compression.
+   It uses the <strong class="classname">Cache_Lite</strong> PEAR package to do so.
+  </p>
+  <p class="para">
+   A zip file is made of compressed files, one after the others.
+   So if you generate an archive that contains files A, B and C and then
+   another archive that contains A and C, you will compress twice the files
+   A and C. The use of the cache will allow to save the compressed version of
+   files A, B and C on the first compression, to use them again in the
+   second compression.
+  </p>
+ </div>
+
+
+ <div class="refsection" id="package.fileformats.file-archive.cache.examples"><div class="info"><h1>Usage examples</h1>
+</div>
+  
+  <p class="para">
+   The cache can be (and should be) used if you dynamically create some zip
+   archive that contains frequently the same files.
+   For example, you may want to allow the user to select some images, videos or
+   other files from your gallery and allow them to download a compressed zip
+   archive that contains these files.
+  </p>
+  <p class="para">
+   If you do so without cache, your server will answer very slowly if a lot of
+   users ask the files. With the cache, the files will be compressed only once.
+  </p>
+  <p class="para">
+   On my machine (a thinkpad T42P with default factory equipment), generating a
+   200MB zip archive takes around 30s of CPU without the cache, 32s of CPU with
+   an empty cache and 2s of CPU if all the files to compress are already in
+   cache.
+  </p>
+ </div>
+
+
+ <div class="refsection" id="package.fileformats.file-archive.cache.howtouse"><div class="info"><h1>How to use the cache</h1>
+</div>
+  
+  <p class="para">
+   The cache is a Cache_Lite object.
+   So you must have installed the package.
+   Then all you have to do is use the
+   <strong class="function">File_Archive::setOption()</strong> function with the
+   <code class="varname">cache</code> parameter.
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Set up the cache</strong></p></div>
+   
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"File/Archive.php"</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">"Cache/Lite.php"</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//Create&nbsp;the&nbsp;cache&nbsp;object<br /></span><span style="color: #0000BB">$cache&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Cache_Lite</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//See&nbsp;the&nbsp;doc&nbsp;of&nbsp;Cache_Lite&nbsp;for&nbsp;its&nbsp;constructor&nbsp;parameters<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">)<br />);<br /><br /></span><span style="color: #FF8000">//Ask&nbsp;File_Archive&nbsp;to&nbsp;use&nbsp;the&nbsp;cache&nbsp;object&nbsp;we&nbsp;just&nbsp;created<br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">setOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'cache'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$cache</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//And&nbsp;then&nbsp;create&nbsp;your&nbsp;archives&nbsp;as&nbsp;usual<br />//Generate&nbsp;a&nbsp;file&nbsp;called&nbsp;archive.zip&nbsp;in&nbsp;the&nbsp;working&nbsp;folder<br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">extract</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'folderToCompress'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'archive.zip'<br /></span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//Send&nbsp;an&nbsp;archive&nbsp;to&nbsp;the&nbsp;user<br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">extract</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'folderToCompress'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toArchive</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'archive.zip'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toOutput</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;)<br />);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.fileformats.file-archive.archmod.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.fileformats.file-archive.html">File_Archive</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.fileformats.file-cabinet.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Archive modification</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">File_Cabinet</td>
+  </tr>
+ </table>
+</div>
+</body></html>

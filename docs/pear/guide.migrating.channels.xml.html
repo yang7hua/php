@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>channel.xml: The channel definition file</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="channels.whatarethey.html" title="channel.xml, REST, XML-RPC" />
+  <link rel="prev" href="channels.whatarethey.html" title="channel.xml, REST, XML-RPC" />
+  <link rel="next" href="core.rest.html" title="PEAR channel server REST interface" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">channel.xml: The channel definition file</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="channels.whatarethey.html" title="channel.xml, REST, XML-RPC">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="core.rest.html" title="PEAR channel server REST interface">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="guide.migrating.channels.xml">
+ <h1>channel.xml: The channel definition file</h1>
+
+ <div class="section" id="guide.migrating.channels.xml.intro">
+  <h2 class="title">How to describe a channel</h2> 
+  
+  <p class="para">
+   Discovery of a channel&#039;s capabilities is extremely flexible.  The XSD schema
+   defining channel.xml can be found at
+   <a href="http://pear.php.net/dtd/channel-1.0.xsd" class="link external">http://pear.php.net/dtd/channel-1.0.xsd</a>.
+   Channel.xml defines:
+   </p><ol type="1">
+    <li class="listitem">
+     <p class="para">
+      the channel name
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      an optional suggested user alias for the channel
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+     a brief summary of the channel&#039;s purpose
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      an optional package to perform custom validation of packages on
+      both download and packaging
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      a list of protocols supported by a channel (XML-RPC, SOAP, and REST are supported)
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      a list of mirrors and the protocols they support.
+     </p>
+    </li>
+   </ol>
+  
+  <p class="para">
+   Here is a sample channel.xml with all elements:
+  </p>
+  <p class="para">
+   </p><div class="xmlcode"><pre class="xmlcode">&lt;channel version=&quot;1.0&quot;
+         xsi:schemaLocation=&quot;http://pear.php.net/channel-1.0
+                             http://pear.php.net/dtd/channel-1.0.xsd&quot;&gt;</pre>
+<a href="guide.migrating.channels.xml.html#guide.migrating.channels.xml.name" class="link">&lt;name&gt;</a><pre class="xmlcode">pear.example.com&lt;/name&gt;</pre>
+<a href="guide.migrating.channels.xml.html#guide.migrating.channels.xml.suggestedalias" class="link">&lt;suggestedalias&gt;</a><pre class="xmlcode">foo&lt;/suggestedalias&gt;</pre>
+<a href="guide.migrating.channels.xml.html#guide.migrating.channels.xml.summary" class="link">&lt;summary&gt;</a><pre class="xmlcode">Example channel.xml&lt;/summary&gt;</pre>
+<a href="guide.migrating.channels.xml.html#guide.migrating.channels.xml.validatepackage" class="link">&lt;validatepackage</a><pre class="xmlcode">version=&quot;1.3.4&quot;&gt;Foo_Validate&lt;/validatepackage&gt;</pre>
+<a href="guide.migrating.channels.xml.html#guide.migrating.channels.xml.mirrors" class="link">&lt;servers&gt;</a>
+  <a href="guide.migrating.channels.xml.html#guide.migrating.channels.xml.mirrors" class="link">&lt;primary</a><pre class="xmlcode">port=&quot;8080&quot; ssl=&quot;yes&quot;&gt;</pre>
+<a href="guide.migrating.channels.xml.html#guide.migrating.channels.xml.protocols" class="link">&lt;xmlrpc&gt;</a><pre class="xmlcode">&lt;!-- default path is xmlrpc.php --&gt;
+    &lt;function version=&quot;1.0&quot;&gt;logintest&lt;/function&gt;
+    &lt;function version=&quot;1.0&quot;&gt;package.listLatestReleases&lt;/function&gt;
+    &lt;function version=&quot;1.0&quot;&gt;package.listAll&lt;/function&gt;
+    &lt;function version=&quot;1.0&quot;&gt;package.info&lt;/function&gt;
+    &lt;function version=&quot;1.0&quot;&gt;package.getDownloadURL&lt;/function&gt;
+    &lt;function version=&quot;1.1&quot;&gt;package.getDownloadURL&lt;/function&gt;
+    &lt;function version=&quot;1.0&quot;&gt;package.getDepDownloadURL&lt;/function&gt;
+    &lt;function version=&quot;1.1&quot;&gt;package.getDepDownloadURL&lt;/function&gt;
+    &lt;function version=&quot;1.0&quot;&gt;package.search&lt;/function&gt;
+    &lt;function version=&quot;1.0&quot;&gt;channel.listAll&lt;/function&gt;
+   &lt;/xmlrpc&gt;</pre>
+<a href="guide.migrating.channels.xml.html#guide.migrating.channels.xml.protocols" class="link">&lt;rest&gt;</a><pre class="xmlcode">&lt;!-- no default path, all must be defined in baseurl --&gt;
+    &lt;baseurl type=&quot;REST1.0&quot;&gt;http://pear.example.com/rest/&lt;/baseurl&gt;
+    &lt;baseurl type=&quot;REST1.1&quot;&gt;http://pear.example.com/rest/&lt;/baseurl&gt;
+   &lt;/rest&gt;</pre>
+<a href="guide.migrating.channels.xml.html#guide.migrating.channels.xml.protocols" class="link">&lt;soap</a><pre class="xmlcode">path=&quot;soapy.php&quot;&gt; &lt;!-- default path is soap.php --&gt;
+    &lt;function version=&quot;1.0&quot;&gt;package.listAll&lt;/function&gt;
+   &lt;/soap&gt;
+  &lt;/primary&gt;</pre>
+<a href="guide.migrating.channels.xml.html#guide.migrating.channels.xml.mirrors" class="link">&lt;mirror</a><pre class="xmlcode">server=&quot;foo2.example.com/pearmirror&quot;&gt;
+   &lt;xmlrpc path=&quot;mirrorxmlrpc.php&quot;&gt; &lt;!-- default path is xmlrpc.php --&gt;
+    &lt;function version=&quot;1.0&quot;&gt;package.listLatestReleases&lt;/function&gt;
+    &lt;function version=&quot;1.0&quot;&gt;package.listAll&lt;/function&gt;
+    &lt;function version=&quot;1.0&quot;&gt;package.info&lt;/function&gt;
+    &lt;function version=&quot;1.0&quot;&gt;package.getDownloadURL&lt;/function&gt;
+    &lt;function version=&quot;1.1&quot;&gt;package.getDownloadURL&lt;/function&gt;
+    &lt;function version=&quot;1.0&quot;&gt;package.getDepDownloadURL&lt;/function&gt;
+    &lt;function version=&quot;1.1&quot;&gt;package.getDepDownloadURL&lt;/function&gt;
+    &lt;function version=&quot;1.0&quot;&gt;package.search&lt;/function&gt;
+   &lt;/xmlrpc&gt;
+   &lt;rest&gt; &lt;!-- no default path, all must be defined in baseurl --&gt;
+    &lt;baseurl type=&quot;REST1.0&quot;&gt;http://foo2.example.com/rest/&lt;/baseurl&gt;
+   &lt;/rest&gt; 
+  &lt;/mirror&gt;
+ &lt;/servers&gt;
+&lt;/channel&gt;</pre>
+</div>
+  
+  <div class="section" id="guide.migrating.channels.xml.name"><h3 class="title">&lt;name&gt;</h3>
+   
+   <p class="para">
+    A channel&#039;s name should be the name of the server that users would browse to in order
+    to learn more about the packages being offered.  For instance, PEAR packages are
+    located in the pear.php.net channel.  PECL packages are located in the pecl.php.net
+    channel.  Note that for backwards compatibility, all existing packages based on
+    package.xml version 1.0 are in the pear.php.net channel.
+   </p>
+   <p class="para">
+    The benefit that comes from using the server name as the channel name is that
+    auto-discovery becomes a real possibility, as well as ease of locating packages
+    increases dramatically.
+   </p>
+   <p class="para">
+    A channel need not be located in the document root, a channel can contain a path.  This
+    is a perfectly valid channel name:
+    <code class="filename">foo.example.com/path/to/pear</code>.
+    Note that users would have to type:
+   </p>
+   <p class="para">
+    </p><pre class="screen">
+     <br/>$&nbsp;pear&nbsp;install&nbsp;foo.example.com/path/to/pear/Packagename<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </pre>
+
+   
+   <p class="para">
+    Unless you provide a &lt;suggestedalias&gt;.
+   </p>
+   <p class="para">
+    The channel&#039;s definition file &quot;channel.xml&quot; must be placed in the root channel
+    directory.  If a channel is &quot;pear.example.com&quot;, the channel.xml must be located
+    in &quot;http://pear.example.com/channel.xml&quot;.  If the channel is
+    &quot;pear.example.com/path/to/pear&quot;, then the channel.xml must be located in
+    &quot;http://pear.example.com/path/to/pear/channel.xml&quot;
+   </p>
+  </div>
+  <div class="section" id="guide.migrating.channels.xml.suggestedalias"><h3 class="title">&lt;suggestedalias&gt;</h3>
+   
+   <p class="para">
+    &lt;suggestedalias&gt; defines a shorter, more friendly name to use when installing
+    packages from a channel.  For instance, the pear.php.net channel&#039;s suggested alias is
+    &quot;pear&quot;.  The best aliases for a channel will be no more than 6 characters long -
+    remember, a user must type them often when installing or upgrading, and this can be
+    tedious for longer aliases.
+   </p>
+   <p class="para">
+    Rather than call this tag &lt;alias&gt;, as it was originally named, the tag
+    is named &lt;suggestedalias&gt; in order to provide the user some latitude.  If
+    the user does not like the alias suggested by the channel owners, he or she can
+    easily re-alias a channel through the channel-alias command.
+   </p>
+  </div>
+  <div class="section" id="guide.migrating.channels.xml.summary"><h3 class="title">&lt;summary&gt;</h3>
+   
+   <p class="para">
+    This tag provides a short description of what packages the user should expect to
+    find on this channel.  The summary is what users will see when the use the list-channels
+    command.
+   </p>
+  </div>
+  <div class="section" id="guide.migrating.channels.xml.validatepackage"><h3 class="title">&lt;validatepackage&gt;</h3>
+   
+   <p class="para">
+    Most channels will be satisfied with the restrictions placed upon package naming,
+    versioning, and so on that PEAR provides by default.  However, for some channels,
+    the validation will be too strict, and others, too relaxed.  The &lt;validatepackage&gt;
+    tag provides the next level of customization.
+   </p>
+   <p class="para">
+    If omitted, the installer assumed that the <strong class="classname">PEAR_Validate</strong> class
+    should be used.  Note that a looser version validation is provided by the
+    <strong class="classname">PEAR_Validate_PECL</strong> class, for channels like pecl.php.net that do
+    not wish to deal with PEAR&#039;s warnings on version transgressions.
+   </p>
+   <p class="para">
+    &lt;validatepackage&gt; requires a version attribute and text content.  The text content
+    must be the name of a package that can be installed via:
+   </p>
+   <p class="para">
+    </p><pre class="screen">
+     <br/>$&nbsp;pear&nbsp;install&nbsp;channelname.example.com/Packagename-version<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </pre>
+
+   
+   <p class="para">
+    as in:
+   </p>
+   <p class="para">
+    </p><pre class="screen">
+     <br/>$&nbsp;pear&nbsp;install&nbsp;pear.example.com/Foo_Validate-1.3.4<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </pre>
+
+   
+   <p class="para">
+    for the sample channel.xml at the beginning of this section.  In addition, the package
+    must provide a single class named after the package in a file using the PEAR naming
+    conventions (all underscores &quot;_&quot; converted into path separators &quot;/&quot;
+    so that Foo_Validate is located in Foo/Validate.php), and this class should extend
+    PEAR_Validate.  Methods beginning with &quot;validate&quot; like
+    <strong class="function">validateVersion()</strong> are intended to be overridden by validation classes
+    for use in extending existing validation functionality.
+   </p>
+  </div>
+  <div class="section" id="guide.migrating.channels.xml.mirrors"><h3 class="title">&lt;servers&gt;: &lt;primary&gt; and &lt;mirror&gt;</h3>
+   
+   <p class="para">
+    Mirroring is explicitly supported in channel.xml and in the PEAR installer.  Users can
+    choose their favorite mirror via the <code class="filename">default_channel</code> configuration
+    option, and channel.xml can list all the possible mirrors using the (surprise)
+    &lt;mirror&gt; tag.
+   </p>
+   <p class="para">
+    The &lt;primary&gt; tag is used to define the location of protocols, and to list
+    the protocols that are supported by the main channel server.  Optional attributes
+    can be used to modify how the PEAR installer will attempt to connect to the server.
+    The &quot;port&quot; attribute can be used to define how the installer will connect
+    to XML-RPC and SOAP services.  REST services are always controlled by the individual
+    &lt;baseurl&gt; tags.
+   </p>
+  </div>
+  <div class="section" id="guide.migrating.channels.xml.protocols"><h3 class="title">&lt;xmlrpc&gt;, &lt;soap&gt;, &lt;rest&gt;</h3>
+   
+   <p class="para">
+    channel.xml knows about the XML-RPC, SOAP, and REST protocols for web services.
+    However, the PEAR installer only supports REST currently, and may support
+    other methods in the future.  No support for SOAP is planned for the near future.
+    However, should it ever be implemented, channel.xml is ready.
+   </p>
+   <p class="para">
+    The &lt;xmlrpc&gt; and &lt;soap&gt; tags have identical formats.  Both tags can contain
+    an optional attribute &quot;path&quot; that tells the PEAR installer which URL to
+    query.  By default, the path is protocol.php, as in xmlrpc.php or soap.php.  In other
+    words, to access XML-RPC functions for the pear.example.com channel defined in the sample
+    channel.xml, the installer would query
+    <code class="filename">https://pear.example.com:8080/xmlrpc.php</code> for XML-RPC functions, but
+    would query <code class="filename">https://pear.example.com:8080/soapy.php</code> for SOAP
+    functions.
+   </p>
+   <p class="para">
+    The &lt;rest&gt; tag reflects the design concept behind REST: each resource is
+    defined by a base URL in tag &lt;baseurl&gt; that is then used by the installer
+    along with hyperlinks to glean the same information that XML-RPC or SOAP would
+    provide.  Required attribute &quot;type&quot; tells the installer what version of
+    the PEAR installer REST interface is provided at the base URL.
+   </p>
+   <div class="section" id="guide.migrating.channels.xml.protocols.function"><h4 class="title">&lt;function&gt;</h4>
+    
+    <p class="para">
+     The &lt;function&gt; tag is quite simple.  A required version attribute informs the
+     installer what the API is, and the text content informs the installer what the name
+     of the function is.  Note that multiple functions with different versions can co-exist
+     peacefully, as in:
+     </p><div class="xmlcode">
+      <pre class="xmlcode">
+&lt;function version=&quot;1.0&quot;&gt;package.getDownloadURL&lt;/function&gt;
+&lt;function version=&quot;1.1&quot;&gt;package.getDownloadURL&lt;/function&gt;</pre>
+
+     </div><p>
+     If a newer API is backwards-compatible, always define every possible API version
+     in order to prevent older installer versions from giving up.
+    </p>
+   </div>
+  </div>
+  <div class="section" id="guide.migrating.channels.xml.whynotwsdl"><h3 class="title">Why not use a standard such as wsdl?</h3>
+   
+   <p class="para">
+    Some of you may be asking &quot;why create another standard for web
+    services discovery?&quot;  The answer is simple: channel.xml does not
+    supplant the role that WSDL has for java, or XML-RPC introspection occupies.
+    channnel.xml is a layer on top of these technologies.  The point is to quickly
+    list the remote protocols that are supported, not to describe what they do.
+   </p>
+   <p class="para">
+    The PEAR installer is specialized enough that a generic listing of parameters and
+    return values is entirely unnecessary: the installer knows exactly what xml-rpc
+    function package.info version 1.0 requires and what it returns.  Any other information
+    simply adds wasted bandwidth and disk space.
+   </p>
+  </div>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="channels.whatarethey.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="channels.whatarethey.html">channel.xml, REST, XML-RPC</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="core.rest.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">channel.xml, REST, XML-RPC</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">PEAR channel server REST interface</td>
+  </tr>
+ </table>
+</div>
+</body></html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Javascript support</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-quickform2.output.html" title="Form output and Javascript support" />
+  <link rel="prev" href="package.html.html-quickform2.renderers.stub.html" title="Stub Renderer" />
+  <link rel="next" href="package.html.html-quickform2.multipage.html" title="Multipage forms" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Javascript support</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-quickform2.renderers.stub.html" title="Stub Renderer">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-quickform2.multipage.html" title="Multipage forms">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-quickform2.javascript">
+ 
+  <h1 class="refname">Javascript support</h1>
+  <div class="refnamediv">Javascript support &ndash; Client-side validation and Javascript-backed elements</div>
+
+ 
+ <div class="refsection" id="package.html.html-quickform2.javascript.overview">
+  <div class="info">
+   <h1>Overview</h1>
+
+  </div>
+  <blockquote class="tip">
+   <p class="para">
+    If client-side validation in QuickForm2 doesn&#039;t work, you probably did not <a href="package.html.html-quickform2.javascript.html#package.html.html-quickform2.javascript.libraries" class="link">include the file</a> it depends
+    upon.
+   </p>
+  </blockquote>
+
+  <p class="para">
+   While <strong class="package">HTML_QuickForm</strong> implemented client-side validation and provided several
+   Javascript-backed elements, support for Javascript there was quite limited. Basically, all
+   scripts were inlined and there were some rudimentary checks to prevent outputting the same
+   (library) code twice. 
+  </p>
+  <p class="para">
+   This was addressed in <strong class="package">HTML_QuickForm2</strong>, Javascript handled by the package is
+   logically split into several parts:
+   </p><ol type="1">
+    <li class="listitem"><span class="simpara">
+     Libraries;
+    </span></li>
+    <li class="listitem"><span class="simpara">
+     Form setup code;
+    </span></li>
+    <li class="listitem"><span class="simpara">
+     Inline script.
+    </span></li>
+   </ol><p>
+   A page containing two Javascript-backed forms will look like this:
+   </p><pre class="screen">
+<br/>...<br/>[JS&nbsp;libraries&nbsp;used&nbsp;by&nbsp;form1&nbsp;and&nbsp;form2]<br/>...<br/>[form1&nbsp;html,&nbsp;including&nbsp;inline&nbsp;javascript]<br/>[form1&nbsp;setup&nbsp;code]<br/>...<br/>[form2&nbsp;html,&nbsp;including&nbsp;inline&nbsp;javascript]<br/>[form2&nbsp;setup&nbsp;code]<br/>...<br/>
+   </pre>
+<p>
+   An instance of <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_JavascriptBuilder.html" class="apidoclink">HTML_QuickForm2_JavascriptBuilder</a> takes care of libraries and setup
+   code, inline code can be added using <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Element_Script.html" class="apidoclink">HTML_QuickForm2_Element_Script</a> element.
+  </p>
+  <p class="para">
+   The new approach allows keeping the code that does not change (libraries) in external
+   <code class="filename">*.js</code> files, instead of bloating the resultant HTML. If form&#039;s structure does
+   not change either, generated form setup code may also be moved to an external file. Only code
+   that changes from one request to the other (e.g. setting the element&#039;s value) has to be inlined.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.javascript.builder">
+  <div class="info">
+   <h1>Javascript builder class</h1>
+
+  </div>
+  <blockquote class="note">
+   <p class="para">
+    <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_JavascriptBuilder.html" class="apidoclink">HTML_QuickForm2_JavascriptBuilder</a> is
+    used together with <a href="package.html.html-quickform2.renderers.html" class="link">renderers</a>. Form
+    Javascript is generated in the course of <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2.html#methodrender" class="apidoclink">HTML_QuickForm2::render()</a> call, so that call is mandatory if you are using
+    Javascript in your form.
+   </p>
+  </blockquote>
+
+  <p class="para">
+   Javascript library files are registered via <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_JavascriptBuilder.html#methodaddLibrary" class="apidoclink">addLibrary()</a>. You will
+   only need to call this directly if you create custom Elements or Rules or maybe want to <a href="package.html.html-quickform2.rules.javascript.html#package.html.html-quickform2.rules.javascript.validator" class="link">override validation
+    behaviour</a>. Correct <code class="varname">$webPath</code> and 
+   <code class="varname">$absPath</code> need to be provided so that later call to <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_JavascriptBuilder.html#methodgetLibraries" class="apidoclink">getLibraries()</a> can
+   generate both links to external files and inline code.
+  </p>
+  <p class="para">
+   Form setup code usually contains client-side validation rules added with <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_JavascriptBuilder.html#methodaddRule" class="apidoclink">addRule()</a> and element
+   setup code added with <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_JavascriptBuilder.html#methodaddElementJavascript" class="apidoclink">addElementJavascript()</a>,
+   the latter dealing with event handlers necessary for element behaviour. For example, built-in
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Element_Hierselect.html" class="apidoclink">Hierselect element</a> adds
+   <code class="literal">onchange</code> handlers for contained selects, <code class="literal">onreset</code> handler
+   for a containing form and <code class="literal">onload</code> handler for <code class="varname">window</code>. Once
+   again, you will only directly call <strong class="function">addElementJavascript()</strong> if you are creating
+   a custom element or want to add some custom setup code. You don&#039;t need to call
+   <strong class="function">addRule()</strong> at all, as it is done automatically if you added a Rule to an
+   Element with <strong class="constant">HTML_QuickForm2_Rule::CLIENT</strong> flag set. Javascript added by
+   these two methods is later returned by <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_JavascriptBuilder.html#methodgetFormJavascript" class="apidoclink">getFormJavascript()</a>
+   method which is usually called automatically by a renderer. It is also possible to use separate
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_JavascriptBuilder.html#methodgetSetupCode" class="apidoclink">getSetupCode()</a> and
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_JavascriptBuilder.html#methodgetValidator" class="apidoclink">getValidator()</a>
+   methods.
+  </p>
+  <p class="para">
+   <strong class="classname">HTML_QuickForm2_JavascriptBuilder</strong> also contains a static helper method
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_JavascriptBuilder.html#methodencode" class="apidoclink">encode()</a> which encodes a
+   PHP value as a Javascript literal. This is similar to <a href="http://www.php.net/manual-lookup.php?pattern=json_encode" class="link external"><strong class="function">json_encode()</strong></a>, but does not
+   enforce <code class="literal">UTF-8</code> charset.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.javascript.libraries">
+  <div class="info">
+   <h1>Including JS library files</h1>
+
+  </div>
+  <p class="para">
+   There are currently three library files installed with the package:
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term"><code class="filename">quickform.js</code></dt>
+     <dd class="listitem"><span class="simpara">
+      Helper methods and validation library.
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><code class="filename">quickform-hierselect.js</code></dt>
+     <dd class="listitem"><span class="simpara">
+      Support functions for <a href="package.html.html-quickform2.elements.custom.html#package.html.html-quickform2.elements.custom.hierselect" class="link">hierselect elements</a>.
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><code class="filename">quickform-repeat.js</code></dt>
+     <dd class="listitem"><span class="simpara">
+      Support functions for <a href="package.html.html-quickform2.elements.repeat.html" class="link">repeat
+       elements</a>.
+     </span></dd>
+    </dl>
+   </div><p>
+   Human-readable versions of these files are installed into <code class="filename">HTML_QuickForm2/js</code> directory under PEAR&#039;s
+   <em><code class="parameter">data_dir</code></em> and minified versions are installed into <code class="filename">HTML_QuickForm2/js/min</code>. If you have trouble finding where
+   <em><code class="parameter">data_dir</code></em> is, you can use <a href="guide.users.commandline.config.html" class="link">config-show</a> command of PEAR installer. 
+  </p>
+  <p class="para">
+   While form setup code and inline Javascript is automatically added to output when rendering a
+   form, libraries are <em class="emphasis">not</em> added automatically. The main reasons for this are
+   </p><ol type="1">
+    <li class="listitem"><span class="simpara">
+     Links to the library files are usually placed in <code class="literal">&lt;head&gt;&lt;/head&gt;</code>
+     section of HTML document, while renderer outputs only the form itself.
+    </span></li>
+    <li class="listitem"><span class="simpara">
+     There is no reliable way to generate <code class="literal">&lt;script
+      src=&quot;...&quot;&gt;&lt;/script&gt;</code> tags referencing installed
+     <code class="filename">*.js</code> files. Inlining the code works for package examples but leads to
+     useless bloat in most other circumstances.
+    </span></li>
+   </ol>
+  
+  <blockquote class="note">
+   <p class="para">
+    Libraries should be added to a page before outputting forms and definitely before outputting
+    form setup code. Both inline scripts and form setup code can contain calls to library functions
+    and changes to library properties. 
+   </p>
+  </blockquote>
+
+  <p class="para">
+   It is possible to just copy <code class="filename">*.js</code> files from PEAR&#039;s
+   <em><code class="parameter">data_dir</code></em> to a directory accessible via HTTP and manually add necessary
+   <code class="literal">&lt;script src=&quot;...&quot;&gt;&lt;/script&gt;</code> tags to the page. You will
+   however need to manually update this list if you decide to use a new Element or a new Rule which
+   requires an additional Javascript file. A better approach is to let
+   <strong class="classname">HTML_QuickForm2_JavascriptBuilder</strong> keep track of the used libraries and
+   rely on its <strong class="function">getLibraries()</strong> method to include them. 
+  </p>
+  <p class="para">
+   There are two ways to include the library code in your page using <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_JavascriptBuilder.html#methodgetLibraries" class="apidoclink">HTML_QuickForm2_JavascriptBuilder::getLibraries()</a>:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><p class="para">
+     Inline the libraries, including their contents into the page
+     </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/QuickForm2/Renderer.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$renderer&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Renderer</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">'default'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">render</span><span style="color: #007700">(</span><span style="color: #0000BB">$renderer</span><span style="color: #007700">);<br /><br />echo&nbsp;</span><span style="color: #0000BB">$renderer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getJavascriptBuilder</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">getLibraries</span><span style="color: #007700">(</span><span style="color: #0000BB">true</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br />echo&nbsp;</span><span style="color: #0000BB">$renderer</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div><p>
+     This is the approach taken by package example files as it is guaranteed to work with no
+     additional steps required from the user. It may also be useful while developing new
+     package-related <code class="filename">*.js</code> files as you won&#039;t have problems with browser caching
+     them.
+    </p></li>
+    <li class="listitem"><p class="para">
+     Copy/symlink <code class="filename">*.js</code> files installed with the package to some directory under
+     your website&#039;s document root and provide this information to JavascriptBuilder:
+     </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/QuickForm2/Renderer.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'HTML/QuickForm2/JavascriptBuilder.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$renderer&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Renderer</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">'default'</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;Here&nbsp;'/path/to/libraries'&nbsp;is&nbsp;whatever&nbsp;directory&nbsp;available&nbsp;via&nbsp;HTTP&nbsp;you&nbsp;copied&nbsp;libraries&nbsp;to<br /></span><span style="color: #0000BB">$renderer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setJavascriptBuilder</span><span style="color: #007700">(new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_JavascriptBuilder</span><span style="color: #007700">(</span><span style="color: #DD0000">'/path/to/libraries'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">render</span><span style="color: #007700">(</span><span style="color: #0000BB">$renderer</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;This&nbsp;will&nbsp;output&nbsp;necessary&nbsp;&lt;script&nbsp;src="/path/to/libraries/..."&gt;&lt;/script&gt;&nbsp;tags<br /></span><span style="color: #007700">foreach&nbsp;(</span><span style="color: #0000BB">$renderer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getJavascriptBuilder</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">getLibraries</span><span style="color: #007700">()&nbsp;as&nbsp;</span><span style="color: #0000BB">$link</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$link&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br />echo&nbsp;</span><span style="color: #0000BB">$renderer</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    </li>
+   </ul><p>
+   The latter approach is obviously recommended for production use.
+  </p>
+  <blockquote class="tip">
+   <p class="para">
+    If your page contains several forms, you&#039;ll only need to have one set of libraries for them.
+    Use the same instance of <strong class="classname">HTML_QuickForm2_JavascriptBuilder</strong> when rendering
+    all forms.
+   </p>
+  </blockquote>
+
+  <blockquote class="tip">
+   <p class="para">
+    <code class="filename">dualselect.php</code> example shows among other things how to create a custom
+    element with an additional JS library. 
+   </p>
+  </blockquote>
+
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.javascript.setup">
+  <div class="info">
+   <h1>Outputting form setup code</h1>
+
+  </div>
+  <p class="para">
+   Form setup code is returned by <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_JavascriptBuilder.html#methodgetFormJavascript" class="apidoclink">HTML_QuickForm2_JavascriptBuilder::getFormJavascript()</a>. This method is
+   automatically called by built-in Renderers and thus the code is included in their output.
+  </p>
+  <p class="para">
+   Note that <strong class="package">HTML_QuickForm2</strong>&#039;s Javascript library does not use
+   <code class="literal">DOMContentLoaded</code> event like <strong class="package">jQuery</strong> and similar libraries
+   do:
+   </p><div class="javascriptcode">
+<pre class="javascriptcode">
+$(document).ready(function() {
+    // some code that will be run when complete DOM tree is built
+});</pre>
+
+   </div><p>
+   Instead, form setup code is run immediately and should be output <em class="emphasis">after the
+    form</em>, when form&#039;s <span class="acronym">DOM</span> tree is already available. 
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-quickform2.renderers.stub.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-quickform2.output.html">Form output and Javascript support</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-quickform2.multipage.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Stub Renderer</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Multipage forms</td>
+  </tr>
+ </table>
+</div>
+</body></html>

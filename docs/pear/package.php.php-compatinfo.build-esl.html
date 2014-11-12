@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Build your Extension Support List</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.php.php-compatinfo.tutorial.html" title="Getting started" />
+  <link rel="prev" href="package.php.php-compatinfo.renderer.html" title="Outputting Results" />
+  <link rel="next" href="package.php.php-compatinfo.build-ers.html" title="Build your Exception Rules System" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Build your Extension Support List</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.php.php-compatinfo.renderer.html" title="Outputting Results">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.php.php-compatinfo.build-ers.html" title="Build your Exception Rules System">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.php.php-compatinfo.build-esl">
+ 
+  <h1 class="refname">Build your Extension Support List</h1>
+  <div class="refnamediv">Build your Extension Support List &ndash; or how to improve detection</div>
+
+ 
+
+ <div class="refsection" id="package.php.php-compatinfo.build-esl.why">
+  <div class="info"><h1>Why a new API ?</h1>
+</div>
+
+  <p class="para">
+   Since version 1.0.1 and until version 1.9.0, PHP_CompatInfo (aka PCI) used only
+   one monolithic file for all functions, and another one for all constants.
+   These 2 file support both standard (PHP core) and all extensions known (or
+   supposed to be). This system was the first fruits to a dictionary system with
+   the limitation we know now.
+  </p>
+  <p class="para">
+   Bug report
+   <a href="http://pear.php.net/bugs/bug.php?id=15011" class="link external">15011</a>
+   help me to think again on a new way to improve the dictionary system without
+   any limitation.
+  </p>
+  <p class="para">
+   As I can&#039;t provide all extensions support (already known or future), the new
+   architecture named
+   <strong class="emphasis">E</strong>xtension
+   <strong class="emphasis">S</strong>upport
+   <strong class="emphasis">L</strong>ist (aka ESL) will have by default a group
+   of dictionary that know elements of 25 common extensions.
+   But I will let ability to end-users to build their own ESL corresponding
+   to their platform.
+  </p>
+  <p class="para">
+   Concept was born.
+  </p>
+  <p class="para">
+   PCI provide an automated system named <em class="emphasis">pciconf</em>
+   (PHP5 CLI script) to build all dictionaries required. Of course, as I didn&#039;t
+   want to let down PHP4 users, I will propose two different ways to update
+   your ESL: a first for PHP4 (alternative), and a second for PHP5 (recommanded).
+   But before to explain how to do it, have a look on dictionary structure.
+  </p>
+
+ </div>
+
+ <div class="refsection" id="package.php.php-compatinfo.build-esl.datadict">
+  <div class="info"><h1>Data Dictionaries</h1>
+</div>
+
+  <p class="para">
+   There are 3 main data dictionary knew only by the PCI core of version 1.9.0+.
+   Each one identify a list (alphabetical sorted order) of basic extension component.
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para"><strong class="emphasis">Function dictionary</strong>
+      <code class="filename">CompatInfo/func_array.php</code> provides
+      a global array named <code class="varname">$GLOBALS[&#039;_PHP_COMPATINFO_FUNCS&#039;]</code>
+      what contains list of all functions implemented by all extensions.
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para"><strong class="emphasis">Constant dictionary</strong>
+      <code class="filename">CompatInfo/const_array.php</code> provides
+      a global array named <code class="varname">$GLOBALS[&#039;_PHP_COMPATINFO_CONST&#039;]</code>
+      what contains list of all constants implemented by all extensions.
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para"><strong class="emphasis">Class dictionary</strong>
+      <code class="filename">CompatInfo/class_array.php</code> provides
+      a global array named <code class="varname">$GLOBALS[&#039;_PHP_COMPATINFO_CLASS&#039;]</code>
+      what contains list of all classes implemented by all extensions.
+     </p>
+    </li>
+   </ul>
+  
+
+  <p class="para">
+   Each extension should have (normally) at least a function dictionary (required),
+   but may also have a class and/or constant dictionary (optional) depending of
+   informations it provided.
+   For example: Take the <em class="emphasis">Libxml</em> that contains 3 types of data
+   dictionary.
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para"><strong class="emphasis">Function dictionary</strong>
+      <code class="filename">CompatInfo/libxml_func_array.php</code> provides
+      a global array named <code class="varname">$GLOBALS[&#039;_PHP_COMPATINFO_FUNC_LIBXML&#039;]</code>
+      what contains list of all functions implemented by Libxml extension.
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para"><strong class="emphasis">Constant dictionary</strong>
+      <code class="filename">CompatInfo/libxml_const_array.php</code> provides
+      a global array named <code class="varname">$GLOBALS[&#039;_PHP_COMPATINFO_CONST_LIBXML&#039;]</code>
+      what contains list of all constants implemented by Libxml extension.
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para"><strong class="emphasis">Class dictionary</strong>
+      <code class="filename">CompatInfo/libxml_class_array.php</code> provides
+      a global array named <code class="varname">$GLOBALS[&#039;_PHP_COMPATINFO_CLASS_LIBXML&#039;]</code>
+      what contains list of all classes implemented by Libxml extension.
+     </p>
+    </li>
+   </ul>
+  
+
+  <p class="para">
+   All extensions data dictionary is a key-values pair array, with name of function,
+   constant or class, as the key, and specific data as the values.
+  </p>
+  <p class="para">
+   Specific data is also an array with key-value pairs. Constant and Class
+   dictionary required only 2 keys: <em class="emphasis">init</em>, and <em class="emphasis">name</em>,
+   while Function dictionary required at least 3 keys:
+   <em class="emphasis">init</em>, <em class="emphasis">ext</em> and <em class="emphasis">pecl</em>.
+  </p>
+  <p class="para">
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term">
+      <em><code class="parameter">init</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">the first PHP version which extension element (function, constant, class) came from</p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      <em><code class="parameter">end</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">the last PHP version which extension element (function, constant, class) is available</p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      <em><code class="parameter">name</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">name of extension element (function, constant, class)</p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      <em><code class="parameter">ext</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">name of extension (case sensitive)</p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      <em><code class="parameter">ext</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">tell if extension came from PECL repository or not</p>
+     </dd>
+    </dl>
+   </div>
+  
+
+ </div>
+
+ <div class="refsection" id="package.php.php-compatinfo.build-esl.php4-procedure">
+  <div class="info"><h1>Procedure to build your ESL for PHP4 users</h1>
+</div>
+
+  <p class="para">
+   </p><blockquote class="important">
+    <p class="para">
+     This procedure is also named alternative solution, because it&#039;s manual.
+     You make changes at your own risks.
+    </p>
+   </blockquote>
+
+  
+
+  <p class="para">
+   If you need only extension included in the default distribution, the solution is easy.
+   Edit by hand the global dictionaries, add resources required and add extension dict
+   to the list as follow :
+   Suppose we need support of XSL extension.
+  </p>
+  <p class="para">
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para">
+      In <code class="filename">CompatInfo</code> directory where PCI
+      was installed (standard is @php_dir@/PHP, where @php_dir@ identify the
+      PEAR directory), edit:
+      </p><ol type="1">
+       <li class="listitem">
+        <p class="para">
+         <code class="filename">class_array.php</code> add the resource
+         <code class="filename">PHP/CompatInfo/xsl_class_array.php</code> and merge the global
+         array <code class="varname">$GLOBALS[&#039;_PHP_COMPATINFO_CLASS_XSL&#039;]</code> to main
+         class dictionary named <code class="varname">$GLOBALS[&#039;_PHP_COMPATINFO_CLASS&#039;]</code>
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <code class="filename">const_array.php</code> add the resource
+         <code class="filename">PHP/CompatInfo/xsl_const_array.php</code> and merge the global
+         array <code class="varname">$GLOBALS[&#039;_PHP_COMPATINFO_CONST_XSL&#039;]</code> to main
+         constant dictionary named <code class="varname">$GLOBALS[&#039;_PHP_COMPATINFO_CONST&#039;]</code>
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <code class="filename">func_array.php</code> nothing to do because XSL extension
+         does not provided any function.
+        </p>
+       </li>
+      </ol>
+     
+    </li>
+   </ul>
+  
+
+  <p class="para">
+   That&#039;s all. Your PCI system is ready to detect all data sources
+   that used the XSL extension.
+  </p>
+
+ </div>
+
+ <div class="refsection" id="package.php.php-compatinfo.build-esl.php5-procedure">
+  <div class="info"><h1>Procedure to build your ESL for PHP5 users</h1>
+</div>
+
+  <p class="para">
+   </p><blockquote class="important">
+    <p class="para">
+     This procedure is also named recommanded solution, because there are no manual
+     changes. But for technical reasons, it&#039;s only available for PHP5+ users.
+    </p>
+   </blockquote>
+
+  
+
+  <p class="para">
+   PCI provide an automated system named <strong class="command">pciconf</strong>. This CLI
+   script allow to:
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para">
+      generate by default only all dictionaries corresponding to your platform.
+     </p>
+     <p class="para">
+      </p><blockquote class="caution">
+       <p class="para">
+        Default behavior is to overwrite default system PCI installation
+        (results into
+        <code class="filename">@php_dir@/PHP/CompatInfo</code>,
+        where @php_dir@ identify the PEAR directory).
+       </p>
+      </blockquote>
+
+      <blockquote class="tip">
+       <p class="para">
+        If you don&#039;t want to overwrite default system PCI librairies, use the
+        --output switch to write result in a directory accessible of your include_path
+       </p>
+      </blockquote>
+
+     
+     <p class="para">
+      Example1: <strong class="command">pciconf --output @php_dir@/../includes/PHP/CompatInfo</strong>
+     </p>
+     <p class="para">
+      Example2: <strong class="command">pciconf --output /etc/includes/PHP/CompatInfo</strong>
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      generate only a list of extension
+     </p>
+     <p class="para">
+      Use the --enable switch with a comma separated list of extension name (case sensitive)
+     </p>
+     <p class="para">
+      Example: <strong class="command">pciconf --enable standard,date,gd,xsl</strong>
+     </p>
+     <p class="para">
+      </p><blockquote class="important">
+       <p class="para">
+        Do not forget the standard extension, otherwise the result will be fake
+       </p>
+      </blockquote>
+
+     
+    </li>
+    <li class="listitem">
+     <p class="para">
+      generate all extensions of your platform without some of them
+     </p>
+     <p class="para">
+      Use the --disable switch with a comma separated list of extension name (case sensitive)
+     </p>
+     <p class="para">
+      Example: <strong class="command">pciconf --disable xdebug</strong>
+     </p>
+    </li>
+   </ul>
+  
+
+  <p class="para">
+   That&#039;s all. Your PCI system is ready to detect all data sources
+   that used extension(s) you have choosen.
+   </p><blockquote class="warning">
+
+    <p class="para">
+     You cannot build dictionary for an extension that is not installed on your platform.
+     Unless you used the PHP4 alternative solution.
+    </p>
+   </blockquote>
+
+  
+
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.php.php-compatinfo.renderer.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.php.php-compatinfo.tutorial.html">Getting started</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.php.php-compatinfo.build-ers.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Outputting Results</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Build your Exception Rules System</td>
+  </tr>
+ </table>
+</div>
+</body></html>

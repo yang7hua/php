@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Base Element API</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-quickform2.elements.html" title="Form elements" />
+  <link rel="prev" href="package.html.html-quickform2.elements.html" title="Form elements" />
+  <link rel="next" href="package.html.html-quickform2.elements.container.html" title="Base Container API" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Base Element API</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-quickform2.elements.html" title="Form elements">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-quickform2.elements.container.html" title="Base Container API">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-quickform2.elements.base">
+ 
+  <h1 class="refname">Base Element API</h1>
+  <div class="refnamediv">Base Element API &ndash; Common methods for Elements and Containers</div>
+
+ 
+ 
+ <div class="refsection" id="package.html.html-quickform2.elements.base.baseclasses">
+  <div class="info">
+   <h1>Base classes</h1>
+
+  </div>
+  <p class="para">
+   Element classes in <strong class="package">HTML_QuickForm2</strong>, including <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2.html" class="apidoclink">HTML_QuickForm2</a> itself, are descended from either
+   <strong class="classname">HTML_QuickForm2_Container</strong> or
+   <strong class="classname">HTML_QuickForm2_Element</strong>, class tree for those two abstract classes given
+   below. Common <span class="acronym">API</span> for elements is mostly defined in
+   <strong class="classname">HTML_QuickForm2_Node</strong>.
+   </p><ul class="itemizedlist">
+    <li class="listitem"><p class="para">
+     <a href="http://pear.php.net/package/HTML_Common2/docs/latest/HTML_Common2/HTML_Common2.html" class="apidoclink">HTML_Common2</a>
+     </p><ul class="itemizedlist">
+      <li class="listitem"><p class="para">
+       <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html" class="apidoclink">HTML_QuickForm2_Node</a>
+       </p><ul class="itemizedlist">
+        <li class="listitem"><p class="para">
+         <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Container.html" class="apidoclink">HTML_QuickForm2_Container</a> - a
+         common parent class for form elements that can contain other elements (e.g. fieldsets,
+         groups).
+        </p></li>
+        <li class="listitem"><p class="para">
+         <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Element.html" class="apidoclink">HTML_QuickForm2_Element</a> - a
+         common parent class for &quot;scalar&quot; form elements.
+        </p></li>
+       </ul>
+      </li>
+     </ul>
+    </li>
+   </ul>
+  
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.elements.base.attributes">
+  <div class="info">
+   <h1>Handling HTML attributes</h1>
+
+  </div>
+  <p class="para">
+   As can be seen from the above tree, all elements are descended from
+   <strong class="classname">HTML_Common2</strong>, so you have access to attribute-handling methods defined in
+   that class. Please refer to <a href="package.html.html-common2.html" class="link"><strong class="package">HTML_Common2</strong> documentation</a> for more info.
+  </p>
+  <p class="para">
+   Many elements in <strong class="package">HTML_QuickForm2</strong> take advantage of <a href="package.html.html-common2.subclassing.html#package.html.html-common2.subclassing.watched" class="link"><code class="varname">$watchedAttributes</code></a>
+   feature of <strong class="package">HTML_Common2</strong> to prevent e.g. changing <code class="literal">method</code>
+   attribute of <code class="literal">&lt;form&gt;</code> tag and <code class="literal">type</code> attribute of
+   <code class="literal">&lt;input&gt;</code> tag or to update the element&#039;s value when its name changes. 
+  </p>
+  <p class="para">
+   As all elements need an <code class="literal">id</code> attribute for proper
+   <code class="literal">&lt;label&gt;</code> output and for client-side validation, such an attribute will be
+   automatically generated based on element&#039;s name if not given explicitly.
+  </p>
+  <div class="example">
+   <p><strong>Automatic generation of <code class="literal">id</code> attributes</strong></p>
+   <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Factory</span><span style="color: #007700">::</span><span style="color: #0000BB">createElement</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'name'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'id'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'explicitId'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)-&gt;</span><span style="color: #0000BB">getAttribute</span><span style="color: #007700">(</span><span style="color: #DD0000">'id'</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /><br />echo&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Factory</span><span style="color: #007700">::</span><span style="color: #0000BB">createElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'name'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">getAttribute</span><span style="color: #007700">(</span><span style="color: #DD0000">'id'</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /><br />echo&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Factory</span><span style="color: #007700">::</span><span style="color: #0000BB">createElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'name'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">getAttribute</span><span style="color: #007700">(</span><span style="color: #DD0000">'id'</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /><br />echo&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Factory</span><span style="color: #007700">::</span><span style="color: #0000BB">createElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'name[key]'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">getAttribute</span><span style="color: #007700">(</span><span style="color: #DD0000">'id'</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /><br />echo&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Factory</span><span style="color: #007700">::</span><span style="color: #0000BB">createElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'submit'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">getAttribute</span><span style="color: #007700">(</span><span style="color: #DD0000">'id'</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <div class="example-contents"><p>The above code will output:</p></div>
+   <pre class="screen">
+<br/>explicitId<br/>name-0<br/>name-1<br/>name-key-0<br/>qfauto-0<br/>
+   </pre>
+
+  </div>
+  <p class="para">
+   Note that unique ids are generated and that by default an index is appended to a generated
+   <code class="literal">id</code>. If you want to generate an <code class="literal">id</code> attribute equal to
+   <code class="literal">name</code> by default, you can set an <a href="package.html.html-common2.options.html#package.html.html-common2.options.overview" class="link">option</a> named
+   <code class="literal">&#039;id_force_append_index&#039;</code> to <strong class="constant">FALSE</strong> 
+  </p>
+  <div class="example">
+   <p><strong>Automatic generation of <code class="literal">id</code> attributes without mandatory indexes</strong></p>
+   <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />HTML_Common2</span><span style="color: #007700">::</span><span style="color: #0000BB">setOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'id_force_append_index'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">);<br /><br />echo&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Factory</span><span style="color: #007700">::</span><span style="color: #0000BB">createElement</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'name'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'id'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'explicitId'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)-&gt;</span><span style="color: #0000BB">getAttribute</span><span style="color: #007700">(</span><span style="color: #DD0000">'id'</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /><br />echo&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Factory</span><span style="color: #007700">::</span><span style="color: #0000BB">createElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'name'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">getAttribute</span><span style="color: #007700">(</span><span style="color: #DD0000">'id'</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /><br />echo&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Factory</span><span style="color: #007700">::</span><span style="color: #0000BB">createElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'name'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">getAttribute</span><span style="color: #007700">(</span><span style="color: #DD0000">'id'</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /><br />echo&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Factory</span><span style="color: #007700">::</span><span style="color: #0000BB">createElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'name[key]'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">getAttribute</span><span style="color: #007700">(</span><span style="color: #DD0000">'id'</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /><br />echo&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Factory</span><span style="color: #007700">::</span><span style="color: #0000BB">createElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'submit'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">getAttribute</span><span style="color: #007700">(</span><span style="color: #DD0000">'id'</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <div class="example-contents"><p>The above code will output:</p></div>
+   <pre class="screen">
+<br/>explicitId<br/>name<br/>name-0<br/>name-key<br/>qfauto-0<br/>
+   </pre>
+
+  </div>
+ </div>
+
+
+ <div class="refsection" id="package.html.html-quickform2.elements.base.node">
+  <div class="info">
+   <h1>Methods defined in <strong class="classname">HTML_QuickForm2_Node</strong></h1>
+
+  </div>
+  <p class="para">
+   Constructors of all the elements have the same list of parameters, as defined in
+   <strong class="classname">HTML_QuickForm2_Node</strong>:
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term"><span class="type">string</span> <em><code class="parameter">$name</code></em></dt>
+     <dd class="listitem"><p class="para">Element name</p></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><span class="type">string</span>|<span class="type">array</span> <em><code class="parameter">$attributes</code></em></dt>
+     <dd class="listitem"><p class="para">HTML attributes</p></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><span class="type">array</span> <em><code class="parameter">$data</code></em></dt>
+     <dd class="listitem"><p class="para">
+      Additional element-specific data. A <code class="literal">&#039;label&#039;</code> key in this array is understood
+      by every element and is used for element&#039;s label. Other possible keys are described in the
+      <a href="package.html.html-quickform2.elements.list.html" class="link">list of built-in elements</a>.
+     </p></dd>
+    </dl>
+   </div><p>
+   As a result, <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Factory.html#methodcreateElement" class="apidoclink">HTML_QuickForm2_Factory::createElement()</a> and <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Container.html#methodaddElement" class="apidoclink">HTML_QuickForm2_Container::addElement()</a> that pass
+   their arguments to the element&#039;s constructor also have constant list of parameters, the first
+   being element type and subsequent ones corresponding to constructor parameters.
+  </p>
+  <p class="para">
+   Getters and setters for miscellaneous element properties: <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodsetName" class="apidoclink">setName()</a> / <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodgetName" class="apidoclink">getName()</a>, <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodsetId" class="apidoclink">setId()</a> / <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodgetId" class="apidoclink">getId()</a>, <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodsetLabel" class="apidoclink">setLabel()</a> / <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodgetLabel" class="apidoclink">getLabel()</a>, <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodgetContainer" class="apidoclink">getContainer()</a>, <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodgetData" class="apidoclink">getData()</a>, <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodgetType" class="apidoclink">getType()</a>. 
+  </p>
+  <blockquote class="tip">
+   <p class="para">
+    Setter methods in <strong class="package">HTML_QuickForm2</strong> tend to return <code class="varname">$this</code>, so
+    that it is possible to chain their invocations:
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$text</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setName</span><span style="color: #007700">(</span><span style="color: #DD0000">'aText'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">setLabel</span><span style="color: #007700">(</span><span style="color: #DD0000">'Text&nbsp;input&nbsp;field:'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+  </blockquote>
+
+  <p class="para">
+   Methods for getting and changing elements&#039; values: <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodsetValue" class="apidoclink">setValue()</a>, <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodgetValue" class="apidoclink">getValue()</a>, <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodgetRawValue" class="apidoclink">getRawValue()</a>. Their detailed
+   description is in <a href="package.html.html-quickform2.values-datasources.html#package.html.html-quickform2.values-datasources.values-overview" class="link">the section on values
+    and data sources</a>.  
+  </p>
+  <p class="para">
+   Filtering the elements&#039; values is done by <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodaddFilter" class="apidoclink">addFilter()</a> and <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodaddRecursiveFilter" class="apidoclink">addRecursiveFilter()</a>
+   methods. The former is applied directly to element&#039;s value on <strong class="function">getValue()</strong> call
+   and the latter is propagated to contained elements if the element is a Container or applied
+   recursively to the value if element&#039;s value is an array. 
+  </p>
+  <p class="para">
+   Validation-related methods: <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodsetError" class="apidoclink">setError()</a> / <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodgetError" class="apidoclink">getError()</a>, <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodcreateRule" class="apidoclink">createRule()</a>, <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodaddRule" class="apidoclink">addRule()</a> / <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodremoveRule" class="apidoclink">removeRule()</a>, <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodisRequired" class="apidoclink">isRequired()</a>. Described in 
+   <a href="package.html.html-quickform2.rules.html" class="link">the section on validation</a>. 
+  </p>
+ </div>
+ 
+ <div class="refsection" id="package.html.html-quickform2.elements.base.output">
+  <div class="info">
+   <h1>Output-related methods</h1>
+
+  </div>
+  
+  <p class="para">
+   The elements implement magic <strong class="function">__toString()</strong> method so they can be used in string
+   contexts:
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$element&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Element_InputText</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'textBox'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">20</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'id'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'textBoxId'</span><span style="color: #007700">)<br />);<br />echo&nbsp;</span><span style="color: #0000BB">$element</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   with output being
+   </p><pre class="screen">
+    <br/>&lt;input&nbsp;type=&quot;text&quot;&nbsp;id=&quot;textBoxId&quot;&nbsp;size=&quot;20&quot;&nbsp;name=&quot;textBox&quot;&nbsp;/&gt;<br/>
+   </pre>
+<p>
+   Complex output needs of form elements (including <strong class="classname">HTML_QuickForm2</strong> itself)
+   are covered by <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodrender" class="apidoclink">render()</a> method accepting a specialized
+   <a href="package.html.html-quickform2.renderers.html" class="link">Renderer</a> object.
+  </p>
+  <p class="para">
+   A helpful feature of <strong class="package">HTML_QuickForm2</strong> is the ability to &quot;freeze&quot; form
+   elements, displaying their values without HTML input tags. This may be used for an additional
+   confirmation step after form submit or for sending a filled form via email, among other things.
+   Two methods deal with this: <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodtoggleFrozen" class="apidoclink">toggleFrozen()</a> and <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodpersistentFreeze" class="apidoclink">persistentFreeze()</a>, the
+   former toggling the &quot;frozen&quot; status and the latter &quot;persistent freeze&quot;
+   behaiour. If persistent freeze is on, element&#039;s value will be kept (and possibly submitted) in a
+   hidden field.
+  </p>
+  <div class="example">
+   <p><strong>Freezing the element</strong></p>
+   <div class="example-contents"><p>
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$box&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Element_InputCheckbox</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'aBox'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'value'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'boxValue'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'checked'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'checked'</span><span style="color: #007700">)<br />);<br />echo&nbsp;</span><span style="color: #0000BB">$box&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"\n\n"</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$box</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">toggleFrozen</span><span style="color: #007700">(</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br />echo&nbsp;</span><span style="color: #0000BB">$box&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"\n\n"</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$box</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">persistentFreeze</span><span style="color: #007700">(</span><span style="color: #0000BB">false</span><span style="color: #007700">);<br />echo&nbsp;</span><span style="color: #0000BB">$box</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div><p>
+    the above code results in
+    </p><pre class="screen">
+     <br/>&lt;input&nbsp;type=&quot;checkbox&quot;&nbsp;value=&quot;boxValue&quot;&nbsp;checked=&quot;checked&quot;&nbsp;name=&quot;aBox&quot;&nbsp;id=&quot;aBox-0&quot;&nbsp;/&gt;<br/><br/>&lt;code&gt;[x]&lt;/code&gt;&lt;input&nbsp;type=&quot;hidden&quot;&nbsp;name=&quot;aBox&quot;&nbsp;value=&quot;boxValue&quot;&nbsp;id=&quot;aBox-0&quot;&nbsp;/&gt;<br/><br/>&lt;code&gt;[x]&lt;/code&gt;<br/>    
+    </pre>
+
+   </p></div>
+  </div>
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-quickform2.elements.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-quickform2.elements.html">Form elements</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-quickform2.elements.container.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Form elements</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Base Container API</td>
+  </tr>
+ </table>
+</div>
+</body></html>

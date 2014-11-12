@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction - Execute</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.mdb.html" title="MDB" />
+  <link rel="prev" href="package.database.mdb.intro-sequences.html" title="Introduction - Sequences" />
+  <link rel="next" href="package.database.mdb.mdb.html" title="MDB" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction - Execute</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.mdb.intro-sequences.html" title="Introduction - Sequences">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.mdb.mdb.html" title="MDB">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.mdb.intro-executeQuery">
+ 
+  <h1 class="refname">Introduction - Execute</h1>
+  <div class="refnamediv">Introduction - Execute &ndash; Prepare &amp; Execute/ExecuteMultiple</div>
+
+ 
+ <div class="refsection" id="package.database.mdb.intro-executeQuery.desc"><div class="info"><h1>Description</h1>
+</div>
+  
+  <div class="refsection"><div class="info"><h1>Purpose</h1>
+</div>
+   
+   <p class="para">
+    <a href="package.database.mdb.mdb-common.prepareQuery.html" class="link">
+     <strong class="function">prepareQuery()</strong>
+    </a> and
+      <a href="package.database.mdb.mdb-common.executeQuery.html" class="link">
+     <strong class="function">executeQuery*()</strong>
+    </a>
+      give you more power and flexibilty for query execution. You
+      can use them, if you have to do more than one equal query
+      (i.e. adding a list of adresses to a database) or if you want
+      to support different databases, which have different
+      implementations of the SQL standard.
+     </p>
+   <p class="para">
+      Imagine you want to support two databases with different INSERT
+      syntax:
+      </p><div class="programlisting"><br/>db1&nbsp;:&nbsp;INSERT&nbsp;INTO&nbsp;tbl_name&nbsp;(&nbsp;col1,&nbsp;col2&nbsp;...&nbsp;)&nbsp;VALUES&nbsp;(&nbsp;expr1,&nbsp;expr2&nbsp;...&nbsp;)<br/>db2&nbsp;:&nbsp;INSERT&nbsp;INTO&nbsp;tbl_name&nbsp;SET&nbsp;col1=expr1,&nbsp;col2=expr2&nbsp;...</div><p>
+      Corresponding to create multi-lingual scripts you can create
+      a array with queries like this:
+      </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$statement</span><span style="color: #007700">[</span><span style="color: #DD0000">'db1'</span><span style="color: #007700">][</span><span style="color: #DD0000">'INSERT_PERSON'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">"INSERT&nbsp;INTO&nbsp;person&nbsp;(&nbsp;surname,&nbsp;name,&nbsp;age&nbsp;)&nbsp;VALUES&nbsp;(&nbsp;?,&nbsp;?,&nbsp;?&nbsp;)"&nbsp;</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$statement</span><span style="color: #007700">[</span><span style="color: #DD0000">'db2'</span><span style="color: #007700">][</span><span style="color: #DD0000">'INSERT_PERSON'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">"INSERT&nbsp;INTO&nbsp;person&nbsp;SET&nbsp;surname=?,&nbsp;name=?,&nbsp;age=?"&nbsp;</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   
+  </div>
+  <div class="refsection"><div class="info"><h1>Prepare</h1>
+</div>
+   
+   <p class="para">
+      To use the features above, you have to do two steps. Step one is to
+      <em class="emphasis">prepareQuery</em> the statement and the second is
+      to <em class="emphasis">executeQuery</em> it.
+     </p>
+   <p class="para">
+    <a href="package.database.mdb.mdb-common.prepareQuery.html" class="link">
+     <strong class="function">Prepare()</strong>
+    </a> has to be called with the generic
+      statement at least once. It returns a handle for the statement.
+     </p>
+   <p class="para">
+      To create a generic statement is simple. Write the SQL query
+      as usual, i.e.
+      </p><div class="programlisting"><br/>SELECT&nbsp;surname,&nbsp;name,&nbsp;age&nbsp;FROM&nbsp;person<br/>&nbsp;&nbsp;&nbsp;WHERE&nbsp;name&nbsp;=&nbsp;&#039;name_to_find&#039;&nbsp;AND&nbsp;age&nbsp;&lt;&nbsp;&#039;age_limit&#039;</div><p>
+      Now check which parameters should be replaced while script
+      runtime. Substitute this parameters with a placeholder.
+      </p><div class="programlisting"><br/>SELECT&nbsp;surname,&nbsp;name,&nbsp;age&nbsp;FROM&nbsp;person&nbsp;WHERE&nbsp;name&nbsp;=&nbsp;?&nbsp;AND&nbsp;age&nbsp;&lt;&nbsp;?</div><p>
+      So, thats all! Now you have a generic statement, required by
+      <a href="package.database.mdb.mdb-common.prepareQuery.html" class="link">
+     <strong class="function">prepareQuery()</strong>
+    </a>.
+     </p>
+   <p class="para">
+    <a href="package.database.mdb.mdb-common.prepareQuery.html" class="link">
+     <strong class="function">prepareQuery()</strong>
+    </a> can handle different types of
+      placeholders or wildcards.
+      </p><ul class="simplelist">
+     <li class="member">
+      <em><code class="parameter">?</code></em> - (recommended) stands for a scalar
+        value like strings or numbers, the value will be quoted
+        depending of the database
+       </li>
+     <li class="member">
+      <em><code class="parameter">!</code></em> - stands for a scalar value and
+        will inserted into the statement "<span class="quote">as is</span>".
+       </li>
+     <li class="member">
+      <em><code class="parameter">&amp;</code></em> - requires an existing filename,
+        the content of this file will be included into the statement
+        (i.e. for saving binary data of a graphic file in a database)
+       </li>
+    </ul>
+   
+  </div>
+  <div class="refsection"><div class="info"><h1>Execute/ ExecuteMultiple</h1>
+</div>
+   
+   <p class="para">
+      After preparing the statement, you can execute the query. This
+      means to assign the variables to the prepared statement. To do
+      this, <a href="package.database.mdb.mdb-common.executeQuery.html" class="link">
+     <strong class="function">executeQuery()</strong>
+    </a> requires two arguments, the
+      statement handle of <a href="package.database.mdb.mdb-common.prepareQuery.html" class="link">
+     <strong class="function">prepareQuery()</strong>
+    </a> and an array
+      with the values to assign. The array has to be numerically
+      ordered. The first entry of the array represents the first
+      wildcard, the second the second wildcard etc. The order is
+      independent from the used wildcard char.
+      </p><div class="example"><div class="info"><p><strong>Inserting data into a datebase</strong></p></div>
+     
+     <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$alldata&nbsp;</span><span style="color: #007700">=&nbsp;array(&nbsp;&nbsp;array(</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'one'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'en'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">2</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'two'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'to'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">3</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'three'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'tre'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">4</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'four'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'fire'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$sth&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$dbh</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">prepareQuery</span><span style="color: #007700">(</span><span style="color: #DD0000">"INSERT&nbsp;INTO&nbsp;numbers&nbsp;VALUES(?,?,?)"</span><span style="color: #007700">);<br />foreach&nbsp;(</span><span style="color: #0000BB">$alldata&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$row</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$dbh</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">executeQuery</span><span style="color: #007700">(</span><span style="color: #0000BB">$sth</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$row</span><span style="color: #007700">);<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+    </div><p>
+      In the example the query is done four times:
+      </p><div class="programlisting"><br/>INSERT&nbsp;INTO&nbsp;numbers&nbsp;VALUES(&nbsp;&#039;1&#039;,&nbsp;&#039;one&#039;,&nbsp;&#039;en&#039;)<br/>INSERT&nbsp;INTO&nbsp;numbers&nbsp;VALUES(&nbsp;&#039;2&#039;,&nbsp;&#039;two&#039;,&nbsp;&#039;to&#039;)<br/>INSERT&nbsp;INTO&nbsp;numbers&nbsp;VALUES(&nbsp;&#039;3&#039;,&nbsp;&#039;three&#039;,&nbsp;&#039;tre&#039;)<br/>INSERT&nbsp;INTO&nbsp;numbers&nbsp;VALUES(&nbsp;&#039;4&#039;,&nbsp;&#039;four&#039;,&nbsp;&#039;fire&#039;)</div>
+    <p><a href="package.database.mdb.mdb-common.executemultiple.html" class="link">
+     <strong class="function">executeMultiple()</strong>
+    </a> works in the same way, but
+      requires a two dimensional array. So you can avoid the explicit
+      foreach in the eample above.
+      </p><div class="example"><div class="info"><p><strong>
+        Using <strong class="function">executeMultiple()</strong> instead of
+        <strong class="function">executeQuery()</strong>
+     </strong></p></div>
+     
+     <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">...<br /></span><span style="color: #0000BB">$alldata&nbsp;</span><span style="color: #007700">=&nbsp;array(&nbsp;&nbsp;array(</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'one'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'en'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">2</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'two'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'to'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">3</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'three'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'tre'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">4</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'four'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'fire'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$sth&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$dbh</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">prepareQuery</span><span style="color: #007700">(</span><span style="color: #DD0000">"INSERT&nbsp;INTO&nbsp;numbers&nbsp;VALUES(?,?,?)"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$dbh</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">executeMultiple</span><span style="color: #007700">(</span><span style="color: #0000BB">$sth</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$alldata</span><span style="color: #007700">);<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+    </div><p>
+      The result is the same. If one of the records failed, the
+      unfinished records will not be executed.
+     </p>
+   <p class="para">
+      If <a href="package.database.mdb.mdb-common.executeQuery.html" class="link">
+     <strong class="function">executeQuery*()</strong>
+    </a> fails a
+      <a href="package.database.mdb.mdb-error.html" class="link"><strong class="classname">MDB_Error</strong></a>, else <a href="package.database.mdb.mdb-error.html" class="link"><strong class="constant">MDB_OK</strong></a> will returned.
+     </p>
+  </div>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.mdb.intro-sequences.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.mdb.html">MDB</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.mdb.mdb.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction - Sequences</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">MDB</td>
+  </tr>
+ </table>
+</div>
+</body></html>

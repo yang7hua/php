@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Examples</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.console.console-getopt.html" title="Console_Getopt" />
+  <link rel="prev" href="package.console.console-getopt.readphpargv.html" title="Console_Getopt::readPHPArgv" />
+  <link rel="next" href="package.console.console-progressbar.html" title="Console_ProgressBar" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Examples</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.console.console-getopt.readphpargv.html" title="Console_Getopt::readPHPArgv">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.console.console-progressbar.html" title="Console_ProgressBar">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="chapter" id="package.console.console-getopt.examples">
+ <div class="info">
+  <h1>Examples</h1>
+
+ </div>
+
+ <p class="para">
+  The following example shows how to setup short and long option
+  arrays as well as reading the arguments passed via commandline.
+  The example also introduces a helper method that converts
+  the parsed parameters returned by Console_Getopt into a
+  key-value-array.
+ </p>
+
+ <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/**<br />&nbsp;*&nbsp;Example&nbsp;how&nbsp;to&nbsp;get&nbsp;a&nbsp;key-value&nbsp;pair&nbsp;array<br />&nbsp;*&nbsp;from&nbsp;command&nbsp;line&nbsp;parameters&nbsp;with&nbsp;Console_Getopt.<br />&nbsp;*<br />&nbsp;*&nbsp;@link&nbsp;http://pear.php.net/bugs/bug.php?id=13902<br />&nbsp;*/<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Console/Getopt.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">/**<br />&nbsp;*&nbsp;Make&nbsp;a&nbsp;key-value&nbsp;array.<br />&nbsp;*&nbsp;Since&nbsp;Console_Getopt&nbsp;does&nbsp;not&nbsp;provide&nbsp;such&nbsp;a&nbsp;method,<br />&nbsp;*&nbsp;we&nbsp;implement&nbsp;it&nbsp;ourselves.<br />&nbsp;*<br />&nbsp;*&nbsp;@params&nbsp;array&nbsp;$params&nbsp;Array&nbsp;of&nbsp;parameters&nbsp;from&nbsp;Console_Getopt::getopt2()<br />&nbsp;*<br />&nbsp;*&nbsp;@return&nbsp;array&nbsp;key-value&nbsp;pair&nbsp;array<br />&nbsp;*/<br /></span><span style="color: #007700">function&nbsp;&amp;</span><span style="color: #0000BB">condense_arguments</span><span style="color: #007700">(</span><span style="color: #0000BB">$params</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$new_params&nbsp;</span><span style="color: #007700">=&nbsp;array();<br />&nbsp;&nbsp;&nbsp;&nbsp;foreach&nbsp;(</span><span style="color: #0000BB">$params</span><span style="color: #007700">[</span><span style="color: #0000BB">0</span><span style="color: #007700">]&nbsp;as&nbsp;</span><span style="color: #0000BB">$param</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$new_params</span><span style="color: #007700">[</span><span style="color: #0000BB">$param</span><span style="color: #007700">[</span><span style="color: #0000BB">0</span><span style="color: #007700">]]&nbsp;=&nbsp;</span><span style="color: #0000BB">$param</span><span style="color: #007700">[</span><span style="color: #0000BB">1</span><span style="color: #007700">];<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$new_params</span><span style="color: #007700">;<br />}<br /><br /><br /></span><span style="color: #0000BB">$cg&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Console_Getopt</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$args&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$cg</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">readPHPArgv</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">array_shift</span><span style="color: #007700">(</span><span style="color: #0000BB">$args</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$shortOpts&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'u:g:'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$longOpts&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'user='</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'group='</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$params&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$cg</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getopt2</span><span style="color: #007700">(</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$shortOpts</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$longOpts</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$params</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Error:&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$params</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;exit(</span><span style="color: #0000BB">1</span><span style="color: #007700">);<br />}<br /><br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">condense_arguments</span><span style="color: #007700">(</span><span style="color: #0000BB">$params</span><span style="color: #007700">));<br /></span><span style="color: #FF8000">/*<br />When&nbsp;called&nbsp;as&nbsp;follows:<br />&nbsp;associative.php&nbsp;-u&nbsp;jason&nbsp;-g&nbsp;argonauts<br />you&nbsp;will&nbsp;get&nbsp;this&nbsp;output:<br />&nbsp;array(2)&nbsp;{<br />&nbsp;&nbsp;&nbsp;["u"]=&gt;<br />&nbsp;&nbsp;&nbsp;string(5)&nbsp;"jason"<br />&nbsp;&nbsp;&nbsp;["g"]=&gt;<br />&nbsp;&nbsp;&nbsp;string(9)&nbsp;"argonauts"<br />&nbsp;}<br />&nbsp;*/<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.console.console-getopt.readphpargv.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.console.console-getopt.html">Console_Getopt</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.console.console-progressbar.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Console_Getopt::readPHPArgv</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Console_ProgressBar</td>
+  </tr>
+ </table>
+</div>
+</body></html>

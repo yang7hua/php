@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Stub Renderer</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-quickform2.output.html" title="Form output and Javascript support" />
+  <link rel="prev" href="package.html.html-quickform2.renderers.array.html" title="Array Renderer" />
+  <link rel="next" href="package.html.html-quickform2.javascript.html" title="Javascript support" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Stub Renderer</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-quickform2.renderers.array.html" title="Array Renderer">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-quickform2.javascript.html" title="Javascript support">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-quickform2.renderers.stub">
+ 
+  <h1 class="refname">Stub Renderer</h1>
+  <div class="refnamediv">Stub Renderer &ndash; Minimum overhead renderer to use when actual form output is done manually</div>
+
+ 
+
+ <div class="refsection" id="package.html.html-quickform2.renderers.stub.purpose">
+  <div class="info">
+   <h1>Purpose of Stub Renderer</h1>
+
+  </div>
+  <p class="para">
+   You may often want to output form elements manually, especially if the form has a complex layout:
+   </p><div class="htmlcode">
+<pre class="htmlcode">
+&lt;complex html&gt;&lt;?= $form-&gt;getElementById(&#039;someElement&#039;); ?&gt;&lt;more complex html&gt;</pre>
+
+   </div><p>
+   or, if using a template engine
+   </p><div class="htmlcode">
+<pre class="htmlcode">
+&lt;complex html&gt;{{ form.getElementById(&#039;someElement&#039;) }}&lt;more complex html&gt;</pre>
+
+   </div>
+  
+  <p class="para">
+   However, you will require a rendering step if your form uses client-side validation or contains
+   Javascript-backed elements like Hierselect. Stub renderer can be used in such circumstances to
+   reduce overhead as the results of a more complex renderer like Default will be discarded. 
+  </p>
+  <p class="para">
+   Stub renderer serves as a container for JavascriptBuilder object and does some minimal form
+   processing: it can group errors and hidden elements if <code class="literal">group_errors</code> and
+   <code class="literal">group_hiddens</code> parameters are set to true. The accumulated data is available
+   through <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Renderer_Stub.html#methodgetErrors" class="apidoclink">getErrors()</a> and
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Renderer_Stub.html#methodgetHidden" class="apidoclink">getHidden()</a> methods,
+   respectively. You can also use <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Renderer_Stub.html#methodhasRequired" class="apidoclink">hasRequired()</a> method to
+   check whether form contains required elements.
+  </p>
+  <div class="example" id="package.html.html-quickform2.renderers.stub.usage">
+   <div class="info">
+    <p><strong>Using Stub Renderer</strong></p>
+   </div>
+   <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$renderer&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">render</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Renderer</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">'stub'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">setOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'group_errors'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br />);<br /><br /></span><span style="color: #FF8000">//&nbsp;outputting&nbsp;JS&nbsp;libraries<br /></span><span style="color: #007700">foreach&nbsp;(</span><span style="color: #0000BB">$renderer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getJavascriptBuilder</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">getLibraries</span><span style="color: #007700">()&nbsp;as&nbsp;</span><span style="color: #0000BB">$link</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$link&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #FF8000">//&nbsp;outputting&nbsp;form&nbsp;errors<br /></span><span style="color: #007700">foreach&nbsp;(</span><span style="color: #0000BB">$renderer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getErrors</span><span style="color: #007700">()&nbsp;as&nbsp;</span><span style="color: #0000BB">$id&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$error</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"&lt;a&nbsp;href=\"#</span><span style="color: #007700">{</span><span style="color: #0000BB">$id</span><span style="color: #007700">}</span><span style="color: #DD0000">\"&gt;</span><span style="color: #007700">{</span><span style="color: #0000BB">$error</span><span style="color: #007700">}</span><span style="color: #DD0000">&lt;/a&gt;&lt;br&nbsp;/&gt;"</span><span style="color: #007700">;<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;...<br />//&nbsp;form&nbsp;output&nbsp;code&nbsp;goes&nbsp;here<br />//&nbsp;...<br /><br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$renderer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getJavascriptBuilder</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">getFormJavascript</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-quickform2.renderers.array.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-quickform2.output.html">Form output and Javascript support</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-quickform2.javascript.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Array Renderer</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Javascript support</td>
+  </tr>
+ </table>
+</div>
+</body></html>

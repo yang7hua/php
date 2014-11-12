@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Parsing data sources</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-css.tutorial.html" title="Getting started" />
+  <link rel="prev" href="package.html.html-css.group.html" title="Grouping selectors" />
+  <link rel="next" href="package.html.html-css.output.html" title="Output" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Parsing data sources</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-css.group.html" title="Grouping selectors">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-css.output.html" title="Output">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-css.parse">
+ 
+  <h1 class="refname">Parsing data sources</h1>
+  <div class="refnamediv">Parsing data sources &ndash; load existing style sheet from different data sources</div>
+
+ 
+
+ <div class="refsection" id="package.html.html-css.parse.purpose">
+  <div class="info"><h1>In brief</h1>
+</div>
+
+   <p class="para">
+    One of the great features of HTML_CSS is to parse and load existing style sheet
+    from different data sources : (simple string, css file, combine).
+    We will see in detail all these possibilities with 3 methods :
+    <code class="methodname">HTML_CSS::parseString()</code>,
+    <code class="methodname">HTML_CSS::parseFile()</code> and
+    <code class="methodname">HTML_CSS::parseData()</code>.
+   </p>
+  </div>
+
+  <div class="refsection" id="package.html.html-css.parse.string">
+   <div class="info"><h1>Parse a simple string</h1>
+</div>
+   <p class="para">
+    A quick way to create multiple selector definitions in one step is to use the
+    <code class="methodname">HTML_CSS::parseString()</code> function.
+   </p>
+   <p class="para">
+     Let creates these definitions :
+     </p><div class="csscode"><pre class="csscode">html, body {
+  margin: 2px;
+  padding: 0px;
+  border: 0px;
+}
+
+p, body {
+  margin: 4px;
+}</pre>
+</div>
+   
+   <p class="para">
+     Very easy with such script :
+     </p><div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/CSS.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$css&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_CSS</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">$strcss&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'<br />html,&nbsp;body&nbsp;{<br />&nbsp;&nbsp;margin:&nbsp;2px;<br />&nbsp;&nbsp;padding:&nbsp;0px;<br />&nbsp;&nbsp;border:&nbsp;0px;<br />}<br /><br />p,&nbsp;body&nbsp;{<br />&nbsp;&nbsp;margin:&nbsp;4px;<br />}<br />'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parseString</span><span style="color: #007700">(</span><span style="color: #0000BB">$strcss</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">display</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+   
+  </div>
+
+  <div class="refsection" id="package.html.html-css.parse.file">
+   <div class="info"><h1>Parse a file contents</h1>
+</div>
+   <p class="para">
+    Another quick way to create multiple selector definitions in one step is to use the
+    <code class="methodname">HTML_CSS::parseFile()</code> function.
+    CSS file to load is supposed to be W3C/CSS compliant.
+   </p>
+   <p class="para">
+    If previous selector definitions was into a file named &#039;styles.css&#039;, then to parse
+    and load contents will be done with such script :
+     </p><div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/CSS.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$css&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_CSS</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parseFile</span><span style="color: #007700">(</span><span style="color: #DD0000">'styles.css'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">display</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+   
+   <p class="para">
+    </p><blockquote class="tip">
+     <p class="para">
+      If there are duplicate definitions into file contents, you should parse file
+      with call :
+      </p><div class="phpcode">
+       <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parseFile</span><span style="color: #007700">(</span><span style="color: #DD0000">'styles.css'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+      </div><p>
+      We will see next why we may find such duplicate definitions.
+     </p>
+    </blockquote>
+
+   
+  </div>
+
+  <div class="refsection" id="package.html.html-css.parse.data">
+   <div class="info"><h1>Parse multi data sources </h1>
+</div>
+   <p class="para">
+    We have already seen two single sources where CSS data could come from.
+    The last one allow to parse data from multiple sources at once.
+    <code class="methodname">HTML_CSS::parseData()</code> function take an array
+    as first argument. Each item is either a filename (with .css extension) or
+    a string. Each source is merge to produce at end a unique style sheet.
+   </p>
+   <p class="para">
+     In script below we load selector definitions from two independent sources:
+     a string and a css file which contents duplicate definitions (parseFile() 2nd
+     argument to set to true to catch this situation; see next section for explains).
+     Internet Explorer).
+     </p><div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/CSS.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$css&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_CSS</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;1.&nbsp;a&nbsp;string&nbsp;to&nbsp;parse<br /></span><span style="color: #0000BB">$strcss&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'<br />body,&nbsp;p&nbsp;{&nbsp;background-color:&nbsp;white;&nbsp;font:&nbsp;1.2em&nbsp;Arial;&nbsp;}<br />p,&nbsp;div#black&nbsp;{&nbsp;color:&nbsp;black;&nbsp;}<br />div{&nbsp;color:&nbsp;green;&nbsp;}<br />p&nbsp;{&nbsp;margin-left:&nbsp;3em;&nbsp;}<br />'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parseString</span><span style="color: #007700">(</span><span style="color: #0000BB">$strcss</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;2.&nbsp;a&nbsp;css&nbsp;file&nbsp;with&nbsp;duplicate&nbsp;definitions<br /></span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parseFile</span><span style="color: #007700">(</span><span style="color: #DD0000">'iehack.css'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">display</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+   
+  </div>
+
+  <div class="refsection" id="package.html.html-css.parse.duplicate">
+   <div class="info"><h1>Allow duplicate definitions</h1>
+</div>
+   <p class="para">
+    Internet Explorer &lt;= 6 does not handle box model in same way as others browsers that are
+    better W3C compliant. For this reason, we need to fix boxes size with a hack such as
+    this one you can find in example that follow. You can notice the duplicate
+    &#039;voice-family&#039; and &#039;height&#039; properties.
+   </p>
+   <p class="para">
+     To parse these definitions we need to activate the
+     <strong class="emphasis">duplicate</strong> option of HTML_CSS.
+     </p><div class="csscode"><pre class="csscode">#header {
+  background-color: ivory;
+  font-family: &quot;Times New Roman&quot;, Times, serif;
+  font-size: 5mm;
+  text-align: center;
+  /* IE 5.5 */
+  height:81px;
+  border-top:1px solid #000;
+  border-right:1px solid #000;
+  border-left:1px solid #000;
+  voice-family: &quot;\&quot;}\&quot;&quot;;
+  voice-family: inherit;
+  /* IE 6 */
+  height: 99px;
+}</pre>
+</div>
+   
+   <p class="para">
+    There are two ways :
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+       global to all functions: set option <strong class="emphasis">allowduplicates</strong>
+       on class constructor
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       local to a function: set argument <strong class="emphasis">duplicates</strong>
+       to TRUE
+      </p>
+     </li>
+    </ul>
+   
+   <p class="para">
+    For example here, we could wrote either (allow global duplicate) :
+     </p><div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/CSS.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$attr&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'allowduplicates'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$css&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_CSS</span><span style="color: #007700">(</span><span style="color: #0000BB">$attr</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$strcss&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'<br />#header&nbsp;{<br />&nbsp;&nbsp;background-color:&nbsp;ivory;<br />&nbsp;&nbsp;font-family:&nbsp;"Times&nbsp;New&nbsp;Roman",&nbsp;Times,&nbsp;serif;<br />&nbsp;&nbsp;font-size:&nbsp;5mm;<br />&nbsp;&nbsp;text-align:&nbsp;center;<br />&nbsp;&nbsp;/*&nbsp;IE&nbsp;5.5&nbsp;*/<br />&nbsp;&nbsp;height:81px;<br />&nbsp;&nbsp;border-top:1px&nbsp;solid&nbsp;#000;<br />&nbsp;&nbsp;border-right:1px&nbsp;solid&nbsp;#000;<br />&nbsp;&nbsp;border-left:1px&nbsp;solid&nbsp;#000;<br />&nbsp;&nbsp;voice-family:&nbsp;"\"}\"";<br />&nbsp;&nbsp;voice-family:&nbsp;inherit;<br />&nbsp;&nbsp;/*&nbsp;IE&nbsp;6&nbsp;*/<br />&nbsp;&nbsp;height:&nbsp;99px;<br />}<br />'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parseString</span><span style="color: #007700">(</span><span style="color: #0000BB">$strcss</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">display</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div><p>
+     or also (duplicate on local call) :
+     </p><div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/CSS.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$css&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_CSS</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">$strcss&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'<br />#header&nbsp;{<br />&nbsp;&nbsp;background-color:&nbsp;ivory;<br />&nbsp;&nbsp;font-family:&nbsp;"Times&nbsp;New&nbsp;Roman",&nbsp;Times,&nbsp;serif;<br />&nbsp;&nbsp;font-size:&nbsp;5mm;<br />&nbsp;&nbsp;text-align:&nbsp;center;<br />&nbsp;&nbsp;/*&nbsp;IE&nbsp;5.5&nbsp;*/<br />&nbsp;&nbsp;height:81px;<br />&nbsp;&nbsp;border-top:1px&nbsp;solid&nbsp;#000;<br />&nbsp;&nbsp;border-right:1px&nbsp;solid&nbsp;#000;<br />&nbsp;&nbsp;border-left:1px&nbsp;solid&nbsp;#000;<br />&nbsp;&nbsp;voice-family:&nbsp;"\"}\"";<br />&nbsp;&nbsp;voice-family:&nbsp;inherit;<br />&nbsp;&nbsp;/*&nbsp;IE&nbsp;6&nbsp;*/<br />&nbsp;&nbsp;height:&nbsp;99px;<br />}<br />'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parseString</span><span style="color: #007700">(</span><span style="color: #0000BB">$strcss</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">display</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+   
+  </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-css.group.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-css.tutorial.html">Getting started</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-css.output.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Grouping selectors</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Output</td>
+  </tr>
+ </table>
+</div>
+</body></html>

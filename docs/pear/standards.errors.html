@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Error Handling Guidelines</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="standards.html" title="Coding Standards" />
+  <link rel="prev" href="standards.e_strict.html" title="E_STRICT-compatible code" />
+  <link rel="next" href="standards.bestpractices.html" title="Best practices" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Error Handling Guidelines</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="standards.e_strict.html" title="E_STRICT-compatible code">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="standards.bestpractices.html" title="Best practices">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="standards.errors"><div class="info"><h1>Error Handling Guidelines</h1>
+</div>
+
+
+
+      <p class="para">
+        This part of the Coding Standards describes how errors are
+        handled in PEAR packages that are developed for PHP 5 and 6.  It
+        uses Exceptions, introduced in PHP 5.0 with Zend Engine 2, as
+        the error handling mechanism.
+      </p>
+
+
+    <div class="section"><div class="info"><h2 class="title">Definition of an error</h2></div>
+
+
+      <p class="para">
+        An error is defined as an unexpected, invalid program state from
+        which it is impossible to recover. For the sake of definition,
+        recovery scope is defined as the method scope. Incomplete
+        recovery is considered a recovery.
+      </p>
+
+      <div class="example"><div class="info"><p><strong>One pretty straightforward example for an error</strong></p></div>
+
+        <div class="phpcode">
+          <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/*<br />&nbsp;*&nbsp;Connect&nbsp;to&nbsp;Specified&nbsp;Database<br />&nbsp;*<br />&nbsp;*&nbsp;@throws&nbsp;Example_Datasource_Exception&nbsp;when&nbsp;it&nbsp;can't&nbsp;connect<br />&nbsp;*&nbsp;to&nbsp;specified&nbsp;DSN.<br />&nbsp;*/<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">connectDB</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">db&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">DB</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">DB</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">db</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;</span><span style="color: #0000BB">Example_Datasource_Exception</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"Unable&nbsp;to&nbsp;connect&nbsp;to&nbsp;</span><span style="color: #0000BB">$dsn</span><span style="color: #DD0000">:"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+      </div>
+
+      <p class="para">
+        In this example the objective of the method is to connect to the
+        given DSN. Since it can&#039;t do anything but ask PEAR DB to do it,
+        whenever DB returns an error, the only option is to bail out and
+        launch the exception.
+      </p>
+
+      <div class="example"><div class="info"><p><strong>Error handling with recovery</strong></p></div>
+
+
+        <div class="phpcode">
+          <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/*<br />&nbsp;*&nbsp;Connect&nbsp;to&nbsp;one&nbsp;of&nbsp;the&nbsp;possible&nbsp;databases<br />&nbsp;*<br />&nbsp;*&nbsp;@throws&nbsp;Example_Datasource_Exception&nbsp;when&nbsp;it&nbsp;can't&nbsp;connect&nbsp;to<br />&nbsp;*&nbsp;any&nbsp;of&nbsp;the&nbsp;configured&nbsp;databases.<br />&nbsp;*<br />&nbsp;*&nbsp;@throws&nbsp;Example_Config_Exception&nbsp;when&nbsp;it&nbsp;can't&nbsp;find&nbsp;databases<br />&nbsp;*&nbsp;in&nbsp;the&nbsp;configuration.<br />&nbsp;*/<br /><br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #0000BB">Config&nbsp;$conf</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$dsns&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$conf</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">searchPath</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'config'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'db'</span><span style="color: #007700">));<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$dsns&nbsp;</span><span style="color: #007700">===&nbsp;</span><span style="color: #0000BB">FALSE</span><span style="color: #007700">)&nbsp;throw&nbsp;new&nbsp;</span><span style="color: #0000BB">Example_Config_Exception</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'Unable&nbsp;to&nbsp;find&nbsp;config/db&nbsp;section&nbsp;in&nbsp;configuration.'<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$dsns&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$dsns</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">toArray</span><span style="color: #007700">();<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;foreach(</span><span style="color: #0000BB">$dsns&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">connectDB</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Example_Datasource_Exception&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Some&nbsp;warning/logging&nbsp;code&nbsp;recording&nbsp;the&nbsp;failure<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;to&nbsp;connect&nbsp;to&nbsp;one&nbsp;of&nbsp;the&nbsp;databases<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;</span><span style="color: #0000BB">Example_Datasource_Exception</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'Unable&nbsp;to&nbsp;connect&nbsp;to&nbsp;any&nbsp;of&nbsp;the&nbsp;configured&nbsp;databases'<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">);<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+      </div>
+
+      <p class="para">
+        This second example shows an exception being caught and
+        recovered from. Although the lower level
+        <strong class="function">connectDB()</strong> method is unable to do anything
+        but throw an error when one database connection fails, the upper
+        level <strong class="function">connect()</strong> method knows the object can
+        go by with any one of the configured databases. Since the error
+        was recovered from, the exception is silenced at this level and
+        not rethrown.
+      </p>
+
+      <div class="example"><div class="info"><p><strong>Incomplete recovery</strong></p></div>
+
+
+        <div class="phpcode">
+          <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/*<br />&nbsp;*&nbsp;loadConfig&nbsp;parses&nbsp;the&nbsp;provided&nbsp;configuration.&nbsp;If&nbsp;the&nbsp;configuration<br />&nbsp;*&nbsp;is&nbsp;invalid,&nbsp;it&nbsp;will&nbsp;set&nbsp;the&nbsp;configuration&nbsp;to&nbsp;the&nbsp;default&nbsp;config.<br />&nbsp;*<br />&nbsp;*/<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">loadConfig</span><span style="color: #007700">(</span><span style="color: #0000BB">Config&nbsp;$conf</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">config&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$conf</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parse</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Config_Parse_Exception&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Warn/Log&nbsp;code&nbsp;goes&nbsp;here<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;Perform&nbsp;incomplete&nbsp;recovery<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">config&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">defaultConfig</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+      </div>
+
+      <p class="para">
+        The recovery produces side effects, so it is considered
+        incomplete. However, the program may proceed, so the exception
+        is considered handled, and must not be rethrown. As in the
+        previous example, when silencing the exception, logging or
+        warning should occur.
+      </p>
+    </div>
+
+    <div class="section"><div class="info"><h2 class="title">Error Signaling in PHP 5 PEAR packages</h2></div>
+
+
+      <p class="para">
+        Error conditions in PEAR packages written for PHP 5 must be
+        signaled using exceptions. Usage of return codes or return
+        <strong class="classname">PEAR_Error</strong> objects is deprecated in favor
+        of exceptions. Naturally, packages providing compatibility with
+        PHP 4 do not fall under these coding guidelines, and may thus
+        use the error handling mechanisms defined in the PHP 4 PEAR
+        coding guidelines.
+      </p>
+      <p class="para">
+        An exception should be thrown whenever an error condition is
+        met, according to the definition provided in the previous
+        section. The thrown exception should contain enough information
+        to debug the error and quickly identify the error cause. Note
+        that, during production runs, no exception should reach the
+        end-user, so there is no need for concern about technical
+        complexity in the exception error messages.
+      </p>
+      <p class="para">
+        The basic <strong class="classname">PEAR_Exception</strong> contains a
+        textual error, describing the program state that led to the
+        throw and, optionally, a wrapped lower level exception,
+        containing more info on the lower level causes of the error.
+      </p>
+      <p class="para">
+        The kind of information to be included in the exception is
+        dependent on the error condition. From the point of view of
+        exception throwing, there are three classes of error conditions:
+      </p>
+
+      <ol type="1">
+        <li class="listitem">
+          <span class="simpara">
+            Errors detected during precondition checks
+          </span>
+        </li>
+        <li class="listitem">
+          <span class="simpara">
+            Lower level library errors signaled via error return codes
+            or error return objects
+          </span>
+        </li>
+        <li class="listitem">
+          <span class="simpara">
+            Uncorrectable lower library exceptions
+          </span>
+        </li>
+      </ol>
+
+      <p class="para">
+        Errors detected during precondition checks should contain a
+        description of the failed check. If possible, the description
+        should contain the violating value. Naturally, no wrapped
+        exception can be included, as there isn&#039;t a lower level cause of
+        the error. Example:
+      </p>
+
+      <div class="example"><div class="info"></div>
+
+        <div class="phpcode">
+          <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">divide</span><span style="color: #007700">(</span><span style="color: #0000BB">$x</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$y</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$y&nbsp;</span><span style="color: #007700">==&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;</span><span style="color: #0000BB">Example_Aritmetic_Exception</span><span style="color: #007700">(</span><span style="color: #DD0000">'Division&nbsp;by&nbsp;zero'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+      </div>
+
+      <p class="para">
+        Errors signaled via return codes by lower level libraries, if
+        unrecoverable, should be turned into exceptions. The error
+        description should try to convey all information contained in
+        the original error. One example, is the connect method
+        previously presented:
+      </p>
+
+      <div class="example"><div class="info"></div>
+
+        <div class="phpcode">
+          <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/*<br />&nbsp;*&nbsp;Connect&nbsp;to&nbsp;Specified&nbsp;Database<br />&nbsp;*<br />&nbsp;*&nbsp;@throws&nbsp;Example_Datasource_Exception&nbsp;when&nbsp;it&nbsp;can't&nbsp;connect&nbsp;to&nbsp;specified&nbsp;DSN.<br />&nbsp;*/<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">connectDB</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">db&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">DB</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">DB</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">db</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;</span><span style="color: #0000BB">Example_Datasource_Exception</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"Unable&nbsp;to&nbsp;connect&nbsp;to&nbsp;</span><span style="color: #0000BB">$dsn</span><span style="color: #DD0000">:"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+      </div>
+
+      <p class="para">
+        Lower library exceptions, if they can&#039;t be corrected, should
+        either be rethrown or bubbled up. When rethrowing, the original
+        exception must be wrapped inside the one being thrown. When
+        letting the exception bubble up, the exception just isn&#039;t
+        handled and will continue up the call stack in search of a
+        handler.
+      </p>
+
+      <div class="example"><div class="info"><p><strong>Rethrowing an exception</strong></p></div>
+
+
+        <div class="phpcode">
+          <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">preTaxPrice</span><span style="color: #007700">(</span><span style="color: #0000BB">$retailPrice</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$taxRate</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">divide</span><span style="color: #007700">(</span><span style="color: #0000BB">$retailPrice</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1&nbsp;</span><span style="color: #007700">+&nbsp;</span><span style="color: #0000BB">$taxRate</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Example_Aritmetic_Exception&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;</span><span style="color: #0000BB">Example_Tax_Exception</span><span style="color: #007700">(</span><span style="color: #DD0000">'Invalid&nbsp;tax&nbsp;rate.'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+      </div>
+
+      <div class="example"><div class="info"><p><strong>Letting exceptions bubble up</strong></p></div>
+
+
+        <div class="phpcode">
+          <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">preTaxPrice</span><span style="color: #007700">(</span><span style="color: #0000BB">$retailPrice</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$taxRate</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">divide</span><span style="color: #007700">(</span><span style="color: #0000BB">$retailPrice</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1&nbsp;</span><span style="color: #007700">+&nbsp;</span><span style="color: #0000BB">$taxRate</span><span style="color: #007700">);<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+      </div>
+
+      <p class="para">
+        The case between rethrowing or bubbling up is one of software
+        architecture: Exceptions should be bubbled up, except in these
+        two cases:
+      </p>
+
+      <ol type="1">
+        <li class="listitem">
+          <span class="simpara">
+            The original exception is from another package. Letting it
+            bubble up would cause implementation details to be exposed,
+            violating layer abstraction, conducing to poor design.
+          </span>
+        </li>
+        <li class="listitem">
+          <span class="simpara">
+            The current method can add useful debugging information to
+            the received error before rethrowing.
+          </span>
+        </li>
+      </ol>
+    </div>
+
+    <div class="section"><div class="info"><h2 class="title">Exceptions and normal program flow</h2></div>
+
+
+      <p class="para">
+        Exceptions should never be used as normal program flow. If
+        removing all exception handling logic (try-catch statements)
+        from the program, the remaining code should represent the
+        &quot;One True Path&quot; -- the flow that would be executed in
+        the absence of errors.
+      </p>
+      <p class="para">
+        This requirement is equivalent to requiring that exceptions be
+        thrown only on error conditions, and never in normal program
+        states.
+      </p>
+      <p class="para">
+        One example of a method that wrongly uses the bubble up
+        capability of exceptions to return a result from a deep
+        recursion:
+      </p>
+
+      <div class="example"><div class="info"></div>
+
+        <div class="phpcode">
+          <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/**<br />&nbsp;*&nbsp;Recursively&nbsp;search&nbsp;a&nbsp;tree&nbsp;for&nbsp;string.<br />&nbsp;*&nbsp;@throws&nbsp;ResultException<br />&nbsp;*/<br /></span><span style="color: #007700">public&nbsp;function&nbsp;</span><span style="color: #0000BB">search</span><span style="color: #007700">(</span><span style="color: #0000BB">TreeNode&nbsp;$node</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$node</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">data&nbsp;</span><span style="color: #007700">===&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;</span><span style="color: #0000BB">ResultException</span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$node&nbsp;</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">search</span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$node</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">leftChild</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">search</span><span style="color: #007700">(&nbsp;</span><span style="color: #0000BB">$node</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">rightChild</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+      </div>
+
+      <p class="para">
+        In the example the ResultException is simply using the
+        &quot;eject!&quot; qualities of exception handling to jump out
+        of deeply nested recursion. When actually used to signify an
+        error this is a very powerful feature, but in the example above
+        this is simply lazy development.
+      </p>
+    </div>
+
+    <div class="section"><div class="info"><h2 class="title">Exception class hierarchies</h2></div>
+
+
+      <p class="para">
+        All of PEAR packages exceptions must be descendant from
+        <strong class="classname">PEAR_Exception</strong>. <strong class="classname">PEAR_Exception</strong>
+        provides exception wrapping abilities, absent from the top level
+        PHP Exception class, and needed to comply with the previous
+        section requirements.
+      </p>
+      <p class="para">
+        Additionally, each PEAR package must provide a top level
+        exception, named &lt;Package_Name&gt;_Exception. It is
+        considered best practice that the package never throws
+        exceptions that aren&#039;t descendant from its top level exception.
+      </p>
+    </div>
+
+    <div class="section"><div class="info"><h2 class="title">Documenting Exceptions</h2></div>
+
+
+      <p class="para">
+        Because PHP, unlike Java, does not require you to explicitly
+        state which exceptions a method throws in the method signature,
+        it is critical that exceptions be thoroughly documented in your
+        method headers.
+      </p>
+
+      <div class="example"><div class="info"><p><strong>
+          Exceptions should be documented using the
+          <code class="literal">@throws</code> phpdoc keyword
+        </strong></p></div>
+
+
+        <div class="phpcode">
+          <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/**<br />&nbsp;*&nbsp;This&nbsp;method&nbsp;searches&nbsp;for&nbsp;aliens.<br />&nbsp;*<br />&nbsp;*&nbsp;@return&nbsp;array&nbsp;Array&nbsp;of&nbsp;Aliens&nbsp;objects.<br />&nbsp;*&nbsp;@throws&nbsp;AntennaBrokenException&nbsp;If&nbsp;the&nbsp;impedence&nbsp;readings&nbsp;indicate<br />&nbsp;*&nbsp;that&nbsp;the&nbsp;antenna&nbsp;is&nbsp;broken.<br />&nbsp;*<br />&nbsp;*&nbsp;@throws&nbsp;AntennaInUseException&nbsp;If&nbsp;another&nbsp;process&nbsp;is&nbsp;using&nbsp;the<br />&nbsp;*&nbsp;antenna&nbsp;already.<br />&nbsp;*/<br /></span><span style="color: #007700">public&nbsp;function&nbsp;</span><span style="color: #0000BB">findAliens</span><span style="color: #007700">(</span><span style="color: #0000BB">$color&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'green'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+      </div>
+
+      <p class="para">
+        In many cases middle layers of an application will rewrap any
+        lower-level exceptions into more meaningful application
+        exceptions. This also needs to be made clear:
+      </p>
+
+      <div class="example"><div class="info"></div>
+
+        <div class="phpcode">
+          <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/**<br />&nbsp;*&nbsp;Load&nbsp;session&nbsp;objects&nbsp;into&nbsp;shared&nbsp;memory.<br />&nbsp;*<br />&nbsp;*&nbsp;@throws&nbsp;LoadingException&nbsp;Any&nbsp;lower-level&nbsp;IOException&nbsp;will&nbsp;be&nbsp;wrapped<br />&nbsp;*&nbsp;and&nbsp;re-thrown&nbsp;as&nbsp;a&nbsp;LoadingException.<br />&nbsp;*/<br /></span><span style="color: #007700">public&nbsp;function&nbsp;</span><span style="color: #0000BB">loadSessionObjects</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+      </div>
+
+      <p class="para">
+        In other cases your method may simply be a conduit through which
+        lower level exceptions can pass freely. As challenging as it may
+        be, your method should also document which exceptions it is
+        <em class="emphasis">not</em> catching.
+      </p>
+
+      <div class="example"><div class="info"></div>
+
+        <div class="phpcode">
+          <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/**<br />&nbsp;*&nbsp;Performs&nbsp;a&nbsp;batch&nbsp;of&nbsp;database&nbsp;queries&nbsp;(atomically,&nbsp;not&nbsp;in&nbsp;transaction).<br />&nbsp;*&nbsp;@throws&nbsp;SQLException&nbsp;Low-level&nbsp;SQL&nbsp;errors&nbsp;will&nbsp;bubble&nbsp;up&nbsp;through&nbsp;this&nbsp;method.<br />&nbsp;*/<br /></span><span style="color: #007700">public&nbsp;function&nbsp;</span><span style="color: #0000BB">batchExecute</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+      </div>
+    </div>
+
+    <div class="section"><div class="info"><h2 class="title">Exceptions as part of the API</h2></div>
+
+
+      <p class="para">
+        Exceptions play a critical role in the API of your
+        library. Developers using your library
+        <em class="emphasis">depend</em> on accurate descriptions of where
+        and why exceptions might be thrown from your
+        package. Documentation is critical. Also maintaining the types
+        of messages that are thrown is also an important requirement for
+        maintaining backwards-compatibility.
+      </p>
+      <p class="para">
+        Because Exceptions are critical to the API of your package, you
+        must ensure that you don&#039;t break backwards compatibility (BC) by
+        making changes to exceptions.
+      </p>
+      <p class="para">
+        Things that break BC include:
+      </p>
+
+      <ul class="itemizedlist">
+        <li class="listitem">
+          <span class="simpara">
+            Any change to which methods throw exceptions.
+          </span>
+        </li>
+        <li class="listitem">
+          <span class="simpara">
+            A change whereby a method throws an exception higher in the
+            inheritance tree. For example, if you changed your method to
+            throw a <strong class="classname">PEAR_Exception</strong> rather than a
+            <strong class="classname">PEAR_IOException</strong>, you would be
+            breaking backwards compatibility.
+          </span>
+        </li>
+      </ul>
+
+      <p class="para">
+        Things that do not break BC:
+      </p>
+
+      <ul class="itemizedlist">
+        <li class="listitem">
+          <span class="simpara">
+            Throwing a subclass of the original exception. For example,
+            changing a method to throw
+            <strong class="classname">PEAR_IOException</strong> when before it had
+            been throwing <strong class="classname">PEAR_Exception</strong> would
+            not break BC (provided that
+            <strong class="classname">PEAR_IOException</strong> extends
+            <strong class="classname">PEAR_Exception</strong>).
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="standards.e_strict.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="standards.html">Coding Standards</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="standards.bestpractices.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">E_STRICT-compatible code</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Best practices</td>
+  </tr>
+ </table>
+</div>
+</body></html>

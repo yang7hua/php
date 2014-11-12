@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Mail_RFC822::parseAddressList()</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.mail.mail.html" title="Mail" />
+  <link rel="prev" href="package.mail.mail-rfc822.intro.html" title="RFC822 - Introduction" />
+  <link rel="next" href="package.mail.mail-imap.html" title="Mail_IMAP" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Mail_RFC822::parseAddressList()</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.mail.mail-rfc822.intro.html" title="RFC822 - Introduction">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.mail.mail-imap.html" title="Mail_IMAP">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.mail.mail-rfc822.parseaddresslist">
+   
+    <h1 class="refname">Mail_RFC822::parseAddressList()</h1>
+    <div class="refnamediv">Mail_RFC822::parseAddressList() &ndash; extract the parts of a list of email addresses</div>
+
+   
+   <h2 class="refsynopsisdiv">Synopsis</h2>
+    <div class="funcsynopsis">
+     <div class="programlisting">
+      require_once &#039;Mail/RFC822.php&#039;;
+     </div>
+     <p><code class="funcprototype">
+      array <strong class="function">parseAddressList</strong> ( 
+      
+       string $address = &#039;&#039;
+      
+       , 
+       string $defaultDomain = &#039;localhost&#039;
+      
+      
+       , 
+       boolean $nestGroups
+       <span class="initializer"> = null</span>
+      
+       , 
+       boolean $validate
+       <span class="initializer"> = null</span>
+      
+     )</code></p>
+    </div>
+   
+   <div class="refsection" id="package.mail.mail-rfc822.parseaddresslist.desc">
+    <h1 class="title">Description</h1>
+    <p class="para">
+     Extracts the given addresses into their parts.
+    </p>
+   </div>
+   <div class="refsection" id="package.mail.mail-rfc822.parseaddresslist.parameter">
+    <h1 class="title">Parameter</h1>
+    <p class="para">
+     </p><ul class="itemizedlist">
+      <li class="listitem">
+       <p class="para">
+        <em><code class="parameter">string $address</code></em> -
+        the address(es) to validate
+       </p>
+      </li>
+      <li class="listitem">
+       <p class="para">
+        <em><code class="parameter">string $defaultDomain</code></em> -
+        the default domain to use in case of absence in the
+        given email address.
+       </p>
+      </li>
+      <li class="listitem">
+       <p class="para">
+        <em><code class="parameter">boolean $nestGroups</code></em> -
+        whether to return the structure with groups
+        nested for easier viewing.
+       </p>
+      </li>
+      <li class="listitem">
+       <p class="para">
+        <em><code class="parameter">boolean $validate</code></em> -
+        whether to validate atoms. Turn this off if you need to run addresses
+        through before encoding the personal names, for instance.
+       </p>
+      </li>
+     </ul>
+    
+   </div>
+   <div class="refsection" id="package.mail.mail-rfc822.parseaddresslist.return">
+    <h1 class="title">Return value</h1>
+    <p class="para">
+     <em><code class="parameter">array</code></em> -
+     a nested array of anonymous objects.
+    </p>
+    <p class="para">
+     If <em><code class="parameter">$nestGroups</code></em> set to <strong class="constant">FALSE</strong>, you
+     can jump over the next paragraph.
+    </p>
+    <p class="para">
+     Every array entry contains an object per group.
+     This object has two attributes:
+     </p><ul class="simplelist">
+      <li class="member">
+       <em><code class="parameter">groupname</code></em> - the name of
+       the group
+      </li>
+      <li class="member">
+       <em><code class="parameter">addresses</code></em> - an array of
+       all addresses of a group
+      </li>
+     </ul>
+    
+    <p class="para">
+     The <em><code class="parameter">addresses</code></em> array consists of an
+     array of anonymous objects for each address. This object
+     comes with the following attributes:
+     </p><ul class="simplelist">
+      <li class="member">
+       <em><code class="parameter">personal</code></em> -
+       the name of the address owner
+      </li>
+      <li class="member">
+       <em><code class="parameter">comment</code></em> -
+       an array, an entry for each comment per address
+      </li>
+      <li class="member">
+       <em><code class="parameter">mailbox</code></em> -
+       the name of the mailbox, the part before the @
+      </li>
+      <li class="member">
+       <em><code class="parameter">host</code></em> -
+       the name of the server, the part after the @
+      </li>
+     </ul>
+    
+   </div>
+   <div class="refsection" id="package.mail.mail-rfc822.parseaddresslist.throws">
+    <h1 class="title">Throws</h1>
+    <p class="para">
+     </p><table class="doctable table"><caption>Possible PEAR_Error values</caption>
+
+      
+       <thead>
+        <tr>
+         <th>Error code</th>
+         <th>Error message</th>
+         <th>Reason</th>
+         <th>Solution</th>
+        </tr>
+
+       </thead>
+
+       <tbody class="tbody">
+        <tr>
+         <td><strong class="constant">NULL</strong></td>
+         <td>
+          every
+         </td>
+         <td>
+          The given address string is not
+          <a href="http://www.faqs.org/rfcs/rfc822" class="link external">RFC822</a> compliant
+         </td>
+         <td>
+          The error code contains a description of the error.
+         </td>
+        </tr>
+
+       </tbody>
+      
+     </table>
+
+    
+   </div>
+   <div class="refsection" id="package.mail.mail-rfc822.parseaddresslist.note">
+    <h1 class="title">Note</h1>
+    <p class="simpara">This function can be called
+statically.</p>
+    <blockquote class="warning">
+
+     <p class="para">
+      This class checks the string only. It does not check for
+      the existence of an email address.
+     </p>
+    </blockquote>
+
+   </div>
+   <div class="refsection" id="package.mail.mail-rfc822.parseaddresslist.example">
+    <h1 class="title">Example</h1>
+    <p class="para">
+     </p><div class="example"><div class="info"><p><strong>Extract some addresses</strong></p></div>
+
+      <div class="phpcode">
+       <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$address&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'My&nbsp;group:&nbsp;"Richard"&nbsp;&lt;richard@localhost&gt;;,&nbsp;ted@example.com&nbsp;(A&nbsp;comment)'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$addresses&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Mail_RFC822</span><span style="color: #007700">::</span><span style="color: #0000BB">parseAddressList</span><span style="color: #007700">(</span><span style="color: #0000BB">$address</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'phpguru.org'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">TRUE</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$addresses</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+      </div>
+     </div>
+    
+   </div>
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.mail.mail-rfc822.intro.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.mail.mail.html">Mail</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.mail.mail-imap.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">RFC822 - Introduction</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Mail_IMAP</td>
+  </tr>
+ </table>
+</div>
+</body></html>

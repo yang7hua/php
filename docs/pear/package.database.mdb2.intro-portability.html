@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Portability</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.mdb2.html" title="MDB2" />
+  <link rel="prev" href="package.database.mdb2.intro-auto.html" title="autoPrepare &amp; autoExecute" />
+  <link rel="next" href="package.database.mdb2.intro-sequences.html" title="Sequences" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Portability</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.mdb2.intro-auto.html" title="autoPrepare &amp; autoExecute">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.mdb2.intro-sequences.html" title="Sequences">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.mdb2.intro-portability">
+ 
+  <h1 class="refname">Portability</h1>
+  <div class="refnamediv">Portability &ndash; Database portability features</div>
+
+ 
+
+ <div class="refsection" id="package.database.mdb2.intro-portability.desc">
+  <h1 class="title">Description</h1>
+  <p class="para">
+   Each database management system (DBMS) has its own behaviour.
+   For example, some databases capitalize field names in their output,
+   some lowercase them, while others leave them alone. These quirks
+   make it difficult to port your scripts over to another server type.
+   PEAR MDB2 strives to overcome these differences so your program can
+   switch between DBMSs without any changes.
+  </p>
+  <p class="para">
+   You control which portability modes are enabled by using
+   the <code class="varname">portability</code> configuration option.
+   Configuration options are set via
+   <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2.html#methodfactory" class="link external">
+    <strong class="function">factory()</strong></a> and
+   <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Common.html#methodsetOption" class="link external">
+    <strong class="function">setOption()</strong></a>.
+  </p>
+  <p class="para">
+   The portability modes are bitwised, so they can be combined using
+   <code class="literal">|</code> and removed using <code class="literal">^</code>.
+   See the examples section below on how to do this.
+  </p>
+  <p class="para">
+   NB: MDB2 portability modes are meant to change the behaviour of the returned
+   values only, not that of the query itself. For instance, if you created your
+   tables quoting the identifiers, remember to use the <strong class="function">quoteIdentifier()</strong>
+   method in all your queries or you&#039;ll get &quot;not found&quot; or &quot;not exists&quot; errors.
+   Also check for the <em><code class="parameter">quote_identifier</code></em> option,
+   if it&#039;s false then quoting won&#039;t be applied if the check_option is used.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.database.mdb2.intro-portability.constants"><div class="info"><h1>Portability Mode Constants</h1>
+</div>
+  
+  <p class="para">
+   </p><ul class="itemizedlist">
+
+    <li class="listitem">
+     <p class="para">
+      <strong class="constant">MDB2_PORTABILITY_ALL</strong> (default)
+     </p>
+     <p class="para">
+      turn on all portability features. this is the default setting.
+     </p>
+    </li>
+
+    <li class="listitem">
+     <p class="para">
+      <strong class="constant">MDB2_PORTABILITY_DELETE_COUNT</strong>
+     </p>
+     <p class="para">
+      Force reporting the number of rows deleted.
+      Some DBMSs don&#039;t count the number of rows deleted when performing
+      simple <strong class="userinput"><code>DELETE FROM tablename</code></strong> queries. This mode
+      tricks such DBMSs into telling the count by adding
+      <strong class="userinput"><code>WHERE 1=1</code></strong> to the end of <strong class="command">DELETE</strong>
+      queries.
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <strong class="constant">MDB2_PORTABILITY_EMPTY_TO_NULL</strong>
+     </p>
+     <p class="para">
+      Convert empty strings values to null in data in and output.
+      Needed because Oracle considers empty strings to be null,
+      while most other DBMSs know the difference between empty and null.
+     </p>
+    </li>
+
+    <li class="listitem">
+     <p class="para">
+      <strong class="constant">MDB2_PORTABILITY_ERRORS</strong>
+     </p>
+     <p class="para">
+      Makes certain error messages in certain drivers compatible
+      with those from other DBMSs
+     </p>
+     <p class="para">
+
+      </p><table class="doctable table"><caption>Error Code Re-mappings</caption>
+       
+       
+        <thead>
+         <tr>
+          <th>Driver</th>
+          <th>Description</th>
+          <th>Old Constant</th>
+          <th>New Constant</th>
+         </tr>
+
+        </thead>
+
+        <tbody class="tbody">
+
+         <tr>
+          <td>
+           mysql, mysqli
+          </td>
+          <td>
+           unique and primary key constraints
+          </td>
+          <td>
+           <strong class="constant">MDB2_ERROR_ALREADY_EXISTS</strong>
+          </td>
+          <td>
+           <strong class="constant">MDB2_ERROR_CONSTRAINT</strong>
+          </td>
+         </tr>
+
+
+         <tr>
+          <td>
+           mysql, mysqli
+          </td>
+          <td>
+           not-null constraints
+          </td>
+          <td>
+           <strong class="constant">MDB2_ERROR_CONSTRAINT</strong>
+          </td>
+          <td>
+           <strong class="constant">MDB2_ERROR_CONSTRAINT_NOT_NULL</strong>
+          </td>
+         </tr>
+
+
+        </tbody>
+       
+      </table>
+
+
+     
+    </li>
+
+    <li class="listitem">
+     <p class="para">
+      <strong class="constant">MDB2_PORTABILITY_FIX_ASSOC_FIELD_NAMES</strong>
+     </p>
+     <p class="para">
+      This removes any qualifiers from keys in associative fetches. Some
+      RDBMS, for example SQLite, will default to use the fully qualified
+      name for a column in assoc fetches if it is qualified in a query.
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <strong class="constant">MDB2_PORTABILITY_FIX_CASE</strong>
+     </p>
+     <p class="para">
+      Convert names of tables and fields to lower or upper case in all methods.
+      The case depends on the <em><code class="parameter">field_case</code></em> option that may
+      be set to either <strong class="constant">CASE_LOWER</strong> (default) or
+      <strong class="constant">CASE_UPPER</strong>.
+      NB: the case change is applied to the returned values only, not to
+      the field and table names in the query.
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <strong class="constant">MDB2_PORTABILITY_NONE</strong>
+     </p>
+     <p class="para">
+      Turn off all portability features
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <strong class="constant">MDB2_PORTABILITY_NUMROWS</strong>
+     </p>
+     <p class="para">
+      Enable hack that makes <strong class="function">numRows()</strong> work in Oracle
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <strong class="constant">MDB2_PORTABILITY_RTRIM</strong>
+     </p>
+     <p class="para">
+      Right trim the data output for all data fetches. This does not apply to drivers
+      for RDBMS that automatically right trim values of fixed length character values,
+      even if they do not right trim value of variable length character values.
+     </p>
+    </li>
+
+   </ul>
+  
+ </div>
+
+ <div class="refsection" id="package.database.mdb2.intro-portability.example">
+  <h1 class="title">Example</h1>
+  <div class="example"><div class="info"><p><strong>Disabling all portability options while connecting</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'MDB2.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$dsn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'mysql://user:password@host/database'<br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'debug'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'portability'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">MDB2_PORTABILITY_NONE</span><span style="color: #007700">,<br />);<br /><br /></span><span style="color: #0000BB">$mdb2&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">MDB2</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+
+  <div class="example"><div class="info"><p><strong>
+    Using <strong class="function">setOption()</strong> to enable portability
+    for lowercasing and trimming
+   </strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;MDB2&nbsp;object&nbsp;named&nbsp;$mdb2...<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'field_case'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">CASE_LOWER</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'portability'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">MDB2_PORTABILITY_FIX_CASE&nbsp;</span><span style="color: #007700">|&nbsp;</span><span style="color: #0000BB">MDB2_PORTABILITY_RTRIM</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+
+  <div class="example"><div class="info"><p><strong>
+    Using <strong class="function">setOption()</strong> to enable all portability
+    options except trimming
+   </strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;MDB2&nbsp;object&nbsp;named&nbsp;$mdb2...<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'portability'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">MDB2_PORTABILITY_ALL&nbsp;</span><span style="color: #007700">^&nbsp;</span><span style="color: #0000BB">MDB2_PORTABILITY_RTRIM</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.mdb2.intro-auto.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.mdb2.html">MDB2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.mdb2.intro-sequences.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">autoPrepare &amp; autoExecute</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Sequences</td>
+  </tr>
+ </table>
+</div>
+</body></html>

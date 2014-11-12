@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Conditional Code Analysis</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.php.php-compatinfo.tutorial.html" title="Getting started" />
+  <link rel="prev" href="package.php.php-compatinfo.advanced.html" title="Advanced detection" />
+  <link rel="next" href="package.php.php-compatinfo.command-line.html" title="The Command-Line Parser" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Conditional Code Analysis</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.php.php-compatinfo.advanced.html" title="Advanced detection">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.php.php-compatinfo.command-line.html" title="The Command-Line Parser">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.php.php-compatinfo.condition">
+ 
+  <h1 class="refname">Conditional Code Analysis</h1>
+  <div class="refnamediv">Conditional Code Analysis &ndash; improve accuracy detection with conditional code</div>
+
+ 
+
+ <div class="refsection" id="package.php.php-compatinfo.condition.category"><div class="info"><h1>Categories</h1>
+</div>
+  
+   <p class="para">
+    As briefly introduced at end of
+    <a href="package.php.php-compatinfo.advanced.html" class="link">advanced detection</a>
+    chapter, we will learn now that there are 3 categories of conditional code
+    that could give wrong result, if there are not catched properly.
+   </p>
+   <p class="para">
+    These categories are :
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+       <strong class="emphasis">function</strong> (<code class="literal">cond_code = 1</code>)
+      </p>
+      <p class="para">
+       A quick example:
+       </p><div class="phpcode">
+        <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">function_exists</span><span style="color: #007700">(</span><span style="color: #DD0000">'debug_backtrace'</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$backtrace&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">debug_backtrace</span><span style="color: #007700">();<br />}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$backtrace&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+       </div>
+      
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <strong class="emphasis">extension</strong> (<code class="literal">cond_code = 2</code>)
+      </p>
+      <p class="para">
+       A quick example:
+       </p><div class="phpcode">
+        <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">extension_loaded</span><span style="color: #007700">(</span><span style="color: #DD0000">'sqlite'</span><span style="color: #007700">)&nbsp;==&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$prefix&nbsp;</span><span style="color: #007700">=&nbsp;(</span><span style="color: #0000BB">PHP_SHLIB_SUFFIX&nbsp;</span><span style="color: #007700">===&nbsp;</span><span style="color: #DD0000">'dll'</span><span style="color: #007700">)&nbsp;?&nbsp;</span><span style="color: #DD0000">'php_'&nbsp;</span><span style="color: #007700">:&nbsp;</span><span style="color: #DD0000">''</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">dl</span><span style="color: #007700">(</span><span style="color: #0000BB">$prefix&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">'sqlite.'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">PHP_SHLIB_SUFFIX</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'SQLite&nbsp;version&nbsp;:&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">sqlite_libversion</span><span style="color: #007700">();<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+       </div>
+      
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <strong class="emphasis">constant</strong> (<code class="literal">cond_code = 4</code>)
+      </p>
+      <p class="para">
+       A quick example:
+       </p><div class="phpcode">
+        <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">defined</span><span style="color: #007700">(</span><span style="color: #DD0000">'DATE_RSS'</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$date_format&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">DATE_RSS</span><span style="color: #007700">;<br />}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$date_format&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'D,&nbsp;j&nbsp;M&nbsp;Y&nbsp;H:i:s&nbsp;O'</span><span style="color: #007700">;<br />}<br /></span><span style="color: #FF8000">//&nbsp;will&nbsp;display&nbsp;something&nbsp;like&nbsp;"Sat,&nbsp;26&nbsp;Jul&nbsp;2008&nbsp;16:56:24&nbsp;+0200"<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #0000BB">$date_format</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">mktime</span><span style="color: #007700">(</span><span style="color: #0000BB">0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">7</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">26</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">2008</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+       </div>
+      
+     </li>
+    </ul>
+   
+ </div>
+
+ <div class="refsection" id="package.php.php-compatinfo.condition.web-catch"><div class="info"><h1>How to catch them with web interface</h1>
+</div>
+   
+   <p class="para">
+    At the beginning of first version that catch conditional code, there were only
+    3 options: <code class="literal">ignore_functions</code>, <code class="literal">ignore_extensions</code>
+    and <code class="literal">ignore_constants</code>.
+   </p>
+   <p class="para">
+    Incovenient with these options, is that you should know the source code to parse,
+    and identify whose functions, extensions or constants to avoid.
+   </p>
+   <p class="para">
+    Version 1.7.0 of API has introduced the ability to add name patterns to identify
+    all or part of functions, extensions, constants to ignore from parsing.
+    You should use now these options: <code class="literal">ignore_functions_match</code>,
+    <code class="literal">ignore_extensions_match</code> or <code class="literal">ignore_constants_match</code>.
+   </p>
+   <p class="para">
+    Let&#039;s take a look with an example, how it&#039;s easy to catch whatever you want
+    to exclude from parsing. We will take again example of PEAR::HTML_CSS 1.5.1 package
+    already seen in
+    <a href="package.php.php-compatinfo.advanced.html#package.php.php-compatinfo.advanced.dir" class="link">
+     advanced directory detection
+    </a>.
+   </p>
+   <p class="para">
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'PHP/CompatInfo.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$datasource&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'/tmp/HTML_CSS-1.5.1'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$options&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'ignore_dirs'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'examples'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'tests'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'ignore_functions_match'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'function_exists'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'/.*/'</span><span style="color: #007700">)),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'ignore_extensions_match'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'extension_loaded'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'/.*/'</span><span style="color: #007700">)),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'ignore_constants_match'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'defined'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'/.*/'</span><span style="color: #007700">)),<br />&nbsp;&nbsp;&nbsp;&nbsp;);<br /><br /></span><span style="color: #0000BB">$pci&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">PHP_CompatInfo</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$pci</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parseData</span><span style="color: #007700">(</span><span style="color: #0000BB">$datasource</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+   <p class="para">
+    Here we catch all standard conditional code (<code class="literal">function_exists</code>,
+    <code class="literal">extension_loaded</code>, <code class="literal">defined</code>) what match
+    all names (regular expression given by <code class="literal">array(&#039;/.*/&#039;)</code>).
+   </p>
+   <p class="para">
+    </p><blockquote class="tip">
+     <p class="para">
+      To catch what ever function you want, use <code class="literal">preg_match</code>
+      rather than <code class="literal">function_exists</code>.
+     </p>
+     <p class="para">
+      It&#039;s also true for <code class="literal">extension_loaded</code> and <code class="literal">defined</code>
+     </p>
+     <p class="para">
+      With <em class="emphasis">preg_match</em> you are really free to ignore a single function,
+      a group set or all functions, only by giving the good name pattern.
+     </p>
+    </blockquote>
+<p>
+    Example to ignore all functions prefixed by <em class="emphasis">xdebug_</em> :
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'PHP/CompatInfo.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$datasource&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'/tmp/HTML_CSS-1.5.1'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$options&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'ignore_functions_match'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'preg_match'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'/^xdebug_/'</span><span style="color: #007700">)),<br />&nbsp;&nbsp;&nbsp;&nbsp;);<br /><br /></span><span style="color: #0000BB">$pci&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">PHP_CompatInfo</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$pci</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parseData</span><span style="color: #007700">(</span><span style="color: #0000BB">$datasource</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+ </div>
+
+ <div class="refsection" id="package.php.php-compatinfo.condition.cli-catch"><div class="info"><h1>How to catch them with CLI</h1>
+</div>
+  
+   <p class="para">
+    If you use the command-line parser with <strong class="command">pci</strong> script, the solution
+    is a bit different.
+   </p>
+
+   <p class="para">
+    To catch cond_code = 1 (function), you must run the command
+    <span style="background-color:#eee">
+     <strong class="command">pci</strong>
+     -inm <span class="replaceable">functions-match.txt</span>
+    </span>
+    where <code class="filename">functions-match.txt</code> is a text file, that identify
+    on each line a new condition.
+   </p>
+   <p class="para">
+    Each blank line or beginning with <code class="literal">;</code> will be skipped
+    (proceed as comment line like in php.ini)
+   </p>
+   <p class="para">
+    If first non blank character is an equal sign (=), then you can catch
+    what ever function you want with a preg_match condition (see xdebug example in
+    previous section (web interface)
+   </p>
+   <p class="para">
+    Example of text file contents
+    </p><pre class="screen">
+;=^xdebug_
+;=alias$
+.*
+;file_put_contents
+    </pre>
+
+   
+   <p class="para">
+    </p><blockquote class="caution">
+     <p class="para">
+      Do not confuse a regular expression beginning with equal sign (=), and the
+      same line without =.
+     </p>
+     <p class="para">
+      In first case you will catch all functions that match the name pattern given
+      found in all source code, while second case try to catch only
+      matches found with <code class="literal">if function_exists(&#039;&#039;)</code> condition.
+     </p>
+     <p class="para">
+      It&#039;s also true for extensions and constants, we will see them now.
+     </p>
+    </blockquote>
+
+   
+
+   <p class="para">
+    To catch cond_code = 2 (extension), you must run the command
+    <span style="background-color:#eee">
+     <strong class="command">pci</strong>
+     -iem <span class="replaceable">extensions-match.txt</span>
+    </span>
+    where <code class="filename">extensions-match.txt</code> is a text file, that identify
+    on each line a new condition.
+   </p>
+   <p class="para">
+    Each blank line or beginning with <code class="literal">;</code> will be skipped
+    (proceed as comment line like in php.ini)
+   </p>
+   <p class="para">
+    If first non blank character is an equal sign (=), then you can catch
+    what ever extension you want with a preg_match condition.
+   </p>
+   <p class="para">
+    Example of text file contents
+    </p><pre class="screen">
+;=xdebug
+;sqlite
+=gd
+;=sapi_apache
+    </pre>
+
+   
+
+   <p class="para">
+    To catch cond_code = 4 (constant), you must run the command
+    <span style="background-color:#eee">
+     <strong class="command">pci</strong>
+     -icm <span class="replaceable">constants-match.txt</span>
+    </span>
+    where <code class="filename">constants-match.txt</code> is a text file, that identify
+    on each line a new condition.
+   </p>
+   <p class="para">
+    Each blank line or beginning with <code class="literal">;</code> will be skipped
+    (proceed as comment line like in php.ini)
+   </p>
+   <p class="para">
+    If first non blank character is an equal sign (=), then you can catch
+    what ever constant you want with a preg_match condition.
+   </p>
+   <p class="para">
+    Example of text file contents
+    </p><pre class="screen">
+=PHP_EOL
+=DATE_RSS
+;FILE_FIND_VERSION
+    </pre>
+
+   
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.php.php-compatinfo.advanced.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.php.php-compatinfo.tutorial.html">Getting started</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.php.php-compatinfo.command-line.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Advanced detection</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">The Command-Line Parser</td>
+  </tr>
+ </table>
+</div>
+</body></html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>DSN</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.mdb2.html" title="MDB2" />
+  <link rel="prev" href="package.database.mdb2.intro.html" title="Introduction" />
+  <link rel="next" href="package.database.mdb2.intro-connect.html" title="Connecting" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">DSN</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.mdb2.intro.html" title="Introduction">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.mdb2.intro-connect.html" title="Connecting">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.mdb2.intro-dsn">
+ 
+  <h1 class="refname">DSN</h1>
+  <div class="refnamediv">DSN &ndash; The Data Source Name</div>
+
+ 
+
+ <div class="refsection" id="package.database.mdb2.intro-dsn.desc">
+  <h1 class="title">Description</h1>
+  <p class="simpara">
+   To connect to a database through PEAR::MDB2, you have to create a
+   valid <span class="acronym">DSN - data source name</span>. This DSN
+   consists in the following parts:
+  </p>
+  <p class="para">
+   </p><ul class="simplelist">
+    <li class="member">
+     <code class="varname">phptype</code>:
+     Database backend used in PHP (i.e. <code class="literal">mysql</code>
+     , <code class="literal">pgsql</code> etc.)
+    </li>
+    <li class="member">
+     <code class="varname">dbsyntax</code>:
+     Database used with regards to SQL syntax etc.
+    </li>
+    <li class="member">
+     <code class="varname">protocol</code>:
+     Communication protocol to use ( i.e. <code class="literal">tcp</code>,
+     <code class="literal">unix</code> etc.)
+    </li>
+    <li class="member">
+     <code class="varname">hostspec</code>:
+     Host specification (<code class="literal">hostname[:port]</code>)
+    </li>
+    <li class="member">
+     <code class="varname">database</code>:
+     Database to use on the DBMS server
+    </li>
+    <li class="member">
+     <code class="varname">username</code>:
+     User name for login
+    </li>
+    <li class="member">
+     <code class="varname">password</code>:
+     Password for login
+    </li>
+    <li class="member">
+     <code class="varname">proto_opts</code>:
+     Maybe used with <code class="varname">protocol</code>
+    </li>
+    <li class="member">
+     <code class="varname">option</code>:
+     Additional connection options in URI query string format.
+     options get separated by &amp;.
+     The Following table shows a non complete list of options:
+    </li>
+   </ul>
+   <table class="doctable table"><caption>List of options</caption>
+    
+    
+     <thead>
+      <tr>
+       <th>Name</th>
+       <th>Description</th>
+       <th>Type</th>
+      </tr>
+
+     </thead>
+
+     <tbody class="tbody">
+      <tr>
+       <td><code class="varname">charset</code></td>
+       <td>
+        Some backends support setting the client charset. (Invokes
+        setCharset(string $charset, [resource $connection = null])
+       </td>
+       <td>string</td>
+      </tr>
+
+      <tr>
+       <td><code class="varname">new_link</code> [boolean]</td>
+       <td>
+        Some RDBMS do not create new connections when connecting to the same host
+        multiple times. If this option is set to <strong class="constant">TRUE</strong> it will attempt to force
+        a new connection.
+       </td>
+       <td>boolean</td>
+      </tr>
+
+     </tbody>
+    
+   </table>
+
+  
+  <p class="para">
+   The DSN can either be provided as an <em class="emphasis">associative array</em> or
+   as a <em class="emphasis">string</em>.
+   The array format is preferred, since it doesn&#039;t require a further parsing step
+   (see the <a href="package.database.mdb2.intro-connect.html" class="link">Connecting</a>
+   chapter for an example).
+   The string format of the supplied DSN is in its fullest form:
+   </p><div class="urlcode">
+    <pre class="urlcode">
+phptype(dbsyntax)://username:password@protocol+hostspec/database?option=value</pre>
+
+   </div>
+  
+  <p class="para">
+   Most variations are allowed:
+   </p><div class="urlcode">
+    <pre class="urlcode">
+phptype://username:password@protocol+hostspec:110//usr/db_file.db
+phptype://username:password@hostspec/database
+phptype://username:password@hostspec
+phptype://username@hostspec
+phptype://hostspec/database
+phptype://hostspec
+phptype:///database
+phptype:///database?option=value&amp;anotheroption=anothervalue
+phptype(dbsyntax)
+phptype</pre>
+
+   </div>
+  
+  <p class="para">
+   The currently supported database backends are:
+   </p><div class="configurecode">
+    <pre class="configurecode">
+fbsql  -&gt; FrontBase
+ibase  -&gt; InterBase / Firebird (requires PHP 5)
+mssql  -&gt; Microsoft SQL Server (NOT for Sybase. Compile PHP --with-mssql)
+mysql  -&gt; MySQL
+mysqli -&gt; MySQL (supports new authentication protocol) (requires PHP 5)
+oci8   -&gt; Oracle 7/8/9/10
+pgsql  -&gt; PostgreSQL
+querysim -&gt; QuerySim
+sqlite -&gt; SQLite 2</pre>
+
+   </div>
+  
+  <p class="para">
+   A second DSN format is supported
+   </p><div class="urlcode">
+    <pre class="urlcode">
+phptype(syntax)://user:pass@protocol(proto_opts)/database</pre>
+
+   </div>
+  
+  <p class="para">
+   If your <code class="varname">database</code>, <code class="varname">option</code> values,
+   <code class="varname">username</code> or <code class="varname">password</code>
+   contain characters used to delineate DSN parts, you
+   can escape them via URI hex encodings:
+   </p><div class="urlcode">
+    <pre class="urlcode">
+: = %3a   / = %2f   @ = %40
++ = %2b   ( = %28   ) = %29
+? = %3f   = = %3d   &amp; = %26</pre>
+
+   </div>
+  
+  <blockquote class="warning">
+
+   <p class="para">
+    Please note, that some features may be not supported by all
+    database backends.
+   </p>
+  </blockquote>
+
+ </div>
+
+ <div class="refsection" id="package.database.mdb2.intro-dsn.example">
+  <h1 class="title">Example</h1>
+   <div class="example"><div class="info"><p><strong>Connect to database through a socket</strong></p></div>
+    
+    <div class="urlcode">
+     <pre class="urlcode">
+mysql://user@unix(/path/to/socket)/pear</pre>
+
+    </div>
+   </div>
+   <div class="example"><div class="info"><p><strong>Connect to database on a non standard port</strong></p></div>
+    
+    <div class="urlcode">
+     <pre class="urlcode">
+pgsql://user:pass@tcp(localhost:5555)/pear</pre>
+
+    </div>
+   </div>
+   <div class="example"><div class="info"><p><strong>Connect to SQLite on a Unix machine using options</strong></p></div>
+    
+    <div class="urlcode">
+     <pre class="urlcode">
+sqlite:////full/unix/path/to/file.db?mode=0666</pre>
+
+    </div>
+   </div>
+   <div class="example"><div class="info"><p><strong>Connect to SQLite on a Windows machine using options</strong></p></div>
+    
+    <div class="urlcode">
+     <pre class="urlcode">
+sqlite:///c:/full/windows/path/to/file.db?mode=0666</pre>
+
+    </div>
+   </div>
+   <div class="example"><div class="info"><p><strong>Connect to MySQLi using SSL</strong></p></div>
+    
+    <div class="urlcode">
+     <pre class="urlcode">
+mysqli://user:pass@localhost/pear?key=client-key.pem&amp;cert=client-cert.pem</pre>
+
+    </div>
+   </div>
+   <div class="example"><div class="info"><p><strong>Connect to Oracle using Service name</strong></p></div>
+    
+    <div class="urlcode">
+     <pre class="urlcode">
+oci8://username:password@foo.example.com[:port]/?service=service</pre>
+
+    </div>
+   </div>
+   <div class="example"><div class="info"><p><strong>Connect to Oracle using &quot;Easy Connect&quot; syntax</strong></p></div>
+    
+    <div class="urlcode">
+     <pre class="urlcode">
+username/password@[//]host[:port][/service_name]</pre>
+
+    </div>
+   </div>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.mdb2.intro.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.mdb2.html">MDB2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.mdb2.intro-connect.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Connecting</td>
+  </tr>
+ </table>
+</div>
+</body></html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>DB_common::quoteSmart()</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.db.html" title="DB" />
+  <link rel="prev" href="package.database.db.db-common.quoteidentifier.html" title="DB_common::quoteIdentifier()" />
+  <link rel="next" href="package.database.db.db-common.rollback.html" title="DB_common::rollback()" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">DB_common::quoteSmart()</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.db.db-common.quoteidentifier.html" title="DB_common::quoteIdentifier()">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.db.db-common.rollback.html" title="DB_common::rollback()">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.db.db-common.quotesmart">
+ 
+  <h1 class="refname">DB_common::quoteSmart()</h1>
+  <div class="refnamediv">DB_common::quoteSmart() &ndash; Formats input so it can be safely used as a literal</div>
+
+ 
+
+ <h2 class="refsynopsisdiv">Synopsis</h2>
+  <div class="funcsynopsis">
+   <p><code class="funcprototype">
+    mixed <strong class="function">quoteSmart</strong> ( 
+    
+     mixed $in
+    
+   )</code></p>
+  </div>
+ 
+
+ <div class="refsection" id="package.database.db.db-common.quotesmart.desc">
+  <h1 class="title">Description</h1>
+  <p class="para">
+   Format input so it can be safely used as a literal in a query.  Literals
+   are values such as strings or numbers which get utilized in places like
+   <strong class="command">WHERE</strong>, <strong class="command">SET</strong> and
+   <strong class="command">VALUES</strong> clauses of SQL statements.
+  </p>
+  <p class="para">
+   The format returned depends on the PHP data type of input and the
+   database type being used.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.quotesmart.parameter">
+  <h1 class="title">Parameter</h1>
+  <p class="para">
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term">
+      <span class="type">mixed</span>
+      <em><code class="parameter">$in</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       the input to be quoted
+      </p>
+     </dd>
+    </dl>
+   </div>
+  
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.quotesmart.return">
+  <h1 class="title">Return value</h1>
+  <p class="para">
+   <span class="type">mixed</span> - the formatted data
+  </p>
+  <p class="para">
+   The format of the results depends on the input&#039;s PHP type:
+  </p>
+  <ul class="itemizedlist">
+   <li class="listitem">
+    <p class="para">
+     <code class="literal">input</code> -&gt; <code class="literal">returns</code>
+    </p>
+   </li>
+   <li class="listitem">
+    <p class="para">
+     <strong class="constant">NULL</strong> -&gt; the string <code class="literal">NULL</code>
+    </p>
+   </li>
+   <li class="listitem">
+    <p class="para">
+     <span class="type">integer</span> or <span class="type">float</span> -&gt; the unquoted number
+    </p>
+   </li>
+   <li class="listitem">
+    <p class="para">
+     <span class="type">boolean</span> -&gt; output depends on the driver in use
+    </p>
+    <p class="para">
+     Most drivers return integers: <code class="literal">1</code> if
+     <code class="literal">true</code> or <code class="literal">0</code> if
+     <code class="literal">false</code>.
+     Some return strings: <code class="literal">TRUE</code> if
+     <code class="literal">true</code> or <code class="literal">FALSE</code> if
+     <code class="literal">false</code>.
+     Finally one returns strings: <code class="literal">T</code> if
+     <code class="literal">true</code> or <code class="literal">F</code> if
+     <code class="literal">false</code>. Here is a list of each DBMS,
+     the values returned and the suggested column type:
+    </p>
+    <ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+       <code class="literal">dbase</code> -&gt; <code class="literal">T/F</code>
+       (<code class="literal">Logical</code>)
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <code class="literal">fbase</code> -&gt; <code class="literal">TRUE/FALSE</code>
+       (<code class="literal">BOOLEAN</code>)
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <code class="literal">ibase</code> -&gt; <code class="literal">1/0</code>
+       (<code class="literal">SMALLINT</code>) [1]
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <code class="literal">ifx</code> -&gt; <code class="literal">1/0</code>
+       (<code class="literal">SMALLINT</code>) [1]
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <code class="literal">msql</code> -&gt; <code class="literal">1/0</code>
+       (<code class="literal">INTEGER</code>)
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <code class="literal">mssql</code> -&gt; <code class="literal">1/0</code>
+       (<code class="literal">TINYINT</code>)
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <code class="literal">mysql</code> -&gt; <code class="literal">1/0</code>
+       (<code class="literal">TINYINT(1)</code>)
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <code class="literal">mysqli</code> -&gt; <code class="literal">1/0</code>
+       (<code class="literal">TINYINT(1)</code>)
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <code class="literal">oci8</code> -&gt; <code class="literal">1/0</code>
+       (<code class="literal">NUMBER(1)</code>)
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <code class="literal">odbc</code> -&gt; <code class="literal">1/0</code>
+       (<code class="literal">SMALLINT</code>) [1]
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <code class="literal">pgsql</code> -&gt; <code class="literal">TRUE/FALSE</code>
+       (<code class="literal">BOOLEAN</code>)
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <code class="literal">sqlite</code> -&gt; <code class="literal">1/0</code>
+       (<code class="literal">INTEGER</code>)
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <code class="literal">sybase</code> -&gt; <code class="literal">1/0</code>
+       (<code class="literal">TINYINT</code>)
+      </p>
+     </li>
+    </ul>
+    <p class="para">
+     [1] Accommodate the lowest common denominator because not all
+     versions of have <code class="literal">BOOLEAN</code>.
+    </p>
+   </li>
+   <li class="listitem">
+    <p class="para">
+     other (including strings and numeric strings) -&gt;
+     a string which has been escaped in a DBMS specific way
+     (using
+     <a href="package.database.db.db-common.escapesimple.html" class="link">
+      <strong class="function">escapeSimple()</strong></a>)
+     and then surrounded by single quotes
+    </p>
+   </li>
+  </ul>
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.quotesmart.note">
+  <h1 class="title">Note</h1>
+  <p class="simpara">This function can not be called
+statically.</p>
+  <p class="simpara">
+   Function available since: Release 1.6.0
+  </p>
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.quotesmart.example">
+  <h1 class="title">Example</h1>
+  <div class="example"><div class="info"><p><strong>Using <strong class="function">quoteSmart()</strong></strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /></span><span style="color: #0000BB">$name&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"all's&nbsp;well"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$active&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$sql&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'SELECT&nbsp;*&nbsp;FROM&nbsp;clients&nbsp;WHERE&nbsp;name&nbsp;=&nbsp;'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">quoteSmart</span><span style="color: #007700">(</span><span style="color: #0000BB">$name</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;</span><span style="color: #DD0000">'&nbsp;AND&nbsp;active&nbsp;=&nbsp;'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">quoteSmart</span><span style="color: #007700">(</span><span style="color: #0000BB">$active</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.quotesmart.see">
+  <h1 class="title">See</h1>
+  <p class="para">
+   <a href="package.database.db.db-common.quoteidentifier.html" class="link">
+    <strong class="function">quoteIdentifier()</strong></a>,
+   <a href="package.database.db.db-common.escapesimple.html" class="link">
+    <strong class="function">escapeSimple()</strong></a>
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.db.db-common.quoteidentifier.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.db.html">DB</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.db.db-common.rollback.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">DB_common::quoteIdentifier()</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">DB_common::rollback()</td>
+  </tr>
+ </table>
+</div>
+</body></html>

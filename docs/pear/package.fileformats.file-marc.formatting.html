@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Formatting MARC data</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.fileformats.file-marc.html" title="File_MARC" />
+  <link rel="prev" href="package.fileformats.file-marc.reading.html" title="Reading MARC data" />
+  <link rel="next" href="package.fileformats.file-passwd.html" title="File_Passwd" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Formatting MARC data</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.fileformats.file-marc.reading.html" title="Reading MARC data">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.fileformats.file-passwd.html" title="File_Passwd">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.fileformats.file-marc.formatting">
+ 
+  <h1 class="refname">Formatting MARC data</h1>
+  <div class="refnamediv">Formatting MARC data &ndash; 
+   Formatting MARC data with <strong class="classname">File_MARC</strong>
+  </div>
+
+ 
+
+ <div class="refsection" id="package.fileformats.file-marc.formatting.overview"><div class="info"><h1>Overview</h1>
+</div>
+  
+
+  <p class="para">
+   The <strong class="classname">File_MARC_Record</strong> class enables you to write
+   Machine Readable Cataloging (<span class="acronym">MARC</span>) data in MARC 21
+   format, in a human-readable string format, and (with some restrictions)
+   in MARCXML format.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.fileformats.file-marc.formatting.marc21"><div class="info"><h1>Formatting MARC 21 data</h1>
+</div>
+  
+  <p class="para">
+   To return a record in MARC 21 format, call the <strong class="function">toRaw()</strong>
+   method on the <strong class="classname">File_MARC_Record</strong> object. 
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Writing MARC 21 data to a file</strong></p></div>
+   
+   <div class="example-contents"><p>
+    In the following example, we have created one or more MARC records
+    represented by <strong class="classname">File_MARC_Record</strong> objects
+    stored in the <code class="varname">$records</code> array. To write this
+    data to a file in MARC 21 format, we simply open the file in binary
+    mode and write the contents of the records in the array to the file
+    by calling the <strong class="function">toRaw()</strong> method on each record
+    in turn.
+   </p></div>
+
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require&nbsp;</span><span style="color: #DD0000">'File/MARC.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;convert_metadata_to_marc()&nbsp;is&nbsp;a&nbsp;fictional&nbsp;method<br />//&nbsp;that&nbsp;returns&nbsp;an&nbsp;array&nbsp;of&nbsp;File_MARC_Record&nbsp;objects<br /></span><span style="color: #0000BB">$records&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">convert_metadata_to_marc</span><span style="color: #007700">();&nbsp;<br /><br /></span><span style="color: #FF8000">//&nbsp;Open&nbsp;a&nbsp;file&nbsp;for&nbsp;binary&nbsp;write&nbsp;access<br /></span><span style="color: #0000BB">$marc21_file&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">fopen</span><span style="color: #007700">(</span><span style="color: #DD0000">"records.mrc"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"wb"</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Iterate&nbsp;through&nbsp;the&nbsp;records<br /></span><span style="color: #007700">while&nbsp;(</span><span style="color: #0000BB">$record&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$records</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">next</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Write&nbsp;each&nbsp;record&nbsp;to&nbsp;the&nbsp;file&nbsp;in&nbsp;MARC&nbsp;21&nbsp;format<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">fwrite</span><span style="color: #007700">(</span><span style="color: #0000BB">$marc21_file</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$record</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">toRaw</span><span style="color: #007700">());<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;Close&nbsp;the&nbsp;file<br /></span><span style="color: #0000BB">fclose</span><span style="color: #007700">(</span><span style="color: #0000BB">$marc21_file</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+  </div>
+ </div>
+
+ <div class="refsection" id="package.fileformats.file-marc.formatting.human"><div class="info"><h1>Creating human-readable output from MARC data</h1>
+</div>
+  
+  <p class="para">
+   To return a human-readable version of a MARC 21 or MARCXML record,
+   call the <strong class="function">__toString()</strong> method on the
+   <strong class="classname">File_MARC_Record</strong> object. Note that you call the
+   <strong class="function">__toString()</strong> method implicitly when you call the 
+   <strong class="function">print()</strong> function on a
+   <strong class="classname">File_MARC_Record</strong> object.
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Returning a human-readable representation of MARC</strong></p></div>
+   
+   <div class="example-contents"><p>
+    In the following example, we print the contents of each
+    MARC record in a human-readable format and also explicitly call
+    the <strong class="function">__toString()</strong> method so that we can write
+    the human-readable contents to a file. Notice that it does not
+    matter whether the source format is MARC or MARCXML, the methods
+    we call to format the data for output are the same.
+   </p></div>
+
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require&nbsp;</span><span style="color: #DD0000">'File/MARCXML.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Retrieve&nbsp;a&nbsp;set&nbsp;of&nbsp;MARCXML&nbsp;records&nbsp;from&nbsp;a&nbsp;string<br /></span><span style="color: #0000BB">$journals&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">File_MARCXML</span><span style="color: #007700">(</span><span style="color: #0000BB">$xml_data</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">File_MARC</span><span style="color: #007700">::</span><span style="color: #0000BB">SOURCE_STRING</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Open&nbsp;a&nbsp;file&nbsp;for&nbsp;binary&nbsp;write&nbsp;access<br /></span><span style="color: #0000BB">$marc21_file&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">fopen</span><span style="color: #007700">(</span><span style="color: #DD0000">"records.mrc"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"wb"</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Iterate&nbsp;through&nbsp;the&nbsp;retrieved&nbsp;records<br /></span><span style="color: #007700">while&nbsp;(</span><span style="color: #0000BB">$record&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$journals</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">next</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Pretty&nbsp;print&nbsp;each&nbsp;record<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">print&nbsp;</span><span style="color: #0000BB">$record</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Write&nbsp;the&nbsp;pretty-printed&nbsp;record&nbsp;to&nbsp;file<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">fwrite</span><span style="color: #007700">(</span><span style="color: #0000BB">$marc21_file</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$record</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">__toString</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">);<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;Close&nbsp;the&nbsp;file<br /></span><span style="color: #0000BB">fclose</span><span style="color: #007700">(</span><span style="color: #0000BB">$marc21_file</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+  </div>
+ </div>
+
+ <div class="refsection" id="package.fileformats.file-marc.writing.marcxml"><div class="info"><h1>Formatting MARCXML data</h1>
+</div>
+  
+  <p class="para">
+   To return a record in MARCXML format, call the <strong class="function">toXML()</strong>
+   method on the <strong class="classname">File_MARC_Record</strong> object. 
+  </p>
+  
+  <blockquote class="warning">
+<h3 class="warning-title">Significant restrictions on the <strong class="function">toXML()</strong> method</h3>
+
+   
+   <ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para">
+      Most significantly, PHP offers no means of converting from the MARC8
+      encoding that most legacy MARC records have been encoded in to a valid
+      XML encoding such as UTF-8. MARC libraries in other languages have
+      worked around this basic lack of infrastructure by creating their own
+      character encoding conversion libraries. At this time, the author of
+      <strong class="classname">File_MARC</strong> does not have the capacity to build
+      the same support as a PEAR package but would welcome any assistance.
+      Better still would be the addition of ANSEL and MARC8 encoding support
+      to the iconv and ICU toolkits that are used to supply encoding conversion
+      by most open-source projects and languages.
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      The <strong class="function">toXML()</strong> method currently produces a single,
+      complete, valid XML MARCXML document for a single
+      <strong class="classname">File_MARC_Record</strong> object. You cannot simply
+      concatenate the results of calling <strong class="function">toXML()</strong> on two 
+      <strong class="classname">File_MARC_Record</strong> objects, because that will
+      produce invalid an invalid XML document. At this time, it is up to the
+      developer to extract the <code class="varname">record</code> node from each MARCXML
+      document and concatenate them inside a <code class="varname">collection</code> root
+      element if they want to create a MARCXML document that contains more than
+      a single record.
+     </p>
+    </li>
+   </ul>
+  </blockquote>
+
+
+  <div class="example"><div class="info"><p><strong>Writing MARCXML data to a file</strong></p></div>
+   
+   <div class="example-contents"><p>
+    In the following example, we have created a MARC record
+    represented by a <strong class="classname">File_MARC_Record</strong> object
+    stored in the <code class="varname">$record</code> variable. To write this
+    data to a file in MARCXML format, we simply open the file in binary
+    mode and write the record to the file by calling the
+    <strong class="function">toXML()</strong> method on the record object.
+   </p></div>
+
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require&nbsp;</span><span style="color: #DD0000">'File/MARC.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Create&nbsp;a&nbsp;MARC&nbsp;record<br /></span><span style="color: #0000BB">$record&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">create_a_marc_record</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;Open&nbsp;a&nbsp;file&nbsp;for&nbsp;binary&nbsp;write&nbsp;access<br /></span><span style="color: #0000BB">$marcxml_file&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">fopen</span><span style="color: #007700">(</span><span style="color: #DD0000">"records.mrc"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"wb"</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Write&nbsp;the&nbsp;record&nbsp;to&nbsp;the&nbsp;file&nbsp;in&nbsp;MARCXML&nbsp;format<br /></span><span style="color: #0000BB">fwrite</span><span style="color: #007700">(</span><span style="color: #0000BB">$marcxml_file</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$record</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">toXML</span><span style="color: #007700">());<br /><br /></span><span style="color: #FF8000">//&nbsp;Close&nbsp;the&nbsp;file<br /></span><span style="color: #0000BB">fclose</span><span style="color: #007700">(</span><span style="color: #0000BB">$marcxml_file</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+
+  </div>
+
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.fileformats.file-marc.reading.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.fileformats.file-marc.html">File_MARC</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.fileformats.file-passwd.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Reading MARC data</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">File_Passwd</td>
+  </tr>
+ </table>
+</div>
+</body></html>

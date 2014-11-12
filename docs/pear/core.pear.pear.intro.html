@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="core.pear.pear.html" title="PEAR base and error handling class" />
+  <link rel="prev" href="core.pear.pear.html" title="PEAR base and error handling class" />
+  <link rel="next" href="core.pear.pear.constants.html" title="Constants" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="core.pear.pear.html" title="PEAR base and error handling class">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="core.pear.pear.constants.html" title="Constants">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="core.pear.pear.intro">
+   
+    <h1 class="refname">Introduction</h1>
+    <div class="refnamediv">Introduction &ndash; 
+     How to handle the PEAR base class (destructors, error handling)
+    </div>
+
+   
+   <h2 class="refsynopsisdiv">Synopsis</h2>
+    <div class="programlisting">require_once &quot;PEAR.php&quot;;</div>
+    <div class="programlisting">class <span class="replaceable">classname</span> extends <strong class="classname">PEAR</strong> { ... }</div>
+   
+   <div class="refsection"><div class="info"><h1>Description</h1>
+</div>
+    
+    <p class="simpara">
+     The PEAR base class provides standard functionality that is used
+     by most PEAR classes.  Normally you never make an instance of the
+     PEAR class directly, you use it by subclassing it.
+    </p>
+    <p class="para">
+     Its key features are:
+     </p><ul class="itemizedlist">
+      <li class="listitem">
+       <span class="simpara">request-shutdown object &quot;destructors&quot;</span>
+      </li>
+      <li class="listitem">
+       <span class="simpara">error handling</span>
+      </li>
+     </ul>
+    
+   </div>
+   <div class="refsection" id="destructors"><div class="info"><h1>PEAR &quot;destructors&quot;</h1>
+</div>
+    
+    <p class="simpara">
+     If you inherit <strong class="classname">PEAR</strong> in a class called
+     <span class="replaceable">ClassName</span>, you can define a method in
+     it called _<span class="replaceable">ClassName</span> (the
+     class name with an underscore prepended) that will be invoked
+     when the request is over.  This is not a destructor in the sense
+     that you can &quot;delete&quot; an object and have the destructor called,
+     but in the sense that PHP gives you a callback in the object
+     when PHP is done executing.  See <a href="core.pear.pear.intro.html#example.destructors" class="link">the example</a> below.
+    </p>
+    <p class="para">
+     </p><blockquote class="warning">
+<h3 class="warning-title">Important!</h3>
+
+      
+      <p class="para">
+       In order for destructors to work properly, you must
+       instantiate your class with the &quot;=&amp; new&quot; operator like
+       this:
+       </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$obj&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">MyClass</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+       </div>
+      
+      <p class="simpara">
+       If you only use &quot;= new&quot;, the object registered in PEAR&#039;s
+       shutdown list will be a copy of the object at the time the
+       constructor is called, and it will be this copy&#039;s &quot;destructor&quot;
+       that will be called upon request shutdown.
+      </p>
+     </blockquote>
+
+    
+   </div>
+   <div class="refsection" id="error-handling"><div class="info"><h1>PEAR Error Handling</h1>
+</div>
+    
+    <p class="simpara">
+     PEAR&#039;s base class also provides a way of passing around more
+     complex errors than a true/false value or a numeric code.  A
+     PEAR error is an object that is either an instance of the class
+     <strong class="classname">PEAR_Error</strong>, or some class inheriting
+     <strong class="classname">PEAR_Error</strong>.
+    </p>
+    <p class="simpara">
+     One of the design criteria of PEAR&#039;s errors is that it should not
+     force a particular type of output on the user, it should be
+     possible to handle errors without any output at all if that is
+     desirable. This makes it possible to handle errors gracefully,
+     also when your output format is different from HTML (for example
+     WML or some other XML format).
+    </p>
+    <p class="simpara">
+     The error object can be configured to do a number of things when
+     it is created, such as printing an error message, printing the
+     message and exiting, raising an error with PHP&#039;s
+     <strong class="function">trigger_error()</strong> function, invoke a callback,
+     or none of the above.  This is typically specified in
+     <strong class="classname">PEAR_Error</strong>&#039;s constructor, but all of the
+     parameters are optional, and you can set up defaults for errors
+     generated from each object based on the
+     <strong class="classname">PEAR</strong> class. See the <a href="core.pear.pear.intro.html#example.error1" class="link">PEAR error examples</a> for how
+     to use it and the <strong class="classname">PEAR_Error</strong> reference
+     for the full details.
+    </p>
+   </div>
+   <div class="refsection"><div class="info"><h1>Examples</h1>
+</div>
+    
+    <p class="para">
+     The example below shows how to use the PEAR&#039;s &quot;poor man&#039;s kinda
+     emulated destructors&quot; to implement a simple class that holds the
+     contents of a file, lets you append data to the object and
+     flushes the data back to the file at the end of the request:
+     </p><div class="example" id="example.destructors"><div class="info"><p><strong>PEAR: emulated destructors</strong></p></div>
+      
+      <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"PEAR.php"</span><span style="color: #007700">;<br /><br />class&nbsp;</span><span style="color: #0000BB">FileContainer&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">PEAR<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$file&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">''</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$contents&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">''</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$modified&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">FileContainer</span><span style="color: #007700">(</span><span style="color: #0000BB">$file</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">();&nbsp;</span><span style="color: #FF8000">//&nbsp;this&nbsp;calls&nbsp;the&nbsp;parent&nbsp;class&nbsp;constructor<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$fp&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">fopen</span><span style="color: #007700">(</span><span style="color: #0000BB">$file</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"r"</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(!</span><span style="color: #0000BB">is_resource</span><span style="color: #007700">(</span><span style="color: #0000BB">$fp</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">file&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$file</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;(</span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">fread</span><span style="color: #007700">(</span><span style="color: #0000BB">$fp</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">2048</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">contents&nbsp;</span><span style="color: #007700">.=&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">fclose</span><span style="color: #007700">(</span><span style="color: #0000BB">$fp</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">append</span><span style="color: #007700">(</span><span style="color: #0000BB">$str</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">contents&nbsp;</span><span style="color: #007700">.=&nbsp;</span><span style="color: #0000BB">$str</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">modified</span><span style="color: #007700">++;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;The&nbsp;"destructor"&nbsp;is&nbsp;named&nbsp;like&nbsp;the&nbsp;constructor<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;but&nbsp;with&nbsp;an&nbsp;underscore&nbsp;in&nbsp;front.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">_FileContainer</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">modified</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$fp&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">fopen</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">file</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"w"</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(!</span><span style="color: #0000BB">is_resource</span><span style="color: #007700">(</span><span style="color: #0000BB">$fp</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">fwrite</span><span style="color: #007700">(</span><span style="color: #0000BB">$fp</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">contents</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">fclose</span><span style="color: #007700">(</span><span style="color: #0000BB">$fp</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /><br /></span><span style="color: #0000BB">$fileobj&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">FileContainer</span><span style="color: #007700">(</span><span style="color: #DD0000">"testfile"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$fileobj</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">append</span><span style="color: #007700">(</span><span style="color: #DD0000">"this&nbsp;ends&nbsp;up&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;file\n"</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;When&nbsp;the&nbsp;request&nbsp;is&nbsp;done&nbsp;and&nbsp;PHP&nbsp;shuts&nbsp;down,&nbsp;$fileobj's<br />//&nbsp;"destructor"&nbsp;is&nbsp;called&nbsp;and&nbsp;updates&nbsp;the&nbsp;file&nbsp;on&nbsp;disk.<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+      </div>
+     </div>
+     <blockquote class="note">
+      <span class="simpara">
+       PEAR &quot;destructors&quot; use PHP&#039;s shutdown callbacks
+       (<strong class="function">register_shutdown_function()</strong>), and
+       in PHP &lt; 4.1, you can&#039;t output anything from these when
+       PHP is running in a web server.  So anything printed in a
+       &quot;destructor&quot; gets lost except when PHP is used in
+       command-line mode. In PHP 4.1 and higher, output can
+       be also generated in the destructor.
+      </span>
+      <span class="simpara">
+       Also, see the <a href="core.pear.pear.intro.html#destructors.warning" class="link">warning</a> about how to
+       instantiate objects if you want to use the destructor.
+      </span>
+     </blockquote>
+
+    
+    <p class="simpara">
+     The next examples illustrate different ways of using PEAR&#039;s error
+     handling mechanism.
+    </p>
+    <p class="para">
+     </p><div class="example" id="example.error1"><div class="info"><p><strong>PEAR error example (1)</strong></p></div>
+      
+      <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">mysockopen</span><span style="color: #007700">(</span><span style="color: #0000BB">$host&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"localhost"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$port&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">8090</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$fp&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">fsockopen</span><span style="color: #007700">(</span><span style="color: #0000BB">$host</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$port</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$errno</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$errstr</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(!</span><span style="color: #0000BB">is_resource</span><span style="color: #007700">(</span><span style="color: #0000BB">$fp</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;new&nbsp;</span><span style="color: #0000BB">PEAR_Error</span><span style="color: #007700">(</span><span style="color: #0000BB">$errstr</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$errno</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$fp</span><span style="color: #007700">;<br />}<br /><br /></span><span style="color: #0000BB">$sock&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">mysockopen</span><span style="color: #007700">();<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$sock</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #DD0000">"mysockopen&nbsp;error:&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$sock</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">().</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+      </div>
+     </div>
+    
+    <p class="simpara">
+     This example shows a wrapper to <strong class="function">fsockopen()</strong>
+     that delivers the error code and message (if any) returned by
+     fsockopen in a PEAR error object.  Notice that
+     <strong class="function">PEAR::isError()</strong> is used to detect whether a
+     value is a PEAR error.
+    </p>
+    <p class="simpara">
+     PEAR_Error&#039;s mode of operation in this example is simply
+     returning the error object and leaving the rest to the user
+     (programmer).  This is the default error mode.
+    </p>
+    <p class="simpara">
+     In the next example we&#039;re showing how to use default error modes:
+    </p>
+    <p class="para">
+     </p><div class="example" id="example.error2"><div class="info"><p><strong>PEAR error example (2)</strong></p></div>
+      
+      <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">TCP_Socket&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">PEAR<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$sock</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">TCP_Socket</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #0000BB">$host</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$port</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$sock&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">fsockopen</span><span style="color: #007700">(</span><span style="color: #0000BB">$host</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$port</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$errno</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$errstr</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(!</span><span style="color: #0000BB">is_resource</span><span style="color: #007700">(</span><span style="color: #0000BB">$sock</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">raiseError</span><span style="color: #007700">(</span><span style="color: #0000BB">$errstr</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$errno</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /><br /></span><span style="color: #0000BB">$sock&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">TCP_Socket</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$sock</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setErrorHandling</span><span style="color: #007700">(</span><span style="color: #0000BB">PEAR_ERROR_DIE</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$sock</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #DD0000">'localhost'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">8090</span><span style="color: #007700">);<br />print&nbsp;</span><span style="color: #DD0000">"still&nbsp;alive\n"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+      </div>
+     </div>
+    
+    <p class="simpara">
+     Here, we set the default error mode to
+     <strong class="constant">PEAR_ERROR_DIE</strong>, and since we don&#039;t specify
+     any error mode in the raiseError call (that&#039;d be the third
+     parameter), raiseError uses the default error mode and exits if
+     fsockopen fails.
+    </p>
+   </div>
+   <div class="refsection"><div class="info"><h1>Global Variables Used</h1>
+</div>
+    
+    <p class="para">
+     The PEAR class uses some global variables to register global
+     defaults, and an object list used by the &quot;destructors&quot;.  All of
+     the global variables associated with the PEAR class have a
+     <code class="literal">_PEAR_</code> name prefix.
+    </p>
+    <p class="para">
+     </p><div class="variablelist">
+      <dl class="varlistentry">
+       <dt class="term">$_PEAR_default_error_mode</dt>
+       <dd class="listitem">
+ <span class="simpara">
+  If no default error mode is set in an object, this mode will
+  be used.  Must be one of
+  <strong class="constant">PEAR_ERROR_RETURN</strong>,
+  <strong class="constant">PEAR_ERROR_PRINT</strong>,
+  <strong class="constant">PEAR_ERROR_TRIGGER</strong>,
+  <strong class="constant">PEAR_ERROR_DIE</strong> or
+  <strong class="constant">PEAR_ERROR_CALLBACK</strong>.
+ </span>
+ <p class="para">
+  Don&#039;t set this variable directly, call
+  <strong class="function">PEAR::setErrorHandling()</strong> as a static
+  method like this:
+  </p><div class="informalexample">
+   <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">setErrorHandling</span><span style="color: #007700">(</span><span style="color: #0000BB">PEAR_ERROR_DIE</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+      </div>
+  </div>
+ 
+       </dd>
+      </dl>
+      <dl class="varlistentry">
+       <dt class="term">$_PEAR_default_error_options</dt>
+       <dd class="listitem">
+ <span class="simpara">
+  If the error mode is <strong class="constant">PEAR_ERROR_TRIGGER</strong>,
+  this is the error level (one of
+  <strong class="constant">E_USER_NOTICE</strong>,
+  <strong class="constant">E_USER_WARNING</strong> or
+  <strong class="constant">E_USER_ERROR</strong>).
+ </span>
+ <p class="para">
+  Don&#039;t set this variable directly, call
+  <strong class="function">PEAR::setErrorHandling()</strong> as a static
+  method like this:
+  </p><div class="informalexample">
+   <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">setErrorHandling</span><span style="color: #007700">(</span><span style="color: #0000BB">PEAR_ERROR_TRIGGER</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">E_USER_ERROR</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+      </div>
+  </div>
+ 
+       </dd>
+      </dl>
+      <dl class="varlistentry">
+       <dt class="term">$_PEAR_default_error_callback</dt>
+       <dd class="listitem">
+ <span class="simpara">
+  If no <span class="replaceable">options</span> parameter is used
+  when an error is raised and the error mode is
+  <strong class="constant">PEAR_ERROR_CALLBACK</strong>, the value of this
+  variable is used as the callback.  This means that you can
+  switch the error mode temporarily and return to callback mode
+  without specifying the callback function again.  A string
+  value represents a function, a two-element array with an
+  object at index 0 and a string at index 1 represents a
+  method.
+ </span>
+ <p class="para">
+  Again, don&#039;t set this variable directly, call
+  <strong class="function">PEAR::setErrorHandling()</strong> as a static
+  method like this:
+  </p><div class="informalexample">
+   <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">setErrorHandling</span><span style="color: #007700">(</span><span style="color: #0000BB">PEAR_ERROR_CALLBACK</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"my_error_handler"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+      </div>
+  </div>
+ 
+ <p class="para">
+  Here is an example of how you can switch back and forth
+  without specifying the callback function again:
+  </p><div class="informalexample">
+   <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">setErrorHandling</span><span style="color: #007700">(</span><span style="color: #0000BB">PEAR_ERROR_CALLBACK</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"my_function_handler"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">do_some_stuff</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">setErrorHandling</span><span style="color: #007700">(</span><span style="color: #0000BB">PEAR_ERROR_DIE</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">do_some_critical_stuff</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">setErrorHandling</span><span style="color: #007700">(</span><span style="color: #0000BB">PEAR_ERROR_CALLBACK</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;now&nbsp;we're&nbsp;back&nbsp;to&nbsp;using&nbsp;my_function_handler&nbsp;again<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+  </div>
+ 
+       </dd>
+      </dl>
+     </div>
+    
+   </div>
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="core.pear.pear.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="core.pear.pear.html">PEAR base and error handling class</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="core.pear.pear.constants.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">PEAR base and error handling class</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Constants</td>
+  </tr>
+ </table>
+</div>
+</body></html>

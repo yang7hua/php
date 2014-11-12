@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Using a database container</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.http.http-session2.html" title="HTTP_Session2" />
+  <link rel="prev" href="package.http.http-session2.intro.html" title="Introduction" />
+  <link rel="next" href="package.http.http-session2.cookies.html" title="Making a session persistent" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Using a database container</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.http.http-session2.intro.html" title="Introduction">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.http.http-session2.cookies.html" title="Making a session persistent">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.http.http-session2.database">
+ 
+  <h1 class="refname">Using a database container</h1>
+  <div class="refnamediv">Using a database container &ndash; 
+   How to store session data in a database with <strong class="classname">HTTP_Session2</strong>
+  </div>
+
+ 
+
+ <div class="refsection" id="package.http.http-session2.database.overview"><div class="info"><h1>Overview</h1>
+</div>
+  
+
+  <p class="para">
+   <strong class="classname">HTTP_Session</strong> lets you store the session data in a database
+   making use of the <strong class="classname">DB</strong> and <strong class="classname">MDB2</strong>
+   packages.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.http.http-session2.database.examples"><div class="info"><h1>Example</h1>
+</div>
+  
+
+  <div class="example"><div class="info"><p><strong>Using MDB2 to store session data in a database</strong></p></div>
+   
+
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/*&nbsp;create&nbsp;the&nbsp;following&nbsp;table&nbsp;in&nbsp;your&nbsp;database<br />CREATE&nbsp;TABLE&nbsp;sessiondata&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;varchar(32)&nbsp;NOT&nbsp;NULL,<br />&nbsp;&nbsp;&nbsp;&nbsp;expiry&nbsp;int(10),<br />&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;&nbsp;&nbsp;text,<br />&nbsp;&nbsp;&nbsp;&nbsp;PRIMARY&nbsp;KEY&nbsp;(id)<br />);<br />*/<br /><br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTTP/Session2.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">HTTP_Session2</span><span style="color: #007700">::</span><span style="color: #0000BB">useTransSID</span><span style="color: #007700">(</span><span style="color: #0000BB">false</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">HTTP_Session2</span><span style="color: #007700">::</span><span style="color: #0000BB">useCookies</span><span style="color: #007700">(</span><span style="color: #0000BB">false</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;enter&nbsp;your&nbsp;DSN<br /></span><span style="color: #0000BB">HTTP_Session2</span><span style="color: #007700">::</span><span style="color: #0000BB">setContainer</span><span style="color: #007700">(</span><span style="color: #DD0000">'MDB2'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'dsn'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'mysql://root:password@localhost/database'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'table'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'sessiondata'</span><span style="color: #007700">));<br /><br /></span><span style="color: #FF8000">/*<br />//&nbsp;using&nbsp;an&nbsp;existing&nbsp;MDB2&nbsp;connection<br />HTTP_Session2::setContainer('MDB2',<br />&nbsp;&nbsp;&nbsp;&nbsp;array('dsn'&nbsp;&nbsp;&nbsp;=&gt;&nbsp;&amp;$db,&nbsp;'table'&nbsp;=&gt;&nbsp;'sessiondata'));<br />*/<br /><br /></span><span style="color: #0000BB">HTTP_Session2</span><span style="color: #007700">::</span><span style="color: #0000BB">start</span><span style="color: #007700">(</span><span style="color: #DD0000">'s'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">HTTP_Session2</span><span style="color: #007700">::</span><span style="color: #0000BB">setExpire</span><span style="color: #007700">(</span><span style="color: #0000BB">time</span><span style="color: #007700">()&nbsp;+&nbsp;</span><span style="color: #0000BB">60</span><span style="color: #007700">);&nbsp;</span><span style="color: #FF8000">//&nbsp;set&nbsp;expire&nbsp;to&nbsp;60&nbsp;seconds<br /></span><span style="color: #0000BB">HTTP_Session2</span><span style="color: #007700">::</span><span style="color: #0000BB">setIdle</span><span style="color: #007700">(</span><span style="color: #0000BB">time</span><span style="color: #007700">()&nbsp;+&nbsp;</span><span style="color: #0000BB">5</span><span style="color: #007700">);&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;set&nbsp;idle&nbsp;to&nbsp;5&nbsp;seconds<br /><br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">HTTP_Session2</span><span style="color: #007700">::</span><span style="color: #0000BB">isExpired</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">HTTP_Session2</span><span style="color: #007700">::</span><span style="color: #0000BB">destroy</span><span style="color: #007700">();<br />}<br /><br />if&nbsp;(</span><span style="color: #0000BB">HTTP_Session2</span><span style="color: #007700">::</span><span style="color: #0000BB">isIdle</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">HTTP_Session2</span><span style="color: #007700">::</span><span style="color: #0000BB">destroy</span><span style="color: #007700">();<br />}<br /><br /></span><span style="color: #0000BB">HTTP_Session2</span><span style="color: #007700">::</span><span style="color: #0000BB">updateIdle</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.http.http-session2.intro.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.http.http-session2.html">HTTP_Session2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.http.http-session2.cookies.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Making a session persistent</td>
+  </tr>
+ </table>
+</div>
+</body></html>

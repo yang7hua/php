@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Modules</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.mdb2.html" title="MDB2" />
+  <link rel="prev" href="package.database.mdb2.intro-transaction.html" title="Transactions" />
+  <link rel="next" href="package.database.mdb2.intro-function-module.html" title="Function Module" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Modules</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.mdb2.intro-transaction.html" title="Transactions">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.mdb2.intro-function-module.html" title="Function Module">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.mdb2.intro-module">
+ 
+  <h1 class="refname">Modules</h1>
+  <div class="refnamediv">Modules &ndash; Loading and calling modules</div>
+
+ 
+
+ <div class="refsection" id="package.database.mdb2.intro-module.desc">
+  <h1 class="title">Description</h1>
+  <p class="para">
+   MDB2 follows a modular concept to provide functionality beyond the basic
+   ability to send queries to the database and fetch result sets. Currently
+   the following modules are available:
+
+  </p><ul class="itemizedlist">
+   <li class="listitem">
+    <span class="simpara">
+     Datatype module (<a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Datatype_Common.html" class="link external">API</a>)
+     - handles datatype abstraction via the <strong class="classname">MDB2_Datatype_Common</strong>
+     class
+    </span>
+   </li>
+   <li class="listitem">
+    <span class="simpara">
+     Extended module (<a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Extended.html" class="link external">API</a>)
+     - provides numerous high-level methods via the <strong class="classname">MDB2_Extended</strong>
+     class
+    </span>
+   </li>
+   <li class="listitem">
+    <span class="simpara">
+     <a href="package.database.mdb2.intro-function-module.html" class="link">Function module</a>
+     (<a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Function_Common.html" class="link external">API</a>)
+     - handles SQL function abstraction via the <strong class="classname">MDB2_Function_Common</strong>
+     class
+    </span>
+   </li>
+   <li class="listitem">
+    <span class="simpara">
+     <a href="package.database.mdb2.intro-manager-module.html" class="link">Manager module</a>
+     (<a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Manager_Common.html" class="link external">API</a>)
+     - handles data definition language (DDL) abstraction and schema listing via
+     the <strong class="classname">MDB2_Manager_Common</strong> class
+    </span>
+   </li>
+   <li class="listitem">
+    <span class="simpara">
+     Native module (<a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Native_Common.html" class="link external">API</a>)
+     - handles RDBMS specific functions via the <strong class="classname">MDB2_Native_Common</strong>
+     class
+    </span>
+   </li>
+   <li class="listitem">
+    <span class="simpara">
+     <a href="package.database.mdb2.intro-reverse-module.html" class="link">Reverse module</a>
+     (<a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Reverse_Common.html" class="link external">API</a>)
+     - handles schema reverse engineering abstraction via the <strong class="classname">MDB2_Reverse_Common</strong>
+     class
+    </span>
+   </li>
+  </ul>
+  
+
+  <p class="simpara">
+   A module is loaded using the 
+   <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Common.html#methodloadModule" class="link external">
+    <strong class="function">loadModule()</strong></a>
+   method. This method returns the module instance, but also stores the
+   instance in a property. The name of the property is either the lowercased
+   name of the module passed in as the first parameter, or optionally the non
+   null value of the second parameter. The optional third parameter is used to
+   differentiate modules that depend on a specific RDBMS (like the
+   <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Datatype_Common.html" class="link external">
+   Datatype</a> module) and those that do not (like the
+   <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Extended.html" class="link external">
+   Extended</a> module). The method can also be used to load custom modules that are installed.
+  </p>
+  <blockquote class="warning">
+
+   <p class="para">
+    The third parameter is automatically detected if it is not set. On hosts
+    that have &#039;safe_mode&#039; enabled automatic detection does however require
+    silenced falls to <strong class="function">fopen()</strong>. Error handling and error
+    handlers should be configured accordingly.
+   </p>
+  </blockquote>
+
+
+  <div class="example"><div class="info"><p><strong>Loading a module</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'MDB2.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$dsn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'pgsql://someuser:apasswd@localhost/thedb'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'debug'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'result_buffering'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,<br />);<br /><br /></span><span style="color: #0000BB">$mdb2&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">MDB2</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;...<br /><br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">loadModule</span><span style="color: #007700">(</span><span style="color: #DD0000">'Manager'</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;specifically&nbsp;stating&nbsp;that&nbsp;the&nbsp;module&nbsp;that&nbsp;is&nbsp;being&nbsp;loaded&nbsp;is&nbsp;RDBMS&nbsp;independent<br />//&nbsp;this&nbsp;works&nbsp;around&nbsp;some&nbsp;needless&nbsp;internal&nbsp;calls<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">loadModule</span><span style="color: #007700">(</span><span style="color: #DD0000">'Extended'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+
+  <div class="example"><div class="info"><p><strong>Loading a custom module that is RDBMS independent</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;...<br /><br />//&nbsp;file&nbsp;must&nbsp;reside&nbsp;in&nbsp;[peardir]/MDB2/MyModule.php<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">MDB2_MyModule&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">MDB2_Module_Common<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">myMethod</span><span style="color: #007700">()<br />&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$db&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getDBInstance</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$db</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;...<br />&nbsp;&nbsp;}<br />}&nbsp;<br /></span><span style="color: #0000BB">?&gt;<br /></span><br /><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;...<br /><br />//&nbsp;file&nbsp;must&nbsp;reside&nbsp;in&nbsp;[peardir]/MDB2/MyModule.php<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">loadModule</span><span style="color: #007700">(</span><span style="color: #DD0000">'MyModule'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+
+  <div class="example"><div class="info"><p><strong>Loading a custom module that is RDBMS dependent</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;...<br /><br />//&nbsp;file&nbsp;must&nbsp;reside&nbsp;in&nbsp;[peardir]/MDB2/Driver/MyRDBMSModule/pgsql.php<br />//&nbsp;this&nbsp;is&nbsp;the&nbsp;class&nbsp;that&nbsp;would&nbsp;get&nbsp;loaded&nbsp;for&nbsp;an&nbsp;MDB2&nbsp;PostgreSQL&nbsp;instance<br />//&nbsp;equivalent&nbsp;classes&nbsp;for&nbsp;other&nbsp;backends&nbsp;would&nbsp;need&nbsp;to&nbsp;implemented,<br />//&nbsp;potentially&nbsp;making&nbsp;use&nbsp;of&nbsp;a&nbsp;common&nbsp;base&nbsp;class<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">MDB2_Driver_MyRDBMSModule_pgsql&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">MDB2_Module_Common<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">myRDBMSMethod</span><span style="color: #007700">()<br />&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$db&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getDBInstance</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$db</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;...<br />&nbsp;&nbsp;}<br />}&nbsp;<br /></span><span style="color: #0000BB">?&gt;<br /></span><br /><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;...<br /><br />//&nbsp;file&nbsp;must&nbsp;reside&nbsp;in&nbsp;[peardir]/MDB2/Driver/MyRDBMSModule/[phptype].php<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">loadModule</span><span style="color: #007700">(</span><span style="color: #DD0000">'MyRDBMSModule'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+
+  <div class="example"><div class="info"><p><strong>Using a loaded module</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;...<br /><br />//&nbsp;loading&nbsp;into&nbsp;default&nbsp;name<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">loadModule</span><span style="color: #007700">(</span><span style="color: #DD0000">'Manager'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$tables&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">manager</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">listTables</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;loading&nbsp;into&nbsp;non&nbsp;standard&nbsp;property&nbsp;$foo<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">loadModule</span><span style="color: #007700">(</span><span style="color: #DD0000">'Function'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$tables&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">foo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">concat</span><span style="color: #007700">(</span><span style="color: #0000BB">$str1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$str2</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+
+  <p class="simpara">
+   On PHP5 users can also rely on overloading to load and call modules.
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Using the &#039;modules&#039; option with PHP5 overloading</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'MDB2.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$dsn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'pgsql://someuser:apasswd@localhost/thedb'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'debug'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'result_buffering'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,<br />);<br /><br /></span><span style="color: #0000BB">$mdb2&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">MDB2</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;...<br /><br /></span><span style="color: #0000BB">$module_shorthands&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getOptions</span><span style="color: #007700">(</span><span style="color: #DD0000">'modules'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;use&nbsp;the&nbsp;shorthand&nbsp;key&nbsp;for&nbsp;the&nbsp;given&nbsp;module&nbsp;as&nbsp;a&nbsp;prefix&nbsp;for&nbsp;the&nbsp;method&nbsp;name<br />//&nbsp;where&nbsp;the&nbsp;first&nbsp;letter&nbsp;of&nbsp;the&nbsp;original&nbsp;method&nbsp;name&nbsp;is&nbsp;uppercased<br /></span><span style="color: #0000BB">$tables&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">mgListTables</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+
+
+  <div class="example"><div class="info"><p><strong>Calling a method on a loaded module with PHP5 overloading</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'MDB2.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$dsn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'pgsql://someuser:apasswd@localhost/thedb'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'debug'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'result_buffering'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,<br />);<br /><br /></span><span style="color: #0000BB">$mdb2&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">MDB2</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;...<br /><br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">loadModule</span><span style="color: #007700">(</span><span style="color: #DD0000">'Manager'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;since&nbsp;the&nbsp;manager&nbsp;module&nbsp;is&nbsp;already&nbsp;loaded&nbsp;we&nbsp;can&nbsp;call&nbsp;the&nbsp;listTable()&nbsp;method<br /></span><span style="color: #0000BB">$tables&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">manager</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">listTables</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;NB:&nbsp;on&nbsp;PHP5,&nbsp;where&nbsp;__autoload()&nbsp;is&nbsp;available,<br />//&nbsp;the&nbsp;above&nbsp;line&nbsp;can&nbsp;be&nbsp;rewritten&nbsp;as:<br /></span><span style="color: #0000BB">$tables&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">listTables</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.mdb2.intro-transaction.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.mdb2.html">MDB2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.mdb2.intro-function-module.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Transactions</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Function Module</td>
+  </tr>
+ </table>
+</div>
+</body></html>

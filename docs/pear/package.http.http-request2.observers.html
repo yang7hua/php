@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Observers</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.http.http-request2.html" title="HTTP_Request2" />
+  <link rel="prev" href="package.http.http-request2.response.html" title="HTTP_Request2_Response" />
+  <link rel="next" href="package.http.http-request2.exceptions.html" title="Exceptions" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Observers</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.http.http-request2.response.html" title="HTTP_Request2_Response">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.http.http-request2.exceptions.html" title="Exceptions">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.http.http-request2.observers">
+
+ 
+  <h1 class="refname">Observers</h1>
+  <div class="refnamediv">Observers &ndash; Monitoring the request&#039;s progress</div>
+
+ 
+ <div class="refsection" id="package.http.http-request2.observers.overview">
+  <div class="info"><h1>Overview</h1>
+</div>
+  <p class="para">
+   Observers are classes that can be attached to an instance of <strong class="classname">HTTP_Request2</strong>
+   and notified of request&#039;s progress. Possible uses:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara">
+     Drawing a progress bar for large file uploads and / or downloads;
+    </span></li>
+    <li class="listitem"><span class="simpara">
+     Saving large response body to disk instead of storing it in memory;
+    </span></li>
+    <li class="listitem"><span class="simpara">
+     Cancelling the request by throwing an exception in Observer.
+    </span></li>
+   </ul>
+  
+  <p class="para">
+   <strong class="classname">HTTP_Request2</strong> implements <span class="interfacename">SplSubject</span>
+   interface, so Observers should implement <span class="interfacename">SplObserver</span>. When
+   Observer is notified of an event, it should use <a href="http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2.html#methodgetLastEvent" class="apidoclink">HTTP_Request2::getLastEvent()</a> to access event details. That method returns an
+   associative array with <code class="literal">&#039;name&#039;</code> and <code class="literal">&#039;data&#039;</code> keys. Possible
+   event names are
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term"><code class="literal">&#039;connect&#039;</code></dt>
+     <dd class="listitem"><span class="simpara">
+      On connection to remote server, <code class="literal">&#039;data&#039;</code> is the destination (<span class="type">string</span>).
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><code class="literal">&#039;disconnect&#039;</code></dt>
+     <dd class="listitem"><span class="simpara">
+      On disconnection from server.
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><code class="literal">&#039;sentHeaders&#039;</code></dt>
+     <dd class="listitem"><span class="simpara">
+      On sending the request headers, <code class="literal">&#039;data&#039;</code> is the headers sent (<span class="type">string</span>).
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><code class="literal">&#039;sentBodyPart&#039;</code></dt>
+     <dd class="listitem"><span class="simpara">
+      On sending a part of the request body, <code class="literal">&#039;data&#039;</code> is the length of that part
+      (<span class="type">integer</span>).
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><code class="literal">&#039;sentBody&#039;</code> (since release 2.0.0beta1)</dt>
+     <dd class="listitem"><span class="simpara">On sending the complete request body, <code class="literal">&#039;data&#039;</code> is the
+      length of request body (<span class="type">integer</span>).</span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><code class="literal">&#039;receivedHeaders&#039;</code></dt>
+     <dd class="listitem"><span class="simpara">
+      On receiving the response headers, <code class="literal">&#039;data&#039;</code> is
+      <strong class="classname">HTTP_Request2_Response</strong> object containing these headers.
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><code class="literal">&#039;receivedBodyPart&#039;</code></dt>
+     <dd class="listitem"><span class="simpara">
+      On receiving a part of the response body, <code class="literal">&#039;data&#039;</code> is the received part
+      (<span class="type">string</span>).
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><code class="literal">&#039;receivedEncodedBodyPart&#039;</code></dt>
+     <dd class="listitem"><span class="simpara">
+      As <code class="literal">&#039;receivedBodyPart&#039;</code>, but <code class="literal">&#039;data&#039;</code> is still encoded by
+      relevant <code class="literal">Content-Encoding</code>.
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><code class="literal">&#039;receivedBody&#039;</code></dt>
+     <dd class="listitem"><span class="simpara">
+      On receiving the complete response body, data is <strong class="classname">HTTP_Request2_Response</strong>
+      object, probably containing this body.
+     </span></dd>
+    </dl>
+   </div>
+  
+  <blockquote class="note"><p class="para">
+   As the events are actually sent by request Adapters, you can receive fewer or different events
+   if you switch to another Adapter. Curl Adapter does not notify of <code class="literal">&#039;connect&#039;</code>,
+   <code class="literal">&#039;disconnect&#039;</code> and <code class="literal">&#039;receivedEncodedBodyPart&#039;</code> events (it
+   always uses <code class="literal">&#039;receivedBodyPart&#039;</code> as cURL extension takes care of decoding).
+   Mock Adapter does not send any notifications at all.
+  </p></blockquote>
+
+ </div>
+
+ <div class="refsection" id="package.http.http-request2.observers.example">
+  <div class="info"><h1>Usage Example</h1>
+</div>
+  <p class="para">
+   The following example shows how an Observer can be used to save response body to disk without
+   storing it in memory. Note that only events relevant to that task are handled in its
+   <strong class="function">update()</strong> method, the others can be safely ignored.
+  </p>
+  <p class="para">
+   The package contains another Observer implementation: <a href="http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2_Observer_Log.html" class="apidoclink">HTTP_Request2_Observer_Log</a> class that allows logging request progress to a file
+   or an instance of <a href="package.logging.log.html" class="link"><strong class="classname">Log</strong></a>.  
+  </p>
+  <div class="example">
+   <p><strong>Saving response body to disk</strong></p>
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">HTTP_Request2_Observer_Download&nbsp;</span><span style="color: #007700">implements&nbsp;</span><span style="color: #0000BB">SplObserver<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;protected&nbsp;</span><span style="color: #0000BB">$dir</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;protected&nbsp;</span><span style="color: #0000BB">$fp</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;function&nbsp;</span><span style="color: #0000BB">__construct</span><span style="color: #007700">(</span><span style="color: #0000BB">$dir</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(!</span><span style="color: #0000BB">is_dir</span><span style="color: #007700">(</span><span style="color: #0000BB">$dir</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;</span><span style="color: #0000BB">Exception</span><span style="color: #007700">(</span><span style="color: #DD0000">"'</span><span style="color: #007700">{</span><span style="color: #0000BB">$dir</span><span style="color: #007700">}</span><span style="color: #DD0000">'&nbsp;is&nbsp;not&nbsp;a&nbsp;directory"</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">dir&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$dir</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;function&nbsp;</span><span style="color: #0000BB">update</span><span style="color: #007700">(</span><span style="color: #0000BB">SplSubject&nbsp;$subject</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$event&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$subject</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getLastEvent</span><span style="color: #007700">();<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;switch&nbsp;(</span><span style="color: #0000BB">$event</span><span style="color: #007700">[</span><span style="color: #DD0000">'name'</span><span style="color: #007700">])&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;</span><span style="color: #DD0000">'receivedHeaders'</span><span style="color: #007700">:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;((</span><span style="color: #0000BB">$disposition&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$event</span><span style="color: #007700">[</span><span style="color: #DD0000">'data'</span><span style="color: #007700">]-&gt;</span><span style="color: #0000BB">getHeader</span><span style="color: #007700">(</span><span style="color: #DD0000">'content-disposition'</span><span style="color: #007700">))<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;&amp;&nbsp;</span><span style="color: #0000BB">0&nbsp;</span><span style="color: #007700">==&nbsp;</span><span style="color: #0000BB">strpos</span><span style="color: #007700">(</span><span style="color: #0000BB">$disposition</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'attachment'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;&amp;&nbsp;</span><span style="color: #0000BB">preg_match</span><span style="color: #007700">(</span><span style="color: #DD0000">'/filename="([^"]+)"/'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$disposition</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$m</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$filename&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">basename</span><span style="color: #007700">(</span><span style="color: #0000BB">$m</span><span style="color: #007700">[</span><span style="color: #0000BB">1</span><span style="color: #007700">]);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$filename&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">basename</span><span style="color: #007700">(</span><span style="color: #0000BB">$subject</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getUrl</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">getPath</span><span style="color: #007700">());<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$target&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">dir&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">DIRECTORY_SEPARATOR&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$filename</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(!(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fp&nbsp;</span><span style="color: #007700">=&nbsp;@</span><span style="color: #0000BB">fopen</span><span style="color: #007700">(</span><span style="color: #0000BB">$target</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'wb'</span><span style="color: #007700">)))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;</span><span style="color: #0000BB">Exception</span><span style="color: #007700">(</span><span style="color: #DD0000">"Cannot&nbsp;open&nbsp;target&nbsp;file&nbsp;'</span><span style="color: #007700">{</span><span style="color: #0000BB">$target</span><span style="color: #007700">}</span><span style="color: #DD0000">'"</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;</span><span style="color: #DD0000">'receivedBodyPart'</span><span style="color: #007700">:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;</span><span style="color: #DD0000">'receivedEncodedBodyPart'</span><span style="color: #007700">:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">fwrite</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fp</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$event</span><span style="color: #007700">[</span><span style="color: #DD0000">'data'</span><span style="color: #007700">]);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;</span><span style="color: #DD0000">'receivedBody'</span><span style="color: #007700">:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">fclose</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fp</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /><br /></span><span style="color: #0000BB">$request&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTTP_Request2</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'http://pear.php.net/distributions/manual/pear_manual_en.tar.bz2'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">HTTP_Request2</span><span style="color: #007700">::</span><span style="color: #0000BB">METHOD_GET</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'store_body'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">)<br />);<br /></span><span style="color: #0000BB">$request</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">attach</span><span style="color: #007700">(new&nbsp;</span><span style="color: #0000BB">HTTP_Request2_Observer_Download</span><span style="color: #007700">(</span><span style="color: #DD0000">'.'</span><span style="color: #007700">));<br /><br /></span><span style="color: #FF8000">//&nbsp;This&nbsp;won't&nbsp;output&nbsp;anything&nbsp;since&nbsp;body&nbsp;isn't&nbsp;stored&nbsp;in&nbsp;the&nbsp;response<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$request</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">send</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">getBody</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.http.http-request2.response.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.http.http-request2.html">HTTP_Request2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.http.http-request2.exceptions.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">HTTP_Request2_Response</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Exceptions</td>
+  </tr>
+ </table>
+</div>
+</body></html>

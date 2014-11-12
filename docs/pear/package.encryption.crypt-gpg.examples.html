@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Examples</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.encryption.crypt-gpg.html" title="Crypt_GPG" />
+  <link rel="prev" href="package.encryption.crypt-gpg.referring-to-keys.html" title="Referring to Keys" />
+  <link rel="next" href="package.event.html" title="Event" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Examples</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.encryption.crypt-gpg.referring-to-keys.html" title="Referring to Keys">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.event.html" title="Event">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="package.encryption.crypt-gpg.examples">
+
+ <div class="info">
+  <h1>Examples</h1>
+
+ </div>
+
+ <blockquote class="note">
+  <p class="para">
+   The following examples assume you have created a key following the
+   <a href="package.encryption.crypt-gpg.generate-key.html" class="link">instructions
+   for generating a key</a> that can both encrypt and sign data. The
+   example key has a user id of <em class="emphasis">test@example.com</em> and a
+   passphrase of <em class="emphasis">test</em>. All signature data is fictitious,
+   but is formatted like real signature data.
+  </p>
+ </blockquote>
+
+
+ <div class="section" id="package.encryption.crypt-gpg.examples.signing-file">
+
+  <div class="info">
+   <h2 class="title">Signing a Package File</h2>
+  </div>
+
+  <p class="para">
+   </p><div class="informalexample">
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Crypt/GPG.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$gpg&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Crypt_GPG</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$gpg</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addSignKey</span><span style="color: #007700">(</span><span style="color: #DD0000">'test@example.com'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'test'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$signature&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$gpg</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">signFile</span><span style="color: #007700">(</span><span style="color: #0000BB">$filename</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">Crypt_GPG</span><span style="color: #007700">::</span><span style="color: #0000BB">SIGN_MODE_DETACHED</span><span style="color: #007700">);<br /><br />echo&nbsp;</span><span style="color: #DD0000">"Package&nbsp;signature&nbsp;is:&nbsp;"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$signature</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   </div>
+  
+
+ </div>
+
+ <div class="section" id="package.encryption.crypt-gpg.examples.verifying-file">
+
+  <div class="info">
+   <h2 class="title">Verifying a Signed File</h2>
+  </div>
+
+  <p class="para">
+   </p><div class="informalexample">
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Crypt/GPG.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$signature&nbsp;</span><span style="color: #007700">=&nbsp;&lt;&lt;&lt;DATA<br /></span><span style="color: #DD0000">-----BEGIN&nbsp;PGP&nbsp;SIGNATURE-----<br />Version:&nbsp;GnuPG&nbsp;v1.4.6&nbsp;(GNU/Linux)<br />iD8DBQBIl9Tf6ZWCktsVoskRAoAKAJ9VkbFDTSGY2ygaEGBcMOE8Or9puwCgppYm<br />0qq0bhtw5vsi0cJF5oC52RY=<br />=VfxI<br />-----END&nbsp;PGP&nbsp;SIGNATURE-----<br /></span><span style="color: #007700">DATA;<br /><br /></span><span style="color: #0000BB">$gpg&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Crypt_GPG</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$signatures&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$gpg</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">verifyFile</span><span style="color: #007700">(</span><span style="color: #0000BB">$filename</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$signature</span><span style="color: #007700">);<br /><br />if&nbsp;(</span><span style="color: #0000BB">$signatures</span><span style="color: #007700">[</span><span style="color: #0000BB">0</span><span style="color: #007700">]-&gt;</span><span style="color: #0000BB">isValid</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Package&nbsp;is&nbsp;valid.\n"</span><span style="color: #007700">;<br />}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Package&nbsp;is&nbsp;invalid!\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   </div>
+  
+
+ </div>
+
+ <div class="section" id="package.encryption.crypt-gpg.examples.encrypting-web">
+
+ <div class="info">
+  <h2 class="title">Encrypting a File From the Web</h2>
+ </div>
+
+  <p class="para">
+   </p><div class="informalexample">
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Crypt/GPG.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$gpg&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Crypt_GPG</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$gpg</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addEncryptKey</span><span style="color: #007700">(</span><span style="color: #DD0000">'test@example.com'</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;you&nbsp;can&nbsp;use&nbsp;any&nbsp;fopen-able&nbsp;stream<br /></span><span style="color: #0000BB">$gpg</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">encryptFile</span><span style="color: #007700">(</span><span style="color: #DD0000">'http://example.com/file.html'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'~/file.html.asc'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   </div>
+  
+
+ </div>
+
+ <div class="section" id="package.encryption.crypt-gpg.examples.encrypting-credit-card">
+
+  <div class="info">
+   <h2 class="title">Encrypting Credit Card Numbers</h2>
+  </div>
+
+  <p class="para">
+   </p><div class="informalexample">
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Crypt/GPG.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;...&nbsp;connect&nbsp;to&nbsp;database&nbsp;...<br /><br /></span><span style="color: #0000BB">$card_number&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'411111111111'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$card_type&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'visa'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$gpg&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Crypt_GPG</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$gpg</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addEncryptKey</span><span style="color: #007700">(</span><span style="color: #DD0000">'test@example.com'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$encrypted&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$gpg</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">encrypt</span><span style="color: #007700">(</span><span style="color: #0000BB">$card_number</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$sql&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">sprintf</span><span style="color: #007700">(</span><span style="color: #DD0000">'insert&nbsp;into&nbsp;payments&nbsp;(card_type,&nbsp;card_number)&nbsp;'&nbsp;</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'values&nbsp;(%s,&nbsp;%s)'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">mysql_real_escape_string</span><span style="color: #007700">(</span><span style="color: #0000BB">$card_type</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">mysql_real_escape_string</span><span style="color: #007700">(</span><span style="color: #0000BB">$encrypted</span><span style="color: #007700">));<br /><br /></span><span style="color: #0000BB">mysql_exec</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   </div>
+  
+
+ </div>
+
+ <div class="section" id="package.encryption.crypt-gpg.examples.decrypting-credit-card">
+
+ <div class="info">
+  <h2 class="title">Decrypting Credit Card Numbers</h2>
+ </div>
+
+  <p class="para">
+   </p><div class="informalexample">
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Crypt/GPG.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;...&nbsp;connect&nbsp;to&nbsp;database&nbsp;...<br /><br /></span><span style="color: #0000BB">$gpg&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Crypt_GPG</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$gpg</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addDecryptKey</span><span style="color: #007700">(</span><span style="color: #DD0000">'test@example.com'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'test'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$sql&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'select&nbsp;card_type,&nbsp;card_number&nbsp;from&nbsp;payments'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$rs&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">mysql_query</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">);<br />while&nbsp;(</span><span style="color: #0000BB">$row&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">mysql_fetch_object</span><span style="color: #007700">(</span><span style="color: #0000BB">$rs</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Card&nbsp;type:&nbsp;&nbsp;&nbsp;"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$row</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">card_type</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Card&nbsp;number:&nbsp;"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$gpg</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">decrypt</span><span style="color: #007700">(</span><span style="color: #0000BB">$row</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">card_number</span><span style="color: #007700">),&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   </div>
+  
+
+ </div>
+
+ <div class="section" id="package.encryption.crypt-gpg.examples.publish-public-key">
+
+  <div class="info">
+   <h2 class="title">Publishing a Public Key</h2>
+  </div>
+
+  <p class="para">
+   </p><div class="informalexample">
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Crypt/GPG.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$gpg&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Crypt_GPG</span><span style="color: #007700">();<br />echo&nbsp;</span><span style="color: #DD0000">"My&nbsp;public&nbsp;key&nbsp;is:&nbsp;"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$gpg</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">exportPublicKey</span><span style="color: #007700">(</span><span style="color: #DD0000">'test@example.com'</span><span style="color: #007700">),&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />echo&nbsp;</span><span style="color: #DD0000">"My&nbsp;key&nbsp;fingerprint&nbsp;is:&nbsp;"</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$gpg</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getFingerprint</span><span style="color: #007700">(</span><span style="color: #DD0000">'test@example.com'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">Crypt_GPG</span><span style="color: #007700">::</span><span style="color: #0000BB">FORMAT_CANONICAL</span><span style="color: #007700">),&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   </div>
+  
+
+ </div>
+
+ <div class="section" id="package.encryption.crypt-gpg.examples.clearsign-message">
+
+ <div class="info">
+  <h2 class="title">Clearsigning a Message</h2>
+ </div>
+
+  <p class="para">
+   </p><div class="informalexample">
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Crypt/GPG.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'Hello,&nbsp;World!'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$gpg&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Crypt_GPG</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$gpg</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addSignKey</span><span style="color: #007700">(</span><span style="color: #DD0000">'test@example.com'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'test'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$signedData&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$gpg</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">sign</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">Crypt_GPG</span><span style="color: #007700">::</span><span style="color: #0000BB">SIGN_MODE_CLEAR</span><span style="color: #007700">);<br /><br />echo&nbsp;</span><span style="color: #DD0000">"Clearsigned&nbsp;message&nbsp;is:&nbsp;"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$signedData</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   </div>
+  
+
+ </div>
+
+ <div class="section" id="package.encryption.crypt-gpg.examples.verify-clearsign">
+
+ <div class="info">
+  <h2 class="title">Verifying a Clearsigned Message</h2>
+ </div>
+
+  <p class="para">
+   </p><div class="informalexample">
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Crypt/GPG.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$signedData&nbsp;</span><span style="color: #007700">=&nbsp;&lt;&lt;&lt;DATA<br /></span><span style="color: #DD0000">-----BEGIN&nbsp;PGP&nbsp;SIGNED&nbsp;MESSAGE-----<br />Hash:&nbsp;SHA1<br />Hello,&nbsp;World!<br />-----BEGIN&nbsp;PGP&nbsp;SIGNATURE-----<br />Version:&nbsp;GnuPG&nbsp;v1.4.6&nbsp;(GNU/Linux)<br />iD8DBQFIl9Sb6ZWCktsVoskRArWDAJ9D5mq6p+4JnBy11OaAhnIA+uRSSACgoM5T<br />WcUHQ9pKf9PvNUn1Izy6c9E=<br />=k8+7<br />-----END&nbsp;PGP&nbsp;SIGNATURE-----<br /></span><span style="color: #007700">DATA;<br /><br /></span><span style="color: #0000BB">$gpg&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Crypt_GPG</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$signatures&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$gpg</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">verify</span><span style="color: #007700">(</span><span style="color: #0000BB">$signedData</span><span style="color: #007700">);<br /><br />if&nbsp;(</span><span style="color: #0000BB">$signatures</span><span style="color: #007700">[</span><span style="color: #0000BB">0</span><span style="color: #007700">]-&gt;</span><span style="color: #0000BB">isValid</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Message&nbsp;is&nbsp;valid.\n"</span><span style="color: #007700">;<br />}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Message&nbsp;is&nbsp;invalid!\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   </div>
+  
+
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.encryption.crypt-gpg.referring-to-keys.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.encryption.crypt-gpg.html">Crypt_GPG</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.event.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Referring to Keys</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Event</td>
+  </tr>
+ </table>
+</div>
+</body></html>

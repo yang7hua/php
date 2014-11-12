@@ -1,0 +1,2268 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>PEAR channel server REST interface</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="channels.whatarethey.html" title="channel.xml, REST, XML-RPC" />
+  <link rel="prev" href="guide.migrating.channels.xml.html" title="channel.xml: The channel definition file" />
+  <link rel="next" href="guide.migrating.channels.xmlrpcfunctions.html" title="(deprecated) XML-RPC functions" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">PEAR channel server REST interface</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="guide.migrating.channels.xml.html" title="channel.xml: The channel definition file">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="guide.migrating.channels.xmlrpcfunctions.html" title="(deprecated) XML-RPC functions">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="core.rest">
+    
+    <h1>PEAR channel server REST interface</h1>
+
+
+
+
+ <p class="para">
+  This manual section describes how the REST interface of
+  a PEAR channel server works, as well as the files and their
+  formats look like.
+ </p>
+
+ 
+<div class="section" id="core.rest.directorystructure">
+ <div class="info">
+  <h2 class="title">Directory structure</h2>
+  
+ </div>
+  
+  
+
+  <p class="para">
+   A REST channel server simply delivers files in a certain directory
+   structure. The content of those files is static. Their location is relative
+   to the URLs given in the <code class="filename">channel.xml</code>
+   <code class="literal">baseurl</code> tags.
+  </p>
+
+  <blockquote class="note">
+   <p class="para">
+    All files are static - you do <em class="emphasis">not</em> need a scripting
+    language installed on your server.
+   </p>
+  </blockquote>
+
+
+  <p class="para">
+   The following table lists all known files, a tiny description as well
+   as the version they appeared in first.
+  </p>
+
+  <table class="doctable table"><caption>Directory- and file structure</caption>
+    
+
+    
+      <thead>
+        <tr>
+          <th>Level 0</th>
+
+          <th>Level 1</th>
+
+          <th>Level 2</th>
+
+          <th>Description</th>
+
+          <th>REST version</th>
+        </tr>
+
+      </thead>
+
+
+      <tbody class="tbody">
+        <tr>
+          <td><code class="filename">c/</code></td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td><em class="emphasis">Categories</em></td>
+
+          <td>1.0</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td><a href="core.rest.html#core.rest.fileformats.c-categoriesxml" class="link"><code class="filename">categories.xml</code></a></td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td>List of all categories</td>
+
+          <td>1.1</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td><code class="filename">$CategoryName/</code></td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td>1.0</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td><code class="filename"><a href="core.rest.html#core.rest.fileformats.c-category-infoxml" class="link">info.xml</a></code></td>
+
+          <td>Info about the category</td>
+
+          <td>1.0</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td><code class="filename"><a href="core.rest.html#core.rest.fileformats.c-category-packagesxml" class="link">packages.xml</a></code></td>
+
+          <td>List of packages in category</td>
+
+          <td>1.0</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td><code class="filename"><a href="core.rest.html#core.rest.fileformats.c-category-packagesinfoxml" class="link">packagesinfo.xml</a></code></td>
+
+          <td>Info about all packages</td>
+
+          <td>1.1</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+        </tr>
+
+
+        <tr>
+          <td><code class="filename">m/</code></td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td><em class="emphasis">Maintainers</em></td>
+
+          <td>1.0</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td><code class="filename"><a href="core.rest.html#core.rest.fileformats.m-allmaintainersxml" class="link">allmaintainers.xml</a></code></td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td>List of all maintainers</td>
+
+          <td>1.1</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td><code class="filename">$maintainernick/</code></td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td>1.0</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td><code class="filename"><a href="core.rest.html#core.rest.fileformats.m-maintainer-infoxml" class="link">info.xml</a></code></td>
+
+          <td>Info about the maintainer</td>
+
+          <td>1.0</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+        </tr>
+
+
+        <tr>
+          <td><code class="filename">p/</code></td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td><em class="emphasis">Packages</em></td>
+
+          <td>1.0</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td><code class="filename"><a href="core.rest.html#core.rest.fileformats.p-packagesxml" class="link">packages.xml</a></code></td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td>List of all packages</td>
+
+          <td>1.0</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td><code class="filename">$packagename/</code></td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td>1.0</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td><code class="filename"><a href="core.rest.html#core.rest.fileformats.p-package-infoxml" class="link">info.xml</a></code></td>
+
+          <td>General package information</td>
+
+          <td>1.0</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td><code class="filename"><a href="core.rest.html#core.rest.fileformats.p-package-maintainersxml" class="link">maintainers.xml</a></code></td>
+
+          <td>List of package maintainers</td>
+
+          <td>1.0</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td><code class="filename"><a href="core.rest.html#core.rest.fileformats.p-package-maintainers2xml" class="link">maintainers2.xml</a></code></td>
+
+          <td>List of developers and their roles</td>
+
+          <td>1.2</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+        </tr>
+
+
+        <tr>
+          <td><code class="filename">r/</code></td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td><em class="emphasis">Releases</em></td>
+
+          <td>1.0</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td><code class="filename">$packagename/</code></td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td>1.0</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td><code class="filename"><a href="core.rest.html#core.rest.fileformats.r-package-allreleasesxml" class="link">allreleases.xml</a></code></td>
+
+          <td>List of all releases</td>
+
+          <td>1.0</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td><code class="filename"><a href="core.rest.html#core.rest.fileformats.r-package-allreleases2xml" class="link">allreleases2.xml</a></code></td>
+
+          <td>List of all releases including minimum PHP version</td>
+
+          <td>1.3</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td><code class="filename"><a href="core.rest.html#core.rest.fileformats.r-package-latesttxt" class="link">latest.txt</a></code></td>
+
+          <td>Latest version number</td>
+
+          <td>1.0</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td><a href="core.rest.html#core.rest.fileformats.r-package-stabletxt" class="link"><code class="filename">stable.txt</code></a></td>
+
+          <td>Latest stable version number</td>
+
+          <td>1.0</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td><a href="core.rest.html#core.rest.fileformats.r-package-betatxt" class="link"><code class="filename">beta.txt</code></a></td>
+
+          <td>Latest beta version number</td>
+
+          <td>1.0</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td><a href="core.rest.html#core.rest.fileformats.r-package-alphatxt" class="link"><code class="filename">alpha.txt</code></a></td>
+
+          <td>Latest alpha version number</td>
+
+          <td>1.0</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td><a href="core.rest.html#core.rest.fileformats.r-package-develtxt" class="link"><code class="filename">devel.txt</code></a></td>
+
+          <td>Latest development version number</td>
+
+          <td>1.0</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td><a href="core.rest.html#core.rest.fileformats.r-package-012xml" class="link"><code class="filename">0.1.2.xml</code></a></td>
+
+          <td>Short package info for version 0.1.2</td>
+
+          <td>1.0</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td><a href="core.rest.html#core.rest.fileformats.r-package-v2012xml" class="link"><code class="filename">v2.0.1.2.xml</code></a></td>
+
+          <td>Short version of package.xml, version 2</td>
+
+          <td>1.3</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td><a href="core.rest.html#core.rest.fileformats.r-package-package012xml" class="link"><code class="filename">package.0.1.2.xml</code></a></td>
+
+          <td>package.xml for version 0.1.2</td>
+
+          <td>1.0</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td><a href="core.rest.html#core.rest.fileformats.r-package-deps012txt" class="link"><code class="filename">deps.0.1.2.txt</code></a></td>
+
+          <td>Serialized dependencies for version 0.1.2</td>
+
+          <td>1.0</td>
+        </tr>
+
+
+        <tr>
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+
+          <td class="empty">&nbsp;</td>
+        </tr>
+
+      </tbody>
+    
+  </table>
+
+</div>
+
+ 
+<div class="section" id="core.rest.fileformats">
+ <div class="info">
+  <h2 class="title">File formats</h2>
+  
+ </div>
+ 
+ 
+
+ <p class="para">
+  Here you will find detailled description of the file formats used
+  for the REST interface.
+ </p>
+
+ <blockquote class="note">
+  <p class="para">
+   In file names that contain version numbers, we use <code class="literal">0.1.2</code>
+   as example.
+  </p>
+ </blockquote>
+
+
+ <p class="para">
+  In general, the files try to be as small as possible so that only little
+  bandwidth is required to fetch them. That&#039;s why all of the xml files
+  (except the original <code class="filename">package.xml</code> have only tag names
+  of one or two characters.
+  Remember that operations like <strong class="command">pear list-all</strong> download a
+  large number of files, so every saved bit helps.
+ </p>
+
+
+<div class="section" id="core.rest.fileformats.channelxml"><div class="info"><h3 class="title">channel.xml</h3></div>
+ 
+ <div class="programlisting">Information about the channel</div>
+
+ <p class="para">
+  This is the main file for a channel; nothing works without it.
+  When discovering a channel, this file is retrieved.
+  It defines the REST directory locations as well as mirrors.
+ </p>
+
+ <p class="para">
+  The channel <code class="literal">&lt;name&gt;</code> is a full qualified domain
+  name and is used as part of the URL when e.g. updating the
+  <code class="filename">channel.xml</code> file.
+ </p>
+
+ <p class="para">
+  PEAR provides aliases for channels as shortcuts in the daily work of your
+  user&#039;s lifes. The <code class="literal">&lt;suggestedalias&gt;</code> should be
+  a short and easy to write word. Benefit is that, instead of
+  </p><pre class="screen">pear&nbsp;install&nbsp;pear.mynicelittlespaceon.example.org/package</pre>
+<p>
+  they just can type
+  </p><pre class="screen">pear&nbsp;install&nbsp;nice/package</pre>
+<p>
+  if the alias was <code class="literal">nice</code>.
+ </p>
+
+ 
+
+
+ <div class="section" id="core.rest.fileformats.channelxml.location"><div class="info"><h4 class="title">Location</h4></div>
+  
+  <p class="para">
+   <code class="filename">/channel.xml</code>
+  </p>
+  <p class="para">
+   It needs to be in the root directory of the domain.
+   While all other files can be located somewhere deep in a directory structure,
+   <code class="filename">channel.xml</code> needs to be in <code class="filename">/</code>.
+  </p>
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.channelxml.example"><div class="info"><h4 class="title">Example</h4></div>
+  
+  <div class="xmlcode"><pre class="xmlcode">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;channel version=&quot;1.0&quot;
+         xmlns=&quot;http://pear.php.net/channel-1.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://pear.php.net/channel-1.0
+                             http://pear.php.net/dtd/channel-1.0.xsd&quot;
+&gt;
+ &lt;name&gt;pear.example.org&lt;/name&gt;&lt;!-- URL, used to update channel.xml and such --&gt;
+ &lt;suggestedalias&gt;example&lt;/suggestedalias&gt;
+ &lt;summary&gt;Simple demo channel server&lt;/summary&gt;
+ &lt;servers&gt;
+  &lt;primary&gt;
+   &lt;!-- you can ignore xmlrpc, it&#039;s deprecated anyway --&gt;
+   &lt;xmlrpc&gt;
+    &lt;function version=&quot;1.0&quot;&gt;logintest&lt;/function&gt;
+    &lt;function version=&quot;1.0&quot;&gt;package.listLatestReleases&lt;/function&gt;
+    &lt;function version=&quot;1.0&quot;&gt;package.listAll&lt;/function&gt;
+    &lt;function version=&quot;1.0&quot;&gt;package.info&lt;/function&gt;
+    &lt;function version=&quot;1.0&quot;&gt;package.getDownloadURL&lt;/function&gt;
+    &lt;function version=&quot;1.1&quot;&gt;package.getDownloadURL&lt;/function&gt;
+    &lt;function version=&quot;1.0&quot;&gt;package.getDepDownloadURL&lt;/function&gt;
+    &lt;function version=&quot;1.1&quot;&gt;package.getDepDownloadURL&lt;/function&gt;
+    &lt;function version=&quot;1.0&quot;&gt;package.search&lt;/function&gt;
+    &lt;function version=&quot;1.0&quot;&gt;channel.listAll&lt;/function&gt;
+   &lt;/xmlrpc&gt;
+   &lt;rest&gt;
+    &lt;baseurl type=&quot;REST1.0&quot;&gt;http://pear.example.org/rest/&lt;/baseurl&gt;
+    &lt;baseurl type=&quot;REST1.1&quot;&gt;http://pear.example.org/rest/&lt;/baseurl&gt;
+    &lt;baseurl type=&quot;REST1.2&quot;&gt;http://pear.example.org/rest/&lt;/baseurl&gt;
+    &lt;baseurl type=&quot;REST1.3&quot;&gt;http://pear.example.org/rest/&lt;/baseurl&gt;
+   &lt;/rest&gt;
+  &lt;/primary&gt;
+
+  &lt;mirror host=&quot;us.pear.example.org&quot;&gt;
+   &lt;rest&gt;
+    &lt;baseurl type=&quot;REST1.0&quot;&gt;http://us.pear.example.org/rest/&lt;/baseurl&gt;
+    &lt;baseurl type=&quot;REST1.1&quot;&gt;http://us.pear.example.org/rest/&lt;/baseurl&gt;
+    &lt;baseurl type=&quot;REST1.2&quot;&gt;http://us.pear.example.org/rest/&lt;/baseurl&gt;
+    &lt;baseurl type=&quot;REST1.3&quot;&gt;http://us.pear.example.org/rest/&lt;/baseurl&gt;
+   &lt;/rest&gt;
+  &lt;/mirror&gt;
+
+  &lt;mirror host=&quot;de.pear.example.org&quot; ssl=&quot;yes&quot; port=&quot;3452&quot;&gt;
+   &lt;rest&gt;
+    &lt;baseurl type=&quot;REST1.0&quot;&gt;https://de.pear.example.org:3452/rest/&lt;/baseurl&gt;
+    &lt;baseurl type=&quot;REST1.1&quot;&gt;https://de.pear.example.org:3452/rest/&lt;/baseurl&gt;
+    &lt;baseurl type=&quot;REST1.2&quot;&gt;https://de.pear.example.org:3452/rest/&lt;/baseurl&gt;
+    &lt;baseurl type=&quot;REST1.3&quot;&gt;https://de.pear.example.org:3452/rest/&lt;/baseurl&gt;
+   &lt;/rest&gt;
+  &lt;/mirror&gt;
+
+ &lt;/servers&gt;
+&lt;/channel&gt;</pre>
+</div>
+ </div>
+
+</div>
+
+
+<div class="section" id="core.rest.fileformats.c-categoriesxml"><div class="info"><h3 class="title">categories.xml</h3></div>
+ 
+ <div class="programlisting">List of all categories</div>
+
+ <p class="para">
+  Provides a names and links to for all categories known on the server.
+  Links are URL-encoded.
+ </p>
+
+ <blockquote class="note">
+  <p class="para">
+   Unlike all other files, the channel name is wrapped in a
+   <code class="literal">&lt;ch&gt;</code> instead of a plain
+   <code class="literal">&lt;c&gt;</code> tag.
+  </p>
+ </blockquote>
+
+
+
+ <div class="section" id="core.rest.fileformats.c-categoriesxml.location"><div class="info"><h4 class="title">Location</h4></div>
+  
+  <p class="para">
+   <code class="filename">c/categories.xml</code>
+  </p>
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.c-categoriesxml.example"><div class="info"><h4 class="title">Example</h4></div>
+  
+  <div class="xmlcode"><pre class="xmlcode">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;a xmlns=&quot;http://pear.php.net/dtd/rest.allcategories&quot;
+   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+   xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;
+   xsi:schemaLocation=&quot;http://pear.php.net/dtd/rest.allcategories
+                       http://pear.php.net/dtd/rest.allcategories.xsd&quot;
+&gt;
+ &lt;ch&gt;pear.example.org&lt;/ch&gt;
+ &lt;c xlink:href=&quot;/rest/c/Tools/info.xml&quot;&gt;Tools&lt;/c&gt;
+ &lt;c xlink:href=&quot;/rest/c/Garbage%2Band%2BStuff/info.xml&quot;&gt;Garbage and Stuff&lt;/c&gt;
+&lt;/a&gt;</pre>
+</div>
+ </div>
+
+</div>
+
+
+<div class="section" id="core.rest.fileformats.c-category-infoxml"><div class="info"><h3 class="title">info.xml (category)</h3></div>
+ 
+ <div class="programlisting">Information about a category</div>
+
+ <p class="para">
+  Here, the category is explained in detail. The file lists
+  the name (<code class="literal">&lt;n&gt;</code>),
+  channel server (<code class="literal">&lt;c&gt;</code>),
+  alias (<code class="literal">&lt;a&gt;</code>)
+  and a longer description of the category (<code class="literal">&lt;d&gt;</code>).
+ </p>
+
+
+ <div class="section" id="core.rest.fileformats.c-category-infoxml.location"><div class="info"><h4 class="title">Location</h4></div>
+  
+  <p class="para">
+   <code class="filename">c/${categoryname}/info.xml</code>
+  </p>
+  <blockquote class="note">
+   <p class="para">
+    Category names may contain spaces and other special characters,
+    so (x)links need to be url-encoded.
+   </p>
+  </blockquote>
+
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.c-category-infoxml.example"><div class="info"><h4 class="title">Example</h4></div>
+  
+  <div class="xmlcode"><pre class="xmlcode">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;c xmlns=&quot;http://pear.php.net/dtd/rest.category&quot;
+   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+   xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;
+   xsi:schemaLocation=&quot;http://pear.php.net/dtd/rest.category
+                       http://pear.php.net/dtd/rest.category.xsd&quot;
+&gt;
+ &lt;n&gt;Tools&lt;/n&gt;
+ &lt;c&gt;pear.example.org&lt;/c&gt;
+ &lt;a&gt;Tools and Utilities&lt;/a&gt;
+ &lt;d&gt;This category holds all sorts of packages that might help you when
+  trying to dominate the world.&lt;/d&gt;
+&lt;/c&gt;</pre>
+</div>
+ </div>
+
+</div>
+
+
+<div class="section" id="core.rest.fileformats.c-category-packagesxml"><div class="info"><h3 class="title">packages.xml (category)</h3></div>
+ 
+ <div class="programlisting">List of all packages in category</div>
+
+ <p class="para">
+  The file simply contains a list of names and links to each
+  package in the category.
+ </p>
+
+
+ <div class="section" id="core.rest.fileformats.c-category-packagesxml.location"><div class="info"><h4 class="title">Location</h4></div>
+  
+  <p class="para">
+   <code class="filename">c/${categoryname}/packages.xml</code>
+  </p>
+  <blockquote class="note">
+   <p class="para">
+    Category names may contain spaces and other special characters,
+    so (x)links need to be url-encoded.
+   </p>
+  </blockquote>
+
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.c-category-packagesxml.example"><div class="info"><h4 class="title">Example</h4></div>
+  
+  <div class="xmlcode"><pre class="xmlcode">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;l xmlns=&quot;http://pear.php.net/dtd/rest.categorypackages&quot;
+   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+   xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;
+   xsi:schemaLocation=&quot;http://pear.php.net/dtd/rest.categorypackages
+                       http://pear.php.net/dtd/rest.categorypackages.xsd&quot;
+&gt;
+ &lt;p xlink:href=&quot;/rest/p/earth&quot;&gt;Earth&lt;/p&gt;
+ &lt;p xlink:href=&quot;/rest/p/worlddominator&quot;&gt;WorldDominator&lt;/p&gt;
+&lt;/l&gt;</pre>
+</div>
+ </div>
+
+</div>
+
+
+<div class="section" id="core.rest.fileformats.c-category-packagesinfoxml"><div class="info"><h3 class="title">packagesinfo.xml</h3></div>
+ 
+ <div class="programlisting">Extended information about all packages</div>
+
+ <p class="para">
+  <code class="filename">packagesinfo.xml</code> is a collection of information about
+  packages in the category. It contains the contents of the package&#039;s
+  <a href="core.rest.html#core.rest.fileformats.p-package-infoxml" class="link"><code class="filename">info.xml</code></a>,
+  release information from
+  <a href="core.rest.html#core.rest.fileformats.r-package-allreleasesxml" class="link"><code class="filename">allreleases.xml</code></a>
+  and dependency information for each version.
+ </p>
+
+ <p class="para">
+  Every package information piece is wrapped in a <code class="literal">&lt;pi&gt;</code>
+  tag.
+ </p>
+
+
+ <div class="section" id="core.rest.fileformats.c-category-packagesinfoxml.location"><div class="info"><h4 class="title">Location</h4></div>
+  
+  <p class="para">
+   <code class="filename">c/${categoryname}/packagesinfo.xml</code>
+  </p>
+  <blockquote class="note">
+   <p class="para">
+    Category names may contain spaces and other special characters,
+    so (x)links need to be url-encoded.
+   </p>
+  </blockquote>
+
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.c-category-packagesinfoxml.usage"><div class="info"><h4 class="title">Usage</h4></div>
+  
+  <p class="para">
+    
+    Provides &quot;summary&quot; information in the <strong class="command">list-all</strong> commmand.
+  </p>
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.c-category-packagesinfoxml.example"><div class="info"><h4 class="title">Example</h4></div>
+  
+  <div class="xmlcode"><pre class="xmlcode">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;f xmlns=&quot;http://pear.php.net/dtd/rest.categorypackageinfo&quot;
+   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+   xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;
+   xsi:schemaLocation=&quot;http://pear.php.net/dtd/rest.categorypackageinfo
+                       http://pear.php.net/dtd/rest.categorypackageinfo.xsd&quot;
+&gt;
+ &lt;pi&gt;
+  &lt;p&gt;
+   &lt;n&gt;WorldDominator&lt;/n&gt;
+   &lt;c&gt;pear.example.org&lt;/c&gt;
+   &lt;!-- Full contents of p/${packagename}/info.xml follow --&gt;
+  &lt;/p&gt;
+  &lt;a&gt;
+   &lt;r&gt;&lt;v&gt;1.1.2&lt;/v&gt;&lt;s&gt;stable&lt;/s&gt;&lt;/r&gt;
+   &lt;r&gt;&lt;v&gt;0.1.2&lt;/v&gt;&lt;s&gt;beta&lt;/s&gt;&lt;/r&gt;
+   &lt;r&gt;&lt;v&gt;0.0.1&lt;/v&gt;&lt;s&gt;devel&lt;/s&gt;&lt;/r&gt;
+  &lt;/a&gt;
+  &lt;deps&gt;
+   &lt;v&gt;0.1.2&lt;/v&gt;
+   &lt;d&gt;&lt;!-- serialized dependency information like deps.0.1.2.txt --&gt;&lt;/d&gt;
+  &lt;/deps&gt;
+  &lt;deps&gt;
+   &lt;v&gt;0.0.1&lt;/v&gt;
+   &lt;d&gt;&lt;!-- serialized dependency information like deps.0.1.2.txt --&gt;&lt;/d&gt;
+  &lt;/deps&gt;
+ &lt;/pi&gt;
+&lt;/f&gt;</pre>
+</div>
+ </div>
+
+</div>
+
+
+<div class="section" id="core.rest.fileformats.m-allmaintainersxml"><div class="info"><h3 class="title">allmaintainers.xml</h3></div>
+ 
+ <div class="programlisting">Lists all maintainers</div>
+
+ <p class="para">
+  Simply lists names and links to all developers of any package
+  on the server.
+ </p>
+
+ <p class="para">
+  FIXME: full names or just nicks?
+  FIXME: lowercased nicks?
+ </p>
+
+
+ <div class="section" id="core.rest.fileformats.m-allmaintainersxml.location"><div class="info"><h4 class="title">Location</h4></div>
+  
+  <p class="para">
+   <code class="filename">m/allmaintainers.xml</code>
+  </p>
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.m-allmaintainersxml.example"><div class="info"><h4 class="title">Example</h4></div>
+  
+  <div class="xmlcode"><pre class="xmlcode">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;m xmlns=&quot;http://pear.php.net/dtd/rest.allmaintainers&quot;
+   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+   xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;
+   xsi:schemaLocation=&quot;http://pear.php.net/dtd/rest.allmaintainers
+                       http://pear.php.net/dtd/rest.allmaintainers.xsd&quot;
+&gt;
+ &lt;h xlink:href=&quot;/rest/m/pinky&quot;&gt;pinky&lt;/h&gt;
+ &lt;h xlink:href=&quot;/rest/m/thebrain&quot;&gt;the brain&lt;/h&gt;
+&lt;/m&gt;</pre>
+</div>
+ </div>
+
+</div>
+
+
+<div class="section" id="core.rest.fileformats.m-maintainer-infoxml"><div class="info"><h3 class="title">info.xml (maintainer)</h3></div>
+ 
+ <div class="programlisting">Information about a maintainer</div>
+
+ <p class="para">
+  Contains maintainer information like handle
+  (nickname, <code class="literal">&lt;h&gt;</code>),
+  full name (<code class="literal">&lt;n&gt;</code>)
+  and URL (<code class="literal">&lt;u&gt;</code>) to the developer&#039;s homepage.
+ </p>
+
+
+ <div class="section" id="core.rest.fileformats.m-maintainer-infoxml.location"><div class="info"><h4 class="title">Location</h4></div>
+  
+  <p class="para">
+   <code class="filename">m/${maintainernick}/info.xml</code>
+  </p>
+  <p class="para">
+   FIXME: lowercasednick?
+  </p>
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.m-maintainer-infoxml.example"><div class="info"><h4 class="title">Example</h4></div>
+  
+  <div class="xmlcode"><pre class="xmlcode">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;m xmlns=&quot;http://pear.php.net/dtd/rest.maintainer&quot;
+   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+   xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;
+   xsi:schemaLocation=&quot;http://pear.php.net/dtd/rest.maintainer
+                       http://pear.php.net/dtd/rest.maintainer.xsd&quot;
+&gt;
+ &lt;h&gt;thebrain&lt;/h&gt;
+ &lt;n&gt;The Brain&lt;/n&gt;
+ &lt;u&gt;http://pinkyandthebrain.example.org&lt;/u&gt;
+&lt;/m&gt;</pre>
+</div>
+ </div>
+
+</div>
+
+
+<div class="section" id="core.rest.fileformats.p-packagesxml"><div class="info"><h3 class="title">packages.xml (p)</h3></div>
+ 
+ <div class="programlisting">List of all packages</div>
+
+ <p class="para">
+  This file lists all packages in this channel, together with the channel server
+  name itself.
+ </p>
+
+ <p class="para">
+  Package names should not contain any spaces; the behavior of the installer
+  in such cases is undefined.
+ </p>
+
+
+ <div class="section" id="core.rest.fileformats.p-packagesxml.location"><div class="info"><h4 class="title">Location</h4></div>
+  
+  <p class="para">
+   <code class="filename">p/packages.xml</code>
+  </p>
+  <blockquote class="note">
+   <p class="para">
+    The package name is lowercased.
+   </p>
+  </blockquote>
+
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.p-packagesxml.example"><div class="info"><h4 class="title">Example</h4></div>
+  
+  <div class="xmlcode"><pre class="xmlcode">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;a xmlns=&quot;http://pear.php.net/dtd/rest.allpackages&quot;
+   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+   xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;
+   xsi:schemaLocation=&quot;http://pear.php.net/dtd/rest.allpackages
+                       http://pear.php.net/dtd/rest.allpackages.xsd&quot;
+&gt;
+ &lt;c&gt;pear.example.org&lt;/c&gt;
+ &lt;p&gt;Earth&lt;/p&gt;
+ &lt;p&gt;WorldDominator&lt;/p&gt;
+&lt;/a&gt;</pre>
+</div>
+ </div>
+
+</div>
+
+
+<div class="section" id="core.rest.fileformats.p-package-infoxml"><div class="info"><h3 class="title">info.xml (package)</h3></div>
+ 
+ <div class="programlisting">Information about a package</div>
+
+ <p class="para">
+  This file contains general version-independent information
+  about the package: License, category, summary, description
+  and a link to the release directory.
+ </p>
+
+
+ <div class="section" id="core.rest.fileformats.p-package-infoxml.location"><div class="info"><h4 class="title">Location</h4></div>
+  
+  <p class="para">
+   <code class="filename">r/${packagename}/info.xml</code>
+  </p>
+  <blockquote class="note">
+   <p class="para">
+    The package name is lowercased.
+   </p>
+  </blockquote>
+
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.p-package-infoxml.usage"><div class="info"><h4 class="title">Usage</h4></div>
+  
+  <p class="para">
+   <strong class="command">remote-info</strong> fetches this file and displays
+   its information.
+  </p>
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.p-package-infoxml.example"><div class="info"><h4 class="title">Example</h4></div>
+  
+  <div class="xmlcode"><pre class="xmlcode">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;p xmlns=&quot;http://pear.php.net/dtd/rest.package&quot;
+   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+   xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;
+   xsi:schemaLocation=&quot;http://pear.php.net/dtd/rest.package
+                       http://pear.php.net/dtd/rest.package.xsd&quot;
+&gt;
+ &lt;n&gt;WorldDomination&lt;/n&gt;
+ &lt;c&gt;pear.example.org&lt;/c&gt;
+ &lt;ca xlink:href=&quot;/rest/c/Tools&quot;&gt;Tools&lt;/ca&gt;
+ &lt;l&gt;Dictatoric License&lt;/l&gt;
+ &lt;s&gt;Tool to dominate the world&lt;/s&gt;
+ &lt;d&gt;
+  Helps you dominating the world by fulfilling various tasks:
+  - Feed the cats
+  - Lock the doors after 23:42
+ &lt;/d&gt;
+ &lt;r xlink:href=&quot;/rest/r/worlddomination&quot;/&gt;
+&lt;/p&gt;</pre>
+</div>
+ </div>
+
+</div>
+
+
+<div class="section" id="core.rest.fileformats.p-package-maintainersxml"><div class="info"><h3 class="title">maintainers.xml</h3></div>
+ 
+ <div class="programlisting">Lists all developers on the package</div>
+
+ <p class="para">
+  All package developers are listed in this file, regardless if active
+  or inactive.
+ </p>
+
+ <p class="para">
+  Each maintainer&#039;s handle (<code class="literal">&lt;h&gt;</code>) and
+  activity state (<code class="literal">&lt;a&gt;</code>, <code class="literal">0</code>
+  for inactive, <code class="literal">1</code> for active)
+  is provided.
+ </p>
+
+
+ <div class="section" id="core.rest.fileformats.p-package-maintainersxml.location"><div class="info"><h4 class="title">Location</h4></div>
+  
+  <p class="para">
+   <code class="filename">r/${packagename}/maintainers.xml</code>
+  </p>
+  <blockquote class="note">
+   <p class="para">
+    The package name is lowercased.
+   </p>
+  </blockquote>
+
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.p-package-maintainersxml.example"><div class="info"><h4 class="title">Example</h4></div>
+  
+  <div class="xmlcode"><pre class="xmlcode">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;m xmlns=&quot;http://pear.php.net/dtd/rest.packagemaintainers&quot;
+   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+   xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;
+   xsi:schemaLocation=&quot;http://pear.php.net/dtd/rest.packagemaintainers
+                       http://pear.php.net/dtd/rest.packagemaintainers.xsd&quot;
+&gt;
+ &lt;p&gt;WorldDominator&lt;/p&gt;
+ &lt;c&gt;pear.example.org&lt;/c&gt;
+ &lt;m&gt;
+  &lt;h&gt;pinky&lt;/h&gt;
+  &lt;a&gt;1&lt;/a&gt;
+ &lt;/m&gt;
+ &lt;m&gt;
+  &lt;h&gt;thebrain&lt;/h&gt;
+  &lt;a&gt;1&lt;/a&gt;
+ &lt;/m&gt;
+ &lt;m&gt;
+  &lt;h&gt;deadcow&lt;/h&gt;
+  &lt;a&gt;0&lt;/a&gt;
+ &lt;/m&gt;
+&lt;/m&gt;</pre>
+</div>
+ </div>
+
+</div>
+
+
+<div class="section" id="core.rest.fileformats.p-package-maintainers2xml"><div class="info"><h3 class="title">maintainers2.xml</h3></div>
+ 
+ <div class="programlisting">Lists package developers</div>
+
+ <p class="para">
+  Same as
+  <a href="core.rest.html#core.rest.fileformats.p-package-maintainersxml" class="link"><code class="filename">maintainers.xml</code></a>,
+  except that the developer&#039;s role is written down, too.
+ </p>
+ <p class="para">
+  Valid
+  <a href="guide.developers.package2.developers.html" class="link">role names</a>
+  are <code class="literal">lead</code>, <code class="literal">developer</code>,
+  <code class="literal">contributor</code> and <code class="literal">helper</code>.
+ </p>
+
+
+ <div class="section" id="core.rest.fileformats.p-package-maintainers2xml.location"><div class="info"><h4 class="title">Location</h4></div>
+  
+  <p class="para">
+   <code class="filename">r/${packagename}/maintainers2.xml</code>
+  </p>
+  <blockquote class="note">
+   <p class="para">
+    The package name is lowercased.
+   </p>
+  </blockquote>
+
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.p-package-maintainers2xml.example"><div class="info"><h4 class="title">Example</h4></div>
+  
+  <div class="xmlcode"><pre class="xmlcode">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;m xmlns=&quot;http://pear.php.net/dtd/rest.packagemaintainers&quot;
+   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+   xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;
+   xsi:schemaLocation=&quot;http://pear.php.net/dtd/rest.packagemaintainers
+                       http://pear.php.net/dtd/rest.packagemaintainers.xsd&quot;
+&gt;
+ &lt;p&gt;WorldDominator&lt;/p&gt;
+ &lt;c&gt;pear.example.org&lt;/c&gt;
+ &lt;m&gt;
+  &lt;h&gt;pinky&lt;/h&gt;
+  &lt;a&gt;1&lt;/a&gt;
+  &lt;r&gt;developer&lt;/r&gt;
+ &lt;/m&gt;
+ &lt;m&gt;
+  &lt;h&gt;thebrain&lt;/h&gt;
+  &lt;a&gt;1&lt;/a&gt;
+  &lt;r&gt;lead&lt;/r&gt;
+ &lt;/m&gt;
+ &lt;m&gt;
+  &lt;h&gt;deadcow&lt;/h&gt;
+  &lt;a&gt;0&lt;/a&gt;
+  &lt;r&gt;helper&lt;/r&gt;
+ &lt;/m&gt;
+&lt;/m&gt;</pre>
+</div>
+ </div>
+
+</div>
+
+
+<div class="section" id="core.rest.fileformats.r-package-allreleasesxml"><div class="info"><h3 class="title">allreleases.xml</h3></div>
+ 
+ <div class="programlisting">List of all package versions</div>
+
+ <p class="para">
+  This file lists all known versions of a package, together with
+  its stability.
+ </p>
+
+ <p class="para">
+  Releases in this file are ordered, the latest version has to be first.
+ </p>
+
+ <div class="section" id="core.rest.fileformats.r-package-allreleasesxml.location"><div class="info"><h4 class="title">Location</h4></div>
+  
+  <p class="para">
+   <code class="filename">r/${packagename}/allreleases.xml</code>
+  </p>
+  <blockquote class="note">
+   <p class="para">
+    The package name is lowercased.
+   </p>
+  </blockquote>
+
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.r-package-allreleasesxml.example"><div class="info"><h4 class="title">Example</h4></div>
+  
+  <div class="xmlcode"><pre class="xmlcode">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;a xmlns=&quot;http://pear.php.net/dtd/rest.allreleases&quot;
+   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+   xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;
+   xsi:schemaLocation=&quot;http://pear.php.net/dtd/rest.allreleases
+                       http://pear.php.net/dtd/rest.allreleases.xsd&quot;
+&gt;
+ &lt;p&gt;WorldDominator&lt;/p&gt;
+ &lt;c&gt;pear.example.org&lt;/c&gt;
+ &lt;r&gt;&lt;v&gt;0.8.1&lt;/v&gt;&lt;s&gt;beta&lt;/s&gt;&lt;/r&gt;
+ &lt;r&gt;&lt;v&gt;0.0.2&lt;/v&gt;&lt;s&gt;alpha&lt;/s&gt;&lt;/r&gt;
+&lt;/a&gt;</pre>
+</div>
+ </div>
+
+</div>
+
+
+<div class="section" id="core.rest.fileformats.r-package-allreleases2xml"><div class="info"><h3 class="title">allreleases2.xml</h3></div>
+ 
+ <div class="programlisting">List of all package versions with PHP version</div>
+
+ <p class="para">
+  Same as <code class="filename">allreleases.xml</code>, but with information
+  about the minimum version of PHP required.
+ </p>
+
+
+ <div class="section" id="core.rest.fileformats.r-package-allreleases2xml.location"><div class="info"><h4 class="title">Location</h4></div>
+  
+  <p class="para">
+   <code class="filename">r/${packagename}/allreleases2.xml</code>
+  </p>
+  <blockquote class="note">
+   <p class="para">
+    The package name is lowercased.
+   </p>
+  </blockquote>
+
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.r-package-allreleases2xml.example"><div class="info"><h4 class="title">Example</h4></div>
+  
+  <div class="xmlcode"><pre class="xmlcode">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;a xmlns=&quot;http://pear.php.net/dtd/rest.allreleases2&quot;
+   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+   xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;
+   xsi:schemaLocation=&quot;http://pear.php.net/dtd/rest.allreleases2
+                       http://pear.php.net/dtd/rest.allreleases2.xsd&quot;
+&gt;
+ &lt;p&gt;WorldDominator&lt;/p&gt;
+ &lt;c&gt;pear.example.org&lt;/c&gt;
+ &lt;r&gt;&lt;v&gt;0.8.1&lt;/v&gt;&lt;s&gt;beta&lt;/s&gt;&lt;m&gt;4.4.2&lt;/m&gt;&lt;/r&gt;
+ &lt;r&gt;&lt;v&gt;0.0.2&lt;/v&gt;&lt;s&gt;alpha&lt;/s&gt;&lt;m&gt;5.2.3&lt;/m&gt;&lt;/r&gt;
+&lt;/a&gt;</pre>
+</div>
+ </div>
+
+</div>
+
+
+<div class="section" id="core.rest.fileformats.r-package-latesttxt"><div class="info"><h3 class="title">latest.txt</h3></div>
+ 
+ <div class="programlisting">The latest package version</div>
+
+ <p class="para">
+  The only content of this file is the version number of the latest
+  version in pure plain text. The stability state does not matter;
+  the highest version number is written down here.
+ </p>
+
+
+ <div class="section" id="core.rest.fileformats.r-package-latesttxt.location"><div class="info"><h4 class="title">Location</h4></div>
+  
+  <p class="para">
+   <code class="filename">r/${packagename}/latest.txt</code>
+  </p>
+  <blockquote class="note">
+   <p class="para">
+    The package name is lowercased.
+   </p>
+  </blockquote>
+
+  <p class="para">
+   This file does not exist when no release has been made yet.
+  </p>
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.r-package-latesttxt.example"><div class="info"><h4 class="title">Example</h4></div>
+  
+
+  <p class="para">
+   A package has a stable version <code class="literal">1.0.0</code>, two beta versions
+   <code class="literal">0.9.8</code> and <code class="literal">1.0.9</code> and a development
+   version <code class="literal">1.0.1</code>. The highest version number is
+   <code class="literal">1.0.9</code>, and this is put in <code class="filename">latest.txt</code>.
+  </p>
+
+  <div class="textcode"><pre class="textcode">1.0.9</pre>
+</div>
+ </div>
+
+</div>
+
+
+<div class="section" id="core.rest.fileformats.r-package-stabletxt"><div class="info"><h3 class="title">stable.txt</h3></div>
+ 
+ <div class="programlisting">The latest stable version</div>
+
+ <p class="para">
+  The only content of this file is the version number of the latest
+  stable version in pure plain text.
+ </p>
+
+
+ <div class="section" id="core.rest.fileformats.r-package-stabletxt.location"><div class="info"><h4 class="title">Location</h4></div>
+  
+  <p class="para">
+   <code class="filename">r/${packagename}/stable.txt</code>
+  </p>
+  <blockquote class="note">
+   <p class="para">
+    The package name is lowercased.
+   </p>
+  </blockquote>
+
+  <p class="para">
+   This file does not exist when no stable release exists.
+  </p>
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.r-package-stabletxt.example"><div class="info"><h4 class="title">Example</h4></div>
+  
+  <div class="textcode"><pre class="textcode">0.1.2</pre>
+</div>
+ </div>
+
+</div>
+
+
+<div class="section" id="core.rest.fileformats.r-package-betatxt"><div class="info"><h3 class="title">beta.txt</h3></div>
+ 
+ <div class="programlisting">The latest beta version</div>
+
+ <p class="para">
+  The only content of this file is the version number of the latest
+  beta version in pure plain text.
+ </p>
+
+
+ <div class="section" id="core.rest.fileformats.r-package-betatxt.location"><div class="info"><h4 class="title">Location</h4></div>
+  
+  <p class="para">
+   <code class="filename">r/${packagename}/beta.txt</code>
+  </p>
+  <blockquote class="note">
+   <p class="para">
+    The package name is lowercased.
+   </p>
+  </blockquote>
+
+  <p class="para">
+   This file does not exist when the package has no beta version.
+  </p>
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.r-package-betatxt.example"><div class="info"><h4 class="title">Example</h4></div>
+  
+  <div class="textcode"><pre class="textcode">0.1.2</pre>
+</div>
+ </div>
+
+</div>
+
+
+<div class="section" id="core.rest.fileformats.r-package-alphatxt"><div class="info"><h3 class="title">alpha.txt</h3></div>
+ 
+ <div class="programlisting">The latest alpha version</div>
+
+ <p class="para">
+  The only content of this file is the version number of the latest
+  alpha version in pure plain text.
+ </p>
+
+
+ <div class="section" id="core.rest.fileformats.r-package-alphatxt.location"><div class="info"><h4 class="title">Location</h4></div>
+  
+  <p class="para">
+   <code class="filename">r/${packagename}/alpha.txt</code>
+  </p>
+  <blockquote class="note">
+   <p class="para">
+    The package name is lowercased.
+   </p>
+  </blockquote>
+
+  <p class="para">
+   This file does not exist when no alpha release exists.
+  </p>
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.r-package-alphatxt.example"><div class="info"><h4 class="title">Example</h4></div>
+  
+  <div class="textcode"><pre class="textcode">0.1.2</pre>
+</div>
+ </div>
+
+</div>
+
+
+<div class="section" id="core.rest.fileformats.r-package-develtxt"><div class="info"><h3 class="title">devel.txt</h3></div>
+ 
+ <div class="programlisting">The latest development version</div>
+
+ <p class="para">
+  The only content of this file is the version number of the latest
+  development version in pure plain text.
+ </p>
+
+
+ <div class="section" id="core.rest.fileformats.r-package-develtxt.location"><div class="info"><h4 class="title">Location</h4></div>
+  
+  <p class="para">
+   <code class="filename">r/${packagename}/devel.txt</code>
+  </p>
+  <blockquote class="note">
+   <p class="para">
+    The package name is lowercased.
+   </p>
+  </blockquote>
+
+  <p class="para">
+   This file does not exist when no development release exists.
+  </p>
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.r-package-develtxt.example"><div class="info"><h4 class="title">Example</h4></div>
+  
+  <div class="textcode"><pre class="textcode">0.1.2</pre>
+</div>
+ </div>
+
+</div>
+
+
+<div class="section" id="core.rest.fileformats.r-package-012xml"><div class="info"><h3 class="title">0.1.2.xml (release)</h3></div>
+ 
+ <div class="programlisting">Short xml file about the release</div>
+
+ <p class="para">
+  This file is a special size-optimized version of
+  the full <code class="filename">package.xml</code> with only necessary information.
+ </p>
+
+ <p class="para">
+  As in <code class="filename">package.xml</code>, the tag order is important
+  and may not be shuffled.
+ </p>
+
+
+ <div class="section" id="core.rest.fileformats.r-package-012xml.location"><div class="info"><h4 class="title">Location</h4></div>
+  
+  <p class="para">
+   <code class="filename">r/${packagename}/0.1.2.xml</code>
+  </p>
+  <blockquote class="note">
+   <p class="para">
+    The package name is lowercased.
+   </p>
+  </blockquote>
+
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.r-package-012xml.example"><div class="info"><h4 class="title">Example</h4></div>
+  
+  <div class="xmlcode"><pre class="xmlcode">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;r xmlns=&quot;http://pear.php.net/dtd/rest.release&quot;
+   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+   xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;
+   xsi:schemaLocation=&quot;http://pear.php.net/dtd/rest.release
+                       http://pear.php.net/dtd/rest.release.xsd&quot;
+&gt;
+ &lt;p xlink:href=&quot;/rest/p/worlddominator&quot;&gt;WorldDominator&lt;/p&gt;
+ &lt;c&gt;pear.example.org&lt;/c&gt;
+ &lt;v&gt;0.1.2&lt;/v&gt;
+ &lt;st&gt;beta&lt;/st&gt;
+ &lt;l&gt;Dictatoric License&lt;/l&gt;
+ &lt;m&gt;thebrain&lt;/m&gt;
+ &lt;s&gt;Tool to dominate the world&lt;/s&gt;
+ &lt;d&gt;Helps you dominating the world by fulfilling various tasks:
+  - Feed the cats
+  - Lock the doors after 23:42&lt;/d&gt;
+ &lt;da&gt;2007-12-24 23:42:00&lt;/da&gt;
+ &lt;n&gt;* Fix atomic X-mas bug [thebrain]&lt;/n&gt;
+ &lt;f&gt;19588&lt;/f&gt;
+ &lt;g&gt;http://pear.example/get/WorldDominator-0.1.2&lt;/g&gt;
+ &lt;x xlink:href=&quot;package.0.1.2.xml&quot;/&gt;
+&lt;/r&gt;</pre>
+</div>
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.r-package-012xml.tags"><div class="info"><h4 class="title">Tags</h4></div>
+  
+  <table class="doctable table"><caption>Tag description</caption>
+   
+   
+    <thead>
+     <tr>
+      <th>Tag name</th>
+      <th>Description</th>
+     </tr>
+
+    </thead>
+
+    <tbody class="tbody">
+     <tr>
+      <td><code class="literal">&lt;p&gt;</code></td>
+      <td>
+       Package name inclusive absolute path to the package directory
+      </td>
+     </tr>
+
+
+     <tr>
+      <td><code class="literal">&lt;c&gt;</code></td>
+      <td>Channel server name</td>
+     </tr>
+
+
+     <tr>
+      <td><code class="literal">&lt;v&gt;</code></td>
+      <td>Release version</td>
+     </tr>
+
+
+     <tr>
+      <td><code class="literal">&lt;st&gt;</code></td>
+      <td>
+       Stability state
+       (e.g. <code class="literal">stable</code>, <code class="literal">beta</code> etc.)
+      </td>
+     </tr>
+
+
+     <tr>
+      <td><code class="literal">&lt;l&gt;</code></td>
+      <td>License name</td>
+     </tr>
+
+
+     <tr>
+      <td><code class="literal">&lt;m&gt;</code></td>
+      <td>Handle/nickname of the releasing developer</td>
+     </tr>
+
+
+     <tr>
+      <td><code class="literal">&lt;s&gt;</code></td>
+      <td>Summary</td>
+     </tr>
+
+
+     <tr>
+      <td><code class="literal">&lt;d&gt;</code></td>
+      <td>Description, multiline</td>
+     </tr>
+
+
+     <tr>
+      <td><code class="literal">&lt;da&gt;</code></td>
+      <td>Date and time of release</td>
+     </tr>
+
+
+     <tr>
+      <td><code class="literal">&lt;n&gt;</code></td>
+      <td>Release notes</td>
+     </tr>
+
+
+     <tr>
+      <td><code class="literal">&lt;f&gt;</code></td>
+      <td>File size of the tgz in bytes</td>
+     </tr>
+
+
+     <tr>
+      <td><code class="literal">&lt;g&gt;</code></td>
+      <td>Full URL to the release archive</td>
+     </tr>
+
+
+     <tr>
+      <td><code class="literal">&lt;x&gt;</code></td>
+      <td>
+       Link to the version&#039;s
+       <a href="core.rest.html#core.rest.fileformats.r-package-package012xml" class="link">
+        <code class="filename">package.xml</code>
+       </a>
+       file.
+      </td>
+     </tr>
+
+
+    </tbody>
+   
+  </table>
+
+ </div>
+
+</div>
+
+
+<div class="section" id="core.rest.fileformats.r-package-v2012xml"><div class="info"><h3 class="title">v2.0.1.2.xml</h3></div>
+ 
+ <div class="programlisting">Short xml file about the release, version 2</div>
+
+ <p class="para">
+  Same as
+  <a href="core.rest.html#core.rest.fileformats.r-package-012xml" class="link">
+   <code class="filename">0.1.2.xml</code>
+  </a>,
+  but with additional API and minimum PHP version.
+ </p>
+
+
+ <div class="section" id="core.rest.fileformats.r-package-v2012xml.location"><div class="info"><h4 class="title">Location</h4></div>
+  
+  <p class="para">
+   <code class="filename">r/${packagename}/v2.0.1.2.xml</code>
+  </p>
+  <blockquote class="note">
+   <p class="para">
+    The package name is lowercased.
+   </p>
+  </blockquote>
+
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.r-package-v2012xml.example"><div class="info"><h4 class="title">Example</h4></div>
+  
+  <div class="xmlcode"><pre class="xmlcode">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;r xmlns=&quot;http://pear.php.net/dtd/rest.release2&quot;
+   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+   xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;
+   xsi:schemaLocation=&quot;http://pear.php.net/dtd/rest.release2
+                       http://pear.php.net/dtd/rest.release2.xsd&quot;
+&gt;
+ &lt;p xlink:href=&quot;/rest/p/worlddominator&quot;&gt;WorldDominator&lt;/p&gt;
+ &lt;c&gt;pear.example.org&lt;/c&gt;
+ &lt;v&gt;0.1.2&lt;/v&gt;
+ &lt;a&gt;0.1.2&lt;/a&gt;
+ &lt;mp&gt;5.2.3&lt;/mp&gt;
+ &lt;st&gt;beta&lt;/st&gt;
+ &lt;l&gt;Dictatoric License&lt;/l&gt;
+ &lt;m&gt;thebrain&lt;/m&gt;
+ &lt;s&gt;Tool to dominate the world&lt;/s&gt;
+ &lt;d&gt;Helps you dominating the world by fulfilling various tasks:
+  - Feed the cats
+  - Lock the doors after 23:42&lt;/d&gt;
+ &lt;da&gt;2007-12-24 23:42:00&lt;/da&gt;
+ &lt;n&gt;* Fix atomic X-mas bug [thebrain]&lt;/n&gt;
+ &lt;f&gt;19588&lt;/f&gt;
+ &lt;g&gt;http://pear.example/get/WorldDominator-0.1.2&lt;/g&gt;
+ &lt;x xlink:href=&quot;package.0.1.2.xml&quot;/&gt;
+&lt;/r&gt;</pre>
+</div>
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.r-package-v2012xml.tags"><div class="info"><h4 class="title">Tags</h4></div>
+  
+
+  <p class="para">
+   New tags compared to <code class="filename">0.1.2.xml</code>.
+  </p>
+
+  <table class="doctable table"><caption>Tag description</caption>
+   
+   
+    <thead>
+     <tr>
+      <th>Tag name</th>
+      <th>Description</th>
+     </tr>
+
+    </thead>
+
+    <tbody class="tbody">
+
+     <tr>
+      <td><code class="literal">&lt;a&gt;</code></td>
+      <td>API version</td>
+     </tr>
+
+
+     <tr>
+      <td><code class="literal">&lt;mp&gt;</code></td>
+      <td>Minimum PHP version</td>
+     </tr>
+
+
+    </tbody>
+   
+  </table>
+
+ </div>
+
+</div>
+
+
+<div class="section" id="core.rest.fileformats.r-package-package012xml"><div class="info"><h3 class="title">package.0.1.2.xml</h3></div>
+ 
+ <div class="programlisting">Full package.xml</div>
+
+ <p class="para">
+  Full <code class="filename">package.xml</code> for the release. May be version 1
+  or version 2 of the <code class="filename">package.xml</code> format.
+  The highest version should be made available if the package contains
+  both.
+ </p>
+
+
+ <div class="section" id="core.rest.fileformats.r-package-package012xml.location"><div class="info"><h4 class="title">Location</h4></div>
+  
+  <p class="para">
+   <code class="filename">r/${packagename}/package.0.1.2.xml</code>
+  </p>
+  <blockquote class="note">
+   <p class="para">
+    The package name is lowercased.
+   </p>
+  </blockquote>
+
+ </div>
+
+
+</div>
+
+
+<div class="section" id="core.rest.fileformats.r-package-deps012txt"><div class="info"><h3 class="title">deps.0.1.2.txt</h3></div>
+ 
+ <div class="programlisting">Serialized dependency information</div>
+
+ <p class="para">
+  The file contains an array of dependency information, serialized with
+  PHP&#039;s
+  <a href="http://www.php.net/serialize" class="link external"><strong class="function">serialize()</strong></a>
+  function.
+ </p>
+
+ <div class="section" id="core.rest.fileformats.r-package-deps012txt.location"><div class="info"><h4 class="title">Location</h4></div>
+  
+  <p class="para">
+   <code class="filename">r/${packagename}/deps.0.1.2.txt</code>
+  </p>
+  <blockquote class="note">
+   <p class="para">
+    The package name is lowercased.
+   </p>
+  </blockquote>
+
+ </div>
+
+
+ <div class="section" id="core.rest.fileformats.r-package-deps012txt.example"><div class="info"><h4 class="title">Example of an dependency array, unserialized and in xml</h4></div>
+  
+  <div class="xmlcode"><pre class="xmlcode">array(2) {
+  [&quot;required&quot;]=&gt;
+  array(2) {
+    [&quot;php&quot;]=&gt;
+    array(1) {
+      [&quot;min&quot;]=&gt;
+      string(5) &quot;5.2.3&quot;
+    }
+    [&quot;pearinstaller&quot;]=&gt;
+    array(1) {
+      [&quot;min&quot;]=&gt;
+      string(7) &quot;1.7.1&quot;
+    }
+  }
+  [&quot;optional&quot;]=&gt;
+  array(1) {
+    [&quot;package&quot;]=&gt;
+    array(2) {
+      [&quot;name&quot;]=&gt;
+      string(4) &quot;Toolbox&quot;
+      [&quot;channel&quot;]=&gt;
+      string(12) &quot;pear.example.org&quot;
+      [&quot;min&quot;] =&gt;
+      string(7) &quot;1.3.0&quot;
+    }
+  }
+}</pre>
+</div>
+
+  <div class="xmlcode"><pre class="xmlcode">
+&lt;dependencies&gt;
+  &lt;required&gt;
+   &lt;php&gt;
+    &lt;min&gt;5.2.3&lt;/min&gt;
+   &lt;/php&gt;
+   &lt;pearinstaller&gt;
+    &lt;min&gt;1.7.1&lt;/min&gt;
+   &lt;/pearinstaller&gt;
+  &lt;/required&gt;
+  &lt;optional&gt;
+   &lt;package&gt;
+    &lt;name&gt;Toolbox&lt;/name&gt;
+    &lt;channel&gt;pear.example.org&lt;/channel&gt;
+    &lt;min&gt;1.3.0&lt;/min&gt;
+   &lt;/package&gt;
+  &lt;/optional&gt;
+ &lt;/dependencies&gt;</pre>
+</div>
+ </div>
+
+</div>
+
+
+
+</div>
+
+ 
+<div class="section" id="core.rest.history">
+ <div class="info">
+  <h2 class="title">REST version history</h2>
+  
+ </div>
+  
+  
+
+  <p class="para">
+   This page lists the known REST versions and their changes they introduced.
+  </p>
+
+
+  <div class="section" id="core.rest.history.rest10"><div class="info"><h3 class="title">REST 1.0</h3></div>
+   
+
+   <p class="para">
+    This was the initial and first supported version of the REST interface.
+   </p>
+  </div>
+
+
+  <div class="section" id="core.rest.history.rest11"><div class="info"><h3 class="title">REST 1.1</h3></div>
+   
+
+   <p class="para">
+    This version added files to allow spidering channels without
+    requiring the server to have directory listings enabled.
+    These files are:
+   </p>
+
+   <ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para">
+      <a href="core.rest.html#core.rest.fileformats.c-categoriesxml" class="link">
+       <code class="filename">c/categories.xml</code>
+      </a>
+     </p>
+    </li>
+
+    <li class="listitem">
+     <p class="para">
+      <a href="core.rest.html#core.rest.fileformats.c-category-packagesinfoxml" class="link">
+       <code class="filename">c/$categoryname/packagesinfo.xml</code>
+      </a>
+     </p>
+    </li>
+
+    <li class="listitem">
+     <p class="para">
+      <a href="core.rest.html#core.rest.fileformats.m-allmaintainersxml" class="link">
+       <code class="filename">m/allmaintainers.xml</code>
+      </a>
+     </p>
+    </li>
+   </ul>
+  </div>
+
+
+  <div class="section" id="core.rest.history.rest12"><div class="info"><h3 class="title">REST 1.2</h3></div>
+   
+
+   <p class="para">
+    Now the developer&#039;s roles are listed in the package&#039;s
+    maintainer list.
+   </p>
+   <ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para">
+      <a href="core.rest.html#core.rest.fileformats.p-package-maintainers2xml" class="link">
+       <code class="filename">p/${packagename}/maintainers2.xml</code>
+      </a>
+     </p>
+    </li>
+   </ul>
+  </div>
+
+
+  <div class="section" id="core.rest.history.rest13"><div class="info"><h3 class="title">REST 1.3</h3></div>
+   
+
+   <p class="para">
+    This version makes it possible to resolve PHP version incompatibilities
+    by downloading the releases list only.
+    <code class="filename">allreleases2.xml</code> lists the minimum PHP version
+    for each package release, thus the package name does not need to be
+    changed when upgrading the package&#039;s minimum PHP version.
+   </p>
+
+   <ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para">
+      <a href="core.rest.html#core.rest.fileformats.r-package-allreleases2xml" class="link">
+       <code class="filename">r/${packagename}/allreleases2.xml</code>
+      </a>
+     </p>
+    </li>
+
+    <li class="listitem">
+     <p class="para">
+      <a href="core.rest.html#core.rest.fileformats.r-package-v2012xml" class="link">
+       <code class="filename">r/${packagename}/v2.0.1.2.xml</code>
+      </a>
+     </p>
+    </li>
+
+   </ul>
+  </div>
+
+ </div>
+
+ 
+<div class="section" id="core.rest.usecases">
+ <div class="info">
+  <h2 class="title">Use cases</h2>
+  
+ </div>
+ 
+ 
+
+ <p class="para">
+  This section shows common actions on a channel server and what
+  to do then.
+ </p>
+
+ <p class="para">
+  The idea and initial cases have been taken from
+  Jean-Lou Dupont&#039;s
+  &quot;<a href="http://docs.google.com/present/view?id=dgstxrxv_6f48xbz" class="link external">PEAR Channel on Google Code</a>&quot;
+  presentation.
+ </p>
+
+
+
+<div class="section" id="core.rest.usecases.addcategory"><div class="info"><h3 class="title">Adding a new category</h3></div>
+ 
+
+ <p class="para">
+  When creating a fresh category on your channel server, the following
+  steps are necessary:
+ </p>
+
+ <ol type="1">
+  <li class="listitem">
+   <p class="para">
+     Create <code class="filename">c/${CategoryName}</code> directory.
+   </p>
+  </li>
+
+  <li class="listitem">
+   <p class="para">
+    Create the following files:
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+       <a href="core.rest.html#core.rest.fileformats.c-category-infoxml" class="link">
+        <code class="filename">c/${CategoryName}/info.xml</code>
+       </a>
+      </p>
+     </li>
+
+     <li class="listitem">
+      <p class="para">
+       <a href="core.rest.html#core.rest.fileformats.c-category-packagesxml" class="link">
+        <code class="filename">c/${CategoryName}/packages.xml</code>
+       </a>
+      </p>
+     </li>
+
+     <li class="listitem">
+      <p class="para">
+       <a href="core.rest.html#core.rest.fileformats.c-category-packagesinfoxml" class="link">
+        <code class="filename">c/${CategoryName}/packagesinfo.xml</code>
+       </a>
+      </p>
+     </li>
+    </ul>
+   
+  </li>
+
+  <li class="listitem">
+   <p class="para">
+    Update
+    <a href="core.rest.html#core.rest.fileformats.c-categoriesxml" class="link">
+     <code class="filename">c/categories.xml</code>
+    </a>.
+   </p>
+  </li>
+ </ol>
+
+</div>
+
+
+<div class="section" id="core.rest.usecases.addpackage"><div class="info"><h3 class="title">Adding a new package</h3></div>
+ 
+
+ <p class="para">
+  A new package shall be published on the server, and here are the steps
+  you need to do:
+ </p>
+
+ <ol type="1">
+  <li class="listitem">
+   <p class="para">
+     Check if the package category already exists, or
+     a <a href="core.rest.html#core.rest.usecases.addcategory" class="link">new category</a>
+     needs to be created.
+   </p>
+  </li>
+
+  <li class="listitem">
+   <p class="para">
+    Create the package directory <code class="filename">p/${packagename}/</code>.
+   </p>
+  </li>
+
+  <li class="listitem">
+   <p class="para">
+    Create those files:
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+       <a href="core.rest.html#core.rest.fileformats.p-package-infoxml" class="link">
+        <code class="filename">r/${packagename}/info.xml</code>
+       </a>
+      </p>
+     </li>
+
+     <li class="listitem">
+      <p class="para">
+       <a href="core.rest.html#core.rest.fileformats.p-package-maintainersxml" class="link">
+        <code class="filename">r/${packagename}/maintainers.xml</code>
+       </a>
+      </p>
+     </li>
+
+     <li class="listitem">
+      <p class="para">
+       <a href="core.rest.html#core.rest.fileformats.p-package-maintainers2xml" class="link">
+        <code class="filename">r/${packagename}/maintainers2.xml</code>
+       </a>
+      </p>
+     </li>
+    </ul>
+   
+  </li>
+
+  <li class="listitem">
+   <p class="para">
+    Update the category files:
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+       <a href="core.rest.html#core.rest.fileformats.c-category-packagesxml" class="link">
+        <code class="filename">c/${CategoryName}/packages.xml</code>
+       </a>
+      </p>
+     </li>
+
+     <li class="listitem">
+      <p class="para">
+       <a href="core.rest.html#core.rest.fileformats.c-category-packagesinfoxml" class="link">
+        <code class="filename">c/${CategoryName}/packagesinfo.xml</code>
+       </a>
+      </p>
+     </li>
+    </ul>
+   
+  </li>
+ </ol>
+
+
+</div>
+
+
+<div class="section" id="core.rest.usecases.addrelease"><div class="info"><h3 class="title">Adding a release</h3></div>
+ 
+
+ <p class="para">
+  The time has come to release a new version of an existing package.
+  Those are the steps to do:
+ </p>
+
+ <ol type="1">
+  <li class="listitem">
+   <p class="para">
+    Publish the release&#039;s <code class="filename">package.xml</code> as
+    <a href="core.rest.html#core.rest.fileformats.r-package-package012xml" class="link">
+     <code class="filename">r/${packagename}/package.0.1.2.xml</code>
+    </a>.
+   </p>
+  </li>
+
+  <li class="listitem">
+   <p class="para">
+    Create the version specific
+    <a href="core.rest.html#core.rest.fileformats.r-package-012xml" class="link">
+     <code class="filename">r/${packagename}/0.1.2.xml</code>
+    </a>.
+   </p>
+  </li>
+
+  <li class="listitem">
+   <p class="para">
+    Update state files if appropriate:
+    <a href="core.rest.html#core.rest.fileformats.r-package-latesttxt" class="link">
+     <code class="filename">r/${packagename}/latest.txt</code>
+    </a>,
+    <a href="core.rest.html#core.rest.fileformats.r-package-stabletxt" class="link">
+     <code class="filename">stable.txt</code>
+    </a>,
+    <a href="core.rest.html#core.rest.fileformats.r-package-betatxt" class="link">
+     <code class="filename">beta.txt</code>
+    </a>,
+    <a href="core.rest.html#core.rest.fileformats.r-package-alphatxt" class="link">
+     <code class="filename">alpha.txt</code>
+    </a>,
+    <a href="core.rest.html#core.rest.fileformats.r-package-develtxt" class="link">
+     <code class="filename">devel.txt</code>
+    </a>.
+   </p>
+  </li>
+
+  <li class="listitem">
+   <p class="para">
+    Generate
+    <a href="core.rest.html#core.rest.fileformats.r-package-deps012txt" class="link">
+     <code class="filename">r/${packagename}/deps.0.1.2.xml</code>
+    </a>.
+   </p>
+  </li>
+
+  <li class="listitem">
+   <p class="para">
+    Update
+    <a href="core.rest.html#core.rest.fileformats.r-package-allreleasesxml" class="link">
+     <code class="filename">r/${packagename}/allreleases.xml</code>
+    </a>
+    and
+    <a href="core.rest.html#core.rest.fileformats.r-package-allreleases2xml" class="link">
+     <code class="filename">r/${packagename}/allreleases2.xml</code>
+    </a>.
+   </p>
+  </li>
+
+  <li class="listitem">
+   <p class="para">
+    Place package archives (<code class="literal">tar</code> and <code class="literal">tgz</code>)
+    at the place specified in
+    <a href="core.rest.html#core.rest.fileformats.r-package-012xml" class="link">
+     <code class="filename">r/${packagename}/0.1.2.xml</code>
+    </a>.
+   </p>
+  </li>
+
+ </ol>
+
+</div>
+
+
+</div>
+
+ 
+<div class="section" id="core.rest.channelserversoftware">
+ <div class="info">
+  <h2 class="title">Channel server software</h2>
+ </div>
+
+ <p class="para">
+  While you can use this documentation to build you own channel server,
+  it is possibly easier for you to either get your package
+  into PEAR itself, or setup your own channel server.
+  The reference implementation of a PEAR channel server is the PEAR website
+  itself, but it should not be used for your own server.
+ </p>
+
+ <p class="para">
+  If you seek for an easy-to-setup software,
+  try <strong class="classname">Chiara_PEAR_Server</strong> which resides on its own
+  channel <a href="http://pear.chiaraquartet.net" class="link external">http://pear.chiaraquartet.net</a>.
+ </p>
+
+ <p class="para">
+  Another project is <a href="channels.scs.intro.html" class="link">SimpleChannelServer</a>,
+  which is available as a plugin for Pyrus, or a standalone phar
+  <a href="https://github.com/pear2/PEAR2_SimpleChannelServer/blob/master/pearscs.phar?raw=true" class="link external">pearscs.phar</a>.
+  View the <a href="channels.scs.intro.html" class="link">online documentation</a>,
+  or the source <a href="https://github.com/pear2/PEAR2_SimpleChannelServer" class="link external">in SVN</a>.
+ </p>
+
+</div>
+
+
+ 
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="guide.migrating.channels.xml.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="channels.whatarethey.html">channel.xml, REST, XML-RPC</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="guide.migrating.channels.xmlrpcfunctions.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">channel.xml: The channel definition file</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">(deprecated) XML-RPC functions</td>
+  </tr>
+ </table>
+</div>
+</body></html>

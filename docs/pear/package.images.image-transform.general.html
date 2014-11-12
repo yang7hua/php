@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>General usage</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.images.image-transform.html" title="Image_Transform" />
+  <link rel="prev" href="package.images.image-transform.html" title="Image_Transform" />
+  <link rel="next" href="package.images.image-transform.drivers.html" title="Drivers" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">General usage</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.images.image-transform.html" title="Image_Transform">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.images.image-transform.drivers.html" title="Drivers">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="chapter" id="package.images.image-transform.general">
+  <div class="info"><h1>General usage</h1>
+</div>
+
+  <p class="para">
+   The first step to do when using <strong class="classname">Image_Transform</strong> is
+   to create an <strong class="classname">Image_Transform_Driver</strong> instance via
+   the static <strong class="function">factory()</strong> method. Just pass the driver name
+   and you&#039;ve got your object.
+  </p>
+
+  <blockquote class="note">
+   <p class="para">
+    You may omit the driver name. In that case, <strong class="classname">Image_Transform</strong>
+    checks for <strong class="classname">Imagick2</strong>, <strong class="classname">GD</strong>
+    and <strong class="classname">Imlib</strong> and uses whatever driver is found first.
+   </p>
+  </blockquote>
+
+
+  <p class="para">
+   Now you can <strong class="function">load()</strong> your image by passing the filename
+   to this function. Use one of the scaling methods and then
+   <strong class="function">save()</strong>.
+  </p>
+
+  <blockquote class="warning">
+
+   <p class="para">
+    You may not execute several scaling functions
+    in a row without saving in between.
+   </p>
+  </blockquote>
+
+
+  <div class="example">
+   <div class="info"><p><strong>Scaling an image down</strong></p></div>
+
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Image/Transform.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//create&nbsp;transform&nbsp;driver&nbsp;object<br /></span><span style="color: #0000BB">$it&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Image_Transform</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">'GD'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//load&nbsp;the&nbsp;original&nbsp;file<br /></span><span style="color: #0000BB">$it</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">load</span><span style="color: #007700">(</span><span style="color: #DD0000">'beach-large.jpg'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//scale&nbsp;it&nbsp;to&nbsp;150px<br /></span><span style="color: #0000BB">$it</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">scaleMaxLength</span><span style="color: #007700">(</span><span style="color: #0000BB">150</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//save&nbsp;it&nbsp;into&nbsp;a&nbsp;different&nbsp;file<br /></span><span style="color: #0000BB">$it</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">save</span><span style="color: #007700">(</span><span style="color: #DD0000">'beach-150px.jpg'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+
+  <p class="para">
+   The example above did not do any error checking. Principially, any method
+   may return a <strong class="classname">PEAR_Error</strong> object.
+   Either you check each return value or - in PHP 5 - set the global
+   
+   PEAR error handler to throw exceptions as soon as an error occurs. This
+   may interfere with other errors that are expected and can be hidden, so
+   be careful with this option (especially when using other packages).
+  </p>
+  <div class="example">
+   <div class="info"><p><strong>Scaling an image and checking for all possible errors</strong></p></div>
+
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Image/Transform.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//create&nbsp;transform&nbsp;driver&nbsp;object<br /></span><span style="color: #0000BB">$it&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Image_Transform</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">'GD'</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$it</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$it</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /><br /></span><span style="color: #FF8000">//load&nbsp;the&nbsp;original&nbsp;file<br /></span><span style="color: #0000BB">$ret&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$it</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">load</span><span style="color: #007700">(</span><span style="color: #DD0000">'beach-large.jpg'</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$ret</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$ret</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /><br /></span><span style="color: #FF8000">//scale&nbsp;it&nbsp;to&nbsp;150px<br /></span><span style="color: #0000BB">$ret&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$it</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">scaleByLength</span><span style="color: #007700">(</span><span style="color: #0000BB">150</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$ret</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$ret</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /><br /></span><span style="color: #FF8000">//save&nbsp;it&nbsp;into&nbsp;a&nbsp;different&nbsp;file<br /></span><span style="color: #0000BB">$ret&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$it</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">save</span><span style="color: #007700">(</span><span style="color: #DD0000">'beach-150px.jpg'</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$ret</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$ret</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+ </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.images.image-transform.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.images.image-transform.html">Image_Transform</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.images.image-transform.drivers.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Image_Transform</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Drivers</td>
+  </tr>
+ </table>
+</div>
+</body></html>

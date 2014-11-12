@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>-&gt;getLinks()</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.db-dataobject.html" title="DB_DataObject" />
+  <link rel="prev" href="package.database.db-dataobject.db-dataobject.getlink.html" title="-&gt;getLink()" />
+  <link rel="next" href="package.database.db-dataobject.db-dataobject.selectas.html" title="-&gt;selectAs()" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">-&gt;getLinks()</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.db-dataobject.db-dataobject.getlink.html" title="-&gt;getLink()">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.db-dataobject.db-dataobject.selectas.html" title="-&gt;selectAs()">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.db-dataobject.db-dataobject.getlinks">
+   
+    <h1 class="refname">-&gt;getLinks()</h1>
+    <div class="refnamediv">-&gt;getLinks() &ndash; load related objects</div>
+
+   
+   <h2 class="refsynopsisdiv">Synopsis</h2>
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      boolean <strong class="function">$DB_DataObject-&gt;getLinks</strong> ( 
+       
+      
+      string $variableFormat
+      
+      
+     )</code></p>
+    </div>
+   
+   <div class="refsection" id="package.database.db-dataobject.db-dataobject.getlinks.desc">
+    <h1 class="title">Description</h1>
+    <p class="para">
+     Loads the all the related objects into the main object, by using the links.ini
+     relationships, and sets the calling objects variables with the row name prefixed
+     with an underscode (<em><code class="parameter">_</code></em>) to the resulting objects.
+    </p>
+    <p class="para">
+      Using this with the earlier column naming convention is depreciated, and links.ini
+      files should be used.
+    </p>
+   </div>
+   <div class="refsection" id="package.database.db-dataobject.db-dataobject.getlinks.parameter">
+    <h1 class="title">Parameter</h1>
+    <p class="para">
+     </p><ul class="itemizedlist">
+      
+      <li class="listitem">
+       <p class="para">
+        <em><code class="parameter">string $variableFormat</code></em> - the default behavior is to assign the resulting
+        objects to variables with the row name prefixed with an underscode (<em><code class="parameter">_</code></em>), however,
+        you can use this value to format the variable differently
+        </p><div class="example"><div class="info"><p><strong> examples of formaters </strong></p></div>
+           
+                <div class="inicode"><pre class="inicode">
+
+if room.occupied_by is linked to a person.id
+
+without a modifier - eg _%s
+
+
+results in the equivilant of
+$object-&gt;_occupied_by =  $object-&gt;getLink(&#039;occupied_by&#039;);
+
+
+
+with a modifier - eg link_%s 
+
+results in the equivilant of
+$object-&gt;link_occupied_by = $object-&gt;getLink(&#039;occupied_by&#039;);</pre>
+</div>
+         </div>        
+       
+      </li>  
+     </ul> 
+    
+  </div>
+      
+      
+   <div class="refsection" id="package.database.db-dataobject.db-dataobject.getlinks.return">
+    <h1 class="title">Return value</h1>
+    <p class="para">
+     <em><code class="parameter">boolean</code></em> - <strong class="constant">TRUE</strong> on success and <strong class="constant">FALSE</strong> on failure
+    </p>
+   </div>
+
+   <div class="refsection" id="package.database.db-dataobject.db-dataobject.getlinks.note">
+    <h1 class="title">Note</h1>
+    <p class="simpara">This function can not be called
+statically.</p>
+   </div>
+
+   <div class="refsection" id="package.database.db-dataobject.db-dataobject.getlinks.see">
+    <h1 class="title">See</h1>
+    
+    <p class="para">
+     <a href="package.database.db-dataobject.db-dataobject.getlink.html" class="link"><strong class="function">
+       DB_DataObject::getLink()</strong></a>
+    </p>
+   </div>
+   <div class="refsection" id="package.database.db-dataobject.db-dataobject.getlinks.example">
+    <h1 class="title">Example</h1>
+    <div class="example"><div class="info"><p><strong>Two Example Tables</strong></p></div>
+     
+     <div class="programlisting">
+       <br/>Person<br/>+---------------+---------------+------+-----+---------+----------------+<br/>|&nbsp;Field&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Null&nbsp;|&nbsp;Key&nbsp;|&nbsp;Default&nbsp;|&nbsp;Extra&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>+---------------+---------------+------+-----+---------+----------------+<br/>|&nbsp;id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;mediumint(9)&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;PRI&nbsp;|&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;auto_increment&nbsp;|<br/>|&nbsp;first_name&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;varchar(80)&nbsp;&nbsp;&nbsp;|&nbsp;YES&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;NULL&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;last_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;varchar(80)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;MUL&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;middle_name&nbsp;&nbsp;&nbsp;|&nbsp;varchar(80)&nbsp;&nbsp;&nbsp;|&nbsp;YES&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;NULL&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;badge_number&nbsp;&nbsp;|&nbsp;smallint(6)&nbsp;&nbsp;&nbsp;|&nbsp;YES&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;NULL&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;street&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;varchar(80)&nbsp;&nbsp;&nbsp;|&nbsp;YES&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;NULL&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;city&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;varchar(80)&nbsp;&nbsp;&nbsp;|&nbsp;YES&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;NULL&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;state&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;varchar(80)&nbsp;&nbsp;&nbsp;|&nbsp;YES&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;NULL&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;zip&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;varchar(15)&nbsp;&nbsp;&nbsp;|&nbsp;YES&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;NULL&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;phone&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;varchar(15)&nbsp;&nbsp;&nbsp;|&nbsp;YES&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;NULL&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;reg_type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;varchar(80)&nbsp;&nbsp;&nbsp;|&nbsp;YES&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;NULL&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;judge&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;varchar(10)&nbsp;&nbsp;&nbsp;|&nbsp;YES&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;NULL&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;staff&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;varchar(10)&nbsp;&nbsp;&nbsp;|&nbsp;YES&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;NULL&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;volunteer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;varchar(10)&nbsp;&nbsp;&nbsp;|&nbsp;YES&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;NULL&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;rpga_number&nbsp;&nbsp;&nbsp;|&nbsp;mediumint(9)&nbsp;&nbsp;|&nbsp;YES&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;NULL&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;total_fee&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;float(10,2)&nbsp;&nbsp;&nbsp;|&nbsp;YES&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;NULL&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;email_address&nbsp;|&nbsp;varchar(80)&nbsp;&nbsp;&nbsp;|&nbsp;YES&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;NULL&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;country&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;varchar(30)&nbsp;&nbsp;&nbsp;|&nbsp;YES&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;NULL&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;convention_id&nbsp;|&nbsp;int(11)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;last_modified&nbsp;|&nbsp;timestamp(14)&nbsp;|&nbsp;YES&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;NULL&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>+---------------+---------------+------+-----+---------+----------------+<br/><br/>Convention<br/>+----------------------+---------------+------+-----+---------+----------------+<br/>|&nbsp;Field&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Null&nbsp;|&nbsp;Key&nbsp;|&nbsp;Default&nbsp;|&nbsp;Extra&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>+----------------------+---------------+------+-----+---------+----------------+<br/>|&nbsp;id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;int(11)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;PRI&nbsp;|&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;auto_increment&nbsp;|<br/>|&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;varchar(50)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;sponsor_organization&nbsp;|&nbsp;varchar(50)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;rpga_convention_code&nbsp;|&nbsp;varchar(20)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;web_site_url&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;varchar(200)&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;last_modified&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;timestamp(14)&nbsp;|&nbsp;YES&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;NULL&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;room_id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;int(11)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>+----------------------+---------------+------+-----+---------+----------------+<br/><br/>Room<br/>+----------------------+---------------+------+-----+---------+----------------+<br/>|&nbsp;Field&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Null&nbsp;|&nbsp;Key&nbsp;|&nbsp;Default&nbsp;|&nbsp;Extra&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>+----------------------+---------------+------+-----+---------+----------------+<br/>|&nbsp;room_id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;int(11)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;PRI&nbsp;|&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;auto_increment&nbsp;|<br/>|&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;varchar(50)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>+----------------------+---------------+------+-----+---------+----------------+
+     </div>
+    </div>
+    <div class="example"><div class="info"><p><strong> Loading all the related objects </strong></p></div>
+     
+      <div class="phpcode">
+       <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$person&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">DataObjects_Person</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">get</span><span style="color: #007700">(</span><span style="color: #0000BB">1079</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getLinks</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$person</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    </div>
+    <div class="example"><div class="info"><p><strong>Resulting SQL</strong></p></div>
+     
+     <div class="programlisting">
+       <br/>SELECT&nbsp;*&nbsp;FROM&nbsp;person&nbsp;WHERE&nbsp;id=1079<br/>SELECT&nbsp;*&nbsp;FROM&nbsp;convention&nbsp;WHERE&nbsp;id=1
+     </div>
+    </div>
+    <div class="example"><div class="info"><p><strong>Resulting Output </strong></p></div>
+     
+     <div class="programlisting">
+       <br/>Object:dataobjects_person&nbsp;Object<br/>(<br/>&nbsp;&nbsp;&nbsp;&nbsp;[_DB_DataObject_version]&nbsp;=&gt;&nbsp;1.0<br/>&nbsp;&nbsp;&nbsp;&nbsp;[__table]&nbsp;=&gt;&nbsp;person<br/>&nbsp;&nbsp;&nbsp;&nbsp;[_database_dsn]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;[_database_dsn_md5]&nbsp;=&gt;&nbsp;3974043abbccdd6412fb156a1d10b98377<br/>&nbsp;&nbsp;&nbsp;&nbsp;[_database]&nbsp;=&gt;&nbsp;testing<br/>&nbsp;&nbsp;&nbsp;&nbsp;[_condition]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;[_group_by]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;[_order_by]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;[_limit]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;[_data_select]&nbsp;=&gt;&nbsp;*<br/>&nbsp;&nbsp;&nbsp;&nbsp;[_link_loaded]&nbsp;=&gt;&nbsp;1<br/>&nbsp;&nbsp;&nbsp;&nbsp;[_lastError]&nbsp;=&gt;&nbsp;pear_error&nbsp;Object<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[error_message_prefix]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[mode]&nbsp;=&gt;&nbsp;1<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[level]&nbsp;=&gt;&nbsp;1024<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[code]&nbsp;=&gt;&nbsp;-3<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[message]&nbsp;=&gt;&nbsp;getLink:Could&nbsp;not&nbsp;find&nbsp;class&nbsp;for&nbsp;row&nbsp;last_modified,&nbsp;table&nbsp;last<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[userinfo]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[callback]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[id]&nbsp;=&gt;&nbsp;1079<br/>&nbsp;&nbsp;&nbsp;&nbsp;[N]&nbsp;=&gt;&nbsp;1<br/>&nbsp;&nbsp;&nbsp;&nbsp;[_DB_resultid]&nbsp;=&gt;&nbsp;2<br/>&nbsp;&nbsp;&nbsp;&nbsp;[first_name]&nbsp;=&gt;&nbsp;Tim<br/>&nbsp;&nbsp;&nbsp;&nbsp;[last_name]&nbsp;=&gt;&nbsp;White<br/>&nbsp;&nbsp;&nbsp;&nbsp;[middle_name]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;[badge_number]&nbsp;=&gt;&nbsp;123<br/>&nbsp;&nbsp;&nbsp;&nbsp;[street]&nbsp;=&gt;&nbsp;334411&nbsp;N&nbsp;Washington<br/>&nbsp;&nbsp;&nbsp;&nbsp;[city]&nbsp;=&gt;&nbsp;Texas<br/>&nbsp;&nbsp;&nbsp;&nbsp;[state]&nbsp;=&gt;&nbsp;CO<br/>&nbsp;&nbsp;&nbsp;&nbsp;[zip]&nbsp;=&gt;&nbsp;12345<br/>&nbsp;&nbsp;&nbsp;&nbsp;[phone]&nbsp;=&gt;&nbsp;343412323232<br/>&nbsp;&nbsp;&nbsp;&nbsp;[reg_type]&nbsp;=&gt;&nbsp;Staff<br/>&nbsp;&nbsp;&nbsp;&nbsp;[judge]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;[staff]&nbsp;=&gt;&nbsp;CHECKED<br/>&nbsp;&nbsp;&nbsp;&nbsp;[volunteer]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;[rpga_number]&nbsp;=&gt;&nbsp;1232323<br/>&nbsp;&nbsp;&nbsp;&nbsp;[total_fee]&nbsp;=&gt;&nbsp;0.00<br/>&nbsp;&nbsp;&nbsp;&nbsp;[email_address]&nbsp;=&gt;&nbsp;tim@example.com<br/>&nbsp;&nbsp;&nbsp;&nbsp;[country]&nbsp;=&gt;&nbsp;USA<br/>&nbsp;&nbsp;&nbsp;&nbsp;[convention_id]&nbsp;=&gt;&nbsp;1<br/>&nbsp;&nbsp;&nbsp;&nbsp;[last_modified]&nbsp;=&gt;&nbsp;20020711084539<br/>&nbsp;&nbsp;&nbsp;&nbsp;[_first_name]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;[_last_name]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;[_middle_name]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;[_badge_number]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;[_reg_type]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;[_rpga_number]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;[_total_fee]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;[_email_address]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;[_convention_id]&nbsp;=&gt;&nbsp;dataobjects_convention&nbsp;Object<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[_DB_DataObject_version]&nbsp;=&gt;&nbsp;1.0<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[__table]&nbsp;=&gt;&nbsp;convention<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[_database_dsn]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[_database_dsn_md5]&nbsp;=&gt;&nbsp;3974043abbcc86412fb156a1d10b98377<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[_database]&nbsp;=&gt;&nbsp;testing<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[_condition]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[_group_by]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[_order_by]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[_limit]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[_data_select]&nbsp;=&gt;&nbsp;*<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[_link_loaded]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[_lastError]&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[id]&nbsp;=&gt;&nbsp;1<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[N]&nbsp;=&gt;&nbsp;1<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[_DB_resultid]&nbsp;=&gt;&nbsp;3<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[name]&nbsp;=&gt;&nbsp;ABCD&nbsp;XYZ<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[sponsor_organization]&nbsp;=&gt;&nbsp;some&nbsp;sponser<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[rpga_convention_code]&nbsp;=&gt;&nbsp;ABCD_XYZ<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[web_site_url]&nbsp;=&gt;&nbsp;http://example.com<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[last_modified]&nbsp;=&gt;&nbsp;20020703143828<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[room_id]&nbsp;=&gt;&nbsp;1<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[_last_modified]&nbsp;=&gt;<br/>)<br/><br/>**&nbsp;Note,&nbsp;&nbsp;This&nbsp;error:&nbsp;[message]&nbsp;=&gt;&nbsp;getLink:Could&nbsp;not&nbsp;find&nbsp;class&nbsp;for&nbsp;row&nbsp;last_modified,&nbsp;table&nbsp;last<br/><br/>is&nbsp;caused&nbsp;by&nbsp;the&nbsp;original&nbsp;link&nbsp;code&nbsp;using&nbsp;{tablename}_{colname}&nbsp;for&nbsp;guessing&nbsp;links,&nbsp;this&nbsp;automated<br/>linking&nbsp;should&nbsp;be&nbsp;ignored,&nbsp;and&nbsp;not&nbsp;used,&nbsp;as&nbsp;it&nbsp;is&nbsp;depreciated.
+     </div>
+    </div>
+    <div class="example"><div class="info"><p><strong>Example with three tables join</strong></p></div>
+     
+      <div class="phpcode">
+       <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/**<br />&nbsp;*&nbsp;The&nbsp;following&nbsp;example&nbsp;show&nbsp;a&nbsp;three&nbsp;tables&nbsp;join.<br />&nbsp;*<br />&nbsp;*&nbsp;More&nbsp;joins&nbsp;can&nbsp;be&nbsp;nested&nbsp;as&nbsp;you&nbsp;see&nbsp;fit.<br />&nbsp;*/<br /></span><span style="color: #0000BB">$person&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">DataObjects_Person</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&nbsp;array();<br />if&nbsp;(</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">find</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;(</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getLinks</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Following&nbsp;is&nbsp;another&nbsp;call&nbsp;to&nbsp;getLinks&nbsp;for&nbsp;the&nbsp;second&nbsp;join<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_convention_id</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getLinks</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">[]&nbsp;=&nbsp;</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_convention_id</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_room_id</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">ToArray</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /><br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    </div>
+    <div class="example"><div class="info"><p><strong>databasename.links.ini</strong></p></div>
+     
+      <div class="programlisting">
+       <br/>;&nbsp;this&nbsp;ini&nbsp;file&nbsp;is&nbsp;for&nbsp;the&nbsp;three&nbsp;tables&nbsp;join&nbsp;example&nbsp;above.<br/>[person]<br/>person_id&nbsp;=&nbsp;convention:person_id<br/><br/>[room]<br/>room_id&nbsp;=&nbsp;convention:room_id
+     </div>
+    </div>
+   </div>
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.db-dataobject.db-dataobject.getlink.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.db-dataobject.html">DB_DataObject</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.db-dataobject.db-dataobject.selectas.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">-&gt;getLink()</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">-&gt;selectAs()</td>
+  </tr>
+ </table>
+</div>
+</body></html>

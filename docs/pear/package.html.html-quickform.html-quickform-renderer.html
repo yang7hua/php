@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>HTML_QuickForm_Renderer</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-quickform.output.renderer-doc.html" title="Renderer infrastructure" />
+  <link rel="prev" href="package.html.html-quickform.output.renderer-doc.html" title="Renderer infrastructure" />
+  <link rel="next" href="package.html.html-quickform.html-quickform-renderer.startform.html" title="HTML_QuickForm_Renderer::startForm()" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">HTML_QuickForm_Renderer</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-quickform.output.renderer-doc.html" title="Renderer infrastructure">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-quickform.html-quickform-renderer.startform.html" title="HTML_QuickForm_Renderer::startForm()">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-quickform.html-quickform-renderer">
+   
+    <h1 class="refname"><strong class="classname">HTML_QuickForm_Renderer</strong></h1>
+    <div class="refnamediv"><strong class="classname">HTML_QuickForm_Renderer</strong> &ndash; Abstract base class for renderers (package developer related)</div>
+
+   
+   <div class="refsection" id="package.html.html-quickform.html-quickform-renderer.desc">
+    <h1 class="title">Description</h1>
+    <p class="para">
+Defines the abstract methods that should be implemented by child classes.
+    </p>
+    <p class="para">
+QuickForm renderers implement the Visitor design pattern. That means that each 
+form element has an <strong class="function">accept()</strong> method that is called with a renderer 
+instance as a parameter. This method does the following:
+</p><ul class="itemizedlist">
+  <li class="listitem"><p class="para">
+    If the element contains other elements (<strong class="classname">HTML_QuickForm_group</strong> 
+    and <strong class="classname">HTML_QuickForm</strong> itself) then it iterates over them calling
+    each element&#039;s <strong class="function">accept()</strong> method and calls the methods for rendering 
+    the container itself (e.g. <a href="package.html.html-quickform.html-quickform-renderer.startform.html" class="link"><strong class="function">startForm()</strong></a> 
+    and <a href="package.html.html-quickform.html-quickform-renderer.finishform.html" class="link"><strong class="function">finishForm()</strong></a>).
+  </p></li>
+  <li class="listitem"><p class="para">
+    If the element is simple, then it calls the renderer&#039;s method for rendering itself
+    (e.g. <a href="package.html.html-quickform.html-quickform-renderer.renderheader.html" class="link"><strong class="function">renderHeader()</strong></a>).
+  </p></li>
+</ul>
+    
+    <p class="para">
+It may seem that renderer object has to have a <strong class="function">renderConcreteElement()</strong> method
+for each <strong class="classname">HTML_QuickForm_concreteElement</strong> it may visit, but fortunately 
+most of the elements have fairly similar rendering needs, so instead of separate <strong class="function">renderTextarea()</strong> 
+and <strong class="function">renderCheckbox()</strong> we have a generic 
+<a href="package.html.html-quickform.html-quickform-renderer.renderelement.html" class="link"><strong class="function">renderElement()</strong></a> method.
+    </p>
+    <p class="para">
+The renderer should take care of &quot;accumulating&quot; the information passed to its
+methods and of generating some type of output based on it. How this is implemented internally
+depends on the renderer type.
+    </p>
+   </div>
+   
+   <div class="refsection" id="package.html.html-quickform.html-quickform-renderer.own"><div class="info"><h1>Creating your own renderer</h1>
+</div>
+    
+    <p class="para">
+The first thing you have to decide upon is how your renderer will accumulate the information.
+You&#039;ll probably have to create some data structures to keep it (unless you are going to pass
+the information to e.g. a template object at once).
+    </p>
+    <p class="para">
+Then you have to make concrete implementations for all the abstract 
+methods defined in <strong class="classname">HTML_QuickForm_Renderer</strong>. One notable 
+exception is <a href="package.html.html-quickform.html-quickform-renderer.renderhtml.html" class="link"><strong class="function">renderHtml()</strong></a> method
+that is implemented only in the Default renderer and will probably stay this way.
+    </p>
+    <p class="para">
+You&#039;ll probably also want to add some public methods for customizing the output and getting the 
+results of the renderer&#039;s work. But this depends on the type of the renderer very much.
+    </p>
+    <p class="para">
+If you want to contribute the renderer you made to QuickForm, consider the following
+</p><ul class="itemizedlist">
+  <li class="listitem"><p class="para">Your code should be useful to other people (e.g. renderer for some obscure private template engine is a bad contribution).</p></li>
+  <li class="listitem"><p class="para">Your renderer should have non-trivial usage examples.</p></li>
+  <li class="listitem"><p class="para">And last but not least, you code will have to conform to PEAR coding standards.</p></li>
+</ul>
+    
+    <blockquote class="tip">
+    <p class="para">
+If you have examples for additional uses of an existing renderer, that will be
+a welcome contribution, too.
+    </p>
+    </blockquote>
+
+   </div>
+   
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-quickform.output.renderer-doc.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-quickform.output.renderer-doc.html">Renderer infrastructure</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-quickform.html-quickform-renderer.startform.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Renderer infrastructure</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">HTML_QuickForm_Renderer::startForm()</td>
+  </tr>
+ </table>
+</div>
+</body></html>

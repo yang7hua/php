@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Client Side with cache</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.webservices.xml-rpc2.html" title="XML_RPC2" />
+  <link rel="prev" href="package.webservices.xml-rpc2.server.html" title="Server Side" />
+  <link rel="next" href="package.webservices.xml-rpc2.cachedserver.html" title="Server Side with cache" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Client Side with cache</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.webservices.xml-rpc2.server.html" title="Server Side">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.webservices.xml-rpc2.cachedserver.html" title="Server Side with cache">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.webservices.xml-rpc2.cachedclient">
+
+ 
+  <h1 class="refname">Client Side with cache</h1>
+  <div class="refnamediv">Client Side with cache &ndash; 
+ 
+
+ <div class="refsection" id="package.webservices.xml-rpc2.cachedclient.intro"><div class="info"><h1>Introduction about the XML_RPC2 &quot;cached client side&quot; usage</h1>
+</div>
+  
+  <p class="para">
+   Thanks to PHP5 and PEAR/Cache_Lite, it&#039;s really easy to do XMLRPC &quot;cached client&quot; requests with
+   XML_RPC2. The usage is really straightforward.
+  </p>
+  <p class="para">
+   First, you include &#039;XML/RPC2/CachedClient.php&#039; file (only this one).
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'XML/RPC2/CachedClient.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   Second, you make an assocative arrays of options to tune XML_RPC2 (prefix,
+   proxy, manual backend choice...).
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$options&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'prefix'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'package.'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'cacheOptions'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'cacheDir'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'/tmp/'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'lifetime'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">3600<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">)<br />);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   Third, you make a XML_RPC2_CachedClient object with the server URL and the with
+   the options array.
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$client&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">XML_RPC2_CachedClient</span><span style="color: #007700">::</span><span style="color: #0000BB">create</span><span style="color: #007700">(</span><span style="color: #DD0000">'http://pear.php.net/xmlrpc.php'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   Then, you send your request by calling the server method as it was a local
+   method of the $client object.
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$client</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">info</span><span style="color: #007700">(</span><span style="color: #DD0000">'XML_RPC2'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   This single line will encode a XMLRPC client request for the package.info() (prefix + method name)
+   method with a single argument (the string &#039;XML_RPC2&#039;), will send the request over HTTP to the
+   server and will decode the response into PHP native types. With a single line ! Moreover, the result
+   will be cached into a file for the given lifetime. So the next call will not send any HTTP request
+   and it will be really fast.
+  </p>
+  <p class="para">
+   Of course, to catch server errors, you have to add a few lines around you client call like for example :
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$client</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">info</span><span style="color: #007700">(</span><span style="color: #DD0000">'XML_RPC2'</span><span style="color: #007700">);&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$result</span><span style="color: #007700">);<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">XML_RPC2_FaultException&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;The&nbsp;XMLRPC&nbsp;server&nbsp;returns&nbsp;a&nbsp;XMLRPC&nbsp;error<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">die(</span><span style="color: #DD0000">'Exception&nbsp;#'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getFaultCode</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">'&nbsp;:&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getFaultString</span><span style="color: #007700">());<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Exception&nbsp;$e</span><span style="color: #007700">)&nbsp;{&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Other&nbsp;errors&nbsp;(HTTP&nbsp;or&nbsp;networking&nbsp;problems...)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">die(</span><span style="color: #DD0000">'Exception&nbsp;:&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   
+ </div>
+ <div class="refsection" id="package.webservices.xml-rpc2.cachedclient.options"><div class="info"><h1>The options array</h1>
+</div>
+  
+  <p class="para">
+   This array is completely optional but really usefull. The following keys
+   are available :
+   </p><table class="doctable table"><caption>Options available keys</caption>
+    
+    
+     <thead>
+      <tr>
+       <th>Option</th>
+       <th>Data Type</th>
+       <th>Default Value</th>
+       <th>Description</th>
+      </tr>
+
+     </thead>
+
+     <tbody class="tbody">
+      <tr>
+       <td>[...]</td>
+       <td>[...]</td>
+       <td>[...]</td>
+       <td>See &quot;non cached client side&quot; for more options</td>
+      </tr>
+
+      <tr>
+       <td>cacheOptions</td>
+       <td><span class="type">array</span></td>
+       <td>array()</td>
+       <td>See next table for a complete description</td>
+      </tr>
+      
+     </tbody>  
+    
+   </table>
+<p> 
+   &quot;CacheOptions&quot; entry is an associative array. Available keys are :
+   </p><table class="doctable table"><caption>CacheOptions available keys</caption>
+    
+    
+     <thead>
+      <tr>
+       <th>Option</th>
+       <th>Data Type</th>
+       <th>Default Value</th>
+       <th>Description</th>
+      </tr>
+
+     </thead>
+
+     <tbody class="tbody">
+      <tr>
+       <td>[...]</td>
+       <td>[...]</td>
+       <td>[...]</td>
+       <td>See &quot;Cache_Lite constructor&quot; for more options</td>
+      </tr>
+
+      <tr>
+       <td>defaultCacheGroup</td>
+       <td><span class="type">string</span></td>
+       <td>&#039;&#039;</td>
+       <td>Name of the default cache group</td>
+      </tr>
+      
+      <tr>
+       <td>cachedMethods</td>
+       <td><span class="type">array</span></td>
+       <td>array()</td>
+       <td>Array of method names to be cached (if cacheByDefault is false)</td>
+      </tr>
+    
+      <tr>
+       <td>notCachedMethods</td>
+       <td><span class="type">array</span></td>
+       <td>array()</td>
+       <td>Array of method names not to be cached (if cacheByDefault is true)</td>
+      </tr>
+   
+      <tr>
+       <td>cacheByDefault</td>
+       <td><span class="type">boolean</span></td>
+       <td><strong class="constant">TRUE</strong></td>
+       <td>
+        if true, the cache is &quot;on&quot; by default ; else, only methods listed in cachedMethods
+        will be cached
+       </td>
+      </tr>
+    
+     </tbody>  
+    
+   </table>
+ 
+  
+ </div>
+ <div class="refsection" id="package.webservices.xml-rpc2.cachedclient.create"><div class="info"><h1>Making the XML_RPC2_CachedClient object</h1>
+</div>
+  
+  <p class="para">
+   It&#039;s really easy to make the XML_RPC2_CachedClient object. Use the following syntax :
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;$XMLRPCServerURL&nbsp;is&nbsp;a&nbsp;string&nbsp;:&nbsp;'http://pear.php.net/xmlrpc.php'&nbsp;(for&nbsp;example)<br />//&nbsp;$options&nbsp;is&nbsp;an&nbsp;optional&nbsp;array&nbsp;:&nbsp;see&nbsp;previous&nbsp;section&nbsp;for&nbsp;more&nbsp;informations<br /></span><span style="color: #0000BB">$client&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">XML_RPC2_CachedClient</span><span style="color: #007700">::</span><span style="color: #0000BB">create</span><span style="color: #007700">(</span><span style="color: #0000BB">$XMLRPCServerURL</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   Don&#039;t try to call the XML_RPC2_CachedClient constructor directly, use the call() static method.
+  </p>
+ </div>
+ <div class="refsection" id="package.webservices.xml-rpc2.cachedclient.call"><div class="info"><h1>Call the XMLRPC exported method</h1>
+</div>
+  
+  <p class="para">
+   See &quot;non cached client side&quot; documentation, there is no difference.
+  </p>
+  <p class="para">
+   The caching process is completly embedded and automatic. If a cache is available, result
+   will be get from cache and no HTTP request will be sent. If there is no cache available for
+   this particular call (method name and arguments), the classical XMLRPC communication will
+   be used (and the result will be stored into a cache file for the next use).
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.webservices.xml-rpc2.server.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.webservices.xml-rpc2.html">XML_RPC2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.webservices.xml-rpc2.cachedserver.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Server Side</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Server Side with cache</td>
+  </tr>
+ </table>
+</div>
+</body></html>

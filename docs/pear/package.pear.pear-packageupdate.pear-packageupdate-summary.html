@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction to PEAR_PackageUpdate</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.pear.pear-packageupdate.html" title="PEAR_PackageUpdate" />
+  <link rel="prev" href="package.pear.pear-packageupdate.html" title="PEAR_PackageUpdate" />
+  <link rel="next" href="package.pear.pear-packageupdate.pear-packageupdate.factory.html" title="PEAR_PackageUpdate::factory" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction to PEAR_PackageUpdate</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.pear.pear-packageupdate.html" title="PEAR_PackageUpdate">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.pear.pear-packageupdate.pear-packageupdate.factory.html" title="PEAR_PackageUpdate::factory">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.pear.pear-packageupdate.pear-packageupdate-summary">
+    
+    <h1 class="refname">Introduction to <strong class="classname">PEAR_PackageUpdate</strong></h1>
+    <div class="refnamediv">Introduction to  <strong class="classname">PEAR_PackageUpdate</strong> &ndash; 
+     A package to make adding self updating functionality to other packages or
+     applications easy.
+    </div>
+
+    
+   <div class="refsection"><div class="info"><h1>
+     About PEAR::PackageUpdate
+    </h1>
+</div>
+    <p class="para">
+     PEAR::PackageUpdate gives other packages or applications the ability to
+     automatically keep themselves up-to-date by checking their channel server
+     for the latest release and self-updating with the user&#039;s permission.
+     Auto-update features help developers by reducing the number of different
+     versions of a package which are currently used. This reduces the likely hood
+     of bugs related to outdated versions being reported.
+    </p>
+    <p class="para">
+     This package automates the update process but still allows the user to
+     remain in control of their computer. PEAR::PackageUpdate respects a user&#039;s
+     preferences and allows the user to decide not only if the package should be
+     updated but also when to be alerted to new updates. The user can decide to
+     only be notified when a new release has a certain state or release type (bug
+     fix, feature enhancement, or major version). The user can even turn off the
+     updating features. All of these settings are on a package-by-package basis.
+    </p>
+    <p class="para">
+     PEAR::PackageUpdate is designed to be a backend for other packages which
+     provide different interface types. For example, this package can be used to
+     drive a PHP-GTK 2, CLI or HTML frontend.
+    </p>
+   </div>
+   <div class="refsection"><div class="info"><h1>
+     Usage Example
+    </h1>
+</div>
+    <p class="para">
+     </p><div class="php-highlightedcode">
+   <pre class="php-highlightedcode">&lt;?php
+   class Foo {
+       function __construct()
+       {
+           // Try to update the package if needed.
+           require_once &#039;PEAR/PackageUpdate.php&#039;;
+           // Load the PHP-GTK 2 driver to check for updates for pear://Foo
+           $ppu = PEAR_PackageUpdate::factory(&#039;Gtk2&#039;, &#039;Foo&#039;, &#039;pear&#039;);
+           // Check for trouble loading the driver.
+           if ($ppu !== false) {
+               // See if a new version is available (respects user prefs).
+               if ($ppu-&gt;checkUpdate()) {
+                   // Ask for permission to update.
+                   if ($ppu-&gt;presentUpdate()) {
+                       if ($ppu-&gt;update()) {
+                           // The update was a success. The app must be
+                           // restarted.
+                           $ppu-&gt;forceRestart();
+                       }
+                   }
+               }
+           }
+           // ...
+       }
+       // ...
+   }
+   ?&gt;</pre>
+
+     </div>
+    
+   </div>
+   <div class="refsection"><div class="info"><h1>
+     How to check warnings and/or errors
+    </h1>
+</div>
+    <p class="para">
+     Rather than stop on first error/warning encountered, as it&#039;s done by other PHP4 PEAR packages,
+     PEAR::PackageUpdate used the
+     <a href="core.pear.pear-errorstack.intro.html" class="link">
+      <strong class="classname">PEAR_ErrorStack</strong>
+     </a>
+     for advanced error handling.
+    </p>
+    <p class="para">
+     PEAR_ErrorStack implements error raising and handling using a stack pattern.
+     So, to determine whether there are any errors on the stack, you should use the
+     <a href="package.pear.pear-packageupdate.pear-packageupdate.haserrors.html" class="link"><strong class="function">PEAR_PackageUpdate::hasErrors()</strong></a>.
+     And to retrieve each error/warning, one by one, from the stack, you have to use the
+     <a href="package.pear.pear-packageupdate.pear-packageupdate.poperror.html" class="link"><strong class="function">PEAR_PackageUpdate::popError()</strong></a>.
+    </p>
+    <p class="para">
+     See example below:
+     </p><blockquote class="warning">
+
+      <p class="para">
+       Usage of error levels with <strong class="function">PEAR_PackageUpdate::hasErrors()</strong> is only
+       available since version 0.7.0
+      </p>
+     </blockquote>
+
+     <div class="php-highlightedcode">
+   <pre class="php-highlightedcode">&lt;?php
+   class Foo {
+       function __construct()
+       {
+           // Try to update the package if needed.
+           require_once &#039;PEAR/PackageUpdate.php&#039;;
+           // Load the Cli driver to check for updates for pear://Foo
+           $ppu = PEAR_PackageUpdate::factory(&#039;Cli&#039;, &#039;Foo&#039;, &#039;pear&#039;);
+           // Check for trouble loading the driver.
+           if ($ppu !== false) {
+               // See if a new version is available (respects user prefs).
+               if ($ppu-&gt;checkUpdate()) {
+                   // Ask for permission to update.
+                   if ($ppu-&gt;presentUpdate()) {
+                       if ($ppu-&gt;update()) {
+                           // The update was a success. The app must be
+                           // restarted.
+                           $ppu-&gt;forceRestart();
+                       } else {
+                           // Error handling
+                           if ($ppu-&gt;hasErrors(&#039;warning&#039;)) {
+                               // Warning: specifying error levels is only allowed since version 0.7.0
+                               // Retrieve only first warning, not all
+                               $error = $ppu-&gt;popError();
+                               echo &quot;Warning occured when trying to update: pear/Foo package\n&quot;;
+                               echo &quot;Message: &quot; . $error[&#039;message&#039;] .&quot;\n&quot;;
+                           }
+                           if ($ppu-&gt;hasErrors()) {
+                               // Retrieve only first error, not all
+                               $error = $ppu-&gt;popError();
+                               echo &quot;Error occured when trying to update: pear/Foo package\n&quot;;
+                               echo &quot;Message: &quot; . $error[&#039;message&#039;] .&quot;\n&quot;;
+                               if (isset($error[&#039;context&#039;]) {
+                                   // context is available
+                                   echo &quot;*** Context: ***\n&quot;;
+                                   echo &quot;File: &quot; . $error[&#039;context&#039;][&#039;file&#039;] .&quot;\n&quot;;
+                                   echo &quot;Line: &quot; . $error[&#039;context&#039;][&#039;line&#039;] .&quot;\n&quot;;
+                                   echo &quot;Function: &quot; . $error[&#039;context&#039;][&#039;function&#039;] .&quot;\n&quot;;
+                                   echo &quot;Class: &quot; . $error[&#039;context&#039;][&#039;class&#039;] .&quot;\n&quot;;
+                               }
+                               exit();
+                           }
+                       }
+                   }
+               }
+           }
+           // ...
+       }
+       // ...
+   }
+   ?&gt;</pre>
+
+     </div>
+    
+   </div>
+   </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.pear.pear-packageupdate.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.pear.pear-packageupdate.html">PEAR_PackageUpdate</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.pear.pear-packageupdate.pear-packageupdate.factory.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">PEAR_PackageUpdate</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">PEAR_PackageUpdate::factory</td>
+  </tr>
+ </table>
+</div>
+</body></html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Warnings</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.structures.structures-bibtex.html" title="Structures_BibTex" />
+  <link rel="prev" href="package.structures.structures-bibtex.intro.html" title="Introduction" />
+  <link rel="next" href="package.structures.structures-bibtex.exporting.html" title="Exporting" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Warnings</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.structures.structures-bibtex.intro.html" title="Introduction">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.structures.structures-bibtex.exporting.html" title="Exporting">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.structures.structures-bibtex.warnings">
+ 
+  <h1 class="refname">Warnings</h1>
+  <div class="refnamediv">Warnings &ndash; 
+   Usage of warnings when using <strong class="classname">Structures_BibTex</strong>
+  </div>
+
+ 
+
+ <div class="refsection" id="package.structures.structures-bibtex.warnings.overview"><div class="info"><h1>Overview</h1>
+</div> 
+  
+  <p class="para">
+   The class <strong class="classname">Structures_BibTex</strong> introduces a system to collect warnings that may happen during parsing.
+   Warnings are things in the BibTex source which are not correct but do not cause the parser to fail.
+One example would be a double cite entry.
+   These warnings should help to improve the quality of your BibTex code.
+   Whether warnings are generated or not is controlled by the option validate.
+   Per default warnings are generated.
+   If you want to not generate warnings you should use the <strong class="function">setOption()</strong> method like this.
+   </p><div class="example"><div class="info"><p><strong>Switching off creation of warnings</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Structures/BibTex.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$bibtex&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Structures_BibTex</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$bibtex</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'validate'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>    
+   </div>
+  
+ </div>
+  
+  <div class="refsection" id="package.structures.structures-bibtex.warnings.usage"><div class="info"><h1>Usage</h1>
+</div> 
+  
+  <p class="para">
+   The warnings are stored in an array called warnings which is public accessible.
+   To check is a warning exists you can use the method <strong class="function">hasWarning()</strong>.
+   This method returns true if there are warnings and false otherwise.
+   </p><div class="example"><div class="info"><p><strong>Checking for warnings</strong></p></div>
+    
+    <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Structures/BibTex.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$bibtex&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Structures_BibTex</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$ret&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$bibtex</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">loadFile</span><span style="color: #007700">(</span><span style="color: #DD0000">'foo.bib'</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$ret</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$ret</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">$bibtex</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parse</span><span style="color: #007700">();<br />if&nbsp;(</span><span style="color: #0000BB">$bibtex</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">hasWarning</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #DD0000">'There&nbsp;are&nbsp;warnings!&lt;br&nbsp;/&gt;'</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   </div><p>
+   Every warning itself is hash table with the following keys:
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para">
+      <em><code class="parameter">warning</code></em> - Type of the warning
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <em><code class="parameter">entry</code></em> - The line that caused the warning
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <em><code class="parameter">wholeentry</code></em> - The whole entry in which the warning occurred
+     </p>
+    </li>
+   </ul><p>
+   To print every warning with type and line that caused the warning you could do something like this:
+   </p><div class="example"><div class="info"><p><strong>Checking for warnings</strong></p></div>
+    
+    <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Structures/BibTex.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$bibtex&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Structures_BibTex</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$ret&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$bibtex</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">loadFile</span><span style="color: #007700">(</span><span style="color: #DD0000">'foo.bib'</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$ret</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$ret</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">$bibtex</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parse</span><span style="color: #007700">();<br />if&nbsp;(</span><span style="color: #0000BB">$bibtex</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">hasWarning</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;foreach&nbsp;(</span><span style="color: #0000BB">$bibtex</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">warnings&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$warning</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Warning:&nbsp;'</span><span style="color: #007700">.</span><span style="color: #0000BB">$warning</span><span style="color: #007700">[</span><span style="color: #DD0000">'warning'</span><span style="color: #007700">].</span><span style="color: #DD0000">'&lt;br&nbsp;/&gt;'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Line:&nbsp;'</span><span style="color: #007700">.</span><span style="color: #0000BB">$warning</span><span style="color: #007700">[</span><span style="color: #DD0000">'entry'</span><span style="color: #007700">].</span><span style="color: #DD0000">'&lt;hr&nbsp;/&gt;'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   </div><p>
+   Finally if you want to clear all warnings you can use the method <strong class="function">clearWarnings()</strong>.
+  </p>
+ </div>
+
+  <div class="refsection" id="package.structures.structures-bibtex.warnings.wanringtypes"><div class="info"><h1>Types of Warnings</h1>
+</div>
+  
+  <p class="para">
+   The following Warnings are known: 
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+        <p class="para">
+            <em><code class="parameter">WARNING_MISSING_END_BRACE</code></em> - This warning is generated when the end brace in an entry is missing. Take this warning seriously!
+        </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <em><code class="parameter">WARNING_AT_IN_BRACES</code></em> - A Value is delimited by Braces. Then inside a @ is not allowed.
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <em><code class="parameter">WARNING_ESCAPED_DOUBLE_QUOTE_INSIDE_DOUBLE_QUOTES</code></em> - A Value is delimited by double quotes. Then inside no escaped double quote is allowed.
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <em><code class="parameter">WARNING_UNBALANCED_AMOUNT_OF_BRACES</code></em> - The amount of braces inside a value is not equal (opening and closing). The parses fails if in the complete entry this amount is not correct. But if only on an entry it is not correct then this is only a warning. As a matter of fact of the parser does not fail but there is an unbalanced amount of braces in an entry this warning has to be generated something times two.
+     </p>
+    </li>
+    <li class="listitem">
+        <p class="para">
+            <em><code class="parameter">WARNING_MULTIPLE_ENTRIES</code></em> - Every entry is identified by a unique string. This warning is created if there are at least two entries with the same identification.
+        </p>
+    </li>
+    <li class="listitem">
+        <p class="para">
+            <em><code class="parameter">WARNING_LINE_WAS_NOT_CONVERTED</code></em> - This warning is created if during exporting (for example in RTF or HTML) one entry was ignored because of no matching data in the entry. At least one of the following entries have to exist in the entry to get converted: title, journal, year or authors.
+        </p>
+    </li>
+    <li class="listitem">
+        <p class="para">
+            <em><code class="parameter">STRING_ENTRY_NOT_YET_SUPPORTED</code></em> - BibTex defines some special entry types, String is one of them and is used to define abbreviations. This is not yet supported by Structres_BibTex.
+        </p>
+    </li>
+    <li class="listitem">
+        <p class="para">
+            <em><code class="parameter">PREAMBLE_ENTRY_NOT_YET_SUPPORTED</code></em> - BibTex defines some special entry types, Preamble is one of them and is used to define formatted code. This is not yet supported by Structres_BibTex.
+        </p>
+    </li>
+    <li class="listitem">
+        <p class="para">
+            <em><code class="parameter">WARNING_NOT_ALLOWED_ENTRY_TYPE</code></em> - BibTex allows to define own types. This warning is genereated when a type was detected which is not part of the standard types. The allowed or standard type are defined in the class variable allowedTypes as array.
+        </p>
+    </li>
+   </ul>
+  
+ </div>
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.structures.structures-bibtex.intro.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.structures.structures-bibtex.html">Structures_BibTex</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.structures.structures-bibtex.exporting.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Exporting</td>
+  </tr>
+ </table>
+</div>
+</body></html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Creating plugins for Pyrus</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="pyrus.html" title="Using Pyrus, the PEAR Installer for PHP 5.3+" />
+  <link rel="prev" href="pyrus.differences.customtasks.html" title="Pyrus Custom File Tasks: differences from PEAR" />
+  <link rel="next" href="pyrus.plugins.autoload.html" title="Telling Pyrus how to load your plugin: &lt;class&gt; and &lt;autoloadpath&gt;" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Creating plugins for Pyrus</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="pyrus.differences.customtasks.html" title="Pyrus Custom File Tasks: differences from PEAR">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="pyrus.plugins.autoload.html" title="Telling Pyrus how to load your plugin: &lt;class&gt; and &lt;autoloadpath&gt;">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="chapter" id="pyrus.plugins">
+  <div class="info">
+   <h1>Creating plugins for Pyrus</h1>
+<div class="TOC">
+<strong>Table of Contents</strong><ul class="chunklist chunklist_chapter">
+<li><a href="pyrus.plugins.autoload.html">Telling Pyrus how to load your plugin: &lt;class&gt; and &lt;autoloadpath&gt;</a></li>
+<li><a href="pyrus.plugins.command.html">Pyrus plugins: custom commands</a></li>
+<li><a href="pyrus.plugins.role.html">Pyrus plugins: custom file roles</a></li>
+<li><a href="pyrus.plugins.task.html">Pyrus plugins: custom file tasks</a></li>
+</ul>
+</div>
+
+   <h2 class="EDITEDBY">Edited By</h2><span class="personname fn">Gregory Beaver </span>
+   <p class="date">2009-06-16</p>
+  </div>
+
+  <p class="para">
+   Pyrus defines three kinds of plugins: commands, file roles, and file tasks.
+   Commands add new commands to a frontend for Pyrus, file roles and file tasks
+   add new features to package.xml.
+  </p>
+  <p class="para">
+   Pyrus, by necessity, requires a clear separation between its plugins and
+   its core.  This is because Pyrus is distributed as a phar archive, which
+   cannot be modified without jumping through several hoops.  For this reason,
+   plugins are installed in a special directory whose location is specified by
+   the <a href="pyrus.configuration.user.html#pyrus.configuration.user.pluginsdir" class="link">plugins_dir</a>
+   user configuration variable.
+  </p>
+  <p class="para">
+   Pyrus also makes a clear separation between regular packages and plugin
+   packages.  Plugins must be installed separate from any non-plugin packages using the
+   <a href="pyrus.commands.install.html#pyrus.commands.install.plugin" class="link"><code class="literal">--plugin</code></a>
+   option of the <a href="pyrus.commands.install.html" class="link">install</a>,
+   <a href="pyrus.commands.upgrade.html" class="link">upgrade</a>, and
+   <a href="pyrus.commands.uninstall.html" class="link">uninstall</a> command.  Here is
+   an example, installing the developer tools plugin:
+  </p>
+  <pre class="screen">php pyrus.phar install -p PEAR2_Pyrus_Developer</pre>
+
+  <p class="para">
+   Pyrus defines a plugin as any package that contains one of the three
+   file roles that identify a plugin: <code class="literal">customcommand</code>,
+   <code class="literal">customrole</code>, or <code class="literal">customtask</code>.  In addition,
+   a plugin package can only contain one plugin.  This helps users by mapping
+   one package to one plugin so that when they list plugin packages, it clearly
+   shows all of the plugins that are installed.
+  </p>
+  <p class="para">
+   A plugin&#039;s definition is handled by an XML file, which must be referenced
+   using one of the three plugin file roles in package.xml.  Here is an
+   example identifying a custom command in package.xml:
+  </p>
+  <p class="para">
+   </p><div class="xmlcode">
+    <pre class="xmlcode">
+...
+  &lt;dir name=&quot;/&quot;&gt;
+   &lt;dir name=&quot;customcommand&quot; baseinstalldir=&quot;/&quot;&gt;
+    &lt;file role=&quot;customcommand&quot; name=&quot;commands.xml&quot;/&gt;
+   &lt;/dir&gt;
+...</pre>
+
+   </div>
+  
+
+ 
+  
+
+
+  
+
+
+  
+
+
+ </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="pyrus.differences.customtasks.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="pyrus.html">Using Pyrus, the PEAR Installer for PHP 5.3+</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="pyrus.plugins.autoload.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Pyrus Custom File Tasks: differences from PEAR</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Telling Pyrus how to load your plugin: &lt;class&gt; and &lt;autoloadpath&gt;</td>
+  </tr>
+ </table>
+</div>
+</body></html>

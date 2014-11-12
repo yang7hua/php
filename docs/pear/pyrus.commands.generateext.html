@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>generate-ext - Create the subversion source layout for a new PHP extension that is PECL-ready</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="pyrus.commands.html" title="Commands available in Pyrus" />
+  <link rel="prev" href="pyrus.commands.generatepear2.html" title="generate-pear2 - Create the subversion source layout for a PEAR2 package" />
+  <link rel="next" href="pyrus.commands.make.html" title="make - create a package.xml from its source directory" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">generate-ext - Create the subversion source layout for a new PHP extension that is PECL-ready</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="pyrus.commands.generatepear2.html" title="generate-pear2 - Create the subversion source layout for a PEAR2 package">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="pyrus.commands.make.html" title="make - create a package.xml from its source directory">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="pyrus.commands.generateext">
+ <div class="info"><h1>generate-ext - Create the subversion source layout for a new PHP extension that is PECL-ready</h1>
+</div>
+
+ <div class="section" id="pyrus.commands.generateext.intro">
+  <div class="info"><h2 class="title">Introduction</h2></div>
+  <p class="para">
+   The <code class="literal">generate-pecl</code> command is used to create a bare
+   skeleton for a new PECL package or PHP extension as it will reside in
+   Subversion. This is designed to provide all of the functionality of the
+   ext_skel command but also generates a package.xml and other files that can
+   be used to automatically update for a release.
+  </p>
+  <p class="para">
+   One argument is accepted, <code class="literal">extension</code>.
+  </p>
+  <p class="para">
+  This command automatically creates class definitions as well as ZEND_ARG_INFO
+  for parameters to provide useful reflection to your extension&#039;s users.
+  </p>
+ </div>
+ <div class="section" id="pyrus.commands.generateext.extension">
+  <h2 class="title">extension</h2>
+  <p class="para">
+   The <code class="literal">extension</code> argument is the name of the package to create
+   a skeleton for. This is used as the directory name and as the extension name
+   used within files related to creating a PECL package.
+  </p>
+ </div>
+ <div class="section" id="pyrus.commands.generateext.proto">
+  <h2 class="title">--proto</h2>
+  <p class="para">
+   The <code class="literal">--proto</code> or <code class="literal">-p</code> option specifies a
+   file containing function and method prototypes to create in your new extension.
+  </p>
+  <p class="para">
+   As an example, here are some supported protos:
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">
+       int myfunc(string firstarg, unicode secondarg, array thirdarg,
+       object fourtharg [, double optionalarg1
+       [, float optionalarg2 [, callback optionalarg3 [, text optionalarg4]]]])
+      </code>
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">
+       void Myclass::myfunc(array|object arg1, bool arg2, class arg3,
+       resource arg4, mixed arg5 [, ... varargs])
+      </code>
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">
+       static int Myclass::staticfunc()
+      </code>
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">
+       protected string Myclass::otherguy([mixed optionalarg])
+      </code>
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">
+       static protected object Myclass::factory(text path)
+      </code>
+     </span>
+    </li>
+   </ul>
+  
+  <p class="para">
+   A proto begins with either the return type or access modifiers
+   <code class="literal">static</code> and one of <code class="literal">public</code>,
+   <code class="literal">protected</code> and <code class="literal">private</code> followed
+   by the return type.  Next, the name of the function, or name of the
+   class::method is specified, followed by an argument list.  Optional
+   methods are enclosed in <code class="literal">[brackets]</code> and whitespace
+   is important, so follow the conventions as in the above examples.
+  </p>
+  <p class="para">
+   Each argument consists of a type followed by an argument name.  The types are
+   informed by parameter parsing as supported by PHP&#039;s internal
+   <strong class="function">zend_parse_parameters()</strong>.  This is thoroughly documented
+   in the file <code class="literal">README.PARAMETER_PARSING</code> inside PHP&#039;s
+   source code.  Note that some of the parameter parsing choices only work
+   in PHP 6, in particular the unicode-related options.
+  </p>
+  <p class="para">
+   The following types are supported:
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">array</code> (maps to <code class="literal">&#039;a&#039;</code> in parameter parsing)
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">array|object</code> (maps to <code class="literal">&#039;A&#039;</code> in parameter parsing)
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">bool</code> (maps to <code class="literal">&#039;b&#039;</code> in parameter parsing)
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">boolean</code> (maps to <code class="literal">&#039;b&#039;</code> in parameter parsing)
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">callback</code> (maps to <code class="literal">&#039;f&#039;</code> in parameter parsing)
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">class</code> (Maps to <code class="literal">&#039;C&#039;</code> in parameter parsing)
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">double</code> (maps to <code class="literal">&#039;d&#039;</code> in parameter parsing)
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">float</code> (maps to <code class="literal">&#039;d&#039;</code> in parameter parsing)
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">handle</code> (maps to <code class="literal">&#039;r&#039;</code> in parameter parsing)
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">int</code> (Maps to <code class="literal">&#039;L&#039;</code> in parameter parsing)
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">long</code> (Maps to <code class="literal">&#039;L&#039;</code> in parameter parsing)
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">mixed</code> (maps to <code class="literal">&#039;z&#039;</code> in parameter parsing)
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">object</code> (maps to <code class="literal">&#039;o&#039;</code> in parameter parsing)
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">resource</code> (maps to <code class="literal">&#039;r&#039;</code> in parameter parsing)
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">string</code> (maps to <code class="literal">&#039;s&#039;</code> in parameter parsing)
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">text</code> (Maps to <code class="literal">&#039;T&#039;</code> in parameter parsing)
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">unicode</code> (maps to <code class="literal">&#039;u&#039;</code> in parameter parsing)
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">void</code>, use only for the return value of a function that returns nothing
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <code class="literal">...</code> (varags: maps to <code class="literal">&#039;*&#039;</code> in parameter parsing)
+      However, if the parameter is not optional, if maps to <code class="literal">&#039;+&#039;</code>
+      is used.
+     </span>
+    </li>
+   </ul>
+  
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="pyrus.commands.generatepear2.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="pyrus.commands.html">Commands available in Pyrus</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="pyrus.commands.make.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">generate-pear2 - Create the subversion source layout for a PEAR2 package</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">make - create a package.xml from its source directory</td>
+  </tr>
+ </table>
+</div>
+</body></html>

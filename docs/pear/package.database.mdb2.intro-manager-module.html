@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Manager Module</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.mdb2.html" title="MDB2" />
+  <link rel="prev" href="package.database.mdb2.intro-function-module.html" title="Function Module" />
+  <link rel="next" href="package.database.mdb2.intro-reverse-module.html" title="Reverse Module" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Manager Module</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.mdb2.intro-function-module.html" title="Function Module">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.mdb2.intro-reverse-module.html" title="Reverse Module">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.mdb2.intro-manager-module">
+ 
+  <h1 class="refname">Manager Module</h1>
+  <div class="refnamediv">Manager Module &ndash; Module for managing database structure</div>
+
+ 
+
+ <div class="refsection" id="package.database.mdb2.intro-manager-module.desc">
+  <h1 class="title">Description</h1>
+  <p class="para">
+   The Manager module provides methods for managing database structure.
+   The methods can be grouped based on their responsibility: create, edit (alter
+   or update), list or delete (drop) database elements.
+   The following document lists the available methods, providing examples of their use.
+   The following tables will be created, altered and finally dropped, in a database
+   named &quot;events_db&quot;:
+</p><div class="programlisting">
+    <br/>events(id,&nbsp;name,&nbsp;datetime);<br/>people(id,&nbsp;name);<br/>event_participants(event_id,&nbsp;person_id);
+   </div><p>
+    To include the Manager module functionality, you need to load it first.
+  </p><div class="example"><div class="info"><p><strong>Loading the Manager module</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'MDB2.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$dsn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'pgsql://someuser:apasswd@somehost'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$mdb2&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">MDB2</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;loading&nbsp;the&nbsp;Manager&nbsp;module<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">loadModule</span><span style="color: #007700">(</span><span style="color: #DD0000">'Manager'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div><p>
+    After including the module, you can access its methods like this:
+  </p><div class="example"><div class="info"><p><strong>Creating a database</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;PHP5<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createDatabase</span><span style="color: #007700">(</span><span style="color: #DD0000">'events_db'</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;PHP4&nbsp;and&nbsp;PHP5<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">manager</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createDatabase</span><span style="color: #007700">(</span><span style="color: #DD0000">'events_db'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div><p>
+    Further in the document the PHP5-compatible way will be used.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.database.mdb2.intro-manager-module.create-elements"><div class="info"><h1>Creating database elements</h1>
+</div>
+  
+  <p class="para">
+   These are methods to create new databases, tables, indices, constraints and sequences.
+  </p>
+  
+  <div class="refsection" id="package.database.mdb2.intro-manager-module.create-elements.create-db"><div class="info"><h1>Creating a database</h1>
+</div>
+   
+  <p class="para">
+   </p><div class="example"><div class="info"><p><strong>Creating and setting an events_db database</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;MDB2&nbsp;setup<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'MDB2.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$dsn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'mysql://root:test@localhost'</span><span style="color: #007700">;&nbsp;</span><span style="color: #FF8000">//&nbsp;note&nbsp;that&nbsp;DB&nbsp;name&nbsp;is&nbsp;omitted<br /></span><span style="color: #0000BB">$mdb2&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">MDB2</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;loading&nbsp;the&nbsp;Manager&nbsp;module<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">loadModule</span><span style="color: #007700">(</span><span style="color: #DD0000">'Manager'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;create&nbsp;the&nbsp;database<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createDatabase</span><span style="color: #007700">(</span><span style="color: #DD0000">'events_db'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;set&nbsp;the&nbsp;new&nbsp;database&nbsp;to&nbsp;work&nbsp;with&nbsp;it<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setDatabase</span><span style="color: #007700">(</span><span style="color: #DD0000">'events_db'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;the&nbsp;next&nbsp;time&nbsp;the&nbsp;DSN&nbsp;could&nbsp;be&nbsp;like<br />//&nbsp;mysql://root:test@localhost/events_db<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  
+  </div>
+  <div class="refsection" id="package.database.mdb2.intro-manager-module.create-elements.create-tables"><div class="info"><h1>Creating tables</h1>
+</div>
+   
+   <p class="para">
+  Now that the database is created, we can proceed with adding some tables.
+  The method <strong class="function">createTable()</strong> takes three parameters:
+  the table name, an array of field definition and some extra options (optional
+  and RDBMS-specific).
+  </p><div class="example"><div class="info"><p><strong>Creating the events table</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$definition&nbsp;</span><span style="color: #007700">=&nbsp;array&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'id'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'integer'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'unsigned'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'notnull'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'default'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'length'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">255<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'datetime'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'timestamp'<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">)<br />);<br /><br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createTable</span><span style="color: #007700">(</span><span style="color: #DD0000">'events'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$definition</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div><p>
+  
+  The keys of the definition array are the names of the fields in the table. The values are arrays containing the required key &#039;type&#039; as well as other keys, depending on the value of &#039;type&#039;. The values for the &#039;type&#039; key are the same as the possible MDB2 datatypes. Depending on the datatype, the other options may vary.
+  </p><table class="doctable table"><caption>Options for the definition array based on datatype</caption>
+    
+    
+     <thead>
+      <tr>
+       <th>Datatype</th>
+       <th>length</th>
+       <th>default</th>
+       <th>not null</th>
+       <th>unsigned</th>
+      </tr>
+
+     </thead>
+
+     <tbody class="tbody">
+      <tr>
+       <td>text</td>
+       <td>x</td>
+       <td>x</td>
+       <td>x</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>boolean</td>
+       <td class="empty">&nbsp;</td>
+       <td>x</td>
+       <td>x</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>integer</td>
+       <td class="empty">&nbsp;</td>
+       <td>x</td>
+       <td>x</td>
+       <td>x</td>
+      </tr>
+
+      <tr>
+       <td>decimal</td>
+       <td class="empty">&nbsp;</td>
+       <td>x</td>
+       <td>x</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>float</td>
+       <td class="empty">&nbsp;</td>
+       <td>x</td>
+       <td>x</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>timestamp</td>
+       <td class="empty">&nbsp;</td>
+       <td>x</td>
+       <td>x</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>time</td>
+       <td class="empty">&nbsp;</td>
+       <td>x</td>
+       <td>x</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>date</td>
+       <td class="empty">&nbsp;</td>
+       <td>x</td>
+       <td>x</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>clob</td>
+       <td>x</td>
+       <td class="empty">&nbsp;</td>
+       <td>x</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+      <tr>
+       <td>blob</td>
+       <td>x</td>
+       <td class="empty">&nbsp;</td>
+       <td>x</td>
+       <td class="empty">&nbsp;</td>
+      </tr>
+
+     </tbody>
+    
+   </table>
+<p>
+  The third parameter to <strong class="function">createTable()</strong> contains extra options
+  for the table, such as the charset, collation, and other DBMS-specific properties,
+  like MySQL&#039;s table engine. Here&#039;s an example for MySQL.
+  </p><div class="example"><div class="info"><p><strong>Creating the people table</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$table_options&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'comment'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Repository&nbsp;of&nbsp;people'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'charset'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'utf8'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'collate'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'utf8_unicode_ci'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'innodb'</span><span style="color: #007700">,<br />);<br /></span><span style="color: #0000BB">$definition&nbsp;</span><span style="color: #007700">=&nbsp;array&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'id'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'integer'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'unsigned'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'notnull'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'default'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'length'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">255<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">)<br />);<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createTable</span><span style="color: #007700">(</span><span style="color: #DD0000">'people'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$definition</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$table_options</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div><p>
+  To round up the example database, here&#039;s the event_participants table creation code.
+  </p><div class="example"><div class="info"><p><strong>Creating the event_participants table</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$definition&nbsp;</span><span style="color: #007700">=&nbsp;array&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'event_id'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'integer'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'unsigned'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'notnull'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'default'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'person_id'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'integer'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'unsigned'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'notnull'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'default'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />);<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createTable</span><span style="color: #007700">(</span><span style="color: #DD0000">'event_participants'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$definition</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$table_options</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  
+  </div>
+  <div class="refsection" id="package.database.mdb2.intro-manager-module.create-elements.create-constraints"><div class="info"><h1>Creating constraints</h1>
+</div>
+   
+   <p class="para">
+    In the example events table, the id should be a primary key. Creating a primary
+    key is a task done by the <strong class="function">createConstraint()</strong> method.
+    It takes three parameters: the table name, the constraint name and the definition
+    array.
+  </p>
+  <p class="para">
+    The full structure of the <em><code class="parameter">definition</code></em> array looks like this
+    (in this case, it&#039;s representing a FOREIGN KEY constraint):
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$definition&nbsp;</span><span style="color: #007700">=&nbsp;array&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'primary'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'unique'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'foreign'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'check'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'fields'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'field1name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(),&nbsp;</span><span style="color: #FF8000">//&nbsp;one&nbsp;entry&nbsp;per&nbsp;each&nbsp;field&nbsp;covered<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'field2name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(),&nbsp;</span><span style="color: #FF8000">//&nbsp;by&nbsp;the&nbsp;index<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'field3name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'sorting'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">ascending</span><span style="color: #007700">|</span><span style="color: #0000BB">descending</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'position'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">3</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'references'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'table'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">name</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'fields'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'field1name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(&nbsp;</span><span style="color: #FF8000">//one&nbsp;entry&nbsp;per&nbsp;each&nbsp;referenced&nbsp;field<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'position'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'deferrable'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'initiallydeferred'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'onupdate'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">CASCADE</span><span style="color: #007700">|</span><span style="color: #0000BB">RESTRICT</span><span style="color: #007700">|</span><span style="color: #0000BB">SET&nbsp;NULL</span><span style="color: #007700">|</span><span style="color: #0000BB">SET&nbsp;</span><span style="color: #007700">DEFAULT|</span><span style="color: #0000BB">NO&nbsp;ACTION</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'ondelete'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">CASCADE</span><span style="color: #007700">|</span><span style="color: #0000BB">RESTRICT</span><span style="color: #007700">|</span><span style="color: #0000BB">SET&nbsp;NULL</span><span style="color: #007700">|</span><span style="color: #0000BB">SET&nbsp;</span><span style="color: #007700">DEFAULT|</span><span style="color: #0000BB">NO&nbsp;ACTION</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'match'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">SIMPLE</span><span style="color: #007700">|</span><span style="color: #0000BB">PARTIAL</span><span style="color: #007700">|</span><span style="color: #0000BB">FULL</span><span style="color: #007700">,<br />);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    <div class="example"><div class="info"><p><strong>Creating primary keys in the events and people tables</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$definition&nbsp;</span><span style="color: #007700">=&nbsp;array&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'primary'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'fields'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'id'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array()<br />&nbsp;&nbsp;&nbsp;&nbsp;)<br />);<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createConstraint</span><span style="color: #007700">(</span><span style="color: #DD0000">'events'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'keyname'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$definition</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createConstraint</span><span style="color: #007700">(</span><span style="color: #DD0000">'people'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'keyname'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$definition</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div><p>
+  Note: Some RDBMS may choose to ignore the name of the constraint, for example
+  MySQL will not use the value <em><code class="parameter">keyname</code></em> provided in the
+  method call, but will use <em><code class="parameter">PRIMARY</code></em> when a primary key is
+  created, or <em><code class="parameter">[tablename]_ibfk_[n]</code></em> when a foreign key is
+  created.
+  </p>
+  <p class="para">
+    In the definition array, you specify which fields will be included in the
+    constraint, using the <em><code class="parameter">fields</code></em> key. The other possible
+    keys in the definition array are <em><code class="parameter">primary</code></em> and
+    <em><code class="parameter">unique</code></em>, which have boolean values.
+  </p>
+  <p class="para">
+    Let&#039;s create another key in the event_participants, where each row has to be
+    unique, meaning that one person can appear only once for a specific event.
+    The definitions array will have both fields in the <em><code class="parameter">fields</code></em>
+    key and the <em><code class="parameter">unique</code></em> key will be set to true.
+    </p><div class="example"><div class="info"><p><strong>Creating a unique constraint</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$definition&nbsp;</span><span style="color: #007700">=&nbsp;array&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'unique'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'fields'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'event_id'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'person_id'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(),<br />&nbsp;&nbsp;&nbsp;&nbsp;)<br />);<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createConstraint</span><span style="color: #007700">(</span><span style="color: #DD0000">'event_participants'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'unique_participant'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$definition</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  
+  </div>
+  <div class="refsection" id="package.database.mdb2.intro-manager-module.create-elements.create-indices"><div class="info"><h1>Creating indices</h1>
+</div>
+   
+   <p class="para">
+    To create an index, the method <strong class="function">createIndex()</strong> is used,
+    which has similar signature as <strong class="function">createConstraint()</strong>, so it
+    takes table name, index name and a definition array. The definition array has
+    one key <em><code class="parameter">fields</code></em> with a value which is another associative
+    array containing fields that will be a part of the index. The fields are
+    defined as arrays with possible keys:
+    </p><ul class="itemizedlist">
+    <li class="listitem">
+     <span class="simpara">
+      <em><code class="parameter">sorting</code></em>, with values <em><code class="parameter">ascending</code></em>
+      and <em><code class="parameter">descending</code></em>
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <em><code class="parameter">length</code></em>, integer value
+     </span>
+    </li>
+   </ul><p>
+    Not all RDBMS will support index sorting or length, in these cases the drivers
+    will ignore them. In the test events database, we can assume that our
+    application will show events occuring in a specific timeframe, so the selects
+    will use the datetime field in WHERE conditions. It will help if there is an
+    index on this field.
+    </p><div class="example"><div class="info"><p><strong>Creating an index</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$definition&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'fields'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'datetime'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array()<br />&nbsp;&nbsp;&nbsp;&nbsp;)<br />);<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createIndex</span><span style="color: #007700">(</span><span style="color: #DD0000">'events'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'event_timestamp'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$definition</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  
+  </div>
+  <div class="refsection" id="package.database.mdb2.intro-manager-module.create-elements.create-sequences"><div class="info"><h1>Creating sequences</h1>
+</div>
+   
+   <p class="para">
+    The way MDB2 handles sequences is <a href="package.database.mdb2.intro-sequences.html" class="link">described here</a>.
+    For the events table in our example database, we&#039;ll need to have the &#039;id&#039;
+    auto-incrementing. For this purpose the method <strong class="function">nextId()</strong>
+    is used to give the next value. <strong class="function">nextId()</strong> will create the
+    sequence table if it doesn&#039;t exist, but we can create if beforehand with
+    <strong class="function">createSequence()</strong>. It takes a sequence name and an optional
+    start value for the sequence.
+    </p><div class="example"><div class="info"><p><strong>Creating sequences</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createSequence</span><span style="color: #007700">(</span><span style="color: #DD0000">'events'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createSequence</span><span style="color: #007700">(</span><span style="color: #DD0000">'people'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div><p>
+    In the default <strong class="classname">MDB2</strong> setup the example above will create
+    two tables: events_seq and people_seq, each with one field called &#039;sequence&#039;,
+    but the field name and the &#039;_seq&#039; postfix are configurable via the MDB2 options
+    <em><code class="parameter">seqname_format</code></em> and <em><code class="parameter">seqcol_name</code></em>.
+  </p>
+  </div>
+ </div>
+ 
+ <div class="refsection" id="package.database.mdb2.intro-manager-module.alter-tables"><div class="info"><h1>Altering database tables</h1>
+</div>
+  
+  <p class="para">
+   Once a database table is created you can rename it or add, remove, rename and
+   alter fields, using the <strong class="function">alterTable()</strong> method.
+   <strong class="function">alterTable()</strong> takes three parameters: the table name, the
+   definition of changes and a boolean &quot;check-only&quot; flag. If true, no changes
+   will be made, but only a check if the proposed changes are feasible for the
+   specific table and RDBMS. The second parameter (definition of changes) is an
+   array with these keys:
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <span class="simpara">
+      <em><code class="parameter">name</code></em>: new name for the table. This is the only key
+      related to the table itself, the other keys contain field definitions
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+     <em><code class="parameter">add</code></em>: fields to be added
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+     <em><code class="parameter">remove</code></em>: fields to be removed
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <em><code class="parameter">change</code></em>: fields to be changed
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <em><code class="parameter">rename</code></em>: fields to be renamed
+     </span>
+    </li>
+   </ul><p>
+   The values for add/remove/change/rename keys have slightly different structures,
+   but they all contain field definitions. You can check the
+   <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Manager_Common.html#methodalterTable" class="link external">API docs</a>
+   for more information and an examples.
+  </p>
+ </div>
+ 
+ <div class="refsection" id="package.database.mdb2.intro-manager-module.list-elements"><div class="info"><h1>Listing database elements</h1>
+</div>
+  
+  <p class="para">
+    To see what&#039;s in the database, you can use the list*() family of functions, namely:
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">listDatabases()</strong>
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">listFunctions()</strong>
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">listSequences()</strong>: takes optional database name as a parameter.
+      If not supplied, the currently selected database is assumed.
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">listTableConstraints()</strong>: takes a table name
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">listTableFields()</strong>: takes a table name
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">listTableIndexes()</strong>: takes a table name
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">listTables()</strong>: takes an optional database name
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">listTableTriggers()</strong>: takes a table name
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">listTableViews()</strong>: takes a table name
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">listUsers()</strong>
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      <strong class="function">listViews()</strong>: takes an optional database name
+     </span>
+    </li>
+   </ul>
+   
+    <div class="example"><div class="info"><p><strong>Listing database elements</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$dbs&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">listDatabases</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$dbs</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">/*<br />prints:<br />Array<br />(<br />&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;information_schema<br />&nbsp;&nbsp;&nbsp;&nbsp;[1]&nbsp;=&gt;&nbsp;events_db<br />&nbsp;&nbsp;&nbsp;&nbsp;[2]&nbsp;=&gt;&nbsp;mysql<br />&nbsp;&nbsp;&nbsp;&nbsp;[3]&nbsp;=&gt;&nbsp;test<br />&nbsp;&nbsp;&nbsp;&nbsp;[4]&nbsp;=&gt;&nbsp;test_db<br />&nbsp;&nbsp;&nbsp;&nbsp;[5]&nbsp;=&gt;&nbsp;test_db_explain<br />&nbsp;&nbsp;&nbsp;&nbsp;[6]&nbsp;=&gt;&nbsp;test_mdb2<br />)<br />*/<br /><br /></span><span style="color: #0000BB">$seqs&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">listSequences</span><span style="color: #007700">(</span><span style="color: #DD0000">'events_db'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$seqs</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">/*<br />prints:<br />Array<br />(<br />&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;events<br />&nbsp;&nbsp;&nbsp;&nbsp;[1]&nbsp;=&gt;&nbsp;people<br />)<br />*/<br /><br /></span><span style="color: #0000BB">$cons&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">listTableConstraints</span><span style="color: #007700">(</span><span style="color: #DD0000">'event_participants'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$cons</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">/*<br />prints:<br />Array<br />(<br />&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;unique_participant<br />)<br />*/<br /><br /></span><span style="color: #0000BB">$fields&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">listTableFields</span><span style="color: #007700">(</span><span style="color: #DD0000">'events'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$fields</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">/*<br />prints:<br />Array<br />(<br />&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;id<br />&nbsp;&nbsp;&nbsp;&nbsp;[1]&nbsp;=&gt;&nbsp;name<br />&nbsp;&nbsp;&nbsp;&nbsp;[2]&nbsp;=&gt;&nbsp;datetime<br />)<br />*/<br /><br /></span><span style="color: #0000BB">$idx&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">listTableIndexes</span><span style="color: #007700">(</span><span style="color: #DD0000">'events'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$idx</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">/*<br />prints:<br />Array<br />(<br />&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;event_timestamp<br />)<br />*/<br /><br /></span><span style="color: #0000BB">$tables&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">listTables</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$tables</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">/*<br />prints:<br />Array<br />(<br />&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;event_participants<br />&nbsp;&nbsp;&nbsp;&nbsp;[1]&nbsp;=&gt;&nbsp;events<br />&nbsp;&nbsp;&nbsp;&nbsp;[2]&nbsp;=&gt;&nbsp;people<br />)<br />*/<br /><br />//&nbsp;currently&nbsp;there&nbsp;is&nbsp;no&nbsp;method&nbsp;to&nbsp;create&nbsp;a&nbsp;view,<br />//&nbsp;so&nbsp;let's&nbsp;do&nbsp;it&nbsp;"manually"<br /></span><span style="color: #0000BB">$sql&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"CREATE&nbsp;VIEW&nbsp;names_only&nbsp;AS&nbsp;SELECT&nbsp;name&nbsp;FROM&nbsp;people"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">exec</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$sql&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"CREATE&nbsp;VIEW&nbsp;last_ten_events&nbsp;AS&nbsp;SELECT&nbsp;*&nbsp;FROM&nbsp;events&nbsp;ORDER&nbsp;BY&nbsp;id&nbsp;DESC&nbsp;LIMIT&nbsp;0,10"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">exec</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;list&nbsp;views<br /></span><span style="color: #0000BB">$views&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">listViews</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$views</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">/*<br />prints:<br />Array<br />(<br />&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;last_ten_events<br />&nbsp;&nbsp;&nbsp;&nbsp;[1]&nbsp;=&gt;&nbsp;names_only<br />)<br />*/<br /><br />/*<br />Not&nbsp;implemented&nbsp;in&nbsp;the&nbsp;MySQL&nbsp;driver<br />listTableTriggers()<br />listTableViews()<br />listFunctions()<br />*/<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  
+ </div>
+
+ <div class="refsection" id="package.database.mdb2.intro-manager-module.delete-elements"><div class="info"><h1>Deleting database elements</h1>
+</div>
+  
+  <p class="para">
+    For every create*() method as shown above, there is a corresponding drop*()
+    method to delete a database, a table, field, index or constraint.
+    The drop*() methods do not check if the item to be deleted exists,
+    so it&#039;s the developer&#039;s responsibility to check for PEAR errors.
+    </p><div class="example"><div class="info"><p><strong>Drop database elements</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;let's&nbsp;say&nbsp;our&nbsp;normal&nbsp;setup&nbsp;is&nbsp;to&nbsp;die&nbsp;on&nbsp;PEAR&nbsp;errors<br /></span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">setErrorHandling</span><span style="color: #007700">(</span><span style="color: #0000BB">PEAR_ERROR_DIE</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;for&nbsp;the&nbsp;next&nbsp;statements&nbsp;we'll&nbsp;temporarily<br />//&nbsp;change&nbsp;the&nbsp;error&nbsp;handling<br /></span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">pushErrorHandling</span><span style="color: #007700">(</span><span style="color: #0000BB">PEAR_ERROR_RETURN</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;drop&nbsp;a&nbsp;sequence<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">dropSequence</span><span style="color: #007700">(</span><span style="color: #DD0000">'nonexisting'</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$result</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'The&nbsp;sequence&nbsp;does&nbsp;not&nbsp;exist'</span><span style="color: #007700">;<br />}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Sequence&nbsp;dropped'</span><span style="color: #007700">;<br />}<br /></span><span style="color: #FF8000">//&nbsp;another&nbsp;sequence<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">dropSequence</span><span style="color: #007700">(</span><span style="color: #DD0000">'people'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;drop&nbsp;a&nbsp;constraint<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">dropConstraint</span><span style="color: #007700">(</span><span style="color: #DD0000">'events'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'PRIMARY'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;note:&nbsp;the&nbsp;third&nbsp;parameter&nbsp;gives&nbsp;a&nbsp;hint<br />//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;that&nbsp;this&nbsp;is&nbsp;a&nbsp;primary&nbsp;key&nbsp;constraint<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">dropConstraint</span><span style="color: #007700">(</span><span style="color: #DD0000">'event_participants'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'unique_participant'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;drop&nbsp;an&nbsp;index<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">dropIndex</span><span style="color: #007700">(</span><span style="color: #DD0000">'events'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'event_timestamp'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;drop&nbsp;a&nbsp;table<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">dropTable</span><span style="color: #007700">(</span><span style="color: #DD0000">'events'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;drop&nbsp;the&nbsp;database&nbsp;already!<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">dropDatabase</span><span style="color: #007700">(</span><span style="color: #DD0000">'events_db'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;revert&nbsp;to&nbsp;the&nbsp;usual&nbsp;error&nbsp;handling<br /></span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">popErrorHandling</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.mdb2.intro-function-module.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.mdb2.html">MDB2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.mdb2.intro-reverse-module.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Function Module</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Reverse Module</td>
+  </tr>
+ </table>
+</div>
+</body></html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction - Fetch</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.mdb.html" title="MDB" />
+  <link rel="prev" href="package.database.mdb.intro-query.html" title="Introduction - Query" />
+  <link rel="next" href="package.database.mdb.intro-sequences.html" title="Introduction - Sequences" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction - Fetch</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.mdb.intro-query.html" title="Introduction - Query">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.mdb.intro-sequences.html" title="Introduction - Sequences">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.mdb.intro-fetch">
+ 
+  <h1 class="refname">Introduction - Fetch</h1>
+  <div class="refnamediv">Introduction - Fetch &ndash; Fetching rows from the query</div>
+
+ 
+ <div class="refsection" id="package.database.mdb.intro-fetch.desc"><div class="info"><h1>Description</h1>
+</div>
+  
+  <div class="refsection"><div class="info"><h1>Fetch functions</h1>
+</div>
+   
+   <p class="simpara">
+    In order to fetch data from a result resource you can use one if the following methods:
+    <a href="package.database.mdb.mdb-common.fetchinto.html" class="link">
+     <strong class="function">fetchInto()</strong>
+    </a>
+    , <a href="package.database.mdb.mdb-common.fetchone.html" class="link">
+     <strong class="function">fetchOne()</strong>
+    </a>.
+    , <a href="package.database.mdb.mdb-common.fetchrow.html" class="link">
+     <strong class="function">fetchRow()</strong>
+    </a>.
+    , <a href="package.database.mdb.mdb-common.fetchcol.html" class="link">
+     <strong class="function">fetchCol()</strong>
+    </a>.
+    and <a href="package.database.mdb.mdb-common.fetchall.html" class="link">
+     <strong class="function">fetchAll()</strong>
+    </a>.
+     All above mentioned methods except <strong class="function">fetchOne()</strong>
+    return the requested data encapsuled into a (multi-dimensional-)array,
+    <strong class="constant">NULL</strong> on no more data or a
+    <a href="package.database.mdb.mdb-error.html" class="link">
+     <strong class="classname">MDB_Error</strong>
+    </a>, when an error occurs.
+     All method prefixed with <strong class="function">fetch()</strong> automatically free the result set.
+     </p>
+   <div class="example"><div class="info"><p><strong>Fetching a result set</strong></p></div>
+    
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">...<br /></span><span style="color: #0000BB">$db&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">MDB</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">"SELECT&nbsp;*&nbsp;FROM&nbsp;mytable"</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Get&nbsp;each&nbsp;row&nbsp;of&nbsp;data&nbsp;on&nbsp;each&nbsp;iteration&nbsp;until<br />//&nbsp;there&nbsp;are&nbsp;no&nbsp;more&nbsp;rows<br /></span><span style="color: #007700">while&nbsp;(</span><span style="color: #0000BB">$row&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchInto</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$id&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$row</span><span style="color: #007700">[</span><span style="color: #0000BB">0</span><span style="color: #007700">];<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;If&nbsp;we&nbsp;are&nbsp;just&nbsp;interested&nbsp;in&nbsp;the&nbsp;first&nbsp;column&nbsp;of&nbsp;the&nbsp;first&nbsp;row<br /></span><span style="color: #0000BB">$id&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchOne</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Since&nbsp;the&nbsp;fetch&nbsp;methods&nbsp;always&nbsp;free&nbsp;the&nbsp;result&nbsp;set<br />//&nbsp;we&nbsp;cannot&nbsp;loop&nbsp;across&nbsp;the&nbsp;result&nbsp;set&nbsp;but&nbsp;instead<br />//&nbsp;need&nbsp;to&nbsp;choose&nbsp;the&nbsp;proper&nbsp;fetch&nbsp;method<br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAll</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">);<br />foreach(</span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$row</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$id&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$row</span><span style="color: #007700">[</span><span style="color: #0000BB">0</span><span style="color: #007700">];<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   </div>
+  </div>
+  <div class="refsection"><div class="info"><h1>Select the format of the fetched row</h1>
+</div>
+   
+   <p class="para">
+      The fetch modes supported are:
+      </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+       <strong class="constant">MDB_FETCHMODE_ORDERED</strong> (default)
+        </p>
+      <p class="para">
+         The <strong class="function">fetch*()</strong> returns an ordered array.
+         The order is taken from the select statement.
+         </p><div class="example"><div class="info"><p><strong>Fetch a ordered array</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$res&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;id,&nbsp;name,&nbsp;email&nbsp;FROM&nbsp;users'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$row&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchRow</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">MDB_FETCHMODE_ORDERED</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">/*<br />$row&nbsp;will&nbsp;contain:<br />array&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;=&gt;&nbsp;&lt;column&nbsp;"id"&nbsp;data&gt;,<br />&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;=&gt;&nbsp;&lt;column&nbsp;"name"&nbsp;data&gt;,<br />&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;=&gt;&nbsp;&lt;column&nbsp;"email"&nbsp;data&gt;<br />)<br />*/<br />//&nbsp;Access&nbsp;the&nbsp;data&nbsp;with:<br /></span><span style="color: #0000BB">$id&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$row</span><span style="color: #007700">[</span><span style="color: #0000BB">0</span><span style="color: #007700">];<br /></span><span style="color: #0000BB">$name&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$row</span><span style="color: #007700">[</span><span style="color: #0000BB">1</span><span style="color: #007700">];<br /></span><span style="color: #0000BB">$email&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$row</span><span style="color: #007700">[</span><span style="color: #0000BB">2</span><span style="color: #007700">];<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+       </div>
+      
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <strong class="constant">MDB_FETCHMODE_ASSOC</strong>
+      </p>
+      <p class="para">
+         Returns an associative array with the column
+         names as the array keys
+         </p><div class="example"><div class="info"><p><strong>Fetch a assoc. array</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$res&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;id,&nbsp;name,&nbsp;email&nbsp;FROM&nbsp;users'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$row&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchRow</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">MDB_FETCHMODE_ASSOC</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">/*<br />$row&nbsp;will&nbsp;contain:<br />array&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;'id'&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;&lt;column&nbsp;"id"&nbsp;data&gt;,<br />&nbsp;&nbsp;&nbsp;&nbsp;'name'&nbsp;&nbsp;=&gt;&nbsp;&lt;column&nbsp;"name"&nbsp;data&gt;,<br />&nbsp;&nbsp;&nbsp;&nbsp;'email'&nbsp;=&gt;&nbsp;&lt;column&nbsp;"email"&nbsp;data&gt;<br />)<br />*/<br />//&nbsp;Access&nbsp;the&nbsp;data&nbsp;with:<br /></span><span style="color: #0000BB">$id&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$row</span><span style="color: #007700">[</span><span style="color: #DD0000">'id'</span><span style="color: #007700">];<br /></span><span style="color: #0000BB">$name&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$row</span><span style="color: #007700">[</span><span style="color: #DD0000">'name'</span><span style="color: #007700">];<br /></span><span style="color: #0000BB">$email&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$row</span><span style="color: #007700">[</span><span style="color: #DD0000">'email'</span><span style="color: #007700">];<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+       </div>
+      
+     </li>
+    </ul>
+   
+  </div>
+  <div class="refsection"><div class="info"><h1>Set the format of the fetched row</h1>
+</div>
+   
+   <p class="para">
+      You can set the fetch mode per result call or for your whole MDB
+      instance.
+      </p><div class="example"><div class="info"><p><strong>Per call</strong></p></div>
+     
+     <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">while&nbsp;(</span><span style="color: #0000BB">$row&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchInto</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">MDB_FETCHMODE_ASSOC</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$id&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$row</span><span style="color: #007700">[</span><span style="color: #DD0000">'id'</span><span style="color: #007700">];<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+    </div>
+    <div class="example"><div class="info"><p><strong>Once per instance</strong></p></div>
+     
+     <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$db&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">MDB</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;this&nbsp;will&nbsp;set&nbsp;a&nbsp;default&nbsp;fetchmode&nbsp;for&nbsp;this&nbsp;Pear&nbsp;MDB&nbsp;instance<br />//&nbsp;(for&nbsp;all&nbsp;queries)<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setFetchMode</span><span style="color: #007700">(</span><span style="color: #0000BB">MDB_FETCHMODE_ASSOC</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(...);<br /><br />while&nbsp;(</span><span style="color: #0000BB">$row&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchRow</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$id&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$row</span><span style="color: #007700">[</span><span style="color: #DD0000">'id'</span><span style="color: #007700">];<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+    </div>
+   
+  </div>
+  <div class="refsection"><div class="info"><h1>Fetch rows by number</h1>
+</div>
+   
+   <p class="para">
+      The PEAR MDB fetch system also supports an extra parameter
+      to the fetch statement. So you can fetch rows from a result
+      by number. This is especially helpful if you only want to show
+      sets of an entire result (for example in building paginated
+      HTML lists), fetch rows in an special order, etc.
+      </p><div class="example"><div class="info"><p><strong>Fetching by number</strong></p></div>
+     
+     <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">...<br /></span><span style="color: #FF8000">//&nbsp;the&nbsp;row&nbsp;to&nbsp;start&nbsp;fetching<br /></span><span style="color: #0000BB">$from&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">50</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;how&nbsp;many&nbsp;results&nbsp;per&nbsp;page<br /></span><span style="color: #0000BB">$resPage&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;the&nbsp;last&nbsp;row&nbsp;to&nbsp;fetch&nbsp;for&nbsp;this&nbsp;page<br /></span><span style="color: #0000BB">$to&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$from&nbsp;</span><span style="color: #007700">+&nbsp;</span><span style="color: #0000BB">$resPage</span><span style="color: #007700">;<br /><br />foreach&nbsp;(</span><span style="color: #0000BB">range</span><span style="color: #007700">(</span><span style="color: #0000BB">$from</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$to</span><span style="color: #007700">)&nbsp;as&nbsp;</span><span style="color: #0000BB">$rowNum</span><span style="color: #007700">)&nbsp;{<br />if&nbsp;(!</span><span style="color: #0000BB">$row&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchInto</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$fetchmode</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$rowNum</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$id&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$row</span><span style="color: #007700">[</span><span style="color: #0000BB">0</span><span style="color: #007700">];<br />&nbsp;&nbsp;&nbsp;&nbsp;....<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+    </div>
+   
+  </div>
+  <div class="refsection"><div class="info"><h1>Freeing the result set</h1>
+</div>
+   
+   <p class="para">
+      It is recommended to finish the result set after processing in
+      order to to save memory.
+      Use <a href="package.database.mdb.mdb-common.freeresult.html" class="link">
+     <strong class="function">freeResult()</strong>
+    </a> to do this.
+      </p><div class="example"><div class="info"><p><strong>Freeing</strong></p></div>
+     
+     <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">...<br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;*&nbsp;FROM&nbsp;clients'</span><span style="color: #007700">);<br />while&nbsp;(</span><span style="color: #0000BB">$row&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchInto</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">))&nbsp;{<br />...<br />}<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">freeResult</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+    </div>
+   
+  </div>
+  <div class="refsection"><div class="info"><h1>Quick data retrieving</h1>
+</div>
+   
+   <p class="para">
+      <a href="package.database.mdb.html" class="link"><strong class="classname">MDB</strong></a> provides some special ways to retrieve information
+      from a query without the need of using
+      <strong class="function">fetch*()</strong> and loop throw results.
+     </p>
+   <p class="para">
+    <a href="package.database.mdb.mdb-common.queryone.html" class="link">
+     <strong class="function">queryOne()</strong>
+    </a> retrieves the first result of the
+      first column from a query
+      </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$numrows&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">queryOne</span><span style="color: #007700">(</span><span style="color: #DD0000">'select&nbsp;count(id)&nbsp;from&nbsp;clients'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   
+   <p class="para">
+    <a href="package.database.mdb.mdb-common.queryrow.html" class="link">
+     <strong class="function">queryRow()</strong>
+    </a>returns the first row and returns it as an array.
+      </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$sql&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'select&nbsp;name,&nbsp;address,&nbsp;phone&nbsp;from&nbsp;clients&nbsp;where&nbsp;id=1'</span><span style="color: #007700">;<br />if&nbsp;(</span><span style="color: #0000BB">is_array</span><span style="color: #007700">(</span><span style="color: #0000BB">$row&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">queryRow</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">)))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;list(</span><span style="color: #0000BB">$name</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$address</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$phone</span><span style="color: #007700">)&nbsp;=&nbsp;</span><span style="color: #0000BB">$row</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   
+   <p class="para">
+    <a href="package.database.mdb.mdb-common.querycol.html" class="link">
+     <strong class="function">queryCol()</strong>
+    </a> returns an array with the data
+      of the selected column. It accepts the column number to retrieve
+      as the second parameter.
+      </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$all_client_names&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">queryCol</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;name&nbsp;FROM&nbsp;clients'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div><p>
+      The above sentence could return for example:
+      </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$all_client_names&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'Stig'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Jon'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Colin'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   
+   <p class="para">
+    <a href="package.database.mdb.mdb-common.queryall.html" class="link">
+     <strong class="function">getAll()</strong>
+    </a>
+      fetches all the rows returned from a query. This method also has
+      some advanced parameters still will also enable you to return the data as an
+      associative array using the first column as the key.
+       </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$data&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">getAll</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;id,&nbsp;text,&nbsp;date&nbsp;FROM&nbsp;mytable'</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">/*<br />Will&nbsp;return:<br />array(<br />&nbsp;&nbsp;&nbsp;1&nbsp;=&gt;&nbsp;array('4',&nbsp;'four',&nbsp;'2004'),<br />&nbsp;&nbsp;&nbsp;2&nbsp;=&gt;&nbsp;array('5',&nbsp;'five',&nbsp;'2005'),<br />&nbsp;&nbsp;&nbsp;3&nbsp;=&gt;&nbsp;array('6',&nbsp;'six',&nbsp;'2006')<br />)<br />*/<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   
+   <p class="para">
+      The <strong class="function">query*()</strong> family methods will do all the
+      dirty job for you, this is: launch the query, fetch the data
+      and free the result. Please note that as all PEAR MDB functions
+      they will return a <a href="package.database.mdb.mdb-error.html" class="link"><strong class="classname">MDB_Error</strong></a> object
+      on errors.
+     </p>
+  </div>
+  <div class="refsection"><div class="info"><h1>Getting more information from query results</h1>
+</div>
+   
+   <p class="para">
+      With <a href="package.database.mdb.html" class="link"><strong class="classname">MDB</strong></a> you have many ways to retrieve useful information
+      from query results. These are:
+      </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+       <a href="package.database.mdb.mdb-common.numrows.html" class="link">
+        <strong class="function">numRows()</strong>
+       </a>: Returns the total number of
+         rows returned from a &quot;SELECT&quot; query.
+         </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Number&nbsp;of&nbsp;rows<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">numRows</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+      
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <a href="package.database.mdb.mdb-common.numcols.html" class="link">
+        <strong class="function">numCols()</strong>
+       </a>: Returns the total number of
+         columns returned from a &quot;SELECT&quot; query.
+         </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Number&nbsp;of&nbsp;cols<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">numCols</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+      
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <a href="package.database.mdb.mdb-common.affectedrows.html" class="link">
+        <strong class="function">affectedRows()</strong>
+       </a>: Returns the number of rows
+         affected by a data manipulation query (&quot;INSERT&quot;, &quot;UPDATE&quot; or
+         &quot;DELETE&quot;).
+         </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;remember&nbsp;that&nbsp;this&nbsp;statement&nbsp;won't&nbsp;return&nbsp;a&nbsp;result&nbsp;object<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">'DELETE&nbsp;*&nbsp;FROM&nbsp;clients'</span><span style="color: #007700">);<br />echo&nbsp;</span><span style="color: #DD0000">'I&nbsp;have&nbsp;deleted&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">affectedRows</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">'&nbsp;clients'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+      
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <a href="package.database.mdb.mdb-common.tableinfo.html" class="link">
+        <strong class="function">tableInfo()</strong>
+       </a>: Returns an associative array
+         with information about the returned fields from a &quot;SELECT&quot;
+         query.
+         </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Table&nbsp;Info<br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">tableInfo</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+      
+     </li>
+    </ul><p>
+      Don&#039;t forget to check if the returned result from your action is
+      a <a href="package.database.mdb.mdb-error.html" class="link"><strong class="classname">MDB_Error</strong></a> object. If you get a error message like
+      "<span class="quote">MDB_Error: database not capable</span>", means that
+      your database backend doesn&#039;t support this action.
+     </p>
+  </div>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.mdb.intro-query.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.mdb.html">MDB</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.mdb.intro-sequences.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction - Query</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Introduction - Sequences</td>
+  </tr>
+ </table>
+</div>
+</body></html>

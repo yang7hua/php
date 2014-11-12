@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>extsrcrelease and extbinrelease changes for PECL developers</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="guide.developers.package2.peclinfo.html" title="Special information for PECL developers" />
+  <link rel="prev" href="guide.developers.package2.peclinfo.html" title="Special information for PECL developers" />
+  <link rel="next" href="guide.developers.package2.tags.html" title="Detailed Tag Reference for package.xml version 2.0" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">extsrcrelease and extbinrelease changes for PECL developers</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="guide.developers.package2.peclinfo.html" title="Special information for PECL developers">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="guide.developers.package2.tags.html" title="Detailed Tag Reference for package.xml version 2.0">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="guide.developers.package2.pecl">
+ 
+  <h1 class="refname">extsrcrelease and extbinrelease changes for PECL developers</h1>
+  <div class="refnamediv">extsrcrelease and extbinrelease changes for PECL developers &ndash; PECL-specific details of package.xml 2.0</div>
+
+ 
+ <div class="refsection" id="guide.developers.package2.pecl.intro"><div class="info"><h1>Special extension package tags</h1>
+</div>
+  
+  <p class="para">
+   Most of the tags for PECL-style PHP extension releases are identical to those for
+   PEAR-style PHP script releases.  There are a few extsrc/extbin-specific tags that
+   all PECL developers must know about.
+  </p>
+  <p class="para">
+   </p><table id="guide.developers.package2.pecl.intro.chart" class="doctable table"><caption>PECL extsrc/extbin-specific tags in package.xml 2.0</caption>
+    
+    
+     <thead>
+      <tr>
+       <th>Tag</th>
+       <th>Description of usage</th>
+      </tr>
+
+     </thead>
+
+     <tbody class="tbody">
+      <tr>
+       <td>
+        &lt;providesextension&gt;
+       </td>
+       <td>
+        The &lt;providesextension&gt; tag must be right after &lt;dependencies&gt;.  This
+        tag tells the installer the name of the extension provided by the package, allowing
+        different package names from the extension.  This could be important for binary packages
+        (such as PDO and PDO_windows or something along those lines).
+        <div class="xmlcode">
+         <pre class="xmlcode">
+&lt;providesextension&gt;PDO&lt;/providesextension&gt;</pre>
+
+        </div>
+       </td>
+      </tr>
+
+      <tr>
+       <td>
+        &lt;srcpackage&gt; or &lt;srcuri&gt;
+       </td>
+       <td>
+        &lt;srcpackage&gt; or &lt;srcuri&gt; must follow &lt;providesextension&gt;.
+        Extension binary packages must define either a &lt;srcpackage&gt; tag (for package.xml
+        containing <a href="guide.developers.package2.channel.html" class="link">&lt;channel&gt;</a>) or
+        a &lt;srcuri&gt; tag (for package.xml containing
+        <a href="guide.developers.package2.uri.html" class="link">&lt;uri&gt;</a>).
+        <div class="xmlcode">
+         <pre class="xmlcode">
+&lt;name&gt;PDO_windowsbin&lt;/name&gt;
+&lt;channel&gt;pecl.php.net&lt;/channel&gt;
+&lt;!-- snip --&gt;
+&lt;providesextension&gt;PDO&lt;/providesextension&gt;
+&lt;srcpackage&gt;PDO&lt;/srcpackage&gt;</pre>
+
+        </div>
+        or,
+        <div class="xmlcode">
+         <pre class="xmlcode">
+&lt;name&gt;Foo_windowsbin&lt;/name&gt;
+&lt;uri&gt;http://www.example.com/Foo_windowsbin-1.5.0.tgz&lt;/uri&gt;
+&lt;!-- snip --&gt;
+&lt;providesextension&gt;Foo&lt;/providesextension&gt;
+&lt;srcuri&gt;http://www.example.com/Foo-1.5.0.tgz&lt;/srcuri&gt;</pre>
+
+        </div>
+       </td>
+      </tr>
+
+      <tr>
+       <td>
+        &lt;configureoption&gt;
+       </td>
+       <td>
+        The &lt;configureoption&gt; tag is used to ask a user a specific
+        question, which is then used to influence the building of the extension.
+        Any configure option beginning with "<span class="quote">with</span>" is assumed
+        to be a question about enabling a feature.  Other options have the user&#039;s
+        response automatically passed to <strong class="command">configure</strong>.  The
+        following configureoptions:
+        <div class="xmlcode">
+         <pre class="xmlcode">
+&lt;configureoption name=&quot;with-blah&quot; prompt=&quot;enable blah?&quot; default=&quot;yes&quot;/&gt;
+&lt;configureoption name=&quot;foo&quot; prompt=&quot;what foo to use?&quot; default=&quot;bar&quot;/&gt;</pre>
+
+        </div>
+        will generate a configure line similar to:
+        <pre class="screen">--with-blah --foo=bar</pre>
+ if the user accepts the default
+        values.
+       </td>
+      </tr>
+
+     </tbody>
+    
+   </table>
+
+  
+ </div>
+ </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="guide.developers.package2.peclinfo.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="guide.developers.package2.peclinfo.html">Special information for PECL developers</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="guide.developers.package2.tags.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Special information for PECL developers</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Detailed Tag Reference for package.xml version 2.0</td>
+  </tr>
+ </table>
+</div>
+</body></html>

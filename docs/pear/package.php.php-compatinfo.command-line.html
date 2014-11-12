@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>The Command-Line Parser</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.php.php-compatinfo.tutorial.html" title="Getting started" />
+  <link rel="prev" href="package.php.php-compatinfo.condition.html" title="Conditional Code Analysis" />
+  <link rel="next" href="package.php.php-compatinfo.renderer.html" title="Outputting Results" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">The Command-Line Parser</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.php.php-compatinfo.condition.html" title="Conditional Code Analysis">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.php.php-compatinfo.renderer.html" title="Outputting Results">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.php.php-compatinfo.command-line">
+ 
+  <h1 class="refname">The Command-Line Parser</h1>
+  <div class="refnamediv">The Command-Line Parser &ndash; parsing data source with CLI</div>
+
+ 
+
+ <div class="refsection" id="package.php.php-compatinfo.command-line.switches"><div class="info"><h1>Switches and options</h1>
+</div>
+
+ <p class="para">
+  The <strong class="emphasis">Command-Line Parser</strong> can be invoked through
+  the <strong class="command">pci</strong> command.
+ </p>
+ <p class="para">
+  Let&#039;s take a look at the command-line parser switches:
+ </p>
+ <p class="para">
+  </p><pre class="screen">
+Usage: pci [options]
+
+  -d   --dir (optional)value                      Parse DIR to get its
+                                                  compatibility info ()
+  -f   --file (optional)value                     Parse FILE to get its
+                                                  compatibility info ()
+  -s   --string (optional)value                   Parse STRING to get its
+                                                  compatibility info ()
+  -v   --verbose (optional)value                  Set the verbose level (1)
+  -n   --no-recurse                               Do not recursively parse files
+
+                                                  when using --dir
+  -if  --ignore-files (optional)value             Data file name which contains
+                                                  a list of file to ignore
+                                                  (files.txt)
+  -id  --ignore-dirs (optional)value              Data file name which contains
+                                                  a list of directory to ignore
+                                                  (dirs.txt)
+  -in  --ignore-functions (optional)value         Data file name which contains
+                                                  a list of php function to
+                                                  ignore (functions.txt)
+  -ic  --ignore-constants (optional)value         Data file name which contains
+                                                  a list of php constant to
+                                                  ignore (constants.txt)
+  -ie  --ignore-extensions (optional)value        Data file name which contains
+                                                  a list of php extension to
+                                                  ignore (extensions.txt)
+  -iv  --ignore-versions values(optional)         PHP versions - functions to
+                                                  exclude when parsing source
+                                                  code (5.0.0)
+  -inm --ignore-functions-match (optional)value   Data file name which contains
+                                                  a list of php function pattern
+
+                                                  to ignore
+                                                  (functions-match.txt)
+  -iem --ignore-extensions-match (optional)value  Data file name which contains
+                                                  a list of php extension
+                                                  pattern to ignore
+                                                  (extensions-match.txt)
+  -icm --ignore-constants-match (optional)value   Data file name which contains
+                                                  a list of php constant pattern
+
+                                                  to ignore
+                                                  (constants-match.txt)
+  -fe  --file-ext (optional)value                 A comma separated list of file
+
+                                                  extensions to parse (only
+                                                  valid if parsing a directory)
+                                                  (php, php4, inc, phtml)
+  -r   --report (optional)value                   Print either &quot;xml&quot; or &quot;csv&quot;
+                                                  report (text)
+  -o   --output-level (optional)value             Print Path/File + Version with
+
+                                                  additional data (31)
+  -t   --tab (optional)value                      Columns width (29,12,20)
+  -p   --progress (optional)value                 Show a wait message [text] or
+                                                  a progress bar [bar] (bar)
+  -S   --summarize                                Print only summary when
+                                                  parsing directory
+  -V   --version                                  Print version information
+  -h   --help                                     Show this help
+  </pre>
+
+ 
+
+ <p class="para">
+  </p><div class="variablelist">
+   <dl class="varlistentry">
+    <dt class="term">
+     <em><code class="parameter">-d</code></em> | <em><code class="parameter">--dir</code></em>
+    </dt>
+    <dd class="listitem">
+     <p class="para">
+      <span style="background-color:#eee">
+       <strong class="command">pci</strong>
+       -d <span class="replaceable">directory</span>
+      </span>
+     </p>
+     <p class="para">
+      Runs the parser with all default options, and try to analyze content of
+      files into directory identified by switch -d or --dir
+     </p>
+    </dd>
+   </dl>
+   <dl class="varlistentry">
+    <dt class="term">
+     <em><code class="parameter">-f</code></em> | <em><code class="parameter">--file</code></em>
+    </dt>
+    <dd class="listitem">
+     <p class="para">
+      <span style="background-color:#eee">
+       <strong class="command">pci</strong>
+       -f <span class="replaceable">file</span>
+      </span>
+     </p>
+     <p class="para">
+      Runs the parser with all default options, and try to analyze content of
+      a single file identified by switch -f or --file
+     </p>
+    </dd>
+   </dl>
+   <dl class="varlistentry">
+    <dt class="term">
+     <em><code class="parameter">-s</code></em> | <em><code class="parameter">--string</code></em>
+    </dt>
+    <dd class="listitem">
+     <p class="para">
+      <span style="background-color:#eee">
+       <strong class="command">pci</strong>
+       -s <span class="replaceable">string</span>
+      </span>
+     </p>
+     <p class="para">
+      Runs the parser with all default options, and try to analyze content of
+      a chunk of code (string) designed by switch -s or --string
+     </p>
+    </dd>
+   </dl>
+   <dl class="varlistentry">
+    <dt class="term">
+     <em><code class="parameter">-v</code></em> | <em><code class="parameter">--verbose</code></em>
+    </dt>
+    <dd class="listitem">
+     <p class="para">
+      <span style="background-color:#eee">
+       <strong class="command">pci</strong>
+       -v <span class="replaceable">number</span>
+       -d <span class="replaceable">directory</span>
+      </span>
+     </p>
+     <p class="para">
+      Runs the parser with all default options, and try to analyze content of
+      files into directory identified by switch -d or --dir with the level of detail
+      given by number and switch -v or --verbose
+     </p>
+     <p class="para">
+      Verbose level goes from 0 (no extra information) to 7 (full extra details).
+     </p>
+     <p class="para">
+      </p><ul class="itemizedlist">
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">Level 0</strong>
+         give only parsing results of data source (directory, file, string).
+        </p>
+        <p class="para">
+         For example:
+         <strong class="command">pci -v 0 -d /tmp/Services_W3C_CSSValidator-0.1.0</strong>
+         give
+         </p><pre class="screen">
++-----------------------------+---------+---+------------+--------------------+
+| Files                       | Version | C | Extensions | Constants/Tokens   |
++-----------------------------+---------+---+------------+--------------------+
+| ...W3C_CSSValidator-0.1.0/* | 5.1.0   | 4 | dom        | ...CTORY_SEPARATOR |
+|                             |         |   |            | E_ALL              |
+|                             |         |   |            | FALSE              |
+|                             |         |   |            | NULL               |
+|                             |         |   |            | TRUE               |
+|                             |         |   |            | __FILE__           |
+|                             |         |   |            | instanceof         |
+|                             |         |   |            | protected          |
+|                             |         |   |            | public             |
++-----------------------------+---------+---+------------+--------------------+
+| ...r-0.1.0/CSSValidator.php | 5.1.0   | 0 | dom        | FALSE              |
+|                             |         |   |            | NULL               |
+|                             |         |   |            | TRUE               |
+|                             |         |   |            | protected          |
+|                             |         |   |            | public             |
++-----------------------------+---------+---+------------+--------------------+
+| ...0.1.0/tests/AllTests.php | 5.0.0   | 4 |            | __FILE__           |
+|                             |         |   |            | public             |
++-----------------------------+---------+---+------------+--------------------+
+| ...W3C_CSSValidatorTest.php | 5.0.0   | 4 |            | ...CTORY_SEPARATOR |
+|                             |         |   |            | __FILE__           |
+|                             |         |   |            | protected          |
+|                             |         |   |            | public             |
++-----------------------------+---------+---+------------+--------------------+
+| ...les/validate_atrules.php | 4.0.0   | 0 |            | E_ALL              |
+|                             |         |   |            | TRUE               |
++-----------------------------+---------+---+------------+--------------------+
+| ...ples/validate_byfile.php | 4.0.0   | 0 |            | E_ALL              |
+|                             |         |   |            | TRUE               |
++-----------------------------+---------+---+------------+--------------------+
+| ...mples/validate_byuri.php | 4.0.0   | 0 |            | E_ALL              |
+|                             |         |   |            | TRUE               |
++-----------------------------+---------+---+------------+--------------------+
+| ...es/validate_fragment.php | 4.0.0   | 0 |            | E_ALL              |
+|                             |         |   |            | TRUE               |
++-----------------------------+---------+---+------------+--------------------+
+| ...0/CSSValidator/Error.php | 5.0.0   | 0 |            | public             |
++-----------------------------+---------+---+------------+--------------------+
+| ...CSSValidator/Message.php | 5.0.0   | 0 |            | NULL               |
+|                             |         |   |            | public             |
++-----------------------------+---------+---+------------+--------------------+
+| ...SSValidator/Response.php | 5.0.0   | 0 |            | instanceof         |
+|                             |         |   |            | public             |
++-----------------------------+---------+---+------------+--------------------+
+| ...CSSValidator/Warning.php | 4.0.0   | 0 |            |                    |
++-----------------------------+---------+---+------------+--------------------+
+         </pre>
+
+        
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">Level 1</strong>
+         give same details as level 0, plus command line resume.
+        </p>
+        <p class="para">
+         For example:
+         <strong class="command">pci -v 1 -d /tmp/Services_W3C_CSSValidator-0.1.0</strong>
+         give
+         </p><pre class="screen">
+Command Line resume :
+
++-------------------------+---------------------------------------------------+
+| Option                  | Value                                             |
++-------------------------+---------------------------------------------------+
+| summarize               | FALSE                                             |
+| output-level            | 31                                                |
+| verbose                 | 1                                                 |
+| dir                     | /tmp/Services_W3C_CSSValidator-0.1.0              |
++-------------------------+---------------------------------------------------+
+         </pre>
+
+        
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">Level 2</strong>
+         give same details as level 0, plus parser options used.
+        </p>
+        <p class="para">
+         For example:
+         <strong class="command">pci -v 2 -d /tmp/Services_W3C_CSSValidator-0.1.0</strong>
+         give
+         </p><pre class="screen">
+Parser options :
+
++-------------------------+---------------------------------------------------+
+| Option                  | Value                                             |
++-------------------------+---------------------------------------------------+
+| file_ext                | php                                               |
+|                         | php4                                              |
+|                         | inc                                               |
+|                         | phtml                                             |
+| recurse_dir             | TRUE                                              |
+| debug                   | FALSE                                             |
+| is_string               | FALSE                                             |
+| ignore_files            |                                                   |
+| ignore_dirs             |                                                   |
++-------------------------+---------------------------------------------------+
+         </pre>
+
+        
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">Level 3</strong>
+         is equivalent to level 2 + level 1 + level 0.
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">Level 4</strong>
+         give same details as level 0, plus list of php functions used with their
+         version and source (extension PECL or standard).
+        </p>
+        <p class="para">
+         For example:
+         <strong class="command">pci -v 4 -d /tmp/Services_W3C_CSSValidator-0.1.0</strong>
+         give
+         </p><pre class="screen">
+Debug:
+
++---------+-----------------+-----------+------+
+| Version | Function        | Extension | PECL |
++---------+-----------------+-----------+------+
+| 4.0.0   | in_array        |           | no   |
+| 4.0.0   | file_exists     |           | no   |
+| 4.0.0   | is_bool         |           | no   |
+| 4.0.0   | intval          |           | no   |
+| 4.0.0   | defined         |           | no   |
+| 4.0.0   | define          |           | no   |
+| 4.0.0   | chdir           |           | no   |
+| 4.0.0   | dirname         |           | no   |
+| 4.0.0   | realpath        |           | no   |
+| 4.0.0   | error_reporting |           | no   |
+| 4.0.0   | ini_set         |           | no   |
+| 4.0.0   | var_dump        |           | no   |
+| 4.0.0   | get_object_vars |           | no   |
+| 5.1.0   | property_exists |           | no   |
++---------+-----------------+-----------+------+
+         </pre>
+
+        
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">Level 5</strong>
+         is equivalent to level 4 + level 1 + level 0.
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">Level 6</strong>
+         is equivalent to level 4 + level 2.
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">Level 7</strong>
+         is equivalent to level 4 + level 2 + level 1.
+        </p>
+       </li>
+      </ul>
+     
+    </dd>
+   </dl>
+   <dl class="varlistentry">
+    <dt class="term">
+     <em><code class="parameter">-n</code></em> | <em><code class="parameter">--no-recurse</code></em>
+    </dt>
+    <dd class="listitem">
+     <p class="para">
+      <span style="background-color:#eee">
+       <strong class="command">pci</strong>
+       -n
+       -d <span class="replaceable">directory</span>
+      </span>
+     </p>
+     <p class="para">
+      Runs the parser and analyze only files in directory identified by -d or --dir.
+      Default behavior will parse all directory childs recursively.
+     </p>
+    </dd>
+   </dl>
+   <dl class="varlistentry">
+    <dt class="term">
+     <em><code class="parameter">-if</code></em> | <em><code class="parameter">--ignore-files</code></em>
+    </dt>
+    <dd class="listitem">
+     <p class="para">
+      Identify the parameter text file that contains on each line
+      the name of each file to ignore when parsing a directory/branch.
+     </p>
+     <p class="para">
+      Default value used <code class="filename">files.txt</code> file in the same directory
+      as <strong class="command">pci</strong> script.
+     </p>
+    </dd>
+   </dl>
+   <dl class="varlistentry">
+    <dt class="term">
+     <em><code class="parameter">-id</code></em> | <em><code class="parameter">--ignore-dirs</code></em>
+    </dt>
+    <dd class="listitem">
+     <p class="para">
+      Identify the parameter text file that contains on each line
+      the name of each sub-directory to ignore when parsing a directory/branch.
+     </p>
+     <p class="para">
+      Default value used <code class="filename">dirs.txt</code> file in the same directory
+      as <strong class="command">pci</strong> script.
+     </p>
+    </dd>
+   </dl>
+   <dl class="varlistentry">
+    <dt class="term">
+     <em><code class="parameter">-in</code></em> | <em><code class="parameter">--ignore-functions</code></em>
+    </dt>
+    <dd class="listitem">
+     <p class="para">
+      Identify the parameter text file that contains on each line
+      the name of each PHP function to ignore when parsing the data source.
+     </p>
+     <p class="para">
+      Default value used <code class="filename">functions.txt</code> file in the same directory
+      as <strong class="command">pci</strong> script.
+     </p>
+    </dd>
+   </dl>
+   <dl class="varlistentry">
+    <dt class="term">
+     <em><code class="parameter">-ic</code></em> | <em><code class="parameter">--ignore-constants</code></em>
+    </dt>
+    <dd class="listitem">
+     <p class="para">
+      Identify the parameter text file that contains on each line
+      the name of each PHP constant to ignore when parsing the data source
+     </p>
+    <p class="para">
+     Default value used <code class="filename">constants.txt</code> file in the same directory
+     as <strong class="command">pci</strong> script.
+    </p>
+    </dd>
+   </dl>
+   <dl class="varlistentry">
+    <dt class="term">
+     <em><code class="parameter">-ie</code></em> | <em><code class="parameter">--ignore-extensions</code></em>
+    </dt>
+    <dd class="listitem">
+     <p class="para">
+      Identify the parameter text file that contains on each line
+      the name of each PHP extension to ignore (all extension.functions)
+      when parsing the data source
+     </p>
+    </dd>
+   </dl>
+   <dl class="varlistentry">
+    <dt class="term">
+     <em><code class="parameter">-iv</code></em> | <em><code class="parameter">--ignore-versions</code></em>
+    </dt>
+    <dd class="listitem">
+     <p class="para">
+      Expect one or two values that identify which PHP version (and all
+      its related functions) to ignore.
+     </p>
+     <blockquote class="tip">
+      <p class="para">
+       For example: ignore all PHP 5 functions (minor releases 0 thru 2),
+       or only PHP 5.0.0 functions.
+       <span style="background-color:#eee">
+        <strong class="command">pci</strong>
+        -f <span class="replaceable">file</span>
+        -iv <span class="replaceable">5.0.0</span> <span class="replaceable">5.2.0</span>
+       </span>
+       <span style="background-color:#eee">
+        <strong class="command">pci</strong>
+        -d <span class="replaceable">directory</span>
+        -iv <span class="replaceable">5.0.0</span>
+       </span>
+      </p>
+     </blockquote>
+
+    </dd>
+   </dl>
+   <dl class="varlistentry">
+    <dt class="term">
+     <em><code class="parameter">-inm</code></em> | <em><code class="parameter">--ignore-functions-match</code></em>
+    </dt>
+    <dd class="listitem">
+     <p class="para">
+      Identify the parameter text file that contains on each line
+      a pattern (match a regular expression) of PHP function to ignore
+      when parsing the data source.
+     </p>
+     <p class="para">
+      Default value used <code class="filename">functions-match.txt</code> file in the same directory
+      as <strong class="command">pci</strong> script.
+     </p>
+     <p class="para">
+      Comments start with &quot;;&quot;, as in php.ini, and blank lines are allowed.
+     </p>
+     <p class="para">
+      If you want to use the <strong class="emphasis">preg_match</strong> compare
+      function, put a &quot;=&quot;, to start the line, follow by a regular expression.
+     </p>
+    </dd>
+   </dl>
+   <dl class="varlistentry">
+    <dt class="term">
+     <em><code class="parameter">-iem</code></em> | <em><code class="parameter">--ignore-extensions-match</code></em>
+    </dt>
+    <dd class="listitem">
+     <p class="para">
+      Identify the parameter text file that contains on each line
+      a pattern (match a regular expression) of PHP extension to ignore
+      when parsing the data source.
+     </p>
+     <p class="para">
+      Default value used <code class="filename">extensions-match.txt</code> file in the same directory
+      as <strong class="command">pci</strong> script.
+     </p>
+     <p class="para">
+      Comments start with &quot;;&quot;, as in php.ini, and blank lines are allowed.
+     </p>
+     <p class="para">
+      If you want to use the <strong class="emphasis">preg_match</strong> compare
+      function, put a &quot;=&quot;, to start the line, follow by a regular expression.
+     </p>
+    </dd>
+   </dl>
+   <dl class="varlistentry">
+    <dt class="term">
+     <em><code class="parameter">-icm</code></em> | <em><code class="parameter">--ignore-constants-match</code></em>
+    </dt>
+    <dd class="listitem">
+     <p class="para">
+      Identify the parameter text file that contains on each line
+      a pattern (match a regular expression) of PHP constant to ignore
+      when parsing a directory, a single file, or a string.
+     </p>
+     <p class="para">
+      Default value used <code class="filename">constants-match.txt</code> file in the same directory
+      as <strong class="command">pci</strong> script.
+     </p>
+     <p class="para">
+      Comments start with &quot;;&quot;, as in php.ini, and blank lines are allowed.
+     </p>
+     <p class="para">
+      If you want to use the <strong class="emphasis">preg_match</strong> compare
+      function, put a &quot;=&quot;, to start the line, follow by a regular expression.
+     </p>
+    </dd>
+   </dl>
+   <dl class="varlistentry">
+    <dt class="term">
+     <em><code class="parameter">-fe</code></em> | <em><code class="parameter">--file-ext</code></em>
+    </dt>
+    <dd class="listitem">
+     <p class="para">
+      Follow by a  comma separated list of file extensions to parse (only valid if
+      parsing a directory). Default is: php,php4,inc,phtml
+     </p>
+    </dd>
+   </dl>
+   <dl class="varlistentry">
+    <dt class="term">
+     <em><code class="parameter">-r</code></em> | <em><code class="parameter">--report</code></em>
+    </dt>
+    <dd class="listitem">
+     <p class="para">
+      Print either a text report (default), or any others render available (csv, xml, ...)
+     </p>
+     <p class="para">
+      For example:
+      <span style="background-color:#eee">
+       <strong class="command">pci</strong>
+       -r <span class="replaceable">xml</span>
+       -f <span class="replaceable">/tmp/PHP_CodeSniffer-1.1.0/CodeSniffer.php</span>
+      </span>
+      give these results (when package XML_Beautifier is available)
+      </p><pre class="screen">
+       <br/>&lt;?xml&nbsp;version=&quot;1.0&quot;&nbsp;encoding=&quot;UTF-8&quot;?&gt;<br/>&lt;pci&nbsp;version=&quot;1.9.0b2&quot;&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;file&nbsp;name=&quot;/tmp/PHP_CodeSniffer-1.1.0/CodeSniffer.php&quot;&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;version&gt;5.1.2&lt;/version&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;conditions&nbsp;level=&quot;0&quot;&nbsp;/&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;extensions&nbsp;count=&quot;5&quot;&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;extension&gt;date&lt;/extension&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;extension&gt;pcre&lt;/extension&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;extension&gt;SPL&lt;/extension&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;extension&gt;tokenizer&lt;/extension&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;extension&gt;xml&lt;/extension&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/extensions&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;constants&nbsp;count=&quot;7&quot;&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;constant&gt;DIRECTORY_SEPARATOR&lt;/constant&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;constant&gt;FALSE&lt;/constant&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;constant&gt;NULL&lt;/constant&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;constant&gt;PHP_EOL&lt;/constant&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;constant&gt;TRUE&lt;/constant&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;constant&gt;T_STRING&lt;/constant&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;constant&gt;__FILE__&lt;/constant&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/constants&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;tokens&nbsp;count=&quot;5&quot;&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;token&gt;catch&lt;/token&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;token&gt;protected&lt;/token&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;token&gt;public&lt;/token&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;token&gt;throw&lt;/token&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;token&gt;try&lt;/token&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/tokens&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;ignored&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;files&nbsp;count=&quot;0&quot;&nbsp;/&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;functions&nbsp;count=&quot;0&quot;&nbsp;/&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;extensions&nbsp;count=&quot;0&quot;&nbsp;/&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;constants&nbsp;count=&quot;0&quot;&nbsp;/&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/ignored&gt;<br/>&lt;/pci&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </pre>
+<p>
+      And with little debug option ( verbose level 4 )
+      <span style="background-color:#eee">
+       <strong class="command">pci</strong>
+       -r <span class="replaceable">xml</span>
+       -v <span class="replaceable">4</span>
+       -f <span class="replaceable">/tmp/PHP_CodeSniffer-1.1.0/CodeSniffer.php</span>
+      </span>
+      results became
+      </p><pre class="screen">
+       <br/>&lt;?xml&nbsp;version=&quot;1.0&quot;&nbsp;encoding=&quot;UTF-8&quot;?&gt;<br/>&lt;pci&nbsp;version=&quot;1.9.0b2&quot;&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;file&gt;/tmp/PHP_CodeSniffer-1.1.0/CodeSniffer.php&lt;/file&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;version&gt;5.1.2&lt;/version&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;conditions&nbsp;count=&quot;0&quot;&nbsp;level=&quot;0&quot;&nbsp;/&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;extensions&nbsp;count=&quot;5&quot;&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;extension&gt;date&lt;/extension&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;extension&gt;pcre&lt;/extension&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;extension&gt;SPL&lt;/extension&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;extension&gt;tokenizer&lt;/extension&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;extension&gt;xml&lt;/extension&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/extensions&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;constants&nbsp;count=&quot;7&quot;&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;constant&gt;DIRECTORY_SEPARATOR&lt;/constant&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;constant&gt;FALSE&lt;/constant&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;constant&gt;NULL&lt;/constant&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;constant&gt;PHP_EOL&lt;/constant&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;constant&gt;TRUE&lt;/constant&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;constant&gt;T_STRING&lt;/constant&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;constant&gt;__FILE__&lt;/constant&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/constants&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;tokens&nbsp;count=&quot;5&quot;&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;token&gt;catch&lt;/token&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;token&gt;protected&lt;/token&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;token&gt;public&lt;/token&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;token&gt;throw&lt;/token&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;token&gt;try&lt;/token&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/tokens&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;ignored&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;files&nbsp;count=&quot;0&quot;&nbsp;/&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;functions&nbsp;count=&quot;0&quot;&nbsp;/&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;extensions&nbsp;count=&quot;0&quot;&nbsp;/&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;constants&nbsp;count=&quot;0&quot;&nbsp;/&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/ignored&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;functions&nbsp;count=&quot;41&quot;&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;class_exists&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;define&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;chdir&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;dirname&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;substr&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;str_replace&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;is_file&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;is_array&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;is_string&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;count&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;is_dir&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;basename&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;realpath&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;strtolower&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;strrpos&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;in_array&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;explode&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;array_pop&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;array_merge&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;file_exists&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;strtr&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;extension=&quot;pcre&quot;&nbsp;pecl=&quot;false&quot;&nbsp;version=&quot;4.0.0&quot;&gt;preg_match&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;extension=&quot;date&quot;&nbsp;pecl=&quot;false&quot;&nbsp;version=&quot;4.0.0&quot;&gt;time&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;ksort&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;htmlspecialchars&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;extension=&quot;xml&quot;&nbsp;pecl=&quot;false&quot;&nbsp;version=&quot;4.0.0&quot;&gt;utf8_encode&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;strlen&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;str_repeat&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;ord&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;strtoupper&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;strpos&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;rtrim&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.0&quot;&gt;is_writable&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.2&quot;&gt;wordwrap&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.4&quot;&gt;is_null&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.0.4&quot;&gt;constant&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;extension=&quot;tokenizer&quot;&nbsp;pecl=&quot;false&quot;&nbsp;version=&quot;4.2.0&quot;&gt;token_name&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;4.2.0&quot;&gt;var_export&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;5.0.0&quot;&gt;file_put_contents&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;version=&quot;5.0.2&quot;&gt;interface_exists&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;function&nbsp;extension=&quot;SPL&quot;&nbsp;pecl=&quot;false&quot;&nbsp;version=&quot;5.1.2&quot;&gt;spl_autoload_register&lt;/function&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/functions&gt;<br/>&lt;/pci&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </pre>
+
+     
+    </dd>
+   </dl>
+   <dl class="varlistentry">
+    <dt class="term">
+     <em><code class="parameter">-o</code></em> | <em><code class="parameter">--output-level</code></em>
+    </dt>
+    <dd class="listitem">
+     <p class="para">
+      Allow to filter data type (column) you want on standard output (console).
+      From all details (31=default) to only file name (=0)
+      </p><ul class="itemizedlist">
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">0:</strong> file name
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">1:</strong> conditional code
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">2:</strong> extensions
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">4:</strong> constants
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">8:</strong> tokens
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">16:</strong> version
+        </p>
+       </li>
+      </ul>
+      <p><strong class="emphasis">output_level</strong> is binary value. So to have,
+      for example, only file name (always mandatory) with version and extensions,
+      you have to give value <strong class="emphasis">18</strong> (16 + 2).
+     </p>
+    </dd>
+   </dl>
+   <dl class="varlistentry">
+    <dt class="term">
+     <em><code class="parameter">-t</code></em> | <em><code class="parameter">--tab</code></em>
+    </dt>
+    <dd class="listitem">
+     <p class="para">
+      Sets the Files, Etensions and Constants/Tokens columns width.
+      Default values are: 29 char. for Files colum, 12 char. for Extentions column,
+      and 20 char. for Constants/Tokens column.
+     </p>
+     <p class="para">
+      Here are the best values optimized by output-level for a 80 columns screen width,
+      to almost always see extensions and constants/tokens without name truncated:
+      first value is always for Files column (f),
+      second value is always for Extensions column (e),
+      and third value is always for Constants/Tokens column (c)
+      </p><blockquote class="note">
+       <p class="para">
+        If a (f,e,c) value is missing then the corresponding default
+        value (f=29,e=12,c=20) is used.
+       </p>
+       <p class="para">
+        For example: 56,,20 is equivalent to 56,12,20
+       </p>
+      </blockquote>
+
+      <ul class="itemizedlist">
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">output-level 0</strong>: 77
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">output-level 1</strong>: 73
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">output-level 2</strong>: 59,17
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">output-level 3</strong>: 55,17
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">output-level 4, 8, 12</strong>: 55,,21
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">output-level 5, 9, 13</strong>: 51,,21
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">output-level 6, 10, 14</strong>: 37,17,21
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">output-level 7, 11, 15</strong>: 33,17,21
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">output-level 16</strong>: 67
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">output-level 17</strong>: 63
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">output-level 18</strong>: 49,17
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">output-level 19</strong>: 45,17
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">output-level 20, 24</strong>: 45,,21
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">output-level 21, 25, 29</strong>: 41,,21
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">output-level 22, 26, 30</strong>: 27,17,21
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">output-level 23, 27, 31</strong>: 23,17,21
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         <strong class="emphasis">output-level 24, 28</strong>: 45,17,21
+        </p>
+       </li>
+      </ul>
+     
+    </dd>
+   </dl>
+   <dl class="varlistentry">
+    <dt class="term">
+     <em><code class="parameter">-p</code></em> | <em><code class="parameter">--progress</code></em> [ bar | text ]
+    </dt>
+    <dd class="listitem">
+     <p class="para">
+      Show a progress <code class="literal">bar</code> (if PEAR::Console_ProgressBar is installed)
+      or a simple <code class="literal">text</code> wait message when parsing a directory.
+     </p>
+     <p class="para">
+      </p><blockquote class="note">
+       <p class="para">
+        If you specify --progress bar and PEAR::Console_ProgressBar is not available,
+        then default display will be text wait message (without giving an error), as
+        if you have specified --progress text instead
+       </p>
+      </blockquote>
+
+     
+    </dd>
+   </dl>
+   <dl class="varlistentry">
+    <dt class="term">
+     <em><code class="parameter">-S</code></em> | <em><code class="parameter">--summarize</code></em>
+    </dt>
+    <dd class="listitem">
+     <p class="para">
+      Print only the summary of parsing result for a directory, rather than
+      full details file by file (default).
+     </p>
+    </dd>
+   </dl>
+   <dl class="varlistentry">
+    <dt class="term">
+     <em><code class="parameter">-V</code></em> | <em><code class="parameter">--version</code></em>
+    </dt>
+    <dd class="listitem">
+     <p class="para">
+      Print only the current version information
+     </p>
+    </dd>
+   </dl>
+   <dl class="varlistentry">
+    <dt class="term">
+     <em><code class="parameter">-h</code></em> | <em><code class="parameter">--help</code></em>
+    </dt>
+    <dd class="listitem">
+     <p class="para">
+      Show help panel (as described in beginning of this section)
+     </p>
+    </dd>
+   </dl>
+  </div>
+ 
+ </div>
+
+ <div class="refsection" id="package.php.php-compatinfo.command-line.display"><div class="info"><h1>Display results</h1>
+</div>
+
+ <p class="para">
+  Let&#039;s take a look now at the result displayed : the main table
+ </p>
+ <p class="para">
+  </p><pre class="screen">
++-----------------------------+---------+---+------------+--------------------+
+| Files                       | Version | C | Extensions | Constants/Tokens   |
++-----------------------------+---------+---+------------+--------------------+
+
++-----------------------------+---------+---+------------+--------------------+
+  </pre>
+
+ 
+ <p class="para">
+  We have, by default (output-level = 31) 5 columns
+  </p><blockquote class="note">
+   <p class="para">
+    For Files, Extensions, Constants/Tokens columns,
+    if content is larger than cell width, then the content if truncated by left,
+    and replaced by <code class="literal">...</code>
+   </p>
+  </blockquote>
+
+  <ul class="itemizedlist">
+   <li class="listitem">
+    <p class="para">
+     <strong class="emphasis">Files</strong>
+     Identify each file of data source parsed.
+    </p>
+   </li>
+   <li class="listitem">
+    <p class="para">
+     <strong class="emphasis">Version</strong>
+     Give the minimum version to run the file. And if there is a second number,
+     give the max version to run source file.
+    </p>
+   </li>
+   <li class="listitem">
+    <p class="para">
+     <strong class="emphasis">C</strong>
+     Show the level of conditional code found in your source file(s).
+     From 0=none, 1=function_exists, 2=extension_loaded, 4=defined
+     and more (its binary value). This C column is the same information given
+     by <strong class="emphasis">cond_code</strong> in final hash result of Array Renderer.
+    </p>
+   </li>
+   <li class="listitem">
+    <p class="para">
+     <strong class="emphasis">Extensions</strong>
+     List the PHP standard or PECL extensions required to run the source file.
+    </p>
+   </li>
+   <li class="listitem">
+    <p class="para">
+     <strong class="emphasis">Constants/Tokens</strong>
+     List the PHP standard or user defined constants and PHP5+ tokens (such as:
+     private, public, final, ...)
+    </p>
+   </li>
+  </ul>
+ 
+
+ <p class="para">
+  When verbose mode is set to level 1,
+  you have an additional table displayed, that resume the command line arguments
+ </p>
+ <p class="para">
+  </p><pre class="screen">
+Command Line resume :
+
++-------------------------+---------------------------------------------------+
+| Option                  | Value                                             |
++-------------------------+---------------------------------------------------+
+
++-------------------------+---------------------------------------------------+
+  </pre>
+
+ 
+
+ <p class="para">
+  When verbose mode is set to level 2,
+  you have an additional table displayed, that resume the parser options used
+ </p>
+ <p class="para">
+  </p><pre class="screen">
+Parser options :
+
++-------------------------+---------------------------------------------------+
+| Option                  | Value                                             |
++-------------------------+---------------------------------------------------+
+
++-------------------------+---------------------------------------------------+
+  </pre>
+
+ 
+
+ <p class="para">
+  When verbose mode is set to level 4,
+  you have an additional table displayed, that show each PHP standard or PECL functions
+  with their version
+ </p>
+ <p class="para">
+  </p><pre class="screen">
+Debug:
+
++---------+-----------------+-----------+------+
+| Version | Function        | Extension | PECL |
++---------+-----------------+-----------+------+
+
++---------+-----------------+-----------+------+
+  </pre>
+
+ 
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.php.php-compatinfo.condition.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.php.php-compatinfo.tutorial.html">Getting started</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.php.php-compatinfo.renderer.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Conditional Code Analysis</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Outputting Results</td>
+  </tr>
+ </table>
+</div>
+</body></html>

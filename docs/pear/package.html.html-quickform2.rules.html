@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Rules and validation</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-quickform2.values.html" title="Element values and validation" />
+  <link rel="prev" href="package.html.html-quickform2.values-datasources.html" title="Element values and Data sources" />
+  <link rel="next" href="package.html.html-quickform2.rules.list.html" title="Built-in validation Rules" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Rules and validation</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-quickform2.values-datasources.html" title="Element values and Data sources">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-quickform2.rules.list.html" title="Built-in validation Rules">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-quickform2.rules">
+ 
+  <h1 class="refname">Rules and validation</h1>
+  <div class="refnamediv">Rules and validation &ndash; Checking that you get the values you need</div>
+
+ 
+ <div class="refsection" id="package.html.html-quickform2.rules.intro">
+  <div class="info">
+   <h1>Introduction</h1>
+
+  </div>
+  <p class="para">
+   Server-side validation in HTML_QuickForm2 is performed by <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2.html#methodvalidate" class="apidoclink">HTML_QuickForm2::validate()</a> method. Validation
+   rules doing actual checks on element values are implemented as subclasses of <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Rule.html" class="apidoclink">HTML_QuickForm2_Rule</a>, they are added to
+   elements via <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodaddRule" class="apidoclink">HTML_QuickForm2_Node::addRule()</a>.
+  </p>
+  <p class="para">
+   Basically, the form is invalid if it contains at least one invalid element. The element is
+   considered invalid if it has an error message (accessible by <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodgetError" class="apidoclink">HTML_QuickForm2_Node::getError()</a>) set and valid
+   otherwise. That error can appear in two different ways:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara">You can manually set an error message for an element using <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodsetError" class="apidoclink">HTML_QuickForm2_Node::setError()</a>.</span></li>
+    <li class="listitem"><span class="simpara">A rule added to the element will set an error message if it has such a message
+     and its validation routine returned <strong class="constant">FALSE</strong>.</span></li>
+   </ul><p>
+   The latter happens in the course of executing <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2.html#methodvalidate" class="apidoclink">HTML_QuickForm2::validate()</a>. It iterates over all form&#039;s elements, for each
+   element calling <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Rule.html#methodvalidate" class="apidoclink">validate()</a> methods of all its rules in
+   the order they were added. As soon as an error is set on an element, its validation stops.
+  </p>
+  <blockquote class="tip">
+   <p class="para">
+    Do not forget to provide an error message to the rule, otherwise the element will be considered
+    valid even if rule&#039;s validation routine returns <strong class="constant">FALSE</strong>. Not setting an error message is only
+    useful when chaining (see below).
+   </p>
+  </blockquote>
+
+  <blockquote class="tip">
+   <p class="para">
+    Some of the elements may perform additional hardcoded validation. For example, file uploads will
+    check the value of <code class="literal">&#039;error&#039;</code> field in <code class="varname">$_FILES</code> and assign a
+    relevant error message when file upload was attempted but failed.
+   </p>
+  </blockquote>
+
+  <div class="example">
+   <div class="info">
+    <p><strong>Instantiating Rule objects directly</strong></p>
+   </div>
+   <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/QuickForm2.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'HTML/QuickForm2/Rule/Required.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'HTML/QuickForm2/Rule/Regex.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$form&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2</span><span style="color: #007700">(</span><span style="color: #DD0000">'tutorial'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$username&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'username'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'submit'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'value'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Send!'</span><span style="color: #007700">));<br /><br /></span><span style="color: #0000BB">$username</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRule</span><span style="color: #007700">(new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Rule_Required</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$username</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Username&nbsp;is&nbsp;required!'<br /></span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$username</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRule</span><span style="color: #007700">(new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Rule_Regex</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$username</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Username&nbsp;should&nbsp;contain&nbsp;only&nbsp;letters,&nbsp;digits&nbsp;and&nbsp;underscores'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'/^[a-zA-Z0-9_]+$/'<br /></span><span style="color: #007700">));<br /><br />if&nbsp;(</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">validate</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;process&nbsp;form<br /></span><span style="color: #007700">}<br /><br />echo&nbsp;</span><span style="color: #0000BB">$form</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  <p class="para">
+   Of course, you will rarely need to instantiate Rule subclasses directly, Rule objects can be
+   created by <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodcreateRule" class="apidoclink">HTML_QuickForm2_Node::createRule()</a> or automatically by
+   <strong class="function">addRule()</strong> if first parameter is a string representing 
+   <a href="package.html.html-quickform2.rules.list.html" class="link">registered rule type</a>.
+  </p>
+  <div class="example">
+   <div class="info">
+    <p><strong>Automatic creation of Rule objects</strong></p>
+   </div>
+   <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/QuickForm2.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$form&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2</span><span style="color: #007700">(</span><span style="color: #DD0000">'tutorial'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$username&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'username'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'submit'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'value'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Send!'</span><span style="color: #007700">));<br /><br /></span><span style="color: #0000BB">$username</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'required'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Username&nbsp;is&nbsp;required!'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$username</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'regex'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Username&nbsp;should&nbsp;contain&nbsp;only&nbsp;letters,&nbsp;digits&nbsp;and&nbsp;underscores'</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'/^[a-zA-Z0-9_]+$/'</span><span style="color: #007700">);<br /><br />if&nbsp;(</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">validate</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;process&nbsp;form<br /></span><span style="color: #007700">}<br /><br />echo&nbsp;</span><span style="color: #0000BB">$form</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+ </div>
+ 
+ <div class="refsection" id="package.html.html-quickform2.rules.containers">
+  <div class="info">
+   <h1>Validating containers</h1>
+
+  </div>
+  <p class="para">
+   Most of the built-in rules are designed to check scalar values and will not work properly if
+   added to a Container (this includes <a href="package.html.html-quickform2.groups.html" class="link">Groups</a> and Group-based elements like <a href="package.html.html-quickform2.elements.custom.html#package.html.html-quickform2.elements.custom.date" class="link">Date</a> and <a href="package.html.html-quickform2.elements.custom.html#package.html.html-quickform2.elements.custom.hierselect" class="link">Hierselect</a>), as
+   Containers return their values in an associative array. One notable exception is
+   <code class="varname">nonempty</code> / <code class="varname">required</code> rule that can validate a container (or
+   <code class="literal">&lt;select multiple=&quot;multiple&quot; /&gt;</code>):
+  </p>
+  <div class="example">
+   <div class="info">
+    <p><strong>Checks that at least two checkboxes in a group are selected</strong></p>
+   </div>
+   <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$boxGroup&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'group'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'boxes'</span><span style="color: #007700">)-&gt;</span><span style="color: #0000BB">setLabel</span><span style="color: #007700">(</span><span style="color: #DD0000">'Check&nbsp;at&nbsp;least&nbsp;two:'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$boxGroup</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'checkbox'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'value'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'first'</span><span style="color: #007700">))-&gt;</span><span style="color: #0000BB">setContent</span><span style="color: #007700">(</span><span style="color: #DD0000">'First'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$boxGroup</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'checkbox'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'value'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'second'</span><span style="color: #007700">))-&gt;</span><span style="color: #0000BB">setContent</span><span style="color: #007700">(</span><span style="color: #DD0000">'Second'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$boxGroup</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'checkbox'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'value'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'third'</span><span style="color: #007700">))-&gt;</span><span style="color: #0000BB">setContent</span><span style="color: #007700">(</span><span style="color: #DD0000">'Third'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$boxGroup</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'required'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Check&nbsp;at&nbsp;least&nbsp;two&nbsp;boxes'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  <p class="para">
+   It is of course possible to implement a custom rule that will properly handle an associative
+   array as the element&#039;s value. It is also possible to leverage existing &quot;scalar&quot; rules
+   to validate Containers by using <code class="varname">each</code> rule, it applies a template rule to all the
+   elements in a Container and considers Container valid if its validation routine returns <strong class="constant">TRUE</strong>
+   for all of them:
+  </p>
+  <div class="example">
+   <div class="info">
+    <p><strong>Checks that all phone fields in a group contain numeric data</strong></p>
+   </div>
+   <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$phones&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'group'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'phones'</span><span style="color: #007700">)-&gt;</span><span style="color: #0000BB">setLabel</span><span style="color: #007700">(</span><span style="color: #DD0000">'Phones&nbsp;(numeric):'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">setSeparator</span><span style="color: #007700">(</span><span style="color: #DD0000">'&lt;br&nbsp;/&gt;'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$phones</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'0'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$phones</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'1'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$phones</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'each'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Phones&nbsp;should&nbsp;be&nbsp;numeric'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$phones</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'regex'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">''</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'/^\\d+([&nbsp;-]\\d+)*$/'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  <blockquote class="tip">
+   <p class="para">
+    More specific rules are run first: rules added to container will be checked after rules added to
+    its contained elements.
+   </p>
+  </blockquote>
+
+ </div>
+ 
+ 
+ <div class="refsection" id="package.html.html-quickform2.rules.chaining">
+  <div class="info">
+   <h1>Chaining the rules</h1>
+
+  </div>
+  <p class="para">
+   HTML_QuickForm2 allows validation of elements based on values and validation status of other
+   elements. This is done by building a &quot;chain&quot; of validation rules using <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Rule.html#methodand_" class="apidoclink">HTML_QuickForm2_Rule::and_()</a> and <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Rule.html#methodor_" class="apidoclink">HTML_QuickForm2_Rule::or_()</a> methods. Execution of
+   the chain starts with a rule that was added to an element, then results of other rules&#039;
+   validation routines are combined using corresponding logical operators. Error is only set on the
+   element if the whole chain returned <strong class="constant">FALSE</strong>.
+  </p>
+  <p class="para">
+   Behaviour of <strong class="function">and_()</strong> and <strong class="function">or_()</strong> is similar to PHP&#039;s
+   <code class="varname">and</code> and <code class="varname">or</code> operators:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara"><strong class="function">and_()</strong> has higher precedence than
+     <strong class="function">or_()</strong>.</span></li>
+    <li class="listitem"><span class="simpara">Evaluation is short-circuited. If first argument of <strong class="function">and_()</strong>
+     evaluates to <strong class="constant">FALSE</strong> then <strong class="constant">FALSE</strong> is returned without evaluating second argument, if first
+     argument of <strong class="function">or_()</strong> evaluates to <strong class="constant">TRUE</strong> then <strong class="constant">TRUE</strong> is returned without
+     evaluating second argument.</span></li>
+   </ul>
+  
+  <p class="para">
+   Rules that are added to the chain behave the same way as the rules that are added directly to the
+   element they validate (this is not necessarily the same element the chain is added to), they will
+   set an error if the rule itself returns <strong class="constant">FALSE</strong>, not the chain. Thus it is often needed
+   <em class="emphasis">not to provide</em> error messages to the rules. It may also make sense to add a
+   chain of rules to a chain (this is similar to adding parentheses to a PHP expression with
+   <code class="varname">and</code> and <code class="varname">or</code>).
+  </p>
+  <div class="example">
+   <div class="info">
+    <p><strong>Skips checking email field if &quot;receive email&quot; box is not checked</strong></p>
+   </div>
+   <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$emailPresent&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$email</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'nonempty'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Supply&nbsp;a&nbsp;valid&nbsp;email&nbsp;if&nbsp;you&nbsp;want&nbsp;to&nbsp;receive&nbsp;our&nbsp;spam'</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;note&nbsp;lack&nbsp;of&nbsp;error&nbsp;message&nbsp;here,&nbsp;error&nbsp;should&nbsp;only&nbsp;be&nbsp;set&nbsp;by&nbsp;previous&nbsp;rule<br /></span><span style="color: #0000BB">$emailValid&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$email</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'callback'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">''</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'callback'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'filter_var'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'arguments'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #0000BB">FILTER_VALIDATE_EMAIL</span><span style="color: #007700">)));<br /></span><span style="color: #FF8000">//&nbsp;note&nbsp;lack&nbsp;of&nbsp;error&nbsp;message&nbsp;for&nbsp;'empty'&nbsp;rule,&nbsp;we&nbsp;don't&nbsp;want&nbsp;error&nbsp;on&nbsp;a&nbsp;checkbox<br /></span><span style="color: #0000BB">$spamCheck</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'empty'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">or_</span><span style="color: #007700">(</span><span style="color: #0000BB">$emailPresent</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">and_</span><span style="color: #007700">(</span><span style="color: #0000BB">$emailValid</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  <div class="example">
+   <div class="info">
+    <p><strong>Checks password fields in password change form</strong></p>
+   </div>
+   <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$newPassword</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'empty'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">and_</span><span style="color: #007700">(</span><span style="color: #0000BB">$repPassword</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'empty'</span><span style="color: #007700">))<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">or_</span><span style="color: #007700">(</span><span style="color: #0000BB">$newPassword</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'minlength'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'The&nbsp;password&nbsp;is&nbsp;too&nbsp;short'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">6</span><span style="color: #007700">))<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">and_</span><span style="color: #007700">(</span><span style="color: #0000BB">$repPassword</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'eq'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'The&nbsp;passwords&nbsp;do&nbsp;not&nbsp;match'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$newPassword</span><span style="color: #007700">))<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">and_</span><span style="color: #007700">(</span><span style="color: #0000BB">$oldPassword</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'nonempty'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Supply&nbsp;old&nbsp;password&nbsp;if&nbsp;you&nbsp;want&nbsp;to&nbsp;change&nbsp;it'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>   
+   </div>
+  </div>
+ </div>
+
+
+ <div class="refsection" id="package.html.html-quickform2.rules.clientside">
+  <div class="info">
+   <h1>Client-side validation</h1>
+
+  </div>
+  <blockquote class="note">
+   <strong>Validation library</strong><br />
+   <p class="para">
+    Client-side validation depends on a JS library residing in <code class="filename">quickform.js</code>
+    file. Neither a link to that file nor its contents is automatically included in the output
+    generated by a renderer, <a href="package.html.html-quickform2.javascript.html#package.html.html-quickform2.javascript.libraries" class="link">the
+     next section</a> describes how you can properly handle including it.
+   </p>
+  </blockquote>
+
+  <p class="para">
+   You can tell a rule to also generate Javascript necessary for client-side validation. This is
+   done by passing a <em><code class="parameter">$runAt</code></em> parameter with
+   <strong class="constant">HTML_QuickForm2_Rule::CLIENT</strong> flag set to <strong class="function">addRule()</strong>:
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;if&nbsp;first&nbsp;parameter&nbsp;to&nbsp;addRule()&nbsp;is&nbsp;a&nbsp;string:<br /></span><span style="color: #0000BB">$username</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'required'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Username&nbsp;is&nbsp;required'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Rule</span><span style="color: #007700">::</span><span style="color: #0000BB">SERVER&nbsp;</span><span style="color: #007700">|&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Rule</span><span style="color: #007700">::</span><span style="color: #0000BB">CLIENT</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;if&nbsp;first&nbsp;parameter&nbsp;to&nbsp;addRule()&nbsp;is&nbsp;a&nbsp;Rule&nbsp;instance:<br /></span><span style="color: #0000BB">$username</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRule</span><span style="color: #007700">(</span><span style="color: #0000BB">$username</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'required'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Username&nbsp;is&nbsp;required'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Rule</span><span style="color: #007700">::</span><span style="color: #0000BB">CLIENT_SERVER</span><span style="color: #007700">);&nbsp;</span><span style="color: #FF8000">//&nbsp;using&nbsp;a&nbsp;shorthand&nbsp;for&nbsp;above&nbsp;constants<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   If more rules were chained to the added one with <strong class="function">and_()</strong> and
+   <strong class="function">or_()</strong>, Javascript will be generated for the whole chain.
+  </p>
+  <p class="para">
+   Since release 0.6.0 it is possible to run client-side rules for an element on changing its value
+   or on it losing input focus (<code class="literal">&#039;onchange&#039;</code> and <code class="literal">&#039;onblur&#039;</code>
+   events) in addition to form submit (<code class="literal">&#039;onsubmit&#039;</code> event). This is triggered by
+   passing a <em><code class="parameter">$runAt</code></em> parameter with
+   <strong class="constant">HTML_QuickForm2_Rule::ONBLUR_CLIENT</strong> flag set to
+   <strong class="function">addRule()</strong>. If a rule has chained rules, then validation will be triggered by
+   all elements appearing in a chain.
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;here&nbsp;validation&nbsp;will&nbsp;be&nbsp;run&nbsp;onchange&nbsp;/&nbsp;onblur&nbsp;of&nbsp;both&nbsp;$newPassword&nbsp;and&nbsp;$repPassword&nbsp;fields<br /></span><span style="color: #0000BB">$newPassword</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'empty'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">''</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Rule</span><span style="color: #007700">::</span><span style="color: #0000BB">ONBLUR_CLIENT_SERVER</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">and_</span><span style="color: #007700">(</span><span style="color: #0000BB">$repPassword</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'empty'</span><span style="color: #007700">))<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">or_</span><span style="color: #007700">(</span><span style="color: #0000BB">$repPassword</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'eq'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'The&nbsp;passwords&nbsp;do&nbsp;not&nbsp;match'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$newPassword</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   Another change introduced in 0.6.0 is that validation errors are now output near the elements
+   instead of being shown in Javascript <strong class="function">alert()</strong>. In a nuthshell, client-side
+   validation behaviour in <strong class="package">HTML_QuickForm2</strong> 0.6.0+ is more similar to that of
+   <a href="package.html.html-quickform-dhtmlrulestableless.html" class="link"><strong class="package">HTML_QuickForm_DHTMLRulesTableless</strong></a> 
+   than to that of old <strong class="package">HTML_QuickForm</strong>.
+  </p>
+  <p class="para">
+   Most of the built-in rules are able to run client-side, the only exceptions are
+   <code class="varname">maxfilesize</code> and <code class="varname">mimetype</code> rules specific for file uploads.
+  </p>
+  <p class="para">
+   If you want to run <code class="varname">callback</code> rule client-side, you will obviously need to
+   implement a callback in Javascript as well as in PHP. If you don&#039;t explicitly set
+   <em><code class="parameter">&#039;js_callback&#039;</code></em> configuration parameter, <code class="varname">callback</code> rule
+   will try to run Javascript function having the same name as provided PHP
+   <em><code class="parameter">&#039;callback&#039;</code></em>. This may be especially useful if you use
+   <strong class="package">HTML_AJAX</strong> to <a href="http://pear.php.net/package/HTML_AJAX/docs/latest/HTML_AJAX/HTML_AJAX.html#methodregisterClass" class="apidoclink">proxy PHP classes</a> or <a href="http://pear.php.net/package/HTML_AJAX/docs/latest/HTML_AJAX/HTML_AJAX.html#methodregisterPhpCallback" class="apidoclink">callbacks</a> in
+   Javascript.
+  </p>
+  <p class="para">
+   When running <code class="varname">regex</code> rules client-side, you should stick to regular expression
+   syntax common in PHP and Javascript:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara">
+     Use a slash <code class="literal">/</code> as a delimiter.
+    </span></li>
+    <li class="listitem"><span class="simpara">
+     Use only <code class="varname">i</code>, <code class="varname">m</code>, <code class="varname">u</code> pattern modifiers. If
+     <code class="varname">u</code> modifier is used, PHP&#039;s Unicode escapes
+     <span class="replaceable">\x{NNNN}</span> are automatically converted to Javascript&#039;s Unicode escapes
+     <span class="replaceable">\uNNNN</span> when creating a client-side rule.
+    </span></li>
+    <li class="listitem"><span class="simpara">
+     Do not use regular expession features that are not supported in Javascript (e.g. lookbehind
+     assertions, recursive patterns). 
+    </span></li>
+   </ul>
+  
+  <blockquote class="note">
+   <p class="para">
+    While it is possible to add a client-side only rule
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$username</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'minlength'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Username&nbsp;should&nbsp;be&nbsp;at&nbsp;least&nbsp;4&nbsp;characters&nbsp;long'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">4</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Rule</span><span style="color: #007700">::</span><span style="color: #0000BB">CLIENT</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div><p>
+    it is not recommended unless you perform the same validation server-side using some other rule.
+   </p>
+  </blockquote>
+
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-quickform2.values-datasources.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-quickform2.values.html">Element values and validation</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-quickform2.rules.list.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Element values and Data sources</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Built-in validation Rules</td>
+  </tr>
+ </table>
+</div>
+</body></html>

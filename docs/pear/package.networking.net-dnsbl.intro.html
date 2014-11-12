@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.networking.net-dnsbl.html" title="Net_DNSBL" />
+  <link rel="prev" href="package.networking.net-dnsbl.html" title="Net_DNSBL" />
+  <link rel="next" href="package.networking.net-finger.html" title="Net_Finger" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.networking.net-dnsbl.html" title="Net_DNSBL">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.networking.net-finger.html" title="Net_Finger">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.networking.net-dnsbl.intro">
+ 
+  <h1 class="refname">Introduction</h1>
+  <div class="refnamediv">Introduction &ndash; Introduction to Net_DNSBL</div>
+
+ 
+
+ <div class="refsection" id="package.networking.net-dnsbl.intro.desc">
+  <h1 class="title">Description</h1>
+  <p class="para">
+   PEAR::Net_DNSBL provides an easy way to check if a given Host or URL
+   is listed on an DNS-based Blackhole List (DNSBL, Real-time Blackhole
+   List or RBL) or Spam URI Realtime Blocklist (SURBL).
+  </p>
+  <p class="para">
+   Please not that this currently only works with IPv4 IPs.
+  </p>
+ </div>
+ 
+ <div class="refsection" id="package.networking.net-dnsbl.intro.usage"><div class="info"><h1>Usage</h1>
+</div>
+  
+  <p class="para">
+    Let&#039;s start with a simple example to check if the remote host is
+    listed in two blacklists:
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Net/DNSBL.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$dnsbl&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Net_DNSBL</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$remoteIP&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$_SERVER</span><span style="color: #007700">[</span><span style="color: #DD0000">'REMOTE_ADDR'</span><span style="color: #007700">];<br /></span><span style="color: #0000BB">$remoteIP&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'81.70.69.193'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$dnsbl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setBlacklists</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'sbl-xbl.spamhaus.org'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'bl.spamcop.net'</span><span style="color: #007700">));<br />if&nbsp;(</span><span style="color: #0000BB">$dnsbl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">isListed</span><span style="color: #007700">(</span><span style="color: #0000BB">$remoteIP</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;do&nbsp;something<br /></span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+  
+  <p class="para">
+    This example shows how to check if an URL is listed in a SURBL:
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Net/DNSBL/SURBL.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$surbl&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Net_DNSBL_SURBL</span><span style="color: #007700">();<br />if&nbsp;(</span><span style="color: #0000BB">$surbl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">isListed</span><span style="color: #007700">(</span><span style="color: #DD0000">'http://test.multi.surbl.org/'</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;do&nbsp;something<br /></span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div><p>
+    An example how to extract URLS from a text can be found on
+    http://www.phpfreaks.com/quickcode/Extract_All_URLs_on_a_Page/15.php
+    and be used this way:
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">foreach&nbsp;(</span><span style="color: #0000BB">$extracted_urls&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$surbl_check_url</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$surbl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">isListed</span><span style="color: #007700">(</span><span style="color: #0000BB">$surbl_check_url</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;do&nbsp;something<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">break;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+  
+  <p class="para">
+    Let&#039;s get some details, if our host is listed:
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Net/DNSBL.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$dnsbl&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Net_DNSBL</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$dnsbl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setBlacklists</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'sbl-xbl.spamhaus.org'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'bl.spamcop.net'</span><span style="color: #007700">));<br />if&nbsp;(</span><span style="color: #0000BB">$dnsbl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">isListed</span><span style="color: #007700">(</span><span style="color: #0000BB">$_SERVER</span><span style="color: #007700">[</span><span style="color: #DD0000">'REMOTE_ADDR'</span><span style="color: #007700">]))&nbsp;{<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$dnsbl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getDetails</span><span style="color: #007700">(</span><span style="color: #0000BB">$_SERVER</span><span style="color: #007700">[</span><span style="color: #DD0000">'REMOTE_ADDR'</span><span style="color: #007700">]));<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$dnsbl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getTxt</span><span style="color: #007700">(</span><span style="color: #0000BB">$_SERVER</span><span style="color: #007700">[</span><span style="color: #DD0000">'REMOTE_ADDR'</span><span style="color: #007700">]));<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$dnsbl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getListingBl</span><span style="color: #007700">(</span><span style="color: #0000BB">$_SERVER</span><span style="color: #007700">[</span><span style="color: #DD0000">'REMOTE_ADDR'</span><span style="color: #007700">]));<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$dnsbl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getListingRecord</span><span style="color: #007700">(</span><span style="color: #0000BB">$_SERVER</span><span style="color: #007700">[</span><span style="color: #DD0000">'REMOTE_ADDR'</span><span style="color: #007700">]));<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+  
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.networking.net-dnsbl.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.networking.net-dnsbl.html">Net_DNSBL</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.networking.net-finger.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Net_DNSBL</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Net_Finger</td>
+  </tr>
+ </table>
+</div>
+</body></html>

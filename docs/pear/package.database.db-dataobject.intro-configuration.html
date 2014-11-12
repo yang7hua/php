@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Configuration Options</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.db-dataobject.html" title="DB_DataObject" />
+  <link rel="prev" href="package.database.db-dataobject.intro-purpose.html" title="Introduction" />
+  <link rel="next" href="package.database.db-dataobject.intro-autobuilding.html" title="Auto Building and Database Schema" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Configuration Options</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.db-dataobject.intro-purpose.html" title="Introduction">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.db-dataobject.intro-autobuilding.html" title="Auto Building and Database Schema">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.db-dataobject.intro-configuration">
+    
+      <h1 class="refname">Configuration Options</h1>
+      <div class="refnamediv">Configuration Options &ndash; 
+       Setting the defaults for database access
+      </div>
+
+    
+    <div class="refsection"><div class="info"><h1>Configuration</h1>
+</div>
+      
+      <p class="para">
+       <strong class="classname">DB_DataObject</strong>
+       needs to be configured before using it and auto generating classes and definitions.
+       The easiest way to configure <strong class="classname">DB_DataObject</strong> 
+       is to use ini files (although you may also like to consider
+       the <strong class="classname">PEAR::Config</strong> class, or your own configuration system)
+      </p>
+
+     <div class="example"><div class="info"><p><strong> This is a typical configuration file for <strong class="classname">DB_DataObject</strong></strong></p></div>
+        
+        <div class="inicode"><pre class="inicode">[DB_DataObject]
+
+database          = mysql://user:password@localhost/vending
+schema_location   = /home/me/Projects/myapplication/DataObjects
+class_location    = /home/me/Projects/myapplication/DataObjects
+require_prefix    = DataObjects/
+class_prefix      = DataObjects_
+db_driver         = MDB2 #Use this if you wish to use MDB2 as the driver
+quote_identifiers = 1</pre>
+</div>
+      </div>
+      <p class="para">
+       To use this ini file with <strong class="classname">DB_DataObject</strong>, (and possibly any other classes that use options like this)
+      </p>
+      <div class="example"><div class="info"><p><strong> Setting the default options</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$config&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">parse_ini_file</span><span style="color: #007700">(</span><span style="color: #DD0000">'example.ini'</span><span style="color: #007700">,</span><span style="color: #0000BB">TRUE</span><span style="color: #007700">);<br />foreach(</span><span style="color: #0000BB">$config&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$class</span><span style="color: #007700">=&gt;</span><span style="color: #0000BB">$values</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;&amp;</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">getStaticProperty</span><span style="color: #007700">(</span><span style="color: #0000BB">$class</span><span style="color: #007700">,</span><span style="color: #DD0000">'options'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$values</span><span style="color: #007700">;<br />}<br /><br /><br /></span><span style="color: #FF8000">//&nbsp;or&nbsp;you&nbsp;can&nbsp;do&nbsp;without&nbsp;an&nbsp;ini&nbsp;file,&nbsp;and&nbsp;configure&nbsp;it&nbsp;in&nbsp;PHP..<br /><br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;&amp;</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">getStaticProperty</span><span style="color: #007700">(</span><span style="color: #DD0000">'DB_DataObject'</span><span style="color: #007700">,</span><span style="color: #DD0000">'options'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'database'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'mysql://user:password@localhost/vending'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'schema_location'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'/home/me/Projects/myapplication/DataObjects'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'class_location'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'/home/me/Projects/myapplication/DataObjects'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'require_prefix'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'DataObjects/'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'class_prefix'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'DataObjects_'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'db_driver'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'MDB2'</span><span style="color: #007700">,&nbsp;</span><span style="color: #FF8000">//Use&nbsp;this&nbsp;if&nbsp;you&nbsp;wish&nbsp;to&nbsp;use&nbsp;MDB2&nbsp;as&nbsp;the&nbsp;driver<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'quote_identifiers'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true<br /></span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+      </div>
+
+    </div>
+
+
+
+
+
+    <div class="refsection"><div class="info"><h1>Configuration Options - Required</h1>
+</div>
+      
+
+      <div class="variablelist">
+
+
+
+        <dl class="varlistentry">
+          <dt class="term">
+            <em><code class="parameter">database</code></em>
+            <span class="type">DSN</span>
+          </dt>
+          <dd class="listitem">
+            <p class="para">
+             This is the default data source name (DSN) to connect to your database.
+             See the <a href="package.database.db.intro-dsn.html" class="link">DSN configuration page for DB</a> or the
+             <a href="package.database.mdb.intro-dsn.html" class="link">DSN configuration page for MDB2</a> for more details.
+            </p>
+          </dd>
+        </dl>
+
+
+
+        <dl class="varlistentry">
+          <dt class="term">
+            <em><code class="parameter">schema_location</code></em>
+            <span class="type">directory</span>
+          </dt>
+          <dd class="listitem">
+            <p class="para">
+             The directory where the <strong class="classname">DB_DataObject</strong> database schema file is store.
+            </p>
+            <p class="para">
+             <strong class="classname">DB_DataObject</strong>
+             stores the description of the database (Tables and Columns) in an .ini file,
+             in this directory. This information is used to determine if the column is a string
+             and needs quotes, or should be a number (and is checked)
+            at SQL building time. It is quite common to store the schema in the same directory as your DataObject
+            Classes.
+            </p>
+          </dd>
+        </dl>
+
+
+
+        <dl class="varlistentry">
+          <dt class="term">
+            <em><code class="parameter">require_prefix</code></em>
+            <span class="type">directory</span>
+          </dt>
+          <dd class="listitem">
+            <p class="para">
+            The Path absolute, or relative to your default include path(s), where your
+            extended classes can be found.
+            </p>
+            <p class="para">
+             This is used by the <a href="package.database.db-dataobject.db-dataobject.staticget.html" class="link"><strong class="function">staticGet()</strong></a> method and the
+             <a href="package.database.db-dataobject.db-dataobject.getlinks.html" class="link"><strong class="function">getLinks()</strong></a> method to auto load classes,
+            </p>
+          </dd>
+        </dl>
+
+        <dl class="varlistentry">
+          <dt class="term">
+            <em><code class="parameter">class_prefix</code></em>
+            <span class="type">string</span>
+          </dt>
+          <dd class="listitem">
+            <p class="para">
+             All the generated Classes are named
+             <em><code class="parameter">{class_prefix}ucfirst($table_name)</code></em>. Use this to
+             alter the prefixed name, this is used by the <a href="package.database.db-dataobject.db-dataobject.staticget.html" class="link"><strong class="function">staticGet()</strong></a> and  <a href="package.database.db-dataobject.db-dataobject.getlinks.html" class="link"><strong class="function">getLinks()</strong></a> methods
+            </p>
+          </dd>
+        </dl>
+
+
+    </div>
+
+
+    </div>
+
+
+
+
+    <div class="refsection"><div class="info"><h1>Configuration Options - Optional</h1>
+</div>
+      
+
+      <div class="variablelist">
+
+        <dl class="varlistentry">
+          <dt class="term">
+            <em><code class="parameter">db_driver</code></em>
+            <span class="type">string</span>
+          </dt>
+          <dd class="listitem">
+            <p class="para">
+            default = <code class="literal">DB</code>, Use this configuration option to set the database abstraction
+            driver used by DB_DataObject.
+             </p><div class="example"><div class="info"><p><strong>using MDB2 as the driver</strong></p></div>
+                
+                <div class="inicode"><pre class="inicode">
+
+
+db_driver = MDB2</pre>
+</div>
+                </div>
+             
+          </dd>
+        </dl>
+
+        <dl class="varlistentry">
+          <dt class="term">
+            <em><code class="parameter">sequence_{table}</code></em>
+            <span class="type">string</span>
+          </dt>
+          <dd class="listitem">
+            <p class="para">
+            To Hard code the key (autoincrement/nextval() for a table to a specific key, overriding anything in the keys
+            definition of the file. Normally used on databases that are not able to be queried correctly for their structure
+             </p><div class="example"><div class="info"><p><strong> using login as the key for the person table</strong></p></div>
+                
+                <div class="inicode"><pre class="inicode">
+
+
+sequence_person = login</pre>
+</div>
+                </div>
+             
+          </dd>
+        </dl>
+        
+        <dl class="varlistentry">
+          <dt class="term">
+            <em><code class="parameter">ignore_sequence_keys</code></em>
+            <span class="type">string</span>
+          </dt>
+          <dd class="listitem">
+            <p class="para">
+            If you do not want to use pear&#039;s nextval(), for automatically filling in sequences, this can disable it for 
+            &quot;ALL&quot;, or a list of tables &quot;person,cart,group&quot;
+            </p>
+          </dd>
+        </dl>
+        
+        <dl class="varlistentry">
+          <dt class="term">
+            <em><code class="parameter">debug</code></em>
+            <span class="type">integer</span>
+          </dt>
+          <dd class="listitem">
+            <p class="para">
+            The default debugging level (default 0=off), 1= basic sql logging,2=result logging, 3=everything
+            </p>
+          </dd>
+        </dl>
+
+        <dl class="varlistentry">
+          <dt class="term">
+            <em><code class="parameter">debug_ignore_updates</code></em>
+            <span class="type">boolean</span>
+          </dt>
+          <dd class="listitem">
+            <p class="para">
+            default <strong class="constant">FALSE</strong>, if set, then updates on the database are disabled.
+            </p>
+          </dd>
+        </dl>
+        
+       
+        <dl class="varlistentry">
+          <dt class="term">
+            <em><code class="parameter">dont_die</code></em>
+            <span class="type">boolean</span>
+          </dt>
+          <dd class="listitem">
+            <p class="para">
+             default <strong class="constant">FALSE</strong>, The standard behaviour of dataobjects is to issue a PEAR_ERROR_DIE 
+             (eg. exiting PHP), when a fatal error occurs, like database connection failure 
+             or sending an invalid object type to a method. However if you need to run it on 
+             a live server you will probably want to set this to <strong class="constant">TRUE</strong> and define a PEAR error 
+             handler to catch these errors and show a nice friendly &#039;sorry we are down for 
+             maintenence&#039; message page.
+            </p>
+          </dd>
+        </dl>
+         
+         
+         
+         
+         <dl class="varlistentry">
+          <dt class="term">
+            <em><code class="parameter">quote_identifiers</code></em>
+            <span class="type">boolean</span>
+          </dt>
+          <dd class="listitem">
+            <p class="para">
+             To force the quotation of identifiers in the SQL statements, set this to 1.
+             This is useful if any table names use hyphens.
+             </p><div class="example"><div class="info"><p><strong>Statement Generated with and without quote_identifiers</strong></p></div>
+                
+                <div class="inicode"><pre class="inicode">
+quote_identifiers = 1;
+SELECT &#039;somecol&#039; FROM &#039;sometable&#039; WHERE &#039;somevalue&#039;=1;
+
+quote_identifiers = 0;
+SELECT somecol FROM sometable WHERE somevalue=1;</pre>
+</div>
+                </div>
+            
+            
+            <p class="para">
+                Note: This will not affect data sent to methods such as 
+                <a href="package.database.db-dataobject.db-dataobject.whereadd.html" class="link">whereAdd()</a>,
+                <a href="package.database.db-dataobject.db-dataobject.orderby.html" class="link">orderBy()</a>,
+                and <a href="package.database.db-dataobject.db-dataobject.groupby.html" class="link">groupBy()</a>,
+                which expect raw data.
+            </p>
+          </dd>
+        </dl>
+          
+        <dl class="varlistentry">
+          <dt class="term">
+            <em><code class="parameter">proxy</code></em>
+            <span class="type">string</span>
+          </dt>
+          <dd class="listitem">
+            <p class="para">
+             This enables the building of classes and ini classes on the fly, rather than forcing you
+             to generate the code forhand. (currently the only value supported is &quot;full&quot;, which 
+             will generate both schema data and default classes when using factory)
+             </p>
+          </dd>
+        </dl>
+          
+         
+         
+         
+      </div>
+ 
+
+    </div>
+
+
+
+
+    <div class="refsection"><div class="info"><h1>Configuration Options - Multiple Databases (optional)</h1>
+</div>
+      
+
+      <div class="variablelist">
+
+        <dl class="varlistentry">
+          <dt class="term">
+            <em><code class="parameter">database_*</code></em>
+            <span class="type">string</span>
+          </dt>
+          <dd class="listitem">
+            <p class="para">
+             When you have multiple databases you can use the database_* to
+             specify the <a href="package.database.db.intro-dsn.html" class="link">DSN</a> for each
+            database
+            </p>
+            <p class="para">
+              </p><div class="example"><div class="info"><p><strong> using multiple databases - database passwords</strong></p></div>
+                
+                <div class="inicode"><pre class="inicode">
+
+
+database_authentication  = mysql://user:password@localhost/authentication
+database_sales           = mysql://user:password@localhost/sales</pre>
+</div>
+              </div>
+            
+          </dd>
+        </dl>
+
+
+
+
+        <dl class="varlistentry">
+          <dt class="term">
+            <em><code class="parameter">table_*</code></em>
+            <span class="type">string</span>
+          </dt>
+          <dd class="listitem">
+            <p class="para">
+            When you have multiple databases you can use the table_* configuration variables to map
+            individual tables to different databases, for example
+            </p>
+            <p class="para">
+              </p><div class="example"><div class="info"><p><strong> using multiple databases - table settings</strong></p></div>
+                
+                <div class="inicode"><pre class="inicode">table_users     = authentication
+table_saleslog  = sales
+table_stock     = sales</pre>
+</div>
+              </div>
+            
+
+          </dd>
+        </dl>
+      </div>
+    </div>
+
+
+
+    <div class="refsection"><div class="info"><h1>Configuration Options - Builder</h1>
+</div>
+     
+      <div class="variablelist">
+        <dl class="varlistentry">
+          <dt class="term">
+            <em><code class="parameter">class_location</code></em>
+            <span class="type">directory</span>
+          </dt>
+          <dd class="listitem">
+            <p class="para">
+            The Directory where your DataObject extended Classes are.
+            </p>
+            <p class="para">
+             Used by the Class Auto Builder when updating/writing to your class definitions.
+            </p>
+          </dd>
+        </dl>
+
+
+        <dl class="varlistentry">
+          <dt class="term">
+            <em><code class="parameter">extends</code></em>
+            <span class="type">string</span>
+          </dt>
+          <dd class="listitem">
+            <p class="para">
+             The Name of your Base Class (usually
+             <strong class="classname">DB_DataObject</strong>) is located.
+            </p>
+            <p class="para">
+            If you wish to add a common layer of useful methods for all classes, you can set the extends_location and
+            extends settings to a different class. the default is
+            <em><code class="parameter">&#039;DB_DataObject&#039;</code></em>
+            </p>
+          </dd>
+        </dl>
+
+
+
+        <dl class="varlistentry">
+          <dt class="term">
+            <em><code class="parameter">extends_location</code></em>
+            <span class="type">directory</span>
+          </dt>
+          <dd class="listitem">
+            <p class="para">
+             The Directory where your Base Class (usually
+             <strong class="classname">DB_DataObject</strong>) is located.
+            </p>
+            <p class="para">
+            If you wish to add a common layer of useful methods for all classes, you can set the extends_location and
+            extends settings to a different class. the default is
+            <em><code class="parameter">&#039;DB/DataObject.php&#039;</code></em>
+            </p>
+          </dd>
+        </dl>
+
+
+
+
+        <dl class="varlistentry">
+          <dt class="term">
+            <em><code class="parameter">generator_class_rewrite</code></em>
+            <span class="type">boolean</span>
+          </dt>
+          <dd class="listitem">
+            <p class="para">
+            Normally when you recreate a class from the database, it will only alter the variables, and 
+            staticGet, - with this set, it will also update the extends field 
+            </p>
+            
+          </dd>
+        </dl>
+
+
+
+
+        <dl class="varlistentry">
+          <dt class="term">
+            <em><code class="parameter">build_views</code></em>
+            <span class="type">boolean</span>
+          </dt>
+          <dd class="listitem">
+            <p class="para">
+              Postgres (and maybe some others), allow you to treat views just like normal tables
+              (eg. insert/update/delete etc. work on them), you can use this option to generate files 
+              for all the views in the database.
+            </p>
+            <p class="para">
+              Note: You will have to specify keys manually in the generated classes (eg. define the methods 
+              keys() and sequenceKey(), as the generator can not guess which ones are likely to be the key.
+            </p>           
+          </dd>
+        </dl>
+
+
+
+
+
+        <dl class="varlistentry">
+          <dt class="term">
+            <em><code class="parameter">generator_include_regex</code></em>
+            <span class="type">string</span>
+          </dt>
+          <dd class="listitem">
+           <p class="para">
+           If you only want to generate classes and ini entries for specific tables, 
+           you can use this to build a regex, 
+           only tables with names matching the regex will be generated, for example /mytables_.*/     
+          </p>
+         </dd>
+        </dl>
+
+
+        <dl class="varlistentry">
+          <dt class="term">
+            <em><code class="parameter">generator_exclude_regex</code></em>
+            <span class="type">string</span>
+          </dt>
+          <dd class="listitem">
+            <p class="para">
+                If you only want to explicitly prevent the generation of classes and ini entries for specific tables, you can use this to build a regex,
+                any tables that match the regex, will not be generated, for example /private_tables_.*/
+            </p>
+          </dd>
+        </dl>
+
+        <dl class="varlistentry">
+          <dt class="term">
+            <em><code class="parameter">generator_strip_schema</code></em>
+            <span class="type">boolean</span>
+          </dt>
+          <dd class="listitem">
+            <p class="para">
+               postgresql has a wierd concept of schemas which end up prefixed to
+               the list of tables. - this makes a mess of class/schema generation
+ 	       setting this to 1, makes the generator strip the schema from the table name
+	
+		</p>
+          </dd>
+        </dl>
+   <dl class="varlistentry">
+    <dt class="term">
+     <em><code class="parameter">generator_novars</code></em>
+     <span class="type">boolean</span>
+    </dt>
+    <dd class="listitem">
+     <p class="para">
+      If True, the generator does not write a private or var&#039;s definition 
+      for the columns so you can overload get/set.
+     </p>
+    </dd>
+   </dl>
+   <dl class="varlistentry">
+    <dt class="term">
+     <em><code class="parameter">generator_add_validate_stubs</code></em>
+     <span class="type">boolean</span>
+    </dt>
+    <dd class="listitem">
+     <p class="para">
+      If True, the generator will insert / (or add to existing files) 
+      stubs for validate methods. 
+     </p>
+    </dd>
+   </dl>
+  </div>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.db-dataobject.intro-purpose.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.db-dataobject.html">DB_DataObject</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.db-dataobject.intro-autobuilding.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Auto Building and Database Schema</td>
+  </tr>
+ </table>
+</div>
+</body></html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Configuration and connecting</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.networking.net-ldap.html" title="Net_LDAP" />
+  <link rel="prev" href="package.networking.net-ldap.errorhandling.html" title="Error handling" />
+  <link rel="next" href="package.networking.net-ldap.search.html" title="Search" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Configuration and connecting</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.networking.net-ldap.errorhandling.html" title="Error handling">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.networking.net-ldap.search.html" title="Search">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.networking.net-ldap.connecting">
+    
+        <h1 class="refname">Configuration and connecting</h1>
+        <div class="refnamediv">Configuration and connecting &ndash; How to configure Net_LDAP and connect to an LDAP server</div>
+
+    
+
+    <div class="refsection"><div class="info"><h1>Connecting to an LDAP server</h1>
+</div>
+        
+        
+        <p class="para">
+        To connect to an LDAP server, you should use
+        <strong class="classname">Net_LDAP</strong>&#039;s static <strong class="function">connect()</strong> method.
+        It takes one parameter, an array full of configuration options,
+        and either returns
+        a <strong class="classname">Net_LDAP</strong> object if connecting works, or a
+        <strong class="classname">Net_LDAP_Error</strong> object in case of a failure.
+        </p>
+        
+        <p class="para">
+        The following table lists all configuration options. If the default
+        value for an option fits your needs, you don&#039;t need add it to your
+        configuration array.
+        
+        </p><table class="doctable table"><caption>Possible configuration options</caption>
+        
+        
+            <thead>
+            <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Default</th>
+            </tr>
+
+            </thead>
+
+            <tbody class="tbody">
+            <tr>
+            <td><code class="literal">host</code></td>
+            <td>LDAP server name to connect to. You can provide several hosts in an array in which case the hosts are tried from left to right.</td>
+            <td><code class="literal">localhost</code></td>
+            </tr>
+
+        
+            <tr>
+            <td><code class="literal">port</code></td>
+            <td>Port on the server</td>
+            <td>389</td>
+            </tr>
+
+        
+            <tr>
+            <td><code class="literal">version</code></td>
+            <td>LDAP version</td>
+            <td><code class="literal">3</code></td>
+            </tr>
+
+        
+            <tr>
+            <td><code class="literal">starttls</code></td>
+            <td>TLS is started after connecting</td>
+            <td><code class="literal">false</code></td>
+            </tr>
+
+        
+            <tr>
+            <td><code class="literal">binddn</code></td>
+            <td>The distinguished name to bind as (username)</td>
+            <td>(none)</td>
+            </tr>
+
+        
+            <tr>
+            <td><code class="literal">bindpw</code></td>
+            <td>Password for the <code class="literal">binddn</code></td>
+            <td>(none)</td>
+            </tr>
+
+        
+            <tr>
+            <td><code class="literal">basedn</code></td>
+            <td>LDAP base name (root directory)</td>
+            <td>(none)</td>
+            </tr>
+
+        
+            <tr>
+            <td><code class="literal">options</code></td>
+            <td>Array of additional ldap options as key-value pairs</td>
+            <td><code class="literal">array()</code></td>
+            </tr>
+
+        
+            <tr>
+            <td><code class="literal">filter</code></td>
+            <td>
+                Default search filter (string or preferably <strong class="classname">Net_LDAP_Filter</strong> object).
+                See <a href="package.networking.net-ldap.filter.html" class="link">LDAP filters</a>
+            </td>
+            <td><code class="literal">(objectClass=*)</code></td>
+            </tr>
+
+        
+            <tr>
+            <td><code class="literal">scope</code></td>
+            <td>Default search scope, see <a href="package.networking.net-ldap.search.html" class="link">Search</a></td>
+            <td><code class="literal">sub</code></td>
+            </tr>
+
+        
+            </tbody>
+        
+        </table>
+
+        
+        
+        <div class="example"><div class="info"><p><strong>Connecting to an LDAP server</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Inclusion&nbsp;of&nbsp;the&nbsp;Net_LDAP&nbsp;package:<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Net/LDAP.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;The&nbsp;configuration&nbsp;array:<br /></span><span style="color: #0000BB">$config&nbsp;</span><span style="color: #007700">=&nbsp;array&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'binddn'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'cn=admin,ou=users,dc=example,dc=org'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'bindpw'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'password'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'basedn'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'dc=example,dc=org'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'host'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'ldap.example.org'<br /></span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Connecting&nbsp;using&nbsp;the&nbsp;configuration:<br /></span><span style="color: #0000BB">$ldap&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Net_LDAP</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #0000BB">$config</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Testing&nbsp;for&nbsp;connection&nbsp;error<br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$ldap</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #DD0000">'Could&nbsp;not&nbsp;connect&nbsp;to&nbsp;LDAP-server:&nbsp;'</span><span style="color: #007700">.</span><span style="color: #0000BB">$ldap</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+
+    </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.networking.net-ldap.errorhandling.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.networking.net-ldap.html">Net_LDAP</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.networking.net-ldap.search.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Error handling</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Search</td>
+  </tr>
+ </table>
+</div>
+</body></html>

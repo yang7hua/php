@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction - cache</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-template-sigma.html" title="HTML_Template_Sigma" />
+  <link rel="prev" href="package.html.html-template-sigma.intro-syntax.html" title="Introduction - template syntax" />
+  <link rel="next" href="package.html.html-template-sigma.html-template-sigma.html-template-sigma.html" title="constructor HTML_Template_Sigma()" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction - cache</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-template-sigma.intro-syntax.html" title="Introduction - template syntax">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-template-sigma.html-template-sigma.html-template-sigma.html" title="constructor HTML_Template_Sigma()">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-template-sigma.intro-cache">
+   
+    <h1 class="refname">Introduction - cache</h1>
+    <div class="refnamediv">Introduction - cache &ndash; How Sigma caches the &quot;prepared&quot; templates</div>
+
+   
+   <div class="refsection" id="package.html.html-template-sigma.intro-cache.faq"><div class="info"><h1>Cache FAQ</h1>
+</div>
+     
+     <div class="qandaset"><ol class="qandaset_questions"><li><a href="#phd5461faf46edbe">
+           What exactly is this cache feature?
+         </a></li><li><a href="#phd5461faf46f1a6">
+           What about data?
+         </a></li><li><a href="#phd5461faf46f5ff">
+           Is the cached version regenerated when the template changes?
+         </a></li><li><a href="#phd5461faf46f974">
+           Is there any TTL setting?
+         </a></li><li><a href="#phd5461faf46fd5d">
+           Any way to flush the cache?
+         </a></li><li><a href="#phd5461faf47014e">
+           
+             Does this give significant performance gains?
+           
+         </a></li></ol></div>
+       <dl class="qandaentry">
+         <dt><strong>
+           What exactly is this cache feature?
+         </strong></dt>
+         <dd class="answer">
+           <p class="para">
+             This is the way to bypass RegExp parsing on template load. Instead of
+             parsing the original template on every request, we keep its internal
+             representation (a serialized array, essentially) and load it instead.
+           </p>
+         </dd>
+         <dd class="answer">
+           <p class="para">
+             Think about template compilation in Smarty. Only Sigma does not compile
+             templates to PHP code.
+           </p>
+         </dd>
+       </dl>
+       <dl class="qandaentry">
+         <dt><strong>
+           What about data?
+         </strong></dt>
+         <dd class="answer">
+           <p class="para">
+             <em class="emphasis">No</em> data caching is taking place. If you want to do this, consider using
+             some of the PEAR&#039;s <a href="package.caching.html" class="link">cache packages</a>.
+           </p>
+         </dd>
+       </dl>
+       <dl class="qandaentry">
+         <dt><strong>
+           Is the cached version regenerated when the template changes?
+         </strong></dt>
+         <dd class="answer">
+           <p class="para">Yes.</p>
+         </dd>
+       </dl>
+       <dl class="qandaentry">
+         <dt><strong>
+           Is there any TTL setting?
+         </strong></dt>
+         <dd class="answer">
+           <p class="para">No. Cached version is considered valid until the source template changes.</p>
+         </dd>
+       </dl>
+       <dl class="qandaentry">
+         <dt><strong>
+           Any way to flush the cache?
+         </strong></dt>
+         <dd class="answer">
+           <p class="para">
+             Yes, just delete all the files in the cache dir.
+           </p>
+         </dd>
+       </dl>
+       <dl class="qandaentry">
+         <dt><strong>
+           
+             Does this give significant performance gains?
+           
+         </strong></dt>
+         <dd class="answer">
+           <p class="para">Yes. The answer is based on personal experience.
+           </p>
+         </dd>
+         <dd class="answer">
+           <p class="para">
+             If you are going to perform some benchmarks, then use some real-world
+             complex templates, not artificial ones. The performance gain will be
+             greater with bigger and more complex (dozens of blocks) ones.
+           </p>
+         </dd>
+       </dl>
+     
+   </div>
+   <div class="refsection" id="package.html.html-template-sigma.intro-cache.desc"><div class="info"><h1>Cache usage</h1>
+</div>
+     
+     <p class="para">Caching is completely transparent. To take advantage of this feature you only have to either pass a second parameter to the <a href="package.html.html-template-sigma.html-template-sigma.html-template-sigma.html" class="link">constructor</a> or call a <a href="package.html.html-template-sigma.html-template-sigma.setcacheroot.html" class="link"><strong class="function">setCacheRoot()</strong></a> method later.
+     </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/Template/Sigma.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$tpl&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_Template_Sigma</span><span style="color: #007700">(</span><span style="color: #DD0000">'./templates'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'./templates/prepared'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$tpl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">loadTemplateFile</span><span style="color: #007700">(</span><span style="color: #DD0000">'default.html'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;go&nbsp;on<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+     
+     <p class="para">
+     For each distinct template file in <code class="filename">./templates</code> loaded with either <a href="package.html.html-template-sigma.html-template-sigma.loadtemplatefile.html" class="link"><strong class="function">loadTemplatefile()</strong></a>, <a href="package.html.html-template-sigma.html-template-sigma.addblockfile.html" class="link"><strong class="function">addBlockfile()</strong></a>, <a href="package.html.html-template-sigma.html-template-sigma.replaceblockfile.html" class="link"><strong class="function">replaceBlockfile()</strong></a> or <a href="package.html.html-template-sigma.intro-syntax.html#package.html.html-template-sigma.intro-syntax.include" class="link">&lt;!-- INCLUDE --&gt;</a> a prepared version will be generated in <code class="filename">./templates/prepared</code>.
+     </p>
+   </div>
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-template-sigma.intro-syntax.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-template-sigma.html">HTML_Template_Sigma</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-template-sigma.html-template-sigma.html-template-sigma.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction - template syntax</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">constructor HTML_Template_Sigma()</td>
+  </tr>
+ </table>
+</div>
+</body></html>

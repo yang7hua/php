@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Build your Exception Rules System</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.php.php-compatinfo.tutorial.html" title="Getting started" />
+  <link rel="prev" href="package.php.php-compatinfo.build-esl.html" title="Build your Extension Support List" />
+  <link rel="next" href="package.php.php-compatinfo.ref.html" title="Reference guide" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Build your Exception Rules System</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.php.php-compatinfo.build-esl.html" title="Build your Extension Support List">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.php.php-compatinfo.ref.html" title="Reference guide">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.php.php-compatinfo.build-ers">
+ 
+  <h1 class="refname">Build your Exception Rules System</h1>
+  <div class="refnamediv">Build your Exception Rules System &ndash; or how to fix invalid values</div>
+
+ 
+
+ <div class="refsection" id="package.php.php-compatinfo.build-ers.why">
+  <div class="info"><h1>Who need to fix error ?</h1>
+</div>
+
+  <p class="para">
+   Since version 1.9.0, PHP_CompatInfo (aka PCI) used a full data dictionary system
+   based on source files (set of versions.xml) used by the PHP Manual generation itself.
+  </p>
+  <p class="para">
+   Of course, if extensions files
+   <a href="http://cvs.php.net/viewvc.cgi/phpdoc/en/reference/" class="link external">reference</a>
+   (of phpdoc) changed, you have to wait a new release of PCI to see bugs/changes fixed.
+  </p>
+  <p class="para">
+   If you can&#039;t wait a new PCI release, or because reference (phpdoc) files are fake
+   and not yet fixed, there is an alternative solution named
+   <strong class="emphasis">E</strong>xception
+   <strong class="emphasis">R</strong>ules
+   <strong class="emphasis">S</strong>ystem (aka ERS).
+  </p>
+
+ </div>
+
+ <div class="refsection" id="package.php.php-compatinfo.build-ers.php4-procedure">
+  <div class="info"><h1>Procedure to build your ERS for PHP4 users</h1>
+</div>
+
+  <p class="para">
+   </p><blockquote class="important">
+    <p class="para">
+     This procedure is not secure, because you can lose your changes if you install
+     a new PCI release that did not included your fixes.
+    </p>
+   </blockquote>
+
+  
+
+  <p class="para">
+   End-users have to fix the wrong values in data dictionaries themself (by hand).
+  </p>
+
+ </div>
+
+ <div class="refsection" id="package.php.php-compatinfo.build-ers.php5-procedure">
+  <div class="info"><h1>Procedure to build your ERS for PHP5 users</h1>
+</div>
+
+  <p class="para">
+   </p><blockquote class="important">
+    <p class="para">
+     This procedure is pretty secure, and minimize risk to lose informations.
+    </p>
+   </blockquote>
+
+   <blockquote class="note">
+    <p class="para">
+     Version 1.9.0 of PCI used itself the ERS to fix data still missing in
+     phpdoc reference.
+    </p>
+    <p class="para">
+     Reason: Migration from monolithic
+     <code class="filename">http://cvs.php.net/viewvc.cgi/phpdoc/phpbook/phpbook-xsl/version.xml</code>
+     to specific extension file
+     <code class="filename">http://cvs.php.net/viewvc.cgi/phpdoc/en/reference/*/version.xml</code>
+     is not yet over !
+    </p>
+   </blockquote>
+
+  
+
+  <p class="para">
+   <strong class="command">pciconf</strong> CLI script build data dictionary from source below :
+   </p><ol type="1">
+    <li class="listitem">
+     <p class="para">
+      the phpdoc reference mirror files installed in PCI data directory
+      <code class="filename">@data_dir@/PHP_CompatInfo/data/phpdocref/</code>,
+      where @data_dir@ identify your PEAR data directory.
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      a list of Exception Rules installed in
+      <code class="filename">@php_dir@/scripts/pciconf/</code>,
+      where @php_dir@ identify your PEAR directory.
+     </p>
+    </li>
+   </ol>
+  
+
+  <p class="para">
+   Default Exception Rules are provided by a set of file s named
+   <code class="filename">*_func_exception.php</code>, <code class="filename">*_const_exception.php</code>,
+   <code class="filename">*_class_exception.php</code>, where * means for the extension name
+   (case sensitive).
+  </p>
+  <p class="para">
+   Exception Rules files have the same structure as data dictionary. Only the
+   array php variable name is different.
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para">
+      <code class="varname">$function_exceptions</code> for the related extension functions list
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <code class="varname">$constant_exceptions</code> for the related extension constants list
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <code class="varname">$class_exceptions</code> for the related extension classes list
+     </p>
+    </li>
+   </ul>
+  
+
+  <p class="para">
+   <strong class="command">pciconf</strong> detect presence of Exception Rules by the
+   <code class="filename">exceptions.conf.php</code> file.
+  </p>
+  <p class="para">
+   This file implement a required function
+   </p><div class="funcsynopsis">
+    <p><code class="funcprototype">
+     mixed <strong class="function">getExceptions</strong> ( 
+     string $extension
+      , string $type
+    )</code></p>
+   </div>
+   First argument <em><code class="parameter">$extension</code></em> identify the extension name,
+   while second argument <em><code class="parameter">$type</code></em> identify the kind of exception
+   (version, class, function, constant) to proceed.
+  </p>
+  <p class="para">
+   If function return <strong class="constant">FALSE</strong>, that means there are no value
+   to apply/merge with the phpdoc base reference. Otherwise, function should return
+   a compatible data dictionary structure (array) what contains all news/changes
+   to apply.
+  </p>
+
+  <p class="para">
+   To use your own ERS, you have to tell it to the <strong class="command">pciconf</strong>
+   script with the --exception switch.
+  </p>
+  <p class="para">
+   Example: <strong class="command">pciconf --exception /home/users/farell/myERS.php</strong>
+  </p>
+
+  <p class="para">
+   In summary:
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para">
+      Build your own ERS to be free to fix all errors you found without to wait
+      a PHP Manual/PCI new version.
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      Use a directory acessible in your include_path to store result of
+      data dictionaries corresponding to your platform, and avoid to overwrite
+      the default PCI installation.
+     </p>
+    </li>
+   </ul>
+  
+
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.php.php-compatinfo.build-esl.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.php.php-compatinfo.tutorial.html">Getting started</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.php.php-compatinfo.ref.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Build your Extension Support List</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Reference guide</td>
+  </tr>
+ </table>
+</div>
+</body></html>

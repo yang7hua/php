@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>How to use the package</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.xml.xml-xrd.html" title="XML_XRD" />
+  <link rel="prev" href="package.xml.xml-xrd.html" title="XML_XRD" />
+  <link rel="next" href="package.xml.xml-xrd.loading.html" title="Loading an XRD file" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">How to use the package</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.xml.xml-xrd.html" title="XML_XRD">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.xml.xml-xrd.loading.html" title="Loading an XRD file">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="package.xml.xml-xrd.usage">
+ <div class="info">
+  <h1>How to use the package</h1>
+
+ </div>
+
+ <p class="para">
+  At first, you need to include the main <code class="literal">XML_XRD</code>
+  file and create a new
+  <a href="http://pear.php.net/package/XML_XRD/docs/latest/XML_XRD/XML_XRD.html" class="apidoclink">XML_XRD object</a>:
+ </p>
+ <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'XML/XRD.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$xrd&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">XML_XRD</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+ <p class="para">
+  When that&#039;s done, you
+  <a href="package.xml.xml-xrd.loading.html" class="link">load</a> the XRD file or string,
+  then <a href="package.xml.xml-xrd.verification.html" class="link">verify</a> if
+  the resource is really the resource you wanted to load
+  and then access
+  <a href="package.xml.xml-xrd.links.html" class="link">the links</a>
+  and <a href="package.xml.xml-xrd.properties.html" class="link">the properties</a>
+  of the XRD object.
+ </p>
+
+ <p class="para">
+  Also read the sections about
+  <a href="package.xml.xml-xrd.errorhandling.html" class="link">error handling</a>
+  and
+  <a href="package.xml.xml-xrd.generating.html" class="link">XRD creation</a>.
+ </p>
+
+ <div class="example">
+  <div class="info">
+   <p><strong>Fetching LRDD URI from host-meta</strong></p>
+  </div>
+  <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'XML/XRD.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$xrd&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">XML_XRD</span><span style="color: #007700">();<br />try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$xrd</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">loadFile</span><span style="color: #007700">(</span><span style="color: #DD0000">'http://cweiske.de/.well-known/host-meta'</span><span style="color: #007700">);<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">XML_XRD_Exception&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #DD0000">'Loading&nbsp;XRD&nbsp;file&nbsp;failed:&nbsp;'&nbsp;&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">$link&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$xrd</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">get</span><span style="color: #007700">(</span><span style="color: #DD0000">'lrdd'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'application/xrd+xml'</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">$link&nbsp;</span><span style="color: #007700">===&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #DD0000">'No&nbsp;LRDD&nbsp;link&nbsp;found'</span><span style="color: #007700">);<br />}<br /></span><span style="color: #0000BB">$template&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$link</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">template</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$lrddUri&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">str_replace</span><span style="color: #007700">(</span><span style="color: #DD0000">'{uri}'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">urlencode</span><span style="color: #007700">(</span><span style="color: #DD0000">'acct:cweiske@cweiske.de'</span><span style="color: #007700">),&nbsp;</span><span style="color: #0000BB">$template</span><span style="color: #007700">);<br />echo&nbsp;</span><span style="color: #DD0000">'URL&nbsp;with&nbsp;infos&nbsp;about&nbsp;cweiske@cweiske.de&nbsp;is&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$lrddUri&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.xml.xml-xrd.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.xml.xml-xrd.html">XML_XRD</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.xml.xml-xrd.loading.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">XML_XRD</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Loading an XRD file</td>
+  </tr>
+ </table>
+</div>
+</body></html>

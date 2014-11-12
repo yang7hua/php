@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>importVendors()</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.networking.net-mac.html" title="Net_MAC" />
+  <link rel="prev" href="package.networking.net-mac.setmac.html" title="setMAC()" />
+  <link rel="next" href="package.networking.net-mac.findvendor.html" title="findVendor()" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">importVendors()</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.networking.net-mac.setmac.html" title="setMAC()">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.networking.net-mac.findvendor.html" title="findVendor()">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.networking.net-mac.importvendors">
+   
+    <h1 class="refname">importVendors()</h1>
+    <div class="refnamediv">importVendors() &ndash; Import a manufacturers&#039; file to the database or to an <span class="type">array</span></div>
+
+   
+   <h2 class="refsynopsisdiv">Synopsis</h2>
+    <div class="funcsynopsis">
+     <div class="programlisting">
+      require_once &#039;Net/MAC.php&#039;;
+     </div>
+     <p><code class="funcprototype">
+     <span class="type">mixed</span> <strong class="function">importVendors</strong> ( 
+     <span class="type">string</span> $file
+      , <span class="type">boolean</span> $doReturn
+      <span class="initializer"> = false</span>
+     
+     )</code></p>
+    </div>
+   
+   <div class="refsection" id="package.networking.net-mac.importvendors.desc">
+    <h1 class="title">Description</h1>
+    <p class="para">
+    This method will parse a manufacturers&#039; file, such as the one from
+    <code class="uri">http://anonsvn.wireshark.org/wireshark/trunk/manuf</code>,
+    containing a list of MAC address prefix-to-vendor relationships.
+    If the $doReturn parameter is <strong class="constant">FALSE</strong>, then the data will be
+    imported into the database defined by the factory of this class.
+    However, if $doReturn is <strong class="constant">TRUE</strong>, then the return will be an
+    associative <span class="type">array</span> with the key being the MAC address prefix
+    and the data being an associative <span class="type">array</span> with the keys
+    &#039;vendor&#039; and &#039;description&#039;.
+    </p>
+   </div>
+   <div class="refsection" id="package.networking.net-mac.importvendors.parameter">
+    <h1 class="title">Parameter</h1>
+    <p class="para">
+     </p><ul class="itemizedlist">
+      <li class="listitem">
+       <p class="para">
+        <span class="type">string</span> <em><code class="parameter">$file</code></em> - The filename or
+    URL of the manufacturers&#039; file to parse
+       </p>
+      </li>
+      <li class="listitem">
+       <p class="para">
+    <span class="type">string</span> <em><code class="parameter">$doReturn</code></em> - If <strong class="constant">TRUE</strong>, an
+    <span class="type">array</span> will be returned, if <strong class="constant">FALSE</strong>, the data will be
+    imported into the database.
+       </p>
+      </li>
+     </ul>
+    
+   </div>
+   <div class="refsection" id="package.networking.net-mac.importvendors.return">
+    <h1 class="title">Return value</h1>
+    <p class="para">
+     <span class="type">mixed</span> - If $doReturn is <strong class="constant">TRUE</strong>, the
+     method will return an <span class="type">array</span>.  Otherwise, the method will
+     return <strong class="constant">TRUE</strong> on success. A <a href="package.networking.net-mac.net-mac-exception.html" class="link">Net_MAC_Exception</a>
+      Exception <span class="type">object</span> will be thrown on failure in either case.
+    </p>
+   </div>
+   <div class="refsection" id="package.networking.net-mac.importvendors.note">
+    <h1 class="title">Note</h1>
+    <p class="simpara">This function can not be called
+statically.</p>
+    <p class="para">
+     This method can throw exceptions on error, so the method should
+     always be called from inside a try/catch block.
+    </p>
+   </div>
+   <div class="refsection" id="package.networking.net-mac.importvendors.example">
+    <h1 class="title">Example</h1>
+    <div class="example"><div class="info"><p><strong>Using <strong class="function">importVendors()</strong> with a URL</strong></p></div>
+
+     <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Net/MAC.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'MDB2.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$db_type&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'pgsql'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$db_host&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'localhost'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$db_user&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'username'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$db_name&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'dbname'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$db_pass&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'password'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$dsn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"</span><span style="color: #0000BB">$db_type</span><span style="color: #DD0000">://</span><span style="color: #0000BB">$db_user</span><span style="color: #DD0000">:</span><span style="color: #0000BB">$db_pass</span><span style="color: #DD0000">@</span><span style="color: #0000BB">$db_host</span><span style="color: #DD0000">/</span><span style="color: #0000BB">$db_name</span><span style="color: #DD0000">"</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$dbh&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">MDB2</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">);<br /><br />if&nbsp;(</span><span style="color: #0000BB">MDB2</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$dbh</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"MDB2&nbsp;Error:&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$dbh</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getUserInfo</span><span style="color: #007700">();<br />}<br /><br /></span><span style="color: #0000BB">$dboptions&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'tablename'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'macvendors'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'macaddrcol'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'macaddr'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'vendorcol'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'vendor'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'desccol'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'description'</span><span style="color: #007700">);<br /><br />try&nbsp;{<br />&nbsp;&nbsp;</span><span style="color: #0000BB">$nmh&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">Net_MAC</span><span style="color: #007700">(</span><span style="color: #0000BB">$dbh</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$dboptions</span><span style="color: #007700">);<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Net_MAC_Exception&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Net_MAC&nbsp;Error:&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">();<br />&nbsp;&nbsp;exit;<br />}<br /><br />try&nbsp;{<br />&nbsp;&nbsp;</span><span style="color: #0000BB">$nmh</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">importVendors</span><span style="color: #007700">(</span><span style="color: #DD0000">'http://anonsvn.wireshark.org/wireshark/trunk/manuf'</span><span style="color: #007700">);<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Net_MAC_Exception&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Net_MAC&nbsp;Error:&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">();<br />&nbsp;&nbsp;exit;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+     <div class="example-contents"><p>
+     This would output an error only if there is an error importing
+     the file from the URL.
+     </p></div>
+    </div>
+    <div class="example"><div class="info"><p><strong>Using <strong class="function">importVendors()</strong> with a file,
+     returning an <span class="type">array</span></strong></p></div>
+
+     <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Net/MAC.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'MDB2.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$db_type&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'pgsql'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$db_host&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'localhost'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$db_user&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'username'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$db_name&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'dbname'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$db_pass&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'password'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$dsn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"</span><span style="color: #0000BB">$db_type</span><span style="color: #DD0000">://</span><span style="color: #0000BB">$db_user</span><span style="color: #DD0000">:</span><span style="color: #0000BB">$db_pass</span><span style="color: #DD0000">@</span><span style="color: #0000BB">$db_host</span><span style="color: #DD0000">/</span><span style="color: #0000BB">$db_name</span><span style="color: #DD0000">"</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$dbh&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">MDB2</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">);<br /><br />if&nbsp;(</span><span style="color: #0000BB">MDB2</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$dbh</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"MDB2&nbsp;Error:&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$dbh</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getUserInfo</span><span style="color: #007700">();<br />}<br /><br /></span><span style="color: #0000BB">$dboptions&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'tablename'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'macvendors'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'macaddrcol'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'macaddr'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'vendorcol'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'vendor'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'desccol'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'description'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$nmh&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">Net_MAC</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #0000BB">$dbh</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$dboptions</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$nmh</span><span style="color: #007700">)){<br />&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Net_MAC&nbsp;Error:&nbsp;'</span><span style="color: #007700">.</span><span style="color: #0000BB">$nmh</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">();<br />}<br /><br /></span><span style="color: #0000BB">$vendorArr&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$nmh</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">importVendors</span><span style="color: #007700">(</span><span style="color: #DD0000">'./manuf'</span><span style="color: #007700">)<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(!</span><span style="color: #0000BB">$vendorArr</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Net_MAC:&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$err</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getUserInfo</span><span style="color: #007700">();<br />&nbsp;&nbsp;exit;<br />}<br /><br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$vendorArr</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+     <div class="example-contents"><p>
+     This would output the entire list of MAC address vendors on
+     success and an error message on failure.
+     </p></div>
+    </div>
+   </div>
+   <div class="refsection" id="package.networking.net-mac.importvendors.throws">
+    <h1 class="title">Throws</h1>
+    <p class="para">
+     <em class="emphasis">throws</em> <a href="package.networking.net-mac.net-mac-exception.html" class="link">Net_MAC_Exception</a>
+    </p>
+   </div>
+   <div class="refsection" id="package.networking.net-mac.importvendors.see">
+    <h1 class="title">See</h1>
+    <p class="para">
+     <a href="package.networking.net-mac.constructor.html" class="link"><strong class="function">Net_MAC::__construct()</strong></a>
+    </p>
+    <p class="para">
+     <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2.html#methodfactory" class="link external"><strong class="function">MDB2::factory()</strong></a>
+    </p>
+    <p class="para">
+     <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2.html#methodisError" class="link external"><strong class="function">MDB2::isError()</strong></a>
+    </p>
+    <p class="para">
+     <a href="http://pear.php.net/package/PEAR/docs/latest/PEAR/PEAR_Error.html#methodgetUserInfo" class="link external"><strong class="function">PEAR_Error::getUserInfo()</strong></a>
+    </p>
+   </div>
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.networking.net-mac.setmac.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.networking.net-mac.html">Net_MAC</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.networking.net-mac.findvendor.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">setMAC()</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">findVendor()</td>
+  </tr>
+ </table>
+</div>
+</body></html>

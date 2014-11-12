@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Command line interface</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.php.php-uml.html" title="PHP_UML" />
+  <link rel="prev" href="package.php.php-uml.intro.html" title="Introduction" />
+  <link rel="next" href="package.php.php-uml.about-the-parser.html" title="About the parser" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Command line interface</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.php.php-uml.intro.html" title="Introduction">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.php.php-uml.about-the-parser.html" title="About the parser">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.php.php-uml.command-line">
+ 
+  <h1 class="refname">Command line interface</h1>
+  <div class="refnamediv">Command line interface &ndash; How to run PHP_UML from the command line?</div>
+
+ 
+ <div class="refsection"><div class="info"><h1>Install</h1>
+</div>
+  <p class="para">
+   The executable <code class="literal">phpuml</code> relies on <a href="package.console.console-commandline.html" class="link">Console::CommandLine</a>.
+   If you have followed the normal PEAR installation process to install <strong class="classname">PHP_UML</strong>, that dependency should have been resolved, and you should be able to run <code class="literal">phpuml</code> directly from the command line.
+  </p>
+ </div>
+
+ <div class="refsection"><div class="info"><h1>Arguments</h1>
+</div>
+  
+  <p class="para">PHP_UML converts data into another kind of data. This can be summarized with:
+  </p><div class="textcode">
+     <pre class="textcode">
+$ phpuml [INPUT] -o [OUTPUT LOCATION] -f [OUTPUT FORMAT]</pre>
+
+   </div>
+	 <ul class="itemizedlist">
+    <li class="listitem">
+     <span class="simpara">[INPUT] can be PHP files, or XMI files.</span>
+     <span class="simpara">[OUTPUT FORMAT] can be PHP files, XMI files, or HTML files.</span>
+    </li>
+   </ul>
+  
+  
+  <p class="para">In other words, to specify the files/directories to scan, pass them as main arguments:
+    </p><div class="textcode">
+      <pre class="textcode">
+$ phpuml /var/www/foo</pre>
+
+    </div>
+   
+   <p class="para">Separate the different elements by a space:
+     </p><div class="textcode">
+     <pre class="textcode">
+$ phpuml /var/www/file1.php file2.php</pre>
+
+    </div>
+   
+   <p class="para">By default, <code class="literal">phpuml</code> will recursively parse the specified files/folders, and will echo the XMI code on the screen (UML/XMI version 2).</p>
+ </div>
+
+ <div class="refsection"><div class="info"><h1>Options</h1>
+</div>
+
+	<div class="example"><div class="info"><p><strong>Renaming the UML model name</strong></p></div>
+  <div class="example-contents"><p>By default, the root package of a UML model is named <em class="emphasis">default</em>. To rename it, use the switch <code class="literal">-n</code>:
+    </p><div class="textcode">
+      <pre class="textcode">
+$ phpuml /var/www/foo -n MyProject</pre>
+
+    </div>
+   </p></div>
+ </div>
+ 
+ 	<div class="example"><div class="info"><p><strong>Saving to a file</strong></p></div>
+  <div class="example-contents"><p>To save the XMI data in a particular place, instead of printing it on the screen, use <code class="literal">-o</code>:
+    </p><div class="textcode">
+      <pre class="textcode">
+$ phpuml /var/www/foo -n MyProject -o /var/tmp/</pre>
+
+    </div><p>
+    This will parse <code class="filename">/var/www/foo</code>, and save the XMI data to <code class="filename">/var/tmp/MyProject.xmi</code>.
+    Use the dot to save to the current directory: <code class="literal">-o .</code>
+  </p></div>  
+  <div class="example-contents"><p>The option <code class="literal">-o</code> also accepts a file name, instead of a directory path.</p></div>
+  </div>
+
+  <div class="example"><div class="info"><p><strong>Generating an API&#039;s documentation in HTML, or some PHP code</strong></p></div>
+  <div class="example-contents"><p>In addition to <em class="emphasis">xmi</em>, 3 output formats are also available: <em class="emphasis">html</em>, <em class="emphasis">htmlnew</em>, and <em class="emphasis">php</em>.
+    </p><ul class="itemizedlist">
+    <li class="listitem">
+     <span class="simpara">
+      &quot;htmlnew&quot; is a full XHTML-compliant API documentation (&quot;modern&quot; look and feel). It has the particularity to reflect the procedural code, in addition to the object code. The global procedural functions and constants appear in the top package.
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      &quot;html&quot; is another HTML API documentation (&quot;Javadoc&quot; look and feel)
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      &quot;php&quot; is a PHP code generation (code skeletons)
+     </span>
+    </li>
+   </ul>
+	</p></div>
+  <div class="example-contents"><p>Use the option <code class="literal">-f</code> to specify which format you want <code class="literal">phpuml</code> to generate.
+    </p><div class="textcode">
+      <pre class="textcode">
+$ phpuml /var/www/foo -f html -o /var/tmp/</pre>
+
+    </div><p>
+This will scan <code class="filename">/var/www/foo</code>, and create the API documentation in <code class="filename">/var/tmp/</code>.
+   </p></div>
+
+  <div class="example-contents"><p>
+  If you need to provide your own XMI file (instead of parsing existing PHP files), simply pass it as argument.
+   </p><div class="textcode">
+     <pre class="textcode">
+$ phpuml myFile.xmi -f php -o /var/tmp/</pre>
+
+   </div><p>
+   This will read the XMI code contained in <code class="filename">myFile.xmi</code>, and generate the PHP code templates in <code class="filename">/var/tmp/</code>.
+   Note that with the command line tool, you cannot both read an XMI file and parse PHP files: you will have to use the API if you need to build
+   a UML model by merging inputs from XMI and PHP simultaneously.
+  </p></div>
+	</div>
+
+	<div class="example"><div class="info"><p><strong>Selecting the UML/XMI version</strong></p></div>
+	<div class="example-contents"><p>To select which version of the UML/XMI standards you want your XMI to be written in, use the option <code class="literal">-x</code>:
+    </p><div class="textcode">
+      <pre class="textcode">
+$ phpuml /var/www/foo -x 1 -o /var/tmp/</pre>
+
+    </div><p>
+Note that Argouml accepts XMI code only in version 1, while the Eclipse plugins (Ecore standard) only in version 2.
+  </p></div>
+  </div>
+
+ <div class="example"><div class="info"><p><strong>Converting from UML/XMI version 1 to 2</strong></p></div>
+ <div class="example-contents"><p><code class="literal">phpuml</code> can automatically convert UML/XMI data from version 1.4 to version 2.1.
+   </p><div class="textcode">
+      <pre class="textcode">
+$ phpuml foo1.xmi -o foo2.xmi</pre>
+
+    </div><p>
+This will read <code class="filename">foo1.xmi</code>, and, if its XMI content is in version 1.x, converts it to version 2, and stores it in <code class="filename">foo2.xmi</code>.
+Note that this is an ad hoc conversion, inspired on what Rationale Rose, Argouml and Umbrello generate. It does not convert all of the UML entities, and it does not interpret all of the various XMI dialects. 
+ </p></div>
+ </div>
+ 
+ <div class="example"><div class="info"><p><strong>Filtering the files to parse</strong></p></div>
+ 	<div class="example-contents"><p>By default, <code class="literal">phpuml</code> will parse only files with the extension <code class="filename">.php</code>. To modify this file pattern, use the <code class="literal">- m</code> selector:
+    </p><div class="textcode">
+      <pre class="textcode">
+$ phpuml /var/www/foo -m *.php *.txt</pre>
+
+    </div><p>
+This will parse all <code class="filename">php</code> <em class="emphasis">and</em> <code class="filename">txt</code> files.
+  </p></div>
+ </div>
+ 
+ <div class="example"><div class="info"><p><strong>Ignoring some files and folders</strong></p></div>
+ 	<div class="example-contents"><p>Use the switch <code class="literal">-i</code>:
+    </p><div class="textcode">
+      <pre class="textcode">
+$ phpuml /var/www/foo -i tests *.php4</pre>
+
+    </div><p>
+This will parse all files, except the ones in the folder &quot;tests&quot;, and the ones with an extension &quot;php4&quot;.
+  </p></div>
+ </div>
+ 
+ <div class="example"><div class="info"><p><strong>Removing the dollar sign ($) in the documentation</strong></p></div>
+ 	<div class="example-contents"><p>Use the switch <code class="literal">--no-dollar</code>:
+    </p><div class="textcode">
+      <pre class="textcode">
+$ phpuml /var/www/foo --no-dollar -o foo.xmi</pre>
+
+    </div>
+  </p></div>
+ </div>
+ 
+  <p class="para">Other options are available. You will discover them by asking for <strong class="emphasis">help</strong>, like this:
+    </p><div class="textcode">
+      <pre class="textcode">
+$ phpuml -h</pre>
+
+    </div>
+  
+ 
+  <p class="para">
+    Form more information about how PHP_UML interprets your PHP code, read <a href="package.php.php-uml.about-the-parser.html" class="link">this section</a>.
+  </p>
+  
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.php.php-uml.intro.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.php.php-uml.html">PHP_UML</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.php.php-uml.about-the-parser.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">About the parser</td>
+  </tr>
+ </table>
+</div>
+</body></html>

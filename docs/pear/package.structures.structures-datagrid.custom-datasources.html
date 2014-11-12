@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Custom DataSources</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.structures.structures-datagrid.intro-and-features.html" title="Introduction and Features" />
+  <link rel="prev" href="package.structures.structures-datagrid.example-advanced.html" title="Example - Complex" />
+  <link rel="next" href="package.structures.structures-datagrid.custom-renderers.html" title="Custom Renderers" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Custom DataSources</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.structures.structures-datagrid.example-advanced.html" title="Example - Complex">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.structures.structures-datagrid.custom-renderers.html" title="Custom Renderers">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.structures.structures-datagrid.custom-datasources">
+ 
+  <h1 class="refname">Custom DataSources</h1>
+  <div class="refnamediv">Custom DataSources &ndash; 
+    How to write your own DataSource driver.
+  </div>
+
+ 
+
+ <div class="refsection" id="package.structures.structures-datagrid.custom-datasources.intro"><div class="info"><h1>Introduction</h1>
+</div>
+  
+  
+  <p class="para">Writing your own DataSource driver is the way to go when none
+  of the existing driver suit your needs. It is actually pretty easy,
+  and allows for great flexibility.</p>
+  
+  <p class="para">Of course, if you&#039;re trying to fetch data from an
+  <em class="emphasis">exotic source</em>, writing your own driver is
+  required. But, sometimes it&#039;s also the best way to achieve the best
+  <em class="emphasis">optimization</em>, especially (but not only) with
+  databases.</p>
+  
+  <p class="para">This document will present you the DataSource interface, and
+  how to implement it.</p>
+  
+ </div>
+ <div class="refsection" id="package.structures.structures-datagrid.custom-datasources.def"><div class="info"><h1>Definitions</h1>
+</div>
+  
+  
+  <p class="para"><em class="emphasis">A DataSource driver</em> is a descendent of
+  the <strong class="classname">Structures_DataGrid_DataSource</strong> class,
+  which implements the <em class="emphasis">DataSource interface</em>.</p>
+  
+  <p class="para"><em class="emphasis">DataSource</em> is a synomym for
+  <em class="emphasis">DataSource driver</em>.</p>
+  
+  <p class="para">The <em class="emphasis">DataSource interface</em> consists in a set
+  of methods that drivers must or may overload and protected properties
+  that drivers can use, as well as recommended practices.</p>
+
+  <p class="para">A <em class="emphasis">DataSource container</em> is a constant or
+  a variable of any type (string, array, object, etc...) that either
+  contains data or describes how to retrieve data.</p>
+
+  <p class="para">Every <em class="emphasis">DataSource driver</em> is specific to,
+  and knows how to handle, a given <em class="emphasis">DataSource container</em>
+  type.</p>
+
+ </div>
+ <div class="refsection" id="package.structures.structures-datagrid.custom-datasources.interface"><div class="info"><h1>The DataSource interface</h1>
+</div>
+  
+  
+ <div class="refsection" id="package.structures.structures-datagrid.custom-datasources.interface.properties"><div class="info"><h1>Properties available to drivers</h1>
+</div>
+  
+  
+  <p class="para"><em><code class="parameter">array $_options</code></em> - Data binding options as an 
+  associative array. You can read the content of this property but you
+  shouldn&#039;t change it directly.</p>
+  
+  </div>   
+ <div class="refsection" id="package.structures.structures-datagrid.custom-datasources.interface.methods"><div class="info"><h1>Methods that must or may be implemented in drivers</h1>
+</div>
+  
+     <p class="para">
+     </p><div class="funcsynopsis">
+     <p><code class="funcprototype">
+      <strong class="function">constructor</strong> ( 
+      <span class="type"><span class="type void">void</span></span>
+     )</code></p>
+     </div>
+     The constructor must set default options, if any, and call the parent
+     constructor. This method is optional.
+     </p>
+     <p class="para">
+     </p><div class="funcsynopsis">
+     <p><code class="funcprototype">
+      object <strong class="function">bind</strong> ( 
+      mixed container
+       , array options
+     )</code></p>
+     </div>
+     <strong class="function">bind()</strong> is reponsible for loading a DataSource
+     <em><code class="parameter">container</code></em> into the driver, according to some
+     binding <em><code class="parameter">options</code></em>. This method is optional.
+     It must return a <strong class="classname">PEAR_Error</strong> object in case
+     of failure.
+     </p>
+     <p class="para">
+     </p><div class="funcsynopsis">
+     <p><code class="funcprototype">
+      object <strong class="function">count</strong> ( 
+      <span class="type"><span class="type void">void</span></span>
+     )</code></p>
+     </div>
+     <strong class="function">count()</strong> must return the total number or records
+     found in the container. This method is required, and is always called
+     before <strong class="function">fetch()</strong>.
+     It must return a <strong class="classname">PEAR_Error</strong> object in case of failure.
+     </p>
+     <p class="para">
+     </p><div class="funcsynopsis">
+     <p><code class="funcprototype">
+      object <strong class="function">sort</strong> ( 
+      mixed sortSpec
+       , array sortDir
+     )</code></p>
+     </div>
+     <strong class="function">sort()</strong> must sort the data according
+     to <em><code class="parameter">sortSpec</code></em> and the optional
+     <em><code class="parameter">sortDir</code></em>. This method is required, and is
+     always called before <strong class="function">fetch()</strong>.  It must return
+     a <strong class="classname">PEAR_Error</strong> object in case of failure.
+     </p>
+     <p class="para">
+     </p><div class="funcsynopsis">
+     <p><code class="funcprototype">
+      mixed <strong class="function">fetch</strong> ( 
+      integer offset
+       , integer len
+     )</code></p>
+     </div>
+     <strong class="function">fetch()</strong> must return a 2-dimension array of data, 
+     starting from record <em><code class="parameter">offset</code></em>, containing 
+     <em><code class="parameter">len</code></em> records..This method is required
+     It must return a <strong class="classname">PEAR_Error</strong> object in case of failure.
+     </p>
+  </div>   
+ <div class="refsection" id="package.structures.structures-datagrid.custom-datasources.interface.methods-avail"><div class="info"><h1>Protected methods that drivers can use</h1>
+</div>
+  
+     <p class="para">
+     </p><div class="funcsynopsis">
+     <p><code class="funcprototype">
+      void <strong class="function">_addDefaultOptions</strong> ( 
+      array options
+     )</code></p>
+     </div>
+     <strong class="function">_addDefaultOptions()</strong> is used to declare the
+     driver-specific options, if any, as well as their default values. 
+     It must be called from the constructor.
+     </p>
+     <p class="para">
+     </p><div class="funcsynopsis">
+     <p><code class="funcprototype">
+      void <strong class="function">setOptions</strong> ( 
+      array options
+     )</code></p>
+     </div>
+     <strong class="function">setOptions()</strong> is a public method used to set
+     options. If they ever need to change options, drivers should use this
+     method. 
+     </p>
+ </div>
+ </div>
+ <div class="refsection"><div class="info"><h1>A simple driver</h1>
+</div>
+ 
+ <p class="para">Let&#039;s start with a very simple driver. It is rather readable and you
+ shouldn&#039;t have much trouble understanding it. It is not extremely useful
+ to write a custom driver for a such simple SQL query, but it should get
+ you started.</p>
+   <div class="example"><div class="info"><p><strong>A simple SQL adaptor</strong></p></div>
+    
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require&nbsp;</span><span style="color: #DD0000">'Structures/DataGrid/DataSource.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'DB.php'</span><span style="color: #007700">;<br /><br />class&nbsp;</span><span style="color: #0000BB">MyDataSource&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">Structures_DataGrid_DataSource&nbsp;</span><span style="color: #007700">{<br />&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$orderBy&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">''</span><span style="color: #007700">;<br />&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">MyDataSource</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$dsn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'mysql://someuser:apasswd@localhost/thedb'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">db&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">DB</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">count</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$query&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"SELECT&nbsp;COUNT(*)&nbsp;FROM&nbsp;animals&nbsp;WHERE&nbsp;species='cat'"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getOne</span><span style="color: #007700">(</span><span style="color: #0000BB">$query</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">sort</span><span style="color: #007700">(</span><span style="color: #0000BB">$sortSpec</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$sortDir&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'ASC'</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">orderBy&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"ORDER&nbsp;BY&nbsp;</span><span style="color: #0000BB">$sortSpec</span><span style="color: #DD0000">&nbsp;</span><span style="color: #0000BB">$sortDir</span><span style="color: #DD0000">"</span><span style="color: #007700">;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">fetch</span><span style="color: #007700">(</span><span style="color: #0000BB">$offset&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$len&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$limit&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">is_null</span><span style="color: #007700">(</span><span style="color: #0000BB">$len</span><span style="color: #007700">)&nbsp;?&nbsp;</span><span style="color: #DD0000">"LIMIT&nbsp;</span><span style="color: #0000BB">$offset</span><span style="color: #DD0000">,18446744073709551615"&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">:&nbsp;</span><span style="color: #DD0000">"LIMIT&nbsp;</span><span style="color: #0000BB">$offset</span><span style="color: #DD0000">,</span><span style="color: #0000BB">$len</span><span style="color: #DD0000">"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$query&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"SELECT&nbsp;*&nbsp;FROM&nbsp;animals&nbsp;WHERE&nbsp;species='cat'&nbsp;"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$query&nbsp;</span><span style="color: #007700">.=&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_orderBy&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"&nbsp;</span><span style="color: #0000BB">$limit</span><span style="color: #DD0000">"</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAll</span><span style="color: #007700">(</span><span style="color: #0000BB">$query</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   </div>
+   
+ </div>
+ <div class="refsection" id="package.structures.structures-datagrid.custom-datasources.test"><div class="info"><h1>Testing your driver</h1>
+</div>
+ 
+ <p class="para">Before going live, it is very recommended to test your driver with the
+ <strong class="function">dump()</strong> method.</p>
+   <div class="example"><div class="info"><p><strong>Testing with <strong class="function">dump()</strong></strong></p></div>
+    
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$datasource&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">MyDataSource</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">$count&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$datasource</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">count</span><span style="color: #007700">();<br />echo&nbsp;</span><span style="color: #DD0000">"There&nbsp;are&nbsp;</span><span style="color: #0000BB">$count</span><span style="color: #DD0000">&nbsp;cats&nbsp;in&nbsp;the&nbsp;farm\n\n"</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$datasource</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">sort</span><span style="color: #007700">(</span><span style="color: #DD0000">'weight'</span><span style="color: #007700">);<br /><br />echo&nbsp;</span><span style="color: #DD0000">"Here&nbsp;are&nbsp;the&nbsp;5&nbsp;lightest&nbsp;ones:&nbsp;\n"</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;dump()&nbsp;accepts&nbsp;the&nbsp;same&nbsp;$offset&nbsp;and&nbsp;$len&nbsp;argument&nbsp;as&nbsp;fetch()<br /></span><span style="color: #0000BB">$datasource</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">dump</span><span style="color: #007700">(</span><span style="color: #0000BB">0</span><span style="color: #007700">,</span><span style="color: #0000BB">5</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   </div>
+
+   <p class="para">That should output a nicely formated ascii table like:</p>
+   <pre class="screen">
+     <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>There&nbsp;are&nbsp;23&nbsp;cats&nbsp;in&nbsp;the&nbsp;farm.<br/><br/>Here&nbsp;are&nbsp;the&nbsp;5&nbsp;lightest&nbsp;ones:<br/>+---------+---------+-----------+--------+<br/>|&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;species&nbsp;|&nbsp;birthDate&nbsp;|&nbsp;weight&nbsp;|<br/>+---------+---------+-----------+--------+<br/>|&nbsp;sarge&nbsp;&nbsp;&nbsp;|&nbsp;cat&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;20021220&nbsp;&nbsp;|&nbsp;1.8&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;etch&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;cat&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;20000509&nbsp;&nbsp;|&nbsp;2.5&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;potato&nbsp;&nbsp;|&nbsp;cat&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;19980128&nbsp;&nbsp;|&nbsp;3.8&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;sid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;cat&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;20011101&nbsp;&nbsp;|&nbsp;4.1&nbsp;&nbsp;&nbsp;&nbsp;|<br/>|&nbsp;woody&nbsp;&nbsp;&nbsp;|&nbsp;cat&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;19970712&nbsp;&nbsp;|&nbsp;6.0&nbsp;&nbsp;&nbsp;&nbsp;|<br/>+---------+---------+-----------+--------+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+   </pre>
+
+ </div>
+ <div class="refsection" id="package.structures.structures-datagrid.custom-datasources.use"><div class="info"><h1>Using your new driver</h1>
+</div>
+ 
+ <p class="para">Okay, so you have written a driver that&#039;s tailored to your needs, and tested
+ it. It is now time to connect it to
+ <strong class="classname">Structures_DataGrid</strong>.</p>
+
+ <p class="para">For this purpose we&#039;re going to use the 
+    <a href="package.structures.structures-datagrid.structures-datagrid.binddatasource.html" class="link"><strong class="function">bindDataSource()</strong></a>
+    method.</p>
+   <div class="example"><div class="info"><p><strong>Binding a custom datasource</strong></p></div>
+    
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br />$datagrid&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">Structures_DataGrid</span><span style="color: #007700">();&nbsp;<br /><br /></span><span style="color: #0000BB">$datasource&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">MyDataSource</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">$datagrid</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">bindDataSource</span><span style="color: #007700">(</span><span style="color: #0000BB">$datasource</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$datagrid</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">render</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   </div>
+   <p class="para">That should output a sortable HTML table.</p>
+   <p class="para">Of course, the usual features of
+   <strong class="classname">Structures_DataGrid</strong> are now
+   available to you: paging, other output formats as XML, MS-Excel,
+   etc...</p>
+ </div>
+ 
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.structures.structures-datagrid.example-advanced.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.structures.structures-datagrid.intro-and-features.html">Introduction and Features</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.structures.structures-datagrid.custom-renderers.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Example - Complex</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Custom Renderers</td>
+  </tr>
+ </table>
+</div>
+</body></html>

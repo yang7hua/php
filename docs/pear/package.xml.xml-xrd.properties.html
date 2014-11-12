@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Accessing properties</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.xml.xml-xrd.html" title="XML_XRD" />
+  <link rel="prev" href="package.xml.xml-xrd.links.html" title="Accessing links" />
+  <link rel="next" href="package.xml.xml-xrd.errorhandling.html" title="Error handling" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Accessing properties</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.xml.xml-xrd.links.html" title="Accessing links">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.xml.xml-xrd.errorhandling.html" title="Error handling">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="package.xml.xml-xrd.properties">
+ <div class="info">
+  <h1>Accessing properties</h1>
+
+ </div>
+
+ <p class="para">
+  Properties of XRD files and link elements can be accessed by using
+  its <a href="http://www.php.net/manual/class.arrayaccess.php" class="link external">ArrayAccess</a>
+  interface or the 
+  <a href="http://pear.php.net/package/XML_XRD/docs/latest/XML_XRD/XML_XRD.html#methodgetProperties" class="apidoclink">getProperties()</a>
+  method.
+  The returned properties are objects of type
+  <a href="http://pear.php.net/package/XML_XRD/docs/latest/XML_XRD/XML_XRD_Element_Property.html" class="apidoclink">XML_XRD_Element_Property</a>.
+ </p>
+
+
+ <div class="example">
+  <div class="info">
+   <p><strong>Get a single property</strong></p>
+  </div>
+  <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'XML/XRD.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$xrd&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">XML_XRD</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$xrd</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">loadFile</span><span style="color: #007700">(</span><span style="color: #DD0000">'http://example.org/.well-known/host-meta'</span><span style="color: #007700">);<br />if&nbsp;(isset(</span><span style="color: #0000BB">$xrd</span><span style="color: #007700">[</span><span style="color: #DD0000">'http://spec.example.net/type/person'</span><span style="color: #007700">]))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$xrd</span><span style="color: #007700">[</span><span style="color: #DD0000">'http://spec.example.net/type/person'</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+ </div>
+
+ <div class="example">
+  <div class="info">
+   <p><strong>Get all properties</strong></p>
+  </div>
+  <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'XML/XRD.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$xrd&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">XML_XRD</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$xrd</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">loadFile</span><span style="color: #007700">(</span><span style="color: #DD0000">'http://example.org/.well-known/host-meta'</span><span style="color: #007700">);<br />foreach&nbsp;(</span><span style="color: #0000BB">$xrd</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getProperties</span><span style="color: #007700">()&nbsp;as&nbsp;</span><span style="color: #0000BB">$property</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$property</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">type&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">':&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$property</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">value&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+ </div>
+
+ <div class="example">
+  <div class="info">
+   <p><strong>Get all properties of a type</strong></p>
+  </div>
+  <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'XML/XRD.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$xrd&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">XML_XRD</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$xrd</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">loadFile</span><span style="color: #007700">(</span><span style="color: #DD0000">'http://example.org/.well-known/host-meta'</span><span style="color: #007700">);<br />foreach&nbsp;(</span><span style="color: #0000BB">$xrd</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getProperties</span><span style="color: #007700">(</span><span style="color: #DD0000">'http://spec.example.net/type/person'</span><span style="color: #007700">)&nbsp;as&nbsp;</span><span style="color: #0000BB">$property</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$property</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">type&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">':&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$property</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">value&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.xml.xml-xrd.links.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.xml.xml-xrd.html">XML_XRD</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.xml.xml-xrd.errorhandling.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Accessing links</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Error handling</td>
+  </tr>
+ </table>
+</div>
+</body></html>

@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Error Handler</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-css.ref.errorhandler.html" title="Handling error" />
+  <link rel="prev" href="package.html.html-css.ref.errorhandler.html" title="Handling error" />
+  <link rel="next" href="package.html.html-form.html" title="HTML_Form" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Error Handler</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-css.ref.errorhandler.html" title="Handling error">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-form.html" title="HTML_Form">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-css.errorhandler">
+ 
+  <h1 class="refname">Error Handler</h1>
+  <div class="refnamediv">Error Handler &ndash; Flexible error handler plug-in system</div>
+
+ 
+
+ <div class="refsection" id="package.html.html-css.errorhandler.init"><div class="info"><h1>Introduction</h1>
+</div>
+  
+   <p class="para">
+    The HTML_CSS package is implemented with a flexible error handler
+    plug-in system. You may use any error handler that you want. Using
+    <strong class="classname">PEAR_Error</strong> object (default), but also the
+    <strong class="classname">PEAR_ErrorStack</strong> package, or any other error
+    handler you might want to plug in.
+   </p>
+
+   <p class="para">
+    Without any configuration, each HTML_CSS API error (basic or exception)
+    will raise a <strong class="classname">HTML_CSS_Error</strong> object that will
+    be return to call script (user script).
+    </p><blockquote class="tip">
+     <p class="para">
+      Easy to distinct basic PEAR_Error from other PEAR packages to HTML_CSS errors,
+      even if there is a better and more robust solution:
+      <code class="methodname">HTML_CSS::isError()</code>.
+      But also provide a unique way to retrieve the level of error (warning, error,
+      exception) with the <code class="methodname">HTML_CSS_Error::getLevel()</code> method.
+     </p>
+    </blockquote>
+
+   
+
+   <p class="para">
+    As usual you can use the PEAR error API as well.
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/CSS.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$css&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_CSS</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setStyle</span><span style="color: #007700">(</span><span style="color: #DD0000">'div'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'color'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">5</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$result</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;do&nbsp;something&nbsp;when&nbsp;an&nbsp;error&nbsp;is&nbsp;raised<br /></span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div><p>
+    and output to screen will give something like :
+   </p>
+
+   <div class="informalexample">
+     <pre class="screen">
+Exception<a name="package.html.html-css.errorhandler.error.1.level" id="package.html.html-css.errorhandler.error.1.level">*</a>: invalid input, parameter #3 &quot;$value&quot; was expecting &quot;string&quot;,
+instead got &quot;integer&quot;<a name="package.html.html-css.errorhandler.error.1.message" id="package.html.html-css.errorhandler.error.1.message">**</a> in html_css-&gt;setstyle (file [path_to]\[filename] on line 6)<a name="package.html.html-css.errorhandler.error.1.context" id="package.html.html-css.errorhandler.error.1.context">***</a>
+     </pre>
+
+     <table>
+      <tr><td><a href="#package.html.html-css.errorhandler.error.1.level">*</a></td><td>
+       <p class="para">
+        error level
+       </p>
+      </td></tr>
+
+      <tr><td><a href="#package.html.html-css.errorhandler.error.1.message">**</a></td><td>
+       <p class="para">
+        message body with context informations
+       </p>
+      </td></tr>
+
+      <tr><td><a href="#package.html.html-css.errorhandler.error.1.context">***</a></td><td>
+       <p class="para">
+        call context
+       </p>
+      </td></tr>
+
+     </table>
+   </div>
+
+   <p class="para">
+    Perhaps this standard behavior is not what you want. Don&#039;t worry, you can
+    change everything :
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <span class="simpara">display or ignore the error</span>
+     </li>
+     <li class="listitem">
+      <span class="simpara">display or hide part of message (error level, body, context)</span>
+     </li>
+    </ul>
+   
+
+   <p class="para">
+    </p><blockquote class="important">
+     <p class="para">
+      HTML_CSS obey at
+      <a href="http://www.php.net/manual/en/ref.errorfunc.php#ini.display-errors" class="link external">display_errors</a>
+      and
+      <a href="http://www.php.net/manual/en/ref.errorfunc.php#ini.log-errors" class="link external">log_errors</a>
+      protocol
+     </p>
+    </blockquote>
+
+   
+ </div>
+
+ <div class="refsection" id="package.html.html-css.errorhandler.conf"><div class="info"><h1>Configuring a Handler</h1>
+</div>
+   
+   <p class="simpara">
+    A error handler&#039;s configuration is determined by the arguments used in its
+    construction. Here&#039;s an overview of these parameters.
+   </p>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/CSS.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$errorConf&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'error_handler'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'myErrorHandler'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'push_callback'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'myError'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;...&nbsp;more&nbsp;options<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$css&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_CSS</span><span style="color: #007700">(</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$errorConf</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+
+   <p class="para">
+    </p><table class="doctable table"><caption>Error Handler configuration parameters</caption>
+     
+      <thead>
+       <tr>
+        <th>Option</th>
+        <th>Type</th>
+        <th>Description</th>
+       </tr>
+
+      </thead>
+
+      <tbody class="tbody">
+       <tr>
+        <td>error_handler</td>
+        <td>callback</td>
+        <td>
+         A valid callback (function) to manage errors raised by the
+         <code class="methodname">HTML_CSS::raiseError()</code> method.
+         Default is: <code class="methodname">HTML_CSS::_errorHandler</code>
+        </td>
+       </tr>
+
+       <tr>
+        <td>push_callback</td>
+        <td>callback</td>
+        <td>
+         A valid callback (function) that decides to following action.
+         Default return: <strong class="constant">PEAR_ERROR_DIE</strong> if exception,
+         <strong class="constant">NULL</strong> otherwise.
+        </td>
+       </tr>
+
+       <tr>
+        <td>error_callback</td>
+        <td>callback</td>
+        <td>
+         A valid callback (function) that decides to call a real free user function.
+         Default call: none
+        </td>
+       </tr>
+
+       <tr>
+        <td>message_callback</td>
+        <td>callback</td>
+        <td>
+         A valid callback (function) to control message generation.
+         Default is: <code class="methodname">HTML_CSS_Error::_msgCallback</code>
+        </td>
+       </tr>
+
+       <tr>
+        <td>context_callback</td>
+        <td>callback</td>
+        <td>
+         A valid callback (function) to control error context generation.
+         Default is: <code class="methodname">HTML_CSS_Error::getBacktrace</code>
+        </td>
+       </tr>
+
+       <tr>
+        <td>handler</td>
+        <td>mixed</td>
+        <td>
+         any handler-specific settings
+        </td>
+       </tr>
+
+      </tbody>
+     
+    </table>
+
+   
+  </div>
+
+  <div class="refsection" id="package.html.html-css.errorhandler.control"><div class="info"><h1>Controlling error generation</h1>
+</div>
+   
+   <p class="simpara">
+    There are many scenarios in which fine-grained control over error raising is
+    absolutely necessary.
+   </p>
+
+   <p class="para">
+    The first level to control error generation is the <code class="filename">php.ini</code> directives
+    <em class="emphasis">display_errors</em> and <em class="emphasis">log_errors</em>.
+    When these directives are set to <strong class="constant">TRUE</strong>, then browser and file outputs are
+    effective.
+   </p>
+
+   <p class="para">
+    </p><blockquote class="tip">
+     <p class="para">
+      If you want to ignore all errors raised  (no display, no logs) and avoid to
+      include PEAR core class, then you should have something like :
+      </p><div class="phpcode">
+       <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/CSS.php'</span><span style="color: #007700">;<br /><br />function&nbsp;</span><span style="color: #0000BB">myErrorHandler</span><span style="color: #007700">()<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">;<br />}<br /><br /></span><span style="color: #0000BB">$errorConf&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'error_handler'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'myErrorHandler'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$css&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_CSS</span><span style="color: #007700">(</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$errorConf</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;...<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+      </div>
+     
+    </blockquote>
+
+   
+
+   <p class="para">
+    </p><blockquote class="note"><div class="info"><strong>Note for users of HTML_CSS 1.4.0 or greater</strong><br /></div>
+     <p class="para">
+      You may want to decide to print (yes/no), log (yes/no) error messages
+      with a full free user function local to HTML_CSS
+      </p><div class="phpcode">
+       <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/CSS.php'</span><span style="color: #007700">;<br /><br />function&nbsp;</span><span style="color: #0000BB">myErrorAction</span><span style="color: #007700">(</span><span style="color: #0000BB">$css_error</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;do&nbsp;what&nbsp;you&nbsp;want:&nbsp;print&nbsp;and/or&nbsp;log&nbsp;$css_error&nbsp;instance&nbsp;of&nbsp;HTML_CSS_Error&nbsp;object<br /></span><span style="color: #007700">}<br /><br /></span><span style="color: #0000BB">$errorConf&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'error_callback'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'myErrorAction'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$css&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_CSS</span><span style="color: #007700">(</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$errorConf</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;...<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+      </div><p>
+      rather than using global PEAR error handler (PEAR::setErrorHandling,
+      PEAR::pushErrorHandling, PEAR::popErrorHandling).
+      </p><div class="phpcode">
+       <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/CSS.php'</span><span style="color: #007700">;<br /><br />function&nbsp;</span><span style="color: #0000BB">myErrorAction</span><span style="color: #007700">(</span><span style="color: #0000BB">$css_error</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;do&nbsp;what&nbsp;you&nbsp;want:&nbsp;print&nbsp;and/or&nbsp;log&nbsp;$css_error&nbsp;instance&nbsp;of&nbsp;HTML_CSS_Error&nbsp;object<br /></span><span style="color: #007700">}<br /><br /></span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">setErrorHandling</span><span style="color: #007700">(</span><span style="color: #0000BB">PEAR_ERROR_CALLBACK</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'myErrorAction'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$css&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_CSS</span><span style="color: #007700">();<br /></span><span style="color: #FF8000">//&nbsp;...<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+      </div>
+     
+    </blockquote>
+
+   
+
+   <p class="para">
+    With <strong class="emphasis">push_callback</strong> option, you can decides to
+    stop script execution (as done with exceptions by default:
+    returns <strong class="constant">PEAR_ERROR_DIE</strong> constant), or continue
+    without filtering (returns <strong class="constant">NULL</strong>).
+   </p>
+   <p class="para">
+    If you want to write your own callback function for the <em class="emphasis">push_callback</em>
+    option, this one should have two arguments: first one will get the error code,
+    and second will get error level. These are all the necessary informations to do
+    a filtering. Example that follow show how to be aware that a script use wrong argument data type.
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/CSS.php'</span><span style="color: #007700">;<br /><br />function&nbsp;</span><span style="color: #0000BB">myErrorFilter</span><span style="color: #007700">(</span><span style="color: #0000BB">$code</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$level</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$code&nbsp;</span><span style="color: #007700">===&nbsp;</span><span style="color: #0000BB">HTML_CSS_ERROR_INVALID_INPUT</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">error_log</span><span style="color: #007700">(</span><span style="color: #DD0000">'script:&nbsp;'</span><span style="color: #007700">.</span><span style="color: #0000BB">__FILE__</span><span style="color: #007700">.</span><span style="color: #DD0000">'&nbsp;used&nbsp;wrong&nbsp;argument&nbsp;data&nbsp;type'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'admin@yoursite.com'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">;<br />}<br /><br /></span><span style="color: #0000BB">$errorConf&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'push_callback'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'myErrorFilter'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$css&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_CSS</span><span style="color: #007700">(</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$errorConf</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;...<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+  </div>
+
+  <div class="refsection" id="package.html.html-css.errorhandler.context"><div class="info"><h1>Error Context Display</h1>
+</div>
+   
+   <p class="simpara">
+    In some cases, you may want to customize error generation. For instance,
+    for each error (basic/exception), it is useful to include file, line number,
+    and class/function context information in order to trace it. The default
+    option will be sufficient for most cases but you want perhaps customize the
+    output format (render) of context information.
+   </p>
+
+   <p class="para">
+    With this example we will change display and log renders.
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/CSS.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$displayConfig&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'lineFormat'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'&lt;b&gt;%1$s&lt;/b&gt;:&nbsp;%2$s&lt;br&nbsp;/&gt;%3$s'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'contextFormat'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'&lt;b&gt;File:&lt;/b&gt;&nbsp;%1$s&nbsp;&lt;br&nbsp;/&gt;'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">'&lt;b&gt;Line:&lt;/b&gt;&nbsp;%2$s&nbsp;&lt;br&nbsp;/&gt;'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">'&lt;b&gt;Function:&lt;/b&gt;&nbsp;%3$s&nbsp;'<br /></span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$logConfig&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'lineFormat'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'%1$s&nbsp;%2$s&nbsp;[%3$s]&nbsp;%4$s'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'timeFormat'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'%b'<br /></span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$prefs&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'handler'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'display'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$displayConfig</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'log'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$logConfig<br /></span><span style="color: #007700">));<br /><br /></span><span style="color: #0000BB">$css&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_CSS</span><span style="color: #007700">(</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$prefs</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;...<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$css</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setStyle</span><span style="color: #007700">(</span><span style="color: #DD0000">'div'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'color'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">5</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+
+   <p class="simpara">
+    Display render will give something like:
+   </p>
+   <div class="informalexample">
+     <pre class="screen">
+Exception<a name="package.html.html-css.errorhandler.error.2.level" id="package.html.html-css.errorhandler.error.2.level">****</a>: invalid input, parameter #3 &quot;$value&quot; was expecting &quot;string&quot;, instead got &quot;integer&quot;<a name="package.html.html-css.errorhandler.error.2.message" id="package.html.html-css.errorhandler.error.2.message">*****</a>
+File: [path_to]\[filename] <a name="package.html.html-css.errorhandler.error.2.context" id="package.html.html-css.errorhandler.error.2.context">******</a>
+Line: 22 
+Function: html_css-&gt;setstyle 
+     </pre>
+
+     <table>
+      <tr><td><a href="#package.html.html-css.errorhandler.error.2.level">*</a></td><td>
+       <p class="para">
+        error level
+       </p>
+      </td></tr>
+
+      <tr><td><a href="#package.html.html-css.errorhandler.error.2.message">**</a></td><td>
+       <p class="para">
+        message body with context informations
+       </p>
+      </td></tr>
+
+      <tr><td><a href="#package.html.html-css.errorhandler.error.2.context">***</a></td><td>
+       <p class="para">
+        call context (file, line, function)
+       </p>
+      </td></tr>
+
+     </table>
+   </div>
+
+   <p class="simpara">
+    Log render will give something like:
+   </p>
+   <div class="informalexample">
+     <pre class="screen">
+Jun 127.0.0.1<a name="package.html.html-css.errorhandler.error.3.context" id="package.html.html-css.errorhandler.error.3.context">*******</a> [exception<a name="package.html.html-css.errorhandler.error.3.level" id="package.html.html-css.errorhandler.error.3.level">********</a>] invalid input, parameter #3 &quot;$value&quot; was expecting &quot;string&quot;, instead got &quot;integer&quot;<a name="package.html.html-css.errorhandler.error.3.message" id="package.html.html-css.errorhandler.error.3.message">*********</a>
+     </pre>
+
+     <table>
+      <tr><td><a href="#package.html.html-css.errorhandler.error.3.context">*</a></td><td>
+       <p class="para">
+        client ip address and execution date
+       </p>
+      </td></tr>
+
+      <tr><td><a href="#package.html.html-css.errorhandler.error.3.level">**</a></td><td>
+       <p class="para">
+        error level
+       </p>
+      </td></tr>
+
+      <tr><td><a href="#package.html.html-css.errorhandler.error.3.message">***</a></td><td>
+       <p class="para">
+        message body with context informations
+       </p>
+      </td></tr>
+
+     </table>
+   </div>
+
+   <blockquote class="note">
+    <p class="para">
+     To have both display and log output, check the <code class="filename">php.ini</code>
+     <em class="emphasis">display_errors</em> and <em class="emphasis">log_errors</em> values :
+     must be set to <strong class="constant">TRUE</strong>.
+    </p>
+   </blockquote>
+
+
+   <p class="para">
+    Let review, step by step, how to get such results.
+   </p>
+   <p class="para">
+    Remember that with default classes, there are two drivers :
+    <em class="emphasis">display</em> and <em class="emphasis">log</em> that have both
+    their own configuration parameters.
+    You can override these parameters values with the <strong class="emphasis">handler</strong>
+    entry in the hash of second argument of the HTML_CSS class constructor.
+   </p>
+   <p class="para">
+    We did it here with the <em><code class="parameter">$prefs</code></em> variable; it&#039;s a two key
+    associative array. First key <em class="emphasis">display</em> defines the display driver
+    values, and the second key <em class="emphasis">log</em> defines the log driver values.
+   </p>
+
+   <p class="para">
+    Review the <em class="emphasis">display</em> driver custom values. Only two keys:
+    </p><ul class="simplelist">
+     <li class="member">lineFormat</li>
+     <li class="member">contextFormat</li>
+    </ul><p>
+    are redefined, thats means remains key
+    </p><ul class="simplelist">
+     <li class="member">eol</li>
+    </ul><p>
+    keep its default value. See table below.
+   </p>
+   <p class="para">
+    </p><table class="doctable table"><caption>Display driver configuration parameters</caption>
+     
+      <thead>
+       <tr>
+        <th>Parameter</th>
+        <th>Type</th>
+        <th>Default</th>
+        <th>Description</th>
+       </tr>
+
+      </thead>
+
+      <tbody class="tbody">
+       <tr>
+        <td>eol</td>
+        <td>string</td>
+        <td>&lt;br /&gt;\n</td>
+        <td>The end-on-line character sequence </td>
+       </tr>
+
+       <tr>
+        <td>lineFormat</td>
+        <td>string</td>
+        <td>&lt;b&gt;%1$s&lt;/b&gt;: %2$s %3$s</td>
+        <td>Log line format specification:
+         <ul class="itemizedlist">
+          <li class="listitem"><span class="simpara">1$ = error level</span></li>
+          <li class="listitem"><span class="simpara">2$ = error message (body)</span></li>
+          <li class="listitem"><span class="simpara">3$ = error context</span></li>
+         </ul>
+        </td>
+       </tr>
+
+       <tr>
+        <td>contextFormat</td>
+        <td>string</td>
+        <td>
+         in &lt;b&gt;%3$s&lt;/b&gt; (file &lt;b&gt;%1$s&lt;/b&gt; on line &lt;b&gt;%2$s&lt;/b&gt;)
+        </td>
+        <td>Context format (class, file, line) specification:
+         <ul class="itemizedlist">
+          <li class="listitem"><span class="simpara">1$ = script file name</span></li>
+          <li class="listitem"><span class="simpara">2$ = line in script file</span></li>
+          <li class="listitem"><span class="simpara">3$ = class/method names</span></li>
+         </ul>
+        </td>
+       </tr>
+
+      </tbody>
+     
+    </table>
+
+    <blockquote class="tip">
+     <p class="para">
+      If you don&#039;t wish to see context information in the error message, then
+      remove the parameter %3$ in the <em class="emphasis">lineFormat</em> option
+      even if <em class="emphasis">contextFormat</em> is set.
+     </p>
+    </blockquote>
+
+   
+
+   <p class="para">
+    Review now the <em class="emphasis">log</em> driver custom values. Only two keys
+    </p><ul class="simplelist">
+     <li class="member">lineFormat</li>
+     <li class="member">timeFormat</li>
+    </ul><p>
+    are redefined, thats means six remains keys
+    </p><ul class="simplelist">
+     <li class="member">eol</li>
+     <li class="member">contextFormat</li>
+     <li class="member">ident</li>
+     <li class="member">message_type</li>
+     <li class="member">destination</li>
+     <li class="member">extra_headers</li>
+    </ul><p>
+    keep their default values. See table below.
+   </p>
+   <p class="para">
+    </p><table class="doctable table"><caption>Log driver configuration parameters</caption>
+     
+      <thead>
+       <tr>
+        <th>Parameter</th>
+        <th>Type</th>
+        <th>Default</th>
+        <th>Description</th>
+       </tr>
+
+      </thead>
+
+      <tbody class="tbody">
+       <tr>
+        <td>eol</td>
+        <td>string</td>
+        <td>\n</td>
+        <td>The end-on-line character sequence </td>
+       </tr>
+
+       <tr>
+        <td>lineFormat</td>
+        <td>string</td>
+        <td>%1$s %2$s [%3$s] %4$s %5$s </td>
+        <td>Log line format specification:
+         <ul class="itemizedlist">
+          <li class="listitem"><span class="simpara">1$ = time error</span></li>
+          <li class="listitem"><span class="simpara">2$ = ident (client ip)</span></li>
+          <li class="listitem"><span class="simpara">3$ = error level</span></li>
+          <li class="listitem"><span class="simpara">4$ = error message (body)</span></li>
+          <li class="listitem"><span class="simpara">5$ = error context</span></li>
+         </ul>
+        </td>
+       </tr>
+
+       <tr>
+        <td>contextFormat</td>
+        <td>string</td>
+        <td>in %3$s (file %1$s on line %2$s) </td>
+        <td>Context format (class, file, line) specification:
+         <ul class="itemizedlist">
+          <li class="listitem"><span class="simpara">1$ = script file name</span></li>
+          <li class="listitem"><span class="simpara">2$ = line in script file</span></li>
+          <li class="listitem"><span class="simpara">3$ = class/method names</span></li>
+         </ul>
+        </td>
+       </tr>
+
+       <tr>
+        <td>timeFormat</td>
+        <td>string</td>
+        <td>%b %d %H:%M:%S </td>
+        <td>Time stamp format
+         used by <a href="http://www.php.net/manual-lookup.php?pattern=strftime" class="link external">strftime</a>
+        </td>
+       </tr>
+
+       <tr>
+        <td>ident</td>
+        <td>string</td>
+        <td>REMOTE_ADDR </td>
+        <td>Client IP </td>
+       </tr>
+
+       <tr>
+        <td>message_type</td>
+        <td>string</td>
+        <td>3 </td>
+        <td>Destination type
+         used by <a href="http://www.php.net/manual-lookup.php?pattern=error_log" class="link external">error_log</a>
+        </td>
+       </tr>
+
+       <tr>
+        <td>destination</td>
+        <td>string</td>
+        <td>html_css_error.log </td>
+        <td>Destination name
+         used by <a href="http://www.php.net/manual-lookup.php?pattern=error_log" class="link external">error_log</a>
+        </td>
+       </tr>
+
+       <tr>
+        <td>extra_headers</td>
+        <td>string</td>
+        <td><strong class="constant">NULL</strong> </td>
+        <td>Extra headers depending of destination type </td>
+       </tr>
+
+      </tbody>
+     
+    </table>
+
+    <blockquote class="tip">
+     <p class="para">
+      If you don&#039;t wish to see context information in the error message, then
+      remove the parameter %5$ in the <em class="emphasis">lineFormat</em> option
+      even if <em class="emphasis">contextFormat</em> is set.
+     </p>
+    </blockquote>
+
+   
+ </div>
+
+ <div class="refsection" id="package.html.html-css.errorhandler.messages"><div class="info"><h1>Custom Error Message Generation</h1>
+</div>
+  
+   <p class="para">
+    There are two methods of <strong class="classname">HTML_CSS_Error</strong> designed for use with generating
+    error messages efficiently. To use them, you must set the options below in
+    the HTML_CSS class constructor (argument #2):
+   </p>
+
+   <div class="refsection"><div class="info"><h1>Option: message_callback</h1>
+</div>
+    
+    <p class="para">
+     The default message handling callback
+     (<code class="methodname">HTML_CSS_Error::_getErrorMessage</code>)
+     get an array mapping error codes to error message templates, like so:
+     </p><div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$messages&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">HTML_CSS_ERROR_UNKNOWN&nbsp;</span><span style="color: #007700">=&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'unknown&nbsp;error'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">HTML_CSS_ERROR_INVALID_INPUT&nbsp;</span><span style="color: #007700">=&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'invalid&nbsp;input,&nbsp;parameter&nbsp;#%paramnum%&nbsp;'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">'"%var%"&nbsp;was&nbsp;expecting&nbsp;'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">'"%expected%",&nbsp;instead&nbsp;got&nbsp;"%was%"'<br /></span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div><p>
+     Basically, if a variable name is enclosed in percent signs (%), it will be
+     replaced with the value passed in the associative array.
+    </p>
+   </div>
+
+   <div class="refsection"><div class="info"><h1>Option: context_callback</h1>
+</div>
+    
+    <p class="para">
+     The default context handling callback
+     (<code class="methodname">HTML_CSS_Error::getBackTrace</code>)
+     gets an array of execution functions and discovers where the error was generated.
+    </p>
+   </div>
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-css.ref.errorhandler.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-css.ref.errorhandler.html">Handling error</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-form.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Handling error</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">HTML_Form</td>
+  </tr>
+ </table>
+</div>
+</body></html>

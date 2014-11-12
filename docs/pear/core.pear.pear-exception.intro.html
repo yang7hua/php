@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Using PEAR_Exception for advanced error handling in PHP 5+</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="core.pear.pear-exception.html" title="PEAR_Exception" />
+  <link rel="prev" href="core.pear.pear-exception.html" title="PEAR_Exception" />
+  <link rel="next" href="core.pear.pear-errorstack.html" title="PEAR_ErrorStack" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Using PEAR_Exception for advanced error handling in PHP 5+</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="core.pear.pear-exception.html" title="PEAR_Exception">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="core.pear.pear-errorstack.html" title="PEAR_ErrorStack">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="core.pear.pear-exception.intro">
+ 
+  <h1 class="refname">
+   Using PEAR_Exception for advanced error handling in PHP 5+
+  </h1>
+  <div class="refnamediv">
+   Using PEAR_Exception for advanced error handling in PHP 5+
+   &ndash; 
+   Using PEAR_Exception
+  </div>
+
+ 
+ <h2 class="refsynopsisdiv">Synopsis</h2>
+  <!-- 
+   <h2 class="EDITEDBY">Edited By</h2><span class="personname fn">Gregory Beaver </span><div class="personblurb"><p class="para">cellog@php.net</p></div>
+   <p class="copyright"><a href="copyright.html">Copyright</a> &copy; 
+    <span class="year">2006, </span>
+    by Gregory Beaver
+   </p>
+   <div class="releaseinfo">PEAR_Exception PEAR 1.5.0a1</div>
+  -->
+  <p class="simpara">Introduction to the usage of PEAR_Exception</p>
+ 
+ <div class="refsection" id="core.pear.pear-exception.intro.intro"><div class="info"><h1>Introduction</h1>
+</div>
+  
+  <p class="para">
+   This class is available as part of the
+   <a href="http://pear.php.net/package/pear" class="link external">PEAR package</a>.
+   Features include:
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para">
+      Nestable exceptions (</p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php&nbsp;</span><span style="color: #007700">throw&nbsp;new&nbsp;</span><span style="color: #0000BB">PEAR_Exception</span><span style="color: #007700">(</span><span style="color: #0000BB">$msg</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$prev_exception</span><span style="color: #007700">);&nbsp;</span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div><p>)
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      Subject/Observer pattern, triggered when an exception is instantiated
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      Clear, detailed and attractively formatted error messages
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      Extra context information available compared to built-in Exception.
+      For instance, a cause of the exception (PEAR_Error/PEAR_ErrorStack/another
+      Exception).
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      Exception cause can be a PEAR_Error object, PEAR_Exception object or an array of mixed
+      PEAR_Exceptions/PEAR_ErrorStack warnings
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      callbacks for specific exception classes and their children
+     </p>
+    </li>
+   </ul>
+  
+  <p class="para">
+   Usage example:
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'PEAR/Exception.php'</span><span style="color: #007700">;<br /><br />class&nbsp;</span><span style="color: #0000BB">Test&nbsp;</span><span style="color: #007700">{<br />&nbsp;function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;throw&nbsp;new&nbsp;</span><span style="color: #0000BB">PEAR_Exception</span><span style="color: #007700">(</span><span style="color: #DD0000">'Error&nbsp;Message'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">ERROR_CODE</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /><br />function&nbsp;</span><span style="color: #0000BB">myLogger</span><span style="color: #007700">(</span><span style="color: #0000BB">$pear_exception</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$pear_exception</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">();<br />}<br /></span><span style="color: #FF8000">//&nbsp;each&nbsp;time&nbsp;a&nbsp;exception&nbsp;is&nbsp;thrown&nbsp;the&nbsp;'myLogger'&nbsp;will&nbsp;be&nbsp;called<br />//&nbsp;(its&nbsp;use&nbsp;is&nbsp;completely&nbsp;optional)<br /></span><span style="color: #0000BB">PEAR_Exception</span><span style="color: #007700">::</span><span style="color: #0000BB">addObserver</span><span style="color: #007700">(</span><span style="color: #DD0000">'myLogger'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$test&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Test</span><span style="color: #007700">;<br />try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$test</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">foo</span><span style="color: #007700">();<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">PEAR_Exception&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   API documentation is documented in the documentation for the PEAR package
+   generated by phpDocumentor.  The class is very simple, examine the source
+   in the PEAR package to get a better idea of how it works.
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="core.pear.pear-exception.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="core.pear.pear-exception.html">PEAR_Exception</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="core.pear.pear-errorstack.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">PEAR_Exception</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">PEAR_ErrorStack</td>
+  </tr>
+ </table>
+</div>
+</body></html>

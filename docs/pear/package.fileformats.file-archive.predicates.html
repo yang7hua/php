@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Predicates</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.fileformats.file-archive.html" title="File_Archive" />
+  <link rel="prev" href="package.fileformats.file-archive.writers.html" title="Writers" />
+  <link rel="next" href="package.fileformats.file-archive.archmod.html" title="Archive modification" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Predicates</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.fileformats.file-archive.writers.html" title="Writers">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.fileformats.file-archive.archmod.html" title="Archive modification">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.fileformats.file-archive.predicates">
+ 
+  <h1 class="refname">Predicates</h1>
+  <div class="refnamediv">Predicates &ndash; Filters</div>
+
+ 
+
+
+ <div class="refsection" id="package.fileformats.file-archive.predicates.intro"><div class="info"><h1>Introduction</h1>
+</div>
+  
+  <p class="para">
+   <strong class="classname">File_Archive</strong> introduces the concept of filters
+   to be able to select the files from a source.
+   A filter is a particular reader that you can create with the
+   <strong class="function">File_Archive::filter()</strong> function.
+   This function requires you to give a predicate. You can build this predicate
+   using the <strong class="command">File_Archive::pred*</strong> functions.
+  </p>
+
+  <p class="para">
+   The standard logic predicates are:
+  </p>
+  <ul class="itemizedlist">
+   <li class="listitem">
+    <p class="para">
+     <strong class="command">predTrue()</strong>: always evaluates to true
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para">
+     <strong class="command">predFalse()</strong>: always evaluates to false
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para">
+     <strong class="command">predAnd($p1, $p2, ...)</strong>: evaluates to
+     <code class="literal">$p1 &amp;&amp; $p2 &amp;&amp; ...</code>
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para">
+     <strong class="command">predOr($p1, $p2, ...)</strong>: evaluates to
+     <code class="literal">$p1 || $p2 || ...</code>
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para">
+     <strong class="command">predNot($p)</strong>: evaluates to <code class="literal">!$p</code>
+    </p>
+   </li>
+  </ul>
+
+  <p class="para">
+   Some other predicats will help you filtering the files:
+  </p>
+  <ul class="itemizedlist">
+   <li class="listitem">
+    <p class="para">
+     <strong class="command">predMinSize($size)</strong>: 
+     keep only the files 
+     which size is
+      <code class="literal">&gt;= $size</code> (in bytes).
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para">
+     <strong class="command">predMinTime($time)</strong>: 
+     keep only the files that 
+     have been modified after $time (unix timestamp).
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para">
+     <strong class="command">predMaxDepth($depth)</strong>: 
+     keep only the files that 
+     have a public name with less than <code class="varname">$depth</code> directories.
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para">
+     <strong class="command">predExtension($list)</strong>: keep only the files with a given
+     extension.
+     <code class="varname">$list</code> is an array or a comma separated string of
+     allowed extensions.
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para">
+     <strong class="command">predEreg($ereg)</strong>: keep only the files that have a public
+     name that matches the given regular expression.
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para">
+     <strong class="command">predEregi($ereg)</strong>: same as <strong class="function">predEreg()</strong>,
+     but the test is case insensitive.
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para">
+     <strong class="command">predMIME($mimes)</strong>: Select files with a certain MIME type.
+     You can pass an array of types or a string, and use wildcards.
+    </p>
+   </li>
+  </ul>
+
+  <div class="example"><div class="info"><p><strong>Filter examples</strong></p></div>
+   
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//Extract&nbsp;all&nbsp;the&nbsp;files&nbsp;that&nbsp;contain&nbsp;an&nbsp;'a'&nbsp;in&nbsp;their&nbsp;path<br />//&nbsp;or&nbsp;filename&nbsp;from&nbsp;a&nbsp;tar&nbsp;archive<br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">extract</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">filter</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">predEreg</span><span style="color: #007700">(</span><span style="color: #DD0000">'a'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">read</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'archive.tar/'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'folder'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toFiles</span><span style="color: #007700">()<br />);<br /><br /></span><span style="color: #FF8000">//Compress&nbsp;a&nbsp;directory&nbsp;to&nbsp;a&nbsp;zip&nbsp;file,&nbsp;including&nbsp;only&nbsp;the&nbsp;files<br />//smaller&nbsp;than&nbsp;1MB&nbsp;that&nbsp;have&nbsp;changed&nbsp;since&nbsp;last&nbsp;hour<br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">extract</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">filter</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">predAnd</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">predNot</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">predMinSize</span><span style="color: #007700">(</span><span style="color: #0000BB">1024&nbsp;</span><span style="color: #007700">*&nbsp;</span><span style="color: #0000BB">1024</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">predMinTime</span><span style="color: #007700">(</span><span style="color: #0000BB">time</span><span style="color: #007700">()-</span><span style="color: #0000BB">3600</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">read</span><span style="color: #007700">(</span><span style="color: #DD0000">'directory'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toArchive</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'directory.zip'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toFiles</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;)<br />);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.fileformats.file-archive.writers.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.fileformats.file-archive.html">File_Archive</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.fileformats.file-archive.archmod.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Writers</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Archive modification</td>
+  </tr>
+ </table>
+</div>
+</body></html>

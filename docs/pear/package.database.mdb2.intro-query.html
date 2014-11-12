@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Querying</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.mdb2.html" title="MDB2" />
+  <link rel="prev" href="package.database.mdb2.intro-connect.html" title="Connecting" />
+  <link rel="next" href="package.database.mdb2.intro-quote.html" title="Quoting and escaping" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Querying</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.mdb2.intro-connect.html" title="Connecting">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.mdb2.intro-quote.html" title="Quoting and escaping">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.mdb2.intro-query">
+ 
+  <h1 class="refname">Querying</h1>
+  <div class="refnamediv">Querying &ndash; Performing queries</div>
+
+ 
+
+ <div class="refsection" id="package.database.mdb2.intro-query.desc">
+  <h1 class="title">Description</h1>
+  <p class="para">
+   PEAR MDB2 provides several methods for querying databases.
+   The most direct method is
+   <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Common.html#methodquery" class="link external">
+    <strong class="function">query()</strong></a>.
+   It takes a SQL query string as an argument.
+   There are two possible returns:
+   A new <strong class="classname">MDB2_Result</strong> object for queries that return results (such as
+   <strong class="command">SELECT</strong> queries), or a <strong class="classname">MDB2_Error</strong> object on failure.
+   It should not be used with statements that manipulate data (such as
+   <strong class="command">INSERT</strong> queries)
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Doing a query</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Create&nbsp;a&nbsp;valid&nbsp;MDB2&nbsp;object&nbsp;named&nbsp;$mdb2<br />//&nbsp;at&nbsp;the&nbsp;beginning&nbsp;of&nbsp;your&nbsp;program...<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'MDB2.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$mdb2&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">MDB2</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #DD0000">'pgsql://usr:pw@localhost/dbnam'</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;Proceed&nbsp;with&nbsp;a&nbsp;query...<br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;*&nbsp;FROM&nbsp;clients'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Always&nbsp;check&nbsp;that&nbsp;result&nbsp;is&nbsp;not&nbsp;an&nbsp;error<br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;Disconnect<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">disconnect</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+
+  <p class="para">
+   <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Common.html#methodexec" class="link external">
+    <strong class="function">exec()</strong></a> should be used for manipulation queries.
+   There are two possible returns:
+   An integer denoting the number of affected rows for statements that manipulate data
+   (such as <strong class="command">INSERT</strong> queries), or a <strong class="classname">MDB2_Error</strong> object on failure.
+   It should not be used with statements that return results (such as
+   <strong class="command">SELECT</strong> queries)
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Using exec to manipulate data</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;MDB2&nbsp;object&nbsp;named&nbsp;$mdb2...<br /></span><span style="color: #0000BB">$sql&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"INSERT&nbsp;INTO&nbsp;clients&nbsp;(name,&nbsp;address)&nbsp;VALUES&nbsp;(</span><span style="color: #0000BB">$name</span><span style="color: #DD0000">,&nbsp;</span><span style="color: #0000BB">$address</span><span style="color: #DD0000">)"</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$affected&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">exec</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Always&nbsp;check&nbsp;that&nbsp;result&nbsp;is&nbsp;not&nbsp;an&nbsp;error<br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$affected</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$affected</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+ </div>
+
+  <div class="refsection" id="package.database.mdb2.intro-query.datatypes"><div class="info"><h1>Data types</h1>
+</div>
+   
+   <p class="para">
+    MDB2 supports a number of <a href="package.database.mdb2.datatypes.html" class="link">data types</a>
+    across all drivers. These can be set for result sets at query or prepare time or using the
+    <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Result_Common.html#methodsetResultTypes" class="link external">
+    <strong class="function">setResultTypes()</strong></a> method.
+    You can find an overview of the <a href="package.database.mdb2.datatypes.html" class="link">supported 
+    data types and their format here</a>.
+   </p>
+  </div>
+
+  <div class="refsection" id="package.database.mdb2.intro-query.setlimit"><div class="info"><h1>Limiting rows and reading from an offset</h1>
+</div>
+   
+   <p class="para">
+    In order to read/write to only a limited number of rows from a result set
+    and/or to start reading from a specific offset the
+    <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Common.html#methodsetLimit" class="link external">
+    <strong class="function">setLimit()</strong></a> can be called prior to issueing the
+    query. The limit and offset will only affected the next method call that
+    will issue a query or prepare a statement and will automatically be reset
+    after issueing the query. This also applies to any internal queries issues
+    inside MDB2. Note that limit may not work with DML statements on RDBMS that
+    emulate limit support and no error will be raised.
+   </p>
+
+  <div class="example"><div class="info"><p><strong>Using setLimit with query and exec</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;MDB2&nbsp;object&nbsp;named&nbsp;$mdb2...<br /><br /></span><span style="color: #0000BB">$sql&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"SELECT&nbsp;*&nbsp;FROM&nbsp;clients"</span><span style="color: #007700">;<br /></span><span style="color: #FF8000">//&nbsp;read&nbsp;20&nbsp;rows&nbsp;with&nbsp;an&nbsp;offset&nbsp;of&nbsp;10<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setLimit</span><span style="color: #007700">(</span><span style="color: #0000BB">20</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$affected&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">exec</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$sql&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"DELETE&nbsp;FROM&nbsp;clients"</span><span style="color: #007700">;<br />if&nbsp;(</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">supports</span><span style="color: #007700">(</span><span style="color: #DD0000">'limit_queries'</span><span style="color: #007700">)&nbsp;===&nbsp;</span><span style="color: #DD0000">'emulated'</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'offset&nbsp;will&nbsp;likely&nbsp;be&nbsp;ignored'<br /></span><span style="color: #007700">}<br /></span><span style="color: #FF8000">//&nbsp;only&nbsp;delete&nbsp;10&nbsp;rows<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setLimit</span><span style="color: #007700">(</span><span style="color: #0000BB">10</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$affected&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">exec</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.mdb2.intro-connect.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.mdb2.html">MDB2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.mdb2.intro-quote.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Connecting</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Quoting and escaping</td>
+  </tr>
+ </table>
+</div>
+</body></html>

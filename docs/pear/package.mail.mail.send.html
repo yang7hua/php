@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Mail::send()</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.mail.mail.html" title="Mail" />
+  <link rel="prev" href="package.mail.mail.factory.html" title="Mail::factory()" />
+  <link rel="next" href="package.mail.mail-rfc822.intro.html" title="RFC822 - Introduction" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Mail::send()</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.mail.mail.factory.html" title="Mail::factory()">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.mail.mail-rfc822.intro.html" title="RFC822 - Introduction">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.mail.mail.send">
+   
+    <h1 class="refname">Mail::send()</h1>
+    <div class="refnamediv">Mail::send() &ndash; sends a mail</div>
+
+   
+   <h2 class="refsynopsisdiv">Synopsis</h2>
+    <div class="funcsynopsis">
+     <div class="programlisting">
+      require_once &#039;Mail.php&#039;;
+     </div>     
+    <p><code class="funcprototype">
+     mixed <strong class="function">send</strong> ( 
+     mixed $recipients
+      , array $headers
+      , string $body
+    )</code></p> 
+    </div>
+   
+   <div class="refsection" id="package.mail.mail.send.desc">
+    <h1 class="title">Description</h1>
+    <p class="para">
+     Sends a mail. The <strong class="function">send()</strong> method is
+     provided by the object returned from 
+     <a href="package.mail.mail.factory.html" class="link"><strong class="function">factory()</strong>
+     </a>     
+    </p>
+   </div>   
+   <div class="refsection" id="package.mail.mail.send.parameter">
+    <h1 class="title">Parameter</h1>
+    <p class="para">
+     </p><ul class="itemizedlist">
+      <li class="listitem">
+       <p class="para">
+        <em><code class="parameter">mixed $recipients</code></em> - an array or a 
+        string with comma separated recipients. 
+       </p>
+      </li>
+      <li class="listitem">
+       <p class="para">
+         <em><code class="parameter">array $headers</code></em> - 
+         an associative array of headers. The header name is used as
+       	 key and the header value as value. If you want to override
+       	 the envelope sender of the email, set the Return-Path header
+       	 and that value will be used instead of the value of the From:
+       	 header.
+       </p>
+      </li>
+      <li class="listitem">
+       <p class="para">
+         <em><code class="parameter">string $body</code></em> - 
+         the body of the email.
+       </p>
+      </li>
+     </ul>
+    
+   </div>   
+   <div class="refsection" id="package.mail.mail.send.return">
+    <h1 class="title">Return value</h1>
+    <p class="para">
+     <em><code class="parameter">boolean</code></em> - <strong class="constant">TRUE</strong> or
+    	a <a href="core.pear.pear-error.html" class="link"><strong class="classname">PEAR_Error</strong></a> object on failure.
+    </p>
+   </div>      
+   <div class="refsection" id="package.mail.mail.send.throws">
+    <h1 class="title">Throws</h1>
+    <p class="para">
+     </p><table class="doctable table"><caption>Possible PEAR_Error values</caption>
+            
+      
+       <thead>
+        <tr>
+         <th>Mailer driver</th>
+         <th>Error code</th>
+         <th>Error message</th>        
+         <th>Reason</th>        
+         <th>Solution</th>        
+        </tr>
+
+       </thead>
+
+       <tbody class="tbody">        
+        <tr>
+         <td>sendmail</td>
+         <td><strong class="constant">NULL</strong></td>
+         <td>
+          "<span class="quote">No from address given.</span>"
+         </td>
+         <td>
+          The <em><code class="parameter">$headers</code></em> array requires
+          at least a <em><code class="parameter">from</code></em> entry.
+         </td>
+         <td>
+          Add a <code class="literal">From</code> header: 
+          <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$headers</span><span style="color: #007700">[</span><span style="color: #DD0000">'From'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">'mymail@example.com'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+         </td>
+        </tr>
+
+        <tr>
+         <td>sendmail</td>
+         <td><strong class="constant">NULL</strong></td>
+         <td>
+          "<span class="quote">From address specified with dangerous characters.</span>"
+         </td>
+         <td>
+          The from entry in the <em><code class="parameter">$headers</code></em> array
+          contains one ore more characters which could be non-RFC compliant.
+         </td>
+         <td>
+          Check the given from address for characters like: spaces or
+          <code class="literal">;</code> or <code class="literal">&amp;</code> or
+          <code class="literal">`</code> (backtick).
+         </td>
+        </tr>
+
+        <tr>
+         <td>sendmail</td>
+         <td><strong class="constant">NULL</strong></td>
+         <td>
+          "<span class="quote">sendmail [<em><code class="parameter">path to sendmail</code></em>] 
+           not executable</span>"
+         </td>
+         <td>
+          The path to sendmail program is not correct. No sendmail
+          executable found there.
+         </td>
+         <td>
+          Check the <em><code class="parameter">$param[&#039;sendmail_path&#039;]</code></em> entry
+          in your <a href="package.mail.mail.factory.html" class="link">
+           <strong class="function">Mail::factory()</strong></a> call. If you use
+          another mailer then sendmail, ie. qmail, 
+          check installation of the mailer. Normally it should includes
+          a sendmail wrapper.
+         </td>
+        </tr>
+
+        <tr>
+         <td>sendmail</td>
+         <td><strong class="constant">NULL</strong></td>
+         <td>
+          "<span class="quote">sendmail returned error code 
+           <em><code class="parameter">code</code></em></span>"
+         </td>
+         <td>
+          Sendmail returns a error, which must be handled by use.
+         </td>
+         <td>
+          See the documention of your mailer program.
+         </td>
+        </tr>
+
+        <tr>
+         <td>smtp</td>
+         <td><code class="literal">PEAR_MAIL_SMTP_ERROR_CREATE</code></td>
+         <td>
+          "<span class="quote">Failed to create a Net_SMTP object</span>"
+         </td>
+         <td>
+          Failure in class creation.
+         </td>
+         <td>
+          Reinstall/update the <strong class="classname">Net_SMTP</strong> package.
+         </td>
+        </tr>
+
+        <tr>
+         <td>smtp</td>
+         <td><code class="literal">PEAR_MAIL_SMTP_ERROR_CONNECT</code></td>
+         <td>
+          "<span class="quote">Failed to connect to
+           <em><code class="parameter">host:port</code></em></span>"
+         </td>
+         <td>
+          Connect to SMTP server failed.
+         </td>
+         <td>
+          Check <em><code class="parameter">$param[&#039;port&#039;]</code></em> and 
+          <em><code class="parameter">$param[&#039;host&#039;]</code></em> entries
+          in your <a href="package.mail.mail.factory.html" class="link">
+           <strong class="function">Mail::factory()</strong></a> call.
+         </td>
+        </tr>
+
+        <tr>
+         <td>smtp</td>
+         <td><code class="literal">PEAR_MAIL_SMTP_ERROR_AUTH</code></td>
+         <td>
+          "<span class="quote"><em><code class="parameter">method</code></em> authentication failure</span>"
+         </td>
+         <td>
+          Authentication failed.
+         </td>
+         <td>
+          Check <em><code class="parameter">$param[&#039;auth&#039;]</code></em>,
+          <em><code class="parameter">$param[&#039;username&#039;]</code></em> and 
+          <em><code class="parameter">$param[&#039;password&#039;]</code></em> entries
+          in your <a href="package.mail.mail.factory.html" class="link">
+           <strong class="function">Mail::factory()</strong></a> call.
+          Ensure to use the correct authentication method 
+          for the SMTP server.
+         </td>
+        </tr>
+
+        <tr>
+         <td>smtp</td>
+         <td><code class="literal">PEAR_MAIL_SMTP_ERROR_FROM</code></td>
+         <td>
+          "<span class="quote">No From: address has been provided</span>"
+         </td>
+         <td>
+          The <em><code class="parameter">$headers</code></em> array requires
+          at least a <em><code class="parameter">from</code></em> entry.
+         </td>
+         <td>
+          Add a <code class="literal">From</code> header: 
+          <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$headers</span><span style="color: #007700">[</span><span style="color: #DD0000">'From'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">'mymail@example.com'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+         </td>
+        </tr>
+
+        <tr>
+         <td>smtp</td>
+         <td><code class="literal">PEAR_MAIL_SMTP_ERROR_SENDER</code></td>
+         <td>
+          "<span class="quote">Failed to set sender: <em><code class="parameter">from</code></em></span>"
+         </td>
+         <td>
+          Setting the sender address failed.
+         </td>
+         <td>
+          Check the RFC-compliances of the sender address and the server
+          connnectivity.
+         </td>
+        </tr>
+
+        <tr>
+         <td>smtp</td>
+         <td><code class="literal">PEAR_MAIL_SMTP_ERROR_RECIPIENT</code></td>
+         <td>
+          "<span class="quote">Failed to add recipient: <em><code class="parameter">recipient</code></em>
+          </span>"
+         </td>
+         <td>
+          Sending of recipient address failed.
+         </td>
+         <td>
+          Check the RFC-compliances of the recipient address and the server
+          connnectivity.
+         </td>
+        </tr>
+
+        <tr>
+         <td>smtp</td>
+         <td><code class="literal">PEAR_MAIL_SMTP_ERROR_DATA</code></td>
+         <td>
+          "<span class="quote">Failed to send data</span>"
+         </td>
+         <td>
+          Body of the mail message could not send
+         </td>
+         <td>
+          Check the RFC-compliances of the message body and the server
+          connnectivity.
+         </td>
+        </tr>
+
+       </tbody>
+      
+     </table>
+
+    
+   </div>        
+   <div class="refsection" id="package.mail.mail.send.note">
+    <h1 class="title">Note</h1>
+    <p class="simpara">This function can not be called
+statically.</p>
+   </div>      
+   <div class="refsection" id="package.mail.mail.send.example">
+    <h1 class="title">Example</h1>
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">include(</span><span style="color: #DD0000">'Mail.php'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$recipients&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'joe@example.com'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$headers</span><span style="color: #007700">[</span><span style="color: #DD0000">'From'</span><span style="color: #007700">]&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;</span><span style="color: #DD0000">'richard@example.com'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$headers</span><span style="color: #007700">[</span><span style="color: #DD0000">'To'</span><span style="color: #007700">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;</span><span style="color: #DD0000">'joe@example.com'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$headers</span><span style="color: #007700">[</span><span style="color: #DD0000">'Subject'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">'Test&nbsp;message'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$body&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'Test&nbsp;message'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$params</span><span style="color: #007700">[</span><span style="color: #DD0000">'sendmail_path'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">'/usr/lib/sendmail'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Create&nbsp;the&nbsp;mail&nbsp;object&nbsp;using&nbsp;the&nbsp;Mail::factory&nbsp;method<br /></span><span style="color: #0000BB">$mail_object&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">Mail</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">'sendmail'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$params</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$mail_object</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">send</span><span style="color: #007700">(</span><span style="color: #0000BB">$recipients</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$headers</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$body</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   </div>         
+   <div class="refsection" id="package.mail.mail.send.see">
+    <h1 class="title">See</h1>
+    <p class="para">
+     <a href="package.mail.mail.factory.html" class="link">
+      <strong class="function">Mail::factory()</strong>
+     </a>
+    </p>
+   </div>         
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.mail.mail.factory.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.mail.mail.html">Mail</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.mail.mail-rfc822.intro.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Mail::factory()</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">RFC822 - Introduction</td>
+  </tr>
+ </table>
+</div>
+</body></html>

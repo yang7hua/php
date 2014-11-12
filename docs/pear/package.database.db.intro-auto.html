@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction - autoPrepare &amp; autoExecute</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.db.html" title="DB" />
+  <link rel="prev" href="package.database.db.intro-execute.html" title="Introduction - Prepare &amp; Execute" />
+  <link rel="next" href="package.database.db.intro-portability.html" title="Introduction - Portability" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction - autoPrepare &amp; autoExecute</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.db.intro-execute.html" title="Introduction - Prepare &amp; Execute">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.db.intro-portability.html" title="Introduction - Portability">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.db.intro-auto">
+ 
+  <h1 class="refname">Introduction - autoPrepare &amp; autoExecute</h1>
+  <div class="refnamediv">Introduction - autoPrepare &amp; autoExecute &ndash; Automatically prepare and execute SQL statements</div>
+
+ 
+
+ <div class="refsection" id="package.database.db.intro-auto.desc">
+  <h1 class="title">Description</h1>
+  <div class="refsection"><div class="info"><h1>Purpose</h1>
+</div>
+   
+   <p class="para">
+    <a href="package.database.db.db-common.autoprepare.html" class="link">
+    <strong class="function">autoPrepare()</strong></a> and
+    <a href="package.database.db.db-common.autoexecute.html" class="link">
+    <strong class="function">autoExecute()</strong></a>
+     reduce the need to write boring
+     <strong class="command">INSERT</strong> or <strong class="command">UPDATE</strong>
+     SQL queries which are difficult to maintain when you
+     add a field for instance.
+   </p>
+
+   <p class="para">
+    Imagine you have a &#039;user&#039; table with 3 fields
+    (id, name and country).
+    You have to write sql queries like:
+
+    </p><div class="sqlcode">
+     <pre class="sqlcode">
+INSERT INTO table (id, name, country) VALUES (?, ?, ?)
+UPDATE table SET id=?, name=?, country=? WHERE ...</pre>
+
+    </div><p>
+
+    If you add a field (&#039;birthYear&#039; for example), you have to rewrite your
+    queries which is boring and can lead to bugs (if you forget one query for
+    instance).
+   </p>
+  </div>
+
+  <div class="refsection"><div class="info"><h1>autoPrepare</h1>
+</div>
+   
+   <p class="para">
+    With <a href="package.database.db.db-common.autoprepare.html" class="link">
+    <strong class="function">autoPrepare()</strong></a>, you don&#039;t have to write your
+    insert or update queries. For example:
+
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /></span><span style="color: #0000BB">$table_name&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'user'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$table_fields&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'id'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'name'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'country'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$sth&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">autoPrepare</span><span style="color: #007700">(</span><span style="color: #0000BB">$table_name</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$table_fields</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">DB_AUTOQUERY_INSERT</span><span style="color: #007700">);<br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$sth</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$sth</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div><p>
+
+    In this example, <a href="package.database.db.db-common.autoprepare.html" class="link">
+    <strong class="function">autoPrepare()</strong></a> will build the following SQL query:
+
+    </p><div class="sqlcode">
+     <pre class="sqlcode">
+INSERT INTO user (id, name, country) VALUES (?, ?, ?)</pre>
+
+    </div><p>
+
+    And then, it will call <a href="package.database.db.db-common.prepare.html" class="link">
+    <strong class="function">prepare()</strong></a> with it.
+   </p>
+
+   <p class="para">
+    To add records, you have
+    to use <a href="package.database.db.db-common.execute.html" class="link">
+     <strong class="function">execute()</strong></a> or <a href="package.database.db.db-common.executemultiple.html" class="link">
+    <strong class="function">executeMultiple()</strong></a> like:
+
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;...&nbsp;contining&nbsp;from&nbsp;the&nbsp;example&nbsp;above...<br /></span><span style="color: #0000BB">$table_values&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Fabien'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'France'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">execute</span><span style="color: #007700">(</span><span style="color: #0000BB">$sth</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$table_values</span><span style="color: #007700">);<br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div><p>
+
+    So, you don&#039;t have to write any SQL <strong class="command">INSERT</strong>
+    queries! And it works with <strong class="command">UPDATE</strong>
+    queries too. For flexibility reasons, you have only to write
+    the <strong class="command">WHERE</strong> clause of the query. For instance:
+
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /></span><span style="color: #0000BB">$table_name&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'user'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$table_fields&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'name'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'country'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$table_values&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'Bob'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'USA'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$sth&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">autoPrepare</span><span style="color: #007700">(</span><span style="color: #0000BB">$table_name</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$table_fields</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">DB_AUTOQUERY_UPDATE</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'id&nbsp;=&nbsp;1'</span><span style="color: #007700">);<br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$sth</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$sth</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /><br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">execute</span><span style="color: #007700">(</span><span style="color: #0000BB">$sth</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$table_values</span><span style="color: #007700">);<br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+
+    <p><a href="package.database.db.db-common.autoprepare.html" class="link">
+    <strong class="function">autoPrepare()</strong></a> will build the following query:
+
+    </p><div class="sqlcode">
+     <pre class="sqlcode">
+UPDATE user SET name=?, country=? WHERE id=1</pre>
+
+    </div><p>
+
+    Then, it will call <a href="package.database.db.db-common.prepare.html" class="link">
+    <strong class="function">prepare()</strong></a> with it.
+   </p>
+
+   <p class="para">
+    Be careful, if you don&#039;t specify any <strong class="command">WHERE</strong>
+    clause, all the records
+    of the table will be updated.
+   </p>
+  </div>
+
+  <div class="refsection"><div class="info"><h1>autoExecute</h1>
+</div>
+   
+   <p class="para">
+    Using <a href="package.database.db.db-common.autoexecute.html" class="link">
+    <strong class="function">autoExecute()</strong></a> is the easiest way
+    to do insert or update queries. It is a mix of <a href="package.database.db.db-common.autoprepare.html" class="link">
+     <strong class="function">autoPrepare()</strong></a> and <a href="package.database.db.db-common.autoprepare.html" class="link">
+     <strong class="function">execute()</strong></a>.
+   </p>
+
+   <p class="para">
+    You only need an associative array (key =&gt; value) where keys are fields
+    names and values are corresponding values of these fields.
+    For instance:
+
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /></span><span style="color: #0000BB">$table_name&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'user'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$fields_values&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'id'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'name'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Fabien'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'country'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'France'<br /></span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">autoExecute</span><span style="color: #007700">(</span><span style="color: #0000BB">$table_name</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$fields_values</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">DB_AUTOQUERY_INSERT</span><span style="color: #007700">);<br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div><p>
+
+    And that&#039;s all! The following query is built and executed:
+
+    </p><div class="sqlcode">
+     <pre class="sqlcode">
+INSERT INTO user (id, name, country)
+  VALUES (1, &#039;Fabien&#039;, &#039;France&#039;)</pre>
+
+    </div>
+   
+
+   <p class="para">
+    And it&#039;s the same thing for <strong class="command">UPDATE</strong> queries:
+
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /></span><span style="color: #0000BB">$table_name&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'user'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$fields_values&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'name'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Fabien'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'country'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'France'<br /></span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">autoExecute</span><span style="color: #007700">(</span><span style="color: #0000BB">$table_name</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$fields_values</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">DB_AUTOQUERY_UPDATE</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'id&nbsp;=&nbsp;1'</span><span style="color: #007700">);<br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div><p>
+
+    which prepares and executes the following query:
+
+    </p><div class="sqlcode">
+     <pre class="sqlcode">
+UPDATE user SET name=&#039;Fabien&#039;, country=&#039;France&#039;
+  WHERE id = 1</pre>
+
+    </div>
+   
+
+   <p class="para">
+    Be careful, if you don&#039;t specify any <strong class="command">WHERE</strong>
+    statement, all the records
+    of the table will be updated.
+   </p>
+
+   <blockquote class="warning">
+
+    <p class="para">
+     The values passed in <em><code class="parameter">$data</code></em> must be literals.
+     Do not submit SQL functions (for example <code class="literal">CURDATE()</code>).
+     SQL functions that should be performed at execution time need
+     to be put in the prepared statement.
+    </p>
+   </blockquote>
+
+
+  </div>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.db.intro-execute.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.db.html">DB</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.db.intro-portability.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction - Prepare &amp; Execute</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Introduction - Portability</td>
+  </tr>
+ </table>
+</div>
+</body></html>

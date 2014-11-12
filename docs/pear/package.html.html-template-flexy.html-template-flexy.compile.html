@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>$flexy-&gt;compile()</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-template-flexy.html" title="HTML_Template_Flexy" />
+  <link rel="prev" href="package.html.html-template-flexy.html-template-flexy.html-template-flexy.html" title="new HTML_Template_Flexy" />
+  <link rel="next" href="package.html.html-template-flexy.html-template-flexy.outputobject.html" title="$flexy-&gt;outputObject()" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">$flexy-&gt;compile()</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-template-flexy.html-template-flexy.html-template-flexy.html" title="new HTML_Template_Flexy">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-template-flexy.html-template-flexy.outputobject.html" title="$flexy-&gt;outputObject()">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-template-flexy.html-template-flexy.compile">
+   
+    <h1 class="refname">$flexy-&gt;compile()</h1>
+    <div class="refnamediv">$flexy-&gt;compile() &ndash; Converts a template from markup to PHP if required</div>
+
+   
+   <h2 class="refsynopsisdiv">Synopsis</h2>
+    <div class="funcsynopsis">
+    
+    <p><code class="funcprototype">
+     void $flexy-&gt;
+     <strong class="function">compile</strong> ( 
+     string
+      $template
+    )</code></p>
+    </div>
+   
+   <div class="refsection" id="package.html.html-template-flexy.html-template-flexy.compile.desc">
+    <h1 class="title">Description</h1>
+    <p class="para">
+      If necessary it will convert the Template markup into PHP code, and writes
+      it to the compiledTemplate directory adding the {locale}.php to the end of the filename.
+      The Template is only compiled if
+      </p>
+       <p class="para">
+       </p><ul class="itemizedlist">
+          <li class="listitem"><span class="simpara">No compiled file exists</span></li>
+          <li class="listitem"><span class="simpara">The file modification date of the template is greater than the compiled one</span></li>
+          <li class="listitem"><span class="simpara">The forceCompile Flag was set in config or when you created the template object.</span></li>
+        </ul>
+    
+       <p class="para">
+      It is not normally necessary to set the forceCompile flag, unless you are working
+      on the engine itself.
+    </p>
+    
+    
+   </div>   
+   <div class="refsection" id="package.html.html-template-flexy.html-template-flexy.compile.parameter">
+    <h1 class="title">Parameter</h1>
+    <p class="para">
+     </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+       <em><code class="parameter">string $template</code></em> - 
+       Used in conjuction with the config variable &#039;templateDir&#039; to locate the 
+       template to compile into PHP code.
+      </p>
+     </li>
+     </ul>
+    
+    
+   </div>      
+   
+        
+   <div class="refsection" id="package.html.html-template-flexy.html-template-flexy.compile.return">
+    <h1 class="title">Return value</h1>
+    <p class="para">
+     <em><code class="parameter">string</code></em> - the location of the compiled file (which could be used 
+     with include) - although it is recommended to use the outputObject methods.
+    </p>
+    <p class="para">
+     In case <code class="literal">compileToString</code> option is set to <strong class="constant">TRUE</strong>, the compiled file
+     is directly returned as string here.
+    </p>
+   </div>      
+            
+   
+   
+   <div class="refsection" id="package.html.html-template-flexy.html-template-flexy.compile.note">
+    <h1 class="title">Note</h1>
+    <p class="simpara">This function can not be called
+statically.</p>
+   </div>    
+                   
+   <div class="refsection" id="package.html.html-template-flexy.html-template-flexy.compile.example">
+    <h1 class="title">Example</h1>
+    <div class="example"><div class="info"><p><strong>Compiling multiple files.</strong></p></div>
+     
+      <div class="phpcode">
+       <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">controller_test&nbsp;<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$masterTemplate&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"master.html"<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$template&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"home.html"</span><span style="color: #007700">;&nbsp;</span><span style="color: #FF8000">//&nbsp;name&nbsp;of&nbsp;template<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$title</span><span style="color: #007700">;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;page&nbsp;title;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$numbers&nbsp;</span><span style="color: #007700">=&nbsp;array();&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;an&nbsp;array&nbsp;example<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;start&nbsp;section&nbsp;-&nbsp;deals&nbsp;with&nbsp;posts,&nbsp;get&nbsp;variables&nbsp;etc.*/<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">controller_test</span><span style="color: #007700">()&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">start</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">output</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br /><br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">start</span><span style="color: #007700">()&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">title&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"&lt;Hello&nbsp;World&gt;"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(</span><span style="color: #0000BB">$i&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">;</span><span style="color: #0000BB">$i</span><span style="color: #007700">&lt;&nbsp;</span><span style="color: #0000BB">5</span><span style="color: #007700">;</span><span style="color: #0000BB">$i</span><span style="color: #007700">++)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">numbers</span><span style="color: #007700">[</span><span style="color: #0000BB">$i</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">"Number&nbsp;</span><span style="color: #0000BB">$i</span><span style="color: #DD0000">"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/*&nbsp;output&nbsp;section&nbsp;-&nbsp;probably&nbsp;best&nbsp;to&nbsp;put&nbsp;this&nbsp;in&nbsp;the&nbsp;default_controller&nbsp;class&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">output</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$master&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_Template_Flexy</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$master</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">compile</span><span style="color: #007700">(</span><span style="color: #DD0000">'some_file_name'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$master</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">outputObject</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">outputBody</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$body&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_Template_Flexy</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$body</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">compile</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">template</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$body</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">outputObject</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />}<br /><br />new&nbsp;</span><span style="color: #0000BB">controller_test</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>    
+     </div>
+    </div>
+
+    <div class="example"><div class="info"><p><strong>Master template example</strong></p></div>
+     
+      <div class="htmlcode">
+       <pre class="htmlcode">         
+Page Header Goes here. 
+
+{outputBody()}
+ 
+Page Footer Goes here</pre>
+    
+     </div>
+    </div>
+ 
+    <div class="example"><div class="info"><p><strong>Simple ouput example</strong></p></div>
+     
+      <div class="htmlcode">
+       <pre class="htmlcode">         
+      
+Page Header Goes here. 
+
+some numbers
+Number 1
+Number 2
+Number 3
+Number 4
+ 
+Page Footer Goes here</pre>
+    
+     </div>
+    </div>
+   </div>   
+   
+   
+    
+   
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-template-flexy.html-template-flexy.html-template-flexy.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-template-flexy.html">HTML_Template_Flexy</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-template-flexy.html-template-flexy.outputobject.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">new HTML_Template_Flexy</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">$flexy-&gt;outputObject()</td>
+  </tr>
+ </table>
+</div>
+</body></html>

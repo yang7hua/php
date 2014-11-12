@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Form API</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-quickform2.elements.html" title="Form elements" />
+  <link rel="prev" href="package.html.html-quickform2.elements.container.html" title="Base Container API" />
+  <link rel="next" href="package.html.html-quickform2.elements.list.html" title="Built-in Elements" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Form API</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-quickform2.elements.container.html" title="Base Container API">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-quickform2.elements.list.html" title="Built-in Elements">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-quickform2.elements.form">
+ 
+  <h1 class="refname">Form API</h1>
+  <div class="refnamediv">Form API &ndash; Methods of <strong class="classname">HTML_QuickForm2</strong> class</div>
+
+ 
+
+ <div class="refsection" id="package.html.html-quickform2.elements.form.overview">
+  <div class="info">
+   <h1>Overview</h1>
+
+  </div>
+  <p class="para">
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2.html" class="apidoclink">HTML_QuickForm2</a> is a class
+   representing HTML form. It is a subclass of <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Container.html" class="apidoclink">HTML_QuickForm2_Container</a> and thus inherits the <a href="package.html.html-quickform2.elements.container.html" class="link">API of Container</a> and <a href="package.html.html-quickform2.elements.base.html" class="link">its ancestors</a>. Only a few additional
+   form-specific methods are defined (and a few previously <em class="emphasis">protected</em> methods
+   are declared <em class="emphasis">public</em>). 
+  </p>
+  <p class="para">
+   Those familiar with <a href="package.html.html-quickform.html" class="link"><strong class="package">HTML_QuickForm</strong></a> package should
+   notice that this approach is quite different from that of <strong class="classname">HTML_QuickForm</strong>
+   class which defined dozens of custom methods. As a result <code class="filename">QuickForm2.php</code>
+   file containing <strong class="classname">HTML_QuickForm2</strong> class is an order of magnitude smaller
+   than <code class="filename">QuickForm.php</code> containing <strong class="classname">HTML_QuickForm</strong>.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.elements.form.constructor">
+  <div class="info">
+   <h1>Constructor of <strong class="classname">HTML_QuickForm2</strong></h1>
+
+  </div>
+  <p class="para">
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2.html#method__construct" class="apidoclink">HTML_QuickForm2::__construct()</a> accepts
+   the following parameters:
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term"><span class="type">string</span> <em><code class="parameter">$id</code></em></dt>
+     <dd class="listitem"><p class="para"><code class="literal">id</code> attribute for <code class="literal">&lt;form&gt;</code>
+      tag</p></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><span class="type">string</span> <em><code class="parameter">$method</code></em> = <code class="literal">&#039;post&#039;</code></dt>
+     <dd class="listitem"><p class="para">HTTP method used to submit the form.</p></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><span class="type">string</span>|<span class="type">array</span> <em><code class="parameter">$attributes</code></em> = <strong class="constant">NULL</strong></dt>
+     <dd class="listitem"><p class="para">Additional attributes for <code class="literal">&lt;form&gt;</code>
+      tag.</p></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><span class="type">boolean</span> <em><code class="parameter">$trackSubmit</code></em> = <strong class="constant">TRUE</strong></dt>
+     <dd class="listitem"><p class="para">Whether to track if the form was submitted.</p></dd>
+    </dl>
+   </div>
+  
+  <p class="para">
+   The only way to set <code class="literal">id</code> and <code class="literal">method</code> attributes is through the
+   constructor. Attempts to change them afterwards will result in an Exception.
+  </p>
+  <p class="para">
+   When <em><code class="parameter">$trackSubmit</code></em> is on, a hidden field with a specially crafted name is
+   added to the form. If that name is present in <code class="varname">$_REQUEST</code> then the form is
+   considered submitted. This is especially useful if you have several
+   <strong class="package">HTML_QuickForm2</strong>-backed forms on one page or if the form uses
+   <code class="literal">GET</code> submit method and the page may receive other <code class="varname">$_GET</code>
+   parameters.
+  </p>
+  <p class="para">
+   When <em><code class="parameter">$trackSubmit</code></em> is off the form only checks that either
+   <code class="varname">$_GET</code> or <code class="varname">$_POST</code> array (depending on form submit method) is
+   not empty. 
+  </p>
+  <div class="example">
+   <p><strong>Element behind <code class="varname">$trackSubmit</code></strong></p>
+   <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2</span><span style="color: #007700">(</span><span style="color: #DD0000">'trackMe'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;iterating&nbsp;over&nbsp;supposedly&nbsp;empty&nbsp;form<br /></span><span style="color: #007700">foreach&nbsp;(</span><span style="color: #0000BB">$form&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$element</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$element</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <div class="example-contents"><p>output:</p></div>
+   <pre class="screen">
+<br/>&lt;input&nbsp;type=&quot;hidden&quot;&nbsp;id=&quot;qf:trackMe&quot;&nbsp;name=&quot;_qf__trackMe&quot;&nbsp;/&gt;<br/>
+   </pre>
+
+  </div>
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.elements.form.values-validation">
+  <div class="info">
+   <h1>Form values and validation</h1>
+
+  </div>
+  <p class="para">
+   Unlike simpler elements, form&#039;s values cannot be set via <strong class="function">setValue()</strong>
+   method, <a href="package.html.html-quickform2.values-datasources.html#package.html.html-quickform2.values-datasources.datasources-overview" class="link">data
+    sources</a> should be used. <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2.html#methodgetDataSources" class="apidoclink">getDataSources()</a> returns the list
+   of form&#039;s data sources, <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2.html#methodsetDataSources" class="apidoclink">setDataSources()</a> replaces that list
+   with a new one and <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2.html#methodaddDataSource" class="apidoclink">addDataSource()</a> adds a data source to
+   the list. Data source containing submit values (based on a superglobal <code class="varname">$_GET</code>
+   or <code class="varname">$_POST</code> array) is added automatically if the form is considered submitted. 
+  </p>
+  <p class="para">
+   Coincidentally <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2.html#methodisSubmitted" class="apidoclink">isSubmitted()</a> method checks whether the
+   list of form data sources contains an instance of
+   <span class="interfacename">HTML_QuickForm2_DataSource_Submit</span>, which usually happens when the
+   form was submitted.
+  </p>
+  <p class="para">
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2.html#methodvalidate" class="apidoclink">validate()</a> method <a href="package.html.html-quickform2.rules.html" class="link">performs server-side validation</a>.
+  </p>
+  <blockquote class="note">
+   <p class="para">
+    </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">isSubmitted</span><span style="color: #007700">()&nbsp;&amp;&amp;&nbsp;</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">validate</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;form&nbsp;is&nbsp;valid,&nbsp;process&nbsp;its&nbsp;values<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">doSomeProcessing</span><span style="color: #007700">(</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getValue</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div><p>
+    is redundant, <strong class="function">validate()</strong> checks submit status and will return <strong class="constant">FALSE</strong> if the
+    form wasn&#039;t submitted. 
+   </p>
+  </blockquote>
+
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-quickform2.elements.container.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-quickform2.elements.html">Form elements</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-quickform2.elements.list.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Base Container API</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Built-in Elements</td>
+  </tr>
+ </table>
+</div>
+</body></html>

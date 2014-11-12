@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction - renderers</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-quickform.output.basic-renderers.html" title="Basic renderers" />
+  <link rel="prev" href="package.html.html-quickform.output.basic-renderers.html" title="Basic renderers" />
+  <link rel="next" href="package.html.html-quickform.html-quickform-renderer-default.html" title="HTML_QuickForm_Renderer_Default" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction - renderers</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-quickform.output.basic-renderers.html" title="Basic renderers">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-quickform.html-quickform-renderer-default.html" title="HTML_QuickForm_Renderer_Default">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-quickform.intro-renderers">
+   
+    <h1 class="refname">Introduction - renderers</h1>
+    <div class="refnamediv">Introduction - renderers &ndash; How to output the form</div>
+
+   
+   <div class="refsection" id="package.html.html-quickform.intro-renderers.purpose"><div class="info"><h1>What are renderers?</h1>
+</div>
+    
+    <p class="para">
+Before release 3.0, form outputting logic was implemented as methods of HTML_QuickForm 
+class. This led to two problems:
+</p><ol type="1">
+<li class="listitem"><p class="para">Bloat of the said class (80+ methods!)</p></li>
+<li class="listitem"><p class="para">Difficulties in adding new output logic (i.e. using template engines)</p></li>
+</ol>
+    
+
+    <p class="para">
+In release 3.0, new system was implemented. The form output logic is now contained 
+in classes that extend HTML_QuickForm_Renderer, their behaviour is based on Visitor 
+design pattern from the classic &quot;Design Patterns&quot; book. This gives the 
+following advantages:
+</p><ol type="1">
+  <li class="listitem"><p class="para">
+    Code for some particular output method is loaded <em class="emphasis">only</em> 
+    when the method is used.
+  </p></li>
+  <li class="listitem"><p class="para">
+    It is much easier to add new output method.
+  </p></li>
+</ol><p>
+There are 8 renderers available since release 3.1.1, of which 2 are based on pre-3.0 code and 6 are new. The following template engines are directly suported: Smarty, HTML_Template_Sigma, HTML_Template_IT, HTML_Template_Flexy.
+    </p>
+
+    <p class="para">
+The main steps of using any available renderer are quite similar:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;include&nbsp;the&nbsp;renderer&nbsp;class<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/QuickForm/Renderer/FooBar.php'</span><span style="color: #007700">;<br /></span><span style="color: #FF8000">//&nbsp;instantiate&nbsp;the&nbsp;renderer<br /></span><span style="color: #0000BB">$renderer&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm_Renderer_FooBar</span><span style="color: #007700">(</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;do&nbsp;some&nbsp;customization<br /></span><span style="color: #0000BB">$renderer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">adjustSomething</span><span style="color: #007700">(</span><span style="color: #DD0000">'element1'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'...'</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;...<br /></span><span style="color: #0000BB">$renderer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">adjustSomething</span><span style="color: #007700">(</span><span style="color: #DD0000">'elementN'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'...'</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;process&nbsp;the&nbsp;form<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">accept</span><span style="color: #007700">(</span><span style="color: #0000BB">$renderer</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;output&nbsp;the&nbsp;results<br /></span><span style="color: #0000BB">$renderer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">toFooBar</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+Actual methods for customization and doing the output will of course depend on renderer type.
+    </p>
+    <blockquote class="note"><div class="info"><strong>Concerning usage examples</strong><br /></div>
+      
+      <p class="para">
+      Usage examples provided in the manual are pretty basic. More complex examples for Default
+      renderer can be found in <code class="filename">docs/</code> directory, for all other
+      renderers - in <code class="filename">docs/renderers/</code> directory of HTML_QuickForm.
+      </p>
+    </blockquote>
+
+   </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-quickform.output.basic-renderers.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-quickform.output.basic-renderers.html">Basic renderers</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-quickform.html-quickform-renderer-default.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Basic renderers</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">HTML_QuickForm_Renderer_Default</td>
+  </tr>
+ </table>
+</div>
+</body></html>

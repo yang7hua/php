@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>One Factory To Rule Them All</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.tools.versioncontrol-svn.html" title="VersionControl_SVN" />
+  <link rel="prev" href="package.tools.versioncontrol-svn.example.html" title="A Simple Example" />
+  <link rel="next" href="package.tools.versioncontrol-svn.reading.html" title="Further Reading" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">One Factory To Rule Them All</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.tools.versioncontrol-svn.example.html" title="A Simple Example">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.tools.versioncontrol-svn.reading.html" title="Further Reading">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="chapter" id="package.tools.versioncontrol.example1">
+  <div class="info"><h1>One Factory To Rule Them All</h1>
+</div>
+
+  <p class="para">
+   Have a script that needs to utilize several VersionControl_SVN
+   subclasses? At the expense of a little overhead, you can be sure
+   your <code class="literal">$svn</code> objects are fully-loaded by using the
+   VersionControl_SVN::factory() command keyword
+   <em class="emphasis"><code class="literal">__ALL__</code></em>.
+  </p>
+  <p class="para">
+   For example, in a basic script to get the list of current files in a
+   repository, you just need the
+   VersionControl_SVN::VersionControl_SVN_List() subclass.
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Getting the list of current files in a repository</strong></p></div>
+
+   <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'VersionControl/SVN.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Setup&nbsp;error&nbsp;handling&nbsp;--&nbsp;always&nbsp;a&nbsp;good&nbsp;idea!<br /></span><span style="color: #0000BB">$svnstack&nbsp;</span><span style="color: #007700">=&nbsp;&amp;</span><span style="color: #0000BB">PEAR_ErrorStack</span><span style="color: #007700">::</span><span style="color: #0000BB">singleton</span><span style="color: #007700">(</span><span style="color: #DD0000">'VersionControl_SVN'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Set&nbsp;up&nbsp;runtime&nbsp;options.<br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'fetchmode'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">VERSIONCONTROL_SVN_FETCHMODE_ARRAY</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Request&nbsp;list&nbsp;class&nbsp;from&nbsp;factory<br /></span><span style="color: #0000BB">$svn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">VersionControl_SVN</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">'list'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Define&nbsp;any&nbsp;switches&nbsp;and&nbsp;aguments&nbsp;we&nbsp;may&nbsp;need<br /></span><span style="color: #0000BB">$switches&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'username'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'user'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'password'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'pass'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$args&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'svn://svn.example.com/repos/TestProject'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Run&nbsp;command<br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">$output&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$svn</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">run</span><span style="color: #007700">(</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$switches</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$output</span><span style="color: #007700">);<br />}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">count</span><span style="color: #007700">(</span><span style="color: #0000BB">$errs&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$svnstack</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getErrors</span><span style="color: #007700">()))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;foreach&nbsp;(</span><span style="color: #0000BB">$errs&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$err</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'&lt;br&nbsp;/&gt;'</span><span style="color: #007700">.</span><span style="color: #0000BB">$err</span><span style="color: #007700">[</span><span style="color: #DD0000">'message'</span><span style="color: #007700">].</span><span style="color: #DD0000">"&lt;br&nbsp;/&gt;\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Command&nbsp;used:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$err</span><span style="color: #007700">[</span><span style="color: #DD0000">'params'</span><span style="color: #007700">][</span><span style="color: #DD0000">'cmd'</span><span style="color: #007700">];<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+
+  <p class="simpara">
+   However, if you need to get a recursive list of files in a
+   repository, look up the recent log activity for those files, and
+   view the annotated source for those files, you&#039;ve got two options.
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Recursively getting the list of current files in a repository</strong></p></div>
+
+   <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'VersionControl/SVN.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Setup&nbsp;error&nbsp;handling&nbsp;--&nbsp;always&nbsp;a&nbsp;good&nbsp;idea!<br /></span><span style="color: #0000BB">$svnstack&nbsp;</span><span style="color: #007700">=&nbsp;&amp;</span><span style="color: #0000BB">PEAR_ErrorStack</span><span style="color: #007700">::</span><span style="color: #0000BB">singleton</span><span style="color: #007700">(</span><span style="color: #DD0000">'VersionControl_SVN'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Set&nbsp;up&nbsp;runtime&nbsp;options.<br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'fetchmode'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">VERSIONCONTROL_SVN_FETCHMODE_RAW</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;METHOD&nbsp;ONE:&nbsp;Lowest&nbsp;Overhead<br />//&nbsp;Create&nbsp;svn&nbsp;object&nbsp;with&nbsp;subcommands&nbsp;we&nbsp;need&nbsp;listed&nbsp;out&nbsp;individually<br /></span><span style="color: #0000BB">$svn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">VersionControl_SVN</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'list'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'log'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'blame'</span><span style="color: #007700">),&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Define&nbsp;any&nbsp;switches&nbsp;and&nbsp;aguments&nbsp;we&nbsp;may&nbsp;need<br /></span><span style="color: #0000BB">$switches&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'username'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'user'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'password'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'pass'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$args&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'svn://svn.example.com/repos/TestProject'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$svn</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">list</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">run</span><span style="color: #007700">(</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$switches</span><span style="color: #007700">));<br /><br /></span><span style="color: #FF8000">//&nbsp;Pick&nbsp;files&nbsp;out&nbsp;of&nbsp;the&nbsp;above&nbsp;output,&nbsp;and&nbsp;see&nbsp;who&nbsp;did&nbsp;what<br /></span><span style="color: #0000BB">$args&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'svn://svn.example.com/repos/TestProject/trunk/index.php'</span><span style="color: #007700">);<br /><br />echo&nbsp;</span><span style="color: #DD0000">"&lt;pre&gt;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$svn</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">blame</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">run</span><span style="color: #007700">(</span><span style="color: #0000BB">$args</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">"&lt;/pre&gt;"</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;METHOD&nbsp;TWO:&nbsp;Put&nbsp;all&nbsp;available&nbsp;commands&nbsp;at&nbsp;your&nbsp;disposal<br />//&nbsp;Load&nbsp;up&nbsp;all&nbsp;subcommands&nbsp;-&nbsp;higher&nbsp;overhead,&nbsp;but&nbsp;convenient&nbsp;for&nbsp;certain&nbsp;occasions<br /></span><span style="color: #0000BB">$svn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">VersionControl_SVN</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">'__ALL__'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Now&nbsp;you&nbsp;may&nbsp;run&nbsp;whatever&nbsp;you&nbsp;need&nbsp;to&nbsp;...<br /></span><span style="color: #0000BB">$svn</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">cat</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">run</span><span style="color: #007700">(</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$switches</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$svn</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">info</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">run</span><span style="color: #007700">(</span><span style="color: #0000BB">$args</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$switches</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;...&nbsp;and&nbsp;so&nbsp;on.<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+ </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.tools.versioncontrol-svn.example.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.tools.versioncontrol-svn.html">VersionControl_SVN</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.tools.versioncontrol-svn.reading.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">A Simple Example</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Further Reading</td>
+  </tr>
+ </table>
+</div>
+</body></html>

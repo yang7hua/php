@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>FAQ</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.datetime.calendar.html" title="Calendar" />
+  <link rel="prev" href="package.datetime.calendar.intro-decorators.html" title="Calendar Decorators" />
+  <link rel="next" href="package.datetime.calendar.calendar.html" title="Calendar" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">FAQ</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.datetime.calendar.intro-decorators.html" title="Calendar Decorators">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.datetime.calendar.calendar.html" title="Calendar">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.datetime.calendar.faq">
+    
+      <h1 class="refname">FAQ</h1>
+      <div class="refnamediv">FAQ &ndash; 
+        Frequently Asked Questions
+      </div>
+
+    
+    <div class="refsection"><div class="info"><h1>Why doesn&#039;t it generate HTML?</h1>
+</div>
+      
+       <p class="para">
+        What if you want WML, SOAP, PDF, GIF, command line, etc. etc.?
+        PEAR::<strong class="classname">Calendar</strong> can be used to generate any output
+        format you like (see the examples for SOAP and WML).
+        Tying it to a particular output content type will limit its use
+        (a problem that every public domain PHP Calendar library I&#039;ve
+        looked at suffers from).
+        A PEAR::HTML_Calendar is likely to be developed using
+        PEAR::<strong class="classname">Calendar</strong>.
+       </p>
+    </div>
+    <div class="refsection"><div class="info"><h1>There are too many objects, classes and files. It&#039;s bloated!</h1>
+</div>
+      
+       <p class="para">
+        Running the examples on Sourceforge&#039;s servers (which are always overloaded),
+        example 3.php renders in under 0.1 seconds (usually half that).
+        The code is highly optimized and every &quot;trick in the book&quot; has been
+        applied to make sure PHP only parses / executes the subset of logic
+        you need for your specific problem.
+        If in doubt, use <strong class="classname">Cache_Lite</strong> to cache the output HTML.
+       </p>
+    </div>
+    <div class="refsection"><div class="info"><h1>
+       You use Unix timestamps to calculate the Calendar,
+       which limits the range of years it can generate. Can this be changed?
+      </h1>
+</div>
+      
+       <p class="para">
+        All calculations are handled by a class implementing the
+        <strong class="classname">Calendar_Engine</strong> interface.
+        The default implemention is based on PHP&#039;s <strong class="function">date()</strong>
+        and <strong class="function">mktime()</strong> functions (so Unix timestamps are required
+        for that engine).
+        A second engine exists which uses PEAR::<strong class="classname">Date</strong>.
+        It&#039;s a bit slower but overcomes the limit on the range of Unixstamps.
+        To switch between engines use the constant <strong class="constant">CALENDAR_ENGINE</strong> e.g.
+        </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;The&nbsp;default&nbsp;Unix&nbsp;timestamp&nbsp;engine&nbsp;(this&nbsp;definition&nbsp;is&nbsp;not&nbsp;required)<br />//&nbsp;define('CALENDAR_ENGINE',&nbsp;'UnixTs');<br /><br />//&nbsp;Switch&nbsp;to&nbsp;PEAR::Date&nbsp;engine<br /></span><span style="color: #0000BB">define</span><span style="color: #007700">(</span><span style="color: #DD0000">'CALENDAR_ENGINE'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'PearDate'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div><p>
+        Note that the <strong class="classname">PearDate</strong> engine is based on
+        PEAR::<strong class="classname">Date</strong> version 1.4 or newer.
+       </p>
+    </div>
+    <div class="refsection"><div class="info"><h1>This examples use the English language for days and months. Can this be changed?</h1>
+</div>
+      
+       <p class="para">
+        PEAR::<strong class="classname">Calendar</strong> only uses base 10 numbers for calculations
+        - the names of months and days of the week and generated as the calendar
+        is being rendered (by you).
+        You should only need to change PHP&#039;s locale with <strong class="function">setlocale()</strong>
+        and use the <strong class="function">strftime()</strong> function e.g.:
+        </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$Day&nbsp;</span><span style="color: #007700">=&nbsp;&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">Calendar_Day</span><span style="color: #007700">(</span><span style="color: #0000BB">2003</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">23</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">setlocale&nbsp;</span><span style="color: #007700">(</span><span style="color: #0000BB">LC_TIME</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'de_DE'</span><span style="color: #007700">);&nbsp;</span><span style="color: #FF8000">//&nbsp;German<br /><br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">strftime</span><span style="color: #007700">(</span><span style="color: #DD0000">'%A&nbsp;%d&nbsp;%B&nbsp;%Y'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$Day</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getTimeStamp</span><span style="color: #007700">());<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div><p>
+        Note that <strong class="classname">Calendar_Decorator_Textual</strong> provides help in generating month and day of week names in a manner which is independent of the Calendar Engine you are using and can be modified with <strong class="function">setlocale()</strong>.
+       </p>
+    </div>
+    <div class="refsection"><div class="info"><h1>What are empty days?</h1>
+</div>
+      
+       <p class="para">
+        PEAR::<strong class="classname">Calendar</strong> makes it easy to render calendars
+        in tabular format (like humans are used to) such as:
+        <p class="literallayout">
+<br/>October&nbsp;2003<br/>M&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;T&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;W&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;T&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;F&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;S&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;S<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5<br/>6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;12<br/>13&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;14&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;16&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;17&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;19<br/>20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;21&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;22&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;23&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;24&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;25&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;26<br/>27&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;28&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;29&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;30&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;31<br/>
+        </p>
+<p>
+        Notice the top left and botton right of this example - these are &quot;empty days&quot;.
+        Empty days are generated only by two calendar classes:
+        <strong class="classname">Calendar_Month_Weekdays</strong> and <strong class="classname">Calendar_Week</strong>.
+        For example using <strong class="classname">Calendar_Month_Weekdays</strong>;
+        </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Calendar/Month/Weekdays.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$Month&nbsp;</span><span style="color: #007700">=&nbsp;&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">Calendar_Month_Weekdays</span><span style="color: #007700">(</span><span style="color: #0000BB">2003</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$Month</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">build</span><span style="color: #007700">();<br /><br />while&nbsp;(</span><span style="color: #0000BB">$Day&nbsp;</span><span style="color: #007700">=&nbsp;&amp;&nbsp;</span><span style="color: #0000BB">$Month</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$Day</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">isFirst</span><span style="color: #007700">())&nbsp;</span><span style="color: #FF8000">//&nbsp;Check&nbsp;for&nbsp;the&nbsp;start&nbsp;of&nbsp;a&nbsp;week<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$Day</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">isEmpty</span><span style="color: #007700">())&nbsp;</span><span style="color: #FF8000">//&nbsp;Check&nbsp;to&nbsp;see&nbsp;if&nbsp;day&nbsp;is&nbsp;empty<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #DD0000">"\t"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;else<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$Day</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">thisDay</span><span style="color: #007700">().</span><span style="color: #DD0000">"\t"</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$Day</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">isLast</span><span style="color: #007700">())&nbsp;</span><span style="color: #FF8000">//&nbsp;Check&nbsp;for&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;week<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div><p>
+        An empty day can still return values, the date it represents being from
+        the previous or next month in the calendar.
+        You may get empty days for <strong class="classname">Calendar_Month_Weekdays</strong>
+        and <strong class="classname">Calendar_Week</strong>.
+        Using <strong class="classname">Calendar_Week</strong>, you will only build 7 days
+        (use <strong class="classname">Calendar_Month_Weeks</strong> to build
+        <strong class="classname">Calendar_Week</strong> objects), so the
+        <strong class="function">isFirst()</strong> and <strong class="function">isLast()</strong> methods are
+        not applicable.
+       </p>
+    </div>
+    <div class="refsection"><div class="info"><h1>How do I select some dates?</h1>
+</div>
+      
+       <p class="para">
+        All calendar objects (except <strong class="classname">Calendar_Second</strong>,
+        which has no &quot;children&quot;) have the method <strong class="function">build()</strong>
+        to build the &quot;children&quot; of that object.
+        For example <strong class="classname">Calendar_Year</strong>::<strong class="function">build()</strong>
+        builds <strong class="classname">Calendar_Month</strong> objects while
+        <strong class="classname">Calendar_Hour</strong>::<strong class="function">build()</strong> builds
+        <strong class="classname">Calendar_Minute</strong> objects.
+        You have the option of passing this method an indexed array of Calendar objects
+        which will be used to &quot;select&quot; the matching built children. For example:
+        </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$Month&nbsp;</span><span style="color: #007700">=&nbsp;&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">Calendar_Month</span><span style="color: #007700">(</span><span style="color: #0000BB">2003</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">);&nbsp;</span><span style="color: #FF8000">//&nbsp;Oct&nbsp;2003<br /><br /></span><span style="color: #0000BB">$SelectedDay1&nbsp;</span><span style="color: #007700">=&nbsp;&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">Calendar_Day</span><span style="color: #007700">(</span><span style="color: #0000BB">2003</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">5</span><span style="color: #007700">);&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Oct&nbsp;&nbsp;5th&nbsp;2003<br /></span><span style="color: #0000BB">$SelectedDay2&nbsp;</span><span style="color: #007700">=&nbsp;&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">Calendar_Day</span><span style="color: #007700">(</span><span style="color: #0000BB">2003</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">21</span><span style="color: #007700">);&nbsp;</span><span style="color: #FF8000">//&nbsp;Oct&nbsp;21st&nbsp;2003<br /><br />//&nbsp;Place&nbsp;in&nbsp;an&nbsp;array...<br /></span><span style="color: #0000BB">$selection&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #0000BB">$SelectedDay1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$SelectedDay2</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$Month</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">build</span><span style="color: #007700">(</span><span style="color: #0000BB">$selection</span><span style="color: #007700">);<br /><br />while&nbsp;(</span><span style="color: #0000BB">$Day&nbsp;</span><span style="color: #007700">=&nbsp;&amp;&nbsp;</span><span style="color: #0000BB">$Month</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$Day</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">isSelected</span><span style="color: #007700">())<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;&nbsp;</span><span style="color: #0000BB">$Day</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">thisYear</span><span style="color: #007700">().</span><span style="color: #DD0000">'&nbsp;'</span><span style="color: #007700">.</span><span style="color: #0000BB">$Day</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">thisMonth</span><span style="color: #007700">().</span><span style="color: #DD0000">'&nbsp;'</span><span style="color: #007700">.</span><span style="color: #0000BB">$Day</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">thisDay</span><span style="color: #007700">().</span><span style="color: #DD0000">'&nbsp;is&nbsp;selected'</span><span style="color: #007700">.</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+        <p><em class="emphasis">Note:</em> the date objects you pass to a
+        <strong class="function">build()</strong> method replace the corresponding built
+        date objects, allowing you to do things like attach your own subclass
+        of <strong class="classname">Calendar_Decorator</strong> to them, then access
+        the decorating functionality inside the loop which renders the calendar.
+        You might display the contents from an &quot;events database table&quot; using this
+        approach.
+       </p>
+    </div>
+    <div class="refsection"><div class="info"><h1>
+       Why do I have to call build() explicitly. Why can&#039;t children be
+       built automatically?
+      </h1>
+</div>
+      
+       <p class="para">
+       First and foremost, for performance. Building the children has a
+       performance cost and you won&#039;t always need to have the children,
+       so it should be called explicitly, otherwise you might have $Year-&gt;build(),
+       expecting to get just months but behind the scenes, months built days,
+       which built hours, which build minutes etc.
+       Also calling <strong class="function">build()</strong> yourself give you a chance to
+       &quot;select&quot; some of the children.
+       </p>
+    </div>
+    <div class="refsection"><div class="info"><h1>How do I validate a date?</h1>
+</div>
+      
+       <p class="para">
+       Validity is determined by the <strong class="classname">Calendar_Engine</strong> being used
+       as well as the time the date object you&#039;re working with represents (e.g.
+       $Month = &amp; new Month(2003, 2, 29); is invalid, because Feb 2003 was
+       not a leap year). For quick validation, you can call the method
+       <strong class="function">isValid()</strong> on any date object, which will return <strong class="constant">FALSE</strong>
+       if there&#039;s a problem. For more information of more detailed validation,
+       you can call the method <strong class="function">getValidator()</strong> on any date object,
+       which returns an instance of the class <strong class="classname">Calendar_Validator</strong>.
+       For example;
+        </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$Month&nbsp;</span><span style="color: #007700">=&nbsp;&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">Month</span><span style="color: #007700">(</span><span style="color: #0000BB">2003</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">29</span><span style="color: #007700">);&nbsp;</span><span style="color: #FF8000">//&nbsp;29th&nbsp;Feb&nbsp;2003&nbsp;(?!?)<br /></span><span style="color: #007700">if&nbsp;(!</span><span style="color: #0000BB">$Month</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">isValid</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$Validator&nbsp;</span><span style="color: #007700">=&nbsp;&amp;&nbsp;</span><span style="color: #0000BB">$Month</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getValidator</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;(</span><span style="color: #0000BB">$Error&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$Validator</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$Error</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">toString</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div><p>
+        You can also begin validation by calling <strong class="function">getValidator()</strong>
+        then either <strong class="function">isValidYear()</strong>, <strong class="function">isValidMonth()</strong>,
+        <strong class="function">isValidDay()</strong>, <strong class="function">isValidHour()</strong>,
+        <strong class="function">isValidMinute()</strong> and <strong class="function">isValidSecond()</strong>
+        (or just <strong class="function">isValid()</strong> which calls all of the isValidxxx methods).
+       </p>
+    </div>
+    <div class="refsection"><div class="info"><h1>Can I adjust invalid dates?</h1>
+</div>
+      
+      <p class="para">
+        If you&#039;re allowing end users to navigate your calendar via the URL,
+        were they to modify the URL to something like calendar.php?year=2003&amp;month=13,
+        instead of throwing a validation error at them, you could call the
+        <strong class="classname">Calendar</strong>::<strong class="function">adjust()</strong> method on the
+        calendar object you create with that URL. You should then end up with
+        January 2004 (in this example). This behaviour is possible thanks to
+        <strong class="function">mktime()</strong> for the Unix Timestamp engine, while being built
+        into the <strong class="classname">PearDate</strong> engine for you.
+      </p>
+    </div>
+    <div class="refsection"><div class="info"><h1>
+      After calling <strong class="function">build()</strong>, I just want to get a single
+      child date object without looping through the lot. How?
+     </h1>
+</div>
+     
+      <p class="para">
+        The method <strong class="function">fetchAll()</strong> can be called on any date object
+        to get an indexed array of all the children which have been built,
+        allowing you to reference them directly. Be careful with the first index
+        of this array - in some cases it will be [1] not [0], depending on the
+        type of date object built. For example;
+        </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$Month&nbsp;</span><span style="color: #007700">=&nbsp;&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">Calendar_Month</span><span style="color: #007700">(</span><span style="color: #0000BB">2003</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$Month</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">build</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">$days&nbsp;</span><span style="color: #007700">=&nbsp;&amp;&nbsp;</span><span style="color: #0000BB">$Month</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchAll</span><span style="color: #007700">();&nbsp;</span><span style="color: #FF8000">//&nbsp;Now&nbsp;all&nbsp;in&nbsp;array<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$days</span><span style="color: #007700">[</span><span style="color: #0000BB">1</span><span style="color: #007700">]-&gt;</span><span style="color: #0000BB">thisDay</span><span style="color: #007700">();&nbsp;</span><span style="color: #FF8000">//&nbsp;The&nbsp;first&nbsp;day&nbsp;has&nbsp;index&nbsp;1<br /><br /></span><span style="color: #0000BB">$Hour&nbsp;</span><span style="color: #007700">=&nbsp;&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">Calendar_Hour</span><span style="color: #007700">(</span><span style="color: #0000BB">2003</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">25</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">15</span><span style="color: #007700">);&nbsp;</span><span style="color: #FF8000">//&nbsp;Oct&nbsp;25th&nbsp;2003,&nbsp;3pm<br /></span><span style="color: #0000BB">$Hour</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">build</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">$hours&nbsp;</span><span style="color: #007700">=&nbsp;&amp;&nbsp;</span><span style="color: #0000BB">$Hour</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchAll</span><span style="color: #007700">();&nbsp;</span><span style="color: #FF8000">//&nbsp;Now&nbsp;all&nbsp;in&nbsp;array<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$hours</span><span style="color: #007700">[</span><span style="color: #0000BB">0</span><span style="color: #007700">]-&gt;</span><span style="color: #0000BB">thisHour</span><span style="color: #007700">();&nbsp;</span><span style="color: #FF8000">//&nbsp;The&nbsp;first&nbsp;hour&nbsp;has&nbsp;index&nbsp;0<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div><p>
+        The following classes are always built to have the first index as 1:
+        <strong class="classname">Calendar_Month</strong>,
+        <strong class="classname">Calendar_Month_Weekdays</strong>,
+        <strong class="classname">Calendar_Month_Weeks</strong>,
+        <strong class="classname">Calendar_Week</strong> and
+        <strong class="classname">Calendar_Day</strong>
+        The following classes are always built to have the first index as 0:
+        <strong class="classname">Calendar_Hour</strong>,
+        <strong class="classname">Calendar_Minute</strong> and
+        <strong class="classname">Calendar_Second</strong>
+
+        Note also the method <strong class="function">size()</strong> can be called on any
+        date object, after <strong class="function">build()</strong> has been called,
+        to get the number of children.
+      </p>
+    </div>
+    <div class="refsection"><div class="info"><h1>What does a week actually represent in PEAR::<strong class="classname">Calendar</strong>?</h1>
+</div>
+      
+      <p class="para">
+        Weeks are &quot;pseudo&quot; dates. They&#039;re useful for formatting the user
+        interface for end users. Weeks are instantiated with a year, a month
+        and a day of the month. You can then have the week tell you its timestamp
+        (which will be the same as the timestamp for the first day in the week),
+        its numeric position within the <em class="emphasis">tabular</em> month (see
+        empty days above), its numeric position within the year (this is an ISO-8601
+        week number of year, weeks starting on Monday) or an array containing the
+        numeric year, month and the first day of the week (as a number within the month).
+        For example:
+        </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$Week&nbsp;</span><span style="color: #007700">=&nbsp;&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">Calendar_Week</span><span style="color: #007700">(</span><span style="color: #0000BB">2003</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">15</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$Week&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Calendar_Week</span><span style="color: #007700">(</span><span style="color: #0000BB">2003</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">15</span><span style="color: #007700">);<br /><br />echo&nbsp;</span><span style="color: #0000BB">$Week</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">thisWeek</span><span style="color: #007700">();&nbsp;</span><span style="color: #FF8000">//&nbsp;Displays&nbsp;2&nbsp;(week&nbsp;num&nbsp;in&nbsp;month)<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$Week</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">thisWeek</span><span style="color: #007700">(</span><span style="color: #DD0000">'n_in_month'</span><span style="color: #007700">);&nbsp;</span><span style="color: #FF8000">//&nbsp;Display&nbsp;2&nbsp;-&nbsp;same&nbsp;as&nbsp;above<br /><br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$Week</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">thisWeek</span><span style="color: #007700">(</span><span style="color: #DD0000">'n_in_year'</span><span style="color: #007700">);&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Displays&nbsp;41&nbsp;(week&nbsp;in&nbsp;year)<br /><br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$Week</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">thisWeek</span><span style="color: #007700">(</span><span style="color: #DD0000">'timestamp'</span><span style="color: #007700">);&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Displays&nbsp;unix&nbsp;timestamp&nbsp;or&nbsp;an&nbsp;ISO-8601&nbsp;datetime<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;(YYYY-MM-DD&nbsp;HH:MM:SS),&nbsp;depending&nbsp;on&nbsp;the&nbsp;engine.<br /><br /></span><span style="color: #0000BB">print_r&nbsp;$Week</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">thisWeek</span><span style="color: #007700">(</span><span style="color: #DD0000">'array'</span><span style="color: #007700">);&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;[year]&nbsp;=&gt;&nbsp;2003&nbsp;[month]&nbsp;=&gt;&nbsp;10&nbsp;[day]&nbsp;=&gt;&nbsp;12<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+      
+    </div>
+    <div class="refsection"><div class="info"><h1>
+       How do I get a Calendar_Year to build Calendar_Month_Weekdays or
+       Calendar_Month_Weeks, instead of the default Calendar_Month objects?
+      </h1>
+</div>
+      
+      <p class="para">
+        When working with a <strong class="classname">Calendar_Year</strong>, the constants
+        <strong class="constant">CALENDAR_MONTH_STATE</strong> controls what type of month
+        object is built. You can define <strong class="constant">CALENDAR_MONTH_STATE</strong>
+        to <strong class="constant">CALENDAR_USE_MONTH_WEEKDAYS</strong> or
+        <strong class="constant">CALENDAR_USE_MONTH_WEEKS</strong> for the
+        <strong class="classname">Calendar_Month_Weekdays</strong> and
+        <strong class="classname">Calendar_Month_Week</strong> classes, respectively.
+     </p>
+    </div>
+    <div class="refsection"><div class="info"><h1>You use Monday as the start of the week. Can I change that?</h1>
+</div>
+      
+      <p class="para">
+        Yes. For the classes which are concerned with the notion of a &quot;week&quot;,
+        you can can pass a value which defines the first day of the week.
+        For the default timestamp based Calendar engine, this is a number
+        from 0 to 6, 0 being Sunday through to 6 being Saturday.
+        This value can be passed to the following:
+        </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$Year&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Calendar_Year</span><span style="color: #007700">(</span><span style="color: #0000BB">2003</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$selection&nbsp;</span><span style="color: #007700">=&nbsp;array();<br /></span><span style="color: #0000BB">$Year</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">build</span><span style="color: #007700">(</span><span style="color: #0000BB">$selection</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">);&nbsp;</span><span style="color: #FF8000">//&nbsp;the&nbsp;second&nbsp;argument&nbsp;is&nbsp;the&nbsp;first&nbsp;day&nbsp;of&nbsp;the&nbsp;week&nbsp;(Sunday)<br /><br /></span><span style="color: #0000BB">$MonthWeekdays&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Calendar_Month_Weekdays</span><span style="color: #007700">(</span><span style="color: #0000BB">2003</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">6</span><span style="color: #007700">);&nbsp;</span><span style="color: #FF8000">//&nbsp;Third&nbsp;argument&nbsp;-&nbsp;Saturday<br /><br /></span><span style="color: #0000BB">$MonthWeeks&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Calendar_Month_Weekdays</span><span style="color: #007700">(</span><span style="color: #0000BB">2003</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">);&nbsp;</span><span style="color: #FF8000">//&nbsp;Third&nbsp;argument&nbsp;-&nbsp;Tuesday<br /><br /></span><span style="color: #0000BB">$Week&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Calendar_Week</span><span style="color: #007700">(</span><span style="color: #0000BB">2003</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">15</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">5</span><span style="color: #007700">)&nbsp;</span><span style="color: #FF8000">//&nbsp;Fourth&nbsp;argument&nbsp;-&nbsp;Friday<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+      
+    </div>
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.datetime.calendar.intro-decorators.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.datetime.calendar.html">Calendar</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.datetime.calendar.calendar.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Calendar Decorators</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Calendar</td>
+  </tr>
+ </table>
+</div>
+</body></html>

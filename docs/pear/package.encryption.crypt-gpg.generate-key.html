@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Generating a GnuPG Key</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.encryption.crypt-gpg.html" title="Crypt_GPG" />
+  <link rel="prev" href="package.encryption.crypt-gpg.intro.html" title="Introduction and Overview" />
+  <link rel="next" href="package.encryption.crypt-gpg.usage.html" title="Usage" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Generating a GnuPG Key</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.encryption.crypt-gpg.intro.html" title="Introduction and Overview">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.encryption.crypt-gpg.usage.html" title="Usage">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="package.encryption.crypt-gpg.generate-key">
+
+ <div class="info">
+  <h1>Generating a GnuPG Key</h1>
+
+  <div class="abstract">
+   <p class="para">
+    Outlines how to generate a GnuPG key for use with
+    <strong class="package">Crypt_GPG</strong>.
+   </p>
+  </div>
+ </div>
+
+ <p class="para">
+  <strong class="package">Crypt_GPG</strong> does not yet support generating GnuPG keys.
+  Generating a GnuPG key for use with <strong class="package">Crypt_GPG</strong> is much
+  the same as generating any other GnuPG key on a system.
+ </p>
+
+ <blockquote class="important">
+  <p class="para">
+   Though <strong class="classname">Crypt_GPG</strong> supports
+   <a href="http://pear.php.net/package/Crypt_GPG/docs/latest/Crypt_GPG/Crypt_GPG.html#method__construct" class="link external">specifying the
+   keyring to use</a>, <strong class="classname">Crypt_GPG</strong>, by default, uses
+   the keyring of the current user. If using <strong class="package">Crypt_GPG</strong>
+   with a webserver such as Apache, the current user is the Apache user and
+   the key will need to be generated as the Apache user. To do this, run the
+   <strong class="command">gen-key</strong> command as:
+   </p><div class="informalexample">
+    <pre class="screen">
+<code class="prompt">$ </code><strong class="command">sudo -u apache gpg --gen-key</strong>
+    </pre>
+
+   </div>
+  
+ </blockquote>
+
+
+ <p class="para">
+  The following example walks through the process of generating a key that
+  supports both encrypting and signing. First, run the command:
+  </p><pre class="screen">
+<code class="prompt">$ </code><strong class="command">gpg --gen-key</strong>
+  </pre>
+
+ 
+ <p class="para">
+  This will display the following copyright information and a list of
+  available key types:
+  </p><pre class="screen">
+gpg (GnuPG) 1.4.6; Copyright (C) 2006 Free Software Foundation, Inc.
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions. See the file COPYING for details.
+Please select what kind of key you want:
+   (1) DSA and Elgamal (default)
+   (2) DSA (sign only)
+   (5) RSA (sign only)
+Your selection? <strong class="userinput"><code>1</code></strong>
+DSA keypair will have 1024 bits.
+  </pre>
+
+ 
+
+ <p class="para">
+  Select <em class="emphasis">(1) DSA and Elgamal (default)</em> to allow the
+  generated key to both encrypt and sign data. This will generate a
+  public-private key pair in the GPG keyring and prompt for the size of the
+  encryption key:
+  </p><pre class="screen">
+ELG-E keys may be between 1024 and 4096 bits long.
+What keysize do you want? (2048)
+  </pre>
+
+ 
+
+ <p class="para">
+  Select the default value of 2048. Enter greater or fewer bits depending on
+  how secure the encryption must be. The default value is considered safe for
+  most applications. GnuPG then prompts for the time period over which the
+  generated key will be valid:
+  </p><pre class="screen">
+Please specify how long the key should be valid.
+         0 = key does not expire
+      &lt;n&gt; = key expires in n days
+      &lt;n&gt;w = key expires in n weeks
+      &lt;n&gt;m = key expires in n months
+      &lt;n&gt;y = key expires in n years
+Key is valid for? (0)
+Key does not expire at all
+Is this correct? (y/N) <strong class="userinput"><code>y</code></strong>
+  </pre>
+
+ 
+
+ <p class="para">
+  Unless the key needs to expire after a certain time period (preventing
+  subsequent decryption), a key that does not expire should be used. Next,
+  enter the three parts of the key&#039;s user id. The first part of the user id is
+  the real name of the person or organization that will use the key to sign or
+  encrypt data. The second part is an email address and the third is a comment
+  about the key. Both the email address and comment are optional:
+  </p><pre class="screen">
+You need a user ID to identify your key; the software constructs the user ID
+from the Real Name, Comment and Email Address in this form:
+    &quot;Heinrich Heine (Der Dichter) &lt;heinrichh@duesseldorf.de&gt;&quot;
+Real name: Test User
+Email address: test@example.com
+Comment: test key
+Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? <strong class="userinput"><code>o</code></strong>
+  </pre>
+
+ 
+
+ <p class="para">
+  After entering the primary user id of the new key, the passphrase must be
+  selected. A secret passphrase is essential to securing encrypted data.
+  Guessable passphrases will render encryption useless. For critical data such
+  as credit card numbers, a non-dictionary word that is at least 8 characters
+  long is recommended.
+  </p><pre class="screen">
+You need a Passphrase to protect your secret key.
+Enter passphrase:
+Repeat passphrase:
+  </pre>
+
+ 
+
+ <p class="para">
+  Following the passphrase, GnuPG will gather entropy for a period to ensure
+  the generated key uses sutitably random numbers. When enough entropy is
+  collected the key is generated and added to the keyring:
+  </p><pre class="screen">
+We need to generate a lot of random bytes. It is a good idea to perform
+some other action (type on the keyboard, move the mouse, utilize the
+disks) during the prime generation; this gives the random number
+generator a better chance to gain enough entropy.
+
+<span class="replaceable">... snip ...</span>
+
+gpg: key DB15A2C9 marked as ultimately trusted
+public and secret key created and signed.
+gpg: checking the trustdb
+gpg: 3 marginal(s) needed, 1 complete(s) needed, PGP trust model
+gpg: depth: 0 valid:    1 signed:    0 trust: 0-, 0q, 0n, 0m, 0f, 1u
+pub   1024D/DB15A2C9 2008-08-05
+      Key fingerprint = F94A F628 5725 7147 0569 F9FF E995 8292 DB15 A2C9
+uid                  Test User (test key) &lt;test@example.com&gt;
+sub   2048g/6AD96F48 2008-08-05
+  </pre>
+
+ 
+
+ <p class="para">
+  At this point the key is in the GnuPG keyring and ready to be used by
+  <strong class="package">Crypt_GPG</strong>.
+ </p>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.encryption.crypt-gpg.intro.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.encryption.crypt-gpg.html">Crypt_GPG</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.encryption.crypt-gpg.usage.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction and Overview</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Usage</td>
+  </tr>
+ </table>
+</div>
+</body></html>

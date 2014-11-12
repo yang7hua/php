@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>System_Daemon examples</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.system.system-daemon.examples.html" title="System_Daemon examples" />
+  <link rel="prev" href="package.system.system-daemon.examples.html" title="System_Daemon examples" />
+  <link rel="next" href="package.system.system-daemon.console-action.html" title="Console action" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">System_Daemon examples</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.system.system-daemon.examples.html" title="System_Daemon examples">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.system.system-daemon.console-action.html" title="Console action">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="package.system.system-daemon.examples.simple">
+  <div class="info">
+   <h1>System_Daemon examples</h1>
+
+  </div>
+
+  <p class="para">
+      If you run this code successfully, a daemon will be spawned
+      and stopped directly. You should find a log enty in
+      <code class="literal">/var/log/simple.log</code>
+  </p>
+
+  <div class="phpcode"><code><span style="color: #000000">
+#!/usr/bin/php&nbsp;-q<br /><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/**<br />&nbsp;*&nbsp;System_Daemon&nbsp;turns&nbsp;PHP-CLI&nbsp;scripts&nbsp;into&nbsp;daemons.<br />&nbsp;*&nbsp;<br />&nbsp;*&nbsp;PHP&nbsp;version&nbsp;5<br />&nbsp;*<br />&nbsp;*&nbsp;@category&nbsp;&nbsp;System<br />&nbsp;*&nbsp;@package&nbsp;&nbsp;&nbsp;System_Daemon<br />&nbsp;*&nbsp;@author&nbsp;&nbsp;&nbsp;&nbsp;Kevin&nbsp;&lt;kevin@vanzonneveld.net&gt;<br />&nbsp;*&nbsp;@copyright&nbsp;2008&nbsp;Kevin&nbsp;van&nbsp;Zonneveld<br />&nbsp;*&nbsp;@license&nbsp;&nbsp;&nbsp;http://www.opensource.org/licenses/bsd-license.php&nbsp;New&nbsp;BSD&nbsp;Licence<br />&nbsp;*&nbsp;@version&nbsp;&nbsp;&nbsp;SVN:&nbsp;Release:&nbsp;$Id:&nbsp;simple.php&nbsp;276201&nbsp;2009-02-20&nbsp;16:55:07Z&nbsp;kvz&nbsp;$<br />&nbsp;*&nbsp;@link&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://trac.plutonia.nl/projects/system_daemon<br />&nbsp;*/<br /><br />/**<br />&nbsp;*&nbsp;System_Daemon&nbsp;Example&nbsp;Code<br />&nbsp;*&nbsp;<br />&nbsp;*&nbsp;If&nbsp;you&nbsp;run&nbsp;this&nbsp;code&nbsp;successfully,&nbsp;a&nbsp;daemon&nbsp;will&nbsp;be&nbsp;spawned<br />&nbsp;*&nbsp;and&nbsp;stopped&nbsp;directly.&nbsp;You&nbsp;should&nbsp;find&nbsp;a&nbsp;log&nbsp;enty&nbsp;in&nbsp;<br />&nbsp;*&nbsp;/var/log/simple.log<br />&nbsp;*&nbsp;<br />&nbsp;*/<br /><br />//&nbsp;Make&nbsp;it&nbsp;possible&nbsp;to&nbsp;test&nbsp;in&nbsp;source&nbsp;directory<br />//&nbsp;This&nbsp;is&nbsp;for&nbsp;PEAR&nbsp;developers&nbsp;only<br /></span><span style="color: #0000BB">ini_set</span><span style="color: #007700">(</span><span style="color: #DD0000">'include_path'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">ini_get</span><span style="color: #007700">(</span><span style="color: #DD0000">'include_path'</span><span style="color: #007700">).</span><span style="color: #DD0000">':..'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Include&nbsp;Class<br /></span><span style="color: #0000BB">error_reporting</span><span style="color: #007700">(</span><span style="color: #0000BB">E_ALL</span><span style="color: #007700">);<br />require_once&nbsp;</span><span style="color: #DD0000">"System/Daemon.php"</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Bare&nbsp;minimum&nbsp;setup<br /></span><span style="color: #0000BB">System_Daemon</span><span style="color: #007700">::</span><span style="color: #0000BB">setOption</span><span style="color: #007700">(</span><span style="color: #DD0000">"appName"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"simple"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">System_Daemon</span><span style="color: #007700">::</span><span style="color: #0000BB">setOption</span><span style="color: #007700">(</span><span style="color: #DD0000">"authorEmail"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"kevin@vanzonneveld.net"</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//System_Daemon::setOption("appDir",&nbsp;dirname(__FILE__));<br /></span><span style="color: #0000BB">System_Daemon</span><span style="color: #007700">::</span><span style="color: #0000BB">log</span><span style="color: #007700">(</span><span style="color: #0000BB">System_Daemon</span><span style="color: #007700">::</span><span style="color: #0000BB">LOG_INFO</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"Daemon&nbsp;not&nbsp;yet&nbsp;started&nbsp;so&nbsp;"</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"this&nbsp;will&nbsp;be&nbsp;written&nbsp;on-screen"</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Spawn&nbsp;Deamon!<br /></span><span style="color: #0000BB">System_Daemon</span><span style="color: #007700">::</span><span style="color: #0000BB">start</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">System_Daemon</span><span style="color: #007700">::</span><span style="color: #0000BB">log</span><span style="color: #007700">(</span><span style="color: #0000BB">System_Daemon</span><span style="color: #007700">::</span><span style="color: #0000BB">LOG_INFO</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"Daemon:&nbsp;'"</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">System_Daemon</span><span style="color: #007700">::</span><span style="color: #0000BB">getOption</span><span style="color: #007700">(</span><span style="color: #DD0000">"appName"</span><span style="color: #007700">).<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"'&nbsp;spawned!&nbsp;This&nbsp;will&nbsp;be&nbsp;written&nbsp;to&nbsp;"</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">System_Daemon</span><span style="color: #007700">::</span><span style="color: #0000BB">getOption</span><span style="color: #007700">(</span><span style="color: #DD0000">"logLocation"</span><span style="color: #007700">));<br /><br /></span><span style="color: #FF8000">//&nbsp;Your&nbsp;normal&nbsp;PHP&nbsp;code&nbsp;goes&nbsp;here.&nbsp;Only&nbsp;the&nbsp;code&nbsp;will&nbsp;run&nbsp;in&nbsp;the&nbsp;background<br />//&nbsp;so&nbsp;you&nbsp;can&nbsp;close&nbsp;your&nbsp;terminal&nbsp;session,&nbsp;and&nbsp;the&nbsp;application&nbsp;will<br />//&nbsp;still&nbsp;run.<br /><br /></span><span style="color: #0000BB">System_Daemon</span><span style="color: #007700">::</span><span style="color: #0000BB">stop</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.system.system-daemon.examples.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.system.system-daemon.examples.html">System_Daemon examples</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.system.system-daemon.console-action.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">System_Daemon examples</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Console action</td>
+  </tr>
+ </table>
+</div>
+</body></html>

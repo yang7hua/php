@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Writers</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.fileformats.file-archive.html" title="File_Archive" />
+  <link rel="prev" href="package.fileformats.file-archive.readers.html" title="Readers" />
+  <link rel="next" href="package.fileformats.file-archive.predicates.html" title="Predicates" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Writers</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.fileformats.file-archive.readers.html" title="Readers">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.fileformats.file-archive.predicates.html" title="Predicates">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.fileformats.file-archive.writers">
+ 
+  <h1 class="refname">Writers</h1>
+  <div class="refnamediv">Writers &ndash; Saving archives</div>
+
+ 
+
+
+ <div class="refsection" id="package.fileformats.file-archive.writers.intro"><div class="info"><h1>Introduction</h1>
+</div>
+  
+  <p class="para">
+   A writer is an object that deals with data.
+   Some writers transform data (this is the case of the archive writers),
+    some save them to disk (for files writers), or to memory
+    (for the memory writer)...
+   They all implement the same interface.
+  </p>
+  <p class="para">
+   You can transfer data from a reader to a writer using the
+   <strong class="command">File_Archive::extract</strong> function.
+  </p>
+  <p class="para">
+   All the writers can be created thanks to the
+   <strong class="classname">File_Archive</strong> factory, and more particularly the
+   <strong class="command">File_Archive::to*</strong> functions.
+  </p>
+ </div>
+
+
+ <div class="refsection" id="package.fileformats.file-archive.writers.writearchives"><div class="info"><h1>Write archives</h1>
+</div>
+  
+  <p class="para">
+   To create a writer that will generate an archive, use the
+   <strong class="function">toArchive()</strong> function:
+  </p>
+  <div class="funcsynopsis">
+   <p><code class="funcprototype">
+    
+     <strong class="function">toArchive</strong>
+     ( 
+    
+     <span class="type">string</span>
+     $filename
+    
+     , 
+     &amp;$innerWriter
+    
+     , 
+     $type = null
+    
+     , 
+     $stat = array()
+    
+     , 
+     $autoClose = true
+    
+   )</code></p>
+  </div>
+
+  <ul class="itemizedlist">
+   <li class="listitem">
+    <p class="para">
+     <code class="varname">$filename</code> is the name of the generated archive
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para">
+     <code class="varname">$innerWriter</code> is another writer in which the archive file will be written
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para">
+     <code class="varname">$type</code> is one of <code class="literal">Tar</code>,
+     <code class="literal">Gzip</code> or <code class="literal">Zip</code> and indicates the format
+     of compression.
+     If not specified, the type is determined thanks to the extension of
+     the filename.
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para">
+     <code class="varname">$stat</code> is an optional array to indicate stats about the
+     archive (see the PHP stat function for the possible indexes).
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para">
+     <code class="varname">$autoClose</code> indicates whether the inner writer will be
+     closed once the data are sent.
+     It may be useful not to close the writer if you want to append some more
+     data after writing.
+     In general, you won&#039;t need to keep the writer open, so you should just
+     keep the default value.
+    </p>
+   </li>
+  </ul>
+
+  <div class="example"><div class="info"><p><strong>Generation of archive writers</strong></p></div>
+   
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"File/Archive.php"</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">/*&nbsp;Writer&nbsp;to&nbsp;a&nbsp;tar&nbsp;file&nbsp;*/<br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toArchive</span><span style="color: #007700">(</span><span style="color: #DD0000">"archive.tar"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$innerWriter</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">/*&nbsp;Writer&nbsp;to&nbsp;a&nbsp;tar.gz&nbsp;file&nbsp;*/<br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toArchive</span><span style="color: #007700">(</span><span style="color: #DD0000">"archive.tgz"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$innerWriter</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">/*&nbsp;Writer&nbsp;to&nbsp;a&nbsp;zip&nbsp;file&nbsp;*/<br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toArchive</span><span style="color: #007700">(</span><span style="color: #DD0000">"archive.zip"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$innerWriter</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+ </div>
+
+
+ <div class="refsection" id="package.fileformats.file-archive.writers.writefiles"><div class="info"><h1>Write to files</h1>
+</div>
+  
+  <p class="para">
+   A writer can write the files to physical files.
+   To create such a writer, call <strong class="command">File_Archive::toFiles();</strong>.
+   If a directory does not exist, it will be automatically created.
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Use files writer</strong></p></div>
+   
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"File/Archive.php"</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">/*&nbsp;Copy&nbsp;a&nbsp;whole&nbsp;directory&nbsp;to&nbsp;another&nbsp;location&nbsp;*/<br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">extract</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">read</span><span style="color: #007700">(</span><span style="color: #DD0000">'Path/to/dir'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'new/directory'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toFiles</span><span style="color: #007700">()<br />);<br /><br /></span><span style="color: #FF8000">/*&nbsp;Convert&nbsp;an&nbsp;archive&nbsp;to&nbsp;another&nbsp;format:&nbsp;tgz&nbsp;to&nbsp;zip&nbsp;*/<br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">extract</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">read</span><span style="color: #007700">(</span><span style="color: #DD0000">'archive.tgz/'</span><span style="color: #007700">),<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toArchive</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'archive.zip'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toFiles</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;)<br />);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+ </div>
+
+
+ <div class="refsection" id="package.fileformats.file-archive.writers.sendmails"><div class="info"><h1>Send emails</h1>
+</div>
+  
+  <p class="para">
+   You can send emails as attachment using a mail writer available thanks to
+   <strong class="command">File_Archive::toMail</strong> function.
+  </p>
+
+  <div class="funcsynopsis">
+   <p><code class="funcprototype">
+    
+     <strong class="function">toMail</strong>
+     ( 
+    
+     <span class="type">array</span>
+     $to
+    
+     , 
+     <span class="type">array</span>
+     $headers
+    
+     , 
+     <span class="type">string</span>
+     $message
+    
+     , 
+     &amp;$mail = null
+    
+   )</code></p>
+  </div>
+
+  <p class="para">
+   This function relies on the PEAR <strong class="classname">Mail</strong> and
+   <strong class="classname">Mail_Mime</strong> libraries, and the parameters are the
+   same as the one of these classes:
+  </p>
+
+  <ul class="itemizedlist">
+
+   <li class="listitem">
+    <p class="para">
+     <code class="varname">$to</code> an array or a string with comma separated recipients
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para">
+     <code class="varname">$headers</code> will be sent to
+     <strong class="classname">Mail_Mime</strong> and to <code class="varname">$mail</code>:
+     an associative array of headers.
+     The header name is used as key and the header value as value.
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para">
+     <code class="varname">$message</code> is the text version of the body of the mail.
+     You can provide an HTML version thanks to the
+     <strong class="function">setHTMLBody()</strong> and <strong class="function">addHTMLImage()</strong>
+     of the writer.
+     The signatures of these functions are the same as the ones of
+     <strong class="classname">Mail_Mime</strong>.
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para">
+     <code class="varname">$mail</code> the way to send mail.
+     This is an object created with the <strong class="function">Mail::factory()</strong>
+     function.
+     If <code class="literal">null</code>, <strong class="command">Mail::factory(&#039;mail&#039;)</strong>
+     will be used (and the email will be sent using the PHP mail function).
+    </p>
+   </li>
+  </ul>
+
+  <div class="example"><div class="info"></div>
+   
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"File/Archive.php"</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">/*&nbsp;Send&nbsp;the&nbsp;files&nbsp;in&nbsp;the&nbsp;current&nbsp;directory&nbsp;(no&nbsp;recursion)&nbsp;as&nbsp;attachment&nbsp;*/<br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">extract</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">read</span><span style="color: #007700">(</span><span style="color: #DD0000">'Path/to/dir'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">''</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toMail</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$to</span><span style="color: #007700">,&nbsp;</span><span style="color: #FF8000">//&nbsp;recipients<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'Subject'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Path/to/dir&nbsp;directory'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'From'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'address@of.expeditor'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'Find&nbsp;all&nbsp;the&nbsp;files&nbsp;attached'&nbsp;</span><span style="color: #FF8000">//&nbsp;body<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">)<br />);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+ </div>
+
+
+ <div class="refsection" id="package.fileformats.file-archive.writers.stdout"><div class="info"><h1>Send files to the user</h1>
+</div>
+  
+  <p class="para">
+   To send files to the remote user (i.e. write data to the standard output),
+   you need a special writer.
+   You can build one calling function <strong class="function">File_Archive::toOutput()</strong>.
+  </p>
+  <p class="para">
+   This writer will automatically send a header forcing the download of the file.
+  </p>
+  <p class="para">
+   If you don&#039;t want that, call <strong class="command">File_Archive::toOutput(false)</strong>.
+  </p>
+ </div>
+
+
+ <div class="refsection" id="package.fileformats.file-archive.writers.multiwriters"><div class="info"><h1>Multi writers</h1>
+</div>
+  
+  <p class="para">
+   Using a multi writer, you can write the data to two or more different
+   locations in parallel.
+  </p>
+  <p class="para">
+   A typical use is to send the file to the user at the same time as you write
+   it to a file.
+  </p>
+  <p class="para">
+   It can also be used to generate archives in different formats.
+  </p>
+  <p class="para">
+   You can create a multi writer using
+   <strong class="command">File_Archive::toMulti($dest1, $dest2)</strong>.
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Multi writer</strong></p></div>
+   
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//Send&nbsp;a&nbsp;directory&nbsp;to&nbsp;the&nbsp;user&nbsp;and&nbsp;to&nbsp;a&nbsp;file<br /><br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">extract</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">read</span><span style="color: #007700">(</span><span style="color: #DD0000">'directory'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toArchive</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'multi.zip'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toMulti</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toOutput</span><span style="color: #007700">(),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toFiles</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br />&nbsp;&nbsp;&nbsp;&nbsp;)<br />);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+ </div>
+
+
+ <div class="refsection" id="package.fileformats.file-archive.writers.writing"><div class="info"><h1>Writing to a writer</h1>
+</div>
+  
+  <p class="para">
+   It is also possible to write data directly to a writer, without using
+   a reader. To do so, you can use the following interface implemented by any
+   writer:
+  </p>
+
+  <ul class="itemizedlist">
+   <li class="listitem">
+    <p class="para"><strong class="command">function newFile($URL, $stat)</strong></p>
+    <p class="para">
+     Create a new file in the writer.
+    </p>
+    <p class="para">
+     <code class="varname">$URL</code> is the name of the file,
+     <code class="varname">$stat</code> is an array of statistics about the data
+     (see the PHP <strong class="function">stat()</strong> function for more information).
+    </p>
+    <p class="para">
+     The stat array may not contain all the information.
+     The only index that must be present is index 7 (size of the data).
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para"><strong class="command">function writeData($data)</strong></p>
+    <p class="para">
+     Append the specified data to the writer.
+     A call to <strong class="function">newFile()</strong> must have been done previously.
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para"><strong class="command">function close()</strong></p>
+    <p class="para">
+      Close the writer, eventually flush the data, write the footer...
+      This function must be called before the end of the file, otherwise
+      some data may not be treated by the writer.
+    </p>
+   </li>
+
+  </ul>
+
+  <div class="example"><div class="info"><p><strong>Dynamic creation of a zip file</strong></p></div>
+   
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"File/Archive.php"</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$dest&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toArchive</span><span style="color: #007700">(</span><span style="color: #DD0000">"foo.zip"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toFiles</span><span style="color: #007700">());<br /></span><span style="color: #0000BB">$dest</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">newFile</span><span style="color: #007700">(</span><span style="color: #DD0000">"even.txt"</span><span style="color: #007700">);<br />for(</span><span style="color: #0000BB">$i</span><span style="color: #007700">=</span><span style="color: #0000BB">0</span><span style="color: #007700">;&nbsp;</span><span style="color: #0000BB">$i</span><span style="color: #007700">&lt;</span><span style="color: #0000BB">100</span><span style="color: #007700">;&nbsp;</span><span style="color: #0000BB">$i</span><span style="color: #007700">++)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$dest</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">writeData</span><span style="color: #007700">((</span><span style="color: #0000BB">2</span><span style="color: #007700">*</span><span style="color: #0000BB">$i</span><span style="color: #007700">).</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$dest</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">newFile</span><span style="color: #007700">(</span><span style="color: #DD0000">"odd.txt"</span><span style="color: #007700">);<br />for(</span><span style="color: #0000BB">$i</span><span style="color: #007700">=</span><span style="color: #0000BB">0</span><span style="color: #007700">;&nbsp;</span><span style="color: #0000BB">$i</span><span style="color: #007700">&lt;</span><span style="color: #0000BB">100</span><span style="color: #007700">;&nbsp;</span><span style="color: #0000BB">$i</span><span style="color: #007700">++)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$dest</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">writeData</span><span style="color: #007700">((</span><span style="color: #0000BB">2</span><span style="color: #007700">*</span><span style="color: #0000BB">$i</span><span style="color: #007700">+</span><span style="color: #0000BB">1</span><span style="color: #007700">).</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$dest</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">close</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+
+  <blockquote class="note">
+   <p class="para">
+    If you do not specify the stat array in the <strong class="function">newFile()</strong>
+    function, the majority of the archives will have to buffer the data
+    until the end of the file is reached
+    (this is because the size of the file is usually needed to be able to
+    write the header).
+   </p>
+   <p class="para">
+    This may be a memory problem if you want to generate really large files.
+   </p>
+  </blockquote>
+
+ </div>
+
+
+ <div class="refsection" id="package.fileformats.file-archive.writers.functionsusing"><div class="info"><h1>Functions that use writers</h1>
+</div>
+  
+  <p class="para">
+   All <strong class="classname">File_Archive</strong> functions that take a writer as an
+    argument also accept strings and arrays.
+   The strings will be automatically interpreted as a writer using
+    <strong class="function">File_Archive::appender()</strong> function.
+   The arrays will be interpreted as a multi writer.
+  </p>
+  <p class="para">
+   Since the writers are passed by reference, you will have to pass a
+    variable and not the raw string or array.
+  </p>
+  <p class="para">
+   It is thus possible to rewrite the previous example like that:
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Multi writer</strong></p></div>
+   
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//Send&nbsp;a&nbsp;directory&nbsp;to&nbsp;the&nbsp;user&nbsp;and&nbsp;to&nbsp;a&nbsp;file<br /><br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">extract</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$src&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'directory'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toArchive</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'multi.zip'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toOutput</span><span style="color: #007700">(),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toFiles</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br />&nbsp;&nbsp;&nbsp;&nbsp;)<br />);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.fileformats.file-archive.readers.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.fileformats.file-archive.html">File_Archive</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.fileformats.file-archive.predicates.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Readers</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Predicates</td>
+  </tr>
+ </table>
+</div>
+</body></html>

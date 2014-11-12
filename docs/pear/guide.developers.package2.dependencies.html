@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>&lt;dependencies&gt;</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="guide.developers.package2.tags.html" title="Detailed Tag Reference for package.xml version 2.0" />
+  <link rel="prev" href="guide.developers.package2.compatible.html" title="&lt;compatible&gt;" />
+  <link rel="next" href="guide.developers.package2.usesrole.html" title="&lt;usesrole&gt;" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">&lt;dependencies&gt;</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="guide.developers.package2.compatible.html" title="&lt;compatible&gt;">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="guide.developers.package2.usesrole.html" title="&lt;usesrole&gt;">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="guide.developers.package2.dependencies">
+ 
+  <h1 class="refname">&lt;dependencies&gt;</h1>
+  <div class="refnamediv">&lt;dependencies&gt; &ndash; Dependency Specification in package.xml 2.0</div>
+
+ 
+ <div class="refsection" id="guide.developers.package2.dependencies.intro"><div class="info"><h1>Introduction to dependencies in package.xml 2.0</h1>
+</div> 
+  
+  <p class="para">
+   Dependencies can be tricky to manage.  Using code written by other people
+   requires a robust and simple mechanism to manage the risk of breaking your code
+   because of bugs in the external package, or worse, an unexpected API change.
+   PEAR excels at dependency handling, which mitigates these risks.
+   As a PEAR developer, it is crucial to understand how to
+   specify a dependency on other packages as well as the system requirements of
+   your package.
+  </p>
+  <p class="para">
+   In package.xml 1.0, dependencies are relatively simple, but not as powerful.  Specifying
+   a dependency on a package for applications was actually dangerous.  If you wished to limit an installed
+   version of a package to a single version, it would mean preventing upgrade at any cost.  package.xml
+   2.0 provides a simple way to enforce stricter dependency versioning without making upgrades onerous.
+  </p>
+  <p class="para">
+   package.xml 1.0 supports two kinds of dependencies, required and optional.  package.xml 2.0
+   also supports these two dependency types, but introduces a new kind of dependency concept: an
+   optional dependency group (documented <a href="guide.developers.package2.dependencies.html#guide.developers.package2.dependencies.groups" class="link">here</a>).  
+  </p>
+  <p class="para">
+   package.xml 1.0 only supported php, package, and extension dependencies.  package.xml 2.0
+   supports dependencies on php, package, extension, os, architecture, and PEAR installer.  In
+   addition, package.xml 2.0 supports depending on a static package located at a url, and depending
+   on a package that provides an extension to PHP like PECL packages.
+  </p>
+  <p class="para">
+   The PEAR installer dependency is not a dependency on the PEAR package, but a dependency on the
+   currently running PEAR installer, and is more similar to a PHP dependency in that it requires
+   the specified version to be running in memory.  This is very useful for circumventing difficult
+   bugs in the PEAR installer that render a package install useless.
+  </p>
+  <div class="refsection" id="guide.developers.package2.dependencies.structure"><div class="info"><h1>Structure of &lt;dependencies&gt;</h1>
+</div>
+   
+   <p class="para">
+    The &lt;dependencies&gt; tag re-organizes dependencies into groups and &quot;extracts&quot;
+    attributes into tags.  It also un-abbreviates words for clarity and human-readability.
+    The following excerpt of a package.xml version 1.0:
+   </p>
+   <p class="para">
+    </p><div class="xmlcode">
+     <pre class="xmlcode">
+&lt;deps&gt;
+ &lt;dep type=&quot;pkg&quot; rel=&quot;ge&quot; version=&quot;1.3.1&quot;&gt;Archive_Tar&lt;/dep&gt;
+ &lt;dep type=&quot;php&quot; rel=&quot;ge&quot; version=&quot;4.2.0&quot;/&gt;
+ &lt;dep type=&quot;pkg&quot; rel=&quot;has&quot; optional=&quot;yes&quot;&gt;PEAR_Frontend_Web&lt;/dep&gt;
+&lt;/deps&gt;</pre>
+
+    </div>
+   
+   <p class="para">
+    Approximately translates into this format in package.xml 2.0:
+   </p>
+   <p class="para">
+    </p><div class="xmlcode">
+     <pre class="xmlcode">
+&lt;dependencies&gt;
+ &lt;required&gt;
+  &lt;pearinstaller&gt;
+   &lt;min&gt;1.4.8&lt;/min&gt;
+  &lt;/pearinstaller&gt;
+  &lt;php&gt;
+   &lt;min&gt;4.2.0&lt;/min&gt;
+  &lt;/php&gt;
+  &lt;package&gt;
+   &lt;name&gt;Archive_Tar&lt;/name&gt;
+   &lt;channel&gt;pear.php.net&lt;/channel&gt;
+   &lt;min&gt;1.3.1&lt;/min&gt;
+  &lt;/package&gt;
+ &lt;/required&gt;
+ &lt;optional&gt;
+  &lt;package&gt;
+   &lt;name&gt;PEAR_Frontend_Web&lt;/name&gt;
+   &lt;channel&gt;pear.php.net&lt;/channel&gt;
+  &lt;/package&gt;
+ &lt;/optional&gt;
+&lt;/dependencies&gt;</pre>
+
+    </div>
+   
+   <p class="para">
+    These changes were made to simplify xml validation and parsing.  Note that unlike package.xml
+    1.0, the &lt;pearinstaller&gt; and &lt;php&gt; dependencies are required in all package.xml.
+    In addition the &lt;min&gt; tag is required in both &lt;pearinstaller&gt; and
+    &lt;php&gt; dependencies.
+   </p>
+  </div>
+  <div class="refsection" id="guide.developers.package2.dependencies.groups">
+   <div class="info"><h1>Optional Dependency Groups</h1>
+</div>
+   <p class="para">
+    Optional dependency groups define feature sets that are not required, but
+    should be installed in a block.  These feature sets consist of &lt;package&gt;
+    and &lt;extension&gt; dependencies.  For instance, if a package can optionally
+    perform operations on a remote shell, it would create an optional dependency
+    group named <code class="literal">remoteshell</code> with dependencies on the
+    <code class="literal">ssh2</code> PECL extension and the (fictional)
+    <code class="literal">SSH_RemoteShell</code> package.  The dependency group could look
+    like this in package.xml:
+   </p>
+   <p class="para">
+    </p><div class="xmlcode">
+     <pre class="xmlcode">
+&lt;group name=&quot;remoteshell&quot; hint=&quot;Add support for Remote Shell Operations&quot;&gt;
+ &lt;package&gt;
+  &lt;name&gt;SSH_RemoteShell&lt;/name&gt;
+  &lt;channel&gt;pear.php.net&lt;/channel&gt;
+ &lt;/package&gt;
+ &lt;extension&gt;
+  &lt;name&gt;ssh2&lt;/name&gt;
+ &lt;/extension&gt;
+&lt;/group&gt;</pre>
+
+    </div>
+   
+   <p class="para">
+    To install this dependency group, the user would simply use
+    <code class="literal">pear install Packagename#remoteshell</code>.
+   </p>
+  </div>
+  <div class="refsection" id="guide.developers.package2.dependencies.pearinstaller"><div class="info"><h1>&lt;pearinstaller&gt; dependencies</h1>
+</div>
+   
+   <p class="para">
+    The &lt;pearinstaller&gt; dependency defines the minimum version of PEAR that can properly
+    parse and install the package.xml containing it.  As with all dependency tags that support
+    versioning, these 4 tags are supported to define versioning:
+   </p>
+   <p class="para">
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+       &lt;min&gt; - minimum version of PEAR required to install this package.xml.  This tag is
+       required in all package.xml &lt;pearinstaller&gt; dependencies.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       &lt;max&gt; - maximum version of PEAR installer supported.  Use with caution!  This tag
+       will prevent the package from being installed by anyone with a newer version of PEAR!
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       &lt;recommended&gt; - recommended version of PEAR installer.  This tag is used for strict
+       version control.  The installer will refuse to install a package without the --force
+       option unless the version exactly matches recommended.  This can be used to provide a level
+       of extra security, as a package can be set to install using a version that is known to work
+       without limiting future upgrades.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       &lt;exclude&gt; - incompatible versions of PEAR installer.  Use this to prevent the package
+       from being installed by any PEAR version that cannot properly install the package.  Multiple
+       &lt;exclude&gt; tags may be used to exclude more than one version.
+      </p>
+     </li>
+    </ul>
+   
+  </div>
+  <div class="refsection" id="guide.developers.package2.dependencies.php"><div class="info"><h1>&lt;php&gt; dependencies</h1>
+</div>
+   
+   <p class="para">
+    As with all dependency tags that support
+    versioning, these 4 tags are supported to define versioning:
+   </p>
+   <p class="para">
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+       &lt;min&gt; - minimum version of PHP required to install this package.xml.  This tag is
+       required in all package.xml &lt;php&gt; dependencies.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       &lt;max&gt; - maximum version of PHP supported.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       &lt;exclude&gt; - incompatible versions of PHP.  Use this to prevent the package
+       from being installed by any PHP version that cannot properly work with the package.  Multiple
+       &lt;exclude&gt; tags may be used to exclude more than one version.
+      </p>
+     </li>
+    </ul>
+   
+  </div>
+  <div class="refsection" id="guide.developers.package2.dependencies.subpackage"><div class="info"><h1>&lt;subpackage&gt; dependencies</h1>
+</div>
+   
+   <p class="para">
+    Subpackage dependencies share the same xml format as package dependencies.  The subpackage
+    dependency should only be used if a package is split into more than one package.  In other
+    words, if the child package contains the same files as any earlier version of the parent
+    package, the child package would normally conflict with the parent package because it
+    would be attempting to overwrite the parent package&#039;s files with its own files.
+   </p>
+   <p class="para">
+    A simple example should make this clear.  Package Foo 1.0.0 contains Foo.php and Foo/Bar.php.
+    Package Foo&#039;s developers decide to split Foo into two packages: Foo and Foo_Bar.  Foo 1.1.0
+    contains foo.php, and Foo_Bar 0.1.0 contains Foo/Bar.php.  Foo_Bar 0.1.0 conflicts directly
+    with Foo 1.0.0, as both contain the file Foo/Bar.php.
+   </p>
+   <p class="para">
+    If Foo has a subpackage dependency on Foo_Bar, then the installer will ignore the conflict
+    between Foo 1.0.0&#039;s Foo/Bar.php and Foo_Bar 0.1.0&#039;s Foo/Bar.php just as it ignores the conflict
+    between Foo 1.0.0&#039;s Foo.php and Foo 1.1.0&#039;s Foo.php.
+   </p>
+  </div>
+  <div class="refsection" id="guide.developers.package2.dependencies.package"><div class="info"><h1>&lt;package&gt; dependencies</h1>
+</div>
+   
+   <p class="para">
+    Understandably, the &lt;package&gt; dependency is PEAR&#039;s most complex dependency.  PEAR 1.4.0
+    supports 3 different kinds of package dependencies:
+   </p>
+   <p class="para">
+    </p><ol type="1">
+     <li class="listitem">
+      <p class="para">
+       Normal, traditional channel server-based package dependencies (same idea as package.xml 1.0).
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       Dependencies on packages that provide PHP extensions (like <a href="http://pecl.php.net/" class="link external">PECL</a>
+       packages).  (These can be both server-based and uri-based dependencies)
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       Static, non-traditional uri-based package dependencies.
+      </p>
+     </li>
+    </ol>
+   
+   <div class="refsection" id="guide.developers.package2.dependencies.package.channel"><div class="info"><h1>channel-based &lt;package&gt; depedendencies</h1>
+</div>
+    
+    <p class="para">
+     The most common kind of package dependency is a channel-based dependency.  This dependency
+     from package.xml version 1.0:
+    </p>
+    <p class="para">
+     </p><div class="xmlcode">
+      <pre class="xmlcode">
+&lt;deps&gt;
+ &lt;dep type=&quot;pkg&quot; rel=&quot;has&quot;&gt;PEAR&lt;/dep&gt;
+&lt;/deps&gt;</pre>
+
+     </div>
+    
+    <p class="para">
+     translates to this dependency in package.xml version 2.0:
+    </p>
+    <p class="para">
+     </p><div class="xmlcode">
+      <pre class="xmlcode">
+&lt;dependencies&gt;
+ &lt;required&gt;
+&lt;!-- ... --&gt;
+  &lt;package&gt;
+   &lt;name&gt;PEAR&lt;/name&gt;
+   &lt;channel&gt;pear.php.net&lt;/channel&gt;
+  &lt;/package&gt;
+ &lt;/required&gt;
+&lt;/dependencies&gt;</pre>
+
+     </div>
+    
+    <p class="para">
+     Note that &lt;channel&gt; is a required tag for all typical package dependencies.  Use pear.php.net
+     for all packages that were packaged using package.xml 1.0, regardless of where they are downloaded
+     from.
+    </p>
+    <p class="para">
+     As with all dependency tags that support versioning, all standard versioning tags
+     are supported (min, max, recommended, exclude).  In addition, the &lt;conflicts&gt;
+     tag is supported to create a negative dependency.
+    </p>
+    <p class="para">
+     </p><ul class="itemizedlist">
+      <li class="listitem">
+       <p class="para">
+        &lt;min&gt; - minimum version of a dependency.  If the dependency package is installed, and
+        is older than this version, installation will fail.
+       </p>
+      </li>
+      <li class="listitem">
+       <p class="para">
+        &lt;max&gt; - maximum version of a dependency.  If the dependency package is installed, and
+        is newer than this version, installation will fail.
+       </p>
+      </li>
+      <li class="listitem">
+       <p class="para">
+        &lt;recommended&gt; - recommended version of a dependency.  This tag is used for strict
+        version control.  The installer will refuse to install a package without the --force
+        option unless the version exactly matches recommended.  This can be used to provide a level
+        of extra security, as a package can be set to install using a version that is known to work
+        without limiting future upgrades.
+       </p>
+       <p class="para">
+        Note that use of the <a href="guide.developers.package2.compatible.html" class="link">&lt;compatible&gt;</a>
+        tag in the dependency&#039;s package.xml can be used
+        to circumvent the installer&#039;s strictness.  In essence, the &lt;compatible&gt; tag tells the
+        installer that a dependent package is compatible with the current package, even though
+        it is not the recommended version.
+       </p>
+      </li>
+      <li class="listitem">
+       <p class="para">
+        &lt;exclude&gt; - incompatible versions of a package.  Multiple
+        &lt;exclude&gt; tags may be used to exclude more than one version of a dependency.
+       </p>
+      </li>
+     <li class="listitem">
+      <p class="para">
+       &lt;conflicts&gt; - Negates the dependency.  If the package is installed, it cannot
+       satisfy the requirements of the dependency or installation will fail.
+      </p>
+     </li>
+     </ul>
+    
+    <p class="para">
+     Here is a rough chart describing how to convert from package.xml 1.0 &quot;rel&quot; attributes
+     to a package.xml 2.0 equivalent.
+    </p>
+    <p class="para">
+     </p><table id="guide.developers.package2.dependencies.package.convert" class="doctable table"><caption>Converting package.xml 1.0 package dependencies to package.xml 2.0</caption>
+      
+      
+       <thead>
+        <tr>
+         <th>1.0</th>
+         <th>2.0 equivalent</th>
+        </tr>
+
+       </thead>
+
+       <tbody class="tbody">
+        <tr>
+         <td>
+          <div class="xmlcode">
+           <pre class="xmlcode">&lt;dep type=&quot;pkg&quot; rel=&quot;has&quot;&gt;Foo&lt;/dep&gt;</pre>
+
+          </div>
+         </td>
+         <td>
+          <div class="xmlcode">
+           <pre class="xmlcode">
+&lt;package&gt;
+ &lt;name&gt;Foo&lt;/name&gt;
+ &lt;channel&gt;pear.php.net&lt;/channel&gt;
+&lt;/package&gt;</pre>
+
+          </div>
+         </td>
+        </tr>
+
+        <tr>
+         <td>
+          <div class="xmlcode">
+           <pre class="xmlcode">&lt;dep type=&quot;pkg&quot; rel=&quot;ge&quot; version=&quot;1.0.0&quot;&gt;Foo&lt;/dep&gt;</pre>
+
+          </div>
+         </td>
+         <td>
+          <div class="xmlcode">
+           <pre class="xmlcode">
+&lt;package&gt;
+ &lt;name&gt;Foo&lt;/name&gt;
+ &lt;channel&gt;pear.php.net&lt;/channel&gt;
+ &lt;min&gt;1.0.0&lt;/min&gt;
+&lt;/package&gt;</pre>
+
+          </div>
+         </td>
+        </tr>
+
+        <tr>
+         <td>
+          <div class="xmlcode">
+           <pre class="xmlcode">&lt;dep type=&quot;pkg&quot; rel=&quot;gt&quot; version=&quot;1.0.0&quot;&gt;Foo&lt;/dep&gt;</pre>
+
+          </div>
+         </td>
+         <td>
+          <div class="xmlcode">
+           <pre class="xmlcode">
+&lt;package&gt;
+ &lt;name&gt;Foo&lt;/name&gt;
+ &lt;channel&gt;pear.php.net&lt;/channel&gt;
+ &lt;min&gt;1.0.0&lt;/min&gt;
+ &lt;exclude&gt;1.0.0&lt;/exclude&gt;
+&lt;/package&gt;</pre>
+
+          </div>
+         </td>
+        </tr>
+
+        <tr>
+         <td>
+          <div class="xmlcode">
+           <pre class="xmlcode">&lt;dep type=&quot;pkg&quot; rel=&quot;le&quot; version=&quot;1.0.0&quot;&gt;Foo&lt;/dep&gt;</pre>
+
+          </div>
+         </td>
+         <td>
+          <div class="xmlcode">
+           <pre class="xmlcode">
+&lt;package&gt;
+ &lt;name&gt;Foo&lt;/name&gt;
+ &lt;channel&gt;pear.php.net&lt;/channel&gt;
+ &lt;max&gt;1.0.0&lt;/max&gt;
+&lt;/package&gt;</pre>
+
+          </div>
+         </td>
+        </tr>
+
+        <tr>
+         <td>
+          <div class="xmlcode">
+           <pre class="xmlcode">&lt;dep type=&quot;pkg&quot; rel=&quot;ge&quot; version=&quot;1.0.0&quot;&gt;Foo&lt;/dep&gt;</pre>
+
+          </div>
+         </td>
+         <td>
+          <div class="xmlcode">
+           <pre class="xmlcode">
+&lt;package&gt;
+ &lt;name&gt;Foo&lt;/name&gt;
+ &lt;channel&gt;pear.php.net&lt;/channel&gt;
+ &lt;max&gt;1.0.0&lt;/max&gt;
+ &lt;exclude&gt;1.0.0&lt;/exclude&gt;
+&lt;/package&gt;</pre>
+
+          </div>
+         </td>
+        </tr>
+
+        <tr>
+         <td>
+          <div class="xmlcode">
+           <pre class="xmlcode">
+&lt;dep type=&quot;pkg&quot; rel=&quot;ge&quot; version=&quot;1.0.0&quot;&gt;Foo&lt;/dep&gt;
+&lt;dep type=&quot;pkg&quot; rel=&quot;le&quot; version=&quot;1.9.0&quot;&gt;Foo&lt;/dep&gt;</pre>
+
+          </div>
+         </td>
+         <td>
+          <div class="xmlcode">
+           <pre class="xmlcode">
+&lt;package&gt;
+ &lt;name&gt;Foo&lt;/name&gt;
+ &lt;channel&gt;pear.php.net&lt;/channel&gt;
+ &lt;min&gt;1.0.0&lt;/min&gt;
+ &lt;max&gt;1.9.0&lt;/max&gt;
+&lt;/package&gt;</pre>
+
+          </div>
+         </td>
+        </tr>
+
+        <tr>
+         <td>
+          <div class="xmlcode">
+           <pre class="xmlcode">
+&lt;dep type=&quot;pkg&quot; rel=&quot;not&quot;&gt;Foo&lt;/dep&gt;</pre>
+
+          </div>
+         </td>
+         <td>
+          <div class="xmlcode">
+           <pre class="xmlcode">
+&lt;package&gt;
+ &lt;name&gt;Foo&lt;/name&gt;
+ &lt;channel&gt;pear.php.net&lt;/channel&gt;
+ &lt;conflicts/&gt;
+&lt;/package&gt;</pre>
+
+          </div>
+         </td>
+        </tr>
+
+       </tbody>
+      
+     </table>
+
+    
+   </div>
+   <div class="refsection" id="guide.developers.package2.dependencies.package.uri"><div class="info"><h1>uri-based &lt;package&gt; dependencies</h1>
+</div>
+    
+    <p class="para">
+     Let&#039;s look at uri-based package dependencies.  Here is a simple example:
+    </p>
+    <p class="para">
+     </p><div class="xmlcode">
+      <pre class="xmlcode">
+&lt;package&gt;
+ &lt;name&gt;Foo&lt;name&gt;
+ &lt;uri&gt;http://www.example.com/Foo-1.3.0&lt;/uri&gt;
+&lt;/package&gt;</pre>
+
+     </div>
+    
+    <p class="para">
+     This dependency tells the installer to fetch http://www.example.com/Foo-1.3.0.tgz or
+     http://www.example.com/Foo-1.3.0.tar (both must be available!) if the package Foo
+     is not installed.  All uri packages must contain a
+     <a href="guide.developers.package2.uri.html" class="link">&lt;uri&gt;</a> tag rather than a
+     <a href="guide.developers.package2.channel.html" class="link">&lt;channel&gt;</a> tag and will
+     automatically belong to the pseudo-channel &quot;__uri&quot;, but that is not important to
+     the discussion of how to format the xml to create the uri-based package dependency.
+    </p>
+    <p class="para">
+     uri-based package dependencies cannot contain any versioning information, as this is irrelevant:
+     there is only one version possible with a static uri.  uri-based dependencies can contain the
+     &lt;conflicts/&gt; tag to specify an absolute conflict with the package, and the
+     &lt;providesextension&gt; tag to specify an extension provided by the static package.
+    </p>
+   </div>
+   <div class="refsection" id="guide.developers.package2.dependencies.package.phporext"><div class="info"><h1>PEAR-style &lt;package&gt; dependencies vs. PECL-style &lt;package&gt; dependencies</h1>
+</div>
+    
+    <p class="para">
+     package.xml 2.0 supports differentiating
+     <a href="guide.developers.package2.release.html" class="link">release types</a>, and as such also
+     supports dependencies on PECL-style packages that use the extbinrelease or extsrcrelease type.
+    </p>
+    <p class="para">
+     To specify a dependency on a PHP extension that <em class="emphasis">can be</em> distributed as
+     a PECL package, but could also be bundled with PHP by default, such as the PDO extension,
+     use this dependency style:
+    </p>
+    <p class="para">
+     </p><div class="xmlcode">
+      <pre class="xmlcode">
+&lt;package&gt;
+ &lt;name&gt;PDO&lt;/name&gt;
+ &lt;channel&gt;pecl.php.net&lt;/channel&gt;
+ &lt;min&gt;0.3.1&lt;/min&gt;
+ &lt;providesextension&gt;PDO&lt;/providesextension&gt;
+&lt;/package&gt;</pre>
+
+     </div>
+    
+    <p class="para">
+     The magic is in the &lt;providesextension&gt; tag.  This tag tells the installer to take this
+     process when validating the dependency:
+     </p><ol type="1">
+      <li class="listitem">
+       <p class="para">
+        Is the extension &quot;PDO&quot; present in memory?  If so, is it version 0.3.1 or higher?
+       </p>
+      </li>
+      <li class="listitem">
+       <p class="para">
+        If not, is the user also installing pecl.php.net/PDO at the same time as this package?  If
+        so, is it version 0.3.1 or higher?
+       </p>
+      </li>
+      <li class="listitem">
+       <p class="para">
+        If not, is pecl.php.net/PDO installed, and is the version 0.3.1 or higher?
+       </p>
+      </li>
+     </ol>
+    
+    <p class="para">
+     If any of the three conditions above validate in the order specified, the dependency will be
+     satisfied and installation will continue.  This system allows users to use a different php.ini
+     to install PHP extensions and also provides a fail-safe system to depend on extensions.
+    </p>
+    <blockquote class="warning">
+
+     <p class="simpara">
+      &lt;providesextension&gt;, like all other extension-related functions in PHP, is case-sensitive.
+      Do not use &quot;pdo&quot; for the &quot;PDO&quot; extension, or your dependency will always
+      fail.
+     </p>
+    </blockquote>
+
+   </div>
+  </div>
+  <div class="refsection" id="guide.developers.package2.dependencies.extension"><div class="info"><h1>&lt;extension&gt; dependencies</h1>
+</div>
+   
+   <p class="para">
+    As with all dependency tags that support versioning, all standard versioning tags
+    are supported (min, max, recommended, exclude).  In addition, the &lt;conflicts&gt;
+    tag is supported to create a negative dependency.
+   </p>
+   <p class="para">
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+       &lt;min&gt; - minimum version of PHP extension to install this package.xml.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       &lt;max&gt; - maximum version of PHP extension supported.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       &lt;recommended&gt; - recommended version of PHP extension.  This tag is used for strict
+       version control.  The installer will refuse to install a package without the --force
+       option unless the version exactly matches recommended.  This can be used to provide a level
+       of extra security, as a package can be set to install using a version that is known to work
+       without limiting future upgrades.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       &lt;exclude&gt; - incompatible versions of PHP extension.  Multiple
+       &lt;exclude&gt; tags may be used to exclude more than one version.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       &lt;conflicts&gt; - Negates the dependency.  If the extension is present, it cannot
+       satisfy the requirements of the dependency or installation will fail.
+      </p>
+     </li>
+    </ul>
+   
+  </div>
+  <div class="refsection" id="guide.developers.package2.dependencies.os"><div class="info"><h1>&lt;os&gt; dependencies</h1>
+</div>
+   
+   <p class="para">
+    The OS dependency is used to restrict a package to both a particular class of OSes (like unix) and to
+    a specific OS (like darwin, or freebsd).  Here is an example:
+   </p>
+   <p class="para">
+    </p><div class="xmlcode">
+     <pre class="xmlcode">
+&lt;os&gt;
+ &lt;name&gt;linux&lt;/name&gt;
+&lt;/os&gt;</pre>
+
+    </div>
+   
+   <p class="para">
+    To specify that a package can be installed on every OS except the one specified, use the
+    &lt;conflicts/&gt; tag:
+   </p>
+   <p class="para">
+    </p><div class="xmlcode">
+     <pre class="xmlcode">
+&lt;os&gt;
+ &lt;name&gt;windows&lt;/name&gt;
+ &lt;conflicts/&gt;
+&lt;/os&gt;</pre>
+
+    </div>
+   
+   <p class="para">
+    Possible OS values are:
+    </p><ul class="itemizedlist">
+     <li class="listitem"><span class="simpara">windows</span></li>
+     <li class="listitem"><span class="simpara">unix</span></li>
+     <li class="listitem"><span class="simpara">linux</span></li>
+     <li class="listitem"><span class="simpara">freebsd</span></li>
+     <li class="listitem"><span class="simpara">darwin (use for Mac OS X)</span></li>
+     <li class="listitem"><span class="simpara">sunos</span></li>
+     <li class="listitem"><span class="simpara">irix</span></li>
+     <li class="listitem"><span class="simpara">hpux</span></li>
+     <li class="listitem"><span class="simpara">aix</span></li>
+    </ul>
+   
+   <p class="para">
+    In addition, any esoteric OS that supports the
+    <a href="http://www.php.net/php_uname" class="link external"><strong class="function">php_uname()</strong></a> function can be used.
+    Note that the &quot;unix&quot; OS is defined as any of linux, freebsd, darwin, sunos, irix, hpux,
+    or aix.
+   </p>
+  </div>
+  <div class="refsection" id="guide.developers.package2.dependencies.arch"><div class="info"><h1>&lt;arch&gt; dependencies</h1>
+</div>
+   
+   <p class="para">
+    The arch dependency is used to restrict a package to a specific os and processor architecture.
+    Here is an example:
+   </p>
+   <p class="para">
+    </p><div class="xmlcode">
+     <pre class="xmlcode">
+&lt;arch&gt;
+ &lt;pattern&gt;linux-*-i386-*&lt;/pattern&gt;
+&lt;/arch&gt;</pre>
+
+    </div>
+   
+   <p class="para">
+    To specify that a package can be installed on every architecture except the one specified, use the
+    &lt;conflicts/&gt; tag:
+   </p>
+   <p class="para">
+    </p><div class="xmlcode">
+     <pre class="xmlcode">
+&lt;arch&gt;
+ &lt;pattern&gt;linux-*-i?86-*&lt;/pattern&gt;
+ &lt;conflicts/&gt;
+&lt;/arch&gt;</pre>
+
+    </div>
+   
+   <p class="para">
+    The arch pattern is defined by the <strong class="function">OS_Guess-&gt;matchSignature()</strong> method, and
+    is as follows: sysname[-release[-cpu[-extra]]].  All segments within [] are optional,
+    and the wildcard &quot;*&quot; can be used in all segments instead of a value.  In addition, the
+    &quot;?&quot; wildcard can be used to specify a single character that can match any value.
+    i?86 will match i386, i686, i586 and so on.
+   </p>
+   <p class="para">
+    sysname is the same as the os dependency, except unix is not supported.
+   </p>
+   <p class="para">
+    release is the version of the operating system.
+   </p>
+   <p class="para">
+    cpu is the specific cpu, and is typically i?86, sparc, powerpc.
+   </p>
+   <p class="para">
+    extra is any other stuff on the end of <strong class="function">php_uname()</strong>, including the glibc version
+   </p>
+  </div>
+ </div>
+ </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="guide.developers.package2.compatible.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="guide.developers.package2.tags.html">Detailed Tag Reference for package.xml version 2.0</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="guide.developers.package2.usesrole.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">&lt;compatible&gt;</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">&lt;usesrole&gt;</td>
+  </tr>
+ </table>
+</div>
+</body></html>

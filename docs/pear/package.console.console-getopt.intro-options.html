@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction - Options</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.console.console-getopt.html" title="Console_Getopt" />
+  <link rel="prev" href="package.console.console-getopt.html" title="Console_Getopt" />
+  <link rel="next" href="package.console.console-getopt.getopt.html" title="Console_Getopt::getopt" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction - Options</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.console.console-getopt.html" title="Console_Getopt">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.console.console-getopt.getopt.html" title="Console_Getopt::getopt">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.console.console-getopt.intro-options">
+   
+    <h1 class="refname">Introduction - Options</h1>
+    <div class="refnamediv">Introduction - Options &ndash; Defining and processing options</div>
+
+   
+
+    <div class="refsection" id="package.console.console-getopt.intro-options.defining"><div class="info"><h1>Defining options</h1>
+</div>
+     
+     <p class="para">
+      <strong class="function">Getopt()</strong> supports two types of options: <em><code class="parameter">
+      short options</code></em> and <em><code class="parameter">long options</code></em>
+      </p><div class="example"><div class="info"><p><strong>Calling a script with short and long options</strong></p></div>
+       
+       <div class="example-contents"><p>
+        </p><div class="programlisting"><pre class="programlisting"># Using short options</pre>
+<strong class="command">myphpscript</strong> <em><code class="parameter">-q -l en -o</code></em><pre class="programlisting"># Using long options instead</pre>
+<strong class="command">myphpscript</strong> <em><code class="parameter">--quite --lang=en --option</code></em><pre class="programlisting"># Mixing both</pre>
+<strong class="command">myphpscript</strong> <em><code class="parameter">-q --lang=en -o</code></em>
+        </div><p>
+        You have to define which options you want to support. The second
+        argument of <strong class="function">getopt()</strong> requires a string containing
+        all supported chars. For the example above this would be at least:
+        </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$shortoptions&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"qlo"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div><p>
+        The order of the characters is not important. Often you have
+        to define options with (optional) parameters. To express that
+        a option requires a parameter, you have to add a colon. If the
+        parameter is optional, add a double colon, ie:
+        </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$shortoptions&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"ql:o::"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div><p>
+        this means the following script calls are permitted, ie.
+        </p><div class="programlisting">
+<strong class="command">myphpscript</strong> 
+<strong class="command">myphpscript</strong> <em><code class="parameter">-q</code></em>
+<strong class="command">myphpscript</strong> <em><code class="parameter">-q -l en </code></em>
+<strong class="command">myphpscript</strong> <em><code class="parameter">-o text </code></em>
+<strong class="command">myphpscript</strong> <em><code class="parameter">-o</code></em>
+        </div><p>
+        whilst
+        </p><div class="programlisting">
+<strong class="command">myphpscript</strong> <em><code class="parameter">-l</code></em>
+        </div><p>
+        is not permitted. The <em><code class="parameter">-l</code></em> option
+        requires a parameter, if the option is used.
+       </p></div>
+       <div class="example-contents"><p>
+        The long options work equally, but they have to be defined in
+        an array:
+        </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$longoptions&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">"quite"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"lang"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"option"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div><p>
+        For defining optional parameters, use <em><code class="parameter">&#039;=&#039;</code></em> and
+        <em><code class="parameter">&#039;==&#039;</code></em> like the colon in short options.
+        </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$longoptions&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">"quite"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"lang="</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"option=="</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+       </p></div>
+      </div>
+     
+    </div>
+    <div class="refsection" id="package.console.console-getopt.intro-options.return"><div class="info"><h1>The returned options array</h1>
+</div>
+     
+     <p class="para">
+      The return value is an array of two elements: the list of parsed
+      options and the list of non-option command-line arguments. Each entry in
+      the list of parsed options is a pair of elements - the first one
+      specifies the option, and the second one specifies the option argument,
+      if there was one, else the value is <strong class="constant">NULL</strong>.
+     </p>
+    </div>
+
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.console.console-getopt.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.console.console-getopt.html">Console_Getopt</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.console.console-getopt.getopt.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Console_Getopt</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Console_Getopt::getopt</td>
+  </tr>
+ </table>
+</div>
+</body></html>

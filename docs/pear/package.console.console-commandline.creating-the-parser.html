@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Creating the parser</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.console.console-commandline.html" title="Console_CommandLine" />
+  <link rel="prev" href="package.console.console-commandline.intro.html" title="Introduction" />
+  <link rel="next" href="package.console.console-commandline.options.html" title="Managing command line options" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Creating the parser</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.console.console-commandline.intro.html" title="Introduction">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.console.console-commandline.options.html" title="Managing command line options">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.console.console-commandline.creating-the-parser">
+ 
+  <h1 class="refname">Creating the parser</h1>
+  <div class="refnamediv">Creating the parser &ndash; 
+    how to create a parser using <span class="acronym">PHP</span> code or an
+    <span class="acronym">XML</span> definition file
+  </div>
+
+ 
+ <div class="refsection" id="package.console.console-commandline.creating-the-parser.intro"><div class="info"><h1><strong class="classname">Console_CommandLine</strong> constructor</h1>
+</div>
+
+  <p class="para">
+    <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine.html#method__construct" class="apidoclink">Console_CommandLine::__construct()</a>
+    takes an optional array of parameters explained in the table below.
+    Note that if you are using an <span class="acronym">XML</span> definition file, you
+    can pass these parameters in it (see <span class="acronym">XML</span> example for
+    details).
+  </p>
+  <p class="para">
+    </p><table class="doctable table"><caption>Available parameters</caption>
+
+      
+         <thead>
+           <tr>
+             <th>name</th>
+             <th>type</th>
+             <th>required</th>
+             <th>description</th>
+           </tr>
+
+         </thead>
+
+        <tbody class="tbody">
+          <tr>
+            <td>name</td>
+            <td>string</td>
+            <td>no, default to <code class="varname">$argv[0]</code> if not given</td>
+            <td>the name of your program</td>
+          </tr>
+
+          <tr>
+            <td>description</td>
+            <td>string</td>
+            <td>no, but recommended for the help message</td>
+            <td>the description of your program: this should explain what
+                your program is supposed to do</td>
+          </tr>
+
+          <tr>
+            <td>version</td>
+            <td>mixed (string or numeric)</td>
+            <td>no, note that if not given, the --version option will
+                not be available</td>
+            <td>the program version number</td>
+          </tr>
+
+          <tr>
+            <td>add_help_option</td>
+            <td>boolean</td>
+            <td>no, default to <strong class="constant">TRUE</strong></td>
+            <td>if set to <strong class="constant">FALSE</strong> the parser will not generate
+                automatically the "<span class="quote">help</span>" option</td>
+          </tr>
+
+          <tr>
+            <td>add_version_option</td>
+            <td>boolean</td>
+            <td>no, default to <strong class="constant">TRUE</strong></td>
+            <td>if set to <strong class="constant">FALSE</strong> the parser will not generate
+                automatically the "<span class="quote">version</span>" option</td>
+          </tr>
+
+          <tr>
+            <td>force_posix</td>
+            <td>boolean</td>
+            <td>no, default to <strong class="constant">FALSE</strong></td>
+            <td>if set to <strong class="constant">TRUE</strong>, the parser will force
+                <span class="acronym">POSIX</span> compliance (please see the gettext
+                manual for more information)</td>
+          </tr>
+
+        </tbody>
+      
+    </table>
+
+   
+ </div>
+ <div class="refsection" id="package.console.console-commandline.creating-the-parser.php"><div class="info"><h1>Using <span class="acronym">PHP</span> code</h1>
+</div>
+
+  <p class="para">The examples below demonstrate how to instanciate
+    <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine.html" class="apidoclink">Console_CommandLine</a>
+    and build a parser using <span class="acronym">PHP</span> code.
+  </p>
+  <p class="para">
+    </p><div class="example"><div class="info"><p><strong>The simplest way</strong></p></div>
+
+      <div class="phpcode">
+        <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Console/CommandLine.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$parser&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Console_CommandLine</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'description'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'A&nbsp;useful&nbsp;description&nbsp;for&nbsp;your&nbsp;program.'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'version'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'0.0.1'</span><span style="color: #007700">,&nbsp;</span><span style="color: #FF8000">//&nbsp;the&nbsp;version&nbsp;of&nbsp;your&nbsp;program<br /></span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+      </div>
+    </div>
+  
+  <p class="para">
+    </p><div class="example"><div class="info"><p><strong>Alternative method</strong></p></div>
+
+      <div class="phpcode">
+        <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Console/CommandLine.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$parser&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Console_CommandLine</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">description&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'A&nbsp;useful&nbsp;description&nbsp;for&nbsp;your&nbsp;program.'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">version&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'0.0.1'</span><span style="color: #007700">;&nbsp;</span><span style="color: #FF8000">//&nbsp;the&nbsp;version&nbsp;of&nbsp;your&nbsp;program<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+      </div>
+    </div>
+  
+ </div>
+ <div class="refsection" id="package.console.console-commandline.creating-the-parser.xml"><div class="info"><h1>Using an <span class="acronym">XML</span> definition file</h1>
+</div>
+
+  <p class="para">The examples below demonstrate how to instanciate
+    <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine.html" class="apidoclink">Console_CommandLine</a>
+    and build a parser using an <span class="acronym">XML</span> definition file, this
+    can be very useful if you have a big program or if you need to reuse your
+    user interface settings for a web frontend for example.
+    </p><div class="example"><div class="info"><p><strong>The <span class="acronym">XML</span> file</strong></p></div>
+
+      <div class="xmlcode">
+        <pre class="xmlcode">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
+&lt;command&gt;
+    &lt;description&gt;A useful description for your program.&lt;/description&gt;
+    &lt;version&gt;0.0.1&lt;/version&gt;
+&lt;/command&gt;</pre>
+
+      </div>
+    </div>
+  
+  <p class="para">
+    </p><div class="example"><div class="info"><p><strong>The <span class="acronym">PHP</span> file</strong></p></div>
+
+      <div class="phpcode">
+        <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Console/CommandLine.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$parser&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Console_CommandLine</span><span style="color: #007700">::</span><span style="color: #0000BB">fromXmlFile</span><span style="color: #007700">(</span><span style="color: #DD0000">'example.xml'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+      </div>
+    </div>
+  
+
+  <blockquote class="note">
+   <p class="para">
+    Using an <span class="acronym">XML</span> string you would have called
+    <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine.html#methodfromXmlString" class="apidoclink">Console_CommandLine::fromXmlString()</a>
+    instead of
+    <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine.html#methodfromXmlFile" class="apidoclink">Console_CommandLine::fromXmlFile()</a>
+    of course.
+   </p>
+  </blockquote>
+
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.console.console-commandline.intro.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.console.console-commandline.html">Console_CommandLine</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.console.console-commandline.options.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Managing command line options</td>
+  </tr>
+ </table>
+</div>
+</body></html>

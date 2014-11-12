@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Quoting and escaping</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.mdb2.html" title="MDB2" />
+  <link rel="prev" href="package.database.mdb2.intro-query.html" title="Querying" />
+  <link rel="next" href="package.database.mdb2.datatypes.html" title="Datatypes" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Quoting and escaping</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.mdb2.intro-query.html" title="Querying">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.mdb2.datatypes.html" title="Datatypes">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.mdb2.intro-quote">
+ 
+  <h1 class="refname">Quoting and escaping</h1>
+  <div class="refnamediv">Quoting and escaping &ndash; Quote values in a suitable format to compose a query.</div>
+
+ 
+
+ <div class="refsection" id="package.database.mdb2.intro-quote.desc">
+  <h1 class="title">Description</h1>
+  <p class="para">
+   <strong class="classname">MDB2</strong> provides a <strong class="function">quote()</strong> method to
+   quote a value into a DBMS specific format that is suitable to compose query statements.
+   It has four parameters (only the first one is required): the value to be quoted,
+   its <a href="http://cvs.php.net/viewcvs.cgi/*checkout*/pear/MDB2/docs/datatypes.html" class="link external">datatype</a>,
+   whether or not to quote the value, and whether or not to escape the wildcards in the value.
+   If you don&#039;t provide the datatype, it will be guessed from the value.
+  </p>
+  <div class="example"><div class="info"><p><strong>Doing a query with quoted values</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Create&nbsp;a&nbsp;valid&nbsp;MDB2&nbsp;object&nbsp;named&nbsp;$mdb2<br />//&nbsp;at&nbsp;the&nbsp;beginning&nbsp;of&nbsp;your&nbsp;program...<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'MDB2.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$mdb2&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">MDB2</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #DD0000">'pgsql://usr:pw@localhost/dbnam'</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;some&nbsp;sample&nbsp;values&nbsp;to&nbsp;be&nbsp;inserted<br /></span><span style="color: #0000BB">$id&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$name&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'sample&nbsp;item'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$time&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #DD0000">'Y-m-d&nbsp;H:i:s'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Proceed&nbsp;with&nbsp;a&nbsp;query...<br /></span><span style="color: #0000BB">$query&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'INSERT&nbsp;INTO&nbsp;tablename&nbsp;(id,&nbsp;itemname,&nbsp;saved_time)&nbsp;VALUES&nbsp;('<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">quote</span><span style="color: #007700">(</span><span style="color: #0000BB">$id</span><span style="color: #007700">,&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'integer'</span><span style="color: #007700">)&nbsp;&nbsp;&nbsp;.</span><span style="color: #DD0000">',&nbsp;'<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">quote</span><span style="color: #007700">(</span><span style="color: #0000BB">$name</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'text'</span><span style="color: #007700">)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.</span><span style="color: #DD0000">',&nbsp;'<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">quote</span><span style="color: #007700">(</span><span style="color: #0000BB">$time</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'timestamp'</span><span style="color: #007700">)&nbsp;.</span><span style="color: #DD0000">')'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">exec</span><span style="color: #007700">(</span><span style="color: #0000BB">$query</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  <p class="para">
+    With the third parameter of the <strong class="function">quote()</strong> you can specify
+    whether or not the above fields should be individually quoted:
+  </p>
+  <div class="example"><div class="info"><p><strong>Individually choose the values to be quoted</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$query&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'INSERT&nbsp;INTO&nbsp;sometable&nbsp;(textfield1,&nbsp;boolfield2,&nbsp;datefield3)&nbsp;VALUES&nbsp;('<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">.</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">quote</span><span style="color: #007700">(</span><span style="color: #0000BB">$val1</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"text"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">).</span><span style="color: #DD0000">',&nbsp;'<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">.</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">quote</span><span style="color: #007700">(</span><span style="color: #0000BB">$val2</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"boolean"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">).</span><span style="color: #DD0000">',&nbsp;'<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">.</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">quote</span><span style="color: #007700">(</span><span style="color: #0000BB">$val3</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"date"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">).</span><span style="color: #DD0000">')'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  <p class="para">
+    The above example will quote the fields and the resulting SQL will look as such:
+    </p><div class="programlisting"><pre class="programlisting">INSERT INTO sometable FIELDS (textfield1, boolfield2, datefield3) VALUES (&#039;blah&#039;, 1, &#039;2006-02-21&#039;)</pre>
+</div><p>
+    where the values defined were the values inserted accordingly. You will
+    notice that the &quot;boolfield2&quot; is unquoted as we specified <strong class="constant">FALSE</strong> in the
+    <strong class="function">quote()</strong> method.
+  </p>
+  <p class="para">
+   <em class="emphasis">NB:</em> If you use <a href="package.database.mdb2.intro-execute.html" class="link">prepared statements</a>,
+   then quoting will be done automatically, you don&#039;t need to do it yourself.
+  </p>
+ </div>
+ 
+ <div class="refsection" id="package.database.mdb2.intro-quote.quote-identifiers"><div class="info"><h1>Identifiers</h1>
+</div>
+   
+   <p class="para">
+    You can quote the db identifiers (table and field names) with  <strong class="function">quoteIdentifier()</strong>.
+    The delimiting style depends on which database driver is being used.
+    <em class="emphasis">NOTE:</em> just because you CAN use delimited identifiers,
+    it doesn&#039;t mean you SHOULD use them. In general, they end up causing way more
+    problems than they solve. Anyway, it may be necessary when you have a reserved
+    word as a field name (in this case, we suggest you to change it, if you can).
+    Also, don&#039;t use <strong class="function">quoteIdentifier()</strong> if you have a period in
+    the table name itself (which, BTW, is a really bad idea), since it will consider
+    it as a schema.table pair.
+   </p>
+   <p class="para">
+    Some of the internal MDB2 methods generate queries. Enabling the <em><code class="parameter">quote_identifier</code></em>
+    option of MDB2 you can tell MDB2 to quote the identifiers in these generated
+    queries. For all user supplied queries this option is irrelevant.
+   </p>
+   <p class="para">
+    Portability is broken by using the following characters inside delimited identifiers:
+    </p><ul class="itemizedlist">
+        <li class="listitem">
+        <p class="para">backtick (<code class="literal">`</code>) -- due to MySQL</p>
+        </li>
+        <li class="listitem">
+        <p class="para">double quote (&quot;) -- due to Oracle</p>
+        </li>
+        <li class="listitem">
+        <p class="para">brackets ([ or ]) -- due to Access</p>
+        </li>
+    </ul>
+   
+   <p class="para">
+    Delimited identifiers are known to generally work correctly under the following drivers:
+    </p><ul class="itemizedlist">
+        <li class="listitem"><p class="para">mssql</p></li>
+        <li class="listitem"><p class="para">mysql</p></li>
+        <li class="listitem"><p class="para">mysqli</p></li>
+        <li class="listitem"><p class="para">oci8</p></li>
+        <li class="listitem"><p class="para">pgsql</p></li>
+        <li class="listitem"><p class="para">sqlite</p></li>
+    </ul><p>
+    Firebird/InterBase doesn&#039;t seem to be able to use delimited identifiers
+    via PHP 4. They work fine under PHP 5.
+   </p>
+   <p class="para">
+
+    </p>
+  </div>
+  
+  <div class="refsection" id="package.database.mdb2.intro-quote.quoting-options"><div class="info"><h1>Quoting options</h1>
+</div>
+   
+   <p class="para">
+    Within the <strong class="classname">MDB2</strong> API there are a number of options to
+    set the quoting options, one of which simply quotes the identifiers within
+    the abstraction, the other quotes the field values on insert/update etc.
+    when using the prepared statements methods.
+   </p>
+   <p class="para">
+    When using the <em><code class="parameter">quote_identifier</code></em> option, all of the
+    field identifiers will be automatically quoted in the resulting SQL statements:
+    </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'quote_identifier'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div><p>
+    will result in a SQL statement that all the field names are quoted with the
+    backtick &#039;<code class="literal">`</code>&#039; operator (in MySQL).
+    </p><div class="programlisting"><pre class="programlisting">SELECT * FROM `sometable` WHERE `id` = &#039;123&#039;;</pre>
+</div><p>
+as opposed to:
+    </p><div class="programlisting"><pre class="programlisting">SELECT * FROM sometable WHERE id=&#039;123&#039;;</pre>
+</div>
+   
+  </div>
+  
+
+  <div class="refsection" id="package.database.mdb2.intro-quote.escape"><div class="info"><h1>Escape</h1>
+</div>
+   
+   <p class="para">
+    If you want to escape a value, without surrounding it with quotes, you can
+    use the <strong class="function">escape()</strong> method. If you also want to escape
+    the wildcards (_ and %), set the second parameter to <strong class="constant">TRUE</strong>
+   </p>
+   <p class="para">
+    If you just want to escape the wildcards in a value, you can use the
+    <strong class="function">escapePattern()</strong> method.
+   </p>
+  </div>
+  
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.mdb2.intro-query.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.mdb2.html">MDB2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.mdb2.datatypes.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Querying</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Datatypes</td>
+  </tr>
+ </table>
+</div>
+</body></html>

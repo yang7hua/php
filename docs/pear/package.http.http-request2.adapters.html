@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Adapters</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.http.http-request2.html" title="HTTP_Request2" />
+  <link rel="prev" href="package.http.http-request2.request.html" title="HTTP_Request2" />
+  <link rel="next" href="package.http.http-request2.response.html" title="HTTP_Request2_Response" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Adapters</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.http.http-request2.request.html" title="HTTP_Request2">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.http.http-request2.response.html" title="HTTP_Request2_Response">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.http.http-request2.adapters">
+ 
+  <h1 class="refname">Adapters</h1>
+  <div class="refnamediv">Adapters &ndash; Classes that actually perform the request</div>
+
+ 
+ <div class="refsection" id="package.http.http-request2.adapters.overview">
+  <div class="info"><h1>Overview</h1>
+</div>
+  <p class="para">
+   Adapters in <strong class="classname">HTTP_Request2</strong> package are classes responsible for establishing
+   the actual connection to the remote server, writing requests and reading responses. Adapter can
+   be set either via a configuration parameter (see: <a href="package.http.http-request2.config.html" class="xref">Configuration</a>) or by <a href="http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2.html#methodsetAdapter" class="apidoclink">HTTP_Request2::setAdapter()</a> method. 
+  </p>
+  <p class="para">
+   The package currently contains three adapters:
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term"><strong class="classname">HTTP_Request2_Adapter_Socket</strong></dt>
+     <dd class="listitem"><p class="para">
+      This Adapter uses PHP&#039;s builtin <a href="http://www.php.net/manual-lookup.php?pattern=stream_socket_client" class="link external"><strong class="function">stream_socket_client()</strong></a>
+      function and does not require any special extensions or configuration. Note that this is a
+      pure PHP implementation of HTTP protocol, it does not use <code class="literal">http</code> stream
+      wrapper.
+     </p><p class="para">
+      This is the default Adapter, it will be used by <strong class="classname">HTTP_Request2</strong> unless
+      you explicitly set the other one.
+     </p></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><strong class="classname">HTTP_Request2_Adapter_Curl</strong></dt>
+     <dd class="listitem"><p class="para">
+      Curl adapter wraps around PHP&#039;s cURL extension and thus allows using extremely sophisticated
+      cURL library. It is a good choice if you have cURL extension available in PHP. 
+     </p></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><strong class="classname">HTTP_Request2_Adapter_Mock</strong></dt>
+     <dd class="listitem"><p class="para">
+      This adapter allows testing packages and applications using
+      <strong class="classname">HTTP_Request2</strong> without depending on a network connection and remote
+      server availability.
+     </p><p class="para">
+      You can replace the default adapter in <strong class="classname">HTTP_Request2</strong> by an instance of
+      <strong class="classname">HTTP_Request2_Adapter_Mock</strong> populated via its <a href="http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2_Adapter_Mock.html#methodaddResponse" class="apidoclink">HTTP_Request2_Adapter_Mock::addResponse()</a> method.
+      The adapter will return prepared responses or throw prepared exceptions when its
+      <strong class="function">sendRequest()</strong> method is called.   
+     </p></dd>
+    </dl>
+   </div>
+  
+  <p class="para">
+   Other adapters may be created by subclassing an abstract <a href="http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2_Adapter.html" class="apidoclink">HTTP_Request2_Adapter</a> class and implementing its <a href="http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2_Adapter.html#methodsendRequest" class="apidoclink">HTTP_Request2_Adapter::sendRequest()</a> method.
+  </p>
+ </div>
+ 
+ <div class="refsection" id="package.http.http-request2.adapters.socket">
+  <div class="info"><h1>Socket Adapter Issues</h1>
+</div>
+  <p class="para">
+   Due to <a href="http://bugs.php.net/47030" class="link external">PHP bug
+   #47030</a> <code class="literal">ssl_verify_host</code> configuration parameter is useless without
+   <code class="literal">ssl_verify_peer</code>. When the latter is switched off <em class="emphasis">no host validation
+    will be performed</em>.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.http.http-request2.adapters.curl">
+  <div class="info"><h1>Curl Adapter Issues</h1>
+</div>
+  <p class="para">
+   When doing a <code class="literal">POST</code> request with file uploads or reading the request body from
+   file, <strong class="classname">HTTP_Request2</strong> streams files from disk to reduce memory consumption
+   and to allow monitoring the request progress. This is done by setting up a
+   <strong class="constant">CURLOPT_READFUNCTION</strong> callback. PHP does not allow setting another callback,
+   <strong class="constant">CURLOPT_IOCTLFUNCTION</strong> (see <a href="http://bugs.php.net/47204" class="link external">PHP bug #47204</a>) so the request body can not be
+   &quot;rewound&quot; when another request should be performed. Thus a request with a non-empty
+   body to a resource protected by Digest authentication or to a page that does a redirect when
+   <code class="literal">follow_redirects</code> is enabled will fail. 
+  </p>
+  <p class="para">
+   Since release 0.5.0 <strong class="classname">HTTP_Request2</strong> works around this problem by reading
+   the whole request body into memory. Of course this may be an issue when the request body is huge,
+   so consider using Socket Adapter.
+  </p>
+  <p class="para">
+   Setting <code class="literal">strict_redirects</code> configuration parameter to <strong class="constant">TRUE</strong> will only have
+   effect on Curl Adapter if <strong class="constant">CURLOPT_POSTREDIR</strong> (see <a href="http://bugs.php.net/49571" class="link external">PHP bug #49571</a>) is available in cURL extension.
+   It is available in PHP 5.3.2 and higher.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.http.http-request2.adapters.mock">
+  <div class="info"><h1>Using Mock adapter</h1>
+</div>
+  <p class="para">
+   <a href="http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2_Adapter_Mock.html#methodaddResponse" class="apidoclink">HTTP_Request2_Adapter_Mock::addResponse()</a>
+   method can accept either a HTTP response (instance of
+   <strong class="classname">HTTP_Request2_Response</strong>, a string, a pointer to an open file) or an
+   <strong class="classname">Exception</strong>. The latter may be useful to test that your application degrades
+   gracefully when the remote server is not available due to some network problems. Several
+   responses may be added via <strong class="function">addResponse()</strong> to simulate a HTTP transaction
+   consisting of multiple requests and responses. They will be returned by the Adapter in the order
+   they were added.
+  </p>
+  <p class="para">
+   Since release 2.1.0 it is possible to specify a request URL to
+   <strong class="function">addResponse()</strong>. <strong class="function">sendRequest()</strong> will only return responses
+   without an explicit URL set or having the same URL as the request. It is recommended that you set
+   explicit URLs either for all responses or for none of them, otherwise the behaviour will be
+   difficult to predict. 
+  </p>
+  <p class="para">
+   </p><div class="example">
+    <p><strong>Returning responses and throwing exceptions</strong></p>
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTTP/Request2.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'HTTP/Request2/Adapter/Mock.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$mock&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTTP_Request2_Adapter_Mock</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$mock</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addResponse</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"HTTP/1.1&nbsp;200&nbsp;OK\r\n"&nbsp;</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"Connection:&nbsp;close\r\n"&nbsp;</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"\r\n"&nbsp;</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"Explicit&nbsp;response&nbsp;for&nbsp;example.org"</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'http://example.org/'<br /></span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$mock</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addResponse</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"HTTP/1.1&nbsp;200&nbsp;OK\r\n"&nbsp;</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"Content-Length:&nbsp;32\r\n"&nbsp;</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"Connection:&nbsp;close\r\n"&nbsp;</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"\r\n"&nbsp;</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"Nothing&nbsp;to&nbsp;see&nbsp;here,&nbsp;move&nbsp;along."<br /></span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$mock</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addResponse</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;new&nbsp;</span><span style="color: #0000BB">HTTP_Request2_Exception</span><span style="color: #007700">(</span><span style="color: #DD0000">"The&nbsp;server&nbsp;is&nbsp;on&nbsp;fire!"</span><span style="color: #007700">)<br />);<br /><br /></span><span style="color: #FF8000">//&nbsp;this&nbsp;request&nbsp;will&nbsp;succeed<br /></span><span style="color: #0000BB">$request1&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTTP_Request2</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'http://ok.example.com/'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">HTTP_Request2</span><span style="color: #007700">::</span><span style="color: #0000BB">METHOD_GET</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'adapter'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$mock</span><span style="color: #007700">)<br />);<br />echo&nbsp;</span><span style="color: #DD0000">"Response:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$request1</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">send</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">getBody</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">"\r\n"</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;this&nbsp;request&nbsp;will&nbsp;fail<br /></span><span style="color: #0000BB">$request2&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTTP_Request2</span><span style="color: #007700">(</span><span style="color: #DD0000">'http://burning.example.com/'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$request2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setAdapter</span><span style="color: #007700">(</span><span style="color: #0000BB">$mock</span><span style="color: #007700">);<br />try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Response:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$request2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">send</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">getBody</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">"\r\n"</span><span style="color: #007700">;<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Exception&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Error:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">"\r\n"</span><span style="color: #007700">;<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;The&nbsp;response&nbsp;for&nbsp;example.org&nbsp;was&nbsp;ignored&nbsp;by&nbsp;previous&nbsp;requests<br /></span><span style="color: #0000BB">$requestOrg&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTTP_Request2</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'http://example.org/'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">HTTP_Request2</span><span style="color: #007700">::</span><span style="color: #0000BB">METHOD_GET</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'adapter'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$mock</span><span style="color: #007700">)<br />);<br />echo&nbsp;</span><span style="color: #DD0000">"Response:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$requestOrg</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">send</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">getBody</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">"\r\n"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+    <div class="example-contents"><p>The above code will output:</p></div>
+    <pre class="screen"><br/>Response:&nbsp;Nothing&nbsp;to&nbsp;see&nbsp;here,&nbsp;move&nbsp;along.<br/>Error:&nbsp;The&nbsp;server&nbsp;is&nbsp;on&nbsp;fire!<br/>Response:&nbsp;Explicit&nbsp;response&nbsp;for&nbsp;example.org<br/>
+    </pre>
+
+   </div>
+  
+  <p class="para">
+   Mock Adapter also has two static helper methods <a href="http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2_Adapter_Mock.html#methodcreateResponseFromString" class="apidoclink">HTTP_Request2_Adapter_Mock::createResponseFromString()</a> and <a href="http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2_Adapter_Mock.html#methodcreateResponseFromFile" class="apidoclink">HTTP_Request2_Adapter_Mock::createResponseFromFile()</a> which build
+   <strong class="classname">HTTP_Request2_Response</strong> objects from either a string containing the
+   complete HTTP response or a pointer to an open file with such response, respectively.
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.http.http-request2.request.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.http.http-request2.html">HTTP_Request2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.http.http-request2.response.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">HTTP_Request2</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">HTTP_Request2_Response</td>
+  </tr>
+ </table>
+</div>
+</body></html>

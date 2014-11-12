@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Readers</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.fileformats.file-archive.html" title="File_Archive" />
+  <link rel="prev" href="package.fileformats.file-archive.examples-gallery.html" title="Dynamic generation of archive files for a gallery" />
+  <link rel="next" href="package.fileformats.file-archive.writers.html" title="Writers" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Readers</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.fileformats.file-archive.examples-gallery.html" title="Dynamic generation of archive files for a gallery">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.fileformats.file-archive.writers.html" title="Writers">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.fileformats.file-archive.readers">
+ 
+  <h1 class="refname">Readers</h1>
+  <div class="refnamediv">Readers &ndash; Getting files into an archive</div>
+
+ 
+
+
+ <div class="refsection" id="package.fileformats.file-archive.readers.intro"><div class="info"><h1>Introduction</h1>
+</div>
+  
+  <p class="para">
+   A reader is an object that represents a list of files and directories.
+   
+   Those files can be generated dynamically or exist physically.
+   
+   For example, there is a reader class for a directory,
+   or for each archive format handled by 
+   <strong class="classname">File_Archive</strong>,
+   and they all have the same interface.
+  </p>
+  <p class="para">
+   To create a reader, 
+   you will have to use the
+   <strong class="classname">File_Archive</strong> factory.
+   
+   The important function is the <strong class="function">read()</strong> function:
+  </p>
+  <div class="funcsynopsis">
+   <p><code class="funcprototype">
+    
+     <strong class="function">read</strong>
+     ( 
+    
+     <span class="type">string</span>
+     $url
+    
+     , 
+     <span class="type">string</span>
+     $symbolic = null
+    
+     , 
+     <span class="type">integer</span>
+     $uncompression = 0
+    
+     , 
+     <span class="type">integer</span>
+     $directoryDepth = -0
+    
+   )</code></p>
+  </div>
+  <p class="para">
+   In this function the URL will represent what you want to read.
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Generation of sources</strong></p></div>
+   
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"File/Archive.php"</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">/*<br />To&nbsp;read&nbsp;a&nbsp;directory,&nbsp;just&nbsp;give&nbsp;the&nbsp;directory&nbsp;name<br />By&nbsp;default,&nbsp;the&nbsp;directory&nbsp;and&nbsp;all&nbsp;the&nbsp;subdirectories<br />will&nbsp;be&nbsp;parsed&nbsp;(see&nbsp;$directoryDepth&nbsp;to&nbsp;change&nbsp;this)<br />*/<br /></span><span style="color: #0000BB">$source&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">read</span><span style="color: #007700">(</span><span style="color: #DD0000">"Path/to/dir"</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">/*<br />To&nbsp;read&nbsp;from&nbsp;one&nbsp;single&nbsp;file,<br />simply&nbsp;provide&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;file<br />*/<br /></span><span style="color: #0000BB">$source&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">read</span><span style="color: #007700">(</span><span style="color: #DD0000">"Path/to/dir/file.txt"</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">/*<br />An&nbsp;archive&nbsp;will&nbsp;be&nbsp;considered&nbsp;as&nbsp;a&nbsp;directory&nbsp;if&nbsp;a&nbsp;slash&nbsp;follows<br />This&nbsp;example&nbsp;reads&nbsp;the&nbsp;directory&nbsp;and&nbsp;all&nbsp;the&nbsp;subdirectories&nbsp;of&nbsp;inner/dir<br />contained&nbsp;in&nbsp;archive&nbsp;Path/to/dir/archive.tar<br />This&nbsp;reads&nbsp;all&nbsp;the&nbsp;.txt&nbsp;files&nbsp;in&nbsp;the&nbsp;inner&nbsp;directory&nbsp;of&nbsp;the&nbsp;archive.tar<br />*/<br /></span><span style="color: #0000BB">$source&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">read</span><span style="color: #007700">(</span><span style="color: #DD0000">"Path/to/dir/archive.tar/inner/*.txt"</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">/*<br />If&nbsp;you&nbsp;want&nbsp;to&nbsp;uncompress&nbsp;the&nbsp;archive&nbsp;(read&nbsp;all&nbsp;its&nbsp;content)<br />Note:&nbsp;if&nbsp;you&nbsp;ommit&nbsp;the&nbsp;trailing&nbsp;/,&nbsp;the&nbsp;archive&nbsp;will&nbsp;be&nbsp;treated&nbsp;as&nbsp;a&nbsp;single&nbsp;file<br />*/<br /></span><span style="color: #0000BB">$source&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">read</span><span style="color: #007700">(</span><span style="color: #DD0000">"Path/to/dir/archive.tar/"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+
+  <p class="para">
+   The <code class="literal">symbolic</code> attribute says how the files read will be
+   displayed for future use.
+   If <code class="varname">$URL</code> is a directory, 
+   <code class="varname">$URL</code> 
+   will be replaced by 
+   <code class="varname">$symbolic</code> 
+   (or 
+   <code class="literal">&#039;&#039;</code> 
+   if
+   <code class="varname">$symbolic</code>
+   is 
+   <code class="literal">null</code>).
+   
+   So, 
+   in our first example, 
+   the files will be displayed as if the current directory was 
+   <code class="literal">&#039;Path/to/dir&#039;</code>:
+   
+   Since by default <code class="varname">$symbolic</code> is empty,
+   <code class="literal">Path/to/dir</code> 
+   will be simply removed from the file.
+   
+   You may want to put <code class="literal">Path/to/dir</code> as
+   <code class="varname">$symbolic</code> to keep the full path
+   <code class="literal">Path/to/dir</code>.
+  </p>
+
+  <p class="para">
+   If <code class="varname">$URL</code> is a file, 
+   then only the filename will be kept,
+   and 
+   <code class="varname">$symbolic</code> 
+   will be added to it.
+   
+   So, 
+   in our second example, 
+   the source contains a file with symbolic name
+   <code class="literal">file.txt</code>.
+
+   If a symbolic name <code class="literal">foo</code> had been specified,
+   the source would contain <code class="literal">foo/file.txt</code>.
+  </p>
+
+  <p class="para">
+   The <code class="varname">$uncompression</code> parameter indicate how many files will
+   be uncompressed while parsing the tree to files.
+
+   By default the files are not uncompressed.
+
+   So, if you do
+   <strong class="command">File_Archive::read(&#039;archive.tar/inner/dir&#039;, &#039;inner/dir&#039;)</strong>,
+   and if <code class="filename">archive.tar</code> contains a file called
+   <code class="filename">archive.tar/inner/dir/file.tgz</code>, this second archive
+   will appear as a file and not as a directory.
+    
+   It won&#039;t be uncompressed because <code class="varname">$uncompression</code> 
+   is <code class="literal">0</code>.
+   
+   If <code class="varname">$uncompression</code> is set to <code class="literal">1</code>,
+   <code class="filename">file.tgz</code> would appear as a directory,
+   but the files inside this archive would not be uncompressed.
+   
+   If <code class="varname">$uncompression</code> is set to <code class="literal">-1</code>,
+    all the files would be uncompressed, regardless of the depth.
+  </p>
+
+  <blockquote class="note">
+   <p class="para">
+    The compressed files that may appear in <code class="varname">$URL</code> are
+    not taken into account by <code class="varname">$uncompression</code> variable.
+   </p>
+  </blockquote>
+
+
+  <p class="para">
+   The <code class="varname">$directoryDepth</code> parameter 
+   gives a limit to the number of directory 
+   read by the reader.
+  </p>
+ </div>
+
+
+
+ <div class="refsection" id="package.fileformats.file-archive.readers.multireader"><div class="info"><h1>Multi readers</h1>
+</div>
+  
+
+  <p class="para">
+   Using a multi reader, 
+   you can make several sources appear as one.
+   
+   You can create a multi reader using the
+   <strong class="command">File_Archive::readMulti()</strong> function.
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Multi reader</strong></p></div>
+   
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//This&nbsp;reader&nbsp;contains&nbsp;the&nbsp;content&nbsp;of&nbsp;directory&nbsp;and&nbsp;archive.tar<br /></span><span style="color: #0000BB">$source&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">readMulti</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">read</span><span style="color: #007700">(</span><span style="color: #DD0000">'directory'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">read</span><span style="color: #007700">(</span><span style="color: #DD0000">'archive.tar/'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;)<br />);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+ </div>
+
+
+
+ <div class="refsection" id="package.fileformats.file-archive.readers.readingcontent"><div class="info"><h1>Reading the content of a data reader</h1>
+</div>
+  
+  <p class="para">
+   Any reader provides the following interface:
+  </p>
+  <ul class="itemizedlist">
+   <li class="listitem">
+    <p class="para"><strong class="command">function next()</strong></p>
+    <p class="para">
+     Go to the next file in the source. 
+     
+     Returns <code class="literal">false</code>
+     when the end of the archive is reached.
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para"><strong class="command">function getFilename()</strong></p>
+    <p class="para">
+     Returns the filename
+     of the currently selected entry 
+     in the archive.
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para"><strong class="command">function getStat()</strong></p>
+    <p class="para">
+     Returns the stat as the <strong class="function">stat()</strong> function does.
+     
+     This function may not return a complete array, 
+     it may even return
+     <code class="literal">array()</code>.
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para"><strong class="command">function getDataFilename()</strong></p>
+    <p class="para">
+     For optimisation purposes: 
+     if the source is a physical file,
+     this function returns the name of the file; 
+     otherwise it returns 
+     <code class="literal">null</code>.
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para"><strong class="command">function getData($length = -1)</strong></p>
+    <p class="para">
+     Reads some data from the source.
+     
+     This function will return a string which size is determined by the
+     smallest of
+     </p><ul class="itemizedlist">
+      <li class="listitem">
+       <p class="para">
+        <code class="varname">$length</code> if <code class="varname">$length</code>
+        <code class="literal">&gt;= 0</code>
+       </p>
+      </li>
+      <li class="listitem">
+       <p class="para">
+        the end of the file.
+       </p>
+      </li>
+     </ul><p>
+     If the end of the file is reached, 
+     the function will return
+     <code class="literal">null</code>.
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para"><strong class="command">function skip($length)</strong></p>
+    <p class="para">
+     Equivalent to <strong class="command">getData($length)</strong>, 
+     but does not return any data.
+     
+     Depending on the data reader, 
+     this function can be far more efficient
+     than <strong class="function">getData()</strong>.
+    </p>
+   </li>
+
+   <li class="listitem">
+    <p class="para"><strong class="command">function close()</strong></p>
+    <p class="para">
+     Should be called after having used the data reader
+     (closes the file handles...).
+     
+     This function moves the object in the same state 
+     as it was before the first call to 
+     <strong class="function">next()</strong>.
+     
+     After this call, 
+     you can iterate again on the data reader.
+    </p>
+   </li>
+  </ul>
+
+  <div class="example"><div class="info"><p><strong>Listing the content of a data reader</strong></p></div>
+   
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$source</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">close</span><span style="color: #007700">();&nbsp;</span><span style="color: #FF8000">//Move&nbsp;back&nbsp;to&nbsp;the&nbsp;begining&nbsp;of&nbsp;the&nbsp;source<br /><br /></span><span style="color: #007700">while(</span><span style="color: #0000BB">$source</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">next</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$source</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getFilename</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">"&lt;br/&gt;\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+ </div>
+
+
+
+ <div class="refsection" id="package.fileformats.file-archive.readers.functionsusing"><div class="info"><h1>Functions that use readers</h1>
+</div>
+  
+
+  <p class="para">
+   All <strong class="classname">File_Archive</strong> 
+   functions that take a reader as an
+   argument also accept strings and arrays.
+   
+   The strings will be automatically interpreted as a reader using
+   <strong class="command">File_Archive::read</strong> function.
+   
+   The arrays will be interpreted as a multi reader.
+  </p>
+  <p class="para">
+   Since the readers are passed by reference, 
+   you will have to pass a variable
+   and not the raw string or array.
+  </p>
+  <p class="para">
+   It is thus possible to rewrite the previous example like that:
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Multi reader</strong></p></div>
+   
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//This&nbsp;reader&nbsp;contains&nbsp;the&nbsp;content&nbsp;of&nbsp;directory&nbsp;and&nbsp;archive.tar<br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">extract</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'directory'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'archive.tar/'<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toArchive</span><span style="color: #007700">(</span><span style="color: #DD0000">'test.zip'</span><span style="color: #007700">)<br />);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.fileformats.file-archive.examples-gallery.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.fileformats.file-archive.html">File_Archive</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.fileformats.file-archive.writers.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Dynamic generation of archive files for a gallery</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Writers</td>
+  </tr>
+ </table>
+</div>
+</body></html>

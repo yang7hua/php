@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Error handling</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.networking.net-ldap2.html" title="Net_LDAP2" />
+  <link rel="prev" href="package.networking.net-ldap2.introduction.html" title="Introduction" />
+  <link rel="next" href="package.networking.net-ldap2.connecting.html" title="Configuration and connecting" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Error handling</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.networking.net-ldap2.introduction.html" title="Introduction">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.networking.net-ldap2.connecting.html" title="Configuration and connecting">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.networking.net-ldap2.errorhandling">
+    
+        <h1 class="refname">Error handling</h1>
+        <div class="refnamediv">Error handling &ndash; How handling errors works in Net_LDAP2</div>
+
+    
+    
+    <div class="refsection"><div class="info"><h1>Error handling</h1>
+</div>
+        
+        
+        <p class="para">
+            Nearly all of Net_LDAPs methods return a <strong class="classname">Net_LDAP2_Error</strong> object if something went wrong.
+            You always should check for errors after you performed an action to be sure that your
+            application doesn&#039;t do things you don&#039;t want it to do.
+        </p>
+        
+        <p class="para">
+            Handling errors is an easy task, you just have to test the return value as
+            shown below. If an error occured, you can halt the script for example.
+            In other cases, you may just log the error, but what exactly happens depends on
+            your specific situation, of course.
+        </p>
+        <p class="para">
+            You can use the <strong class="function">getMessage()</strong> method of the error object to retrieve the error message explaining the problem
+            and <strong class="function">getCode()</strong> to get the error code which is usually the LDAP-Error code (see Table below)
+            and may be used for automated reaction on errors.
+        </p>
+        
+        <div class="example"><div class="info"><p><strong>Dealing with errors</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Perform&nbsp;an&nbsp;arbitrary&nbsp;action:<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$ldap</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">search</span><span style="color: #007700">(</span><span style="color: #0000BB">$searchbase</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$filter</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Check,&nbsp;if&nbsp;an&nbsp;error&nbsp;occured&nbsp;and&nbsp;do&nbsp;something.<br />//&nbsp;Here&nbsp;we&nbsp;use&nbsp;die()&nbsp;to&nbsp;show&nbsp;the&nbsp;message&nbsp;of&nbsp;the&nbsp;error.<br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">Net_LDAP2</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$result</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$result</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+
+        <table class="doctable table"><caption>Error codes Net_LDAP2</caption>
+            
+            
+                <thead>
+                    <tr>
+                        <th>Error code</th>
+                        <th>Description</th>
+                    </tr>
+
+                </thead>
+
+                <tbody class="tbody">
+                    <tr><td>0x00</td><td>LDAP_SUCCESS</td></tr>
+
+                    <tr><td>0x01</td><td>LDAP_OPERATIONS_ERROR</td></tr>
+
+                    <tr><td>0x02</td><td>LDAP_PROTOCOL_ERROR</td></tr>
+
+                    <tr><td>0x03</td><td>LDAP_TIMELIMIT_EXCEEDED</td></tr>
+
+                    <tr><td>0x04</td><td>LDAP_SIZELIMIT_EXCEEDED</td></tr>
+
+                    <tr><td>0x05</td><td>LDAP_COMPARE_FALSE</td></tr>
+
+                    <tr><td>0x06</td><td>LDAP_COMPARE_TRUE</td></tr>
+
+                    <tr><td>0x07</td><td>LDAP_AUTH_METHOD_NOT_SUPPORTED</td></tr>
+
+                    <tr><td>0x08</td><td>LDAP_STRONG_AUTH_REQUIRED</td></tr>
+
+                    <tr><td>0x09</td><td>LDAP_PARTIAL_RESULTS</td></tr>
+
+                    <tr><td>0x0a</td><td>LDAP_REFERRAL</td></tr>
+
+                    <tr><td>0x0b</td><td>LDAP_ADMINLIMIT_EXCEEDED</td></tr>
+
+                    <tr><td>0x0c</td><td>LDAP_UNAVAILABLE_CRITICAL_EXTENSION</td></tr>
+
+                    <tr><td>0x0d</td><td>LDAP_CONFIDENTIALITY_REQUIRED</td></tr>
+
+                    <tr><td>0x0e</td><td>LDAP_SASL_BIND_INPROGRESS</td></tr>
+
+                    <tr><td>0x10</td><td>LDAP_NO_SUCH_ATTRIBUTE</td></tr>
+
+                    <tr><td>0x11</td><td>LDAP_UNDEFINED_TYPE</td></tr>
+
+                    <tr><td>0x12</td><td>LDAP_INAPPROPRIATE_MATCHING</td></tr>
+
+                    <tr><td>0x13</td><td>LDAP_CONSTRAINT_VIOLATION</td></tr>
+
+                    <tr><td>0x14</td><td>LDAP_TYPE_OR_VALUE_EXISTS</td></tr>
+
+                    <tr><td>0x15</td><td>LDAP_INVALID_SYNTAX</td></tr>
+
+                    <tr><td>0x20</td><td>LDAP_NO_SUCH_OBJECT</td></tr>
+
+                    <tr><td>0x21</td><td>LDAP_ALIAS_PROBLEM</td></tr>
+
+                    <tr><td>0x22</td><td>LDAP_INVALID_DN_SYNTAX</td></tr>
+
+                    <tr><td>0x23</td><td>LDAP_IS_LEAF</td></tr>
+
+                    <tr><td>0x24</td><td>LDAP_ALIAS_DEREF_PROBLEM</td></tr>
+
+                    <tr><td>0x30</td><td>LDAP_INAPPROPRIATE_AUTH</td></tr>
+
+                    <tr><td>0x31</td><td>LDAP_INVALID_CREDENTIALS</td></tr>
+
+                    <tr><td>0x32</td><td>LDAP_INSUFFICIENT_ACCESS</td></tr>
+
+                    <tr><td>0x33</td><td>LDAP_BUSY</td></tr>
+
+                    <tr><td>0x34</td><td>LDAP_UNAVAILABLE</td></tr>
+
+                    <tr><td>0x35</td><td>LDAP_UNWILLING_TO_PERFORM</td></tr>
+
+                    <tr><td>0x36</td><td>LDAP_LOOP_DETECT</td></tr>
+
+                    <tr><td>0x3C</td><td>LDAP_SORT_CONTROL_MISSING</td></tr>
+
+                    <tr><td>0x3D</td><td>LDAP_INDEX_RANGE_ERROR</td></tr>
+
+                    <tr><td>0x40</td><td>LDAP_NAMING_VIOLATION</td></tr>
+
+                    <tr><td>0x41</td><td>LDAP_OBJECT_CLASS_VIOLATION</td></tr>
+
+                    <tr><td>0x42</td><td>LDAP_NOT_ALLOWED_ON_NONLEAF</td></tr>
+
+                    <tr><td>0x43</td><td>LDAP_NOT_ALLOWED_ON_RDN</td></tr>
+
+                    <tr><td>0x44</td><td>LDAP_ALREADY_EXISTS</td></tr>
+
+                    <tr><td>0x45</td><td>LDAP_NO_OBJECT_CLASS_MODS</td></tr>
+
+                    <tr><td>0x46</td><td>LDAP_RESULTS_TOO_LARGE</td></tr>
+
+                    <tr><td>0x47</td><td>LDAP_AFFECTS_MULTIPLE_DSAS</td></tr>
+
+                    <tr><td>0x50</td><td>LDAP_OTHER</td></tr>
+
+                    <tr><td>0x51</td><td>LDAP_SERVER_DOWN</td></tr>
+
+                    <tr><td>0x52</td><td>LDAP_LOCAL_ERROR</td></tr>
+
+                    <tr><td>0x53</td><td>LDAP_ENCODING_ERROR</td></tr>
+
+                    <tr><td>0x54</td><td>LDAP_DECODING_ERROR</td></tr>
+
+                    <tr><td>0x55</td><td>LDAP_TIMEOUT</td></tr>
+
+                    <tr><td>0x56</td><td>LDAP_AUTH_UNKNOWN</td></tr>
+
+                    <tr><td>0x57</td><td>LDAP_FILTER_ERROR</td></tr>
+
+                    <tr><td>0x58</td><td>LDAP_USER_CANCELLED</td></tr>
+
+                    <tr><td>0x59</td><td>LDAP_PARAM_ERROR</td></tr>
+
+                    <tr><td>0x5a</td><td>LDAP_NO_MEMORY</td></tr>
+
+                    <tr><td>0x5b</td><td>LDAP_CONNECT_ERROR</td></tr>
+
+                    <tr><td>0x5c</td><td>LDAP_NOT_SUPPORTED</td></tr>
+
+                    <tr><td>0x5d</td><td>LDAP_CONTROL_NOT_FOUND</td></tr>
+
+                    <tr><td>0x5e</td><td>LDAP_NO_RESULTS_RETURNED</td></tr>
+
+                    <tr><td>0x5f</td><td>LDAP_MORE_RESULTS_TO_RETURN</td></tr>
+
+                    <tr><td>0x60</td><td>LDAP_CLIENT_LOOP</td></tr>
+
+                    <tr><td>0x61</td><td>LDAP_REFERRAL_LIMIT_EXCEEDED</td></tr>
+
+                    <tr><td>1000</td><td>Unknown Net_LDAP2 Error</td></tr>
+
+                </tbody>
+            
+        </table>
+
+    </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.networking.net-ldap2.introduction.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.networking.net-ldap2.html">Net_LDAP2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.networking.net-ldap2.connecting.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Configuration and connecting</td>
+  </tr>
+ </table>
+</div>
+</body></html>

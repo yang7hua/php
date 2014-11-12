@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Auth_Container_Multiple</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.authentication.auth.html" title="Auth" />
+  <link rel="prev" href="package.authentication.auth.storage.mdb2.html" title="Auth_Container_MDB2" />
+  <link rel="next" href="package.authentication.auth.storage.pear.html" title="Auth_Container_PEAR" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Auth_Container_Multiple</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.authentication.auth.storage.mdb2.html" title="Auth_Container_MDB2">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.authentication.auth.storage.pear.html" title="Auth_Container_PEAR">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.authentication.auth.storage.multiple">
+ 
+  <h1 class="refname">Auth_Container_Multiple</h1>
+  <div class="refnamediv">Auth_Container_Multiple &ndash; Authenticate against multiple Auth_Containers</div>
+
+ 
+ <div class="refsection" id="package.authentication.auth.storage.multiple.overview"><div class="info"><h1>Multiple</h1>
+</div>
+  
+  <p class="para">
+   This container provides a facility to attempt to authenticate against
+   multiple Auth_Containers in order.
+  </p>
+  <p class="para">
+   If a container&#039;s <strong class="function">getAuthData()</strong> returns true 
+   <strong class="classname">Auth_Container_Multiple</strong> will return true.
+  </p>
+  <p class="para">
+   When a container&#039;s <strong class="function">getAuthData()</strong> returns false 
+   <strong class="classname">Auth_Container_Multiple</strong> will continue on through
+   the list of available containers until a successful login is found
+   or the list of containers is expired.
+  </p>
+  <p class="para">
+   On receipt of an error from <strong class="function">getAuthData()</strong>
+   <strong class="classname">Auth_Container_Multiple</strong> will abort checking
+   further containers and return the error.
+  </p>
+  <p class="para">
+   The storage-specific argument for the 
+   <a href="package.authentication.auth.auth.auth.html" class="link">
+    <strong class="function">Auth constructor()</strong>
+   </a>
+   is an array of container configurations. Each container configuration
+   has the following options:
+   </p><table class="doctable table"><caption>Available Options</caption>
+    
+    
+     <thead>
+      <tr>
+       <th>Option</th>
+       <th>Data Type</th>
+       <th>Default value</th>
+       <th>Description</th>
+      </tr>
+
+     </thead>
+
+     <tbody class="tbody">
+      <tr>
+       <td>
+        "<span class="quote">type</span>"
+       </td>
+       <td>
+        <span class="type">string</span>
+       </td>
+       <td>
+        "<span class="quote">
+       </td>
+       <td>
+        The type of container to instanciate. This is the same value as
+        used in the first parameter of the
+        <a href="package.authentication.auth.auth.auth.html" class="link">
+         <strong class="function">Auth constructor()</strong>
+        </a>.
+       </td>
+      </tr>
+
+      <tr>
+       <td>
+        "<span class="quote">options</span>"
+       </td>
+       <td>
+        <span class="type">array</span>
+       </td>
+       <td>
+        array()
+       </td>
+       <td>
+        This is the standard array of options required for the container.
+       </td>
+      </tr>
+
+     </tbody>
+    
+   </table>
+
+  
+  <div class="example"><div class="info"><p><strong>Example usage of <strong class="classname">Auth_Container_Multiple</strong></strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"Auth.php"</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'Log.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'Log/observer.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Callback&nbsp;function&nbsp;to&nbsp;display&nbsp;login&nbsp;form<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">loginFunction</span><span style="color: #007700">(</span><span style="color: #0000BB">$username&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$status&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;&amp;</span><span style="color: #0000BB">$auth&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/*<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Change&nbsp;the&nbsp;HTML&nbsp;output&nbsp;so&nbsp;that&nbsp;it&nbsp;fits&nbsp;to&nbsp;your<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;application.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #DD0000">"&lt;form&nbsp;method=\"post\"&nbsp;action=\""</span><span style="color: #007700">.</span><span style="color: #0000BB">$_SERVER</span><span style="color: #007700">[</span><span style="color: #DD0000">'PHP_SELF'</span><span style="color: #007700">].</span><span style="color: #DD0000">"\"&gt;"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Username:&nbsp;&lt;input&nbsp;type=\"text\"&nbsp;name=\"username\"&gt;&lt;br/&gt;"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Password:&nbsp;&lt;input&nbsp;type=\"password\"&nbsp;name=\"password\"&gt;&lt;br/&gt;"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"&lt;input&nbsp;type=\"submit\"&gt;"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"&lt;/form&gt;"</span><span style="color: #007700">;<br />}<br /><br />class&nbsp;</span><span style="color: #0000BB">Auth_Log_Observer&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">Log_observer&nbsp;</span><span style="color: #007700">{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$messages&nbsp;</span><span style="color: #007700">=&nbsp;array();<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">notify</span><span style="color: #007700">(</span><span style="color: #0000BB">$event</span><span style="color: #007700">)&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">messages</span><span style="color: #007700">[]&nbsp;=&nbsp;</span><span style="color: #0000BB">$event</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />}<br /><br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'enableLogging'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Array'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'options'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'cryptType'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'md5'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'users'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'guest'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">md5</span><span style="color: #007700">(</span><span style="color: #DD0000">'password'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Array'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'options'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'cryptType'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'md5'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'users'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'admin'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">md5</span><span style="color: #007700">(</span><span style="color: #DD0000">'password'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />);<br /></span><span style="color: #0000BB">$a&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Auth</span><span style="color: #007700">(</span><span style="color: #DD0000">"Multiple"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"loginFunction"</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$infoObserver&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Auth_Log_Observer</span><span style="color: #007700">(</span><span style="color: #0000BB">PEAR_LOG_INFO</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$a</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">attachLogObserver</span><span style="color: #007700">(</span><span style="color: #0000BB">$infoObserver</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$debugObserver&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Auth_Log_Observer</span><span style="color: #007700">(</span><span style="color: #0000BB">PEAR_LOG_DEBUG</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$a</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">attachLogObserver</span><span style="color: #007700">(</span><span style="color: #0000BB">$debugObserver</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$a</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">start</span><span style="color: #007700">();<br /><br />if&nbsp;(</span><span style="color: #0000BB">$a</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">checkAuth</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/*<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;The&nbsp;output&nbsp;of&nbsp;your&nbsp;site&nbsp;goes&nbsp;here.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">print&nbsp;</span><span style="color: #DD0000">"Authentication&nbsp;Successful.&lt;br/&gt;"</span><span style="color: #007700">;<br />}<br /><br />print&nbsp;</span><span style="color: #DD0000">'&lt;h3&gt;Logging&nbsp;Output:&lt;/h3&gt;'<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">.</span><span style="color: #DD0000">'&lt;b&gt;PEAR_LOG_INFO&nbsp;level&nbsp;messages:&lt;/b&gt;&lt;br/&gt;'</span><span style="color: #007700">;<br /><br />foreach&nbsp;(</span><span style="color: #0000BB">$infoObserver</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">messages&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$event</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #0000BB">$event</span><span style="color: #007700">[</span><span style="color: #DD0000">'priority'</span><span style="color: #007700">].</span><span style="color: #DD0000">':&nbsp;'</span><span style="color: #007700">.</span><span style="color: #0000BB">$event</span><span style="color: #007700">[</span><span style="color: #DD0000">'message'</span><span style="color: #007700">].</span><span style="color: #DD0000">'&lt;br/&gt;'</span><span style="color: #007700">;<br />}<br /><br />print&nbsp;</span><span style="color: #DD0000">'&lt;br/&gt;'<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">.</span><span style="color: #DD0000">'&lt;b&gt;PEAR_LOG_DEBUG&nbsp;level&nbsp;messages:&lt;/b&gt;&lt;br/&gt;'</span><span style="color: #007700">;<br /><br />foreach&nbsp;(</span><span style="color: #0000BB">$debugObserver</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">messages&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$event</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #0000BB">$event</span><span style="color: #007700">[</span><span style="color: #DD0000">'priority'</span><span style="color: #007700">].</span><span style="color: #DD0000">':&nbsp;'</span><span style="color: #007700">.</span><span style="color: #0000BB">$event</span><span style="color: #007700">[</span><span style="color: #DD0000">'message'</span><span style="color: #007700">].</span><span style="color: #DD0000">'&lt;br/&gt;'</span><span style="color: #007700">;<br />}<br /><br />print&nbsp;</span><span style="color: #DD0000">'&lt;br/&gt;'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+ </div>
+ <div class="refsection" id="package.authentication.auth.storage.multiple.note">
+  <h1 class="title">Note</h1>
+  <p class="para">
+   This container has only been available since version 1.5.0.
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.authentication.auth.storage.mdb2.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.authentication.auth.html">Auth</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.authentication.auth.storage.pear.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Auth_Container_MDB2</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Auth_Container_PEAR</td>
+  </tr>
+ </table>
+</div>
+</body></html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Pyrus Custom File Roles: differences from PEAR</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="pyrus.differences.html" title="Differences from the PEAR Installer" />
+  <link rel="prev" href="pyrus.differences.customcommands.html" title="Pyrus Custom Commands: differences from PEAR" />
+  <link rel="next" href="pyrus.differences.customtasks.html" title="Pyrus Custom File Tasks: differences from PEAR" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Pyrus Custom File Roles: differences from PEAR</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="pyrus.differences.customcommands.html" title="Pyrus Custom Commands: differences from PEAR">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="pyrus.differences.customtasks.html" title="Pyrus Custom File Tasks: differences from PEAR">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="pyrus.differences.customroles">
+ <div class="info"><h1>Pyrus Custom File Roles: differences from PEAR</h1>
+</div>
+
+ <div class="section" id="pyrus.differences.customroles.overview">
+  <div class="info"><h2 class="title">Overview</h2></div>
+  <p class="para">
+   Custom file roles (documented <a href="guide.migrating.customroles.html" class="link">here</a>)
+   have changed substantially in Pyrus.  Fortunately, the usage of roles in package.xml
+   remains unchanged, and Pyrus&#039;s expectation of custom role implementation does not conflict
+   or overlap with PEAR&#039;s at all, so custom role packages can easily be designed
+   to work with both PEAR and Pyrus.
+  </p>
+  <p class="para">
+   The biggest difference between how a custom role is implemented in Pyrus has
+   to do with the new plugin system (documented <a href="pyrus.plugins.html" class="link">here</a>).
+   Before reading any further, it may be a good idea to familiarize yourself with
+   the way that plugins work in Pyrus by reading the documentation on plugins,
+   then return back to finish reading about custom roles.
+  </p>
+  <p class="para">
+   Pyrus modifies the XML description file for custom file roles slightly, here
+   is the PEAR version of a role:
+  </p>
+  <p class="para">
+   </p><div class="xmlcode">
+    <pre class="xmlcode">
+&lt;role version=&quot;1.0&quot;&gt;
+ &lt;releasetypes&gt;php&lt;/releasetypes&gt;
+ &lt;releasetypes&gt;extsrc&lt;/releasetypes&gt;
+ &lt;releasetypes&gt;extbin&lt;/releasetypes&gt;
+ &lt;releasetypes&gt;zendextsrc&lt;/releasetypes&gt;
+ &lt;releasetypes&gt;zendextbin&lt;/releasetypes&gt;
+ &lt;installable&gt;1&lt;/installable&gt;
+ &lt;locationconfig&gt;php_dir&lt;/locationconfig&gt;
+ &lt;honorsbaseinstall&gt;1&lt;/honorsbaseinstall&gt;
+ &lt;unusualbaseinstall /&gt;
+ &lt;phpfile&gt;1&lt;/phpfile&gt;
+ &lt;executable /&gt;
+ &lt;phpextension /&gt;
+ &lt;config_vars /&gt;
+&lt;/role&gt;</pre>
+
+   </div>
+  
+  <p class="para">
+   And the same role as implemented in Pyrus:
+  </p>
+  <p class="para">
+   </p><div class="xmlcode">
+    <pre class="xmlcode">
+&lt;role version=&quot;2.0&quot; xmlns=&quot;http://pear2.php.net/dtd/customrole-2.0&quot;&gt;
+ &lt;name&gt;php&lt;/name&gt;
+ &lt;class&gt;PEAR2\Pyrus\Installer\Role\Php&lt;/class&gt;
+ &lt;releasetypes&gt;php&lt;/releasetypes&gt;
+ &lt;releasetypes&gt;extsrc&lt;/releasetypes&gt;
+ &lt;releasetypes&gt;extbin&lt;/releasetypes&gt;
+ &lt;releasetypes&gt;zendextsrc&lt;/releasetypes&gt;
+ &lt;releasetypes&gt;zendextbin&lt;/releasetypes&gt;
+ &lt;installable&gt;1&lt;/installable&gt;
+ &lt;locationconfig&gt;php_dir&lt;/locationconfig&gt;
+ &lt;honorsbaseinstall&gt;1&lt;/honorsbaseinstall&gt;
+ &lt;unusualbaseinstall /&gt;
+ &lt;executable /&gt;
+&lt;/role&gt;</pre>
+
+   </div>
+  
+  <p class="para">
+   The most obvious difference is that Pyrus now includes the name of the role,
+   PEAR extracts the role name from the name of the file (which in the
+   example above was <code class="literal">Php.xml</code>).  In addition, the
+   <code class="literal">&lt;phpfile&gt;</code> and <code class="literal">&lt;phpextension&gt;</code>
+   elements have been removed.
+  </p>
+  <p class="para">
+   The details of new tags like &lt;class&gt; and &lt;autoloadpath&gt; are
+   documented in the full documentation of custom roles
+   <a href="pyrus.plugins.role.html" class="link">here</a>.
+  </p>
+  <p class="para">
+   This XML metadata file is identified by Pyrus through the use of the file role
+   <code class="literal">customrole</code>, which is used in the custom role&#039;s package.xml.
+   Here is an example from the &lt;contents&gt; of a package.xml:
+  </p>
+  <p class="para">
+   </p><div class="xmlcode">
+    <pre class="xmlcode">
+...
+  &lt;contents&gt;
+   &lt;dir name=&quot;data&quot;&gt;
+    &lt;file name=&quot;myrole.xml&quot; role=&quot;customrole&quot;/&gt;
+    &lt;file name=&quot;someotherdata.csv&quot; role=&quot;data&quot;/&gt;
+   &lt;/dir&gt;
+  &lt;/contents&gt;
+...</pre>
+
+   </div>
+  
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="pyrus.differences.customcommands.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="pyrus.differences.html">Differences from the PEAR Installer</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="pyrus.differences.customtasks.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Pyrus Custom Commands: differences from PEAR</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Pyrus Custom File Tasks: differences from PEAR</td>
+  </tr>
+ </table>
+</div>
+</body></html>

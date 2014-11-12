@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>DB_Table Class Tutorial</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.db-table.html" title="DB_Table" />
+  <link rel="prev" href="package.database.db-table.intro.html" title="Introduction" />
+  <link rel="next" href="package.database.db-table.intro-forms.html" title="DB_Table Forms Tutorial" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">DB_Table Class Tutorial</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.db-table.intro.html" title="Introduction">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.db-table.intro-forms.html" title="DB_Table Forms Tutorial">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.db-table.intro-table">
+ 
+  <h1 class="refname"><strong class="classname">DB_Table</strong> Class Tutorial</h1>
+  <div class="refnamediv"><strong class="classname">DB_Table</strong>  Class Tutorial &ndash; 
+  Interface to a single table
+  </div>
+
+ 
+
+<div class="refsection" id="package.database.db-table.intro-table.desc">
+<h1 class="title">Description</h1>
+
+<p class="para">
+This tutorial uses an extended example to introduce the use of the 
+<strong class="classname">DB_Table</strong> class as an interface to a single 
+database table. This class provides:
+</p><ul class="itemizedlist">
+  <li class="listitem">
+    <span class="simpara">
+    Column and index definitions embedded in the object properties,
+    using portable data types.
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    Creation or verification of the table from the declared schema.
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    Simplified API for SELECT, INSERT, UPDATE, and DELETE commands.
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    Array syntax for SELECT commands, and stored baseline queries.
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    Data type validation for inserted/updated column values
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    Auto-increment emulation
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    Automated creation of <strong class="classname">HTML_QuickForm</strong> 
+    elements from the column definitions.
+    </span>
+  </li>
+</ul>
+
+
+<p class="para">
+This class tutorial contains two manual pages: This page documents all 
+of the features of <strong class="classname">DB_Table</strong> except those involving 
+<strong class="classname">HTML_Quick</strong> form generation, which are discussed 
+in the next page. The tutorial is based closely upon the original 
+external documentation for <strong class="classname">DB_Table</strong>, by Paul M.
+Jones, which is still available
+<a href="http://wiki.ciaweb.net/yawiki/index.php?area=DB_Table" class="link external">
+here</a>. The original documentation includes some examples of 
+how to customize a <strong class="classname">DB_Table</strong> subclass definition
+that are not included here.
+</p>
+
+<p class="para">
+The <strong class="classname">DB_Table</strong> and 
+<strong class="classname">DB_Table_Database</strong> classes both extend an abstract 
+base class named <strong class="classname">DB_Table_Base</strong>. Methods and 
+properties that are inherited from <strong class="classname">DB_Table_Base</strong> 
+are thus available via either a <strong class="classname">DB_Table</strong> or a
+<strong class="classname">DB_Table_Database</strong> object, with the same interface.
+These shared methods and properties will be identified as such in these
+manual pages. 
+</p>
+
+<ul class="itemizedlist">
+  
+  <li class="listitem">
+     <span class="simpara">
+       <a href="package.database.db-table.intro-table.html#package.database.db-table.intro-table.extend" class="link">
+       Extending <strong class="classname">DB_Table</strong></a>
+     </span>
+     <ul class="itemizedlist">
+       <li class="listitem">
+          <span class="simpara">
+          <a href="package.database.db-table.intro-table.html#package.database.db-table.intro-table.extend.columns" class="link">
+          Defining columns</a>
+          </span>
+       </li>
+       <li class="listitem">
+          <span class="simpara">
+          <a href="package.database.db-table.intro-table.html#package.database.db-table.intro-table.extend.indices" class="link">
+          Defining indices</a>
+          </span>
+       </li>
+       <li class="listitem">
+          <span class="simpara">
+          <a href="package.database.db-table.intro-table.html#package.database.db-table.intro-table.extend.autoinc" class="link">
+          Declaring an auto-increment column</a>
+          </span>
+       </li>
+     </ul>
+  </li>
+  <li class="listitem">
+     <span class="simpara">
+       <a href="package.database.db-table.intro-table.html#package.database.db-table.intro-table.constructor" class="link">
+       <strong class="classname">DB_Table</strong> Constructor</a>
+     </span>
+  </li>
+  <li class="listitem">
+     <span class="simpara">
+       <a href="package.database.db-table.intro-table.html#package.database.db-table.intro-table.modify" class="link">
+       Modifying Data: insert, update and delete</a>
+     </span>
+     <ul class="itemizedlist">
+       <li class="listitem">
+          <span class="simpara">
+          <a href="package.database.db-table.intro-table.html#package.database.db-table.intro-table.modify.insert" class="link">
+          <strong class="function">insert()</strong> - Inserting rows of data </a> 
+          </span>
+       </li>
+       <li class="listitem">
+          <span class="simpara">
+          <a href="package.database.db-table.intro-table.html#package.database.db-table.intro-table.modify.autoinc" class="link">
+          Auto-increment and sequences</a>
+          </span>
+       </li>
+       <li class="listitem">
+          <span class="simpara">
+          <a href="package.database.db-table.intro-table.html#package.database.db-table.intro-table.modify.update" class="link">
+          <strong class="function">update()</strong> - Updating rows of data</a> 
+          </span>
+       </li>
+       <li class="listitem">
+          <span class="simpara">
+          <a href="package.database.db-table.intro-table.html#package.database.db-table.intro-table.modify.delete" class="link">
+          <strong class="function">delete()</strong> - Deleting rows of data</a>
+          </span>
+       </li>
+     </ul>
+  </li>
+  <li class="listitem">
+     <span class="simpara">
+       <a href="package.database.db-table.intro-table.html#package.database.db-table.intro-table.select" class="link">
+       Selecting Data</a>
+     </span>
+     <ul class="itemizedlist">
+        <li class="listitem">
+           <span class="simpara">
+           <a href="package.database.db-table.intro-table.html#package.database.db-table.intro-table.select.queryarray" class="link">
+           Query Arrays</a>
+           </span>
+        </li>
+        <li class="listitem">
+           <span class="simpara">
+           <a href="package.database.db-table.intro-table.html#package.database.db-table.intro-table.select.stored" class="link">
+           Storing Queries: $this-&gt;sql</a>
+           </span>
+        </li>
+        <li class="listitem">
+           <span class="simpara">
+           <a href="package.database.db-table.intro-table.html#package.database.db-table.intro-table.select.submit" class="link">
+           Submitting Queries: <strong class="function">select*()</strong> methods</a>
+           </span>
+        </li>
+     </ul>
+  </li>
+  <li class="listitem">
+     <span class="simpara">
+        <a href="package.database.db-table.intro-table.html#package.database.db-table.intro-table.validate" class="link">
+        Data Type Validation</a> 
+     </span>
+  </li>
+  <li class="listitem">
+     <span class="simpara">
+        <a href="package.database.db-table.intro-table.html#package.database.db-table.intro-table.misc" class="link">
+        Miscellaneous Utility Methods</a> 
+     </span>
+     <ul class="itemizedlist">
+        <li class="listitem">
+           <span class="simpara">
+           <a href="package.database.db-table.intro-table.html#package.database.db-table.intro-table.misc.quote" class="link">
+           <strong class="function">quote()</strong></a>
+           </span>
+        </li>
+        <li class="listitem">
+           <span class="simpara">
+           <a href="package.database.db-table.intro-table.html#package.database.db-table.intro-table.misc.recast" class="link">
+           <strong class="function">recast()</strong></a>
+           </span>
+        </li>
+        <li class="listitem">
+           <span class="simpara">
+           <a href="package.database.db-table.intro-table.html#package.database.db-table.intro-table.misc.getblankrow" class="link">
+           <strong class="function">getBlankRow()</strong></a>
+           </span>
+        </li>
+     </ul>
+  </li>
+</ul>
+
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-table.extend"><div class="info"><h1>Extending <strong class="classname">DB_Table</strong></h1>
+</div>
+
+<p class="para">
+You generally do not usually create instances of
+<strong class="classname">DB_Table</strong> directly. 
+Instead, for each table in a database, you define a a subclass of 
+<strong class="classname">DB_Table</strong>, and instantiate one object of that
+subclass. The table schema is embedded in the properties of that 
+object: column definitions are declared in the $col property array 
+and indices in the $idx property array. Normally, the values of these
+property arrays are defined as part of the subclass definition, which 
+thus serves as a record of the table schema.
+</p>
+
+<p class="para">
+One advantage of any database gateway that associates a class with
+each RDBMS table is that the subclass definition provides a natural
+place to specify properties and behaviors that are specific to that 
+table.  Custom behaviors and validations may be implemented by 
+overriding the class methods, or by defining new methods.  
+<strong class="classname">DB_Table</strong> also allows commonly used or 
+baseline SELECT queries to be stored in the $sql property array.
+</p>
+
+<p class="para">
+The package provides two ways to create both a RDBMS table and a 
+corresponding <strong class="classname">DB_Table</strong> subclass, without 
+writing redundant specifications: 
+</p><ul class="itemizedlist">
+<li class="listitem">
+<span class="simpara">
+Programmatic table creation:
+Write a <strong class="classname">DB_Table</strong> subclass definition for each 
+table, and use an instance of that subclass to create the actual 
+database table.
+</span>
+</li>
+<li class="listitem">
+<span class="simpara">
+Reflection and code generation:
+Use the <strong class="classname">DB_Table_Generator</strong> class to automatically
+generate skeleton <strong class="classname">DB_Table</strong> subclass definitions, 
+and related glue code, for an existing database.
+</span>
+</li>
+</ul><p>
+In this tutorial, we demonstrate the former method, which requires us 
+to write subclass definitions manually. A discussion of the latter
+method is given in the <strong class="classname">DB_Table_Generator</strong> class 
+tutorial.
+</p>
+
+<div class="refsection" id="package.database.db-table.intro-table.extend.columns"><div class="info"><h1>Defining Columns</h1>
+</div>
+
+<p class="para">
+The $col property is an associative array in which each key is a column 
+name, and each value is an associative array containing a column definition. 
+The value of the required &#039;type&#039; element of a column definition must be the 
+name of one of the <strong class="classname">DB_Table</strong>
+<a href="package.database.db-table.intro-datatypes.html" class="link">data types</a>, 
+<em class="emphasis">e.g.</em>, &#039;integer&#039;, &#039;decimal&#039;, &#039;boolean&#039;, etc. 
+The &#039;char&#039; and &#039;varchar&#039; string types, and the &#039;decimal&#039; numerical type, 
+all require a &#039;size&#039; element, for which the value is an integer number of 
+characters or digits. The &#039;decimal&#039; type also requires a &#039;scope&#039; element, 
+which is the number of digits after the decimal point. A &#039;require&#039; element
+with a boolean true value is equivalent to NOT NULL in SQL, and indicates 
+that NULL values are not allowed in that column. 
+</p>
+
+<p class="para">
+As an example, let&#039;s say we&#039;re going to create a GuestBook table.
+This table will store the first and last name of visitors, their email 
+address, and the date and time they signed the guestbook. In addition, 
+we&#039;re going to want a unique ID for each row. The columns in our table 
+will be:
+</p><ul class="itemizedlist">
+   <li class="listitem">
+      <span class="simpara">
+      id -- a sequential integer that is unique for every row (required; 
+         i.e., no nulls allowed)
+      </span>
+   </li>
+   <li class="listitem">
+      <span class="simpara">
+      fname -- a string of up to 32 characters, the first name of the visitor
+      </span>
+   </li>
+   <li class="listitem">
+      <span class="simpara">
+      lname -- a string of up to 64 characters, the last name of the visitor
+      </span>
+   </li>
+   <li class="listitem">
+      <span class="simpara">
+      email -- a string of up to 255 characters, the visitor&#039;s email address 
+      (required; i.e., no nulls allowed)
+      </span>
+   </li>
+   <li class="listitem">
+      <span class="simpara">
+      signdate -- a date for when the visitor signed the guestbook 
+      (required; i.e., no nulls allowed)
+      </span>
+   </li>
+ </ul>
+ 
+
+<p class="para">
+These column definitions must be declared in the $col property array. 
+Shown below is the required declaration of $col for a subclass of 
+<strong class="classname">DB_Table</strong>, named 
+<strong class="classname">GuestBook_Table</strong>, that is associated with a 
+database table named GuestBook: 
+</p><div class="example"><div class="info"><p><strong>GuestBook column definitions</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">GuestBook_Table&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">DB_Table<br /></span><span style="color: #007700">{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$col&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;unique&nbsp;row&nbsp;ID<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'id'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'integer'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'require'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;first&nbsp;name<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'fname'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'varchar'</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">32<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">),<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;last&nbsp;name&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'lname'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'varchar'</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">64<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">),<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;email&nbsp;address&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'email'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'varchar'</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">128</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'require'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">),<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;date&nbsp;signed&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'signdate'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'date'</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'require'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+
+</div> 
+
+<div class="refsection" id="package.database.db-table.intro-table.extend.indices"><div class="info"><h1>Defining Indices</h1>
+</div>
+
+<p class="para">
+The $idx property array is used to declare indices. Each index can be 
+declared to be of type &#039;primary&#039;, &#039;unique&#039;, or &#039;normal&#039;. Primary and unique 
+indices both define constraints that require that each key value be unique 
+within the table.  Normal indices are introduced purely for efficiency. 
+Both single- and multi-column indices may be defined.
+</p>
+
+<p class="para">
+In our GuestBook example, we want two single column indices: First, we will 
+define a primary index for the &quot;id&quot; identifier column. Second, for purposes 
+of the example, we&#039;ll define a normal index on the &quot;signdate&quot; column, because 
+we expect to search for visitors by date and time. The required $idx property
+declaration is given below:
+</p><div class="example"><div class="info"><p><strong>Index Definitions for GuestBook</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">GuestBook_Table&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">DB_Table<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Column&nbsp;definitions&nbsp;-&nbsp;see&nbsp;above&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;var&nbsp;$col&nbsp;=&nbsp;array(...);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;Index&nbsp;definitions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$idx&nbsp;</span><span style="color: #007700">=&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'id'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'primary'</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'cols'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'id'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">),&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'signdate'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'normal'</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'cols'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'signdate'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;);&nbsp;<br />}&nbsp;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+
+
+<p class="para">
+The key of each element in the $idx array is an index name, and the
+value is generally an array containing a definition for the index. 
+An index definition array must contain a &#039;type&#039; element, for which 
+the value must be &#039;primary&#039;, &#039;unique&#039; or &#039;normal&#039;, and &#039;cols&#039; 
+element.  The value of &#039;cols&#039; element must be either the name of a 
+single column, for a single-column array, or a sequential array of 
+column names, for a multi-column index. There is also an alternative 
+shorthand syntax for single-column indices, which is discussed below. 
+</p>
+
+<p class="para">
+As an example of a multi-column index, here is the definition for a
+multi-column index named &quot;namefl&quot; on the fname and lname columns.
+</p><div class="example"><div class="info"><p><strong>Defining A Multi-Column Index</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">GuestBook_Table&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">DB_Table<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Column&nbsp;definitions<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;var&nbsp;$col&nbsp;=&nbsp;array(&nbsp;...&nbsp;)<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;Index&nbsp;definitions<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$idx&nbsp;</span><span style="color: #007700">=&nbsp;array(<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;above&nbsp;single-column&nbsp;indices,&nbsp;plus<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'namefl'&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'normal'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'cols'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'fname'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'lname'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+
+
+<p class="para">
+There is also a shorthand way to declare a single-column index:
+If you want single-column index for which the index name is the same 
+as the column name, use the column name as the key of $idx, and the 
+index type string (rather than an index definition array) as the 
+value.
+</p><div class="example"><div class="info"><p><strong>Shorthand for Single-Column Indices:</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">GuestBook_Table&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">DB_Table<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Column&nbsp;definitions&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;var&nbsp;$col&nbsp;=&nbsp;array(...);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;Index&nbsp;definitions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$idx&nbsp;</span><span style="color: #007700">=&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;primary&nbsp;index&nbsp;called&nbsp;'id'&nbsp;based&nbsp;on&nbsp;the&nbsp;'id'&nbsp;column&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'id'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'primary'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;normal&nbsp;index&nbsp;called&nbsp;'signdate'&nbsp;based&nbsp;on&nbsp;the&nbsp;'signdate'&nbsp;column&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'signdate'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'normal'<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">);&nbsp;<br />}&nbsp;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+
+
+</div> 
+<div class="refsection" id="package.database.db-table.intro-table.extend.autoinc"><div class="info"><h1>Declaring an Auto-Increment Column</h1>
+</div>
+
+<p class="para">
+One integer column of each table may be declared to be an auto-increment
+column. This column is normally a primary key identifier. The only effect 
+of this declaration is to change the behavior of the 
+<strong class="function">insert()</strong> 
+method: If the <strong class="function">insert()</strong> method is used to insert a 
+row in which the value of an auto-increment column is not set or NULL,
+then an auto-incremented integer will be inserted automatically. 
+</p>
+
+<p class="para">
+A column is declared to be auto-increment by setting the value of the
+$auto_inc_col property to the column name. In the following example, we 
+declare the &quot;id&quot; primary key column of the GuestBook table to be 
+auto-increment:
+</p>
+
+<div class="example"><div class="info"><p><strong>An Auto-Incrementing Identifier</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">GuestBook_Table&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">DB_Table<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Column&nbsp;definitions&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;var&nbsp;$col&nbsp;=&nbsp;array(...);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;Index&nbsp;definitions&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$idx&nbsp;</span><span style="color: #007700">=&nbsp;array(...);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Auto-increment&nbsp;declaration<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$auto_inc_col&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'id'</span><span style="color: #007700">;<br /><br />}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+
+</div> 
+
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-table.constructor"><div class="info"><h1><strong class="classname">DB_Table</strong> Constructor</h1>
+</div>
+
+<p class="para">
+Each <strong class="classname">DB_Table</strong> object wraps a <strong class="classname">DB</strong> 
+or <strong class="classname">MDB2</strong> database connection object. This object is 
+passed to the <strong class="classname">DB_Table</strong> constructor as its first
+parameter. A single <strong class="classname">DB/MDB2</strong> object may be shared by any 
+number of <strong class="classname">DB_Table</strong> objects.  The second parameter 
+of the constructor is the name of the associated RDBMS table.  The 
+optional third parameter is a string $create that can be used to 
+specify whether the table should be created by the constructor if it 
+does not already exist, or whether its structure should be verified if 
+it does (as discussed in more detail below).
+</p>
+
+<p class="para">
+In the example shown below, an instance of the GuestBook subclass is 
+created, which binds to the GuestBook table. The use of a value $auto_create 
+= &#039;safe&#039; specifies that the GuestBook table should be created if a table 
+of that name does not already exist, but not otherwise. 
+</p><div class="example"><div class="info"><p><strong>Constructing the GuestBook_Table Object</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;Include&nbsp;basic&nbsp;classes<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'MDB2.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'DB/Table.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'Guestboook_Table.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;create&nbsp;a&nbsp;PEAR&nbsp;MDB2&nbsp;(or&nbsp;DB)&nbsp;object<br /></span><span style="color: #0000BB">$dsn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"phptype://username:password@localhost/database"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$conn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">MDB2</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;set&nbsp;up&nbsp;for&nbsp;the&nbsp;GuestBook&nbsp;and&nbsp;create&nbsp;it<br /></span><span style="color: #0000BB">$table&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'GuestBook'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$create&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'safe'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$GuestBook&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">GuestBook_Table</span><span style="color: #007700">(</span><span style="color: #0000BB">$conn</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$table</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$create</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;print&nbsp;out&nbsp;results<br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">$GuestBook</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">error</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Failure!&nbsp;&nbsp;Try&nbsp;again."</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$GuestBook</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">error</span><span style="color: #007700">);<br />}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Success!"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$GuestBook</span><span style="color: #007700">);<br />}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div><p>
+The $conn connection object may be either a <strong class="classname">DB</strong> or 
+<strong class="classname">MDB2</strong> object, and is passed by reference. 
+</p>
+
+<p class="para">
+The allowed values of the $create argument are:
+</p><ul class="itemizedlist">
+   <li class="listitem">
+      <span class="simpara">
+      boolean false to not attempt creation (default)
+      </span>
+   </li>
+   <li class="listitem">
+      <span class="simpara">
+      &#039;drop&#039; to drop any existing table with the same name and re-create it
+      </span>
+   </li>
+   <li class="listitem">
+      <span class="simpara">
+      &#039;safe&#039; to create the table if no such table exist, and do nothing
+      if it does.
+      </span>
+   </li>
+   <li class="listitem">
+      <span class="simpara">
+      &#039;verify&#039; to check whether the table exists, verify the schema. It
+      checks whether all the columns exist, whether the columns have 
+      the right type, and whether the indexes exist and have the right 
+      type 
+      </span>
+   </li>
+   <li class="listitem">
+      <span class="simpara">
+      &#039;alter&#039; does the same as &#039;safe&#039; if the table does not exist; if it
+      does exist, the schema is verified, and the table is altered if needed.
+      </span>
+   </li>
+</ul>
+
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-table.modify"><div class="info"><h1>Modifying Data: Insert, Update, and Delete</h1>
+</div>
+
+
+<p class="para">
+The <strong class="classname">DB_Table</strong> <strong class="function">insert()</strong>, 
+<strong class="function">update()</strong>, and <strong class="function">delete()</strong> 
+methods provide a convenient interface for inserting, updating, 
+and deleting rows of data. A row of data to be inserted or updated 
+is passed to the insert or update method as an associative array
+in which the keys are column names.
+</p>
+
+<div class="refsection" id="package.database.db-table.intro-table.modify.insert"><div class="info"><h1>Inserting Rows</h1>
+</div>
+
+<p class="para">
+To insert a row into the GuestBook table, you use the 
+<strong class="function">insert()</strong> method.  
+The only parameter is an associative array in which the keys are 
+column names, and the values are column values to be inserted. 
+</p><div class="example"><div class="info"><p><strong>Inserting a Row</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;[snip]&nbsp;create&nbsp;the&nbsp;$GuestBook&nbsp;object<br /><br />//&nbsp;assign&nbsp;fields&nbsp;and&nbsp;values<br /></span><span style="color: #0000BB">$row&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'fname'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Thomas'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'lname'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Anderson'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'signdate'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'2003-10-12'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'email'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'neo@matrix.net'<br /></span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;insert&nbsp;into&nbsp;the&nbsp;table&nbsp;and&nbsp;print&nbsp;results<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$GuestBook</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">insert</span><span style="color: #007700">(</span><span style="color: #0000BB">$row</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$result</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Error&nbsp;handling&nbsp;code<br /></span><span style="color: #007700">}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+
+
+<p class="para">
+By default, the insert method will automatically validate that 
+the data you are inserting is of the expected type, and that 
+values have been provided for all required columns other than
+auto-increment columns. If either of these validations fails, 
+the method returns a PEAR Error, and does not attempt to insert 
+a row.  In the above example, no value has been provided for the 
+required &#039;id&#039; column because this is an auto-increment column, 
+as discussed below.
+</p>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-table.modify.autoinc"><div class="info"><h1>Auto-Increment Columns and Sequences</h1>
+</div>
+
+<p class="para">
+<strong class="classname">DB_Table</strong> can use sequences created by the underlying 
+<strong class="classname">DB</strong> or <strong class="classname">MDB2</strong> layer to generate 
+auto-increment integer identifiers.
+If the value of a column that has been declared to be auto-increment is not 
+set or set to PHP NULL in the array of values that is passed to the insert 
+method, then an auto-incremented sequence value will be generated and 
+inserted for that column. In the above example, a sequence value is generated 
+and inserted for the &#039;id&#039; column.  If an integer value is set for such a 
+column, however, the provided value will instead be inserted.
+</p>
+
+<p class="para">
+The sequence generation features of <strong class="classname">DB</strong> or 
+<strong class="classname">MDB2</strong> may also be accessed explictly via the 
+<strong class="function">DB_Table::nextID()</strong> method. This method is simply a 
+wrapper that calls the corresponding <strong class="classname">DB</strong> or 
+<strong class="classname">MDB2</strong> method internally. The following example
+shows how to use <strong class="function">nextID()</strong> to explicitly generate 
+and insert an auto-incremented value for an identifier.
+</p><div class="example"><div class="info"><p><strong>Using nextID() to access a sequence</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;[snip]&nbsp;create&nbsp;the&nbsp;$GuestBook&nbsp;object<br /><br />//&nbsp;get&nbsp;the&nbsp;next&nbsp;ID&nbsp;in&nbsp;a&nbsp;sequence&nbsp;associated&nbsp;with&nbsp;the&nbsp;table<br /></span><span style="color: #0000BB">$id&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$GuestBook</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">nextID</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;assign&nbsp;fields&nbsp;and&nbsp;values<br /></span><span style="color: #0000BB">$row&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'id'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$id</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'fname'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Thomas'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'lname'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Anderson'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'signdate'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'2003-10-12'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'email'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'neo@matrix.net'<br /></span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;insert&nbsp;into&nbsp;the&nbsp;table&nbsp;and&nbsp;print&nbsp;results<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$GuestBook</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">insert</span><span style="color: #007700">(</span><span style="color: #0000BB">$row</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$result</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;...&nbsp;error&nbsp;handling&nbsp;code&nbsp;...<br /></span><span style="color: #007700">}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div><p>
+Because the &#039;id&#039; column has been declared to be auto-increment,
+this code snippet is functionally equivalent to that given in the 
+preceding example.
+</p>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-table.modify.update"><div class="info"><h1>Updating Rows</h1>
+</div>
+
+<p class="para">
+The <strong class="function">update()</strong> method is used to update the data in 
+a row or a set of rows. The method takes two parameters. Its first 
+parameter is an associative array in which keys are names of columns 
+to be updated, and values are new data values. The second is the text 
+of the WHERE clause of the corresponding SQL UPDATE statement, excluding 
+the WHERE keyword. 
+</p>
+
+<p class="para">
+For example to change all the rows with the last name &quot;Smith&quot; to &quot;Jones&quot;:
+</p>
+
+<div class="example"><div class="info"><p><strong>Updating a Set of Rows</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;[snip]&nbsp;create&nbsp;the&nbsp;$GuestBook&nbsp;object<br /><br /></span><span style="color: #0000BB">$values&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'lname'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Jones'<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;assign&nbsp;the&nbsp;WHERE&nbsp;clause<br /></span><span style="color: #0000BB">$where&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"lname&nbsp;=&nbsp;'Smith'"</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;attempt&nbsp;the&nbsp;update&nbsp;<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$GuestBook</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">update</span><span style="color: #007700">(</span><span style="color: #0000BB">$values</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$where</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$result</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;...&nbsp;error&nbsp;handling&nbsp;code&nbsp;...<br /></span><span style="color: #007700">}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+<p class="para">
+As for insertion, if you attempt to update with values that do not
+validate against the declared column types, then the update will
+fail, and the method will return a PEAR Error. 
+</p>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-table.modify.delete"><div class="info"><h1>Deleting Rows</h1>
+</div>
+
+<p class="para">
+The <strong class="function">delete()</strong> method is used to delete a row or
+set of rows specified by a logical condition.  Its only parameter is a 
+string containing the logical condition of the WHERE clause needed to 
+identify which rows to delete, excluding the WHERE keyword.
+</p>
+
+<p class="para">
+For example, to delete all rows that were entered before today:
+</p>
+
+<div class="example"><div class="info"><p><strong>Deleting a Set of Rows</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;[snip]&nbsp;create&nbsp;the&nbsp;$GuestBook&nbsp;object<br /><br />//&nbsp;a&nbsp;WHERE&nbsp;clause<br /></span><span style="color: #0000BB">$today&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #DD0000">'Y-m-d'</span><span style="color: #007700">);&nbsp;</span><span style="color: #FF8000">//&nbsp;formatted&nbsp;as&nbsp;yyyy-mm-dd<br /></span><span style="color: #0000BB">$where&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"signdate&nbsp;&lt;&nbsp;'</span><span style="color: #0000BB">$today</span><span style="color: #DD0000">'"</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;attempt&nbsp;the&nbsp;update&nbsp;and&nbsp;print&nbsp;the&nbsp;results<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$GuestBook</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">delete</span><span style="color: #007700">(</span><span style="color: #0000BB">$where</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$result</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;...&nbsp;error&nbsp;handling&nbsp;code&nbsp;...<br /></span><span style="color: #007700">}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+
+</div>
+
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-table.select"><div class="info"><h1>Selecting Data</h1>
+</div>
+
+<p class="para">
+<strong class="classname">DB_Table</strong> uses an array syntax for constructing 
+SQL SELECT statements, in which each clause of an SQL SELECT statement 
+(e.g., SELECT, FROM, WHERE clauses) is stored in a different element. 
+This representation makes it relatively easy to modify a query by,
+<em class="emphasis">e.g.</em>, adding additional conditions to the WHERE
+clause to further limit the returned set of rows. Query arrays may be 
+stored in the $sql property array.
+</p>
+
+<p class="para">
+Queries may be submitted to the database using either the
+<strong class="function">select()</strong> method, which generally returns the 
+result set as an array, or the <strong class="function">selectResult()</strong> 
+method, which returns a <strong class="classname">DB_Result</strong> or 
+<strong class="classname">MDB2_Result_Common</strong> result set object.
+These three methods are all inherited from the 
+<strong class="classname">DB_Table_Base</strong> base class, and thus are also 
+available as methods of a <strong class="classname">DB_Table_Database</strong> 
+object. 
+</p>
+
+<div class="refsection" id="package.database.db-table.intro-table.select.queryarray"><div class="info"><h1>Query Arrays</h1>
+</div>
+
+<p class="para">
+Each SQL select statement is defined by a &quot;query array&quot;. For most of 
+the allowed elements of a query array, the key is a lower case version of
+the keyword that begins a clause in the SELECT statement (e.g., &#039;select&#039;, 
+&#039;from&#039;, &#039;where&#039;, etc.), and the value is the text of the remainder of
+that clause, excluding the keyword. 
+The allowed keys of a query array that define clauses of the SELECT 
+command are:
+</p>
+<ul class="itemizedlist">
+<li class="listitem">
+<span class="simpara">
+&#039;select&#039; - the SELECT clause
+           (defaults to &#039;*&#039;)
+</span>
+</li>
+<li class="listitem">
+<span class="simpara">
+&#039;from&#039; - the table(s) to select from.
+         (Defaults to the name of this table, $this-&gt;table)
+</span>
+</li>
+<li class="listitem">
+<span class="simpara">
+&#039;join&#039; - any join clauses that should be added to the FROM clause.
+</span>
+</li>
+<li class="listitem">
+<span class="simpara">
+&#039;where&#039; - the WHERE clause
+</span>
+</li>
+<li class="listitem">
+<span class="simpara">
+&#039;group&#039; - the GROUP BY clause
+</span>
+</li>
+<li class="listitem">
+<span class="simpara">
+&#039;having&#039; - the HAVING clause
+</span>
+</li>
+<li class="listitem">
+<span class="simpara">
+&#039;order&#039; - the ORDER BY clause 
+</span>
+</li>
+</ul>
+<p class="para">
+The values of the &#039;select&#039;, &#039;from&#039;, &#039;where&#039;, &#039;group&#039;, &#039;having&#039;, and 
+&#039;order&#039; elements are strings that contain the text of corresponding
+clause of the desired SQL statement, excluding the keywords SELECT, 
+FROM, WHERE, GROUP BY, HAVING, or ORDER, respectively. The value of
+the &#039;join&#039; element, if present, is simply concatenated onto the end 
+of the &#039;FROM&#039; element, and should include the keywords, 
+<em class="emphasis">e.g.</em>, &#039;JOIN&#039;, &#039;INNER JOIN&#039;, or &#039;LEFT JOIN&#039;.
+</p>
+
+<p class="para">
+The other allowed keys of a query array may be used to specify how the 
+results of query should be returned by the <strong class="function">select()</strong>
+method. These are:
+</p><ul class="itemizedlist">
+ <li class="listitem">
+  <span class="simpara">
+   &#039;get&#039; - determines how the <strong class="function">select()</strong> method will 
+           return results.  See below for a list of allowed values. 
+           (Defaults to &#039;all&#039;).
+  </span>
+ </li>
+ <li class="listitem">
+  <span class="simpara">
+   &#039;fetchmode&#039; - determines how rows of a result set will be returned 
+          by <strong class="function">select()</strong> if &#039;get&#039; is &#039;all&#039; or not set. 
+  </span>
+ </li>
+ <li class="listitem">
+  <span class="simpara">
+  &#039;fetchmode_object_class&#039; - The name of the class of the objects that 
+         should be used to encapsulate rows if rows are returned as 
+         objects. 
+  </span>
+ </li>
+</ul><p>
+These three elements effect only the behavior of the 
+<strong class="function">select()</strong> method, and have no effect upon the 
+behavior of the <strong class="function">selectResult()</strong> method.  The 
+allowed values of the &#039;get&#039; element are:
+</p><ul class="itemizedlist">
+<li class="listitem">
+<span class="simpara">
+&#039;all&#039; - return all rows of a return set as a sequential array of rows 
+(this is the default). Each row can be returned as either an associative 
+array in which keys are column names (the default) or a sequential array.
+</span>
+</li>
+<li class="listitem">
+<span class="simpara">
+&#039;assoc&#039; - returns an associative array in which the key is the first 
+column of the return set and the value is the second column. 
+</span>
+</li>
+<li class="listitem">
+<span class="simpara">
+&#039;col&#039; - return only the first column as a sequential array
+</span>
+</li>
+<li class="listitem">
+<span class="simpara">
+&#039;row&#039; - return only the first row as an associative array in which the
+keys are column names and the values are the column values.
+</span>
+</li>
+<li class="listitem">
+<span class="simpara">
+&#039;one&#039; - return only the value of the first column in the first row.
+</span>
+</li>
+</ul><p>
+Each allowed value of the &#039;get&#039; element corresponds to the name of the 
+get* method of <strong class="classname">DB</strong> and <strong class="classname">MDB2</strong> that
+is actually called internally by
+<strong class="function">DB_Table::select()</strong>: If the value of the &#039;get&#039; 
+element is &#039;all&#039;, the query is submitted by calling the 
+<strong class="function">DB/MDB2::getAll()</strong> method, using an SQL query
+constructed from the query array, and
+<strong class="function">DB_Table::select()</strong> simply returns the return value 
+of <strong class="function">getAll()</strong>. Similarly, a &#039;get&#039; element value of 
+&#039;assoc&#039; causes a call to <strong class="function">getAssoc()</strong>, 
+&#039;col&#039; calls <strong class="function">getCol()</strong>, 
+&#039;one&#039; calls <strong class="function">getOne()</strong>, and
+&#039;row&#039; calls <strong class="function">getRow()</strong>.
+</p>
+
+<p class="para">
+When the &#039;get&#039; element is set to &#039;all&#039;, explicitly or by default, each 
+row in the array returned by the <strong class="function">DB_Table::select()</strong> 
+method returned as an associative array in which keys are column names,
+as a sequential array, or as an object in which column names map to 
+property names. The choice of data structure for each row may be
+controlled by the &#039;fetchmode&#039; element of the query or, if this is not
+is set, by the $fetchmode property of the 
+<strong class="classname">DB_Table</strong> object.  Similarly, when rows are 
+returned as objects, the name of the object class may be specified by 
+the &#039;fetchmode_object_class&#039; element of the query or, if this is not 
+set, by the $fetchmode_object_class property of the 
+<strong class="classname">DB_Table</strong> object. 
+</p>
+
+<p class="para">
+The values of the &#039;fetchmode&#039; and &#039;fetchmode_object_class&#039; elements 
+of the query or the $fetchmode and $fetchmode_object_class properties 
+of <strong class="classname">DB_Table</strong> are used to temporarily reset the 
+values of the &#039;fetchmode&#039; and &#039;fetchmode_object_class&#039; properties 
+(for <strong class="classname">DB</strong>) or 
+options (for <strong class="classname">MDB2</strong>) 
+of the underlying <strong class="classname">DB</strong> or 
+<strong class="classname">MDB2</strong> object. These values should be set 
+equal to the desired DB_FETCHMODE_* or MDB2_FETCHMODE_* constant 
+appropriate for the underlying backend. The original values of the 
+<strong class="classname">DB/MDB2</strong> object properties or options are 
+restored before the <strong class="function">select()</strong> method returns. 
+</p>
+
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-table.select.stored"><div class="info"><h1>Storing Queries: $sql property array</h1>
+</div>
+
+<p class="para">
+Commonly used queries, and &quot;baseline&quot; queries that are useful as 
+a starting point for construction of more complicated ones, may be 
+stored in the $sql public property array. The $sql property is an 
+associative array in which keys are query names, and values are 
+query arrays. Stored queries can be submitted by passing the name 
+key for the query as an argument to any of the 
+<strong class="classname">select*()</strong> methods. 
+</p>
+
+<p class="para">
+The $sql property is inherited from the 
+<strong class="classname">DB_Table_Base</strong> class. Queries may thus be 
+stored either the $sql property of a <strong class="classname">DB_Table</strong> 
+that provides an interface to a specific table, or in the $sql property 
+of a <strong class="classname">DB_Table_Database</strong> object that provides an 
+interface to the entire database. For applications that involve only 
+one table, or queries that involve only one table, it may be 
+convenient to use the $sql property of the 
+<strong class="classname">DB_Table</strong> object, as in the above example, and 
+to then use the <strong class="function">select*()</strong> methods of that object 
+to access these queries by name. For more complicated queries and 
+applications, however, it may be more convenient to store all queries 
+in the $sql property of a <strong class="classname">DB_Table_Database</strong> 
+object, and submit them by name via the <strong class="function">select*()</strong> 
+methods of that object. 
+</p>
+
+<div class="example"><div class="info"><p><strong>Defining Baseline Queries in a 
+<strong class="classname">DB_Table</strong> Subclass Definition</strong></p></div>
+
+<div class="example-contents"><p>
+For our GuestBook table, let&#039;s say we define three stored SELECT 
+statements, which may be used as a basis of more specific queries:
+</p><ul class="itemizedlist">
+<li class="listitem">
+<span class="simpara">
+One that returns a list of guestbook rows ordered from most-recent to
+least-recent, showing the full name (first+last) and the date signed.
+</span>
+</li>
+<li class="listitem">
+<span class="simpara">
+One that returns a single guestbook row, showing all fields.
+</span>
+</li>
+<li class="listitem">
+<span class="simpara">
+One that returns a list of all unique email + fullname rows, ordered by last
+name and first name.
+</span>
+</li>
+</ul><p>
+In the following program snippet, we declare these queries as elements 
+of the $sql property within the GuestBook_Table class definition. 
+</p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">GuestBook_Table&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">DB_Table<br /></span><span style="color: #007700">{<br />&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;[snip]&nbsp;var&nbsp;$col&nbsp;=&nbsp;array(&nbsp;...&nbsp;);<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;[snip]&nbsp;var&nbsp;$idx&nbsp;=&nbsp;array(&nbsp;...&nbsp;);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$sql&nbsp;</span><span style="color: #007700">=&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;multiple&nbsp;rows&nbsp;for&nbsp;a&nbsp;list&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'list'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'select'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">"id,&nbsp;signdate,&nbsp;CONCAT(fname,&nbsp;'&nbsp;',&nbsp;lname)&nbsp;AS&nbsp;fullname"</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'order'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'signdate&nbsp;DESC'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">),&nbsp;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;one&nbsp;row&nbsp;for&nbsp;an&nbsp;item&nbsp;detail<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'item'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'select'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'id,&nbsp;fname,&nbsp;lname,&nbsp;email,&nbsp;signdate'</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'get'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'row'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">),<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;email&nbsp;=&gt;&nbsp;fullname&nbsp;(unique&nbsp;rows&nbsp;only)&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'emails'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'select'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">"DISTINCT&nbsp;email,&nbsp;CONCAT(fname,&nbsp;'&nbsp;',&nbsp;lname)&nbsp;AS&nbsp;fullname"</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'order'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'lname,&nbsp;fname'</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'get'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'assoc'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;);<br /><br />}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-table.select.submit"><div class="info"><h1>Submitting Queries: <strong class="function">select*()</strong> Methods</h1>
+</div>
+
+<p class="para">
+The <strong class="function">select()</strong> method submits a query and returns the
+result set as an array. The <strong class="function">selectResult()</strong> method
+returns the result as a <strong class="classname">DB_Result/MDB2_Result_Common</strong> 
+object. The <strong class="function">selectCount()</strong> method returns an integer 
+equal to the number of rows that would be returned by a query, without 
+returning the actual result set. 
+</p>
+
+<p class="para">
+The interface is the same for all three of these methods. In each, the 
+first parameter, which is required, can be either a query array or a
+key of the $sql property array, for which the corresponding value is a
+stored query array.  The remaining parameters, which are all optional, 
+may be used to modify the query before submission to the database. The 
+second parameter, $filter, is a string that contains an SQL logical 
+expression that will be ANDed with the WHERE clause of the query before 
+the SELECT command is submitted.  The third parameter, $order, if present, 
+is used to construct the &#039;ORDER BY&#039; clause, and may be used to override 
+the &#039;order&#039; element of the query. The fourth and fifth parameters, $start 
+and $count, are integers that may be used to specify the first row of the 
+result set that should be returned, and the maximum number of rows to be 
+returned.
+</p>
+
+<div class="example"><div class="info"><p><strong>Submitting a Stored Query</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;[snip]&nbsp;create&nbsp;a&nbsp;DB/MDB2&nbsp;object&nbsp;and&nbsp;connect&nbsp;to&nbsp;the&nbsp;database<br />//&nbsp;[snip]&nbsp;create&nbsp;the&nbsp;GuestBook_Table&nbsp;object&nbsp;$GuestBook<br /><br />//&nbsp;Submit&nbsp;the&nbsp;stored&nbsp;'list'&nbsp;query,&nbsp;which&nbsp;returns&nbsp;an&nbsp;array&nbsp;of&nbsp;rows<br /></span><span style="color: #0000BB">$rows&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$GuestBook</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">select</span><span style="color: #007700">(</span><span style="color: #DD0000">'list'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Print&nbsp;the&nbsp;result&nbsp;set<br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$rows</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+
+<p class="para">
+The next example shows how to modify a stored query with the filter,
+order, start and count parameters:
+</p>
+
+<div class="example"><div class="info"><p><strong>Using Filter, Order, and Limit Parameters</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br />$filter&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"signdate&nbsp;=&nbsp;'2003-08-14'"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$order&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'lname,&nbsp;fname'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$start&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">7</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$count&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">12</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Return&nbsp;results&nbsp;as&nbsp;an&nbsp;array&nbsp;of&nbsp;rows<br /></span><span style="color: #0000BB">$rows&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$GuestBook</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">select</span><span style="color: #007700">(</span><span style="color: #0000BB">$view</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$filter</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$order</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$start</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$count</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$rows</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Return&nbsp;results&nbsp;as&nbsp;a&nbsp;DB_Result/MDB2_Result_Common&nbsp;object<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$GuestBook</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">selectResult</span><span style="color: #007700">(</span><span style="color: #0000BB">$view</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$filter</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$order</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$start</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$count</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$result</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+
+<p class="para">
+To have <strong class="function">select()</strong> return rows as associative arrays,
+we must set either the &#039;fetchmode&#039; element of a specific query array 
+or the $fetchmode property of the <strong class="classname">DB_Table</strong> 
+object to the DB_FETCHMODE_ASSOC or MDB2_FETCHMODE_ASSOC constant 
+values, as appropriate:
+</p>
+
+<div class="example"><div class="info"><p><strong>Setting Fetchmode to Return Rows as Associative Arrays</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;[snip]&nbsp;create&nbsp;the&nbsp;$GuestBook&nbsp;GuestBook_Table&nbsp;object<br /><br />//&nbsp;set&nbsp;the&nbsp;fetch&nbsp;mode&nbsp;to&nbsp;"associative"<br /></span><span style="color: #0000BB">$GuestBook</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchmode&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">DB_FETCHMODE_ASSOC</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;now&nbsp;all&nbsp;rows&nbsp;arrays&nbsp;will&nbsp;be&nbsp;returned&nbsp;by&nbsp;DB_Table::select()&nbsp;as&nbsp;associative<br />//&nbsp;arrays&nbsp;with&nbsp;the&nbsp;column&nbsp;names&nbsp;as&nbsp;the&nbsp;array&nbsp;keys<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+
+<p class="para">
+To have <strong class="function">select()</strong> return rows as objects, with 
+properties that correspond to column names, we must set either 
+the &#039;fetchmode&#039; element of the query array or the $fetchmode 
+property of the <strong class="classname">DB_Table</strong> object to the 
+DB_FETCHMODE_OBJECT or MDB2_FETCHMODE_OBJECT constant. If no 
+user-defined class is specified, all rows are returned as instances 
+of stdClass, as in the following example:
+</p>
+
+<div class="example"><div class="info"><p><strong>Returning Rows as stdClass Objects</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;[snip]&nbsp;create&nbsp;the&nbsp;$GuestBook&nbsp;GuestBook_Table&nbsp;object<br /><br />//&nbsp;set&nbsp;the&nbsp;fetch&nbsp;mode&nbsp;to&nbsp;the&nbsp;"object"&nbsp;constant&nbsp;for&nbsp;DB&nbsp;or&nbsp;MDB2<br /></span><span style="color: #0000BB">$GuestBook</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchmode&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">DB_FETCHMODE_OBJECT</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;now&nbsp;each&nbsp;row&nbsp;in&nbsp;the&nbsp;results&nbsp;array&nbsp;will&nbsp;be&nbsp;a&nbsp;stdClass&nbsp;object,<br />//&nbsp;and&nbsp;the&nbsp;object&nbsp;properties&nbsp;will&nbsp;be&nbsp;named&nbsp;for&nbsp;the&nbsp;columns<br /><br />//&nbsp;now&nbsp;all&nbsp;column&nbsp;arrays&nbsp;will&nbsp;come&nbsp;with&nbsp;the&nbsp;column&nbsp;names&nbsp;as&nbsp;the&nbsp;array&nbsp;keys<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+
+<p class="para">
+To specify a class to be used to encapsulate rows of a return set, set
+the value of the &#039;fetchmode_object_class&#039; element of the query array or 
+the $fetchmode_object_class property to the name of the desired class.
+</p>
+
+<div class="example"><div class="info"><p><strong>Returning Rows as Objects of a User-Defined Class</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;[snip]&nbsp;create&nbsp;the&nbsp;$GuestBook&nbsp;GuestBook_Table&nbsp;object<br /><br />//&nbsp;set&nbsp;the&nbsp;fetch&nbsp;mode&nbsp;to&nbsp;"object"<br /></span><span style="color: #0000BB">$GuestBook</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchmode&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">DB_FETCHMODE_OBJECT</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;set&nbsp;the&nbsp;fetched&nbsp;row&nbsp;class&nbsp;to&nbsp;"myRowClass"&nbsp;...<br />//&nbsp;of&nbsp;course,&nbsp;you&nbsp;will&nbsp;need&nbsp;to&nbsp;include&nbsp;the&nbsp;"myRowClass"&nbsp;file<br />//&nbsp;before&nbsp;this.<br /></span><span style="color: #0000BB">$GuestBook</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchmode_object_class&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'myRowClass'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;now&nbsp;each&nbsp;row&nbsp;in&nbsp;the&nbsp;results&nbsp;array&nbsp;will&nbsp;be&nbsp;a&nbsp;myRowClass&nbsp;object,<br />//&nbsp;and&nbsp;the&nbsp;object&nbsp;properties&nbsp;will&nbsp;be&nbsp;named&nbsp;for&nbsp;the&nbsp;columns<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+</div>
+
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-table.validate"><div class="info"><h1>Data Type Validation</h1>
+</div>
+
+
+<p class="para">
+<strong class="classname">DB_Table</strong> can automatically validate that the format 
+of data to be inserted or updated is consistent with the declared types for
+the corresponding columns.  Validation of the data type of both inserted 
+and updated data is on by default. Validation upon insertion and updating 
+can be turned on or off with the <strong class="function">autoValidInsert()</strong> and 
+<strong class="function">autoValidUpdate()</strong> methods, respectively. Each of these
+methods takes a single boolean parameter, and turns validation on if its 
+parameter is true and off if it is false. 
+</p>
+
+<p class="para">
+Data type validation for a row of data to be inserted or updated is 
+actually carried out by the 
+<strong class="function">validInsert()</strong>
+or 
+<strong class="function">validUpdate()</strong> method, respectively. Each of these 
+methods takes one parameter, which is an associative array of data
+in which keys are column names. Each returns boolean true on success 
+or a <strong class="classname">PEAR_Error</strong> object on failure. These 
+methods are called internally by the 
+<strong class="function">insert()</strong> and <strong class="function">update()</strong> methods,
+respectively, when auto-validation is enabled. Customized automatic
+validations may thus be implemented by overriding one or both of 
+these methods. 
+</p>
+
+<p class="para">
+Validation of the type of a single column value is carried out by 
+the <strong class="function">isValid()</strong> method. This method takes the value 
+to be validated as its first parameter, and the name of the required 
+<strong class="classname">DB_Table</strong> data type as its second parameter. 
+This method is called internally by the two row validation methods. 
+</p>
+
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-table.misc"><div class="info"><h1>Miscellaneous Utility Methods</h1>
+</div>
+
+  <p class="para">
+  </p><table class="doctable table"><caption>Miscellaneous Methods</caption>
+   
+   
+     <thead>
+       <tr>
+         <th>Method</th>
+         <th>Description</th>
+       </tr>
+ 
+     </thead>
+ 
+     <tbody class="tbody"> 
+       <tr>
+         <td>
+         <strong class="function">quote()</strong></td>
+         <td>Enquotes and escapes a value in a form appropriate for inclusion 
+         in an SQL query. A simple wrapper for the 
+         <strong class="function">DB::smartQuote()</strong> or
+         <strong class="function">MDB2::quote()</strong> method, which it calls internally.
+         </td>
+       </tr>
+ 
+       <tr>
+         <td>
+         <strong class="function">recast()</strong></td>
+         <td>Takes an associative array of data (keys are column names 
+         and values are column values) and re-casts each value to the proper
+         format for its column.
+         </td>
+       </tr>
+ 
+       <tr>
+         <td>
+         <strong class="function">getBlankRow()</strong></td>
+         <td>Returns an associative array with column name keys and a 
+         blank value for each column. Each value will be in the proper 
+         format for the associated column type.</td>
+       </tr>
+ 
+     </tbody> 
+   
+  </table>
+
+  
+
+</div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.db-table.intro.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.db-table.html">DB_Table</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.db-table.intro-forms.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">DB_Table Forms Tutorial</td>
+  </tr>
+ </table>
+</div>
+</body></html>

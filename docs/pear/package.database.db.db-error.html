@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>DB_Error</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.db.html" title="DB" />
+  <link rel="prev" href="package.database.db.db-result.numrows.html" title="DB_result::numRows()" />
+  <link rel="next" href="package.database.db-dataobject.html" title="DB_DataObject" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">DB_Error</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.db.db-result.numrows.html" title="DB_result::numRows()">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.db-dataobject.html" title="DB_DataObject">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.db.db-error">
+ 
+  <h1 class="refname"><strong class="classname">DB_Error</strong></h1>
+  <div class="refnamediv"><strong class="classname">DB_Error</strong> &ndash; DB Error object</div>
+
+ 
+
+ <div class="refsection" id="package.database.db.db-error.desc">
+  <h1 class="title">Description</h1>
+  <p class="para">
+   In case of failure, most of the <a href="package.database.db.html" class="link"><strong class="classname">DB</strong></a> functions return a
+   <a href="package.database.db.db-error.html" class="link"><strong class="classname">DB_Error</strong></a> object which contains information about
+   the error.  <a href="package.database.db.db-error.html" class="link"><strong class="classname">DB_Error</strong></a> offers the same functions
+   as <a href="core.pear.pear-error.html" class="link"><strong class="classname">PEAR_Error</strong></a>.
+  </p>
+  <p class="para">
+   The text messages returned by <strong class="function">DB_Error::getMessage()</strong>
+   are consistent between each DBMS.
+  </p>
+  <p class="para">
+   The error code integers returned by <strong class="function">DB_Error::getCode()</strong>
+   are also consistent between each DBMS. The integers returned are based
+   on the <strong class="constant">DB_ERROR_*</strong> constants defined in
+   <code class="filename">DB.php</code>.
+  </p>
+  <p class="para">
+   <strong class="function">DB_Error::getDebugInfo()</strong> and
+   <strong class="function">DB_Error::getUserInfo()</strong> return complete
+   native DBMS error reports.
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Trapping errors and determining what happened</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'DB.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$db&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">DB</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #DD0000">'pgsql://wronguser:badpw@localhost/thedb'</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$db</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/*<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;This&nbsp;is&nbsp;not&nbsp;what&nbsp;you&nbsp;would&nbsp;really&nbsp;want&nbsp;to&nbsp;do&nbsp;in<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;your&nbsp;program.&nbsp;&nbsp;It&nbsp;merely&nbsp;demonstrates&nbsp;what&nbsp;kinds<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;of&nbsp;data&nbsp;you&nbsp;can&nbsp;get&nbsp;back&nbsp;from&nbsp;error&nbsp;objects.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #DD0000">'Standard&nbsp;Message:&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Standard&nbsp;Code:&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getCode</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'DBMS/User&nbsp;Message:&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getUserInfo</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'DBMS/Debug&nbsp;Message:&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getDebugInfo</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;exit;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.db.db-result.numrows.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.db.html">DB</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.db-dataobject.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">DB_result::numRows()</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">DB_DataObject</td>
+  </tr>
+ </table>
+</div>
+</body></html>

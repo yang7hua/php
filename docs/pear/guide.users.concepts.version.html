@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Package version</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="guide.users.concepts.html" title="Basic concepts all PEAR users should understand" />
+  <link rel="prev" href="guide.users.concepts.stability.html" title="Package stability" />
+  <link rel="next" href="guide.users.concepts.maintainer.html" title="Maintainers and maintainer roles" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Package version</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="guide.users.concepts.stability.html" title="Package stability">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="guide.users.concepts.maintainer.html" title="Maintainers and maintainer roles">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="guide.users.concepts.version">
+ <div class="info"><h1>Package version</h1>
+</div>
+
+ <p class="para">
+  Versioning and stability are separate entities for
+  <a href="guide.users.concepts.package.html" class="link">packages</a>.
+  The version of a package is a numeric string like <code class="literal">1.2.3</code> that
+  is incremented every time a new version of the package is released.
+  The stability of a package determines how likely the package is to contain bugs
+  or to have changes to its <a href="guide.users.concepts.api.html" class="link">API</a>.
+ </p>
+ <p class="para">
+  In addition, PEAR makes a distinction between the
+  <a href="guide.users.concepts.api.html" class="link">API</a> version and the package
+  version.
+
+ </p>
+ <div class="section" id="guide.users.concepts.version.guidelines">
+  <h2 class="title">Versioning guidelines</h2>
+  <p class="para">
+   There are a few conventions that should be followed when deciding which version
+   number or stability to use for your package.  Version numbers should always
+   contain three decimals such as <code class="literal">1.2.3</code>.  This is because of
+   the way that PHP&#039;s <strong class="function">version_compare()</strong> function calculates
+   the difference between versions:
+  </p>
+  <p class="para">
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />&nbsp;var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">version_compare</span><span style="color: #007700">(</span><span style="color: #DD0000">"1.0"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"1.0.0"</span><span style="color: #007700">));&nbsp;</span><span style="color: #FF8000">//&nbsp;int(-1)<br />&nbsp;</span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   The example above shows that in fact version <code class="literal">1.0</code> is
+   considered to be a different version from version <code class="literal">1.0.0</code>,
+   a distinction that is confusing at best for users.  Use of 3 decimals for
+   every version will ensure that both your users and PHP will not be confused
+   by which of two versions is the same or newer.
+  </p>
+  <p class="para">
+   Package versions can be abstractly referred to as <code class="literal">X.Y.Z</code>.
+   For version <code class="literal">1.2.3</code>, <code class="literal">X</code> is <code class="literal">1</code>,
+   <code class="literal">Y</code> is <code class="literal">2</code> and <code class="literal">Z</code> is
+   <code class="literal">3</code>.
+  </p>
+  <p class="para">
+   Generally speaking, it is best if <code class="literal">X</code> is used to refer to
+   major API changes, sweeping addition of new features, or any break of
+   backwards compatibility.  The <code class="literal">Y</code> component should be reserved
+   for small to large feature additions, but should never be used for
+   breaks of backwards compatibility.  The <code class="literal">Z</code> component should
+   only be used for bugfixes.
+  </p>
+  <p class="para">
+   These three questions can be used to determine how to increase the version
+   number:
+   </p><ol type="1">
+    <li class="listitem">
+     <span class="simpara">
+      Breaking backwards compatibility? Yes = increment <code class="literal">X</code>,
+      set <code class="literal">Y</code> = <code class="literal">Z</code> = 0
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      Adding new features? Yes = increment <code class="literal">Y</code>, set
+      <code class="literal">Z</code> = 0
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      Fixing bugs? Yes = increment <code class="literal">Z</code>
+     </span>
+    </li>
+   </ol>
+  
+  <p class="para">
+   Here is a typical life cycle for a package:
+   </p><table class="doctable table">
+    <caption>A version life cycle for a package</caption>
+    
+     <thead>
+      <tr>
+       <th>Release Notes</th>
+       <th>Release Stability</th>
+       <th>API Stability</th>
+       <th>Release Version</th>
+       <th>API Version</th>
+      </tr>
+
+     </thead>
+
+
+     <tbody class="tbody">
+      <tr>
+       <td>Initial release</td>
+       <td><code class="literal">devel</code> or <code class="literal">alpha</code></td>
+       <td><code class="literal">devel</code> or <code class="literal">alpha</code></td>
+       <td><code class="literal">0.1.0</code></td>
+       <td><code class="literal">0.1.0</code></td>
+      </tr>
+
+      <tr>
+       <td>Bugs fixed</td>
+       <td><code class="literal">devel</code> or <code class="literal">alpha</code></td>
+       <td><code class="literal">devel</code> or <code class="literal">alpha</code></td>
+       <td><code class="literal">0.1.1</code></td>
+       <td><code class="literal">0.1.0</code></td>
+      </tr>
+
+      <tr>
+       <td>More bugs fixed</td>
+       <td><code class="literal">devel</code> or <code class="literal">alpha</code></td>
+       <td><code class="literal">devel</code> or <code class="literal">alpha</code></td>
+       <td><code class="literal">0.1.2</code></td>
+       <td><code class="literal">0.1.0</code></td>
+      </tr>
+
+      <tr>
+       <td>API changed, more bugs fixed</td>
+       <td><code class="literal">devel</code> or <code class="literal">alpha</code></td>
+       <td><code class="literal">devel</code> or <code class="literal">alpha</code></td>
+       <td><code class="literal">0.2.0</code></td>
+       <td><code class="literal">0.2.0</code></td>
+      </tr>
+
+      <tr>
+       <td>API changed, more bugs fixed</td>
+       <td><code class="literal">devel</code> or <code class="literal">alpha</code></td>
+       <td><code class="literal">devel</code> or <code class="literal">alpha</code></td>
+       <td><code class="literal">0.3.0</code></td>
+       <td><code class="literal">0.3.0</code></td>
+      </tr>
+
+      <tr>
+       <td>API changed, documentation started, tests expanding</td>
+       <td><code class="literal">alpha</code></td>
+       <td><code class="literal">alpha</code></td>
+       <td><code class="literal">0.4.0</code></td>
+       <td><code class="literal">0.4.0</code></td>
+      </tr>
+
+      <tr>
+       <td>API stabilizing, documentation nearly finished, tests expanding</td>
+       <td><code class="literal">alpha</code></td>
+       <td><code class="literal">beta</code></td>
+       <td><code class="literal">0.5.0</code></td>
+       <td><code class="literal">0.4.1</code></td>
+      </tr>
+
+      <tr>
+       <td>API stabilizing, code stabilizing, documentation nearly finished, tests expanding</td>
+       <td><code class="literal">beta</code></td>
+       <td><code class="literal">beta</code></td>
+       <td><code class="literal">0.5.1</code></td>
+       <td><code class="literal">0.4.1</code></td>
+      </tr>
+
+      <tr>
+       <td>API problem fixed, code stabilizing, documentation nearly finished, tests expanding</td>
+       <td><code class="literal">beta</code></td>
+       <td><code class="literal">beta</code></td>
+       <td><code class="literal">0.6.0</code></td>
+       <td><code class="literal">0.5.0</code></td>
+      </tr>
+
+      <tr>
+       <td>API stabilized, code stabilizing, documentation nearly finished, tests expanding</td>
+       <td><code class="literal">beta</code></td>
+       <td><code class="literal">stable</code></td>
+       <td><code class="literal">0.6.1</code></td>
+       <td><code class="literal">1.0.0</code></td>
+      </tr>
+
+      <tr>
+       <td>API stabilized, code stabilizing, documentation finished, tests expanding</td>
+       <td><code class="literal">beta</code></td>
+       <td><code class="literal">stable</code></td>
+       <td><code class="literal">1.0.0RC1</code></td>
+       <td><code class="literal">1.0.0</code></td>
+      </tr>
+
+      <tr>
+       <td>API stabilized, code stabilizing, documentation finished, tests full coverage</td>
+       <td><code class="literal">beta</code></td>
+       <td><code class="literal">stable</code></td>
+       <td><code class="literal">1.0.0RC2</code></td>
+       <td><code class="literal">1.0.0</code></td>
+      </tr>
+
+      <tr>
+       <td>code ready for use in production</td>
+       <td><code class="literal">stable</code></td>
+       <td><code class="literal">stable</code></td>
+       <td><code class="literal">1.0.0</code></td>
+       <td><code class="literal">1.0.0</code></td>
+      </tr>
+
+      <tr>
+       <td>bugs fixed</td>
+       <td><code class="literal">stable</code></td>
+       <td><code class="literal">stable</code></td>
+       <td><code class="literal">1.0.1</code></td>
+       <td><code class="literal">1.0.0</code></td>
+      </tr>
+
+      <tr>
+       <td>bugs fixed</td>
+       <td><code class="literal">stable</code></td>
+       <td><code class="literal">stable</code></td>
+       <td><code class="literal">1.0.2</code></td>
+       <td><code class="literal">1.0.0</code></td>
+      </tr>
+
+      <tr>
+       <td>new features added, bugs fixed</td>
+       <td><code class="literal">stable</code></td>
+       <td><code class="literal">stable</code></td>
+       <td><code class="literal">1.1.0</code></td>
+       <td><code class="literal">1.1.0</code></td>
+      </tr>
+
+      <tr>
+       <td>bugs fixed, package enters maintenance mode to develop next generation</td>
+       <td><code class="literal">stable</code></td>
+       <td><code class="literal">stable</code></td>
+       <td><code class="literal">1.1.1</code></td>
+       <td><code class="literal">1.1.0</code></td>
+      </tr>
+
+
+     </tbody>
+    
+   </table>
+
+  
+  <p class="para">
+   Note that the PEAR coding standards require packages to be renamed when they
+   break backwards compatibility.  Thus, a PEAR package can never reach
+   version <code class="literal">2.0.0</code>.
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="guide.users.concepts.stability.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="guide.users.concepts.html">Basic concepts all PEAR users should understand</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="guide.users.concepts.maintainer.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Package stability</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Maintainers and maintainer roles</td>
+  </tr>
+ </table>
+</div>
+</body></html>

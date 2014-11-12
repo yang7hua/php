@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Post-install script structure</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="guide.migrating.postinstall.html" title="Post-installation Scripts" />
+  <link rel="prev" href="guide.migrating.postinstall.naming.html" title="Naming the post-install script" />
+  <link rel="next" href="rfcs.html" title="RFCs" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Post-install script structure</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="guide.migrating.postinstall.naming.html" title="Naming the post-install script">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="rfcs.html" title="RFCs">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="guide.migrating.postinstall.structure">
+  <div class="info">
+   <h1>Structure of a post-install script</h1>
+
+   
+  </div>
+
+
+  <p class="para">
+   The post-install script class must contain two methods, one named <strong class="function">init()</strong>,
+   and the other named <strong class="function">run()</strong>.  The <strong class="function">init()</strong> method is called
+   at the same time as all other post-install scripts.  The <strong class="function">run()</strong> method is
+   called at the conclusion of each parameter group in order to process the user&#039;s responses
+   to queries.
+  </p>
+
+  <div class="section" id="guide.migrating.postinstall.structure.init">
+   <div class="info">
+    <h2 class="title">The <strong class="function">init()</strong> method</h2>
+   </div>
+
+   <p class="para">
+    </p><div class="funcsynopsis">
+     <p><code class="funcprototype">
+      boolean <strong class="function">init</strong> ( 
+      PEAR_Config $config
+       , PEAR_PackageFile_v2 $self
+       , string|null $lastInstalledVersion
+     )</code></p>
+    </div>
+   </p>
+   <p class="para">
+    </p><div class="variablelist">
+     <dl class="varlistentry">
+      <dt class="term">
+       <a href="core.ppm.pear-config.html" class="link">PEAR_Config</a> <em><code class="parameter">$xml</code></em>
+      </dt>
+      <dd class="listitem">
+       <p class="para">
+        The current configuration used for installation.
+       </p>
+      </dd>
+     </dl>
+     <dl class="varlistentry">
+      <dt class="term">
+       PEAR_PackageFile_v2 <em><code class="parameter">$self</code></em>
+      </dt>
+      <dd class="listitem">
+       <p class="para">
+        The package.xml contents as abstracted by this object.
+       </p>
+      </dd>
+     </dl>
+     <dl class="varlistentry">
+      <dt class="term">
+       <span class="type">string</span>|<strong class="constant">NULL</strong> <em><code class="parameter">$lastInstalledVersion</code></em>
+      </dt>
+      <dd class="listitem">
+       <p class="para">
+        The last version of this package that was installed.  This is a very important
+        parameter, as it is the only way to determine whether a package is being installed
+        from scratch, or upgraded from a previous version.  Using this parameter, it is
+        possible to determine what incremental changes, if any, need to be performed.
+       </p>
+      </dd>
+     </dl>
+    </div>
+   
+   <p class="para">
+    The function has to return <strong class="constant">TRUE</strong> when initialization succeeded,
+    <strong class="constant">FALSE</strong> when it failed. In the latter case, the post install script
+    it stopped.
+   </p>
+  </div>
+
+
+
+  <div class="section" id="guide.migrating.postinstall.structure.run">
+   <div class="info">
+    <h2 class="title">The <strong class="function">run()</strong> method</h2>
+   </div>
+
+   <p class="para">
+    </p><div class="funcsynopsis">
+     <p><code class="funcprototype">
+      void <strong class="function">run</strong> ( 
+      array $infoArray
+       , string $paramGroupId
+     )</code></p>
+    </div>
+   </p>
+   <p class="para">
+    </p><div class="variablelist">
+     <dl class="varlistentry">
+      <dt class="term">
+       <span class="type">array</span> <em><code class="parameter">$infoArray</code></em>
+      </dt>
+      <dd class="listitem">
+       <p class="para">
+        if <code class="varname">$paramGroupId</code> is <code class="literal">_undoOnError</code>, then
+        $infoArray will contain a list of successfully completed parameter group
+        sections.  This can be used to restore any system changes made by the installation
+        script.
+       </p>
+       <p class="para">
+        Otherwise, <code class="varname">$infoArray</code> contains the results of the user input
+        from the most recent &lt;paramgroup&gt; section.
+       </p>
+      </dd>
+     </dl>
+     <dl class="varlistentry">
+      <dt class="term">
+       <span class="type">string</span> <em><code class="parameter">$paramGroupId</code></em>
+      </dt>
+      <dd class="listitem">
+       <p class="para">
+        This variable either contains <code class="literal">_undoOnError</code> or the contents
+        of the most recent &lt;paramgroup&gt;&#039;s &lt;id&gt; tag.  Note that paramgroup
+        id cannot begin with an underscore (<code class="literal">_</code>), and so
+        <code class="literal">_undoOnError</code> can only be triggered by the PEAR installer.
+       </p>
+      </dd>
+     </dl>
+    </div>
+   
+  </div>
+ </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="guide.migrating.postinstall.naming.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="guide.migrating.postinstall.html">Post-installation Scripts</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="rfcs.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Naming the post-install script</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">RFCs</td>
+  </tr>
+ </table>
+</div>
+</body></html>

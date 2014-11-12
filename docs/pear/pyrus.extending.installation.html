@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Leveraging Pyrus's installation API</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="pyrus.extending.html" title="Using Pyrus in your programs: Pyrus's Public API" />
+  <link rel="prev" href="pyrus.extending.configuration.html" title="Pyrus's configuration API" />
+  <link rel="next" href="pyrus.extending.registry.html" title="Working with installed packages and channels: The Registry API" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Leveraging Pyrus's installation API</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="pyrus.extending.configuration.html" title="Pyrus's configuration API">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="pyrus.extending.registry.html" title="Working with installed packages and channels: The Registry API">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="pyrus.extending.installation">
+ <div class="info"><h1>Leveraging Pyrus&#039;s installation API</h1>
+</div>
+
+ <div class="section" id="pyrus.extending.installation.intro">
+  <div class="info"><h2 class="title">Introduction</h2></div>
+  <p class="para">
+   Pyrus provides a very simple API for performing installation tasks.  This
+   API begins with the ability to pass any packagename that can be
+   specified on the command-line to a <code class="literal">PEAR2\Pyrus\Package</code>
+   object:
+  </p>
+  <p class="para">
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;examples&nbsp;of&nbsp;the&nbsp;range&nbsp;of&nbsp;valid&nbsp;package&nbsp;names<br /></span><span style="color: #0000BB">$package&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;\</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Package</span><span style="color: #007700">(</span><span style="color: #DD0000">'package.xml'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$package&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;\</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Package</span><span style="color: #007700">(</span><span style="color: #DD0000">'/full/path/to/package.xml'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$package&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;\</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Package</span><span style="color: #007700">(</span><span style="color: #DD0000">'Package-1.2.3.tgz'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$package&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;\</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Package</span><span style="color: #007700">(</span><span style="color: #DD0000">'/full/path/to/Package-1.2.3.zip'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$package&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;\</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Package</span><span style="color: #007700">(</span><span style="color: #DD0000">'RemotePackage'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$package&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;\</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Package</span><span style="color: #007700">(</span><span style="color: #DD0000">'RemotePackage-alpha'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$package&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;\</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Package</span><span style="color: #007700">(</span><span style="color: #DD0000">'RemotePackage-1.2.3'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$package&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;\</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Package</span><span style="color: #007700">(</span><span style="color: #DD0000">'channelname/RemotePackage'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$package&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;\</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Package</span><span style="color: #007700">(</span><span style="color: #DD0000">'http://example.com/RemotePackage-1.2.3.phar'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   If there is a problem with the package name as passed to the constructor,
+   an exception is thrown.  This can be any of a wide variety of exceptions
+   ranging from a <code class="literal">PEAR2\Pyrus\PackageFile\Exception</code> for
+   invalid package.xml, a <code class="literal">PEAR2\Pyrus\Package\Exception</code> for
+   higher-level errors (file does not exist, invalid abstract package name),
+   a <code class="literal">PEAR2\Pyrus\Package\InstalledException</code> if an abstract
+   remote package was requested and a newer version is installed, and
+   a <code class="literal">PEAR2\Pyrus\Channel\Exception</code> if any problems with
+   retrieving remote REST information occur.  Also possible are
+   <code class="literal">PEAR2\Pyrus\Package\Phar\Exception</code> for errors relating
+   to local <code class="literal">tar</code>, <code class="literal">tgz</code>, <code class="literal">zip</code>
+   or <code class="literal">phar</code> archives.
+  </p>
+ </div>
+ <div class="section" id="pyrus.extending.installation.install">
+  <div class="info"><h2 class="title">Installing and Uninstalling packages</h2></div>
+  <p class="para">
+   Once you have a valid package object, installation is very simple.  Pyrus
+   conducts all installation activities within a transaction, meaning that all
+   changes are applied nearly simultaneously, and any failure mid-transaction
+   does not leave an invalid installation lying around.
+  </p>
+  <p class="para">
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;import&nbsp;the&nbsp;class&nbsp;names&nbsp;into&nbsp;the&nbsp;current&nbsp;scope<br />//&nbsp;this&nbsp;step&nbsp;is&nbsp;optional,&nbsp;you&nbsp;can&nbsp;also&nbsp;use&nbsp;the&nbsp;full&nbsp;class&nbsp;names<br />//&nbsp;like&nbsp;PEAR2\Pyrus\Installer::begin()<br /></span><span style="color: #007700">use&nbsp;</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Installer&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">Installer</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Package&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">Package</span><span style="color: #007700">;<br /><br />try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$p1&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Package</span><span style="color: #007700">(</span><span style="color: #DD0000">'package.xml'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$p2&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Package</span><span style="color: #007700">(</span><span style="color: #DD0000">'Package.tgz'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$p3&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Package</span><span style="color: #007700">(</span><span style="color: #DD0000">'pear2/RemotePackage'</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;here&nbsp;is&nbsp;the&nbsp;meat&nbsp;of&nbsp;the&nbsp;installation&nbsp;transaction<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">Installer</span><span style="color: #007700">::</span><span style="color: #0000BB">begin</span><span style="color: #007700">();<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">Installer</span><span style="color: #007700">::</span><span style="color: #0000BB">prepare</span><span style="color: #007700">(</span><span style="color: #0000BB">$p1</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">Installer</span><span style="color: #007700">::</span><span style="color: #0000BB">prepare</span><span style="color: #007700">(</span><span style="color: #0000BB">$p2</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">Installer</span><span style="color: #007700">::</span><span style="color: #0000BB">prepare</span><span style="color: #007700">(</span><span style="color: #0000BB">$p3</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">Installer</span><span style="color: #007700">::</span><span style="color: #0000BB">commit</span><span style="color: #007700">();<br />}&nbsp;catch&nbsp;(\</span><span style="color: #0000BB">Exception&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Install&nbsp;failed\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   Uninstalling a package is even simpler:
+  </p>
+  <p class="para">
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;import&nbsp;the&nbsp;class&nbsp;names&nbsp;into&nbsp;the&nbsp;current&nbsp;scope<br />//&nbsp;this&nbsp;step&nbsp;is&nbsp;optional,&nbsp;you&nbsp;can&nbsp;also&nbsp;use&nbsp;the&nbsp;full&nbsp;class&nbsp;names<br />//&nbsp;like&nbsp;PEAR2\Pyrus\Uninstaller::begin()<br /></span><span style="color: #007700">use&nbsp;</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Pyrus</span><span style="color: #007700">\</span><span style="color: #0000BB">Uninstaller&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">Uninstaller</span><span style="color: #007700">;<br /><br />try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">Uninstaller</span><span style="color: #007700">::</span><span style="color: #0000BB">begin</span><span style="color: #007700">();<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">Uninstaller</span><span style="color: #007700">::</span><span style="color: #0000BB">prepare</span><span style="color: #007700">(</span><span style="color: #DD0000">'pear2.php.net/Package1'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">Uninstaller</span><span style="color: #007700">::</span><span style="color: #0000BB">prepare</span><span style="color: #007700">(</span><span style="color: #DD0000">'pear.php.net/Package'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">Uninstaller</span><span style="color: #007700">::</span><span style="color: #0000BB">prepare</span><span style="color: #007700">(</span><span style="color: #DD0000">'__uri/Package'</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">Uninstaller</span><span style="color: #007700">::</span><span style="color: #0000BB">commit</span><span style="color: #007700">();<br />}&nbsp;catch&nbsp;(\</span><span style="color: #0000BB">Exception&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Uninstall&nbsp;failed\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="pyrus.extending.configuration.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="pyrus.extending.html">Using Pyrus in your programs: Pyrus's Public API</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="pyrus.extending.registry.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Pyrus's configuration API</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Working with installed packages and channels: The Registry API</td>
+  </tr>
+ </table>
+</div>
+</body></html>

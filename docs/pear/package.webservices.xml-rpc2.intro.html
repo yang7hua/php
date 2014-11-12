@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.webservices.xml-rpc2.html" title="XML_RPC2" />
+  <link rel="prev" href="package.webservices.xml-rpc2.html" title="XML_RPC2" />
+  <link rel="next" href="package.webservices.xml-rpc2.client.html" title="Client Side" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.webservices.xml-rpc2.html" title="XML_RPC2">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.webservices.xml-rpc2.client.html" title="Client Side">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.webservices.xml-rpc2.intro">
+
+ 
+  <h1 class="refname">Introduction</h1>
+  <div class="refnamediv">Introduction &ndash; 
+ 
+
+ <div class="refsection" id="package.webservices.xml-rpc2.intro.desc">
+  <h1 class="title">Description</h1>
+  <p class="para">
+   XML_RPC2 is a &quot;PHP5 only&quot; implementation of the XMLRPC protocol. This package
+   provides the client and the server side of the protocol. An optimized cache 
+   is also available for both parts. 
+  </p>
+  <p class="para">
+   As a client library, XML_RPC2 is capable of creating a proxy class which 
+   exposes the methods exported by the server. So it&#039;s very easy and 
+   natural to call XMLRPC exported methods. Like in Python language, the classic
+   way to use XML_RPC2 client side is :
+  </p>
+  <ul class="itemizedlist">
+   <li class="listitem">
+    <p class="para">
+     We make a XML_RCP2_Client object with server informations as arguments.
+    </p>
+   </li>
+   <li class="listitem">
+    <p class="para">
+     In a classic way, we call a method of this object.
+    </p>
+   </li>
+   <li class="listitem">
+    <p class="para">
+     Then, the method call is XMLRPC encoded, sent to the server, the response 
+     is decoded into PHP native types and we get the result of the call (all this
+     logic is made by the library in a completely transparent way). 
+    </p>
+   </li>
+  </ul> 
+  <p class="para">
+   As a server library, XML_RPC2 is capable of exposing methods from a class or 
+   object instance, seamlessly capable of exposing methods from a class or 
+   object instance, seamlessly exporting local methods as remotely callable 
+   procedures. Method signatures are automatically determined and checked by using
+   the reflection API and PHPDOC comments. An automatic documentation about
+   XMLRPC exported methods is dynamically built and available at the server URL
+   (with a simple HTTP GET).
+  </p>
+  <p class="para">
+   For both sides, an optimized cache based on Cache_Lite can be set. It can
+   be really usefull especially on public XMLRPC servers.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.webservices.xml-rpc2.intro.requirements"><div class="info"><h1>Requirements</h1>
+</div>
+  
+  <p class="para">
+   XML_RCP2 need PHP5 and the CURL extension. To avoid in next version, the CURL
+   dependency, we are waiting for a PHP5 E_STRICT PEAR module for HTTP_Request.
+  </p>
+  <p class="para">
+   If you want to use the integrated cache, you will also need the Cache_Lite 
+   PEAR module but it&#039;s of course an optional dependency.
+  </p>
+  <p class="para">
+   XML_RPC2 can use two backends for the XMLRPC encoding/decoding :
+  </p>
+  <ul class="itemizedlist">
+   <li class="listitem">
+    <p class="para">
+     XMLRPCEXT, which of course need this PHP extension (probably the better
+     choice but it&#039;s an additional dependency) ;
+    </p>
+   </li>
+   <li class="listitem">
+    <p class="para">
+     PHP, which doesn&#039;t need the XMLRPCEXT extension at all (this is full PHP
+     but slower).
+    </p>
+   </li>
+  </ul>
+ </div>
+
+ <div class="refsection" id="package.webservices.xml-rpc2.intro.exampleclient"><div class="info"><h1>A first example of the client side use</h1>
+</div>
+  
+  <p class="para">
+   Let&#039;s start with a XMLRPC call to the pear.php.net XMLRPC server :   
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'XML/RPC2/Client.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'prefix'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'package.'<br /></span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;We&nbsp;make&nbsp;the&nbsp;XML_RPC2_Client&nbsp;object&nbsp;(as&nbsp;the&nbsp;backend&nbsp;is&nbsp;not&nbsp;specified,&nbsp;XMLRPCEXT<br />//&nbsp;will&nbsp;be&nbsp;used&nbsp;if&nbsp;available&nbsp;(full&nbsp;PHP&nbsp;else))<br /></span><span style="color: #0000BB">$client&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">XML_RPC2_Client</span><span style="color: #007700">::</span><span style="color: #0000BB">create</span><span style="color: #007700">(</span><span style="color: #DD0000">'http://pear.php.net/xmlrpc.php'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /><br />try&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Because&nbsp;of&nbsp;the&nbsp;prefix&nbsp;specified&nbsp;in&nbsp;the&nbsp;$options&nbsp;array,&nbsp;indeed,&nbsp;&nbsp;we&nbsp;will&nbsp;call<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;the&nbsp;package.info()&nbsp;method&nbsp;with&nbsp;a&nbsp;single&nbsp;argument&nbsp;(the&nbsp;string&nbsp;'XML_RPC2')<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$client</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">info</span><span style="color: #007700">(</span><span style="color: #DD0000">'XML_RPC2'</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;$result&nbsp;is&nbsp;a&nbsp;complex&nbsp;PHP&nbsp;type&nbsp;(no&nbsp;XMLRPC&nbsp;decoding&nbsp;needed,&nbsp;it's&nbsp;already&nbsp;done)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$result</span><span style="color: #007700">);<br /><br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">XML_RPC2_FaultException&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;The&nbsp;XMLRPC&nbsp;server&nbsp;returns&nbsp;a&nbsp;XMLRPC&nbsp;error<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">die(</span><span style="color: #DD0000">'Exception&nbsp;#'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getFaultCode</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">'&nbsp;:&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getFaultString</span><span style="color: #007700">());<br /><br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Exception&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Other&nbsp;errors&nbsp;(HTTP&nbsp;or&nbsp;networking&nbsp;problems...)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">die(</span><span style="color: #DD0000">'Exception&nbsp;:&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>  
+  
+ </div>
+ <div class="refsection" id="package.webservices.xml-rpc2.intro.exampleserver"><div class="info"><h1>A first example of the server side use</h1>
+</div>
+  
+  <p class="para">
+   Let&#039;s build a XMLRPC &quot;echo server&quot; :
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'XML/RPC2/Server.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Let's&nbsp;define&nbsp;a&nbsp;class&nbsp;with&nbsp;public&nbsp;static&nbsp;methods<br />//&nbsp;PHPDOC&nbsp;comments&nbsp;are&nbsp;really&nbsp;important&nbsp;because&nbsp;they&nbsp;are&nbsp;used&nbsp;for&nbsp;automatic<br />//&nbsp;signature&nbsp;checking<br /><br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">EchoServer&nbsp;</span><span style="color: #007700">{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/**<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;echoes&nbsp;the&nbsp;message&nbsp;received<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;string&nbsp;&nbsp;Message<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@return&nbsp;string&nbsp;The&nbsp;echo<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">public&nbsp;static&nbsp;function&nbsp;</span><span style="color: #0000BB">echoecho</span><span style="color: #007700">(</span><span style="color: #0000BB">$string</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$string</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />}<br /><br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'prefix'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'test.'&nbsp;</span><span style="color: #FF8000">//&nbsp;we&nbsp;define&nbsp;a&nbsp;sort&nbsp;of&nbsp;"namespace"&nbsp;for&nbsp;the&nbsp;server<br /></span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Let's&nbsp;build&nbsp;the&nbsp;server&nbsp;object&nbsp;with&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;Echo&nbsp;class&nbsp;<br /></span><span style="color: #0000BB">$server&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">XML_RPC2_Server</span><span style="color: #007700">::</span><span style="color: #0000BB">create</span><span style="color: #007700">(</span><span style="color: #DD0000">'EchoServer'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$server</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">handleCall</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>  
+   If you do a simple HTTP GET on the server URL, you will get an automatic
+   HTML documentation about the echoecho function. If you make a XMLRPC client
+   request on the same URL about the &quot;test.echoecho()&quot; method (with one argument),
+   you will get your argument as a response. If you call another method or with a
+   bad arguments number, you will get an error (because of automatic method 
+   signature checking).   
+  </p>
+ </div>
+ 
+ <div class="refsection" id="package.webservices.xml-rpc2.intro.examplecachedclient"><div class="info"><h1>A first example of the client side use (with integrated cache)</h1>
+</div>
+  
+  <p class="para">
+   As the caching process is completely transparent, this is very similar to the standard client side use :
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'XML/RPC2/CachedClient.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'prefix'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'package.'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'cacheDebug'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,&nbsp;</span><span style="color: #FF8000">//&nbsp;with&nbsp;cacheDebug&nbsp;set&nbsp;to&nbsp;true,&nbsp;it's&nbsp;very&nbsp;easy<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;to&nbsp;get&nbsp;an&nbsp;indication&nbsp;about&nbsp;the&nbsp;cache&nbsp;using&nbsp;(or&nbsp;not)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'cacheOptions'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'cacheDir'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'/tmp/'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'lifetime'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">3600</span><span style="color: #007700">,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;during&nbsp;this&nbsp;lifetime,&nbsp;the&nbsp;local&nbsp;cache&nbsp;will&nbsp;be&nbsp;used&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'cacheByDefault'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true&nbsp;</span><span style="color: #FF8000">//&nbsp;all&nbsp;methods&nbsp;call&nbsp;will&nbsp;be&nbsp;cached<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;(but&nbsp;a&nbsp;more&nbsp;precise&nbsp;way&nbsp;is&nbsp;possible)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">)<br />);<br /><br /></span><span style="color: #FF8000">//&nbsp;We&nbsp;make&nbsp;the&nbsp;XML_RPC2_CachedClient&nbsp;object&nbsp;(same&nbsp;syntax&nbsp;than&nbsp;XML_RPC2_Client)<br /></span><span style="color: #0000BB">$client&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">XML_RPC2_CachedClient</span><span style="color: #007700">::</span><span style="color: #0000BB">create</span><span style="color: #007700">(</span><span style="color: #DD0000">'http://pear.php.net/xmlrpc.php'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /><br />try&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;First&nbsp;call,&nbsp;the&nbsp;cache&nbsp;won't&nbsp;be&nbsp;used<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$client</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">info</span><span style="color: #007700">(</span><span style="color: #DD0000">'XML_RPC2'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$result</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Second&nbsp;call,&nbsp;the&nbsp;cache&nbsp;will&nbsp;be&nbsp;used&nbsp;&nbsp;(in&nbsp;a&nbsp;transparent&nbsp;way)&nbsp;and&nbsp;no<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;additional&nbsp;HTTP&nbsp;request&nbsp;will&nbsp;be&nbsp;sent&nbsp;to&nbsp;the&nbsp;server<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$client</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">info</span><span style="color: #007700">(</span><span style="color: #DD0000">'XML_RPC2'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$result</span><span style="color: #007700">);<br /><br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">XML_RPC2_FaultException&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;The&nbsp;XMLRPC&nbsp;server&nbsp;returns&nbsp;a&nbsp;XMLRPC&nbsp;error<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">die(</span><span style="color: #DD0000">'Exception&nbsp;#'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getFaultCode</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">'&nbsp;:&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getFaultString</span><span style="color: #007700">());<br /><br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Exception&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Other&nbsp;errors&nbsp;(HTTP&nbsp;or&nbsp;networking&nbsp;problems...)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">die(</span><span style="color: #DD0000">'Exception&nbsp;:&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+ </div>
+
+ <div class="refsection" id="package.webservices.xml-rpc2.intro.examplecachedserver"><div class="info"><h1>A first example of the server side use (with integrated cache)</h1>
+</div>
+  
+  <p class="para">
+   As the caching process is completely transparent, this is very similar to the standard server side use :
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'XML/RPC2/CachedServer.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Let's&nbsp;define&nbsp;a&nbsp;class&nbsp;with&nbsp;public&nbsp;static&nbsp;methods<br />//&nbsp;PHPDOC&nbsp;comments&nbsp;are&nbsp;really&nbsp;important&nbsp;because&nbsp;they&nbsp;are&nbsp;used&nbsp;for&nbsp;automatic<br />//&nbsp;signature&nbsp;checking<br /><br />//&nbsp;IMPORTANT&nbsp;:&nbsp;note&nbsp;the&nbsp;@xmlrpc.caching&nbsp;PHPDOC&nbsp;tags&nbsp;to&nbsp;indicate<br />//&nbsp;that&nbsp;the&nbsp;method&nbsp;has&nbsp;to&nbsp;be&nbsp;cached<br /><br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">EchoServer&nbsp;</span><span style="color: #007700">{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/**<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;echoes&nbsp;the&nbsp;message&nbsp;received<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;string&nbsp;&nbsp;Message<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@return&nbsp;string&nbsp;The&nbsp;echo<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@xmlrpc.caching&nbsp;true<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">public&nbsp;static&nbsp;function&nbsp;</span><span style="color: #0000BB">echoecho</span><span style="color: #007700">(</span><span style="color: #0000BB">$string</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$string</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />}<br /><br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'prefix'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'test..'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'cacheDebug'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,&nbsp;</span><span style="color: #FF8000">//&nbsp;with&nbsp;cacheDebug&nbsp;set&nbsp;to&nbsp;true,&nbsp;it's&nbsp;very&nbsp;easy<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;to&nbsp;get&nbsp;an&nbsp;indication&nbsp;about&nbsp;the&nbsp;cache&nbsp;using&nbsp;(or&nbsp;not)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'cacheOptions'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'cacheDir'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'/tmp/'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'lifetime'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">3600</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'cacheByDefault'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">false&nbsp;</span><span style="color: #FF8000">//&nbsp;we&nbsp;don't&nbsp;cache&nbsp;by&nbsp;default&nbsp;(only&nbsp;methods&nbsp;with&nbsp;@xmlrpc.caching&nbsp;true)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">)<br />);<br /><br /></span><span style="color: #0000BB">$server&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">XML_RPC2_CachedServer</span><span style="color: #007700">::</span><span style="color: #0000BB">create</span><span style="color: #007700">(</span><span style="color: #DD0000">'EchoServer'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);&nbsp;&nbsp;<br /></span><span style="color: #0000BB">$server</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">handleCall</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.webservices.xml-rpc2.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.webservices.xml-rpc2.html">XML_RPC2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.webservices.xml-rpc2.client.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">XML_RPC2</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Client Side</td>
+  </tr>
+ </table>
+</div>
+</body></html>

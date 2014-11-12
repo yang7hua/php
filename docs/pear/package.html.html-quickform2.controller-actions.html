@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Controller action handlers</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-quickform2.multipage.html" title="Multipage forms" />
+  <link rel="prev" href="package.html.html-quickform2.controller-migration.html" title="Migration from HTML_QuickForm_Controller" />
+  <link rel="next" href="package.html.html-table.html" title="HTML_Table" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Controller action handlers</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-quickform2.controller-migration.html" title="Migration from HTML_QuickForm_Controller">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-table.html" title="HTML_Table">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-quickform2.controller-actions">
+ 
+  <h1 class="refname">Controller action handlers</h1>
+  <div class="refnamediv">Controller action handlers &ndash; Using available handlers and writing custom ones</div>
+
+ 
+ <div class="refsection" id="package.html.html-quickform2.controller-actions.overview">
+  <div class="info">
+   <h1>Overview</h1>
+
+  </div>
+  <p class="para">
+   Action handlers in <strong class="classname">HTML_QuickForm2_Controller</strong> define what should happen
+   when request to a script containing the form is made. To make Controller execute a specific
+   action handler after form submit you <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Page.html#methodgetButtonName" class="apidoclink">give a special name</a>
+   to a form&#039;s submit button: 
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'submit'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getButtonName</span><span style="color: #007700">(</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'value'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'This&nbsp;button&nbsp;does&nbsp;foo!'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   Action handlers are called via <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Page.html#methodhandle" class="apidoclink">HTML_QuickForm2_Controller_Page::handle()</a>
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$page</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">handle</span><span style="color: #007700">(</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   which is usually done by <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller.html#methodrun" class="apidoclink">HTML_QuickForm2_Controller::run()</a> after finding page id and action name from
+   request, but can also be done manually. In fact, built-in handlers liberally call other action
+   handlers, the execution ending with either <code class="literal">&#039;display&#039;</code>,
+   <code class="literal">&#039;jump&#039;</code> or <code class="literal">&#039;process&#039;</code>.   
+  </p>
+  <p class="para">
+   Action handlers can be added either to the form Page or to the Controller:
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$page</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addHandler</span><span style="color: #007700">(</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">,&nbsp;new&nbsp;</span><span style="color: #0000BB">SpecificActionFoo</span><span style="color: #007700">());<br /></span><span style="color: #0000BB">$controller</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addHandler</span><span style="color: #007700">(</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">,&nbsp;new&nbsp;</span><span style="color: #0000BB">GenericActionFoo</span><span style="color: #007700">());<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   When Page&#039;s <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Page.html#methodhandle" class="apidoclink">handle()</a> method is called it
+   first checks for a handler added via <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Page.html#methodaddHandler" class="apidoclink">HTML_QuickForm2_Controller_Page::addHandler()</a> and calls its <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Action.html#methodperform" class="apidoclink">perform()</a> method if
+   present. If a handler is missing it calls Controller&#039;s <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller.html#methodhandle" class="apidoclink">handle()</a> which checks
+   for a handler added via <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller.html#methodaddHandler" class="apidoclink">HTML_QuickForm2_Controller::addHandler()</a> and calls its
+   <strong class="function">perform()</strong> method. If a handler is missing here but its name is known and a
+   default handler is available (see below), it is loaded and added automatically, otherwise an
+   Exception is thrown.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.controller-actions.builtin">
+  <div class="info">
+   <h1>Built-in action names and action handlers</h1>
+
+  </div>
+  <table class="doctable table">
+   <caption>Handlers that can be bound to submit buttons</caption>
+   
+    <thead>
+     <tr>
+      <th>Built-in name</th>
+      <th>Default handler</th>
+      <th>Description</th>
+     </tr>
+
+    </thead>
+
+    <tbody class="tbody">
+     <tr style="vertical-align: top;">
+      <td><code class="literal">&#039;back&#039;</code></td>
+      <td><a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Action_Back.html" class="apidoclink">HTML_QuickForm2_Controller_Action_Back</a></td>
+      <td>This handler should be bound to the <code class="literal">&quot;Back&quot;</code> button of
+       (usually) a wizard-type multipage form, it redirects to the previous page whether current
+       page is valid or not.</td>
+     </tr>
+
+     <tr style="vertical-align: top;">
+      <td><em class="emphasis">None</em>, actual name should be equal to <code class="varname">id</code> of some
+       form page.</td>
+      <td><a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Action_Direct.html" class="apidoclink">HTML_QuickForm2_Controller_Action_Direct</a></td>
+      <td>Used to go to a specific page of the form, most useful for non-wizard forms,
+       obviously.</td>
+     </tr>
+
+     <tr style="vertical-align: top;">
+      <td><code class="literal">&#039;next&#039;</code></td>
+      <td><a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Action_Next.html" class="apidoclink">HTML_QuickForm2_Controller_Action_Next</a></td>
+      <td>This handler should be bound to the <code class="literal">&quot;Next&quot;</code> button of
+       (usually) a wizard-type multipage form, it redirects to the next page if the current
+       one is valid (or the form is not wizard). On the last page of a multipage form it behaves
+       like <code class="literal">&#039;submit&#039;</code>.</td>
+     </tr>
+
+     <tr style="vertical-align: top;">
+      <td><code class="literal">&#039;submit&#039;</code></td>
+      <td><a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Action_Submit.html" class="apidoclink">HTML_QuickForm2_Controller_Action_Submit</a></td>
+      <td>This handler should be bound to a &quot;global&quot; submit button for a form. It can be
+       the &quot;submit&quot; button of a single-page or tabbed multi-page form, &quot;finish&quot;
+       button of a wizard. Default handler checks whether all the pages of the form are valid, then
+       either calls the <code class="literal">&#039;process&#039;</code> handler or displays the invalid
+       page.</td>
+     </tr>
+
+    </tbody>
+   
+  </table>
+
+
+  <table class="doctable table">
+   <caption>Other handlers, only called explicitly</caption>
+   
+    <thead>
+     <tr>
+      <th>Built-in name</th>
+      <th>Default handler</th>
+      <th>Description</th>
+     </tr>
+
+    </thead>
+  
+    <tbody class="tbody">
+     <tr style="vertical-align: top;">
+      <td><code class="literal">&#039;display&#039;</code></td>
+      <td><a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Action_Display.html" class="apidoclink">HTML_QuickForm2_Controller_Action_Display</a></td>
+      <td>Displays the form using <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Renderer_Default.html" class="apidoclink">Default renderer</a>. You should
+       subclass this handler and override its <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Action_Display.html#methodrenderForm" class="apidoclink">renderForm()</a>
+       method if you want to customize the form output.</td>
+     </tr>
+
+     <tr style="vertical-align: top;">
+      <td><code class="literal">&#039;jump&#039;</code></td>
+      <td><a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Action_Jump.html" class="apidoclink">HTML_QuickForm2_Controller_Action_Jump</a></td>
+      <td>Performs a HTTP redirect to a given page.</td>
+     </tr>
+
+     <tr style="vertical-align: top;">
+      <td><code class="literal">&#039;process&#039;</code></td>
+      <td><em class="emphasis">None</em>, application-specific</td>
+      <td>This is the action called by default <code class="literal">&#039;submit&#039;</code> and
+       <code class="literal">&#039;next&#039;</code> (on the last page of the wizard only) handlers after
+       successful (i.e. without validation errors) form submit. This action doesn&#039;t have a
+       default handler, you should define the custom one yourself and implement all the necessary
+       logic to process the form&#039;s values in it.</td>
+     </tr>
+
+    </tbody>
+   
+  </table>
+
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.controller-actions.custom">
+  <div class="info">
+   <h1>Writing a custom handler</h1>
+
+  </div>
+  <p class="para">
+   Basically you need to create a class implementing <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Action.html" class="apidoclink">HTML_QuickForm2_Controller_Action</a> and add necessary logic to its <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Action.html#methodperform" class="apidoclink">perform()</a> method.
+  </p>
+  <p class="para">
+   If you intend to bind this action to some submit button via <strong class="function">getButtonName()</strong>,
+   you should make sure that you store the submitted values in the session container. This is
+   most easily done via <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller_Page.html#methodstoreValues" class="apidoclink">HTML_QuickForm2_Controller_Page::storeValues()</a>.
+  </p>
+  <p class="para">
+   As usual, see the built-in handlers&#039; source for the inspiration.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.controller-actions.bind">
+  <div class="info">
+   <h1>Can actions be bound to something other than submit buttons?</h1>
+
+  </div>
+  <p class="para">
+   Controller is able to properly handle actions bound to <code class="literal">&lt;input type=&quot;image&quot;
+   /&gt;</code> controls, too. You don&#039;t have to do anything special, just set the
+   control&#039;s name via <strong class="function">getButtonName()</strong>. 
+  </p>
+  <p class="para">
+   If you want to bind an action to something like a hyperlink, you must consider the following:
+   <em class="emphasis">the form must be submitted</em> to be able to get its values, thus you need to
+   write some javascript that will submit the form and pass the action name to the controller
+   (possibly by setting a name of some hidden element to that name).
+  </p>
+ </div>
+ 
+ <div class="refsection" id="package.html.html-quickform2.controller-actions.urls">
+  <div class="info">
+   <h1>URLs</h1>
+
+  </div>
+  <p class="para">
+   If an instance of <strong class="classname">HTML_QuickForm2</strong> is not provided with an explicit
+   <code class="literal">&#039;action&#039;</code> attribute it tries to guess it from environment using
+   <code class="varname">$_SERVER[&#039;PHP_SELF&#039;]</code>. This may not be a best guess when all requests are
+   routed through <code class="filename">index.php</code>.
+  </p>
+  <p class="para">
+   Controller has even more problems since its <code class="literal">&#039;jump&#039;</code> handler has to build an
+   absolute URL for a redirect (per <a href="http://www.faqs.org/rfcs/rfc2616" class="link external">RFC 2616</a>). It uses various values from
+   <code class="varname">$_SERVER</code> array for this, but your server may be configured in such a way (e.g.
+   if you use reverse proxy) that an URL a user sees is quite different from one a script can guess.
+  </p>
+  <p class="para">
+   Thus the only bulletproof solution sometimes will be to explicitly set the
+   <code class="literal">&#039;action&#039;</code> attribute of all <strong class="classname">HTML_QuickForm2</strong> instances in
+   Controller:
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">foreach&nbsp;(</span><span style="color: #0000BB">$controller&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$page</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$page</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getForm</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">setAttribute</span><span style="color: #007700">(</span><span style="color: #DD0000">'action'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'http://example.com/pretty/url/of/my/form'</span><span style="color: #007700">);<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   Default handler for <code class="literal">&#039;jump&#039;</code> will use this absolute URL for redirects.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.controller-actions.pretty-urls">
+  <div class="info">
+   <h1>Pretty URLs</h1>
+
+  </div>
+  <p class="para">
+   A common question is whether it is possible to get rid of &quot;ugly&quot; <code class="literal">GET</code>
+   parameters that appear when redirecting from one form page to the other:
+   </p><pre class="screen">
+<br/>http://example.com/wizard.php?_qf_page2_display=true<br/>
+   </pre>
+
+  
+  <p class="para">
+   The simplest solution will be to get rid of <code class="literal">&#039;jump&#039;</code> altogether and use
+   <code class="literal">&#039;display&#039;</code> in its place. However, this will completely break navigation with
+   browser&#039;s &quot;Back&quot; and &quot;Forward&quot; buttons, so don&#039;t do that.
+  </p>
+  <p class="para">
+   It is possible to use an URL like
+   </p><pre class="screen">
+<br/>http://example.com/wizard/page2<br/>
+   </pre>
+<p>
+   instead of the above one, but it&#039;ll be more difficult:
+   </p><ol type="1">
+    <li class="listitem"><span class="simpara">Make sure that the &quot;pretty&quot; URL actually routes to a script
+     containing the Controller.</span></li>
+    <li class="listitem"><span class="simpara">Create a custom <code class="literal">&#039;jump&#039;</code> handler that&#039;ll redirect to a
+     &quot;pretty&quot; URL instead of an &quot;ugly&quot; one.</span></li>
+    <li class="listitem"><span class="simpara">Either change <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Controller.html#methodgetActionName" class="apidoclink">HTML_QuickForm2_Controller::getActionName()</a> to be able to get action name from a
+     &quot;pretty&quot; URL or add a key with &quot;ugly&quot; action name to
+     <code class="varname">$_REQUEST</code>.</span></li>
+   </ol>
+  
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-quickform2.controller-migration.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-quickform2.multipage.html">Multipage forms</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-table.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Migration from HTML_QuickForm_Controller</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">HTML_Table</td>
+  </tr>
+ </table>
+</div>
+</body></html>

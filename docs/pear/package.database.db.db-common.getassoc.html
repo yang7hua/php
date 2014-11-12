@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>DB_common::getAssoc()</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.db.html" title="DB" />
+  <link rel="prev" href="package.database.db.db-common.getall.html" title="DB_common::getAll()" />
+  <link rel="next" href="package.database.db.db-common.getcol.html" title="DB_common::getCol()" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">DB_common::getAssoc()</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.db.db-common.getall.html" title="DB_common::getAll()">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.db.db-common.getcol.html" title="DB_common::getCol()">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.db.db-common.getassoc">
+ 
+  <h1 class="refname">DB_common::getAssoc()</h1>
+  <div class="refnamediv">DB_common::getAssoc() &ndash; Runs a query and returns the data as an array</div>
+
+ 
+
+ <h2 class="refsynopsisdiv">Synopsis</h2>
+  <div class="funcsynopsis">
+   <p><code class="funcprototype">
+    array <strong class="function">&amp;getAssoc</strong> ( 
+    
+     string $query
+    
+     , 
+     boolean $force_array
+     <span class="initializer"> = false</span>
+    
+     , 
+     mixed $params = array()
+    
+     , 
+     integer $fetchmode
+     <span class="initializer"> = DB_FETCHMODE_DEFAULT</span>
+    
+     , 
+     boolean $group
+     <span class="initializer"> = false</span>
+    
+   )</code></p>
+  </div>
+ 
+
+ <div class="refsection" id="package.database.db.db-common.getassoc.desc">
+  <h1 class="title">Description</h1>
+  <p class="para">
+   Runs the query provided and puts the
+   entire result set into an associative array
+   then frees the result set.
+  </p>
+  <p class="para">
+   If the result set contains more than two columns, the value
+   will be an array of the values from column 2 to n.  If the result
+   set contains only two columns, the returned value will be a
+   scalar with the value of the second column (unless forced to an
+   array with the <em><code class="parameter">$force_array</code></em> parameter).
+  </p>
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.getassoc.parameter">
+  <h1 class="title">Parameter</h1>
+  <p class="para">
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term">
+      <span class="type">string</span>
+      <em><code class="parameter">$query</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       the SQL query or the statement to prepare
+      </p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      <span class="type">boolean</span>
+      <em><code class="parameter">$force_array</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       used only if the query returns
+       exactly two columns.
+       If <strong class="constant">TRUE</strong>, the values of the returned array
+       will be one-element arrays instead of scalars.
+      </p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      <span class="type">mixed</span>
+      <em><code class="parameter">$params</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       array, string or numeric data to be added to the prepared statement.
+       Quantity of items passed must match quantity of placeholders in the
+       prepared statement: meaning 1 placeholder for non-array
+       parameters or 1 placeholder per array element.
+      </p>
+      <p class="para">
+       If supplied,
+       <a href="package.database.db.intro-execute.html" class="link">
+        <strong class="function">prepare()</strong>/
+        <strong class="function">execute()</strong></a> is used.
+      </p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      <span class="type">integer</span>
+      <em><code class="parameter">$fetchmode</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       the fetch mode to use.
+       The default is <strong class="constant">DB_FETCHMODE_DEFAULT</strong>,
+       which tells this method to use DB&#039;s current fetch mode.
+       DB&#039;s current default fetch mode can be changed using
+       <a href="package.database.db.db-common.setfetchmode.html" class="link">
+        <strong class="function">setFetchMode()</strong></a>.
+       Potential values include:
+       </p><ul class="itemizedlist">
+        <li class="listitem">
+         <p class="para">
+          <strong class="constant">DB_FETCHMODE_ORDERED</strong>
+         </p>
+        </li>
+        <li class="listitem">
+         <p class="para">
+          <strong class="constant">DB_FETCHMODE_ASSOC</strong>
+         </p>
+        </li>
+        <li class="listitem">
+         <p class="para">
+          <strong class="constant">DB_FETCHMODE_OBJECT</strong>
+         </p>
+        </li>
+       </ul>
+      
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      <span class="type">boolean</span>
+      <em><code class="parameter">$group</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       if <strong class="constant">TRUE</strong>, the values of
+       the returned array is wrapped in another array.
+       If the same key value (in the first column)
+       repeats itself, the values
+       will be appended to this array instead
+       of overwriting the
+       existing values.
+      </p>
+     </dd>
+    </dl>
+   </div>
+  
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.getassoc.return">
+  <h1 class="title">Return value</h1>
+  <p class="para">
+   <span class="type">array</span> - associative array with the query results
+   or a <a href="package.database.db.db-error.html" class="link"><strong class="classname">DB_Error</strong></a> object on failure
+  </p>
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.getassoc.throws">
+  <h1 class="title">Throws</h1>
+  <p class="para">
+   </p><table class="doctable table"><caption>Possible PEAR_Error values</caption>
+
+    
+     <thead>
+      <tr>
+       <th>Error code</th>
+       <th>Error message</th>
+       <th>Reason</th>
+       <th>Solution</th>
+      </tr>
+
+     </thead>
+
+     <tbody class="tbody">
+      <tr>
+       <td><strong class="constant">DB_ERROR_INVALID</strong></td>
+       <td>
+        invalid
+       </td>
+       <td>
+        SQL statement for preparing is not valid.
+       </td>
+       <td>
+        See the <a href="package.database.db.db-common.prepare.html" class="link">
+         <strong class="function">prepare()</strong> documentation</a>,
+        if you want to use a SQL statemt using placeholders.
+       </td>
+      </tr>
+
+      <tr>
+       <td><strong class="constant">DB_ERROR_MISMATCH</strong></td>
+       <td>
+        mismatch
+       </td>
+       <td>
+        Quantity of parameters didn&#039;t match quantity of placeholders in
+        the prepared statement.
+       </td>
+       <td>
+        Check that the number of placeholders in the
+        <a href="package.database.db.db-common.prepare.html" class="link">
+         <strong class="function">prepare()</strong></a> statement passed to
+        <em><code class="parameter">$query</code></em> equals the count of entries
+        passed to <em><code class="parameter">$params</code></em>.
+       </td>
+      </tr>
+
+      <tr>
+       <td><strong class="constant">DB_ERROR_NODBSELECTED</strong></td>
+       <td>
+        no database selected
+       </td>
+       <td>
+        No database was chosen.
+       </td>
+       <td>
+        Check the <a href="package.database.db.intro-dsn.html" class="link">DSN</a>
+        in <a href="package.database.db.db.connect.html" class="link">
+         <strong class="function">connect()</strong></a>.
+       </td>
+      </tr>
+
+      <tr>
+       <td><strong class="constant">DB_ERROR_TRUNCATED</strong></td>
+       <td>
+        truncated
+       </td>
+       <td>
+        The result set contains fewer then two columns
+       </td>
+       <td>
+        Check the SQL query or choose another
+        <strong class="function">get*()</strong> function
+       </td>
+      </tr>
+
+      <tr>
+       <td>every other error code</td>
+       <td class="empty">&nbsp;</td>
+       <td>
+        Database specific error
+       </td>
+       <td>
+        Check the database related section of
+        <a href="http://www.php.net/manual/" class="link external">PHP-Manual</a>
+        to detect the reason for this error. In the most cases
+        a misformed SQL statement. Ie. using LIMIT in a SQL-Statement
+        for an Oracle database.
+       </td>
+      </tr>
+
+     </tbody>
+    
+   </table>
+
+  
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.getassoc.note">
+  <h1 class="title">Note</h1>
+  <p class="simpara">This function can not be called
+statically.</p>
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.getassoc.example">
+  <h1 class="title">Example</h1>
+  <p class="para">
+   All of the examples use the following data set:
+   </p><div class="sqlcode">
+    <pre class="sqlcode">
+
+INSERT INTO foo VALUES (&#039;Juan&#039;, 5, &#039;1991-01-11 21:31:41&#039;);
+
+INSERT INTO foo VALUES (&#039;Kyu&#039;, 10, &#039;1992-02-12 22:32:42&#039;);
+
+INSERT INTO foo VALUES (&#039;Kyu&#039;, 15, &#039;1993-03-13 23:33:43&#039;);</pre>
+
+   </div>
+  
+
+  <div class="refsection" id="package.database.db.db-common.getassoc.example.two"><div class="info"><h1>Result sets having two columns</h1>
+</div>
+
+   <p class="para">
+    When using <strong class="function">getAssoc()</strong> for results
+    which have two columns and
+    <em><code class="parameter">$force_array</code></em> = <strong class="constant">FALSE</strong> (the default)
+    changing <em><code class="parameter">$fetchmode</code></em> has no
+    impact on the format of the resulting array.
+   </p>
+
+   <div class="example"><div class="info"><p><strong>
+     Using <strong class="function">getAssoc()</strong> in default mode
+    </strong></p></div>
+
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /><br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAssoc</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;cf,&nbsp;df&nbsp;FROM&nbsp;foo'</span><span style="color: #007700">);<br /><br /><br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">))&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$data</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />}<br /><br /><br /><br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+    <div class="example-contents"><p>
+     Output:
+    </p></div>
+    <pre class="screen">
+     <br/><br/>Array<br/><br/>(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Juan]&nbsp;=&gt;&nbsp;1991-01-11&nbsp;21:31:41<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Kyu]&nbsp;=&gt;&nbsp;1993-03-13&nbsp;23:33:43<br/><br/>)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </pre>
+
+   </div>
+
+   <div class="example"><div class="info"><p><strong>
+     Using <strong class="function">getAssoc()</strong> with
+     <em><code class="parameter">$group</code></em> = <strong class="constant">TRUE</strong>
+    </strong></p></div>
+
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /><br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAssoc</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;cf,&nbsp;df&nbsp;FROM&nbsp;foo'</span><span style="color: #007700">,<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,&nbsp;array(),&nbsp;</span><span style="color: #0000BB">DB_FETCHMODE_ORDERED</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /><br /><br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">))&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$data</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />}<br /><br /><br /><br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+    <div class="example-contents"><p>
+     Output:
+    </p></div>
+    <pre class="screen">
+     <br/><br/>Array<br/><br/>(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Juan]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;1991-01-11&nbsp;21:31:41<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Kyu]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;1992-02-12&nbsp;22:32:42<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1]&nbsp;=&gt;&nbsp;1993-03-13&nbsp;23:33:43<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </pre>
+
+   </div>
+
+   <div class="example"><div class="info"><p><strong>
+     Using <strong class="function">getAssoc()</strong> with
+     <em><code class="parameter">$force_array</code></em> = <strong class="constant">TRUE</strong>
+     and <em><code class="parameter">$fetchmode</code></em> =
+     <strong class="constant">DB_FETCHMODE_ORDERED</strong>
+    </strong></p></div>
+
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /><br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAssoc</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;cf,&nbsp;df&nbsp;FROM&nbsp;foo'</span><span style="color: #007700">,<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,&nbsp;array(),&nbsp;</span><span style="color: #0000BB">DB_FETCHMODE_ORDERED</span><span style="color: #007700">);<br /><br /><br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">))&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$data</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />}<br /><br /><br /><br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+    <div class="example-contents"><p>
+     Output:
+    </p></div>
+    <pre class="screen">
+     <br/><br/>Array<br/><br/>(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Juan]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;1991-01-11&nbsp;21:31:41<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Kyu]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;1993-03-13&nbsp;23:33:43<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </pre>
+
+   </div>
+
+   <div class="example"><div class="info"><p><strong>
+     Using <strong class="function">getAssoc()</strong> with
+     <em><code class="parameter">$force_array</code></em> = <strong class="constant">TRUE</strong>
+     and <em><code class="parameter">$fetchmode</code></em> =
+     <strong class="constant">DB_FETCHMODE_ASSOC</strong>
+    </strong></p></div>
+
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /><br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAssoc</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;cf,&nbsp;df&nbsp;FROM&nbsp;foo'</span><span style="color: #007700">,<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,&nbsp;array(),&nbsp;</span><span style="color: #0000BB">DB_FETCHMODE_ASSOC</span><span style="color: #007700">);<br /><br /><br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">))&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$data</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />}<br /><br /><br /><br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+    <div class="example-contents"><p>
+     Output:
+    </p></div>
+    <pre class="screen">
+     <br/><br/>Array<br/><br/>(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Juan]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[df]&nbsp;=&gt;&nbsp;1991-01-11&nbsp;21:31:41<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Kyu]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[df]&nbsp;=&gt;&nbsp;1993-03-13&nbsp;23:33:43<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </pre>
+
+   </div>
+
+   <div class="example"><div class="info"><p><strong>
+     Using <strong class="function">getAssoc()</strong> with
+     <em><code class="parameter">$force_array</code></em> = <strong class="constant">TRUE</strong>
+     and <em><code class="parameter">$fetchmode</code></em> =
+     <strong class="constant">DB_FETCHMODE_OBJECT</strong>
+    </strong></p></div>
+
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /><br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAssoc</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;cf,&nbsp;df&nbsp;FROM&nbsp;foo'</span><span style="color: #007700">,<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,&nbsp;array(),&nbsp;</span><span style="color: #0000BB">DB_FETCHMODE_OBJECT</span><span style="color: #007700">);<br /><br /><br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">))&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$data</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />}<br /><br /><br /><br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+    <div class="example-contents"><p>
+     Output:
+    </p></div>
+    <pre class="screen">
+     <br/><br/>Array<br/><br/>(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Juan]&nbsp;=&gt;&nbsp;stdClass&nbsp;Object<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cf]&nbsp;=&gt;&nbsp;Juan<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[df]&nbsp;=&gt;&nbsp;1991-01-11&nbsp;21:31:41<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Kyu]&nbsp;=&gt;&nbsp;stdClass&nbsp;Object<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cf]&nbsp;=&gt;&nbsp;Kyu<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[df]&nbsp;=&gt;&nbsp;1993-03-13&nbsp;23:33:43<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </pre>
+
+   </div>
+
+   <div class="example"><div class="info"><p><strong>
+     Using <strong class="function">getAssoc()</strong> with
+     <em><code class="parameter">$force_array</code></em> = <strong class="constant">TRUE</strong>,
+     <em><code class="parameter">$fetchmode</code></em> =
+     <strong class="constant">DB_FETCHMODE_ORDERED</strong>
+     and <em><code class="parameter">$group</code></em> = <strong class="constant">TRUE</strong>
+    </strong></p></div>
+
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /><br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAssoc</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;cf,&nbsp;df&nbsp;FROM&nbsp;foo'</span><span style="color: #007700">,<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,&nbsp;array(),&nbsp;</span><span style="color: #0000BB">DB_FETCHMODE_ORDERED</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /><br /><br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">))&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$data</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />}<br /><br /><br /><br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+    <div class="example-contents"><p>
+     Output:
+    </p></div>
+    <pre class="screen">
+     <br/><br/>Array<br/><br/>(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Juan]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;1991-01-11&nbsp;21:31:41<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Kyu]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;1992-02-12&nbsp;22:32:42<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;1993-03-13&nbsp;23:33:43<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </pre>
+
+   </div>
+
+   <div class="example"><div class="info"><p><strong>
+     Using <strong class="function">getAssoc()</strong> with
+     <em><code class="parameter">$force_array</code></em> = <strong class="constant">TRUE</strong>,
+     <em><code class="parameter">$fetchmode</code></em> =
+     <strong class="constant">DB_FETCHMODE_ASSOC</strong>
+     and <em><code class="parameter">$group</code></em> = <strong class="constant">TRUE</strong>
+    </strong></p></div>
+
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /><br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAssoc</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;cf,&nbsp;df&nbsp;FROM&nbsp;foo'</span><span style="color: #007700">,<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,&nbsp;array(),&nbsp;</span><span style="color: #0000BB">DB_FETCHMODE_ASSOC</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /><br /><br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">))&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$data</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />}<br /><br /><br /><br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+    <div class="example-contents"><p>
+     Output:
+    </p></div>
+    <pre class="screen">
+     <br/><br/>Array<br/><br/>(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Juan]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[df]&nbsp;=&gt;&nbsp;1991-01-11&nbsp;21:31:41<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Kyu]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[df]&nbsp;=&gt;&nbsp;1992-02-12&nbsp;22:32:42<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[df]&nbsp;=&gt;&nbsp;1993-03-13&nbsp;23:33:43<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </pre>
+
+   </div>
+
+   <div class="example"><div class="info"><p><strong>
+     Using <strong class="function">getAssoc()</strong> with
+     <em><code class="parameter">$force_array</code></em> = <strong class="constant">TRUE</strong>,
+     <em><code class="parameter">$fetchmode</code></em> =
+     <strong class="constant">DB_FETCHMODE_OBJECT</strong>
+     and <em><code class="parameter">$group</code></em> = <strong class="constant">TRUE</strong>
+    </strong></p></div>
+
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /><br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAssoc</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;cf,&nbsp;df&nbsp;FROM&nbsp;foo'</span><span style="color: #007700">,<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,&nbsp;array(),&nbsp;</span><span style="color: #0000BB">DB_FETCHMODE_OBJECT</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /><br /><br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">))&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$data</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />}<br /><br /><br /><br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+    <div class="example-contents"><p>
+     Output:
+    </p></div>
+    <pre class="screen">
+     <br/><br/>Array<br/><br/>(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Juan]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;stdClass&nbsp;Object<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cf]&nbsp;=&gt;&nbsp;Juan<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[df]&nbsp;=&gt;&nbsp;1991-01-11&nbsp;21:31:41<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Kyu]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;stdClass&nbsp;Object<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cf]&nbsp;=&gt;&nbsp;Kyu<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[df]&nbsp;=&gt;&nbsp;1992-02-12&nbsp;22:32:42<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1]&nbsp;=&gt;&nbsp;stdClass&nbsp;Object<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cf]&nbsp;=&gt;&nbsp;Kyu<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[df]&nbsp;=&gt;&nbsp;1993-03-13&nbsp;23:33:43<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </pre>
+
+   </div>
+
+  </div>
+
+
+  <div class="refsection" id="package.database.db.db-common.getassoc.example.more"><div class="info"><h1>Result sets having more than two columns</h1>
+</div>
+
+
+   <div class="example"><div class="info"><p><strong>
+     Using <strong class="function">getAssoc()</strong> with
+     <em><code class="parameter">$fetchmode</code></em> =
+     <strong class="constant">DB_FETCHMODE_ORDERED</strong>
+    </strong></p></div>
+
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /><br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAssoc</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;cf,&nbsp;nf,&nbsp;df&nbsp;FROM&nbsp;foo'</span><span style="color: #007700">,<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,&nbsp;array(),&nbsp;</span><span style="color: #0000BB">DB_FETCHMODE_ORDERED</span><span style="color: #007700">);<br /><br /><br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">))&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$data</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />}<br /><br /><br /><br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+    <div class="example-contents"><p>
+     Output:
+    </p></div>
+    <pre class="screen">
+     <br/><br/>Array<br/><br/>(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Juan]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;5<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1]&nbsp;=&gt;&nbsp;1991-01-11&nbsp;21:31:41<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Kyu]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;15<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1]&nbsp;=&gt;&nbsp;1993-03-13&nbsp;23:33:43<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </pre>
+
+   </div>
+
+   <div class="example"><div class="info"><p><strong>
+     Using <strong class="function">getAssoc()</strong> with
+     <em><code class="parameter">$fetchmode</code></em> =
+     <strong class="constant">DB_FETCHMODE_ASSOC</strong>
+    </strong></p></div>
+
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /><br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAssoc</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;cf,&nbsp;nf,&nbsp;df&nbsp;FROM&nbsp;foo'</span><span style="color: #007700">,<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,&nbsp;array(),&nbsp;</span><span style="color: #0000BB">DB_FETCHMODE_ASSOC</span><span style="color: #007700">);<br /><br /><br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">))&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$data</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />}<br /><br /><br /><br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+    <div class="example-contents"><p>
+     Output:
+    </p></div>
+    <pre class="screen">
+     <br/><br/>Array<br/><br/>(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Juan]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[nf]&nbsp;=&gt;&nbsp;5<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[df]&nbsp;=&gt;&nbsp;1991-01-11&nbsp;21:31:41<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Kyu]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[nf]&nbsp;=&gt;&nbsp;15<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[df]&nbsp;=&gt;&nbsp;1993-03-13&nbsp;23:33:43<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </pre>
+
+   </div>
+
+   <div class="example"><div class="info"><p><strong>
+     Using <strong class="function">getAssoc()</strong> with
+     <em><code class="parameter">$fetchmode</code></em> =
+     <strong class="constant">DB_FETCHMODE_OBJECT</strong>
+    </strong></p></div>
+
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /><br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAssoc</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;cf,&nbsp;nf,&nbsp;df&nbsp;FROM&nbsp;foo'</span><span style="color: #007700">,<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,&nbsp;array(),&nbsp;</span><span style="color: #0000BB">DB_FETCHMODE_OBJECT</span><span style="color: #007700">);<br /><br /><br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">))&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$data</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />}<br /><br /><br /><br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+    <div class="example-contents"><p>
+     Output:
+    </p></div>
+    <pre class="screen">
+     <br/><br/>Array<br/><br/>(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Juan]&nbsp;=&gt;&nbsp;stdClass&nbsp;Object<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cf]&nbsp;=&gt;&nbsp;Juan<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[nf]&nbsp;=&gt;&nbsp;5<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[df]&nbsp;=&gt;&nbsp;1991-01-11&nbsp;21:31:41<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Kyu]&nbsp;=&gt;&nbsp;stdClass&nbsp;Object<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cf]&nbsp;=&gt;&nbsp;Kyu<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[nf]&nbsp;=&gt;&nbsp;15<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[df]&nbsp;=&gt;&nbsp;1993-03-13&nbsp;23:33:43<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </pre>
+
+   </div>
+
+   <div class="example"><div class="info"><p><strong>
+     Using <strong class="function">getAssoc()</strong> with
+     <em><code class="parameter">$fetchmode</code></em> =
+     <strong class="constant">DB_FETCHMODE_ORDERED</strong>
+     and <em><code class="parameter">$group</code></em> = <strong class="constant">TRUE</strong>
+    </strong></p></div>
+
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /><br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAssoc</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;cf,&nbsp;nf,&nbsp;df&nbsp;FROM&nbsp;foo'</span><span style="color: #007700">,<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,&nbsp;array(),&nbsp;</span><span style="color: #0000BB">DB_FETCHMODE_ORDERED</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /><br /><br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">))&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$data</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />}<br /><br /><br /><br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+    <div class="example-contents"><p>
+     Output:
+    </p></div>
+    <pre class="screen">
+     <br/><br/>Array<br/><br/>(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Juan]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;5<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1]&nbsp;=&gt;&nbsp;1991-01-11&nbsp;21:31:41<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Kyu]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;10<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1]&nbsp;=&gt;&nbsp;1992-02-12&nbsp;22:32:42<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;15<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1]&nbsp;=&gt;&nbsp;1993-03-13&nbsp;23:33:43<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </pre>
+
+   </div>
+
+   <div class="example"><div class="info"><p><strong>
+     Using <strong class="function">getAssoc()</strong> with
+     <em><code class="parameter">$fetchmode</code></em> =
+     <strong class="constant">DB_FETCHMODE_ASSOC</strong>
+     and <em><code class="parameter">$group</code></em> = <strong class="constant">TRUE</strong>
+    </strong></p></div>
+
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /><br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAssoc</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;cf,&nbsp;nf,&nbsp;df&nbsp;FROM&nbsp;foo'</span><span style="color: #007700">,<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,&nbsp;array(),&nbsp;</span><span style="color: #0000BB">DB_FETCHMODE_ASSOC</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /><br /><br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">))&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$data</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />}<br /><br /><br /><br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+    <div class="example-contents"><p>
+     Output:
+    </p></div>
+    <pre class="screen">
+     <br/><br/>Array<br/><br/>(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Juan]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[nf]&nbsp;=&gt;&nbsp;5<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[df]&nbsp;=&gt;&nbsp;1991-01-11&nbsp;21:31:41<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Kyu]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[nf]&nbsp;=&gt;&nbsp;10<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[df]&nbsp;=&gt;&nbsp;1992-02-12&nbsp;22:32:42<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[nf]&nbsp;=&gt;&nbsp;15<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[df]&nbsp;=&gt;&nbsp;1993-03-13&nbsp;23:33:43<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </pre>
+
+   </div>
+
+   <div class="example"><div class="info"><p><strong>
+     Using <strong class="function">getAssoc()</strong> with
+     <em><code class="parameter">$fetchmode</code></em> =
+     <strong class="constant">DB_FETCHMODE_OBJECT</strong>
+     and <em><code class="parameter">$group</code></em> = <strong class="constant">TRUE</strong>
+    </strong></p></div>
+
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /><br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAssoc</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;cf,&nbsp;nf,&nbsp;df&nbsp;FROM&nbsp;foo'</span><span style="color: #007700">,<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,&nbsp;array(),&nbsp;</span><span style="color: #0000BB">DB_FETCHMODE_OBJECT</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /><br /><br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">))&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$data</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />}<br /><br /><br /><br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+    <div class="example-contents"><p>
+     Output:
+    </p></div>
+    <pre class="screen">
+     <br/><br/>Array<br/><br/>(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Juan]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;stdClass&nbsp;Object<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cf]&nbsp;=&gt;&nbsp;Juan<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[nf]&nbsp;=&gt;&nbsp;5<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[df]&nbsp;=&gt;&nbsp;1991-01-11&nbsp;21:31:41<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;[Kyu]&nbsp;=&gt;&nbsp;Array<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;stdClass&nbsp;Object<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cf]&nbsp;=&gt;&nbsp;Kyu<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[nf]&nbsp;=&gt;&nbsp;10<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[df]&nbsp;=&gt;&nbsp;1992-02-12&nbsp;22:32:42<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1]&nbsp;=&gt;&nbsp;stdClass&nbsp;Object<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cf]&nbsp;=&gt;&nbsp;Kyu<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[nf]&nbsp;=&gt;&nbsp;15<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[df]&nbsp;=&gt;&nbsp;1993-03-13&nbsp;23:33:43<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>)<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </pre>
+
+   </div>
+
+  </div>
+
+  <div class="refsection" id="package.database.db.db-common.getassoc.example.params"><div class="info"><h1>Prepare / Execute Mode</h1>
+</div>
+
+
+   <div class="example"><div class="info"><p><strong>
+     Using <strong class="function">getAssoc()</strong>
+     with one placeholder
+    </strong></p></div>
+
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /><br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAssoc</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;cf,&nbsp;df&nbsp;FROM&nbsp;foo&nbsp;WHERE&nbsp;nf&nbsp;=&nbsp;?'</span><span style="color: #007700">,<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">5</span><span style="color: #007700">);<br /><br /><br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">))&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$data</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   </div>
+
+   <div class="example"><div class="info"><p><strong>
+     Using <strong class="function">getAssoc()</strong>
+     with two placeholders
+    </strong></p></div>
+
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /><br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAssoc</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;cf,&nbsp;df&nbsp;FROM&nbsp;foo&nbsp;WHERE&nbsp;nf&nbsp;IN&nbsp;(?,&nbsp;?)'</span><span style="color: #007700">,<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #0000BB">5</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">));<br /><br /><br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">))&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$data</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   </div>
+
+  </div>
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.getassoc.see">
+  <h1 class="title">See</h1>
+  <p class="para">
+   <a href="package.database.db.db-common.setfetchmode.html" class="link">
+    <strong class="function">setFetchMode()</strong></a>,
+   <a href="package.database.db.db-common.getone.html" class="link">
+    <strong class="function">getOne()</strong></a>,
+   <a href="package.database.db.db-common.getrow.html" class="link">
+    <strong class="function">getRow()</strong></a>,
+   <a href="package.database.db.db-common.getcol.html" class="link">
+    <strong class="function">getCol()</strong></a>,
+   <a href="package.database.db.db-common.getall.html" class="link">
+    <strong class="function">getAll()</strong></a>,
+   <a href="package.database.db.db-common.query.html" class="link">
+    <strong class="function">query()</strong></a>,
+   <a href="package.database.db.intro-execute.html" class="link">
+    "<span class="quote">Intro - Prepare &amp; Execute</span>"</a>
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.db.db-common.getall.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.db.html">DB</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.db.db-common.getcol.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">DB_common::getAll()</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">DB_common::getCol()</td>
+  </tr>
+ </table>
+</div>
+</body></html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction - Connect</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.mdb.html" title="MDB" />
+  <link rel="prev" href="package.database.mdb.intro-dsn.html" title="Introduction - DSN" />
+  <link rel="next" href="package.database.mdb.intro-query.html" title="Introduction - Query" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction - Connect</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.mdb.intro-dsn.html" title="Introduction - DSN">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.mdb.intro-query.html" title="Introduction - Query">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.mdb.intro-connect">
+ 
+  <h1 class="refname">Introduction - Connect</h1>
+  <div class="refnamediv">Introduction - Connect &ndash; Connecting and disconnecting a database</div>
+
+ 
+ <div class="refsection" id="package.database.mdb.intro-connect.desc"><div class="info"><h1>Description</h1>
+</div>
+  
+  <p class="simpara">
+   To connect to a database you have to use the function
+   <a href="package.database.mdb.mdb.connect.html" class="link">
+    <strong class="function">MDB::connect()</strong>
+   </a>, which requires a valid
+   <a href="package.database.mdb.intro-dsn.html" class="link">DSN</a>
+   as parameter and
+   optional a boolean value, which determines wether to use a
+   persistent connection or not. In case of  success you get a new
+   instance of the database class. It is strongly recommended to
+   check this return value with <a href="package.database.mdb.mdb.iserror.html" class="link">
+    <strong class="function">MDB::isError()</strong>
+   </a>.
+   To disconnect use the method <a href="package.database.mdb.mdb-common.disconnect.html" class="link">
+    <strong class="function">disconnect()</strong>
+   </a>
+   from your database class instance.
+  </p>
+  <div class="example"><div class="info"><p><strong>Connect and disconnect</strong></p></div>
+   
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'MDB.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$user&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$pass&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'bar'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$host&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'localhost'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$db_name&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'clients_db'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Data&nbsp;Source&nbsp;Name:&nbsp;This&nbsp;is&nbsp;the&nbsp;universal&nbsp;connection&nbsp;string<br /></span><span style="color: #0000BB">$dsn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"mysql://</span><span style="color: #0000BB">$user</span><span style="color: #DD0000">:</span><span style="color: #0000BB">$pass</span><span style="color: #DD0000">@</span><span style="color: #0000BB">$host</span><span style="color: #DD0000">/</span><span style="color: #0000BB">$db_name</span><span style="color: #DD0000">"</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;MDB::connect&nbsp;will&nbsp;return&nbsp;a&nbsp;PEAR&nbsp;MDB&nbsp;object&nbsp;on&nbsp;success<br />//&nbsp;or&nbsp;an&nbsp;PEAR&nbsp;MDB&nbsp;Error&nbsp;object&nbsp;on&nbsp;error<br /><br /></span><span style="color: #0000BB">$db&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">MDB</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;With&nbsp;MDB::isError&nbsp;you&nbsp;can&nbsp;differentiate&nbsp;between&nbsp;an&nbsp;error&nbsp;or<br />//&nbsp;a&nbsp;valid&nbsp;connection.<br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">MDB</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$db</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die&nbsp;(</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /><br />....<br /></span><span style="color: #FF8000">//&nbsp;close&nbsp;conection<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">disconnect</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.mdb.intro-dsn.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.mdb.html">MDB</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.mdb.intro-query.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction - DSN</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Introduction - Query</td>
+  </tr>
+ </table>
+</div>
+</body></html>

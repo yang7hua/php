@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Reading MARC data</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.fileformats.file-marc.html" title="File_MARC" />
+  <link rel="prev" href="package.fileformats.file-marc.html" title="File_MARC" />
+  <link rel="next" href="package.fileformats.file-marc.formatting.html" title="Formatting MARC data" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Reading MARC data</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.fileformats.file-marc.html" title="File_MARC">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.fileformats.file-marc.formatting.html" title="Formatting MARC data">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.fileformats.file-marc.reading">
+ 
+  <h1 class="refname">Reading MARC data</h1>
+  <div class="refnamediv">Reading MARC data &ndash; 
+   Reading MARC data with <strong class="classname">File_MARC</strong>
+  </div>
+
+ 
+
+ <div class="refsection" id="package.fileformats.file-marc.reading.overview"><div class="info"><h1>Overview</h1>
+</div>
+  
+
+  <p class="para">
+   <strong class="classname">File_MARC</strong> allows you to read Machine
+   Readable Cataloging (<span class="acronym">MARC</span>) data in MARC 21 format.
+   <strong class="classname">File_MARCXML</strong>, which is bundled with
+   <strong class="classname">File_MARC</strong>, allows you to read MARCXML formatted
+   data.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.fileformats.file-marc.reading.source"><div class="info"><h1>Reading MARC data from different sources</h1>
+</div>
+  
+  <p class="para">
+   Your input source can be a PHP stream (<strong class="constant">File_MARC::SOURCE_FILE</strong>) or a string
+   (<strong class="constant">File_MARC::SOURCE_STRING</strong>). The source location and source types are the
+   first and second arguments to the <strong class="classname">File_MARC</strong>
+   and <strong class="classname">File_MARCXML</strong> constructors.
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Reading MARC 21 data from a file</strong></p></div>
+   
+   <div class="example-contents"><p>
+    In the following example, MARC21 data has been stored on disk in a file 
+    named <code class="filename">journals.mrc</code>. To read the MARCX21 data, we
+    call the constructor for <strong class="classname">File_MARC</strong>. We do not need
+    to tell File_MARC that <code class="filename">journals.mrc</code> is a filename or
+    stream pointing to the MARC content, because the value of the second
+    parameter of the constructor for <strong class="classname">File_MARC</strong> defaults
+    to <strong class="constant">File_MARC::SOURCE_FILE</strong>.
+   </p></div>
+
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require&nbsp;</span><span style="color: #DD0000">'File/MARC.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Retrieve&nbsp;a&nbsp;set&nbsp;of&nbsp;MARC&nbsp;records&nbsp;from&nbsp;a&nbsp;file<br /></span><span style="color: #0000BB">$journals&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">File_MARC</span><span style="color: #007700">(</span><span style="color: #DD0000">'journals.mrc'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Iterate&nbsp;through&nbsp;the&nbsp;retrieved&nbsp;records<br /></span><span style="color: #007700">while&nbsp;(</span><span style="color: #0000BB">$record&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$journals</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">next</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Pretty&nbsp;print&nbsp;each&nbsp;record<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">print&nbsp;</span><span style="color: #0000BB">$record</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+  </div>
+
+  <div class="example"><div class="info"><p><strong>Reading MARCXML data from a string</strong></p></div>
+   
+   <div class="example-contents"><p>
+    In the following example, MARCXML data has been returned from a call to
+    a Web service and has therefore been stored in a PHP variable, 
+    <code class="varname">$xml_data</code>, as a string. To read the MARCXML data, we
+    call the constructor for <strong class="classname">File_MARCXML</strong>. To tell
+    File_MARCXML that <code class="varname">$xml_data</code> is a string, we specify
+    <strong class="constant">File_MARC::SOURCE_STRING</strong> as the second parameter of the
+    constructor.
+   </p></div>
+
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require&nbsp;</span><span style="color: #DD0000">'File/MARCXML.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Retrieve&nbsp;a&nbsp;set&nbsp;of&nbsp;MARCXML&nbsp;records&nbsp;from&nbsp;a&nbsp;string<br /></span><span style="color: #0000BB">$journals&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">File_MARCXML</span><span style="color: #007700">(</span><span style="color: #0000BB">$xml_data</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">File_MARC</span><span style="color: #007700">::</span><span style="color: #0000BB">SOURCE_STRING</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Iterate&nbsp;through&nbsp;the&nbsp;retrieved&nbsp;records<br /></span><span style="color: #007700">while&nbsp;(</span><span style="color: #0000BB">$record&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$journals</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">next</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Pretty&nbsp;print&nbsp;each&nbsp;record<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">print&nbsp;</span><span style="color: #0000BB">$record</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+  </div>
+ </div>
+
+ <div class="refsection" id="package.fileformats.file-marc.reading.structure"><div class="info"><h1>Reading MARC data from different sources</h1>
+</div>
+  
+  <p class="para">
+   A <strong class="classname">File_MARC</strong> object consists of a leader and an
+   iterable set of <strong class="classname">File_MARC_Record</strong> objects
+   representing MARC records. Each of these, in turn, consists of an
+   iterable set of <strong class="classname">File_MARC_Data_Field</strong> or
+   <strong class="classname">File_MARC_Control_Field</strong> objects representing MARC
+   fields. A <strong class="classname">File_MARC_Data_Field</strong> consists of a set of
+   iterable <strong class="classname">File_MARC_Subfield</strong> objects representing
+   MARC subfields.
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Printing the elements of a record</strong></p></div>
+   
+
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require&nbsp;</span><span style="color: #DD0000">'File/MARC.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Retrieve&nbsp;a&nbsp;set&nbsp;of&nbsp;MARC&nbsp;records<br /></span><span style="color: #0000BB">$bibrecords&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">File_MARC</span><span style="color: #007700">(</span><span style="color: #DD0000">'catdump.mrc'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">File_MARC</span><span style="color: #007700">::</span><span style="color: #0000BB">SOURCE_FILE</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Iterate&nbsp;through&nbsp;the&nbsp;retrieved&nbsp;records<br /></span><span style="color: #007700">while&nbsp;(</span><span style="color: #0000BB">$record&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$bibrecords</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">next</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Print&nbsp;the&nbsp;leader<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">print&nbsp;</span><span style="color: #0000BB">$record</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getLeader</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$subjects&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$record</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getFields</span><span style="color: #007700">(</span><span style="color: #DD0000">'650'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$subjects</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Retrieve&nbsp;just&nbsp;the&nbsp;first&nbsp;24_&nbsp;field<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">print&nbsp;</span><span style="color: #0000BB">$record</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getField</span><span style="color: #007700">(</span><span style="color: #DD0000">'24.'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Now&nbsp;print&nbsp;all&nbsp;of&nbsp;the&nbsp;retrieved&nbsp;subjects<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">foreach&nbsp;(</span><span style="color: #0000BB">$subjects&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$field</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #0000BB">$field</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+
+  </div>
+
+
+  <p class="para">
+   All of this means that <strong class="classname">File_MARC</strong> makes it easy
+   to read in a set of MARC records and iterate through the contents to retrieve 
+   specific fields and subfields. 
+   
+   <strong class="classname">File_MARC</strong> offers
+   convenience methods for retrieving specific fields without forcing you to
+   iterate through the fields. <code class="methodname">getField</code> returns
+   the first field that matches the field name, while
+   <code class="methodname">getFields</code> returns an array of all of the fields
+   that match the specified field name. Both of these methods accept an
+   optional boolean parameter that specifies whether your match string should
+   be treated as a Perl Compatible Regular Expression.
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Retrieving all 650 fields from a record</strong></p></div>
+   
+
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require&nbsp;</span><span style="color: #DD0000">'File/MARC.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Retrieve&nbsp;a&nbsp;set&nbsp;of&nbsp;MARC&nbsp;records&nbsp;from&nbsp;a&nbsp;z39&nbsp;result&nbsp;string<br /></span><span style="color: #0000BB">$bibrecords&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">File_MARC</span><span style="color: #007700">(</span><span style="color: #0000BB">$z39_result</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">File_MARC</span><span style="color: #007700">::</span><span style="color: #0000BB">SOURCE_STRING</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Iterate&nbsp;through&nbsp;the&nbsp;retrieved&nbsp;records<br /></span><span style="color: #007700">while&nbsp;(</span><span style="color: #0000BB">$record&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$bibrecords</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">next</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Retrieve&nbsp;an&nbsp;array&nbsp;of&nbsp;all&nbsp;of&nbsp;the&nbsp;650&nbsp;fields<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$subjects&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$record</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getFields</span><span style="color: #007700">(</span><span style="color: #DD0000">'650'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$subjects</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Retrieve&nbsp;just&nbsp;the&nbsp;first&nbsp;24_&nbsp;field<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">print&nbsp;</span><span style="color: #0000BB">$record</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getField</span><span style="color: #007700">(</span><span style="color: #DD0000">'24.'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Now&nbsp;print&nbsp;all&nbsp;of&nbsp;the&nbsp;retrieved&nbsp;subjects<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">foreach&nbsp;(</span><span style="color: #0000BB">$subjects&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$field</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #0000BB">$field</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+  </div>
+ </div>
+
+ <div class="refsection" id="package.fileformats.file-marc.reading.iterating"><div class="info"><h1>Iterating through fields and subfields</h1>
+</div>
+  
+  <p class="para">
+   When you iterate over a <strong class="classname">File_MARC_Data_Field</strong> object
+   using <strong class="function">foreach()</strong>, the MARC tag for the given field is
+   returned as the key for the element and the set of subfields is returned
+   as the value of the element.
+  </p>
+  <p class="para">
+   Similarly, when you iterate over a <strong class="classname">File_MARC_Subfield</strong>
+   object using <strong class="function">foreach()</strong>, the code for the given subfield
+   is returned as the key of the element and the value of the given subfield
+   is returned as the value of the element.
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Iterating over fields and subfields in a MARC record</strong></p></div>
+   
+   <div class="example-contents"><p>
+    In the following example, we iterate through a set of 650 fields
+    to print out the subject headings contained in the subfields for each
+    field.
+   </p></div>
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require&nbsp;</span><span style="color: #DD0000">'File/MARC.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Retrieve&nbsp;a&nbsp;set&nbsp;of&nbsp;MARC&nbsp;records&nbsp;from&nbsp;a&nbsp;z39&nbsp;result&nbsp;string<br /></span><span style="color: #0000BB">$bibrecords&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">File_MARC</span><span style="color: #007700">(</span><span style="color: #0000BB">$z39_result</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">File_MARC</span><span style="color: #007700">::</span><span style="color: #0000BB">SOURCE_STRING</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Go&nbsp;through&nbsp;each&nbsp;record<br /></span><span style="color: #007700">while&nbsp;(</span><span style="color: #0000BB">$record&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$bibrecords</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">next</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Iterate&nbsp;through&nbsp;the&nbsp;fields<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">foreach&nbsp;(</span><span style="color: #0000BB">$record</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getFields</span><span style="color: #007700">()&nbsp;as&nbsp;</span><span style="color: #0000BB">$tag&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$subfields</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Skip&nbsp;everything&nbsp;except&nbsp;for&nbsp;650&nbsp;fields<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">$tag&nbsp;</span><span style="color: #007700">==&nbsp;</span><span style="color: #DD0000">'650'</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #DD0000">"Subject:"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;foreach&nbsp;(</span><span style="color: #0000BB">$subfields</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getSubfields</span><span style="color: #007700">()&nbsp;as&nbsp;</span><span style="color: #0000BB">$code&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$value</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #DD0000">"&nbsp;</span><span style="color: #0000BB">$value</span><span style="color: #DD0000">"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+
+  </div>
+
+ </div>
+
+ <div class="refsection" id="package.fileformats.file-marc.reading.indicators"><div class="info"><h1>Retrieving field indicators</h1>
+</div>
+  
+  <p class="para">
+   Data fields, represented by the <strong class="classname">File_MARC_Data_Field</strong>
+   class, offer a <strong class="function">getIndicator()</strong> function to enable you to
+   retrieve the value of an indicator.
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Retrieving an indicator</strong></p></div>
+   
+   <div class="example-contents"><p>
+    In the following example, we retrieve the title (245) field of a MARC
+    record and check the second indicator for the field to determine whether
+    there are non-filing indicators that we should ignore when sorting the
+    contents of the field.
+   </p></div>
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require&nbsp;</span><span style="color: #DD0000">'File/MARC.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$titleField&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$record</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getField</span><span style="color: #007700">(</span><span style="color: #DD0000">'245'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$nonfiling&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$titleField</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getIndicator</span><span style="color: #007700">(</span><span style="color: #0000BB">2</span><span style="color: #007700">);<br /><br />if&nbsp;(</span><span style="color: #0000BB">$nonfiling</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Sort&nbsp;using&nbsp;the&nbsp;subset&nbsp;of&nbsp;the&nbsp;$a&nbsp;subfield<br />&nbsp;&nbsp;</span><span style="color: #0000BB">$title&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">substr</span><span style="color: #007700">(</span><span style="color: #0000BB">$titleField</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getSubfield</span><span style="color: #007700">(</span><span style="color: #DD0000">'a'</span><span style="color: #007700">),&nbsp;</span><span style="color: #0000BB">$nonfiling</span><span style="color: #007700">);<br />}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Sort&nbsp;using&nbsp;the&nbsp;entire&nbsp;contents&nbsp;of&nbsp;the&nbsp;$a&nbsp;subfield<br />&nbsp;&nbsp;</span><span style="color: #0000BB">$title&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$titleField</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getSubfield</span><span style="color: #007700">(</span><span style="color: #DD0000">'a'</span><span style="color: #007700">);<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+
+  </div>
+
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.fileformats.file-marc.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.fileformats.file-marc.html">File_MARC</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.fileformats.file-marc.formatting.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">File_MARC</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Formatting MARC data</td>
+  </tr>
+ </table>
+</div>
+</body></html>

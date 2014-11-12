@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Tutorial: Create an RSS Feed</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.xml.xml-serializer.html" title="XML_Serializer" />
+  <link rel="prev" href="package.xml.xml-serializer.xml-serializer.examples.html" title="Example" />
+  <link rel="next" href="package.xml.xml-serializer.xml-unserializer-summary.html" title="Class Summary XML_Unserializer" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Tutorial: Create an RSS Feed</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.xml.xml-serializer.xml-serializer.examples.html" title="Example">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.xml.xml-serializer.xml-unserializer-summary.html" title="Class Summary XML_Unserializer">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.xml.xml-serializer.xml-serializer.tutorial-rss">
+ 
+  <h1 class="refname">Tutorial: Create an RSS Feed</h1>
+  <div class="refnamediv">Tutorial: Create an RSS Feed &ndash; How to use XML_Serializer to build an RSS Newsfeed</div>
+
+ 
+
+ <div class="refsection" id="package.xml.xml-serializer.xml-serializer.tutorial-rss.mission"><div class="info"><h1>Mission</h1>
+</div>
+  
+
+  <blockquote class="note">
+   <p class="para">
+  This tutorial has been written by cnb and been published on
+  <a href="http://freedomink.org/node/62" class="link external">http://freedomink.org/node/62</a>.
+  The site is offline since 2005 and has been rescued using the
+  Internet Archive&#039;s Wayback Machine.
+   </p>
+  </blockquote>
+
+
+  <p class="para">
+   Here&#039;s how you can create an XML news feed in just five minutes using PHP,
+   PEAR and the PEAR XML_Serializer package by Stephan Schmidt.
+  </p>
+  <p class="para">
+   What a news feed consists of in it&#039;s barest form is your &quot;site name&quot;,
+   &quot;site url&quot; and a &quot;listing of stories&quot; from your site.
+   To create a news feed what we need to do is create a publically accessible
+   (web) document which can show this information in a format other sites can
+   understand. This is possible by creating this document in the standard RDF
+   Site Summary (RSS) format. A format used by many sites.
+  </p>
+  <p class="para">
+   What we are aiming at is creating a document which looks like the following:
+  </p>
+  <blockquote class="note">
+   <p class="para">
+    This isn&#039;t &quot;well formed&quot; XML but a stripped version making it as simple as
+    possible for illustrative purposes.
+    Once we understand the basics we can move on to create well formed XML.
+   </p>
+  </blockquote>
+
+  <div class="xmlcode"><pre class="xmlcode">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;rdf:RDF&gt;
+    &lt;channel&gt;
+        &lt;title&gt;Freedom Ink&lt;/title&gt;
+        &lt;link&gt;http://freedomink.org/&lt;/link&gt;
+        &lt;item&gt;
+            &lt;item&gt;
+                &lt;title&gt;First Article&lt;/title&gt;
+                &lt;link&gt;http://freedomink.org/node/view/55&lt;/link&gt;
+                &lt;description&gt;Short blurb about article........&lt;/description&gt;
+            &lt;/item&gt;
+            &lt;item&gt;
+                &lt;title&gt;Second Article&lt;/title&gt;
+                &lt;link&gt;http://freedomink.org/node/view/11&lt;/link&gt;
+                &lt;description&gt;This article shows you how ......&lt;/description&gt;
+            &lt;/item&gt;
+        &lt;/item&gt;
+    &lt;/channel&gt;
+&lt;/rdf:RDF&gt;</pre>
+</div>
+ </div>
+
+ <div class="refsection" id="package.xml.xml-serializer.xml-serializer.tutorial-rss.inphp"><div class="info"><h1>Do it in PHP</h1>
+</div>
+  
+  <p class="para">
+   Here&#039;s an easy way to do it in PHP.
+  </p>
+  <p class="para">
+   Prerequisite: Install PEAR and the <strong class="classname">XML_Serializer</strong> package.
+  </p>
+  <p class="para">
+   Include the following default options at the top of your php page.
+  </p>
+  <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'XML/Serializer.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"indent"&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">"&nbsp;&nbsp;&nbsp;&nbsp;"</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"linebreak"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"typeHints"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"addDecl"&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"encoding"&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">"UTF-8"</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"rootName"&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">"rdf:RDF"</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"defaultTagName"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">"item"<br /></span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+  <p class="para">
+   Let us first create an array containing a listing of the stories on your
+   site.
+  </p>
+  <p class="para">
+   We create array <code class="varname">$stories</code> and add one story.
+  </p>
+  <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$stories</span><span style="color: #007700">[]&nbsp;=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'title'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'First&nbsp;Article'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'link'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'http://freedomink.org/node/view/55'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'description'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Short&nbsp;blurb&nbsp;about&nbsp;article........'<br /></span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+  <p class="para">
+   You can add more stories to the array in the same manner.
+   Ideally this should be done in a &quot;for&quot; or &quot;foreach&quot; loop.
+  </p>
+  <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$stories</span><span style="color: #007700">[]&nbsp;=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'title'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Second&nbsp;Article'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'link'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'http://freedomink.org/node/view/11'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'description'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'This&nbsp;article&nbsp;shows&nbsp;you&nbsp;how&nbsp;......'<br /></span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+  <p class="para">
+   Finally we specify the channel details and add the stories to it.
+  </p>
+  <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$data</span><span style="color: #007700">[</span><span style="color: #DD0000">'channel'</span><span style="color: #007700">]&nbsp;=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"title"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">"Freedom&nbsp;Ink"</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"link"&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">"http://freedomink.org/"</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$stories<br /></span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+  <p class="para">
+   Now we generate the XML using the PEAR <strong class="classname">XML_Serializer</strong>
+   package.
+  </p>
+  <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$serializer&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">XML_Serializer</span><span style="color: #007700">(</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /><br />if&nbsp;(</span><span style="color: #0000BB">$serializer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">serialize</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">header</span><span style="color: #007700">(</span><span style="color: #DD0000">'Content-type:&nbsp;text/xml'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$serializer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getSerializedData</span><span style="color: #007700">();<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+  <p class="para">
+   And that&#039;s it! When a person visits the page containing this code an XML
+   file like the one we saw above will be generated and served.
+  </p>
+  <p class="para">
+   To learn how to parse XML/RSS files you can read this related article which
+   has by far the easiest method of parsing XML/RSS documents.
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.xml.xml-serializer.xml-serializer.examples.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.xml.xml-serializer.html">XML_Serializer</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.xml.xml-serializer.xml-unserializer-summary.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Example</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Class Summary XML_Unserializer</td>
+  </tr>
+ </table>
+</div>
+</body></html>

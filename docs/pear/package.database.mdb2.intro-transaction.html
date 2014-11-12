@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Transactions</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.mdb2.html" title="MDB2" />
+  <link rel="prev" href="package.database.mdb2.intro-execute.html" title="Prepare &amp; Execute" />
+  <link rel="next" href="package.database.mdb2.intro-module.html" title="Modules" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Transactions</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.mdb2.intro-execute.html" title="Prepare &amp; Execute">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.mdb2.intro-module.html" title="Modules">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.mdb2.intro-transaction">
+ 
+  <h1 class="refname">Transactions</h1>
+  <div class="refnamediv">Transactions &ndash; Performing transactions</div>
+
+ 
+
+ <div class="refsection" id="package.database.mdb2.intro-transaction.desc">
+  <h1 class="title">Description</h1>
+  <p class="para">
+   PEAR MDB2 defaults to auto-committing all queries. However using the
+   <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Common.html#methodbeginTransaction" class="link external">
+   <strong class="function">beginTransaction()</strong></a> method one can open a new transaction
+   and with the <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Common.html#methodcommit" class="link external">
+   <strong class="function">commit()</strong></a> and
+   <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Common.html#methodrollback" class="link external">
+   <strong class="function">rollback()</strong></a> methods, a transaction is finished. These
+   three methods optionally accept a string name of a savepoint to set, release
+   or rollback to respectively. The method
+    <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Common.html#methodinTransaction" class="link external">
+   <strong class="function">inTransaction()</strong></a> may be used to check if a transaction is
+   currently open.
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Doing a transaction</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Create&nbsp;a&nbsp;valid&nbsp;MDB2&nbsp;object&nbsp;named&nbsp;$mdb2<br />//&nbsp;at&nbsp;the&nbsp;beginning&nbsp;of&nbsp;your&nbsp;program...<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'MDB2.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$mdb2&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">MDB2</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #DD0000">'pgsql://usr:pw@localhost/dbnam'</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;check&nbsp;if&nbsp;transaction&nbsp;are&nbsp;supported&nbsp;by&nbsp;this&nbsp;driver<br /></span><span style="color: #007700">if&nbsp;(!</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">supports</span><span style="color: #007700">(</span><span style="color: #DD0000">'transactions'</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;exit();<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;Open&nbsp;a&nbsp;transaction<br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">beginTransaction</span><span style="color: #007700">();<br /><br />..<br /><br /></span><span style="color: #FF8000">//&nbsp;check&nbsp;if&nbsp;we&nbsp;are&nbsp;inside&nbsp;a&nbsp;transaction&nbsp;and&nbsp;if&nbsp;savepoints&nbsp;are&nbsp;supported<br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">inTransaction</span><span style="color: #007700">()&nbsp;&amp;&amp;&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">supports</span><span style="color: #007700">(</span><span style="color: #DD0000">'savepoints'</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Set&nbsp;a&nbsp;savepoint<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$savepoint&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'MYSAVEPOINT'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">beginTransaction</span><span style="color: #007700">(</span><span style="color: #0000BB">$savepoint</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;..<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;determine&nbsp;if&nbsp;the&nbsp;savepoint&nbsp;should&nbsp;be&nbsp;released&nbsp;or&nbsp;to&nbsp;rollback&nbsp;to&nbsp;the&nbsp;savepoint<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">$error_condition</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">rollback</span><span style="color: #007700">(</span><span style="color: #0000BB">$savepoint</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">commit</span><span style="color: #007700">(</span><span style="color: #0000BB">$savepoint</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /><br />..<br /><br /></span><span style="color: #FF8000">//&nbsp;determine&nbsp;if&nbsp;the&nbsp;commit&nbsp;or&nbsp;rollback<br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">$error_condition</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">rollback</span><span style="color: #007700">();<br />}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">commit</span><span style="color: #007700">();<br />}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+
+   <blockquote class="warning">
+
+    <p class="para">
+     PEAR MDB2 does not emulate transactions or savepoints. This means that it
+     depends on the underlying RDBMS (and in the case of MySQL the storage
+     engines used) if transactions will be available in MDB2. Also note that
+     some RDBMS implicitly commit transactions when executing DDL statements - 
+     notable exceptions are Oracle and PostgreSQL.
+    </p>
+   </blockquote>
+
+
+  <p class="para">
+   MDB2 also supports &quot;nested&quot; transactions using the
+   <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Common.html#methodbeginNestedTransaction" class="link external">
+   <strong class="function">beginNestedTransaction()</strong></a> method. Actually these are not
+   true nested transactions as they are natively supported in Interbase for
+   example. MDB2 maintains a counter of opened nested transactions. The
+   transaction is finished once that counter is decremented back to 1 with
+   <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Common.html#methodcompleteNestedTransaction" class="link external">
+   <strong class="function">completeNestedTransaction()</strong></a> calls. If the RDBMS supports
+   savepoints then MDB2 will automatically set a savepoint on every call of the
+   <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Common.html#methodbeginNestedTransaction" class="link external">
+   <strong class="function">beginNestedTransaction()</strong></a> method after the initial call
+   and will return the name. These savepoints are automatically released by the
+   <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Common.html#methodcompleteNestedTransaction" class="link external">
+   <strong class="function">completeNestedTransaction()</strong></a> method. The name of these
+   automatic savepoints are determined by the &quot;savepoint_format&quot; option
+   and the nested transaction counter. The &quot;savepoint_format&quot; defaults to
+   &#039;MDB2_SAVEPOINT_%s&#039;.
+  </p>
+
+  <p class="para">
+   If, after initially opening a nested transaction, an unexpected PEAR error is raised on the
+   MDB2 instance the transaction is rolled back, otherwise it is commited at
+   this point. Using the <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Common.html#methodgetNestedTransactionError" class="link external">
+   <strong class="function">getNestedTransactionError()</strong></a> method it is possible to check
+   if there has been an error inside the transaction. Alternatively a rollback
+   can be forced using the 
+   <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Common.html#methodfailNestedTransaction" class="link external">
+   <strong class="function">failNestedTransaction()</strong></a>. This method optionally accepts
+   a mixed parameter which will set the error to return if the
+   <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Common.html#methodgetNestedTransactionError" class="link external">
+   <strong class="function">getNestedTransactionError()</strong></a> method is called, as well as
+   a second boolean parameter that optionally forces an immidiate rollback.
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Using emulated nested transactions</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br />$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">beginNestedTransaction</span><span style="color: #007700">();&nbsp;</span><span style="color: #FF8000">#&nbsp;open&nbsp;transaction<br /><br /></span><span style="color: #0000BB">$query&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"INSERT&nbsp;INTO&nbsp;autoinc&nbsp;(id)&nbsp;VALUES&nbsp;(?)"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$stmt&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">prepare</span><span style="color: #007700">(</span><span style="color: #0000BB">$query</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$stmt</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">execute</span><span style="color: #007700">(array(</span><span style="color: #0000BB">1</span><span style="color: #007700">));<br /><br /></span><span style="color: #0000BB">$savepoint&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">beginNestedTransaction</span><span style="color: #007700">();&nbsp;</span><span style="color: #FF8000">#&nbsp;ignored&nbsp;/&nbsp;sets&nbsp;savepoint<br /><br /></span><span style="color: #007700">..<br /><br /></span><span style="color: #FF8000">//&nbsp;never&nbsp;true&nbsp;for&nbsp;this&nbsp;example<br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">false</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;raise&nbsp;an&nbsp;error<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$error&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">raiseError</span><span style="color: #007700">(</span><span style="color: #0000BB">MDB2_ERROR</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'kaboom'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">failNestedTransaction</span><span style="color: #007700">();<br />}<br /><br />if((</span><span style="color: #0000BB">$error&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getNestedTransactionError</span><span style="color: #007700">()))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$error</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getUserinfo</span><span style="color: #007700">());<br />}<br /><br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">completeNestedTransaction</span><span style="color: #007700">();&nbsp;</span><span style="color: #FF8000">#&nbsp;ignored&nbsp;/&nbsp;releases&nbsp;savepoint<br /><br /></span><span style="color: #0000BB">$stmt</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">execute</span><span style="color: #007700">(array(</span><span style="color: #0000BB">2</span><span style="color: #007700">));<br /><br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">completeNestedTransaction</span><span style="color: #007700">();&nbsp;</span><span style="color: #FF8000">#&nbsp;commit<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+
+  <p class="para">
+   Finally MDB2 supports setting the transaction isolation level as per the
+   SQL 92 standard using the
+   <a href="http://pear.php.net/package/MDB2/docs/latest/MDB2/MDB2_Driver_Common.html#methodsetTransactionIsolation" class="link external">
+   <strong class="function">setTransactionIsolation()</strong></a> method. If a given RDBMS
+   does not support a given isolation level but supports a higher more strict
+   isolation level, then MDB2 silently uses that higher transaction level. Some
+   RDBMS systems support additional options which are silently ignored if they are not
+   supported.
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Setting the transaction isolation level</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br />$options&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'wait'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'WAIT'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'rw'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'READ&nbsp;WRITE'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'wait'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'NO&nbsp;WAIT'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'rw'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'READ&nbsp;ONLY'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$isolation_level&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">READ&nbsp;UNCOMMITTED&nbsp;</span><span style="color: #FF8000">#&nbsp;(allows&nbsp;dirty&nbsp;reads)<br /></span><span style="color: #0000BB">$isolation_level&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">READ&nbsp;COMMITTED&nbsp;</span><span style="color: #FF8000">#&nbsp;(prevents&nbsp;dirty&nbsp;reads)<br /></span><span style="color: #0000BB">$isolation_level&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">REPEATABLE&nbsp;READ&nbsp;</span><span style="color: #FF8000">#&nbsp;(prevents&nbsp;nonrepeatable&nbsp;reads)<br /></span><span style="color: #0000BB">$isolation_level&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">SERIALIZABLE&nbsp;</span><span style="color: #FF8000">#&nbsp;(prevents&nbsp;phantom&nbsp;reads)<br /></span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setTransactionIsolation</span><span style="color: #007700">(</span><span style="color: #0000BB">$isolation_level</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.mdb2.intro-execute.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.mdb2.html">MDB2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.mdb2.intro-module.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Prepare &amp; Execute</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Modules</td>
+  </tr>
+ </table>
+</div>
+</body></html>

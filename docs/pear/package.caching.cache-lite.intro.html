@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.caching.cache-lite.html" title="Cache_Lite" />
+  <link rel="prev" href="package.caching.cache-lite.html" title="Cache_Lite" />
+  <link rel="next" href="package.caching.cache-lite.cache-lite.cache-lite.html" title="constructor Cache_Lite::Cache_Lite" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.caching.cache-lite.html" title="Cache_Lite">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.caching.cache-lite.cache-lite.cache-lite.html" title="constructor Cache_Lite::Cache_Lite">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.caching.cache-lite.intro">
+ 
+  <h1 class="refname">Introduction</h1>
+  <div class="refnamediv">Introduction &ndash; Introduction to Cache_Lite</div>
+
+ 
+
+ <div class="refsection" id="package.caching.cache-lite.intro.desc">
+  <h1 class="title">Description</h1>
+  <p class="para">
+   PEAR::Cache_Lite is a little cache system. It&#039;s optimized for high traffic
+   websites so it is really fast and safe (because it uses file locking and/or
+   anti-corruption tests).
+  </p>
+  <p class="para">
+   Note : An independent documentation of Cache_Lite is available in chinese
+   <a href="http://rainx.phpmore.com/manual/cache_lite.html" class="link external">on this
+   page</a>.
+  </p>
+ </div>
+ 
+ <div class="refsection" id="package.caching.cache-lite.intro.technical"><div class="info"><h1>Goals and technical details</h1>
+</div>
+  
+  <div class="refsection" id="package.caching.cache-lite.intro.technical.speed"><div class="info"><h1>speed</h1>
+</div>
+   
+   <p class="para">
+    Before all, PEAR::Cache_Lite has to be extremely fast. That returns the 
+    use of PEAR possible on sites with high traffic without falling in hi-level
+    hardware solutions.
+   </p>
+   <p class="para">
+    You can find more details about cache_lite technical choices on  
+    <a href="http://svn.php.net/viewvc/pear/packages/Cache_Lite/trunk/docs/technical?view=markup" class="link external">this document</a>, 
+    but the main idea is to include PEAR.php file <em class="emphasis">ONLY</em> when 
+    an error occurs (very rare). 
+   </p>
+  </div>
+  <div class="refsection" id="package.caching.cache-lite.intro.technical.simplicity"><div class="info"><h1>simplicity</h1>
+</div>
+   
+   <p class="para">
+    Because the cache system is often embedded in the application layer, 
+    PEAR::Cache_Lite kernel has to be small and flexible with an adapted licence (LGPL).
+    Advanced functionality can be found in files that extend the core.
+   </p>
+  </div>
+  <div class="refsection"><div class="info"><h1>security</h1>
+</div>
+   
+   <p class="para">
+    On high traffic websites, the cache system has to be really protected against
+    cache files corruptions (because of concurrent accesses in read/write mode).
+    Very few cache systems offer a protection against this problem.
+   </p>
+   <p class="para">
+    File locking is not a perfect solution because it is useless with NFS 
+    or multithreaded servers. So in addition to it, PEAR::Cache_Lite offers two
+    fully transparent mechanisms (based on hash keys) to guarantee the security
+    of the data in all circumstances. Just have a look at the link given in
+    the previous paragraph for more details.
+   </p>
+  </div>
+ </div>
+ 
+ <div class="refsection" id="package.caching.cache-lite.intro.usage"><div class="info"><h1>Usage</h1>
+</div>
+  
+  <div class="refsection" id="package.caching.cache-lite.intro.usage.general"><div class="info"><h1>general usage</h1>
+</div>
+   
+   <p class="para">
+    Every module of Cache_Lite follows the same philosophy.
+   </p>
+   <p class="para">
+    Parameters (others than default ones) are passed to the constructor 
+    by using an associative array.
+   </p>
+   <p class="para">
+    A cache file is identified by a cache ID (and eventually a group). 
+    For obvious flexibility reasons, the logic of IDs choice is left to the 
+    developer.
+   </p>
+   <p class="para">
+    In the following, we will use the term &quot;group&quot; as a pool of cache files and
+    the term &quot;block&quot; as a piece of an HTML page.
+   </p>
+  </div>
+  <div class="refsection" id="package.caching.cache-lite.intro.usage.core"><div class="info"><h1>core</h1>
+</div>
+   
+   <p class="para">
+    Let&#039;s start with a simple example : the page is built, then recovered with 
+    a unique variable (string):
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;Include&nbsp;the&nbsp;package<br /></span><span style="color: #007700">require_once(</span><span style="color: #DD0000">'Cache/Lite.php'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Set&nbsp;a&nbsp;id&nbsp;for&nbsp;this&nbsp;cache<br /></span><span style="color: #0000BB">$id&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'123'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Set&nbsp;a&nbsp;few&nbsp;options<br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'cacheDir'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'/tmp/'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'lifeTime'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">3600<br /></span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Create&nbsp;a&nbsp;Cache_Lite&nbsp;object<br /></span><span style="color: #0000BB">$Cache_Lite&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Cache_Lite</span><span style="color: #007700">(</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Test&nbsp;if&nbsp;thereis&nbsp;a&nbsp;valide&nbsp;cache&nbsp;for&nbsp;this&nbsp;id<br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$Cache_Lite</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">get</span><span style="color: #007700">(</span><span style="color: #0000BB">$id</span><span style="color: #007700">))&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Cache&nbsp;hit&nbsp;!<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;Content&nbsp;is&nbsp;in&nbsp;$data<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;(...)<br /><br /></span><span style="color: #007700">}&nbsp;else&nbsp;{&nbsp;</span><span style="color: #FF8000">//&nbsp;No&nbsp;valid&nbsp;cache&nbsp;found&nbsp;(you&nbsp;have&nbsp;to&nbsp;make&nbsp;the&nbsp;page)<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;Cache&nbsp;miss&nbsp;!<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;Put&nbsp;in&nbsp;$data&nbsp;datas&nbsp;to&nbsp;put&nbsp;in&nbsp;cache<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;(...)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$Cache_Lite</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">save</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br /><br />}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+   <p class="para">
+    If you wish use a cache per block and not a global cache, take as
+    example the following script:
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once(</span><span style="color: #DD0000">'Cache/Lite.php'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'cacheDir'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'/tmp/'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'lifeTime'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">3600<br /></span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Create&nbsp;a&nbsp;Cache_Lite&nbsp;object<br /></span><span style="color: #0000BB">$Cache_Lite&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Cache_Lite</span><span style="color: #007700">(</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /><br />if&nbsp;(</span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$Cache_Lite</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">get</span><span style="color: #007700">(</span><span style="color: #DD0000">'block1'</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br />}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'Data&nbsp;of&nbsp;the&nbsp;block&nbsp;1'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$Cache_Lite</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">save</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br />}<br /><br />echo(</span><span style="color: #DD0000">'&lt;br&gt;&lt;br&gt;Non&nbsp;cached&nbsp;line&nbsp;!&lt;br&gt;&lt;br&gt;'</span><span style="color: #007700">);<br /><br />if&nbsp;(</span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$Cache_Lite</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">get</span><span style="color: #007700">(</span><span style="color: #DD0000">'block2'</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br />}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'Data&nbsp;of&nbsp;the&nbsp;block&nbsp;2'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$Cache_Lite</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">save</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br />}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+  </div>
+  <div class="refsection" id="package.caching.cache-lite.intro.usage.output"><div class="info"><h1>core</h1>
+</div>
+   
+   <p class="para">
+    However, it is not always possible to recover all the contents of a page in
+    a single string variable. Thus Cache_Lite_Output comes to our aid :
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">require_once(</span><span style="color: #DD0000">'Cache/Lite/Output.php'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'cacheDir'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'/tmp/'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'lifeTime'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">10<br /></span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$cache&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Cache_Lite_Output</span><span style="color: #007700">(</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /><br />if&nbsp;(!(</span><span style="color: #0000BB">$cache</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">start</span><span style="color: #007700">(</span><span style="color: #DD0000">'123'</span><span style="color: #007700">)))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Cache&nbsp;missed...<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">for(</span><span style="color: #0000BB">$i</span><span style="color: #007700">=</span><span style="color: #0000BB">0</span><span style="color: #007700">;</span><span style="color: #0000BB">$i</span><span style="color: #007700">&lt;</span><span style="color: #0000BB">1000</span><span style="color: #007700">;</span><span style="color: #0000BB">$i</span><span style="color: #007700">++)&nbsp;{&nbsp;</span><span style="color: #FF8000">//&nbsp;Making&nbsp;of&nbsp;the&nbsp;page...<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo(</span><span style="color: #DD0000">'0123456789'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$cache</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">end</span><span style="color: #007700">();<br />}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+   <p class="para">
+    The idea is the same for a per block usage :
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">require_once(</span><span style="color: #DD0000">'Cache/Lite/Output.php'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'cacheDir'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'/tmp/'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'lifeTime'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">10<br /></span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$cache&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Cache_Lite_Output</span><span style="color: #007700">(</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /><br />if&nbsp;(!(</span><span style="color: #0000BB">$cache</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">start</span><span style="color: #007700">(</span><span style="color: #DD0000">'block1'</span><span style="color: #007700">)))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Cache&nbsp;missed...<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo(</span><span style="color: #DD0000">'Data&nbsp;of&nbsp;the&nbsp;block&nbsp;1&nbsp;!'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$cache</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">end</span><span style="color: #007700">();<br />}<br /><br />echo(</span><span style="color: #DD0000">'Non&nbsp;cached&nbsp;line&nbsp;!'</span><span style="color: #007700">);<br /><br />if&nbsp;(!(</span><span style="color: #0000BB">$cache</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">start</span><span style="color: #007700">(</span><span style="color: #DD0000">'block2'</span><span style="color: #007700">)))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Cache&nbsp;missed...<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo(</span><span style="color: #DD0000">'Data&nbsp;of&nbsp;the&nbsp;block&nbsp;2&nbsp;!'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$cache</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">end</span><span style="color: #007700">();<br />}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+  </div>
+  <div class="refsection" id="package.caching.cache-lite.intro.usage.important"><div class="info"><h1>IMPORTANT NOTE</h1>
+</div>
+   
+   <p class="para">
+    For a maximum efficiency with Cache_Lite, do not systematically include 
+    every package the page needs. <em class="emphasis">ONLY</em> load the modules
+    you need when the page is not in the cache (and has 
+    to be recomputed) by using a conditional inclusion.
+   </p>
+   <p class="para">
+    The <em class="emphasis">BAD</em> way :
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">require_once(</span><span style="color: #DD0000">"Cache/Lite.php"</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;require_once(</span><span style="color: #DD0000">"..."</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;require_once(</span><span style="color: #DD0000">"..."</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;(...)<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$cache&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Cache_Lite</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$Cache_Lite</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">get</span><span style="color: #007700">(</span><span style="color: #0000BB">$id</span><span style="color: #007700">))&nbsp;{&nbsp;</span><span style="color: #FF8000">//&nbsp;cache&nbsp;hit&nbsp;!<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{&nbsp;</span><span style="color: #FF8000">//&nbsp;page&nbsp;has&nbsp;to&nbsp;be&nbsp;(re)constructed&nbsp;in&nbsp;$data<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;(...)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$Cache_Lite</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">save</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+   <p class="para">
+    Here is the good way (often more than twice faster) :
+    </p><div class="phpcode">    
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">require_once(</span><span style="color: #DD0000">"Cache/Lite.php"</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;(...)<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$cache&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Cache_Lite</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$Cache_Lite</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">get</span><span style="color: #007700">(</span><span style="color: #0000BB">$id</span><span style="color: #007700">))&nbsp;{&nbsp;</span><span style="color: #FF8000">//&nbsp;cache&nbsp;hit&nbsp;!<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{&nbsp;</span><span style="color: #FF8000">//&nbsp;page&nbsp;has&nbsp;to&nbsp;be&nbsp;(re)constructed&nbsp;in&nbsp;$data<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">require_once(</span><span style="color: #DD0000">"..."</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;require_once(</span><span style="color: #DD0000">"..."</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;(...)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$Cache_Lite</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">save</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>   
+    </div>
+   
+  </div>
+ </div>
+ <div class="refsection" id="package.caching.cache-lite.intro.conclusion"><div class="info"><h1>Conclusion</h1>
+</div>
+  
+  <p class="para">
+   To go further with Cache_Lite, have a look at examples and technical 
+   details bundled with the package.
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.caching.cache-lite.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.caching.cache-lite.html">Cache_Lite</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.caching.cache-lite.cache-lite.cache-lite.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Cache_Lite</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">constructor Cache_Lite::Cache_Lite</td>
+  </tr>
+ </table>
+</div>
+</body></html>

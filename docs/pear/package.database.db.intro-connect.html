@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction - Connect</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.db.html" title="DB" />
+  <link rel="prev" href="package.database.db.intro-dsn.html" title="Introduction - DSN" />
+  <link rel="next" href="package.database.db.intro-query.html" title="Introduction - Query" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction - Connect</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.db.intro-dsn.html" title="Introduction - DSN">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.db.intro-query.html" title="Introduction - Query">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.db.intro-connect">
+ 
+  <h1 class="refname">Introduction - Connect</h1>
+  <div class="refnamediv">Introduction - Connect &ndash; Connecting and disconnecting a database</div>
+
+ 
+
+ <div class="refsection" id="package.database.db.intro-connect.desc">
+  <h1 class="title">Description</h1>
+  <p class="para">
+   To connect to a database you have to use the function
+   <a href="package.database.db.db.connect.html" class="link">
+    <strong class="function">connect()</strong></a>, which requires a valid
+   <a href="package.database.db.intro-dsn.html" class="link">DSN</a>
+   as the first parameter. This parameter can either be a string
+   or an array. If using an array, the array used gets merged with the
+   default information:
+   </p><div class="configurationcode">
+    <pre class="configurationcode">
+$dsn = array(
+    &#039;phptype&#039;  =&gt; false,
+    &#039;dbsyntax&#039; =&gt; false,
+    &#039;username&#039; =&gt; false,
+    &#039;password&#039; =&gt; false,
+    &#039;protocol&#039; =&gt; false,
+    &#039;hostspec&#039; =&gt; false,
+    &#039;port&#039;     =&gt; false,
+    &#039;socket&#039;   =&gt; false,
+    &#039;database&#039; =&gt; false,
+);</pre>
+
+   </div><p>
+   Any elements you set override the defaults and the remainder stay at
+   their defaults.
+  </p>
+
+  <p class="simpara">
+   The second parameter is the optional <em><code class="parameter">$options</code></em>
+   array that can contain runtime configuration settings for this package.
+   See <a href="package.database.db.db-common.setoption.html" class="link">
+    <strong class="function">setOption()</strong></a> for more information on the
+   available settings.
+  </p>
+
+  <p class="simpara">
+   In case of success you get a new instance of the database class.
+   It is strongly recommended to
+   check this return value with <a href="package.database.db.db.iserror.html" class="link">
+    <strong class="function">isError()</strong></a>.
+  </p>
+
+  <p class="simpara">
+   To disconnect use the method <a href="package.database.db.db-common.disconnect.html" class="link">
+    <strong class="function">disconnect()</strong></a>
+   from your database class instance.
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Connect and disconnect</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'DB.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$dsn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'pgsql://someuser:apasswd@localhost/thedb'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'debug'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'portability'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">DB_PORTABILITY_ALL</span><span style="color: #007700">,<br />);<br /><br /></span><span style="color: #0000BB">$db&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">DB</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$db</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;...<br /><br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">disconnect</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+
+  <div class="example"><div class="info"><p><strong>Connect using an array for the DSN information</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'DB.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$dsn&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'phptype'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'pgsql'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'username'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'someuser'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'password'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'apasswd'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'hostspec'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'localhost'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'database'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'thedb'</span><span style="color: #007700">,<br />);<br /><br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'debug'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'portability'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">DB_PORTABILITY_ALL</span><span style="color: #007700">,<br />);<br /><br /></span><span style="color: #0000BB">$db&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">DB</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$db</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <div class="example-contents"><p>
+    When connecting to SQLite using a DSN array, the value
+    of the <code class="varname">mode</code> element must be a string:
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$dsn&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'phptype'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'sqlite'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'database'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'thedb'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'mode'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'0644'</span><span style="color: #007700">,<br />);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   </p></div>
+  </div>
+
+  <div class="example"><div class="info"><p><strong>
+    Connect to MySQLi via SSL
+    using an array for the DSN information
+   </strong></p></div>
+   
+   <div class="example-contents"><p>
+    The <code class="varname">ssl</code> element of the
+    <em><code class="parameter">$options</code></em> array must be set to
+    <strong class="constant">TRUE</strong> in order for SSL to work. Each of the extra
+    elements in the <em><code class="parameter">$dsn</code></em> array
+    (<code class="varname">key</code> through <code class="varname">cipher</code>
+    in the example below) are optional.
+   </p></div>
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'DB.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$dsn&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'phptype'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'mysqli'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'username'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'someuser'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'password'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'apasswd'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'hostspec'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'localhost'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'database'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'thedb'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'key'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'client-key.pem'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'cert'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'client-cert.pem'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'ca'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'cacert.pem'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'capath'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'/path/to/ca/dir'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'cipher'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'AES'</span><span style="color: #007700">,<br />);<br /><br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'ssl'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,<br />);<br /><br /></span><span style="color: #0000BB">$db&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">DB</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$db</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+
+  <div class="example"><div class="info"><p><strong>Connect to a PostgreSQL database via a socket</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'DB.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$dsn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'pgsql://someuser:apasswd@unix(/tmp)/thedb'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'debug'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'portability'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">DB_PORTABILITY_ALL</span><span style="color: #007700">,<br />);<br /><br /></span><span style="color: #0000BB">$db&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">DB</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$db</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+
+ </div>
+
+ <div class="refsection" id="package.database.db.intro-connect.see">
+  <h1 class="title">See</h1>
+  <p class="para">
+   <a href="package.database.db.db-error.html" class="link"><strong class="classname">DB_Error</strong></a>,
+   <a href="package.database.db.db-common.setoption.html" class="link">
+    <strong class="function">setOption()</strong></a>,
+   <a href="package.database.db.intro-portability.html" class="link">
+    "<span class="quote">Intro - Portability</span>"</a>
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.db.intro-dsn.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.db.html">DB</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.db.intro-query.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction - DSN</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Introduction - Query</td>
+  </tr>
+ </table>
+</div>
+</body></html>

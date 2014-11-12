@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Managing command line sub-commands</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.console.console-commandline.html" title="Console_CommandLine" />
+  <link rel="prev" href="package.console.console-commandline.arguments.html" title="Managing command line arguments" />
+  <link rel="next" href="package.console.console-commandline.extending.html" title="Extending Console_CommandLine" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Managing command line sub-commands</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.console.console-commandline.arguments.html" title="Managing command line arguments">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.console.console-commandline.extending.html" title="Extending Console_CommandLine">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.console.console-commandline.sub-commands">
+ 
+  <h1 class="refname">Managing command line sub-commands</h1>
+  <div class="refnamediv">Managing command line sub-commands &ndash; 
+    how to add sub-commands to the parser and use them
+  </div>
+
+ 
+ <div class="refsection" id="package.console.console-commandline.sub-commands.background"><div class="info"><h1>What are sub-commands ?</h1>
+</div>
+
+   <p class="para">
+     Some programs are very complex, you can&#039;t do anything about that but
+     you need to provide the best user interface possible in order to have
+     happy users. In some cases, sub-commands can be very useful, take the
+     PEAR installer for example, it is much more clearer to separate the
+     installer functionalities than to mix all functionalities in the same
+     interface, that&#039;s why you have an interface like:
+   </p>
+   <div class="textcode">
+     <pre class="textcode">
+$ pear install &lt;options&gt; &lt;pkgname&gt;
+$ pear upgrade &lt;options&gt; &lt;pkgname&gt;
+and so on...</pre>
+
+   </div>
+ </div>
+ <div class="refsection" id="package.console.console-commandline.sub-commands.adding"><div class="info"><h1>Adding sub-commands with <strong class="classname">Console_CommandLine</strong></h1>
+</div>
+
+   <p class="para">
+     Adding sub-commands is quite simple, basically you use the 
+     <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine.html#methodaddCommand" class="apidoclink">Console_CommandLine::addCommand()</a>
+     method that returns a 
+     <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine_Command.html" class="apidoclink">Console_CommandLine_Command</a>
+     instance and then you build your command instance like you would do for
+     the main parser (add options, arguments etc...).
+     One thing to remember is that sub-commands are exactly the same as main
+     parsers: they have the same properties and methods.
+   </p>
+   <p class="para">
+     Let&#039;s take a simple example to demonstrate the use of sub-commands, in
+     the following code we will build a simple command line program that will
+     have two sub-commands: &quot;foo&quot; and &quot;bar&quot;:
+     </p><div class="phpcode">
+       <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Include&nbsp;the&nbsp;Console_CommandLine&nbsp;package.<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Console/CommandLine.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;create&nbsp;the&nbsp;parser<br /></span><span style="color: #0000BB">$parser&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Console_CommandLine</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'description'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'A&nbsp;great&nbsp;program&nbsp;that&nbsp;can&nbsp;foo&nbsp;and&nbsp;bar&nbsp;!'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'version'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'1.0.0'<br /></span><span style="color: #007700">));<br /><br /></span><span style="color: #FF8000">//&nbsp;add&nbsp;a&nbsp;global&nbsp;option&nbsp;to&nbsp;make&nbsp;the&nbsp;program&nbsp;verbose<br /></span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'verbose'</span><span style="color: #007700">,&nbsp;array(<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'short_name'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'-v'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'long_name'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'--verbose'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'action'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'StoreTrue'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'description'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'turn&nbsp;on&nbsp;verbose&nbsp;output'<br /></span><span style="color: #007700">));<br /><br /></span><span style="color: #FF8000">//&nbsp;add&nbsp;the&nbsp;foo&nbsp;subcommand<br /></span><span style="color: #0000BB">$foo_cmd&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addCommand</span><span style="color: #007700">(</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">,&nbsp;array(<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'description'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'output&nbsp;the&nbsp;given&nbsp;string&nbsp;with&nbsp;a&nbsp;foo&nbsp;prefix'<br /></span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$foo_cmd</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'reverse'</span><span style="color: #007700">,&nbsp;array(<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'short_name'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'-r'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'long_name'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'--reverse'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'action'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'StoreTrue'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'description'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'reverse&nbsp;the&nbsp;given&nbsp;string&nbsp;before&nbsp;echoing&nbsp;it'<br /></span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$foo_cmd</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addArgument</span><span style="color: #007700">(</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;array(<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'description'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'the&nbsp;text&nbsp;to&nbsp;output'<br /></span><span style="color: #007700">));<br /><br /></span><span style="color: #FF8000">//&nbsp;add&nbsp;the&nbsp;bar&nbsp;subcommand<br /></span><span style="color: #0000BB">$bar_cmd&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addCommand</span><span style="color: #007700">(</span><span style="color: #DD0000">'bar'</span><span style="color: #007700">,&nbsp;array(<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'description'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'output&nbsp;the&nbsp;given&nbsp;string&nbsp;with&nbsp;a&nbsp;bar&nbsp;prefix'<br /></span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$bar_cmd</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'reverse'</span><span style="color: #007700">,&nbsp;array(<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'short_name'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'-r'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'long_name'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'--reverse'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'action'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'StoreTrue'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'description'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'reverse&nbsp;the&nbsp;given&nbsp;string&nbsp;before&nbsp;echoing&nbsp;it'<br /></span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$bar_cmd</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addArgument</span><span style="color: #007700">(</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;array(<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'description'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'the&nbsp;text&nbsp;to&nbsp;output'<br /></span><span style="color: #007700">));<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div><p>
+     Of course, we could also build our parser with sub-commands using an xml
+     file, the xml file would be:
+     </p><div class="xmlcode">
+       <pre class="xmlcode">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
+&lt;command&gt;
+   &lt;description&gt;A great program that can foo and bar !&lt;/description&gt;
+   &lt;version&gt;1.0.0&lt;/version&gt;
+   &lt;option name=&quot;verbose&quot;&gt;
+       &lt;short_name&gt;-v&lt;/short_name&gt;
+       &lt;long_name&gt;--verbose&lt;/long_name&gt;
+       &lt;description&gt;turn on verbose output&lt;/description&gt;
+       &lt;action&gt;StoreTrue&lt;/action&gt;
+   &lt;/option&gt;
+   &lt;command&gt;
+       &lt;name&gt;foo&lt;/name&gt;
+       &lt;description&gt;output the given string with a foo prefix&lt;/description&gt;
+       &lt;option name=&quot;reverse&quot;&gt;
+           &lt;short_name&gt;-r&lt;/short_name&gt;
+           &lt;long_name&gt;--reverse&lt;/long_name&gt;
+           &lt;description&gt;reverse the string before echoing it&lt;/description&gt;
+           &lt;action&gt;StoreTrue&lt;/action&gt;
+       &lt;/option&gt;
+       &lt;argument name=&quot;text&quot;&gt;
+           &lt;description&gt;the text to output&lt;/description&gt;
+       &lt;/argument&gt;
+   &lt;/command&gt;
+   &lt;command&gt;
+       &lt;name&gt;bar&lt;/name&gt;
+       &lt;description&gt;output the given string with a bar prefix&lt;/description&gt;
+       &lt;option name=&quot;reverse&quot;&gt;
+           &lt;short_name&gt;-r&lt;/short_name&gt;
+           &lt;long_name&gt;--reverse&lt;/long_name&gt;
+           &lt;description&gt;reverse the string before echoing it&lt;/description&gt;
+           &lt;action&gt;StoreTrue&lt;/action&gt;
+       &lt;/option&gt;
+       &lt;argument name=&quot;text&quot;&gt;
+           &lt;description&gt;the text to output&lt;/description&gt;
+       &lt;/argument&gt;
+   &lt;/command&gt;
+&lt;/command&gt;</pre>
+
+     </div>
+
+   
+   <p class="para">
+      Also note that sub-commands support aliases, for example it is possible 
+      to have an &quot;update&quot; command and specify &quot;up&quot; as an alias (shortcut) of 
+      the command:
+     </p><div class="phpcode">
+       <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br />$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addCommand</span><span style="color: #007700">(</span><span style="color: #DD0000">'update'</span><span style="color: #007700">,&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'description'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Update&nbsp;the&nbsp;given&nbsp;package'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'aliases'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'up'</span><span style="color: #007700">),&nbsp;</span><span style="color: #FF8000">//&nbsp;we&nbsp;can&nbsp;have&nbsp;more&nbsp;than&nbsp;1&nbsp;alias<br /></span><span style="color: #007700">));<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+   
+   <p class="para">
+     So far, so good, now let&#039;s see how to use this parser.
+     When a user type a sub-command in the command line, the result object will
+     have two properties set: the 
+     <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine_Result.html#var$command_name" class="apidoclink">Console_CommandLine_Result::$command_name</a>
+     that will contain the name (as a string) of the sub-command typed by
+     the user, and the 
+     <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine_Result.html#var$command" class="apidoclink">Console_CommandLine_Result::$command</a>
+     that will contain a 
+     <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine_Result.html" class="apidoclink">Console_CommandLine_Result</a>
+     instance, specific to the provided sub-command.
+     For example with the above parser, we would do:
+     </p><div class="phpcode">
+       <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">try&nbsp;{<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parse</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;find&nbsp;which&nbsp;command&nbsp;was&nbsp;entered<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">switch&nbsp;(</span><span style="color: #0000BB">$result</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">command_name</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;case&nbsp;</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;the&nbsp;user&nbsp;typed&nbsp;the&nbsp;foo&nbsp;command<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;options&nbsp;and&nbsp;arguments&nbsp;for&nbsp;this&nbsp;command&nbsp;are&nbsp;stored&nbsp;in&nbsp;the<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;$result-&gt;command&nbsp;instance:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$result</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">command</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit(</span><span style="color: #0000BB">0</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;case&nbsp;</span><span style="color: #DD0000">'bar'</span><span style="color: #007700">:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;the&nbsp;user&nbsp;typed&nbsp;the&nbsp;bar&nbsp;command<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;options&nbsp;and&nbsp;arguments&nbsp;for&nbsp;this&nbsp;command&nbsp;are&nbsp;stored&nbsp;in&nbsp;the<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;$result-&gt;command&nbsp;instance:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$result</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">command</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit(</span><span style="color: #0000BB">0</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;default:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;no&nbsp;command&nbsp;entered<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">exit(</span><span style="color: #0000BB">0</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;}<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Exception&nbsp;$exc</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">displayError</span><span style="color: #007700">(</span><span style="color: #0000BB">$exc</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+   
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.console.console-commandline.arguments.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.console.console-commandline.html">Console_CommandLine</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.console.console-commandline.extending.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Managing command line arguments</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Extending Console_CommandLine</td>
+  </tr>
+ </table>
+</div>
+</body></html>

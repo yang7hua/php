@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Outputting Results</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.php.php-compatinfo.tutorial.html" title="Getting started" />
+  <link rel="prev" href="package.php.php-compatinfo.command-line.html" title="The Command-Line Parser" />
+  <link rel="next" href="package.php.php-compatinfo.build-esl.html" title="Build your Extension Support List" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Outputting Results</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.php.php-compatinfo.command-line.html" title="The Command-Line Parser">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.php.php-compatinfo.build-esl.html" title="Build your Extension Support List">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.php.php-compatinfo.renderer">
+ 
+  <h1 class="refname">Outputting Results</h1>
+  <div class="refnamediv">Outputting Results &ndash; how to use the renderer system</div>
+
+ 
+
+ <div class="refsection" id="package.php.php-compatinfo.renderer.overview"><div class="info"><h1>Overview</h1>
+</div>
+  
+   <p class="para">
+    PHP_CompatInfo can use different kind of renderers and provides a default one
+    (Array) which print a complete parsable string representation of results.
+   </p>
+   <p class="para">
+    There are 6 renderers available with PHP_CompatInfo 1.8.0
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+       <strong class="emphasis">Array</strong>, <strong class="classname">PHP_CompatInfo_Renderer_Array</strong>.
+       It is similar to PHP
+       <a href="http://www.php.net/manual/en/function.var-export.php" class="link external">var_export</a>
+       May be beautify if PEAR::Var_Dump is installed on your system.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <strong class="emphasis">Csv</strong>, <strong class="classname">PHP_CompatInfo_Renderer_Csv</strong>.
+       Print a comma separate values of results.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <strong class="emphasis">Html</strong>, <strong class="classname">PHP_CompatInfo_Renderer_Html</strong>.
+       Print a pretty nice table with a customizable style sheet (inline or to a separate file)
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <strong class="emphasis">Null</strong>, <strong class="classname">PHP_CompatInfo_Renderer_Null</strong>.
+       The solution to suppress display on standard output.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <strong class="emphasis">Text</strong>, <strong class="classname">PHP_CompatInfo_Renderer_Text</strong>.
+       This renderer is usefull only with the command-line parser mode (CLI).
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <strong class="emphasis">Xml</strong>, <strong class="classname">PHP_CompatInfo_Renderer_Xml</strong>.
+       Print an XML representation of results.
+       May be beautify if PEAR::XML_Beautifier is installed on your system.
+      </p>
+     </li>
+    </ul><p>
+    If none of them match your need, you can also write your own renderers.
+   </p>
+ </div>
+
+ <div class="refsection" id="package.php.php-compatinfo.renderer.basic-usage"><div class="info"><h1>Basic usage</h1>
+</div>
+  
+   <p class="para">
+    The main steps of using any available renderer are quite similar:
+   </p>
+   <p class="para">
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'PHP/CompatInfo.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;data&nbsp;source&nbsp;to&nbsp;parse:&nbsp;file,&nbsp;directory,&nbsp;string,&nbsp;...<br /></span><span style="color: #0000BB">$datasource&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'/tmp/HTML_CSS-1.5.1'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;parser&nbsp;options&nbsp;depending&nbsp;of&nbsp;data&nbsp;source<br /></span><span style="color: #0000BB">$options&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;array();<br /><br /></span><span style="color: #FF8000">//&nbsp;kind&nbsp;of&nbsp;renderer:&nbsp;array,&nbsp;csv,&nbsp;html,&nbsp;null,&nbsp;text,&nbsp;xml,&nbsp;...<br /></span><span style="color: #0000BB">$driverType&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'array'</span><span style="color: #007700">;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;case&nbsp;insensitive<br /><br />//&nbsp;specific&nbsp;renderer&nbsp;hash&nbsp;options<br /></span><span style="color: #0000BB">$driverOptions&nbsp;</span><span style="color: #007700">=&nbsp;array();<br /><br /></span><span style="color: #0000BB">$pci&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">PHP_CompatInfo</span><span style="color: #007700">(</span><span style="color: #0000BB">$driverType</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$driverOptions</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$r&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$pci</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parseData</span><span style="color: #007700">(</span><span style="color: #0000BB">$datasource</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+   <p class="para">
+    </p><blockquote class="note">
+     <p class="para">
+      To keep compatibility with previous versions, you can find the result similar
+      to var_export (Array renderer) in $r (in our example). All parse functions
+      (parseDir, parseFile, parseArray, parseString) have the same behavior.
+     </p>
+    </blockquote>
+
+   
+
+   <p class="para">
+    PHP_CompatInfo class constructor expect to receive two parameters:
+    first one identify the kind of renderer (array, csv, html, null, text, xml),
+    while second is private and specific to each renderer. Allows to customize a
+    bit the renderer without to rewrite a new one (explore all options before
+    beginning to write your own version).
+   </p>
+
+ </div>
+
+ <div class="refsection" id="package.php.php-compatinfo.renderer.configuration"><div class="info"><h1>Configuration options</h1>
+</div>
+  
+   <p class="para">
+    Before to have a look on each driver specific options, take a short pause on
+    common options of all renderers.
+   </p>
+   <p class="para">
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+        <strong class="emphasis">silent</strong> mode :
+        When parsing more than one source file, PHP_CompatInfo can display status
+        of long process. With simple wait text messages, or a progress bar if
+        PEAR::Console_ProgressBar is available (installed on your system).
+      </p>
+      <p class="para">
+       The default mode <em class="emphasis">silent On</em>, is turn off
+       when you specify a progress bar or a progress text
+       with --progress or -p switches on CLI with the pci script.
+      </p>
+      <p class="para">
+       If you run the web interface, you have to turn it on manually.
+       For example:
+       </p><div class="phpcode">
+        <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'PHP/CompatInfo.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;data&nbsp;source&nbsp;to&nbsp;parse:&nbsp;file,&nbsp;directory,&nbsp;string,&nbsp;...<br /></span><span style="color: #0000BB">$datasource&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'/tmp/HTML_CSS-1.5.1'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;parser&nbsp;options&nbsp;depending&nbsp;of&nbsp;data&nbsp;source<br /></span><span style="color: #0000BB">$options&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;array();<br /><br /></span><span style="color: #FF8000">//&nbsp;kind&nbsp;of&nbsp;renderer:&nbsp;array,&nbsp;csv,&nbsp;html,&nbsp;null,&nbsp;text,&nbsp;xml,&nbsp;...<br /></span><span style="color: #0000BB">$driverType&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'array'</span><span style="color: #007700">;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;case&nbsp;insensitive<br /><br />//&nbsp;Turn&nbsp;Off&nbsp;the&nbsp;silent&nbsp;mode,&nbsp;and&nbsp;display&nbsp;simple&nbsp;wait&nbsp;text&nbsp;messages<br /></span><span style="color: #0000BB">$driverOptions&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'silent'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'progress'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'text'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$pci&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">PHP_CompatInfo</span><span style="color: #007700">(</span><span style="color: #0000BB">$driverType</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$driverOptions</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$r&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$pci</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parseData</span><span style="color: #007700">(</span><span style="color: #0000BB">$datasource</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+       </div><p>
+       See also the <code class="filename">docs/examples/parseDir_withCustomProgressBar.php</code>
+       example in the package distribution, to customize a progress bar
+       for the CLI and pci script usage.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+        <strong class="emphasis">output-level</strong> allow to choose what
+        information (condition code level, extensions, constants, tokens, version)
+        will be shown or hidden.
+      </p>
+      <p class="para">
+       Default value is 31: that means we show all details.
+       See the <a href="package.php.php-compatinfo.command-line.html" class="link">Command-Line Parser</a>
+       section, and -o | --output-level switch to learn more about values
+       and corresponding behaviors.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+        <strong class="emphasis">summarize</strong> mode, is usefull when you
+        parse more than one file, and don&#039;t want to see intermediate result
+        of each file, but only the final one.
+      </p>
+      <p class="para">
+       Default is turn off.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+        <strong class="emphasis">verbose</strong> level, give details deep you
+        want to have: from 0 (no extra information) to 7 (full details).
+      </p>
+      <p class="para">
+       Default level is 0.
+       See the <a href="package.php.php-compatinfo.command-line.html" class="link">Command-Line Parser</a>
+       section, and -v | --verbose switch to learn more about values
+       and corresponding behaviors.
+      </p>
+     </li>
+    </ul>
+   
+
+   <p class="para">
+    </p><blockquote class="important">
+     <p class="para">
+      All renderers can be run in both interfaces (web and cli), this is why we can find
+      a hash named <em class="emphasis">args</em> in the driver array options (second
+      parameter of PHP_CompatInfo class constructor). This hash replace corresponding
+      arguments you should have (otherwise) to specify on the Command-Line.
+     </p>
+    </blockquote>
+
+   
+
+ </div>
+
+ <div class="refsection" id="package.php.php-compatinfo.renderer.array"><div class="info"><h1>Array renderer options</h1>
+</div>
+  
+   <p class="para">
+    Array renderer used two drivers to show dump of results.
+    Default is <code class="literal">PHP</code> (var_export function). The other one is
+    <code class="literal">PEAR::Var_Dump</code>. You can use this last one only if package
+    is installed on your system.
+   </p>
+
+   <p class="para">
+    While there are no specific options for PHP driver, you can use all options
+    of PEAR::Var_Dump to beautify the dump of results.
+    See example <code class="filename">docs/examples/pci180_parsefile.php</code>
+    in the package distribution.
+   </p>
+
+   <p class="para">
+    First key of hash (<code class="literal">options</code>) allow to choose the Var_Dump renderer
+    (display_mode) you want.
+    </p><blockquote class="caution">
+     <p class="para">
+      Only <em class="emphasis">display_mode = Text</em> is allowed
+      if you run PHP_CompatInfo on CLI.
+     </p>
+    </blockquote>
+<p>
+    Second key of hash (<code class="literal">rendererOptions</code>) allow to give
+    specific options to the Var_Dump renderer identified by display_mode directive.
+   </p>
+
+   <p class="para">
+    </p><blockquote class="note">
+     <p class="para">
+      <strong class="emphasis">Var_Dump</strong> package exists for two major versions
+      of PHP.
+     </p>
+     <p class="para">
+      <a href="http://pear.php.net/package/Var_Dump" class="link external">
+       Var_Dump PHP 4 on default PEAR channel
+      </a> (branch 1.0)
+     </p>
+     <p class="para">
+      <a href="http://toolbox.aldabase.com/index.php?package=Var_Dump" class="link external">
+       Var_Dump PHP 5 on PEAR channel Toolbox
+      </a> (branch 1.2)
+     </p>
+    </blockquote>
+
+   
+ </div>
+
+ <div class="refsection" id="package.php.php-compatinfo.renderer.csv"><div class="info"><h1>Csv renderer options</h1>
+</div>
+  
+   <p class="para">
+    Csv renderer can be customized only in one way: change delimiters characters
+   </p>
+   <p class="para">
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+       <strong class="emphasis">fields-values-separated-by</strong>
+       identify the delimiter of values when there is a list given (extensions,
+       constants, tokens).
+       Default is <strong class="emphasis">,</strong>
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <strong class="emphasis">fields-terminated-by</strong>
+       identify the delimiter of fields (those given by the output-level directive).
+       Default is <strong class="emphasis">;</strong>
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <strong class="emphasis">fields-enclosed-by</strong>
+       identify the protect field character if content have one or more restrictive
+       character as given by previous options.
+       Default is <strong class="emphasis">&quot;</strong>
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <strong class="emphasis">lines-terminated-by</strong>
+       identify the end-of-line character. Usefull if you want to generate a file for
+       another platform than those who have produced the results.
+       Default is <strong class="emphasis">PHP_EOL constant</strong>
+      </p>
+     </li>
+    </ul>
+   
+ </div>
+
+ <div class="refsection" id="package.php.php-compatinfo.renderer.html"><div class="info"><h1>Html renderer options</h1>
+</div>
+  
+   <p class="para">
+    Html renderer have only one specific option :
+   </p>
+   <p class="para">
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+       <strong class="emphasis">tdwidth</strong> that give size of each column
+       (in em css unit), even if there are not shown (see output-level value).
+       Default is <strong class="emphasis">18,4,2,7,13</strong>
+      </p>
+      <p class="para">
+       That means: File is 18 em width, Version is 4 em width, C (cond_code)
+       is 2 em width, Extensions is 7 em width, and Constants/Tokens is 13 em width.
+      </p>
+     </li>
+    </ul>
+   
+   <p class="para">
+    See also the <code class="filename">docs/examples/pci180_parsedir_tohtml.php</code>
+    example in the package distribution, howto define your own html renderer.
+   </p>
+ </div>
+
+ <div class="refsection" id="package.php.php-compatinfo.renderer.text"><div class="info"><h1>Text renderer options</h1>
+</div>
+  
+   <p class="para">
+    Text renderer have only one specific option :
+   </p>
+   <p class="para">
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+       <strong class="emphasis">colwidth</strong> that give size of file (f),
+       extensions (e), and constants/tokens (c) column (in character unit),
+       even if there are not shown (see output-level value).
+       Default is <strong class="emphasis">f = 29, e = 12, c = 20)</strong>
+      </p>
+     </li>
+    </ul>
+   
+   <p class="para">
+    See the <a href="package.php.php-compatinfo.command-line.html" class="link">Command-Line Parser</a>
+    section, and -t | --tab switch to learn more about optimized values depending of output-level
+   </p>
+ </div>
+
+ <div class="refsection" id="package.php.php-compatinfo.renderer.xml"><div class="info"><h1>Xml renderer options</h1>
+</div>
+  
+   <p class="para">
+    Xml renderer have only two specific options :
+   </p>
+   <p class="para">
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+       <strong class="emphasis">use-beautifier</strong> tell if we use the
+       PEAR::XML_Beautifier package to beautify XML output.
+       Default is <strong class="emphasis">auto</strong> (use only if available)
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <strong class="emphasis">beautifier</strong> is a hash for
+       the PEAR::XML_Beautifier package options.
+       Default is empty array (use all XML_Beautifier package default options).
+      </p>
+     </li>
+    </ul>
+   
+   <p class="para">
+    </p><blockquote class="tip">
+     <p class="para">
+      Use <code class="literal">no</code> value if you have PEAR::XML_Beautifier installed,
+      and you don&#039;t want to have XML beautified.
+     </p>
+    </blockquote>
+
+   
+   <p class="para">
+    See also the <code class="filename">docs/examples/pci180_parsedata_toxml.php</code>,
+    and <code class="filename">docs/examples/pci180_parsestring_toxml.php</code>
+    examples in the package distribution.
+   </p>
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.php.php-compatinfo.command-line.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.php.php-compatinfo.tutorial.html">Getting started</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.php.php-compatinfo.build-esl.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">The Command-Line Parser</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Build your Extension Support List</td>
+  </tr>
+ </table>
+</div>
+</body></html>

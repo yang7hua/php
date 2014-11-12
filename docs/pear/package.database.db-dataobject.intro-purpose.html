@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.db-dataobject.html" title="DB_DataObject" />
+  <link rel="prev" href="package.database.db-dataobject.html" title="DB_DataObject" />
+  <link rel="next" href="package.database.db-dataobject.intro-configuration.html" title="Configuration Options" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.db-dataobject.html" title="DB_DataObject">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.db-dataobject.intro-configuration.html" title="Configuration Options">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.db-dataobject.intro-purpose">
+    
+      <h1 class="refname">Introduction</h1>
+      <div class="refnamediv">Introduction &ndash; 
+        What <strong class="classname">DB_DataObject</strong> can do
+      </div>
+
+    
+    <div class="refsection"><div class="info"><h1>Introduction</h1>
+</div>
+      
+
+       <blockquote class="warning">
+
+   <p class="para">
+     Zend Optimizer: due to a bug in the optimizer, you will have to either reduce the
+    optimization level, or define the constant DB_DATAOBJECT_NO_OVERLOAD = 0
+    otherwise PHP may segfault
+   </p> <p class="para">
+    Pass by Reference, due to a unfixable bug in PHP4, you can not use overload with pass-by-reference arguments
+    (It works OK in PHP5), If you need pass-by-reference,  define the constant DB_DATAOBJECT_NO_OVERLOAD = 0
+   </p>
+  </blockquote>
+
+
+      <p class="para">
+       <strong class="classname">DB_DataObject</strong> is a SQL Builder and Data Modeling Layer
+       built on top of PEAR::<a href="package.database.db.html" class="link"><strong class="classname">DB</strong></a>. Its main purpose is to
+      </p>
+      <p class="para">
+        </p><ul class="itemizedlist">
+          <li class="listitem">
+            <span class="simpara">Build SQL and execute statements based on the objects variables.</span>
+          </li>
+          <li class="listitem">
+            <span class="simpara">Group source code around the data that they relate to.</span>
+          </li>
+          <li class="listitem">
+            <span class="simpara">Provide a simple consistent API to access and manipulate that data.</span>
+          </li>
+         </ul>
+      
+
+       <p class="para">
+       So what does that mean in English? Well, if you look around at some of the better written PHP
+       applications and frameworks out there, you will notice a common approach to using classes to
+       wrap access to database tables or groups. The prime example of this is the person object, which would
+       frequently look something like this.
+
+       </p><div class="example"><div class="info"><p><strong>A Classic Data Object or Container</strong></p></div>
+        
+        <div class="phpcode">
+         <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'DB.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$db&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">DB</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #DD0000">'mysql://someuser:somepass@localhost/pear_dbdo'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setFetchMode</span><span style="color: #007700">(</span><span style="color: #0000BB">DB_FETCHMODE_ASSOC</span><span style="color: #007700">);<br /><br />class&nbsp;</span><span style="color: #0000BB">MyPerson<br /></span><span style="color: #007700">{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;gets&nbsp;an&nbsp;array&nbsp;of&nbsp;data&nbsp;about&nbsp;the&nbsp;seleted&nbsp;person<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">getPerson</span><span style="color: #007700">(</span><span style="color: #0000BB">$id</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;global&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;*&nbsp;FROM&nbsp;person&nbsp;WHERE&nbsp;id='&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">quote</span><span style="color: #007700">(</span><span style="color: #0000BB">$id</span><span style="color: #007700">));<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$result</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchRow</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;example&nbsp;of&nbsp;checking&nbsp;a&nbsp;password.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">checkPassword</span><span style="color: #007700">(</span><span style="color: #0000BB">$username</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$password</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;global&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$hashed&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">md5</span><span style="color: #007700">(</span><span style="color: #0000BB">$password</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'SELECT&nbsp;name&nbsp;FROM&nbsp;person&nbsp;WHERE&nbsp;name='&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">quote</span><span style="color: #007700">(</span><span style="color: #0000BB">$username</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;</span><span style="color: #DD0000">'&nbsp;AND&nbsp;password&nbsp;=&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">quote</span><span style="color: #007700">(</span><span style="color: #0000BB">$hashed</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$result</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchRow</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;get&nbsp;the&nbsp;persons&nbsp;details..<br /></span><span style="color: #0000BB">$array&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">MyPerson</span><span style="color: #007700">::</span><span style="color: #0000BB">getPerson</span><span style="color: #007700">(</span><span style="color: #0000BB">12</span><span style="color: #007700">);<br />echo&nbsp;</span><span style="color: #0000BB">$array</span><span style="color: #007700">[</span><span style="color: #DD0000">'name'</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div></div><p>
+
+     The examples operate on the following SQL database table:
+       </p><div class="sqlcode"><pre class="sqlcode">
+CREATE TABLE IF NOT EXISTS `person` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(64) NOT NULL,
+  `password` varchar(32) NOT NULL,
+  `birthDate` date NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
+
+INSERT INTO `person` (`id`, `name`, `password`, `birthDate`) VALUES
+(12, &#039;John&#039;, &#039;098f6bcd4621d373cade4e832627b4f6&#039;, &#039;1984-02-23&#039;);</pre>
+</div>
+      
+      <p class="para">
+      The key benefit of this approach is that you are grouping similar actions on a single table in one place, and are
+      more likely to spot duplicated code (eg. two methods that do similar things). You will also notice the global $db variable
+      used here - the fact is that most of the time you will use a common database connection for all your classes, so how should this
+      be dealt with?
+      </p>
+      <p class="para">
+        The next step on this road is to use the objects variables as a storage mechanism.
+
+      </p><div class="example"><div class="info"><p><strong>A Classic Data Object or Container</strong></p></div>
+        
+        <div class="phpcode">
+         <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'DB.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$db&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">DB</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #DD0000">'mysql://someuser:somepass@localhost/pear_dbdo'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setFetchMode</span><span style="color: #007700">(</span><span style="color: #0000BB">DB_FETCHMODE_ASSOC</span><span style="color: #007700">);<br /><br />class&nbsp;</span><span style="color: #0000BB">MyPerson<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$id</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$name</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$birthDate</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;gets&nbsp;an&nbsp;array&nbsp;of&nbsp;data&nbsp;about&nbsp;the&nbsp;seleted&nbsp;person<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">get</span><span style="color: #007700">(</span><span style="color: #0000BB">$id</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;global&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;*&nbsp;FROM&nbsp;person&nbsp;WHERE&nbsp;id='&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">quote</span><span style="color: #007700">(</span><span style="color: #0000BB">$id</span><span style="color: #007700">));<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$array&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$result</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchRow</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;foreach&nbsp;(</span><span style="color: #0000BB">$array&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$key&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$value</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">$key&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$value</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">getAge</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #DD0000">'Y'</span><span style="color: #007700">)&nbsp;-&nbsp;</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #DD0000">'Y'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">strtotime</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">birthDate</span><span style="color: #007700">));<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />}<br /></span><span style="color: #FF8000">//&nbsp;now&nbsp;get&nbsp;the&nbsp;person&nbsp;and&nbsp;display&nbsp;the&nbsp;age.<br /></span><span style="color: #0000BB">$person&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">MyPerson</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">get</span><span style="color: #007700">(</span><span style="color: #0000BB">12</span><span style="color: #007700">);<br />echo&nbsp;</span><span style="color: #DD0000">"</span><span style="color: #007700">{</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">name</span><span style="color: #007700">}</span><span style="color: #DD0000">&nbsp;is&nbsp;"</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAge</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">"&nbsp;years&nbsp;old\n"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div></div>
+          
+      <p class="para">
+      As you can see, the current row of data is now stored in the Data Container, and additional methods can be added to manipulate
+      the data in the object or even call other related objects (eg. tables relationships in databases)
+        </p>
+
+        <p class="para">
+        As a next step, why not utilize the member variables to perform searches or gets on the database.
+
+
+
+
+         </p><div class="example"><div class="info"><p><strong>A Classic Data Object or Container</strong></p></div>
+        
+        <div class="phpcode">
+         <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'DB.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$db&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">DB</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #DD0000">'mysql://someuser:somepass@localhost/pear_dbdo'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setFetchMode</span><span style="color: #007700">(</span><span style="color: #0000BB">DB_FETCHMODE_ASSOC</span><span style="color: #007700">);<br /><br />class&nbsp;</span><span style="color: #0000BB">MyPerson<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$id</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$name</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$birthDate</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;does&nbsp;the&nbsp;query&nbsp;based&nbsp;on&nbsp;the&nbsp;value&nbsp;of&nbsp;$this-&gt;name<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">find</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;global&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;*&nbsp;FROM&nbsp;person&nbsp;WHERE&nbsp;name='&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">quote</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">name</span><span style="color: #007700">));<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;fetches&nbsp;a&nbsp;row&nbsp;of&nbsp;data&nbsp;and&nbsp;sets&nbsp;the&nbsp;object&nbsp;variables&nbsp;to&nbsp;match&nbsp;it.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">fetch</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$array&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">result</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchRow</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(empty(</span><span style="color: #0000BB">$array</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;foreach&nbsp;(</span><span style="color: #0000BB">$array&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$key</span><span style="color: #007700">=&gt;</span><span style="color: #0000BB">$value</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">$key&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$value</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;now&nbsp;get&nbsp;the&nbsp;person&nbsp;and&nbsp;display&nbsp;the&nbsp;age.<br /></span><span style="color: #0000BB">$person&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">MyPerson</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">name&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"John"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">find</span><span style="color: #007700">();<br />while&nbsp;(</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"a&nbsp;</span><span style="color: #007700">{</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">name</span><span style="color: #007700">}</span><span style="color: #DD0000">&nbsp;has&nbsp;a&nbsp;birthday&nbsp;on&nbsp;</span><span style="color: #007700">{</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">birthDate</span><span style="color: #007700">}</span><span style="color: #DD0000">&lt;br/&gt;\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div></div>
+         
+      <p class="para">
+      As you can see, by assigning values to the object before the find method is called, you can set conditions for the query.
+      <strong class="classname">DB_DataObject</strong>s behaves in a similar way to this, however, you can also add more conditions with the whereAdd() method, or
+      restrict the selection using the selectAdd() method.
+        </p>
+
+
+      <p class="para">
+      Obviously you can carry on down this road and create lots of little containers for each table in your database,
+      and all the code will nicely relate to each table. However, you can see from the examples above that all classes
+      are likely to end up with a common set of methods.
+      </p><ul class="itemizedlist">
+          <li class="listitem">
+            <span class="simpara"> to fetch data, like get, find, fetch</span>
+          </li>
+          <li class="listitem">
+            <span class="simpara">  to update, insert and delete from the data store</span>
+          </li>
+          <li class="listitem">
+            <span class="simpara"> to automate fetching related objects</span>
+          </li>
+         </ul><p>
+      So to improve on this, <strong class="classname">DB_DataObject</strong> was born, it started life as a common answer to the issues above, however as most
+      problems grow in complexity as the problem is examined in finer detail, so has DataObjects. It has grown to include
+          </p><ul class="itemizedlist">
+          <li class="listitem">
+            <span class="simpara"> A common simple configuration method (for setting database connections)</span>
+          </li>
+          <li class="listitem">
+            <span class="simpara">  A fast and simple store for database descriptions, so primary keys can be used to locate data quickly</span>
+          </li>
+          <li class="listitem">
+            <span class="simpara"> a debugger that enables you to see what exactly it is doing.</span>
+          </li>
+          <li class="listitem">
+            <span class="simpara"> basic data validation - so the strings and integers can be checked.</span>
+          </li>
+          <li class="listitem">
+            <span class="simpara"> Posibility to build complex joins or get related data by secondary calls (links) .</span>
+          </li>
+          <li class="listitem">
+            <span class="simpara"> Ability to create and update your Table specific classes with the current database table variables (see autobuilding)</span>
+          </li>
+           <li class="listitem">
+            <span class="simpara"> Simple to integrate with other packages, with setFrom() and toArray() methods</span>
+          </li>
+        </ul>
+
+
+        
+
+
+       <p class="para">
+       So what do my classes look like?
+        </p><div class="example"><div class="info"><p><strong>At last some real DataObject Code..</strong></p></div>
+        
+         <div class="phpcode">
+         <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;this&nbsp;is&nbsp;the&nbsp;common&nbsp;configuration&nbsp;code&nbsp;-&nbsp;place&nbsp;in&nbsp;a&nbsp;general&nbsp;site&nbsp;wide&nbsp;include&nbsp;file.<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;this&nbsp;&nbsp;the&nbsp;code&nbsp;used&nbsp;to&nbsp;load&nbsp;and&nbsp;store&nbsp;DataObjects&nbsp;Configuration.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;&amp;</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">getStaticProperty</span><span style="color: #007700">(</span><span style="color: #DD0000">'DB_DataObject'</span><span style="color: #007700">,</span><span style="color: #DD0000">'options'</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;the&nbsp;simple&nbsp;examples&nbsp;use&nbsp;parse_ini_file,&nbsp;which&nbsp;is&nbsp;fast&nbsp;and&nbsp;efficient.<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;however&nbsp;you&nbsp;could&nbsp;as&nbsp;easily&nbsp;use&nbsp;wddx,&nbsp;xml&nbsp;or&nbsp;your&nbsp;own&nbsp;configuration&nbsp;array.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$config&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">parse_ini_file</span><span style="color: #007700">(</span><span style="color: #DD0000">'example.ini'</span><span style="color: #007700">,</span><span style="color: #0000BB">TRUE</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;because&nbsp;PEAR::getstaticProperty&nbsp;was&nbsp;called&nbsp;with&nbsp;an&nbsp;&amp;&nbsp;(get&nbsp;by&nbsp;reference)<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;this&nbsp;will&nbsp;actually&nbsp;set&nbsp;the&nbsp;variable&nbsp;inside&nbsp;that&nbsp;method&nbsp;(a&nbsp;quasi&nbsp;static&nbsp;variable)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'DB_DataObject'</span><span style="color: #007700">];<br /><br /><br /><br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;this&nbsp;is&nbsp;normally&nbsp;contained&nbsp;in&nbsp;your&nbsp;DataObjects&nbsp;file&nbsp;(autogenerated&nbsp;by&nbsp;the&nbsp;generator)<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'DB/DataObject.php'</span><span style="color: #007700">;<br /><br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;by&nbsp;extending&nbsp;the&nbsp;base&nbsp;class&nbsp;DB_DataObject&nbsp;-&nbsp;you&nbsp;inherit&nbsp;all&nbsp;the&nbsp;common&nbsp;methods&nbsp;defined&nbsp;in&nbsp;it.<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">DataObjects_Person&nbsp;</span><span style="color: #007700">extends&nbsp;&nbsp;</span><span style="color: #0000BB">DB_DataObject&nbsp;</span><span style="color: #007700">{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$id</span><span style="color: #007700">;&nbsp;</span><span style="color: #FF8000">//&nbsp;this&nbsp;is&nbsp;a&nbsp;primary&nbsp;id&nbsp;(it's&nbsp;specified&nbsp;in&nbsp;a&nbsp;config&nbsp;file&nbsp;-&nbsp;explained&nbsp;later)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$name</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$friend</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;this&nbsp;is&nbsp;a&nbsp;simple&nbsp;function&nbsp;to&nbsp;get&nbsp;the&nbsp;persons&nbsp;friends..?<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">getFriends</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$personObject&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">'person'</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;look&nbsp;for&nbsp;all&nbsp;people&nbsp;with&nbsp;their&nbsp;friend&nbsp;number&nbsp;matching&nbsp;this&nbsp;persons&nbsp;id.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$personObject</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">friend&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">id</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;do&nbsp;the&nbsp;select&nbsp;query.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$personObject</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">find</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$array&nbsp;</span><span style="color: #007700">=&nbsp;array();<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;fetch&nbsp;the&nbsp;results&nbsp;into&nbsp;the&nbsp;object.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">while&nbsp;(</span><span style="color: #0000BB">$personObject</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;use&nbsp;the&nbsp;clone&nbsp;to&nbsp;copy&nbsp;-&nbsp;not&nbsp;really&nbsp;needed&nbsp;but&nbsp;get&nbsp;used&nbsp;to&nbsp;it&nbsp;for&nbsp;PHP5<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$array</span><span style="color: #007700">[]&nbsp;=&nbsp;clone(</span><span style="color: #0000BB">$personObject</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;return&nbsp;the&nbsp;results.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">return&nbsp;</span><span style="color: #0000BB">$array</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br /><br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;and&nbsp;this&nbsp;goes&nbsp;on&nbsp;your&nbsp;display&nbsp;code<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;create&nbsp;a&nbsp;new&nbsp;person&nbsp;class..<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$person&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">DB_DataObject</span><span style="color: #007700">::</span><span style="color: #0000BB">Factory</span><span style="color: #007700">(</span><span style="color: #DD0000">'person'</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;get&nbsp;the&nbsp;person&nbsp;using&nbsp;the&nbsp;primary&nbsp;key.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">get</span><span style="color: #007700">(</span><span style="color: #0000BB">12</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;get&nbsp;the&nbsp;friends.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$friends&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getFriends</span><span style="color: #007700">();<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;&nbsp;DB_DataObjects&nbsp;is&nbsp;designed&nbsp;to&nbsp;make&nbsp;print_r&nbsp;useable&nbsp;to&nbsp;debug&nbsp;your&nbsp;applications.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$friends</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+      </div></div>
+
+      
+
+
+
+      <p class="para">
+       The above example illustrates the components of the
+       <strong class="classname">DB_DataObject</strong>, by setting the options, all
+        the core objects will be able to auto load the data definitions from a generated ini file, and know
+        how to access the database. (multiple databases are supported - see section on configuration)
+      </p>
+      <p class="para">
+       The class definition illustrates how you only need to define the data specific code in your class, ignoring
+       all the common methods, along with showing one of the methods for retrieveing multiple rows of data.
+      </p>
+      <p class="para">
+        The later half illustrates how to query and get the result for a
+        single row. The <a href="package.database.db-dataobject.db-dataobject.get.html" class="link"><strong class="function">$person-&gt;get()</strong></a> would connect
+        to the database, perform the query, fetch the result and assign the objects variables to the data returned
+        from the query.
+      </p>
+      <p class="para">
+
+      </p>
+<div class="example"><div class="info"><p><strong>  In the above example, this query would be performed.</strong></p></div>
+        
+      <div class="sqlcode"><pre class="sqlcode">SELECT * FROM person WHERE id=12;
+SELECT * FROM person WHERE friend=12;</pre>
+</div>
+</div>
+
+<div class="example"><div class="info"><p><strong> To make a change to the Database you would just change the value of the objects variables and call
+        the update method.</strong></p></div>
+        
+      <div class="phpcode">
+         <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$person&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">DB_DataObject</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">'person'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">get</span><span style="color: #007700">(</span><span style="color: #0000BB">12</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">name&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'Fred'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">update</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+      </div>
+      </div>
+         <p class="para">
+        As a general rule of thumb method names are usually the same as the SQL statement they relate to.
+      </p>
+
+
+
+    </div>
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.db-dataobject.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.db-dataobject.html">DB_DataObject</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.db-dataobject.intro-configuration.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">DB_DataObject</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Configuration Options</td>
+  </tr>
+ </table>
+</div>
+</body></html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.system.folders.html" title="System_Folders" />
+  <link rel="prev" href="package.system.folders.html" title="System_Folders" />
+  <link rel="next" href="package.system.folders.example.html" title="Example" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.system.folders.html" title="System_Folders">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.system.folders.example.html" title="Example">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.system.folders.intro">
+ 
+  <h1 class="refname">Introduction</h1>
+  <div class="refnamediv">Introduction &ndash; 
+   Get system folder locations.
+  </div>
+
+ 
+
+ <div class="refsection" id="package.system.folders.intro.contrib"><div class="info"><h1>Contributors</h1>
+</div>
+  
+  <p class="para">
+   </p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara">Christian Weiske</span></li>
+   </ul>
+  
+ </div>
+
+ <div class="refsection" id="package.system.folders.intro.desc"><div class="info"><h1>Description</h1>
+</div>
+  
+  <p class="para">
+   <strong class="classname">System_Folders</strong> provides methods to get the locations
+   of various system folders like home directory, desktop folder and
+   &quot;My documents&quot;. You can use it on nearly every operating system: It works
+   on Linux, Windows and Mac OS; allowing you to write OS independent
+   programs.
+  </p>
+
+  <p class="para">
+   The methods return a string of the directory (with trailing slash)
+   if the directory can be determined, and <code class="literal">NULL</code> if
+   it fails or isn&#039;t available on the system. For example, the
+   &quot;Shared Documents&quot; folder exists on Windows only. If you run
+   <strong class="function">getSharedDocuments()</strong> on a Mac or Linux, the method
+   will return <code class="literal">NULL</code>.
+  </p>
+
+  <p class="para">
+   The class does heavy use of environment variables. That means
+   it is very likely that the methods fail when running in a php server
+   module (e.g. apache) because there is user information available.
+   Using them on command line (cli) scripts gives best results, as the
+   class is meant to be used for such ones.
+  </p>
+
+  <table class="doctable table"><caption>Available folders and their methods</caption>
+   
+   
+    <thead>
+     <tr>
+      <th>Folder</th>
+      <th>Method to use</th>
+      <th>Notes</th>
+     </tr>
+
+    </thead>
+
+    <tbody class="tbody">
+     <tr>
+      <td>All users directory</td>
+      <td><strong class="function">getAllUsers()</strong></td>
+      <td>Windows only</td>
+     </tr>
+
+     <tr>
+      <td>Application data</td>
+      <td><strong class="function">getAppData()</strong></td>
+      <td class="empty">&nbsp;</td>
+     </tr>
+
+     <tr>
+      <td>Desktop</td>
+      <td><strong class="function">getDesktop()</strong></td>
+      <td class="empty">&nbsp;</td>
+     </tr>
+
+     <tr>
+      <td>Documents / My Documents</td>
+      <td><strong class="function">getDocuments()</strong></td>
+      <td class="empty">&nbsp;</td>
+     </tr>
+
+     <tr>
+      <td>Home directory</td>
+      <td>getHome()</td>
+      <td class="empty">&nbsp;</td>
+     </tr>
+
+     <tr>
+      <td>Programs folder (installed ones)</td>
+      <td><strong class="function">getPrograms()</strong></td>
+      <td class="empty">&nbsp;</td>
+     </tr>
+
+     <tr>
+      <td>Temporary files</td>
+      <td><strong class="function">getTemp()</strong></td>
+      <td class="empty">&nbsp;</td>
+     </tr>
+
+     <tr>
+      <td>Shared documents</td>
+      <td><strong class="function">getSharedDocuments()</strong></td>
+      <td>Windows only</td>
+     </tr>
+
+     <tr>
+      <td>Windows directory</td>
+      <td><strong class="function">getWindows()</strong></td>
+      <td>Windows only</td>
+     </tr>
+
+    </tbody>
+   
+  </table>
+
+
+ </div>
+
+ <div class="refsection" id="package.system.folders.intro.cached"><div class="info"><h1>System_Folders_Cached</h1>
+</div>
+  
+
+  <p class="para">
+   On every <strong class="function">getXXX()</strong> call, the whole procedure of
+   looping through
+   environment variables, checking the existence of the folders and
+   trying some common locations is executed. So if you call the same
+   method again and again, it will cost you the same amount of cpu cycles
+   every time and perhaps be a slowdown in your application.
+  </p>
+
+  <p class="para">
+   Another problem might be that some methods fail or don&#039;t return the correct
+   path, e.g. because the user has an unusual installation or unusual
+   preferences.
+  </p>
+
+  <p class="para">
+   Both issues are addressed with <strong class="classname">System_Folders_Cached</strong>.
+   It provides a cached version of the <strong class="function">getXXX()</strong> methods,
+   meaning that the result of the first method calls are stored locally and
+   returned on every further call, which speeds up consecutive calls to the
+   same method a lot.
+  </p>
+
+  <p class="para">
+   Further, the class provides methods to set the folder locations and
+   save this settings into an ini file. Saving them can be done with
+   <strong class="function">saveToFile()</strong> and they can be loaded with
+   <strong class="function">loadFromFile()</strong>. This allows customization of the
+   folder locations, and persistency across sessions.
+  </p>
+
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.system.folders.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.system.folders.html">System_Folders</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.system.folders.example.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">System_Folders</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Example</td>
+  </tr>
+ </table>
+</div>
+</body></html>

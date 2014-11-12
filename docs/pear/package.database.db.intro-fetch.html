@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction - Results</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.db.html" title="DB" />
+  <link rel="prev" href="package.database.db.intro-query.html" title="Introduction - Query" />
+  <link rel="next" href="package.database.db.intro-execute.html" title="Introduction - Prepare &amp; Execute" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction - Results</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.db.intro-query.html" title="Introduction - Query">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.db.intro-execute.html" title="Introduction - Prepare &amp; Execute">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.db.intro-fetch">
+ 
+  <h1 class="refname">Introduction - Results</h1>
+  <div class="refnamediv">Introduction - Results &ndash; Obtaining data from query results</div>
+
+ 
+
+ <div class="refsection" id="package.database.db.intro-fetch.desc">
+  <h1 class="title">Description</h1>
+
+  <div class="refsection" id="package.database.db.intro-fetch.desc.fetch"><div class="info"><h1>Fetching Individual Rows From Query Results</h1>
+</div>
+   
+   <p class="para">
+    The <a href="package.database.db.db-result.html" class="link"><strong class="classname">DB_result</strong></a> object provides two
+    methods for fetching data from rows of a result set:
+    <a href="package.database.db.db-result.fetchrow.html" class="link">
+     <strong class="function">fetchRow()</strong></a> and
+    <a href="package.database.db.db-result.fetchinto.html" class="link">
+     <strong class="function">fetchInto()</strong></a>.
+   </p>
+   <p class="para">
+    <strong class="function">fetchRow()</strong> returns the row&#039;s data.
+    <strong class="function">fetchInto()</strong> assigns the row&#039;s data
+    to a variable you provide and returns <a href="package.database.db.db-error.html" class="link"><strong class="constant">DB_OK</strong></a>.
+   </p>
+   <p class="para">
+    The result pointer gets moved to the next row each
+    time these methods are called. <strong class="constant">NULL</strong> is returned
+    when the end of the result set is reached.
+   </p>
+   <p class="para">
+    <a href="package.database.db.db-error.html" class="link"><strong class="classname">DB_Error</strong></a> is returned if an error is encountered.
+   </p>
+
+   <div class="example"><div class="info"><p><strong>Fetching a result set</strong></p></div>
+    
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Create&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db<br />//&nbsp;at&nbsp;the&nbsp;beginning&nbsp;of&nbsp;your&nbsp;program...<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'DB.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$db&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">DB</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #DD0000">'pgsql://usr:pw@localhost/dbnam'</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$db</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;Proceed&nbsp;with&nbsp;getting&nbsp;some&nbsp;data...<br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;*&nbsp;FROM&nbsp;mytable'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Get&nbsp;each&nbsp;row&nbsp;of&nbsp;data&nbsp;on&nbsp;each&nbsp;iteration&nbsp;until<br />//&nbsp;there&nbsp;are&nbsp;no&nbsp;more&nbsp;rows<br /></span><span style="color: #007700">while&nbsp;(</span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchInto</span><span style="color: #007700">(</span><span style="color: #0000BB">$row</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Assuming&nbsp;DB's&nbsp;default&nbsp;fetchmode&nbsp;is&nbsp;DB_FETCHMODE_ORDERED<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$row</span><span style="color: #007700">[</span><span style="color: #0000BB">0</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;Or,&nbsp;you&nbsp;could&nbsp;have&nbsp;done&nbsp;the&nbsp;same&nbsp;thing&nbsp;using&nbsp;fetchRow()<br />//&nbsp;while&nbsp;($row&nbsp;=&amp;&nbsp;$res-&gt;fetchRow())&nbsp;{<br />//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;Assuming&nbsp;DB's&nbsp;default&nbsp;fetchmode&nbsp;is&nbsp;DB_FETCHMODE_ORDERED<br />//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;$row[0]&nbsp;.&nbsp;"\n";<br />//&nbsp;}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   </div>
+  </div>
+
+  <div class="refsection" id="package.database.db.intro-fetch.desc.format"><div class="info"><h1>Formats of Fetched Rows</h1>
+</div>
+   
+   <p class="para">
+    The data from the row of a query result can be
+    placed into one of three constructs:
+    an ordered array (with column numbers as keys),
+    an associative array (with column names as keys) or
+    an object (with column names as properties).
+   </p>
+
+   <p class="para">
+    <strong class="constant">DB_FETCHMODE_ORDERED</strong> (default)
+    </p><pre class="screen">
+     <br/>Array<br/>(<br/>&nbsp;&nbsp;&nbsp;&nbsp;[0]&nbsp;=&gt;&nbsp;28<br/>&nbsp;&nbsp;&nbsp;&nbsp;[1]&nbsp;=&gt;&nbsp;hi<br/>)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </pre>
+
+   
+
+   <p class="para">
+    <strong class="constant">DB_FETCHMODE_ASSOC</strong>
+    </p><pre class="screen">
+     <br/>Array<br/>(<br/>&nbsp;&nbsp;&nbsp;&nbsp;[a]&nbsp;=&gt;&nbsp;28<br/>&nbsp;&nbsp;&nbsp;&nbsp;[b]&nbsp;=&gt;&nbsp;hi<br/>)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </pre>
+
+   
+
+   <p class="para">
+    <strong class="constant">DB_FETCHMODE_OBJECT</strong>
+    </p><pre class="screen">
+     <br/>stdClass&nbsp;Object<br/>(<br/>&nbsp;&nbsp;&nbsp;&nbsp;[a]&nbsp;=&gt;&nbsp;28<br/>&nbsp;&nbsp;&nbsp;&nbsp;[b]&nbsp;=&gt;&nbsp;hi<br/>)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </pre>
+
+   
+   <p class="para">
+    NOTE: When a query contains the same column name more
+    than once (such as when joining tables which have
+    duplicate column names) and the fetch mode is
+    <strong class="constant">DB_FETCHMODE_ASSOC</strong> or
+    <strong class="constant">DB_FETCHMODE_OBJECT</strong>,
+    the data from the last column with a given name will
+    be the one returned. There are two immediate options
+    to work around this issue:
+    </p><ul class="simplelist">
+     <li class="member">
+      Use aliases in your query, for example
+      <strong class="userinput"><code>People.Name AS PersonName</code></strong>
+     </li>
+     <li class="member">
+      Change the fetch mode to <strong class="constant">DB_FETCHMODE_ORDERED</strong>
+     </li>
+    </ul>
+   
+   <p class="para">
+    TIP: If you are running into this issue, it likely
+    indicates poor planning of the database schema. Either
+    data is needlessly being duplicated or the same names are
+    being used for different kinds of data.
+   </p>
+  </div>
+
+  <div class="refsection" id="package.database.db.intro-fetch.desc.set"><div class="info"><h1>How to Set Formats</h1>
+</div>
+   
+   <p class="para">
+    You can set the fetch mode each time you call a
+    fetch method and/or you can set the default fetch
+    mode for the whole DB instance by using the
+    <a href="package.database.db.db-common.setfetchmode.html" class="link">
+     <strong class="function">setFetchMode()</strong></a> method.
+
+    </p><div class="example"><div class="info"><p><strong>Determining fetch mode per call</strong></p></div>
+     
+     <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;*&nbsp;FROM&nbsp;users'</span><span style="color: #007700">);<br /><br />while&nbsp;(</span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchInto</span><span style="color: #007700">(</span><span style="color: #0000BB">$row</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">DB_FETCHMODE_ASSOC</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$row</span><span style="color: #007700">[</span><span style="color: #DD0000">'id'</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    </div>
+    <div class="example"><div class="info"><p><strong>Changing default fetch mode</strong></p></div>
+     
+     <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setFetchMode</span><span style="color: #007700">(</span><span style="color: #0000BB">DB_FETCHMODE_ASSOC</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;*&nbsp;FROM&nbsp;users'</span><span style="color: #007700">);<br /><br />while&nbsp;(</span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchInto</span><span style="color: #007700">(</span><span style="color: #0000BB">$row</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$row</span><span style="color: #007700">[</span><span style="color: #DD0000">'id'</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    </div>
+   
+  </div>
+
+  <div class="refsection" id="package.database.db.intro-fetch.desc.number"><div class="info"><h1>Fetch Rows by Number</h1>
+</div>
+   
+   <p class="para">
+    The PEAR DB fetch system also supports an extra parameter
+    to the fetch statement. So you can fetch rows from a result
+    by number. This is especially helpful if you only want to show
+    sets of an entire result (for example in building paginated
+    HTML lists), fetch rows in an special order, etc.
+    </p><div class="example"><div class="info"><p><strong>Fetching by number</strong></p></div>
+     
+     <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /><br />//&nbsp;the&nbsp;row&nbsp;to&nbsp;start&nbsp;fetching<br /></span><span style="color: #0000BB">$from&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">50</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;how&nbsp;many&nbsp;results&nbsp;per&nbsp;page<br /></span><span style="color: #0000BB">$resPage&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;the&nbsp;last&nbsp;row&nbsp;to&nbsp;fetch&nbsp;for&nbsp;this&nbsp;page<br /></span><span style="color: #0000BB">$to&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$from&nbsp;</span><span style="color: #007700">+&nbsp;</span><span style="color: #0000BB">$resPage</span><span style="color: #007700">;<br /><br />foreach&nbsp;(</span><span style="color: #0000BB">range</span><span style="color: #007700">(</span><span style="color: #0000BB">$from</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$to</span><span style="color: #007700">)&nbsp;as&nbsp;</span><span style="color: #0000BB">$rowNum</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(!</span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchInto</span><span style="color: #007700">(</span><span style="color: #0000BB">$row</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">DB_FETCHMODE_ORDERED</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$rowNum</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$row</span><span style="color: #007700">[</span><span style="color: #0000BB">0</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    </div>
+   
+  </div>
+
+  <div class="refsection" id="package.database.db.intro-fetch.desc.get"><div class="info"><h1>Getting Entire Result Sets</h1>
+</div>
+   
+   <p class="para">
+    The <a href="package.database.db.db-common.html" class="link"><strong class="classname">DB_common</strong></a> object provides several
+    methods that make data retrieval easy by combining
+    the processes of running of the query string you provide,
+    putting the returned information into a PHP data
+    structure and freeing the results. These methods include
+    <a href="package.database.db.db-common.getone.html" class="link">
+     <strong class="function">getOne()</strong></a>,
+    <a href="package.database.db.db-common.getrow.html" class="link">
+     <strong class="function">getRow()</strong></a>,
+    <a href="package.database.db.db-common.getcol.html" class="link">
+     <strong class="function">getCol()</strong></a>,
+    <a href="package.database.db.db-common.getassoc.html" class="link">
+     <strong class="function">getAssoc()</strong></a> and
+    <a href="package.database.db.db-common.getall.html" class="link">
+     <strong class="function">getAll()</strong></a>.
+   </p>
+  </div>
+
+  <div class="refsection" id="package.database.db.intro-fetch.desc.free"><div class="info"><h1>Freeing Result Sets</h1>
+</div>
+   
+   <p class="para">
+    Once you finish using a result set, if your script
+    continues for a while, it&#039;s a good idea to save
+    memory by freeing the result set via
+    Use <a href="package.database.db.db-result.free.html" class="link">
+     <strong class="function">free()</strong></a>.
+    </p><div class="example"><div class="info"><p><strong>Freeing</strong></p></div>
+     
+     <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;name,&nbsp;address&nbsp;FROM&nbsp;clients'</span><span style="color: #007700">);<br />while&nbsp;(</span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetchInto</span><span style="color: #007700">(</span><span style="color: #0000BB">$row</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$row</span><span style="color: #007700">[</span><span style="color: #DD0000">'name'</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">',&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$row</span><span style="color: #007700">[</span><span style="color: #DD0000">'address'</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">free</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    </div>
+   
+  </div>
+
+  <div class="refsection" id="package.database.db.intro-fetch.desc.more"><div class="info"><h1>Getting More Information From Query Results</h1>
+</div>
+   
+   <p class="para">
+    With <a href="package.database.db.html" class="link"><strong class="classname">DB</strong></a> there are four ways to retrieve useful
+    information about the query result sets themselves:
+   </p>
+
+   <div class="example"><div class="info"><p><strong>
+     <a href="package.database.db.db-result.numrows.html" class="link">
+      <strong class="function">numRows()</strong></a> tells how many
+     rows are in a <strong class="command">SELECT</strong> query result
+    </strong></p></div>
+    
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;*&nbsp;FROM&nbsp;phptest'</span><span style="color: #007700">);<br />echo&nbsp;</span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">numRows</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   </div>
+
+   <div class="example"><div class="info"><p><strong>
+     <a href="package.database.db.db-result.numcols.html" class="link">
+      <strong class="function">numCols()</strong></a> tells how many
+     columns are in a <strong class="command">SELECT</strong> query result
+    </strong></p></div>
+    
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;*&nbsp;FROM&nbsp;phptest'</span><span style="color: #007700">);<br />echo&nbsp;</span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">numCols</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   </div>
+
+   <div class="example"><div class="info"><p><strong>
+     <a href="package.database.db.db-common.affectedrows.html" class="link">
+      <strong class="function">affectedRows()</strong></a> tells how many rows
+     were altered by a data change query (<strong class="command">INSERT</strong>,
+     <strong class="command">UPDATE</strong> or <strong class="command">DELETE</strong>)
+    </strong></p></div>
+    
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;remember&nbsp;that&nbsp;this&nbsp;statement&nbsp;won't&nbsp;return&nbsp;a&nbsp;result&nbsp;object<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">'DELETE&nbsp;*&nbsp;FROM&nbsp;clients'</span><span style="color: #007700">);<br />echo&nbsp;</span><span style="color: #DD0000">'I&nbsp;have&nbsp;deleted&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">affectedRows</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">'&nbsp;clients'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   </div>
+
+   <div class="example"><div class="info"><p><strong>
+     <a href="package.database.db.db-common.tableinfo.html" class="link">
+      <strong class="function">tableInfo()</strong></a> returns an associative
+     array with information about the columns in a
+     <strong class="command">SELECT</strong> query result
+    </strong></p></div>
+    
+    <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">'SELECT&nbsp;*&nbsp;FROM&nbsp;phptest'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">tableInfo</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">));<br /><br /></span><span style="color: #FF8000">//&nbsp;That&nbsp;usage&nbsp;works&nbsp;for&nbsp;DB&nbsp;1.6.0&nbsp;or&nbsp;later.<br />//&nbsp;Below&nbsp;is&nbsp;the&nbsp;syntax&nbsp;for&nbsp;earlier&nbsp;versions:<br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">tableInfo</span><span style="color: #007700">());<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   </div>
+  </div>
+
+  <div class="refsection" id="package.database.db.intro-fetch.desc.error"><div class="info"><h1>Checking for Errors</h1>
+</div>
+   
+   <p class="para">
+    Don&#039;t forget to use
+    <a href="package.database.db.db.iserror.html" class="link">
+     <strong class="function">isError()</strong></a> to check
+    if your actions return a <a href="package.database.db.db-error.html" class="link"><strong class="classname">DB_Error</strong></a> object.
+   </p>
+  </div>
+
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.db.intro-query.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.db.html">DB</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.db.intro-execute.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction - Query</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Introduction - Prepare &amp; Execute</td>
+  </tr>
+ </table>
+</div>
+</body></html>

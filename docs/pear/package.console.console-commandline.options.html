@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Managing command line options</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.console.console-commandline.html" title="Console_CommandLine" />
+  <link rel="prev" href="package.console.console-commandline.creating-the-parser.html" title="Creating the parser" />
+  <link rel="next" href="package.console.console-commandline.arguments.html" title="Managing command line arguments" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Managing command line options</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.console.console-commandline.creating-the-parser.html" title="Creating the parser">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.console.console-commandline.arguments.html" title="Managing command line arguments">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.console.console-commandline.options">
+ 
+  <h1 class="refname">Managing command line options</h1>
+  <div class="refnamediv">Managing command line options &ndash; 
+    how to add options to the parser and use them.
+  </div>
+
+ 
+
+ <div class="refsection" id="package.console.console-commandline.options.background"><div class="info"><h1>Some background</h1>
+</div>
+
+   <p class="para">
+     Options are used to provide extra information to tune or customize the
+     execution of a program. In case it wasn&#039;t clear, options are usually
+     optional. A program should be able to run just fine with no options
+     whatsoever. Pick a random program from the Unix or GNU toolsets. Can it
+     run without any options at all and still make sense? The main exceptions
+     are find, tar, and dd--all of which are mutant oddballs that have been
+     rightly criticized for their non-standard syntax and confusing
+     interfaces.
+   </p>
+   <p class="para">
+     Lots of people want their programs to have &quot;required options&quot;. Think
+     about it. If it&#039;s required, then it&#039;s not optional! If there is a piece
+     of information that your program absolutely requires in order to run
+     successfully, that&#039;s what arguments are for.
+   </p>
+   <p class="para">
+     As an example of good command-line interface design, consider the humble
+     cp utility, for copying files. It doesn&#039;t make much sense to try to copy
+     files without supplying a destination and at least one source. Hence, cp
+     fails if you run it with no arguments. However, it has a flexible, useful
+     syntax that does not require any options at all:
+     </p><div class="textcode">
+       <pre class="textcode">
+$ cp SOURCE DEST
+$ cp SOURCE ... DEST-DIR</pre>
+
+     </div>
+   
+   <p class="para">
+     You can get pretty far with just that. Most cp implementations provide a
+     bunch of options to tweak exactly how the files are copied: you can
+     preserve mode and modification time, avoid following symlinks, ask before
+     clobbering existing files, etc. But none of this distracts from the core
+     mission of cp, which is to copy either one file to another, or several
+     files to another directory.
+   </p>
+ </div>
+ <div class="refsection" id="package.console.console-commandline.options.adding"><div class="info"><h1>Adding options with <strong class="classname">Console_CommandLine</strong></h1>
+</div>
+
+   <p class="para">
+     To add options to your parser, just create the parser as explained in the
+     previous section and use the
+     <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine.html#methodaddOption" class="apidoclink">Console_CommandLine::addOption()</a>
+     method.
+   </p>
+   <p class="para">
+       The
+       <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine.html#methodaddOption" class="apidoclink">Console_CommandLine::addOption()</a>
+       method takes two arguments:
+     </p><ul class="itemizedlist">
+       <li class="listitem">
+         <span class="simpara">the option name: a string that will be used to access the
+          option in the result object. For example if you name your option
+          foo, you will access to the result object like this:
+          <code class="varname">$result-&gt;options[&#039;foo&#039;]</code>;</span>
+       </li>
+       <li class="listitem">
+         <span class="simpara">the options parameters: an array of various informations,
+          as explained below.</span>
+       </li>
+     </ul>
+     <table class="doctable table"><caption>Available option parameters</caption>
+
+       
+         <thead>
+           <tr>
+             <th>name</th>
+             <th>type</th>
+             <th>required</th>
+             <th>description</th>
+             <th>example</th>
+           </tr>
+
+         </thead>
+
+         <tbody class="tbody">
+           <tr>
+             <td>short_name</td>
+             <td>string</td>
+             <td>yes, if no long_name given</td>
+             <td>the option short name</td>
+             <td>-o</td>
+           </tr>
+
+           <tr>
+             <td>long_name</td>
+             <td>string</td>
+             <td>yes, if no short_name given</td>
+             <td>the option long name</td>
+             <td>--orientation</td>
+           </tr>
+
+           <tr>
+             <td>description</td>
+             <td>string</td>
+             <td>no, but recommended for the help message</td>
+             <td>a description for the option</td>
+             <td>orientation of the page: ltr (default) or rtl</td>
+           </tr>
+
+           <tr>
+             <td>action</td>
+             <td>string</td>
+             <td>no, default to "<span class="quote">StoreString</span>"</td>
+             <td>the option action (see next section for details)</td>
+             <td>StoreString</td>
+           </tr>
+
+           <tr>
+             <td>default</td>
+             <td>mixed</td>
+             <td>no</td>
+             <td>the option default value</td>
+             <td>ltr</td>
+           </tr>
+
+           <tr>
+             <td>choices</td>
+             <td>array</td>
+             <td>no, only relevant for options that expect argument(s)</td>
+             <td>list of possible values for the option</td>
+             <td>array(&#039;ltr&#039;, &#039;rtl&#039;)</td>
+           </tr>
+
+           <tr>
+             <td>list</td>
+             <td>array</td>
+             <td>no, only relevant for options that use the &quot;List&quot; action</td>
+             <td>list of values to display</td>
+             <td>array(&#039;blue&#039;, &#039;green&#039;, &#039;yellow&#039;)</td>
+           </tr>
+
+           <tr>
+             <td>add_list_option</td>
+             <td>boolean</td>
+             <td>no, default to <strong class="constant">FALSE</strong></td>
+             <td>this property is only relevant when the choices property
+                 is set, if set to <strong class="constant">TRUE</strong> the parser will generate an
+                 additional option to list the choices (eg. --list-foo).</td>
+             <td><strong class="constant">TRUE</strong></td>
+           </tr>
+
+           <tr>
+             <td>help_name</td>
+             <td>string</td>
+             <td>no, if not given it will default to the option name</td>
+             <td>the name to display in the option help line</td>
+             <td>page_orientation (the help ligne will be:
+               --orientation=page_orientation)</td>
+           </tr>
+
+         </tbody>
+       
+     </table>
+
+   
+   <p class="para">
+     </p><div class="example"><div class="info"><p><strong>Adding commandline options</strong></p></div>
+
+       <div class="phpcode">
+         <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Console/CommandLine.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$parser&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Console_CommandLine</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'description'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'A&nbsp;useful&nbsp;description&nbsp;for&nbsp;your&nbsp;program.'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'version'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'0.0.1'</span><span style="color: #007700">,&nbsp;</span><span style="color: #FF8000">//&nbsp;the&nbsp;version&nbsp;of&nbsp;your&nbsp;program<br /></span><span style="color: #007700">));<br /><br /></span><span style="color: #FF8000">//&nbsp;Adding&nbsp;a&nbsp;simple&nbsp;option&nbsp;that&nbsp;takes&nbsp;no&nbsp;argument&nbsp;and&nbsp;that&nbsp;tell&nbsp;our&nbsp;program&nbsp;to<br />//&nbsp;turn&nbsp;on&nbsp;verbose&nbsp;output:<br /></span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addOption</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'verbose'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'short_name'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'-v'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'long_name'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'--verbose'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'description'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'turn&nbsp;on&nbsp;verbose&nbsp;output'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'action'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'StoreTrue'<br />&nbsp;&nbsp;</span><span style="color: #007700">)<br />);<br /><br /></span><span style="color: #FF8000">//&nbsp;Adding&nbsp;an&nbsp;option&nbsp;that&nbsp;will&nbsp;store&nbsp;a&nbsp;string<br /></span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addOption</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'orientation'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'short_name'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'-o'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'long_name'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'--orientation'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'description'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'orientation&nbsp;of&nbsp;the&nbsp;page,&nbsp;"ltr"&nbsp;(default)&nbsp;or&nbsp;"rtl"'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'action'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'StoreString'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'default'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'ltr'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'help_name'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'page_orientation'<br />&nbsp;&nbsp;</span><span style="color: #007700">)<br />);<br /><br />try&nbsp;{<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parse</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$result</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">options</span><span style="color: #007700">);<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Exception&nbsp;$exc</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">displayError</span><span style="color: #007700">(</span><span style="color: #0000BB">$exc</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+       </div>
+     </div>
+   
+   <p class="para">Now if the user type:</p>
+   <p class="para">
+     </p><div class="textcode">
+       <pre class="textcode">
+$ &lt;yourprogram&gt; -vo rtl</pre>
+
+     </div>
+   
+   <p class="para">or (equivalent):</p>
+   <p class="para">
+     </p><div class="textcode">
+       <pre class="textcode">
+$ &lt;yourprogram&gt; --verbose --orientation=rtl</pre>
+
+     </div>
+   
+   <p class="para">The output of the above script will be:</p>
+   <p class="para">
+     </p><div class="textcode">
+       <pre class="textcode">
+Array
+(
+   [verbose] =&gt; 1
+   [orientation] =&gt; rtl
+   [help] =&gt;
+   [version] =&gt;
+)</pre>
+
+     </div>
+   
+ </div>
+ <div class="refsection" id="package.console.console-commandline.options.actions"><div class="info"><h1>Options actions</h1>
+</div>
+
+   <p class="para">
+     Actions tell the parser how to handle option values, among other things
+     they tell the parser if the option expects a value or not and how to
+     store this value in the result object.
+   </p>
+   <div class="refsection"><div class="info"><h1>StoreTrue</h1>
+</div>
+
+     <p class="para">This action tells the parser to store the value true in the
+       result object if the option is present in the command line, for
+       example:
+     </p>
+     <p class="para">
+       </p><div class="textcode"><pre class="textcode">$ &lt;yourprogram&gt; -v</pre>
+</div>
+     
+     <p class="para">
+       will store <strong class="constant">TRUE</strong> in <code class="varname">$result-&gt;options[&#039;verbose&#039;]</code>,
+       assuming the option was defined like this:
+     </p>
+     <p class="para">
+       </p><div class="phpcode">
+         <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'verbose'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'short_name'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'-v'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'action'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'StoreTrue'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parse</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+       </div>
+     
+   </div>
+   <div class="refsection"><div class="info"><h1>StoreFalse</h1>
+</div>
+
+     <p class="para">This action tells the parser to store the value false in the
+       result object if the option is present in the command line, for
+       example:</p>
+     <p class="para">
+       </p><div class="textcode"><pre class="textcode">$ &lt;yourprogram&gt; -q</pre>
+</div>
+     
+     <p class="para">
+       will store <strong class="constant">FALSE</strong> in <code class="varname">$result-&gt;options[&#039;verbose&#039;]</code>,
+       assuming the option was defined like this:
+     </p>
+     <p class="para">
+       </p><div class="phpcode">
+         <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'verbose'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'short_name'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'-q'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'action'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'StoreFalse'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parse</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+       </div>
+     
+   </div>
+   <div class="refsection"><div class="info"><h1>StoreString</h1>
+</div>
+
+     <p class="para">This action tells the parser that the option expects a value and to
+       store this value as a string in the result object, for example:</p>
+     <p class="para">
+       </p><div class="textcode"><pre class="textcode">$ &lt;yourprogram&gt; -o out.txt</pre>
+</div>
+     
+     <p class="para">
+       will store the string "<span class="quote">out.txt</span>" in
+       <code class="varname">$result-&gt;options[&#039;outfile&#039;]</code>,
+       assuming the option was defined like this:
+     </p>
+     <p class="para">
+       </p><div class="phpcode">
+         <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'outfile'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'short_name'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'-o'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'action'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'StoreString'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parse</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+       </div>
+     
+   </div>
+   <div class="refsection"><div class="info"><h1>StoreInt</h1>
+</div>
+
+     <p class="para">This action tells the parser that the option expects a value and
+       to store this value as an integer in the result object, for example:</p>
+     <p class="para">
+       </p><div class="textcode"><pre class="textcode">$ &lt;yourprogram&gt; --width=500</pre>
+</div>
+     
+     <p class="para">
+       will store the integer 500 in <code class="varname">$result-&gt;options[&#039;width&#039;]</code>,
+       assuming the option was defined like this:
+     </p>
+     <p class="para">
+       </p><div class="phpcode">
+         <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'width'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'long_name'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'--width'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'action'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'StoreInt'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parse</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+       </div>
+     
+   </div>
+   <div class="refsection"><div class="info"><h1>StoreFloat</h1>
+</div>
+
+     <p class="para">This action tells the parser that the option expects a value and
+       to store this value as a float in the result object, for example:</p>
+     <p class="para">
+       </p><div class="textcode"><pre class="textcode">$ &lt;yourprogram&gt; -l=0.3</pre>
+</div>
+     
+     <p class="para">
+       will store the float 0.3 in <code class="varname">$result-&gt;options[&#039;level&#039;]</code>,
+       assuming the option was defined like this:
+     </p>
+     <p class="para">
+       </p><div class="phpcode">
+         <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'level'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'short_name'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'-l'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'action'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'StoreFloat'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parse</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+       </div>
+     
+   </div>
+   <div class="refsection"><div class="info"><h1>Counter</h1>
+</div>
+
+     <p class="para">This action tells the parser to increment the value in the result
+       object each time it encounters the option in the command line, for
+       example:</p>
+     <p class="para">
+       </p><div class="textcode"><pre class="textcode">$ &lt;yourprogram&gt; -vvvv</pre>
+</div>
+     
+     <p class="para">or the equivalent:</p>
+     <p class="para">
+       </p><div class="textcode"><pre class="textcode">$ &lt;yourprogram&gt; -v -v -v --verbose</pre>
+</div>
+     
+     <p class="para">
+       will store the integer 4 in
+       <code class="varname">$result-&gt;options[&#039;verbose_level&#039;]</code>,
+       assuming the option was defined like this:
+     </p>
+     <p class="para">
+       </p><div class="phpcode">
+         <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'verbose_level'</span><span style="color: #007700">,&nbsp;array(<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'short_name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'-v'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'long_name'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'--verbose'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'action'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Counter'<br /></span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parse</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+       </div>
+     
+   </div>
+   <div class="refsection"><div class="info"><h1>Help</h1>
+</div>
+
+     <p class="para">This action tells the parser to display the help message if it
+       encounters the option in the command line, most of the time you won&#039;t
+       need this since it is handled by
+       <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine.html" class="apidoclink">Console_CommandLine</a>
+       internally.
+     </p>
+   </div>
+   <div class="refsection"><div class="info"><h1>Version</h1>
+</div>
+
+     <p class="para">This action tells the parser to display the program version if it
+       encounters the option in the command line, as for Help action, chances
+       are that you won&#039;t need this since it is handled by
+       <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine.html" class="apidoclink">Console_CommandLine</a>
+       internally.
+     </p>
+   </div>
+   <div class="refsection"><div class="info"><h1>Password</h1>
+</div>
+
+     <p class="para">This action allows the user to either type the password on the
+       commandline or to be prompted for it (will not echo on unix systems),
+       some examples:</p>
+     <p class="para">
+       </p><div class="phpcode">
+         <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'password'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'short_name'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'-p'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'action'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'Password'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parse</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+       </div>
+     
+     <p class="para">
+       </p><div class="textcode"><pre class="textcode">$ &lt;yourprogram&gt; -ps3cret</pre>
+</div>
+     
+     <p class="para">
+         will store the string "<span class="quote">s3ecret</span>" in
+         <code class="varname">$result-&gt;options[&#039;password&#039;]</code>
+     </p>
+     <p class="para">whereas:</p>
+     <p class="para">
+       </p><div class="textcode"><pre class="textcode">$ &lt;yourprogram&gt; -p</pre>
+</div>
+     
+     <p class="para">
+         will "<span class="quote">prompt</span>" the user for entering his/her password
+         without echoing it, and will store "<span class="quote">s3ecret</span>" in
+         <code class="varname">$result-&gt;options[&#039;password&#039;]</code>
+     </p>
+   </div>
+   <div class="refsection"><div class="info"><h1>Callback</h1>
+</div>
+
+     <p class="para">This action allows to specify a <span class="acronym">PHP</span> callback
+         to handle user input. The callback must be a php callable and must
+         accept five arguments:</p>
+     <ul class="itemizedlist">
+       <li class="listitem">
+         <span class="simpara">the value of the option;</span>
+       </li>
+       <li class="listitem">
+         <span class="simpara">the
+           <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine_Option_Callback.html" class="apidoclink">Console_CommandLine_Option_Callback</a>
+           instance</span>
+       </li>
+       <li class="listitem">
+         <span class="simpara">the
+           <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine_Result.html" class="apidoclink">Console_CommandLine_Result</a>
+           instance</span>
+       </li>
+       <li class="listitem">
+         <span class="simpara">the
+           <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine.html" class="apidoclink">Console_CommandLine</a>
+           instance (the parser)</span>
+       </li>
+       <li class="listitem">
+         <span class="simpara">an array of additional parameters that you specify when
+             building your option.</span>
+       </li>
+     </ul>
+     <p class="para">Your callback function must return the modified (or not modified)
+         value (the first argument).</p>
+     <p class="para">All these arguments should give you enough flexibility to build
+         complex callback actions.</p>
+     <p class="para">If the callback is to a class method, then the method must be declared as a public.</p>
+     <p class="para">Here is a simple example:</p>
+     <p class="para">
+       </p><div class="phpcode">
+         <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/**<br />*&nbsp;A&nbsp;simple&nbsp;encryption&nbsp;callback.<br />*<br />*/<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">encryptCallback</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$option</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$result</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$parser</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$params</span><span style="color: #007700">=array())<br />{<br />&nbsp;&nbsp;&nbsp;if&nbsp;(!isset(</span><span style="color: #0000BB">$params</span><span style="color: #007700">[</span><span style="color: #DD0000">'salt'</span><span style="color: #007700">]))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$params</span><span style="color: #007700">[</span><span style="color: #DD0000">'salt'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">''</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">sha1</span><span style="color: #007700">(</span><span style="color: #0000BB">$params</span><span style="color: #007700">[</span><span style="color: #DD0000">'salt'</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #0000BB">$value</span><span style="color: #007700">);<br />}<br /><br />require_once&nbsp;</span><span style="color: #DD0000">'Console/CommandLine.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$parser&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Console_CommandLine</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'encrypt'</span><span style="color: #007700">,&nbsp;array(<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'short_name'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'-e'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'long_name'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'--encrypt'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'action'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Callback'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'description'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'encrypt&nbsp;the&nbsp;given&nbsp;value&nbsp;using&nbsp;sha1&nbsp;+&nbsp;salt'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'callback'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'encryptCallback'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'action_params'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'salt'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'x2897ZHKx7200j1__2'</span><span style="color: #007700">)<br />));<br /><br />try&nbsp;{<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parse</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$result</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">options</span><span style="color: #007700">[</span><span style="color: #DD0000">'encrypt'</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Exception&nbsp;$exc</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">displayError</span><span style="color: #007700">(</span><span style="color: #0000BB">$exc</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+       </div>
+     
+     <p class="para">Now if the user type:</p>
+     <p class="para">
+       </p><div class="textcode">
+         <pre class="textcode">
+$ &lt;yourprogram&gt; -e foobar</pre>
+
+       </div>
+     
+     <p class="para">The output of the above script will be:</p>
+     <p class="para">
+       </p><div class="textcode"><pre class="textcode">7f12da3b1c126d7a47745b09dc0040c92cee1700</pre>
+</div>
+     
+   </div>
+   <div class="refsection"><div class="info"><h1>List</h1>
+</div>
+
+     <p class="para">a special action that simply output an array as a list.</p>
+     <p class="para">
+       </p><div class="phpcode">
+         <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'list_colors'</span><span style="color: #007700">,&nbsp;array(<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'short_name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'-l'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'long_name'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'--list-colors'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'action'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'List'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'list'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'blue'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'green'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'yellow'</span><span style="color: #007700">)<br />));<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parse</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+       </div>
+     
+     <p class="para">
+       </p><div class="textcode"><pre class="textcode">$ &lt;yourprogram&gt; --list-colors</pre>
+</div>
+     
+     <p class="para">will display the list of colors separated by commas.</p>
+   </div>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.console.console-commandline.creating-the-parser.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.console.console-commandline.html">Console_CommandLine</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.console.console-commandline.arguments.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Creating the parser</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Managing command line arguments</td>
+  </tr>
+ </table>
+</div>
+</body></html>

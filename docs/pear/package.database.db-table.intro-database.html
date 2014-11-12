@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>DB_Table_Database Class Tutorial</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.db-table.html" title="DB_Table" />
+  <link rel="prev" href="package.database.db-table.intro-forms.html" title="DB_Table Forms Tutorial" />
+  <link rel="next" href="package.database.db-table.intro-generator.html" title="DB_Table_Generator Class Tutorial" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">DB_Table_Database Class Tutorial</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.db-table.intro-forms.html" title="DB_Table Forms Tutorial">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.db-table.intro-generator.html" title="DB_Table_Generator Class Tutorial">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.db-table.intro-database">
+ 
+   <h1 class="refname"><strong class="classname">DB_Table_Database</strong> Class Tutorial</h1>
+   <div class="refnamediv"><strong class="classname">DB_Table_Database</strong>  Class Tutorial &ndash; 
+   Interface to a relational database
+   </div>
+
+ 
+
+<div class="refsection" id="package.database.db-table.intro-database.desc">
+<h1 class="title">Description</h1>
+
+<p class="para">
+<strong class="classname">DB_Table_Database</strong> is an database abstraction 
+class for a relational database. It is a layer built on top of the 
+<strong class="classname">DB_Table</strong> class: 
+Each table in a <strong class="classname">DB_Table_Database</strong> object is 
+represented by a <strong class="classname">DB_Table</strong> object. 
+The most important difference between a 
+<strong class="classname">DB_Table_Database</strong> object and 
+a collection of <strong class="classname">DB_Table</strong> objects is that the 
+properties of a parent <strong class="classname">DB_Table_Database</strong> object 
+contain a model of the entire database, including relationships between
+tables.
+</p><p class="para">
+<strong class="classname">DB_Table_Database</strong> provides:
+</p><ul class="itemizedlist">
+<li class="listitem">
+  <span class="simpara">
+  An object-oriented representation of a relations between tables in a 
+  relational database, including linking/association tables that create
+  many-to-many relationships.
+  </span>
+</li>
+
+<li class="listitem">
+  <span class="simpara">
+  A simplified API for INSERT, UPDATE, DELETE, and SELECT commands, 
+  with an interface very similar to that of the 
+  <strong class="classname">DB_Table</strong> class.
+  </span>
+</li>
+
+<li class="listitem">
+  <span class="simpara">
+  Automated construction of join conditions for inner joins of any 
+  number of tables, based on a list of table names and/or a list of 
+  desired column names.
+  </span>
+</li>
+
+<li class="listitem">
+  <span class="simpara">
+  Optional checking of the validity of foreign key values by the PHP 
+  layer upon insertion or updating.
+  </span>
+</li>
+
+<li class="listitem">
+  <span class="simpara">
+  Optional PHP emulation of SQL ON DELETE and ON UPDATE referentially 
+  triggered actions.
+  </span>
+</li>
+
+<li class="listitem">
+  <span class="simpara">
+  PHP serialization to (and unserialization from) a string that contains 
+  the entire database schema.
+  </span>
+</li>
+
+<li class="listitem">
+  <span class="simpara">
+  Serialization to (and unserialization) from XML, using an extension 
+  of the MDB2 XML schema. (Unserialization from XML requires PHP 5).
+  </span>
+</li>
+
+<li class="listitem">
+  <span class="simpara">
+  Methods to set various properties of all the child 
+  <strong class="classname">DB_Table</strong> objects to a common value.
+  </span>
+</li>
+
+<li class="listitem">
+  <span class="simpara">
+  Various utility methods that aid the construction of SQL queries.
+  </span>
+</li>
+
+</ul>
+
+
+<p class="para">
+Like <strong class="classname">DB_Table</strong>, <strong class="classname">DB_Table_Database</strong> 
+wraps a DB or MDB2 database connection object. The class is compatible with 
+both PHP 4 and PHP 5, with the exception of one non-essential method: The 
+<a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.xml" class="link">
+<strong class="function">fromXML()</strong> 
+</a> 
+method, which creates a <strong class="classname">DB_Table_Database</strong> object 
+from an XML database schema, requires PHP 5. 
+</p>
+
+<p class="para">
+Class <strong class="classname">DB_Table_Database</strong> extends abstract base class
+<strong class="classname">DB_Table_Base</strong>. Methods or properties that are inherited
+from <strong class="classname">DB_Table_Base</strong> are noted as such, and are indicated
+in the table of contents of this page with the notation 
+&quot;(from <strong class="classname">DB_Table_Base</strong>)&quot;.
+</p>
+
+<p class="para">
+This tutorial uses an extended example to introduce the use of the 
+<strong class="classname">DB_Table_Database</strong> class to create a model of
+an interface to a relational database.
+</p>
+
+<ul class="itemizedlist">
+  
+  <li class="listitem">
+     <span class="simpara"><a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.example" class="link">Example Database</a></span>
+  </li>
+  <li class="listitem">
+     <span class="simpara"><a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.constructor" class="link">Constructor</a></span>
+  </li>
+  <li class="listitem">
+     <span class="simpara">
+     <a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.model" class="link">Building a Model</a>
+     </span>
+     <ul class="itemizedlist">
+       <li class="listitem">
+          <span class="simpara">
+          <a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.model.addTable" class="link">
+          <strong class="function">addTable()</strong></a> - Adding tables
+          </span>
+       </li>
+       <li class="listitem">
+          <span class="simpara"><a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.model.addRef" class="link">
+       <strong class="function">addRef()</strong></a> - Adding references</span>
+       </li>
+       <li class="listitem">
+          <span class="simpara"><a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.model.addLink" class="link">
+          <strong class="function">addLink()</strong></a> - Declaring linking tables</span>
+       </li>
+       <li class="listitem">
+          <span class="simpara">
+            <a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.model.delete" class="link">
+            Deleting Tables, References, or Links
+            </a>
+          </span>
+       </li>
+     </ul>
+  </li>
+  <li class="listitem">
+     <span class="simpara">
+       <a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.refAction" class="link">
+       Referentially Triggered Actions
+       </a>
+     </span>
+     <ul class="itemizedlist">
+        <li class="listitem">
+        <span class="simpara">
+          <a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.refAction.addRef" class="link">
+          Declaring actions with <strong class="function">addRef()</strong>
+          </a>
+        </span>
+        </li>
+        <li class="listitem">
+        <span class="simpara">
+        <a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.refAction.modifyRefOptions" class="link">
+          <strong class="function">setOnDelete()</strong> and <strong class="function">setOnUpdate()</strong>
+        </a>
+        </span>
+        </li>
+        <li class="listitem">
+          <span class="simpara">
+            <a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.refAction.setActOn" class="link">
+            <strong class="function">setActOnDelete()</strong> and 
+            <strong class="function">setActOnUpdate()</strong>
+            </a>
+          </span>
+        </li>
+     </ul>
+  </li>
+  <li class="listitem">
+     <span class="simpara">
+        <a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.FKeyCheck" class="link">
+        Foreign Key Validation</a>
+     </span>
+  </li>
+  <li class="listitem">
+     <span class="simpara">
+     <a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.select" class="link">
+     Data Selection</a>
+     </span>
+     <ul class="itemizedlist">
+        <li class="listitem">
+           <span class="simpara">
+           <a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.select.query" class="link">
+             Query Arrays
+           </a>
+           </span>
+        </li>
+        <li class="listitem">
+           <span class="simpara">
+           <a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.select.methods" class="link">
+             <strong class="function">select()</strong>, <strong class="function">selectResult()</strong>, and
+             <strong class="function">selectCount()</strong>
+           </a> 
+           (from <strong class="classname">DB_Table_Base</strong>)
+           </span>
+        </li>
+        <li class="listitem">
+           <span class="simpara">
+           <a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.select.autoJoin" class="link">
+           <strong class="function">autoJoin()</strong></a>
+           </span>
+        </li>
+     </ul>
+  </li>
+  <li class="listitem">
+     <span class="simpara">
+     <a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.util" class="link">
+     SQL Utilities</a>
+     </span>
+     <ul class="itemizedlist">
+        <li class="listitem">
+           <span class="simpara">
+              <a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.util.quote" class="link">
+              <strong class="function">quote()</strong></a>
+           </span>
+        </li>
+        <li class="listitem">
+           <span class="simpara">
+              <a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.util.buildFilter" class="link">
+              <strong class="function">buildFilter()</strong></a>
+              (from <strong class="classname">DB_Table_Base</strong>)
+           </span>
+        </li>
+        <li class="listitem">
+           <span class="simpara">
+              <a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.util.buildSQL" class="link">
+              <strong class="function">buildSQL()</strong></a>
+              (from <strong class="classname">DB_Table_Base</strong>)
+           </span>
+        </li>
+        <li class="listitem">
+           <span class="simpara">
+              <a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.util.validCol" class="link">
+              <strong class="function">validCol()</strong></a>
+           </span>
+        </li>
+     </ul>
+  </li>
+  <li class="listitem">
+     <span class="simpara">
+        <a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.modify" class="link">
+        Data Modification: 
+        <strong class="function">insert()</strong>, <strong class="function">update()</strong>, and 
+        <strong class="function">delete()</strong></a>
+     </span>
+  </li>
+  <li class="listitem">
+     <span class="simpara">
+        <a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.serialize" class="link">
+        PHP Serialization
+        </a>
+     </span>
+     <ul class="itemizedlist">
+        <li class="listitem">
+           <span class="simpara">
+              <a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.serialize.setTableSubclassPath" class="link">
+              <strong class="function">setTableSubclassPath()</strong>
+              </a>
+           </span>
+        </li>
+     </ul>
+  </li>
+  <li class="listitem">
+     <span class="simpara">
+        <a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.xml" class="link">XML Serialization</a>
+     </span>
+  </li>
+  <li class="listitem">
+     <span class="simpara">
+        <a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.DBTableProps" class="link">
+        Setting <strong class="classname">DB_Table</strong> Properties
+        </a>
+     </span>
+  </li>
+  <li class="listitem">
+     <span class="simpara">
+     <a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.get" class="link">Get* Methods</a>
+     </span>
+  </li>
+</ul>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-database.example"><div class="info"><h1>Example Database</h1>
+</div>
+
+<p class="para">
+Throughout this tutorial, our examples will refer to a 
+<strong class="classname">DB_Table_Database</strong> 
+object for an example database named TestDB, which is described below. 
+The child <strong class="classname">DB_Table</strong> objects that are associated 
+with RDBMS tables must all be instantiated first, and then added to 
+(i.e., linked with) a parent <strong class="classname">DB_Table_Database</strong> 
+object. 
+</p>
+<p class="para">
+The example database TestDB stores names, numbers, and addresses 
+for a set of people, and contains 4 tables. Peoples names, phone 
+numbers, and addresses are stored in three tables named Person, 
+Phone, and Address, respectively.  To allow for the fact that 
+several people may share a phone number, and that a person may 
+have more than one phone number, the database allows the creation 
+of a many-to-many relationship between Person and Phone. This
+relationships are established by an additional linking table, named 
+PersonPhone, which contains foreign key references to Person and 
+Phone.
+</p> 
+
+<p class="para">
+DB_Table objects must be instantiated before they can be added to 
+a parent <strong class="classname">DB_Table_Database</strong> instance. The usual 
+way of creating a <strong class="classname">DB_Table</strong> object (as discussed 
+in the tutorial for that class) is to create one subclass of 
+<strong class="classname">DB_Table</strong> for each table, and create one instance 
+of each such subclass. In this tutorial, we use a convention in which 
+the subclass of <strong class="classname">DB_Table</strong> associated with a 
+database table named &quot;Entity&quot; is Entity_Table, and in which the single 
+object of this class is $Entity. This is also the convention used in
+code generated by the <strong class="classname">DB_Table_Generator</strong> class.
+</p> <p class="para">
+The following code defines a subclass <strong class="classname">Person_Table</strong> 
+that represents a database table Person:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'DB/Table.php'<br /><br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">Person_Table&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">DB_Table<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Define&nbsp;columns<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$col&nbsp;</span><span style="color: #007700">=&nbsp;array&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'PersonID'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'integer'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'require'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'FirstName'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'char'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">32</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'require'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'MiddleName'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'char'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">32</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'LastName'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'char'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">64</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'require'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'NameSuffix'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'char'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">16</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'AddressID'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'integer'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Define&nbsp;indices.&nbsp;PersonID&nbsp;is&nbsp;declared&nbsp;to&nbsp;be&nbsp;the&nbsp;primary&nbsp;index<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$idx&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'PersonID'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'cols'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'PersonID'</span><span style="color: #007700">,&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'primary'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'AddressID'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'cols'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'AddressID'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'normal'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Declare&nbsp;'PersonID'&nbsp;to&nbsp;be&nbsp;an&nbsp;auto-increment&nbsp;column<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$auto_inc_col&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'PersonID'</span><span style="color: #007700">;<br /><br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+Here, &#039;PersonID&#039; is the primary index of the Person table. Column 
+AddressID is a foreign key that references the primary key of the 
+Address table (defined below). 
+</p><p class="para">
+Note the assignment of a value for the $auto_inc_col property, which 
+is a recent addition to <strong class="classname">DB_Table</strong>: The value of 
+$auto_inc_col is the name of a column that is declared to be &#039;auto increment&#039;. 
+Auto incrementing of this column is now implemented in the insert method 
+of <strong class="classname">DB_Table</strong> using DB or MDB2 sequences.
+</p><p class="para">
+The following code uses the same method to create subclasses of 
+<strong class="classname">DB_Table</strong> associated with the remaining Phone, 
+Address, and PersonPhone tables of database TestDB:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">Address_Table&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">DB_Table<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$col&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'AddressID'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'integer'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'require'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'Building'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'char'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;</span><span style="color: #0000BB">16</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'Street'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'char'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">64</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'UnitType'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'char'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">16</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'Unit'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'char'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">16</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'City'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'char'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">64</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'StateAbb'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'char'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'ZipCode'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'char'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">16</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$idx&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'AddressID'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'cols'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'AddressID'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'primary'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$auto_inc_col&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'AddressID'</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">Phone_Table&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">DB_Table<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$col&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'PhoneID'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'integer'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'require'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'PhoneNumber'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'char'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">16</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'require'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'PhoneType'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'char'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">4</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$idx&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'PhoneID'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'cols'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'PhoneID'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'primary'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$auto_inc_col&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'PhoneID'</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">PersonPhone_Table&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">DB_Table<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$col&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'PersonID'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'integer'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'require'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'PhoneID'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'integer'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'require'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$idx&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'PersonID'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'cols'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'PersonID'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'normal'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'PhoneID'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'cols'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'PhoneID'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'normal'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;);<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+In ths example, the PhoneType column of table Phone is used to distinguish 
+home, work, and cell phones, and so must have one of the 4 character values 
+&#039;HOME&#039;, &#039;WORK&#039; or &#039;CELL&#039;.
+</p><p class="para">
+The following code instantiates one object of each <strong class="classname">DB_Table</strong> 
+subclass, which is associated with the corresponding table:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$Person&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Person_Table</span><span style="color: #007700">(</span><span style="color: #0000BB">$conn</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Person'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'safe'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$Address&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Address_Table</span><span style="color: #007700">(</span><span style="color: #0000BB">$conn</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Address'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'safe'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$Phone&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Phone_Table</span><span style="color: #007700">(</span><span style="color: #0000BB">$conn</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Phone'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'safe'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$PersonPhone&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">PersonPhone_Table</span><span style="color: #007700">(</span><span style="color: #0000BB">$conn</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'PersonPhone'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'safe'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+Here, because we have used the value &#039;safe&#039; for the optional third 
+parameter of the <strong class="classname">DB_Table</strong> constructor in each 
+statement, each table will be created in the RDBMS only if and only 
+if a table of that name does not already exist in the database.
+</p>
+
+<p class="para">
+It is recommended that constructor statements be placed in a separate 
+file from any of the <strong class="classname">DB_Table</strong> subclass definitions. 
+Doing so makes it easier to 
+<a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.serialize" class="link">
+serialize and unserialize</a> the 
+<strong class="classname">DB_Table</strong> and <strong class="classname">DB_Table_Database</strong> 
+objects, because a php file in which an instance of a 
+<strong class="classname">DB_Table</strong> subclass is unserialized must have access 
+to the subclass definition, but should not include the constructor statements. 
+Putting each <strong class="classname">DB_Table</strong> subclass definition in a separate 
+file, with a name that is the subclass name with a .php extension, also allows 
+the subclass definitions to be autoloaded when an object is serialized, as 
+discussed 
+<a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.serialize" class="link">below</a>.
+</p>
+
+<p class="para">
+An alternative way to create a <strong class="classname">DB_Table</strong> object is to 
+create an instance of <strong class="classname">DB_Table</strong> itself, rather than 
+of a subclass of <strong class="classname">DB_Table</strong>.  In this method, one first 
+instantiates a generic <strong class="classname">DB_Table</strong> object, which initially 
+contains no information about the table schema, and then sets the values of 
+the public $col and $idx properties needed to define a table schema. As an 
+example, the following code constructs an instance of DB_Table that represents 
+the Person table:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$Person&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">DB_Table</span><span style="color: #007700">(</span><span style="color: #0000BB">$conn</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Person'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$Person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">col</span><span style="color: #007700">[</span><span style="color: #DD0000">'PersonID'</span><span style="color: #007700">]&nbsp;=&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'integer'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'require'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$Person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">col</span><span style="color: #007700">[</span><span style="color: #DD0000">'FirstName'</span><span style="color: #007700">]&nbsp;=&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'char'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">32</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'require'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$Person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">col</span><span style="color: #007700">[</span><span style="color: #DD0000">'MiddleName'</span><span style="color: #007700">]&nbsp;=&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'char'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">32</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$Person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">col</span><span style="color: #007700">[</span><span style="color: #DD0000">'LastName'</span><span style="color: #007700">]&nbsp;=&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'char'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">64</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'require'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$Person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">col</span><span style="color: #007700">[</span><span style="color: #DD0000">'NameSuffix'</span><span style="color: #007700">]&nbsp;=&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'char'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">16</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$Person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">col</span><span style="color: #007700">[</span><span style="color: #DD0000">'AddressID'</span><span style="color: #007700">]&nbsp;=&nbsp;array(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'integer'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$Person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">idx</span><span style="color: #007700">[</span><span style="color: #DD0000">'PersonID'</span><span style="color: #007700">]&nbsp;=&nbsp;array(</span><span style="color: #DD0000">'cols'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'PersonID'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'primary'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$Person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">idx</span><span style="color: #007700">[</span><span style="color: #DD0000">'PersonID'</span><span style="color: #007700">]&nbsp;=&nbsp;array(</span><span style="color: #DD0000">'cols'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'PersonID'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'normal'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$Person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">auto_inc_col&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'PersonID'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+This method is valid only in recent versions of the 
+<strong class="classname">DB_Table</strong> package (1.5.0RC1 and greater) that contain 
+the <strong class="classname">DB_Table_Database</strong> class. Earlier versions of 
+<strong class="classname">DB_Table</strong> required that <strong class="classname">DB_Table</strong> 
+always be extended.  The only real disadvantage of using such generic 
+<strong class="classname">DB_Table</strong> objects is that it makes it impossible to 
+override the methods of <strong class="classname">DB_Table</strong> to, for example, 
+customize the insert or update method so as to implement business rules 
+for a table. Generic <strong class="classname">DB_Table</strong> objects are used by 
+the <strong class="function">fromXML()</strong> method, which takes an XML description of 
+a database schema as a parameter, and returns a 
+<strong class="classname">DB_Table_Database</strong> object in which each of the child 
+tables is represented by an instance of <strong class="classname">DB_Table</strong>. 
+</p>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-database.constructor"><div class="info"><h1>Constructor</h1>
+</div>
+
+<p class="para">
+A <strong class="classname">DB_Table_Database</strong> object is instantiated as an 
+empty shell, to which tables, foreign key references, and links are then 
+added. The constructor interface is
+</p><div class="programlisting">
+<br/><br/>void&nbsp;DB_Table_Database(DB/MDB2&nbsp;object&nbsp;$conn,&nbsp;string&nbsp;$name)
+</div><p>
+The parameter $conn must be either a DB or MDB2 object, which establishes
+a connection to a RDBMS.  The $name parameter is the name of the 
+database. To instantiate an object that represents a database named 
+TestDB with a DB connection to a MySQL database, we might thus use 
+(with no error checking):
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'DB/Table/Database.php'<br /><br /></span><span style="color: #0000BB">$conn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">DB</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #DD0000">"mysqli://</span><span style="color: #0000BB">$user</span><span style="color: #DD0000">:</span><span style="color: #0000BB">$password</span><span style="color: #DD0000">@</span><span style="color: #0000BB">$host</span><span style="color: #DD0000">"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$db&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">DB_Table_Database</span><span style="color: #007700">(</span><span style="color: #0000BB">$conn</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'TestDB'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+where the values of $user, $password, and $host are the user name,
+database password, and host machine, respectively.
+</p>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-database.model"><div class="info"><h1>Building a Model</h1>
+</div>
+
+<p class="para">
+To construct a model of a relational database, after instantiating a 
+set of <strong class="classname">DB_Table</strong> objects and a 
+<strong class="classname">DB_Table_Database</strong> object, we must add the table 
+objects to the database object, add declarations of foreign key 
+references, and declare many-to-many relationships that involve linking 
+tables, in that order.
+</p>
+
+<div class="refsection" id="package.database.db-table.intro-database.model.addTable"><div class="info"><h1>Adding Tables</h1>
+</div>
+
+<p class="para">
+After a <strong class="classname">DB_Table</strong> object is instantiated, it 
+can be added to the parent database with the 
+<strong class="function">DB_Table_Database::addTable()</strong> method. The interface 
+for this method is
+</p><div class="programlisting">
+<br/><br/>true|PEAR_Error&nbsp;addTable(object&nbsp;&amp;$Table)
+</div><p>
+where $Table is a <strong class="classname">DB_Table</strong> object that is passed 
+by reference. The method returns boolean true on normal completion, and 
+a <strong class="classname">PEAR_Error</strong> object on failure.
+</p><p class="para">
+The following code adds the four tables of our example database to 
+the $db <strong class="classname">DB_Table_Database</strong> object:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addTable</span><span style="color: #007700">(</span><span style="color: #0000BB">$Person</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addTable</span><span style="color: #007700">(</span><span style="color: #0000BB">$Address</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addTable</span><span style="color: #007700">(</span><span style="color: #0000BB">$Phone</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addTable</span><span style="color: #007700">(</span><span style="color: #0000BB">$PersonPhone</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+In this and all subseqent examples, we omit the error handling code
+that should be added to production code. 
+</p>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-database.model.addRef"><div class="info"><h1>Adding Foreign Key References</h1>
+</div>
+
+<p class="para">
+After tables have been added to a database, we can use the 
+<strong class="function">addRef()</strong> method to add references between pairs 
+of tables. 
+</p><p class="para">
+Synopsis (simplified):
+</p><div class="programlisting">
+<br/><br/>true|PEAR_Error&nbsp;addRef(string&nbsp;$ftable,&nbsp;string|array&nbsp;$fkey,&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;string&nbsp;$rtable,&nbsp;[string|array&nbsp;$rkey]&nbsp;)
+</div><p>
+Here $ftable is the name of a referencing (or foreign key) table, $fkey 
+is the foreign key, $rtable is the name of the referenced table, and $rkey 
+is the (optional) referenced key. If the optional $rkey parameter is absent 
+or null, the referenced key is taken by default to be the primary key of 
+the referenced table.  The foreign and referenced key values are specified 
+using the same syntax as that used to define indices in 
+<strong class="classname">DB_Table</strong>: Each key 
+may be either a column name string, for a single-column key, or a sequential 
+array of column names, for a multi-column key. The method returns true on 
+normal completion, and a <strong class="classname">PEAR_Error</strong> on failure.  The 
+simplified synopsis shown here does not include two more optional parameters 
+(parameters 5 and 6) that can be used to specify &#039;on delete&#039; and &#039;on update&#039; 
+actions. The full interface is presented 
+<a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.refAction.addRef" class="link">
+below</a>.
+
+For example, the command:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRef</span><span style="color: #007700">(</span><span style="color: #DD0000">'Person'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'AddressID'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Address'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'AddressID'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+adds a reference from foreign key Person.AddressID of referencing table 
+Person to the primary key Address.AddressID of referenced table Address. 
+Because the referenced key &#039;AddressID&#039; is also the primary key of table
+&#039;Address&#039; this could also be written as:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRef</span><span style="color: #007700">(</span><span style="color: #DD0000">'Person'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'AddressID'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Address'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+When the referenced key is explicitly specified, as in the first example, 
+it should always be either a primary key or a key for which a unique index 
+is defined, as required by standard SQL.
+</p><p class="para">
+A reference between two tables can only be added after both the referencing 
+and referenced <strong class="classname">DB_Table</strong> objects have been instantiated 
+and added to the parent <strong class="classname">DB_Table_Datbase</strong> instance. 
+</p>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-database.model.addLink"><div class="info"><h1>Adding Links</h1>
+</div>
+
+<p class="para">
+A table may be declared to be a &quot;linking&quot; table that establishes a 
+many-to-may relationship between two others. The only effect of such 
+a declaration is to change the action of the autoJoin method: 
+If a table named $link is declared to be a linking table that creates 
+a many-to-many relationship between tables named $table1 and $table2, 
+then the autoJoin method may use the linking table to join $table1 
+and $table2, if necessary. 
+</p><p class="para">
+Method <strong class="function">addLink()</strong> declares a table to be a 
+linking or association table for two others.
+</p><p class="para">
+Synopsis:
+</p><div class="programlisting">
+<br/><br/>true|PEAR_Error&nbsp;addLink(string&nbsp;$table1,&nbsp;string&nbsp;$table2,&nbsp;string&nbsp;$link)
+</div><p>
+Here, $link is the name of a linking table that links tables named 
+$table1 and $table2. All three parameters are required, and all must 
+be valid table name strings.  It does not matter which of the two 
+linked tables, $table1 and $table2, is listed first and which second 
+in the function call. A table that links $table1 and $table2 must have 
+foreign keys that references to both of the linked tables.  A link can 
+only be added to the model after the references from the linking table 
+to both of the linked tables have been added.  The method returns true
+on normal completion and a <strong class="function">PEAR_Error()</strong> if an error 
+is detected. 
+</p>
+<p class="para">
+For example, the command:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addLink</span><span style="color: #007700">(</span><span style="color: #DD0000">'Person'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Phone,&nbsp;'</span><span style="color: #0000BB">PersonPhone</span><span style="color: #DD0000">')<br />?&gt;</span>
+</span>
+</code>
+</div><p>
+declares PersonPhone to be a linking table that links tables Person
+and Phone.
+</p><p class="para">
+The <strong class="function">addLink()</strong> method will not prevent one from 
+declarating more than one linking table for the same two linked 
+tables. Doing so would make the link declaration useless, however, 
+because the <strong class="function">autoJoin()</strong> method will fail if it 
+needs to use a linking table to join a pair of tables, but finds 
+that more than one of linking table is declared for those two 
+tables. 
+</p><p class="para">
+The command
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addAllLinks</span><span style="color: #007700">()<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+adds all possible linking tables to the database. In this method,
+any table that has foreign keys that reference tables $table1 and
+$table2 is declared to be a link between $table1 and $table2. In
+some databases, the easiest way to declare links may be by using
+the addAllLinks method to create all possible links and then using
+the 
+<a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.model.delete" class="link">
+<strong class="function">deleteLink()</strong></a> method to delete those that 
+are not desired. 
+</p>
+<p class="para">
+The database model is complete when all of the tables have been
+added, all of the references have been added, and all the links 
+have been added. 
+</p>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-database.model.example"><div class="info"><h1>Example - Putting it Together</h1>
+</div>
+
+<p class="para">
+For our example, let us create a directory in which to put all of 
+the code required as an interface to a database. We will put each 
+<strong class="classname">DB_Table</strong> subclass definition in a separate 
+file in this directory, in which each file name is simply the class
+name with a &#039;.php&#039; extension. In addition, it is convenient to create 
+a single file, which we will call &#039;Database.php&#039;, in which we create
+a DB or MDB2 connection, create one object per table, and construct
+a parent <strong class="classname">DB_Table_Database</strong> object. This file 
+structure is used by the <strong class="classname">DB_Table_Generator</strong> 
+class for code that is auto-generated for an existing database. 
+Below is a listing of the minimal &#039;Database.php&#039; file required for
+our example database:
+</p>
+
+<div class="example"><div class="info"><p><strong>Database.php File</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'MDB2.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'DB/Table/Database.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'Person_Table.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'Address_Table.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'Phone_Table.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'PersonPhoneAssoc_Table.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;NOTE:&nbsp;User&nbsp;must&nbsp;uncomment&nbsp;&amp;&nbsp;edit&nbsp;code&nbsp;to&nbsp;create&nbsp;$dsn<br /></span><span style="color: #0000BB">$phptype&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'mysqli'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$username&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'root'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$password&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'password'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$hostname&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'localhost'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$dsn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"</span><span style="color: #0000BB">$phptype</span><span style="color: #DD0000">://</span><span style="color: #0000BB">$username</span><span style="color: #DD0000">:</span><span style="color: #0000BB">$password</span><span style="color: #DD0000">@</span><span style="color: #0000BB">$hostname</span><span style="color: #DD0000">"</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Instantiate&nbsp;DB/MDB2&nbsp;connection&nbsp;object&nbsp;$conn<br /></span><span style="color: #0000BB">$conn&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">MDB2</span><span style="color: #007700">::</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$conn</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #DD0000">"Error&nbsp;connecting&nbsp;to&nbsp;database&nbsp;server\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #0000BB">$conn</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;die;<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;Create&nbsp;one&nbsp;instance&nbsp;of&nbsp;each&nbsp;DB_Table&nbsp;subclass<br /></span><span style="color: #0000BB">$Person&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Person_Table</span><span style="color: #007700">(</span><span style="color: #0000BB">$conn</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Person'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$Address&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Address_Table</span><span style="color: #007700">(</span><span style="color: #0000BB">$conn</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Address'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$Phone&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Phone_Table</span><span style="color: #007700">(</span><span style="color: #0000BB">$conn</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Phone'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$PersonPhoneAssoc&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">PersonPhoneAssoc_Table</span><span style="color: #007700">(</span><span style="color: #0000BB">$conn</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'PersonPhoneAssoc'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Instantiate&nbsp;a&nbsp;parent&nbsp;DB_Table_Database&nbsp;object&nbsp;$db<br /></span><span style="color: #0000BB">$db&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">DB_Table_Database</span><span style="color: #007700">(</span><span style="color: #0000BB">$conn</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'42A'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Add&nbsp;DB_Table&nbsp;objects&nbsp;to&nbsp;parent&nbsp;DB_Table_Database&nbsp;object<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addTable</span><span style="color: #007700">(</span><span style="color: #0000BB">$Person</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addTable</span><span style="color: #007700">(</span><span style="color: #0000BB">$Address</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addTable</span><span style="color: #007700">(</span><span style="color: #0000BB">$Phone</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addTable</span><span style="color: #007700">(</span><span style="color: #0000BB">$PersonPhoneAssoc</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Add&nbsp;foreign&nbsp;references<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRef</span><span style="color: #007700">(</span><span style="color: #DD0000">'PersonPhoneAssoc'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'PersonID'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Person'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRef</span><span style="color: #007700">(</span><span style="color: #DD0000">'PersonPhoneAssoc'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'PhoneID'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Phone'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRef</span><span style="color: #007700">(</span><span style="color: #DD0000">'Person'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'AddressID'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Address'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Add&nbsp;all&nbsp;possible&nbsp;linking&nbsp;tables&nbsp;<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addAllLinks</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+
+<p class="para">
+This example file is very similar to the skeleton file that would 
+be created by <strong class="classname">DB_Table_Generator</strong> for an 
+existing database with this structure. The main differences are
+that some lines in the auto-generated file would have to be 
+uncommented or edited to produce the above (<em class="emphasis">e.g.</em>,
+the lines that define the database DSN). In this example, the call
+to <strong class="function">addAllLinks()</strong> method would correctly identify 
+&#039;PersonPhoneAssoc&#039; as a table that links &#039;Person&#039; and &#039;Phone&#039;. This
+example does not include any referentially triggered &#039;ON DELETE&#039; or 
+&#039;ON UPDATE&#039; actions, discussed below, which could be added to the
+end of the same file.
+</p>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-database.model.delete"><div class="info"><h1>Deleting Tables, References, and Links</h1>
+</div>
+
+<p class="para">
+The 
+<strong class="function">deleteTable()</strong>, 
+<strong class="function">deleteRef()</strong>, and 
+<strong class="function">deleteLinks()</strong>
+methods can be used to delete 
+tables, and foreign key references, and linking table declarations, 
+respectively, from the <strong class="classname">DB_Table_Database</strong> model.
+</p>
+
+<p class="para" id="package.database.db-table.intro-database.model.delete.table">
+<strong class="function">deleteTable()</strong> - deletes a table from the database model
+</p>
+
+<p class="para">
+Synopsis:
+</p><div class="programlisting">
+<br/><br/>void&nbsp;deleteTable(string&nbsp;$table)
+</div><p>
+Parameter $table is the name of the table to be deleted. Deletion 
+of a table causes deletion of the table and all other entities of 
+the model that depend on the existence of that table, including
+foreign key references to or from that table, and linking
+relationships that depend upon the existence of those foreign
+key references.
+</p>
+
+<p class="para" id="package.database.db-table.intro-database.model.delete.ref">
+<strong class="function">deleteRef()</strong> - deletes a reference from the database model
+</p>
+<p class="para">
+Synopsis:
+</p><div class="programlisting">
+<br/><br/>void&nbsp;deleteRef(string&nbsp;$ftable,&nbsp;string&nbsp;$rtable)
+</div><p>
+where $ftable and $rtable are the names of the referencing and 
+referenced tables, respectively. Deletion of a foreign key reference 
+causes deletion of any links that rely on the existence of that 
+reference, i.e., links in which $ftable is the linking table and 
+$rtable is one of the linked tables.
+</p>
+<p class="para" id="package.database.db-table.intro-database.model.delete.Link">
+<strong class="function">deleteLink()</strong> - deletes a linking table declaration 
+</p>
+<p class="para">
+Synopsis:
+</p><div class="programlisting">
+<br/><br/>void&nbsp;deleteLink(string&nbsp;$table1,&nbsp;string&nbsp;$table2,&nbsp;[string&nbsp;$link])
+</div><p>
+Here $table1 and $table2 are names of the linked tables, and the
+optional parameter $link is the name of the linking table. If $link 
+is null or absent, all declarations of linking tables between $table1 
+and $table2 are deleted. If $link is present, only the declaration of 
+$link as a linking table between $table1 and $table2 is deleted (if 
+one exists). The <strong class="function">deleteLinks()</strong> method may be used 
+after the <strong class="function">addAllLinks()</strong> to prune the resulting set 
+of linking table declarations.
+</p>
+</div>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-database.refAction"><div class="info"><h1>On Delete and On Update Actions</h1>
+</div>
+
+<p class="para">
+<strong class="classname">DB_Table_Database</strong> optionally provides actions designed 
+to enforce referential integrity that are provided by ANSI SQL, but that are 
+not provided by some popular databases (e.g., SQLite and the default 
+MySQL engine).  <strong class="classname">DB_Table_Database</strong> offers optional PHP 
+emulation of referentially triggered ON DELETE and ON UPDATE actions, such 
+as cascading deletes (discussed here), and also optionally checks the 
+validity of foreign key values before insertion or updating 
+(discussed 
+<a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.FKeyCheck" class="link">below</a>)
+</p>
+<p class="para">
+The ON DELETE and ON UPDATE actions associated with a reference 
+(if any) may be declared either as additional parameters to 
+<a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.refAction.addRef" class="link">
+<strong class="function">addRef()</strong></a>, or by using 
+<a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.refAction.modifyRefOptions" class="link">
+<strong class="function">setOnDelete()</strong> and <strong class="function">setOnUpdate()</strong></a>.
+</p>
+
+<div class="refsection" id="package.database.db-table.intro-database.refAction.addRef"><div class="info"><h1>Declaring actions in <strong class="function">addRef()</strong></h1>
+</div>
+
+<p class="para">
+Actions to be taken on deletion or updating of a referenced row may
+may be declared when a reference is added to the model using two 
+optional parameters of the <strong class="function">addRef()</strong> method. The following 
+example shows the extended form of <strong class="function">addRef()</strong> needed to add 
+a reference from PersonPhone to Person (as above), while also declaring a 
+cascade action on delete of a referenced row of Person, and a restrict 
+action on update of such a row:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRef</span><span style="color: #007700">(</span><span style="color: #DD0000">'PersonPhone'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'PersonID'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Person'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'cascade'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'restrict'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+Here, a null value of the fourth parameter is used to indicate that 
+the referenced key should be taken, by default, to be primary key of 
+referenced table Person.  The values of the fifth and sixth parameters 
+represent actions to be taken upon delete (&#039;cascade&#039;) and upon update 
+(&#039;restrict&#039;), respectively.  A null or absent value for either of 
+these parameters indicates that no referentially triggered action 
+should be taken on delete or on update.
+</p>
+<p class="para">
+The effect of the &#039;cascade&#039; values of the fifth parameter in the above 
+example is to declare that that all referencing rows of PersonPhone should 
+be deleted upon deletion of a corresponding referenced row of Person (a 
+cascading delete). The &#039;restrict&#039; value of the sixth parameter declares 
+that updating of the primary key PersonID of Person should be prevented 
+(the &#039;restrict&#039; on update action), and an error should be thrown by the
+update method, in rows of Person that are referenced by rows of 
+PersonPhone.
+</p>
+
+<p class="para">
+The full interface of the <strong class="function">addRef()</strong> method is:
+</p><div class="programlisting">
+<br/><br/>true|PEAR_Error&nbsp;addRef(string&nbsp;$ftable,&nbsp;mixed&nbsp;$fkey,&nbsp;string&nbsp;$rtable,&nbsp;[mixed&nbsp;$rkey],&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[string|null&nbsp;$on_delete],&nbsp;[string|null&nbsp;$on_update])
+</div><p>
+Here, $ftable is the referencing table, $fkey is the foreign key, $rtable 
+is referenced table, and $rkey is the referenced key.  The $fkey and $rkey 
+parameters may be column name strings or arrays of column names, or $rkey 
+may be null.  An absent or null value of $rkey indicates a reference to 
+the primary key of the referenced table.  The $on_delete and $on_update 
+parameters indicate actions to be taken on deletion or updating of a 
+referenced row.  The only allowed values of $on_delete and $on_update are 
+the string literals
+</p><div class="programlisting"><pre class="programlisting">&#039;cascade&#039; | &#039;restrict&#039; | &#039;set null&#039; | &#039;set default&#039;</pre>
+</div><p> 
+or PHP null, which is the default value for both parameters. Each of 
+the allowed action strings is the lower case form of a standard SQL 
+action, and turns on PHP emulation of the corresponding action. An 
+absent or null value for either action indicates that no action should 
+be taken at the PHP layer upon delete or update of a referenced row.
+(Note that a PHP null value is different from the &#039;set null&#039; action 
+string.)
+</p>
+<p class="para">
+The following example declares all of the foreign key references needed 
+in our example database, with appropriate referentially triggered actions:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRef</span><span style="color: #007700">(</span><span style="color: #DD0000">'Person'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'AddressID'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Address'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'set&nbsp;null'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'cascade'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRef</span><span style="color: #007700">(</span><span style="color: #DD0000">'PersonPhone'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'PersonID'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Person'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'cascade'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'cascade'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRef</span><span style="color: #007700">(</span><span style="color: #DD0000">'PersonPhone'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'PhoneID'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Phone'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'cascade'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'cascade'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+As a result of these declarations, rows in the linking table PersonPhone will 
+be deleted when corresponding rows of either Person or Phone are deleted, and 
+updated if the primary keys of reference rows Person or Phone are modified. 
+The foreign key AddressID of a row in table Person will be set to null if the 
+corresponding referenced row of Address is deleted (to indicate that no 
+address is known), and updated if the primary key of that row in Address is 
+modified. 
+</p>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-database.refAction.modifyRefOptions"><div class="info"><h1>
+  <strong class="function">setOnDelete()</strong> and <strong class="function">setOnUpdate()</strong>
+</h1>
+</div>
+
+<p class="para">
+The referentially triggered actions associated with a foreign key 
+reference may also be changed, or turned off, with the 
+<strong class="function">setOnDelete()</strong> and <strong class="function">setOnUpdate()</strong> 
+methods.
+</p><p class="para">
+Synopses:
+</p><div class="programlisting">
+<br/><br/>void&nbsp;setOnDelete(string&nbsp;$ftable,&nbsp;string&nbsp;$rtable,&nbsp;string|null&nbsp;$action)<br/>void&nbsp;setOnUpdate(string&nbsp;$ftable,&nbsp;string&nbsp;$rtable,&nbsp;string|null&nbsp;$action)
+</div><p>
+Here, $ftable and $rtable are the names of referencing (foreign key) 
+and referenced table, respectively, for an existing reference. The 
+$action parameter is the value for the on_delete or on_update action 
+for that reference, i.e., either an action strings or null. A null 
+parameter is used to indicate that no action on delete or update of 
+rows of table $rtable. 
+</p>
+<p class="para">
+For example, the following code would change the &#039;on_update&#039; action 
+associated with the reference from &#039;PersonPhone&#039; to &#039;Person&#039; to 
+a &#039;restrict&#039; action:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setOnUpdate</span><span style="color: #007700">(</span><span style="color: #DD0000">'PersonPhone'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Person'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'restrict'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+The effect this is to prohibit updates of the primary key value in 
+rows of Person that are referenced by rows of PersonPhone.
+</p>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-database.refAction.setActOn"><div class="info"><h1>
+<strong class="function">setActOnDelete()</strong> and <strong class="function">setActOnUpdate()</strong>
+</h1>
+</div>
+
+<p class="para">
+PHP emulation of referentially triggered actions may be turned on or 
+off for the entire database by the 
+<strong class="function">setActOnDelete()</strong> and 
+<strong class="function">setActOnUpdate()</strong> methods.
+</p>
+<p class="para">
+Synopses:
+</p><div class="programlisting">
+<br/><br/>void&nbsp;setActOnDelete(bool&nbsp;$flag)<br/>void&nbsp;setActOnUpdate(bool&nbsp;$flag)
+</div><p>
+Passing a true value to either method activates PHP emulation of all 
+of the declared ON DELETE or ON UPDATE actions, respectively, while a 
+false value turns off PHP emulation of the corresponding action. By 
+default, PHP emulation of both ON DELETE and ON UPDATE actions is on.
+Calling either of these methods with a false value does not modify
+the values of the instance property (the $_ref property) that records 
+the on delete or on update actions associated with each reference: 
+It merely prevents PHP emulation of these actions by the 
+<strong class="function">DB_Table_Database::delete()</strong> and 
+<strong class="function">DB_Table_Database::update()</strong> methods.
+</p>
+</div>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-database.FKeyCheck"><div class="info"><h1>Foreign Key Validation</h1>
+</div>
+
+<p class="para">
+By default, <strong class="classname">DB_Table_Database</strong> checks the validity 
+of foreign key values before inserting or updating data in a table with 
+foreign keys. That is, before inserting a row, or updating any foreign key 
+column values, the <strong class="function">insert()</strong> and <strong class="function">update()</strong>
+methods of <strong class="classname">DB_Table_Database</strong> actually submit a query 
+to confirm that the inserted or updated foreign key column values correspond 
+to values of the referenced columns of an existing row in the referenced 
+table. By default, both methods throw an error, and do not modify the data, 
+if this check fails. 
+</p>
+<p class="para" id="package.database.db-table.intro-database.FKeyCheck.setCheckFKey">
+This checking of foreign key validity by the PHP layer may be turned on 
+or off, for insertion or updating of any table in database, with the 
+<strong class="function">setCheckFKey()</strong> method. The interface of this method is:
+</p><div class="programlisting">
+<br/><br/>void&nbsp;setCheckFKey(bool&nbsp;$flag)
+</div><p>
+Passing a true value of $flag turns on checking of foreign keys (the
+default), while a false value turns checking off. 
+</p>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-database.select"><div class="info"><h1>Data Selection</h1>
+</div>
+
+<p class="para">
+<strong class="classname">DB_Table_Database</strong> provides an object-oriented 
+interface for SQL select statements that is almost identical to that of 
+<strong class="classname">DB_Table</strong>.
+</p>
+
+<div class="refsection" id="package.database.db-table.intro-database.select.query"><div class="info"><h1>Query Arrays</h1>
+</div>
+
+<p class="para">
+As in <strong class="classname">DB_Table</strong>, queries are represented in 
+<strong class="classname">DB_Table_Database</strong> as arrays, in which array 
+elements represents clauses of a corresponding SQL select statement. 
+For example, a query for names of all people that live on Oak Street 
+in Anytown in our example database might be 
+</p><div class="programlisting">
+<br/>&lt;?php<br/>$oak&nbsp;=&nbsp;array(<br/>&nbsp;&nbsp;&nbsp;&#039;select&#039;&nbsp;&nbsp;=&gt;&nbsp;&#039;Person.FirstName,&nbsp;Person.LastName,&nbsp;Address.Building&#039;,<br/>&nbsp;&nbsp;&nbsp;&#039;from&#039;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;&#039;Person,&nbsp;Address&#039;,<br/>&nbsp;&nbsp;&nbsp;&#039;where&#039;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;&quot;Person.AddressID&nbsp;=&nbsp;Address.AddressID\n&quot;&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;&quot;&nbsp;&nbsp;AND&nbsp;Address.Street&nbsp;=&nbsp;&#039;Oak&nbsp;Street&#039;\n&quot;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;&quot;&nbsp;&nbsp;AND&nbsp;Address.City&nbsp;=&nbsp;&#039;AnyTown&#039;&quot;,<br/>&nbsp;&nbsp;&nbsp;&#039;order&#039;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;&#039;Address.Building&#039;&nbsp;);<br/>?&gt;
+</div><p>
+The 
+<a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.util.buildSQL" class="link">
+<strong class="function">buildSQL()</strong></a> method accepts such a query array as 
+a parameter and returns the corresponding SQL command string. For example
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">buildSQL</span><span style="color: #007700">(</span><span style="color: #0000BB">$oak</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+yields the output
+</p><div class="programlisting"><pre class="programlisting">SELECT Person.FirstName, Person.LastName, Address.Building
+FROM Person, Address
+WHERE Person.AddressID = Address.AddressID
+  AND Address.Street = &#039;Oak Street&#039;
+  AND Address.City = &#039;AnyTown&#039;
+ORDER BY Address.Building</pre>
+</div><p>
+The string values of most values in this array are passed to the 
+RDBMS unmodified, prefixed by the keywords &#039;SELECT&#039;, &#039;FROM&#039;, etc. 
+Column names that appear in only one table often do not need to be 
+qualified by table names, as they are in the above example.
+</p><p class="para">
+As in <strong class="classname">DB_Table</strong>, such query arrays can be stored 
+in the public $sql property array:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">sql</span><span style="color: #007700">[</span><span style="color: #DD0000">'oak'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #0000BB">$oak<br />?&gt;</span>
+</span>
+</code>
+</div><p>
+Representing queries as arrays, rather than strings, makes it easier 
+for baseline queries to be modified by, for example, adding additional 
+limitations to the end of the &#039;where&#039; clause string.
+</p>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-database.select.methods"><div class="info"><h1>Select* Methods: 
+  <strong class="function">select()</strong>, <strong class="function">selectResult()</strong>, and
+  <strong class="function">selectCount()</strong>
+</h1>
+</div>
+
+<p class="para">
+The <strong class="function">select*()</strong> methods are inherited by both the 
+<strong class="classname">DB_Table_Database</strong>  and <strong class="classname">DB_Table</strong>
+classes from the <strong class="classname">DB_Table_Base</strong> class, and thus 
+share the same interface and behavior. The interface is also the same
+for all three methods. The required first parameter can be either the 
+key for a previously stored query array, as in
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">select</span><span style="color: #007700">(</span><span style="color: #DD0000">'oak'</span><span style="color: #007700">)<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+or the corresponding array value as a parameter, as in
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">select</span><span style="color: #007700">(</span><span style="color: #0000BB">$oak</span><span style="color: #007700">)<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+The select method returns a result set as a numerically indexed array of 
+rows. Each row can represented as be either an associative or numerical 
+array, or an object, depending on the value of the $fetchmode property of 
+the <strong class="classname">DB_Table_Database</strong> object or (if this is null) 
+the fetchmode of the underlying DB or MDB2 object. 
+</p> 
+
+<p class="para">
+The common interface of three select* methods
+<strong class="function">select()</strong>, 
+<strong class="function">selectCount()</strong>, and 
+<strong class="function">selectResult()</strong> is:
+</p><div class="programlisting">
+<br/><br/>mixed&nbsp;select*(&nbsp;array|string&nbsp;$sql_key,&nbsp;[string&nbsp;$filter],&nbsp;[string&nbsp;$order],&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[int&nbsp;$start],&nbsp;[int&nbsp;$count],&nbsp;[array&nbsp;$params])
+</div><p>
+As discussed above, $sql_key is either a query array, or the key of 
+a baseline query array that has been stored in the $sql property. The 
+$filter parameter is an SQL logical expression string that limits the 
+result set. This condition is added (i.e., ANDed) to the end of the 
+&#039;where&#039; element of the $sql_key query array. The $order parameter is 
+an ORDER BY clause (without the ORDER BY prefix) that can be used to 
+override any &#039;order&#039; element of the $sql_key array.  Integer parameters 
+$start is which the position within the full result set of the first 
+row that should be included in the return value, while $count is the 
+maximum number of rows desired within the return value. If present, 
+$params is an array in which the values are parameters for placeholder 
+substitution in a prepared query. 
+</p>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-database.select.autoJoin"><div class="info"><h1><strong class="function">autoJoin()</strong></h1>
+</div>
+
+<p class="para">
+<strong class="function">autoJoin()</strong> - accepts an array parameter containing 
+the names of desired columns and/or an array of tables names, and returns 
+a query array containing a WHERE clause with automatically 
+generated join conditions.
+</p>
+<p class="para">
+Synopsis:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">array|</span><span style="color: #0000BB">PEAR_Error&nbsp;autoJoin</span><span style="color: #007700">([array&nbsp;</span><span style="color: #0000BB">$cols</span><span style="color: #007700">],&nbsp;[array&nbsp;</span><span style="color: #0000BB">$tables</span><span style="color: #007700">],&nbsp;[</span><span style="color: #0000BB">string&nbsp;$filter</span><span style="color: #007700">])<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+Here, $cols is a sequential array of the names of the desired columns, 
+$tables is a sequential array of names of tables to be joined, and
+$filter is an SQL logical statement that may be used to limit the
+results. The $filter clause is added (i.e., ANDed) to the end of the
+the &#039;where&#039; element, after the automatically generated join 
+conditions.  Both the $col and $tables parameter are optional, but 
+at least one of them must be supplied. The query returned by 
+autoJoin is an inner join of a set of tables containing all of those 
+listed in the $tables parameter, all of the tables containing the 
+columns listed in the $cols parameter, and any linking tables 
+required to join these tables. 
+</p>
+<p class="para">
+The following example generates and submits query that selects a result 
+set in which each row contains a person&#039;s name, home phone number and 
+address, based on knowledge of the names of the desired columns. In our 
+example database, this requires that all four tables be joined. 
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$cols&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'FirstName'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'LastName'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'PhoneNumber'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Building'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Street'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'City'</span><span style="color: #007700">)<br /></span><span style="color: #0000BB">$report&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">autoJoin</span><span style="color: #007700">(</span><span style="color: #0000BB">$cols</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"Phone.PhoneType&nbsp;=&nbsp;'HOME'"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">select</span><span style="color: #007700">(</span><span style="color: #0000BB">$report</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+Note that the column names in the $cols parameter do not need to be 
+qualified by table names if they are unambiguous -- the autoJoin 
+method internally uses the 
+<a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.util.validCol" class="link">
+<strong class="function">validCol()</strong></a> 
+method to validate and disambiguate all qualified and unqualified 
+column names.
+</p>
+<p class="para">
+The SQL command corresponding to such a query array may be obtained
+using 
+<a href="package.database.db-table.intro-database.html#package.database.db-table.intro-database.util.buildSQL" class="link">
+<strong class="function">buildSQL()</strong></a>. In this example,the command
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">buildSQL</span><span style="color: #007700">(</span><span style="color: #0000BB">$report</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+yields
+</p><div class="programlisting"><pre class="programlisting">SELECT Person.FirstName, Person.LastName, Phone.PhoneNumber, Address.Building, Address.Street, Address.City
+FROM Person, Phone, Address, PersonPhone
+WHERE PersonPhone.PhoneID = Phone.PhoneID
+  AND PersonPhone.PersonID = Person.PersonID
+  AND Person.AddressID = Address.AddressID</pre>
+</div><p>
+If <strong class="function">autoJoin()</strong> is passed only a set of column names, 
+as in the above example, it identifies the set of tables that contain 
+those columns, and joins those tables, plus any linking tables needed 
+to create many-to-many relationships.
+</p><p class="para">
+In the following example, the $cols parameter is null, but the names 
+of the tables to be joined are specified in the $tables parameter:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$tables&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'Person'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Address'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Phone'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$report&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">autoJoin</span><span style="color: #007700">(</span><span style="color: #0000BB">null</span><span style="color: #007700">,</span><span style="color: #0000BB">$tables</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">select</span><span style="color: #007700">(</span><span style="color: #0000BB">$report</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+The corresponding SQL command is
+</p><div class="programlisting"><pre class="programlisting">SELECT *
+FROM Person, Phone, Address, PersonPhone
+WHERE PersonPhone.PhoneID = Phone.PhoneID
+  AND PersonPhone.PersonID = Person.PersonID
+  AND Person.AddressID = Address.AddressID</pre>
+</div><p>
+When the first argument of autoJoin is null, as in this example,
+the SELECT clause is taken to be &#039;SELECT * by default. Note that
+the FROM and WHERE clauses join a linking table PersonPhone that 
+was not explicitly specified, because this table was necessary 
+to join two of the tables containing the desired data. 
+</p>
+
+<p class="para">
+Algorithm: 
+The algorithm used by <strong class="function">autoJoin()</strong> is designed to 
+find appropriate join conditions if these exist and are unambiguous, 
+and to return a PEAR Error if the structure of references and linking 
+tables either yields a multiply connected network of joins, or if it 
+cannot construct an appropriate set of join conditions.  The method 
+first examines the $col and $table property to identify the list of 
+tables that must be joined. It then creates a network of joined tables 
+(the joined set) by starting with one table and sequentially adding 
+tables to the joined set from the set of tables have not yet been 
+joined (the unjoined set). The process starts by taking the first 
+required table as a nucleus of the joined set, and then iterating 
+through the unjoined set in search of a table that can be joined to 
+the first.  During this and each subsequent stage of addition, the 
+method iterates through the unjoined set in search of a table that 
+can be joined to any table in the joined set (i.e., that either 
+references or is referenced by one of the tables in the joined set.)  
+If it finds an unjoined table that can be joined to exactly one table 
+in the joined set, that table is added to the joined set, and the 
+search for another table to join begins.  If the search encounters 
+a table in the unjoined set that can be joined to two or more tables 
+in the joined set, the method returns an error indicating that the 
+join conditions are ambiguous -- the method will only return a set 
+of joins that correspond to a tree graph (where tables are nodes and 
+joins are bonds) and will reject any multiply connected set of 
+joins. If it is found that none of the tables in the unjoined 
+set can be directly joined to any table in the joined set, the 
+method then cycles through the unjoined set again in search of 
+a table that can be joined to exactly one table in the joined 
+set through a linking tables.  If it finds a table that is 
+connected via linking tables to two or more tables in the 
+joined set, it will also return an error. If the search does 
+not identify any unjoined table that can be joined to a table 
+in the joined set either through a direct reference or a linking 
+table, the method returns an error indicating that the required 
+set of tables can not be joined. 
+</p>
+</div>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-database.util"><div class="info"><h1>SQL Utilities</h1>
+</div>
+
+
+<div class="refsection" id="package.database.db-table.intro-database.util.quote"><div class="info"><h1><strong class="function">quote()</strong></h1>
+</div>
+
+<p class="para">
+The quote method returns an SQL literal string representation of the 
+parameter $value.
+</p><p class="para">
+Synposis:
+</p><div class="programlisting">
+<br/><br/>string&nbsp;quote(mixed&nbsp;$value)
+</div><p>
+The <strong class="function">DB_Table_Database::quote()</strong> method calls either the 
+<strong class="function">DB::quoteSmart()</strong> or <strong class="function">MDB2::quote()</strong> 
+method internally.  The return value is always a string, with a return 
+value whose format depends upon the PHP type of $value: If $value is a 
+string, the method returns a string that is properly quoted and escaped 
+for the underlying RDBMS. If $value is an integer or float, it returns an 
+unquoted string representation of the number. If $value is boolean, it 
+returns &#039;1&#039; for true, or &#039;0&#039; for false (consistent with the representation 
+of booleans as integers used by the <strong class="classname">DB_Table</strong> abstract 
+data type). If $value is null, it returns the unquoted string NULL.
+</p>
+</div>
+<div class="refsection" id="package.database.db-table.intro-database.util.buildFilter"><div class="info"><h1><strong class="function">buildFilter()</strong></h1>
+</div>
+
+<p class="para">
+<strong class="function">buildFilter()</strong> returns a SQL logical expression that 
+is true if the values of a specified set of database columns are equal to 
+a corresponding set of SQL literal values. It must be passed an array 
+parameter in which the array keys are column names and the array values 
+are the required values. 
+</p><p class="para">
+The following example uses the buildFilter method to construct a filter 
+for addresses on Pine St. in Peoria:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$data&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'Street'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Pine&nbsp;St'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'City'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Peoria'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$filter&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">buildFilter</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+Printing $filter then yields the SQL snippet:
+</p><div class="programlisting"><pre class="programlisting">Street = &#039;Pine St&#039; AND City = &#039;Peoria&#039;</pre>
+</div><p>
+In this example, the resulting SQL string is admittedly longer than 
+the code required to create it. The function becomes more useful 
+when the column names and/or values are variables representing data
+of various types, rather than string literals, or strings that may
+require escaping. The buildFilter method uses the quote method 
+internally to construct SQL literal string representations of 
+values.
+</p>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-database.util.buildSQL"><div class="info"><h1><strong class="function">buildSQL()</strong></h1>
+</div>
+
+<p class="para">
+<strong class="function">buildSQL()</strong> - takes a query array of the form used by 
+the select* methods, and returns a corresponding SQL command string. 
+It is called internally by the <strong class="function">select*()</strong> methods. 
+Both <strong class="function">buildSQL()</strong> and the <strong class="function">select*()</strong> 
+methods are inherited from <strong class="classname">DB_Table_Base</strong>.
+</p>
+<p class="para">
+Synopsis: The interface is similar to that of the <strong class="function">select*()</strong> 
+methods:
+</p><div class="programlisting">
+<br/><br/>string|PEAR_Error&nbsp;buildSQL(array|string&nbsp;$query,&nbsp;[string&nbsp;$filter],&nbsp;[string&nbsp;$order],&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[int&nbsp;$start],&nbsp;[int&nbsp;$count])
+</div><p>
+As in the <strong class="function">select*()</strong> methods, $query is a query array or a key 
+for a query array stored in the $sql property, $filter is an SQL logical condition 
+that is added to the &#039;where&#039; element of the query array, $order is an ORDER BY clause 
+that overrides the &#039;order&#039; element of the query array when it is present, and $start 
+and $count are the first row in the result set that should be returned, and the 
+maximum number of rows that should be returned. Only the $query argument is required. 
+</p>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-database.util.validCol"><div class="info"><h1><strong class="function">validCol()</strong></h1>
+</div>
+
+<p class="para">
+<strong class="function">validCol()</strong> - validates and (if necessary) disambiguates 
+column names. 
+</p>
+<p class="para">
+Synopsis:
+</p><div class="programlisting">
+<br/><br/>array|PEAR_Error&nbsp;validCol(string&nbsp;$col,&nbsp;[array&nbsp;$from])
+</div><p>
+The required parameter $col is a column name. The optional $from parameter 
+is a sequential array of table names.
+</p>
+<p class="para">
+The $col parameter may either be a column name qualified by a table name, 
+using the SQL syntax table.column, or a column name that is not qualified 
+by a table name, if the identification of the column with a table is 
+unambiguous.  The return value of validCol, upon success, is a sequential 
+array in which the second element is the unqualified column name string,
+and the first element is either a table name (if $col is qualified by a 
+table name or a unique table can be identified) or a sequential array of 
+possible column names (if $col is an unqualified column name that could 
+refer to columns in two or more different tables). If no column with the 
+specified name exists in the database, a PEAR error is returned. 
+</p>
+<p class="para">
+The optional $from parameter is used only when $col is not explicitly 
+qualified by a table name. When it is present, $from is a sequential 
+list of tables that should be searched for a column of the specified 
+name (as in the from clause of an SQL select statement). In this case, 
+validCol first searches the tables in $from, and returns a table name 
+if this yields a unique result. If a set of or more tables in $from 
+are found to contain a column with the specified name, the return value 
+is that set, or a subset thereof. If none of the table in $from contain
+a columns with the specified name, the search is instead broadened to 
+all tables in the database.  If two or more choices still remain at 
+this point (either more than one tables in from, or more than one
+tables in the rest of the database) the method tries excluding tables 
+in which the specified column is a foreign key column, if this still 
+leaves one or more tables in which the column is not a foreign key 
+column.
+</p>
+</div>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-database.modify"><div class="info"><h1>Data Modification: <strong class="function">insert()</strong>, 
+       <strong class="function">update()</strong>, and <strong class="function">delete()</strong> 
+</h1>
+</div> 
+
+<p class="para">
+The <strong class="function">insert()</strong>, <strong class="function">delete()</strong>, and 
+<strong class="function">update()</strong> methods of <strong class="classname">DB_Table_Database</strong> 
+have interfaces and behaviors similiar to those of the corresponding methods 
+of DB_Table. The only differences in the interfaces are that each of these 
+<strong class="classname">DB_Table_Database</strong> method requires an additional first 
+parameter whose value is the name of the table to which the SQL insert, 
+update, or delete command should be applied. 
+</p>
+
+<p class="para">
+Synopses:
+</p><div class="programlisting">
+<br/><br/>true|PEAR_Error&nbsp;insert(string&nbsp;$table,&nbsp;array&nbsp;$data)<br/>true|PEAR_Error&nbsp;delete(string&nbsp;$table,&nbsp;[string&nbsp;$where])<br/>true|PEAR_Error&nbsp;update(string&nbsp;$table,&nbsp;array&nbsp;$data,&nbsp;[string&nbsp;$where])
+</div><p>
+In all three functions $table_name is the name of the table to which 
+the operation should be applied. In the insert and update methods, 
+$data is an associative array of data to be inserted or updated, in 
+which the keys are column name strings and the values are the value 
+to be inserted or updated in the database.  In the delete and update 
+methods, the optional $where parameter is a string containing an SQL 
+logical condition that is used to select the rows that should be 
+deleted or updated, respectively.  That is, the $where parameter should 
+contain the contents of the WHERE clause of the corresponding SQL 
+command, without the &#039;WHERE &#039; prefix. Each method returns true on normal 
+completion, and a PEAR Error if an error is encountered.
+</p>
+
+<p class="para">
+These <strong class="classname">DB_Table_Database</strong> methods are simple wrappers 
+that call the corresponding methods <strong class="classname">DB_Table</strong> 
+methods internally. As one result, overriding any of these methods in a 
+subclass of <strong class="classname">DB_Table</strong> in order to customize the behavior 
+of a specific table will automatically modify the behavior of the 
+<strong class="classname">DB_Table_Database</strong> method.
+</p>
+
+<p class="para">
+The <strong class="classname">DB_Table_Database</strong> data 
+<strong class="function">insert()</strong> and <strong class="function">update()</strong> methods can 
+validate foreign key values before actually modifying data in the database, 
+and can emulate referentially triggered actions such cascading deletes, if 
+foreign key validation and these referentially triggered actions are enabled.
+The corresponding methods of <strong class="classname">DB_Table</strong> will take 
+identical actions if the <strong class="classname">DB_Table</strong> has been added to 
+a parent <strong class="classname">DB_Table_Database</strong> object (i.e., if it 
+contains a reference to a parent object), and if these actions are enabled 
+in the parent <strong class="classname">DB_Table_Database</strong> object. Foreign key 
+validation is disabled by default. Referentially triggered actions are 
+enabled by default, for any such action that is declared in the database 
+model.  
+</p>
+
+<p class="para">
+The <strong class="function">insert()</strong> and <strong class="function">update()</strong> methods return 
+a <strong class="classname">PEAR_Error</strong> object if foreign key validation fails, or if 
+an error occurs during any database command. A <strong class="classname">PEAR_Error</strong> 
+is also returned if a &#039;restrict&#039; ON DELETE or ON UPDATE action is declared, 
+when such actions are enabled, if an attempt is made to delete or update any 
+row that is referenced by a foreign key of one or more rows of another table.
+</p>
+
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-database.serialize"><div class="info"><h1>PHP Serialization</h1>
+</div>
+
+<p class="para">
+One way to maintain the state of <strong class="classname">DB_Table_Database</strong> 
+between web pages is to serialize the entire database as one string, and 
+save it in a session variable, a file, or a database. A serialized 
+<strong class="classname">DB_Table_Database</strong> object contains serialized 
+versions of all of its tables, and thus contains the information 
+necessary to reconstruct the database. Serialization is accomplished 
+by the PHP serialize function:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$db_serial&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">serialize</span><span style="color: #007700">(</span><span style="color: #0000BB">$db</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+The following two commands are necessary to unserialize and restore 
+the state of a <strong class="classname">DB_Table_Database</strong> object:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$db&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">unserialize</span><span style="color: #007700">(</span><span style="color: #0000BB">$db_serial</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setDBconnection</span><span style="color: #007700">(</span><span style="color: #0000BB">$DB_object</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+where $DB_object is a DB or MDB2 connection object. 
+The setDBconnection method sets the same database connection for the
+parent <strong class="classname">DB_Table_Database</strong> object and all of 
+the child <strong class="classname">DB_Table</strong> objects. 
+</p>
+<p class="para">
+When a <strong class="classname">DB_Table_Database</strong> object is unserialized, 
+each child <strong class="classname">DB_Table</strong> 
+object is unserialized in turn by the 
+<strong class="function">DB_Table_Database::__wakeup()</strong> 
+method.  If the <strong class="classname">DB_Table</strong> objects are instances 
+of subclasses of <strong class="classname">DB_Table</strong>, this requires that 
+the definitions of these subclasses exist in memory prior to 
+unserialization of the table. This can be accomplished by explicitly 
+including the file or files containing the required class definitions 
+in the file containing the unserialize command, or by taking advantage 
+of an auto-load mechanism that is built into the wake-up method.  
+</p>
+<p class="para">
+In order for autoloading of subclass definitions to work, each of the 
+subclasses must be defined in a separate file in a default directory, 
+with a filename that is given by the class name with an added &#039;.php&#039; 
+extension.  If the definition of a required subclass of 
+<strong class="classname">DB_Table</strong> named &quot;classname&quot; is found to not exist 
+in memory when needed during unserialization, the 
+<strong class="function">__wakeup()</strong> method tries to 
+include a file named &quot;classname.php&quot; in this directory. 
+</p><p class="para">
+For autoloading to work, the base of each such filename must be the 
+class name obtained by applying the built-in get_class function to the 
+object. This yields a lower case class name PHP 4 and preserves the 
+capitalization used in the class definition in PHP 5. 
+</p>
+<div class="refsection" id="package.database.db-table.intro-database.serialize.setTableSubclassPath"><div class="info"><h1><strong class="function">setTableSubclassPath()</strong></h1>
+</div>
+
+<p class="para">
+<strong class="function">setTableSubclassPath()</strong> - sets the path to the default 
+directory for <strong class="classname">DB_Table</strong> subclass definitions.
+</p> <p class="para">
+Synopsis:
+</p><div class="programlisting">
+<br/><br/>void&nbsp;setTableSubclassPath(string&nbsp;$path)
+</div><p>
+Parameter $path is the path to the desired directory, without
+a trailing directory separator. The path must be specified in
+the form required by a &#039;require_once&quot; statement, with the 
+current PHP settings.
+</p>
+</div>
+
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-database.xml"><div class="info"><h1>XML Serialization</h1>
+</div>
+
+<p class="para">
+The <strong class="function">toXML()</strong> and <strong class="function">fromXML()</strong> 
+methods may be used to serialize a database schema to, and unserialize 
+it from, an XML string, respectively. The <strong class="function">fromXML()</strong> 
+method uses simpleXML to parse the XML string, and so requires PHP 5. 
+(This is the only method in the class that is not compatible with PHP 4). 
+</p><p class="para">
+The XML schema used by these methods is an extension of the current
+MDB2_Schema DTD, extended so as to allow specification of foreign 
+key references. This extension for foreign keys has been agreed upon
+for adoption in a future release of MDB2_Schema. 
+</p><p class="para">
+The <strong class="function">toXML()</strong> method returns an XML string for the 
+entire database,
+including all of its tables and foreign key references, like so:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$xml_string&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">toXML</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+The <strong class="function">DB_Table_Database::fromXML()</strong> method is a static method 
+that takes an MDB2 XML database schema string as its only parameter and returns 
+a <strong class="classname">DB_Table_Database</strong> object containing all the tables 
+and references in the database. The following pair of commands is necessary 
+to create a <strong class="classname">DB_Table_Database</strong> object and connect it to 
+a RDBMS
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$db&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">DB_Table_Database</span><span style="color: #007700">::</span><span style="color: #0000BB">fromXML</span><span style="color: #007700">(</span><span style="color: #0000BB">$xml_string</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setDBconnection</span><span style="color: #007700">(</span><span style="color: #0000BB">$DB_object</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p> 
+Here, as for unserialization, the <strong class="function">setDBconnection()</strong> 
+method is used to establish a connection be the new object and a 
+database server, where $DB_object is a DB or MDB2 connection object.  
+The tables of the <strong class="classname">DB_Table_Database</strong> object that 
+is returned by <strong class="function">fromXML()</strong> are all instances of 
+<strong class="classname">DB_Table</strong> itself, rather than of custom subclasses 
+of <strong class="classname">DB_Table</strong>.  <strong class="function">fromXML()</strong> returns 
+a <strong class="classname">PEAR_Error</strong> if the XML string cannot be parsed, 
+if an error is thrown during instantiation of either the 
+<strong class="classname">DB_Table_Database</strong> object or any of the child 
+<strong class="classname">DB_Table</strong> objects, or if called with a PHP 4 
+interpreter (it requires PHP 5).  
+</p>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-database.DBTableProps"><div class="info"><h1>Setting <strong class="classname">DB_Table</strong> properties</h1>
+</div>
+
+<p class="para">
+Several methods of <strong class="classname">DB_Table_Database</strong> are used 
+to set a common value of a <strong class="classname">DB_Table</strong> 
+property for every child table in the database. These
+methods, which have the same names and interfaces as the 
+corresponding <strong class="classname">DB_Table</strong> methods, are:
+</p><div class="programlisting">
+<br/><br/>void&nbsp;autoValidInsert(bool&nbsp;$flag);<br/>void&nbsp;autoValidUpdate(bool&nbsp;$flag);<br/>void&nbsp;autoRecast(bool&nbsp;$flag);<br/>void&nbsp;autoInc(bool&nbsp;$flag);
+</div><p>
+Each has a boolean argument that turns on (true) or off (false) one 
+of the features of <strong class="classname">DB_Table</strong>. All of the relevant 
+features affect data insertion and updating, and are implemented within 
+the <strong class="classname">DB_Table</strong>
+<strong class="function">insert()</strong> and <strong class="function">update()</strong> methods.  
+The <strong class="classname">DB_Table_Database</strong> <strong class="function">insert()</strong> 
+and <strong class="function">update()</strong> methods simply call the corresponding
+<strong class="classname">DB_Table</strong> methods, so changes in these properties 
+also change the behavior of the <strong class="classname">DB_Table_Database</strong> 
+methods. 
+</p>
+<p class="para">
+The autoValidInsert and autoValidUpdate methods turn on or off the 
+automatic validation that data is of the expected type prior to 
+insertion or updating of the data. The autoRecast method turns on 
+or off the attempted recasting of data to the expected data type,
+if necessary, prior to insertion or updating. autoInc turns on or 
+off the PHP implementation of auto-incrementation of the value of
+the $auto_inc_col column (if any) upon insertion. Note that, when
+the feature is on, this column is still auto-incremented only if 
+its value is left null in the data to be inserted.
+</p>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-database.get"><div class="info"><h1>Get* Methods</h1>
+</div>
+
+<p class="para">
+Most of the properties of <strong class="classname">DB_Table_Database</strong> 
+are private. A get* method is defined for each private property.  
+Please see the API documentation for a discussion of all of properties 
+and associated get* methods.
+</p>
+</div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.db-table.intro-forms.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.db-table.html">DB_Table</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.db-table.intro-generator.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">DB_Table Forms Tutorial</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">DB_Table_Generator Class Tutorial</td>
+  </tr>
+ </table>
+</div>
+</body></html>

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction to using PEAR_ErrorStack for advanced error handling</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="core.pear.pear-errorstack.html" title="PEAR_ErrorStack" />
+  <link rel="prev" href="core.pear.pear-errorstack.html" title="PEAR_ErrorStack" />
+  <link rel="next" href="core.pear.pear-errorstack.pear-errorstack.html" title="constructor PEAR_ErrorStack::PEAR_ErrorStack" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction to using PEAR_ErrorStack for advanced error handling</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="core.pear.pear-errorstack.html" title="PEAR_ErrorStack">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="core.pear.pear-errorstack.pear-errorstack.html" title="constructor PEAR_ErrorStack::PEAR_ErrorStack">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="core.pear.pear-errorstack.intro">
+ 
+  <h1 class="refname">
+   Introduction to using PEAR_ErrorStack for advanced error handling
+  </h1>
+  <div class="refnamediv">
+   Introduction to using PEAR_ErrorStack for advanced error handling
+   &ndash; 
+   Using PEAR_ErrorStack to do both simple and advanced error handling
+  </div>
+
+ 
+ <h2 class="refsynopsisdiv">Synopsis</h2>
+  <!-- 
+   <h2 class="EDITEDBY">Edited By</h2><span class="personname fn">Gregory Beaver </span><div class="personblurb"><p class="para">cellog@php.net</p></div>
+   <p class="copyright"><a href="copyright.html">Copyright</a> &copy; 
+    <span class="year">2003, </span>
+    <span class="year">2004, </span>
+    <span class="year">2005, </span>
+    <span class="year">2006, </span>
+    by Gregory Beaver
+   </p>
+   <div class="releaseinfo">PEAR_ErrorStack 1.3.2 (beta)</div>
+  -->
+  <p class="simpara">Introduction to the usage of PEAR_ErrorStack</p>
+ 
+ <div class="refsection" id="core.pear.pear-errorstack.intro.intro"><div class="info"><h1>Introduction</h1>
+</div>
+  
+  <p class="para">
+   This class is available as part of the
+   <a href="http://pear.php.net/package/pear" class="link external">PEAR package</a>.
+   Features include:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><p class="para">Fully unit-tested and documented</p></li>
+    <li class="listitem">
+     <p class="para">
+      blazingly fast - blows PEAR_Error out of the water
+     </p>
+    </li>
+    <li class="listitem"><p class="para">Package-specific errors</p></li>
+    <li class="listitem">
+     <p class="para">
+      Error levels (notice/warning/error/exception)
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      Error context data is saved separate from error message
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      Error cascading - parent errors can be specified
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      Dynamic error message generation allows generation of multiple
+      and distinct error messages from the same error object
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      Sophisticated callbacks are available for error message generation,
+      error context generation, and error handling functionality,
+      see
+      <a href="core.pear.pear-errorstack.intro.html#core.pear.pear-errorstack.intro.advanced.context" class="link">Error Context Display</a>,
+      <a href="core.pear.pear-errorstack.intro.html#core.pear.pear-errorstack.intro.advanced.message" class="link">Custom Error Message Generation</a>,
+      and
+      <a href="core.pear.pear-errorstack.intro.html#core.pear.pear-errorstack.intro.advanced.callback" class="link">controlling error generation</a>
+     </p>
+    </li>
+   </ul>
+  
+  <p class="para">
+   PEAR_ErrorStack implements error raising and handling using a stack pattern.
+
+   This has tremendous advantages over the PEAR_Error Implementation.
+
+   PEAR_Error centralizes all error creation and handling in the
+   constructor of the PEAR_Error object.
+
+   Once an object has been created, all handling must have been completed,
+   either through checking the return value of a method,
+   or through a single global callback.
+
+   In addition, it is nearly impossible to determine the source of an error,
+   and the baggage of all of the PEAR base class&#039;s bulky,
+   slow methods accompanies every error creation.
+  </p>
+  <p class="para">
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;traditional&nbsp;PEAR_Error&nbsp;usage<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'PEAR.php'</span><span style="color: #007700">;<br />class&nbsp;</span><span style="color: #0000BB">myobj<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;there&nbsp;is&nbsp;no&nbsp;way&nbsp;to&nbsp;know&nbsp;where&nbsp;$err&nbsp;comes&nbsp;from<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">errorCallback</span><span style="color: #007700">(</span><span style="color: #0000BB">$err</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">display</span><span style="color: #007700">(</span><span style="color: #0000BB">$err</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">log</span><span style="color: #007700">(</span><span style="color: #0000BB">$err</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">log</span><span style="color: #007700">(</span><span style="color: #0000BB">$msg</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">error_log</span><span style="color: #007700">(</span><span style="color: #0000BB">$msg</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">3</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'somefile.log'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">display</span><span style="color: #007700">(</span><span style="color: #0000BB">$msg</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$msg&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">'&lt;br&nbsp;/&gt;'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /><br /></span><span style="color: #0000BB">$myobj&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">myobj</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;using&nbsp;a&nbsp;callback<br /></span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">setErrorHandling</span><span style="color: #007700">(</span><span style="color: #0000BB">PEAR_ERROR_CALLBACK</span><span style="color: #007700">,&nbsp;array(&amp;</span><span style="color: #0000BB">$myobj</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'errorCallback'</span><span style="color: #007700">));<br /><br /></span><span style="color: #0000BB">$ret&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">SomePackage</span><span style="color: #007700">::</span><span style="color: #0000BB">doSomething</span><span style="color: #007700">();<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$ret</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;do&nbsp;some&nbsp;handling&nbsp;-&nbsp;this&nbsp;error&nbsp;is&nbsp;also&nbsp;displayed&nbsp;and&nbsp;logged<br /></span><span style="color: #007700">}<br /></span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">pushErrorHandling</span><span style="color: #007700">(</span><span style="color: #0000BB">PEAR_ERROR_RETURN</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$ret&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">SomePackage</span><span style="color: #007700">::</span><span style="color: #0000BB">doSomething</span><span style="color: #007700">();<br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$ret</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;do&nbsp;some&nbsp;handling&nbsp;-&nbsp;this&nbsp;error&nbsp;is&nbsp;not&nbsp;displayed&nbsp;or&nbsp;logged<br /></span><span style="color: #007700">}<br /></span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">popErrorHandling</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   The PEAR_ErrorStack class has built in knowledge of the
+   <a href="http://pear.php.net/package/Log" class="link external">Log</a> package,
+   can easily differentiate and even automatically re-package errors
+   with little to no difficulty.
+  </p>
+  <p class="para">
+   </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;PEAR_ErrorStack&nbsp;error&nbsp;handling<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'PEAR/ErrorStack.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'Log.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">define</span><span style="color: #007700">(</span><span style="color: #DD0000">'MYPACKAGE_ERROR_DBERROR'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">);<br />class&nbsp;</span><span style="color: #0000BB">myobj<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$_stack</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">myobj</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_stack&nbsp;</span><span style="color: #007700">=&nbsp;&amp;</span><span style="color: #0000BB">PEAR_ErrorStack</span><span style="color: #007700">::</span><span style="color: #0000BB">singleton</span><span style="color: #007700">(</span><span style="color: #DD0000">'MyPackage'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">errorCallback</span><span style="color: #007700">(</span><span style="color: #0000BB">$err</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;switch(</span><span style="color: #0000BB">$err</span><span style="color: #007700">[</span><span style="color: #DD0000">'package'</span><span style="color: #007700">]){<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;</span><span style="color: #DD0000">'MyPackage'</span><span style="color: #007700">:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;tell&nbsp;the&nbsp;error&nbsp;stack&nbsp;to&nbsp;log&nbsp;the&nbsp;error&nbsp;only<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;it&nbsp;will&nbsp;not&nbsp;be&nbsp;pushed&nbsp;onto&nbsp;the&nbsp;stack<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">return&nbsp;</span><span style="color: #0000BB">PEAR_ERRORSTACK_LOG</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;</span><span style="color: #DD0000">'InternalDbPackage'</span><span style="color: #007700">:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;re-package&nbsp;these&nbsp;errors&nbsp;as&nbsp;a&nbsp;mypackage&nbsp;error&nbsp;fit<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;for&nbsp;enduser&nbsp;consumption<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_stack</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">push</span><span style="color: #007700">(</span><span style="color: #0000BB">MYPACKAGE_ERROR_DBERROR</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'error'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'dbmessage'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$err</span><span style="color: #007700">[</span><span style="color: #DD0000">'message'</span><span style="color: #007700">],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'dbcode'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$err</span><span style="color: #007700">[</span><span style="color: #DD0000">'code'</span><span style="color: #007700">],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'We&nbsp;are&nbsp;having&nbsp;Connection&nbsp;problems,&nbsp;please'&nbsp;</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'try&nbsp;again&nbsp;in&nbsp;a&nbsp;few&nbsp;moments'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">''</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$err</span><span style="color: #007700">);&nbsp;</span><span style="color: #FF8000">//&nbsp;include&nbsp;the&nbsp;error&nbsp;as&nbsp;re-packaged<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;tell&nbsp;the&nbsp;internal&nbsp;DB&nbsp;error&nbsp;stack&nbsp;to&nbsp;ignore&nbsp;this&nbsp;error,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;as&nbsp;if&nbsp;it&nbsp;never&nbsp;happened<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">return&nbsp;</span><span style="color: #0000BB">PEAR_ERRORSTACK_IGNORE</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;</span><span style="color: #FF8000">//&nbsp;switch<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br />}<br /><br /></span><span style="color: #0000BB">$myobj&nbsp;</span><span style="color: #007700">=&nbsp;&amp;new&nbsp;</span><span style="color: #0000BB">myobj</span><span style="color: #007700">;<br /></span><span style="color: #FF8000">//&nbsp;separate&nbsp;error&nbsp;stacks&nbsp;for&nbsp;my&nbsp;package,&nbsp;and&nbsp;the&nbsp;internal&nbsp;DB&nbsp;package<br /></span><span style="color: #0000BB">$dbstack&nbsp;</span><span style="color: #007700">=&nbsp;&amp;</span><span style="color: #0000BB">PEAR_ErrorStack</span><span style="color: #007700">::</span><span style="color: #0000BB">singleton</span><span style="color: #007700">(</span><span style="color: #DD0000">'InternalDbPackage'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$mystack&nbsp;</span><span style="color: #007700">=&nbsp;&amp;</span><span style="color: #0000BB">PEAR_ErrorStack</span><span style="color: #007700">::</span><span style="color: #0000BB">singleton</span><span style="color: #007700">(</span><span style="color: #DD0000">'MyPackage'</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;set&nbsp;up&nbsp;a&nbsp;file&nbsp;log&nbsp;using&nbsp;PEAR::Log<br /></span><span style="color: #0000BB">$log&nbsp;</span><span style="color: #007700">=&nbsp;&amp;</span><span style="color: #0000BB">Log</span><span style="color: #007700">::</span><span style="color: #0000BB">Factory</span><span style="color: #007700">(</span><span style="color: #DD0000">'file'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'somefile.log'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'MyPackage&nbsp;error&nbsp;log'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$mystack</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setLogger</span><span style="color: #007700">(</span><span style="color: #0000BB">$log</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;set&nbsp;up&nbsp;a&nbsp;default&nbsp;log&nbsp;to&nbsp;use&nbsp;for&nbsp;all&nbsp;error&nbsp;stacks<br /></span><span style="color: #0000BB">PEAR_ErrorStack</span><span style="color: #007700">::</span><span style="color: #0000BB">setDefaultLogger</span><span style="color: #007700">(</span><span style="color: #0000BB">$log</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;any&nbsp;errors&nbsp;returned&nbsp;by&nbsp;MyPackage&nbsp;are&nbsp;logged<br /></span><span style="color: #0000BB">$ret&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">SomePackage</span><span style="color: #007700">::</span><span style="color: #0000BB">doSomething</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;Note&nbsp;that&nbsp;$ret&nbsp;need&nbsp;not&nbsp;be&nbsp;checked&nbsp;for&nbsp;any&nbsp;error&nbsp;condition&nbsp;-&nbsp;errors&nbsp;are<br />//&nbsp;totally&nbsp;separate&nbsp;from&nbsp;code<br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">$dbstack</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">hasErrors</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$dbstack</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getErrors</span><span style="color: #007700">();<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;sets&nbsp;a&nbsp;default&nbsp;callback&nbsp;for&nbsp;all&nbsp;errors<br /></span><span style="color: #0000BB">PEAR_ErrorStack</span><span style="color: #007700">::</span><span style="color: #0000BB">setDefaultCallback</span><span style="color: #007700">(array(&amp;</span><span style="color: #0000BB">$myobj</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'errorCallback'</span><span style="color: #007700">));<br /><br /></span><span style="color: #FF8000">//&nbsp;any&nbsp;db&nbsp;errors&nbsp;are&nbsp;transparently&nbsp;repackaged&nbsp;as<br />//&nbsp;user-friendly&nbsp;MyPackage&nbsp;errors&nbsp;now<br /></span><span style="color: #0000BB">$ret&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">SomePackage</span><span style="color: #007700">::</span><span style="color: #0000BB">doSomething</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   Why write a new error-handling routine when
+   <a href="core.pear.pear-error.html" class="link"><strong class="classname">PEAR_Error</strong></a>
+   already exists?
+
+   There are several problems with <strong class="classname">PEAR_Error</strong>.
+
+   Although an error message is present in an error class,
+   processing this error message automatically is excessively
+   difficult for computers.
+
+   In addition, the error message cannot easily be translated once it has been placed into
+   the <strong class="classname">PEAR_Error</strong>.
+
+   There is also no standard facility for
+   storing error-related data in the error class.
+
+   On top of error message-related issues,
+   there is no way to automatically determine which package a
+   <strong class="classname">PEAR_Error</strong> object comes from,
+   or the severity of an error.
+
+   Fatal
+   errors look exactly the same as non-fatal errors.
+  </p>
+  <p class="para">
+   The largest flaw with <strong class="classname">PEAR_Error</strong> object is the
+   single-error type design.
+
+   Every <strong class="classname">PEAR_Error</strong> object is just a
+   <strong class="classname">PEAR_Error</strong> object.
+
+   There is no differentiating between the severity of an error, or its origin.
+
+   The only way to determine the severity is to use
+   PEAR_ERROR_TRIGGER and E_USER_NOTICE/E_USER_WARNING/E_USER_ERROR
+   constants from php&#039;s
+   <a href="http://www.php.net/manual-lookup.php?pattern=trigger_error" class="link external">trigger_error</a>.
+
+   But using this functionality does not justify 900 lines of
+   code, simply because trigger_error() is built into PHP itself!
+  </p>
+  <p class="para">
+   Now, to start using your newly created error objects,
+   change all of your
+   <strong class="function">PEAR::raiseError()</strong>
+   or <strong class="function">PEAR::throwError()</strong>
+   calls from this...
+  </p>
+  <p class="para">
+   </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'PEAR.php'</span><span style="color: #007700">;<br /></span><span style="color: #FF8000">//&nbsp;old&nbsp;way:<br /></span><span style="color: #0000BB">$error_specific_info&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'bad'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$e&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">raiseError</span><span style="color: #007700">(</span><span style="color: #DD0000">"error&nbsp;message&nbsp;-&nbsp;very&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$error_specific_info&nbsp;</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"&nbsp;way&nbsp;to&nbsp;do&nbsp;things"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">MYPACKAGE_ERROR_FOO</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;another&nbsp;old&nbsp;way:<br /></span><span style="color: #0000BB">$e&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">throwError</span><span style="color: #007700">(</span><span style="color: #DD0000">"error&nbsp;message&nbsp;-&nbsp;very&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$error_specific_info&nbsp;</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"&nbsp;way&nbsp;to&nbsp;do&nbsp;things"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">MYPACKAGE_ERROR_FOO</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">...to something like this:</p>
+  <p class="para">
+   </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'PEAR/ErrorStack.php'</span><span style="color: #007700">;<br /></span><span style="color: #FF8000">//&nbsp;new&nbsp;way<br />//&nbsp;version&nbsp;1:&nbsp;stack&nbsp;instance&nbsp;access<br /></span><span style="color: #0000BB">$stack&nbsp;</span><span style="color: #007700">=&nbsp;&amp;</span><span style="color: #0000BB">PEAR_ErrorStack</span><span style="color: #007700">::</span><span style="color: #0000BB">singleton</span><span style="color: #007700">(</span><span style="color: #DD0000">'MyPackage'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$stack</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">push</span><span style="color: #007700">(</span><span style="color: #0000BB">MYPACKAGE_ERROR_DBERROR</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'error'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'query'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$query</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'dsn'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'Critical&nbsp;Database&nbsp;Error:&nbsp;Contact&nbsp;Administrator&nbsp;immediately'</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;version&nbsp;2:&nbsp;static&nbsp;singleton&nbsp;access&nbsp;(slightly&nbsp;slower)<br /></span><span style="color: #0000BB">PEAR_ErrorStack</span><span style="color: #007700">::</span><span style="color: #0000BB">staticPush</span><span style="color: #007700">(</span><span style="color: #DD0000">'MyPackage'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">MYPACKAGE_ERROR_DBERROR</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'error'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'query'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$query</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'dsn'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'Critical&nbsp;Database&nbsp;Error:&nbsp;Contact&nbsp;Administrator&nbsp;immediately'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   For basic use, this is all that is needed to use the
+   PEAR_ErrorStack package in place of PEAR_Error.
+  </p>
+ </div>
+ <div class="refsection" id="core.pear.pear-errorstack.intro.advanced"><div class="info"><h1>Advanced Features</h1>
+</div>
+  
+  <div class="refsection" id="core.pear.pear-errorstack.intro.advanced.context"><div class="info"><h1>Error Context Display</h1>
+</div>
+   
+   <p class="para">
+    In some cases, you may want to customize error generation.
+    For instance, for many exceptions, it is useful to include file,
+    line number,
+    and class/function context information in order to trace an error.
+
+    A default option is available which will be sufficient for most cases,
+    and that is
+    <a href="core.pear.pear-errorstack.getfileline.html" class="link"><strong class="function">PEAR_ErrorStack::getFileLine()</strong></a>.
+   </p>
+   <p class="para">
+    Not all package errors occur in the PHP source file.
+
+    For instance, compiling template
+    engines errors can occur in the template source files.
+
+    Database errors can occur in the text of a query,
+    or internal to the database server.
+
+    Internet package errors can occur on another server.
+
+    All of this information can be included in an error
+    message using a context grabbing callback.
+   </p>
+   <p class="para">
+    </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'PEAR/ErrorStack.php'</span><span style="color: #007700">;<br />class&nbsp;</span><span style="color: #0000BB">DatabaseClass<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$_dbError</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$_dbErrorMsg</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$_dbQuery</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$_dbPos</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/**<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Context&nbsp;grabber&nbsp;for&nbsp;the&nbsp;Database&nbsp;package<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;integer&nbsp;Error&nbsp;Code<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;array&nbsp;&nbsp;&nbsp;Error&nbsp;parameters&nbsp;passed&nbsp;into&nbsp;{@link&nbsp;PEAR_ErrorStack::push()}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;array&nbsp;&nbsp;&nbsp;Output&nbsp;of&nbsp;debug_backtrace()&nbsp;(not&nbsp;used&nbsp;in&nbsp;this&nbsp;callback)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">getErrorContext</span><span style="color: #007700">(</span><span style="color: #0000BB">$code</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$params</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$backtrace</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$context&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'errorcode'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_dbError</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'errormsg'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_dbErrorMsg</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'query'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_dbQuery</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'pos'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_dbPos</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$context</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">$db&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">DatabaseClass</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">PEAR_ErrorStack</span><span style="color: #007700">::</span><span style="color: #0000BB">staticSetContextCallback</span><span style="color: #007700">(</span><span style="color: #DD0000">'Database'</span><span style="color: #007700">,&nbsp;array(&amp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'getErrorContext'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+   <p class="para">
+    The context information is formatted to be easily
+    processed by an external application.
+
+    If you wish context information to be in the error message,
+    the error message callback should be used to add the information
+    in a human-readable format to the error message, as described
+    in the next section.
+   </p>
+  </div>
+  <div class="refsection" id="core.pear.pear-errorstack.intro.advanced.message"><div class="info"><h1>Custom Error Message Generation</h1>
+</div>
+   
+   <p class="para">
+    There are three methods of PEAR_ErrorStack designed for
+    use with generating error messages efficiently.
+
+    To use them, you must do one of three things:
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+       Call
+       <a href="core.pear.pear-errorstack.seterrormessagetemplate.html" class="link"><strong class="function">PEAR_ErrorStack::setErrorMessageTemplate()</strong></a>,
+       and set an array mapping error codes to error message templates, like so:
+      </p>
+      <p class="para">
+       </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />define</span><span style="color: #007700">(</span><span style="color: #DD0000">'ERROR_ONE'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">define</span><span style="color: #007700">(</span><span style="color: #DD0000">'ERROR_TWO'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">define</span><span style="color: #007700">(</span><span style="color: #DD0000">'ERROR_THREE'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">3</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">define</span><span style="color: #007700">(</span><span style="color: #DD0000">'ERROR_FOUR'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">4</span><span style="color: #007700">);<br />require_once&nbsp;</span><span style="color: #DD0000">'PEAR/ErrorStack.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$stack&nbsp;</span><span style="color: #007700">=&nbsp;&amp;</span><span style="color: #0000BB">PEAR_ErrorStack</span><span style="color: #007700">::</span><span style="color: #0000BB">singleton</span><span style="color: #007700">(</span><span style="color: #DD0000">'mypackage'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$messages&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">ERROR_ONE&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'The&nbsp;gronk&nbsp;number&nbsp;%num%&nbsp;dropped&nbsp;a&nbsp;%thing%'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">ERROR_TWO&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'The&nbsp;%list%&nbsp;items&nbsp;were&nbsp;missing'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">ERROR_THREE&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'I&nbsp;like&nbsp;chocolate,&nbsp;how&nbsp;about&nbsp;%you%?'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">ERROR_FOUR&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'and&nbsp;a&nbsp;%partridge%&nbsp;in&nbsp;a&nbsp;pear&nbsp;%tree%'</span><span style="color: #007700">,<br />);<br /></span><span style="color: #0000BB">$stack</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setErrorMessageTemplate</span><span style="color: #007700">(</span><span style="color: #0000BB">$messages</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+       </div>
+      
+      <p class="para">
+       Substitution is done using
+       <a href="http://www.php.net/manual-lookup.php?pattern=str_replace" class="link external">str_replace</a>,
+       and is very simple.
+
+       Basically, if a variable name is enclosed in percent signs (%), it will
+       be replaced with the value passed in the associative array.
+
+       If an array
+      </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">array(</span><span style="color: #DD0000">'varname'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'value'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div><p>
+       is passed to either method, all occurrences of %varname% will be replaced
+       by value.
+      </p>
+      <p class="para">
+       In addition, if values are objects, the methods will search for a method
+       named &quot;<strong class="function">__toString()</strong>&quot; and if found,
+       will use that to convert the object to a string.
+
+       If an array of strings is passed in, they will be joined by commas.
+       </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">array(</span><span style="color: #DD0000">'varname'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'first'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'second'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'third'</span><span style="color: #007700">));<br /></span><span style="color: #FF8000">//&nbsp;this&nbsp;will&nbsp;become&nbsp;'first,&nbsp;second,&nbsp;third'<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+       </div>
+      
+     </li>
+     <li class="listitem">
+      <p class="para">
+       Call
+       <a href="core.pear.pear-errorstack.setmessagecallback.html" class="link"><strong class="function">PEAR_ErrorStack::setMessageCallback()</strong></a>,
+       and set a custom error message generating function or method.
+
+       This is probably the best option for the majority of complex situations,
+       as it allows users to override or even extend the existing error
+       message callback using
+       <a href="core.pear.pear-errorstack.getmessagecallback.html" class="link"><strong class="function">PEAR_ErrorStack::getMessageCallback()</strong></a>.
+
+       For example:
+       </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'PEAR/ErrorStack.php'</span><span style="color: #007700">;<br />class&nbsp;</span><span style="color: #0000BB">foo<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$_oldcallback</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">callback</span><span style="color: #007700">(&amp;</span><span style="color: #0000BB">$stack</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$err</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$message&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">call_user_func_array</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_oldcallback</span><span style="color: #007700">,&nbsp;array(&amp;</span><span style="color: #0000BB">$stack</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$err</span><span style="color: #007700">));<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$message&nbsp;</span><span style="color: #007700">.=&nbsp;</span><span style="color: #DD0000">"File&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$err</span><span style="color: #007700">[</span><span style="color: #DD0000">'context'</span><span style="color: #007700">][</span><span style="color: #DD0000">'file'</span><span style="color: #007700">];<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$message</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">$a&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$stack&nbsp;</span><span style="color: #007700">=&nbsp;&amp;</span><span style="color: #0000BB">PEAR_ErrorStack</span><span style="color: #007700">::</span><span style="color: #0000BB">singleton</span><span style="color: #007700">(</span><span style="color: #DD0000">'otherpackage'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$a</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">_oldcallback&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$stack</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessageCallback</span><span style="color: #007700">(</span><span style="color: #DD0000">'otherpackage'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$stack</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setMessageCallback</span><span style="color: #007700">(array(&amp;</span><span style="color: #0000BB">$a</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'callback'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+       </div>
+      
+     </li>
+     <li class="listitem">
+      <p class="para">
+       Extend PEAR_ErrorStack with your own class, and override
+       <a href="core.pear.pear-errorstack.geterrormessagetemplate.html" class="link"><strong class="function">PEAR_ErrorStack::getErrorMessageTemplate()</strong></a>
+       or
+       <a href="core.pear.pear-errorstack.geterrormessage.html" class="link"><strong class="function">PEAR_ErrorStack::getErrorMessage()</strong></a>.
+
+       To guarantee that this class will be used by other packages/applications,
+       use this code right after the class declaration:
+      </p>
+      <p class="para">
+       </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />PEAR_ErrorStack</span><span style="color: #007700">::</span><span style="color: #0000BB">singleton</span><span style="color: #007700">(</span><span style="color: #DD0000">'mypackage'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'MyPEAR_ErrorStack'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+       </div>
+      
+     </li>
+    </ul>
+   
+  </div>
+  <div class="refsection" id="core.pear.pear-errorstack.intro.advanced.callback"><div class="info"><h1>Controlling error generation</h1>
+</div>
+   
+   <p class="para">
+    There are many scenarios in which fine-grained control over error raising
+    is absolutely necessary.
+
+    A generic error handling callback means that every single error
+    raised will be handled in the same error callback.
+
+    Although PEAR_ErrorStack is designed to operate with independent
+    callbacks for each package, generic error handling is possible through the
+    <a href="core.pear.pear-errorstack.staticpushcallback.html" class="link"><strong class="function">PEAR_ErrorStack::staticPushCallback()</strong></a>
+    method.
+
+    This is no different from PEAR_Error&#039;s
+    PEAR_ERROR_CALLBACK error handling mode.
+   </p>
+   <p class="para">
+    PEAR_ErrorStack&#039;s real strength comes from the callback itself.
+
+    PEAR_Error&#039;s callback has no actual effect on the error message -
+    all error handling must happen in the callback method or function itself.
+
+    PEAR_ErrorStack&#039;s callback can influence the error
+    through the use of three constants:
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+       <a href="core.pear.pear-errorstack.constants.html#core.pear.pear-errorstack.constants.details.errorstack---php" class="link"><strong class="constant">PEAR_ERRORSTACK_IGNORE</strong></a>
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <a href="core.pear.pear-errorstack.constants.html#core.pear.pear-errorstack.constants.details.errorstack---php" class="link"><strong class="constant">PEAR_ERRORSTACK_PUSH</strong></a>
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <a href="core.pear.pear-errorstack.constants.html#core.pear.pear-errorstack.constants.details.errorstack---php" class="link"><strong class="constant">PEAR_ERRORSTACK_LOG</strong></a>
+      </p>
+     </li>
+    </ul>
+   
+   <p class="para">
+    PEAR_ERRORSTACK_IGNORE informs the stack to ignore the error, as if it never occurred.  The error will be
+    neither logged, nor pushed on the stack.  It will, however, be returned from <a href="core.pear.pear-errorstack.push.html" class="link"><strong class="function">PEAR_ErrorStack::push()</strong></a>
+   </p>
+   <p class="para">
+    PEAR_ERRORSTACK_PUSH informs the stack to push the error onto the error stack, but not to log the error.
+   </p>
+   <p class="para">
+    PEAR_ERRORSTACK_LOG informs the stack not to push the error onto the error stack, but only to log the error.
+   </p>
+   <p class="para">
+    </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />define</span><span style="color: #007700">(</span><span style="color: #DD0000">'ERROR_CODE_ONE'</span><span style="color: #007700">,</span><span style="color: #0000BB">1</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">define</span><span style="color: #007700">(</span><span style="color: #DD0000">'ERROR_CODE_TWO'</span><span style="color: #007700">,</span><span style="color: #0000BB">2</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">define</span><span style="color: #007700">(</span><span style="color: #DD0000">'ERROR_CODE_THREE'</span><span style="color: #007700">,</span><span style="color: #0000BB">3</span><span style="color: #007700">);<br />require_once&nbsp;</span><span style="color: #DD0000">'PEAR/ErrorStack.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'Log.php'</span><span style="color: #007700">;<br />function&nbsp;</span><span style="color: #0000BB">somecallback</span><span style="color: #007700">(</span><span style="color: #0000BB">$err</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;switch(</span><span style="color: #0000BB">$err</span><span style="color: #007700">[</span><span style="color: #DD0000">'code'</span><span style="color: #007700">]){<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;</span><span style="color: #0000BB">ERROR_CODE_ONE</span><span style="color: #007700">:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">PEAR_ERRORSTACK_IGNORE</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;</span><span style="color: #0000BB">ERROR_CODE_TWO</span><span style="color: #007700">:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">PEAR_ERRORSTACK_PUSH</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;</span><span style="color: #0000BB">ERROR_CODE_THREE</span><span style="color: #007700">:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">PEAR_ERRORSTACK_LOG</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;<br />&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;</span><span style="color: #FF8000">//&nbsp;switch<br /></span><span style="color: #007700">}<br /></span><span style="color: #0000BB">$log&nbsp;</span><span style="color: #007700">=&nbsp;&amp;</span><span style="color: #0000BB">Log</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">'display'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$stack&nbsp;</span><span style="color: #007700">=&nbsp;&amp;</span><span style="color: #0000BB">PEAR_ErrorStack</span><span style="color: #007700">::</span><span style="color: #0000BB">singleton</span><span style="color: #007700">(</span><span style="color: #DD0000">'mypackage'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$stack</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setLogger</span><span style="color: #007700">(</span><span style="color: #0000BB">$log</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$stack</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">pushCallback</span><span style="color: #007700">(</span><span style="color: #DD0000">'somecallback'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$stack</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">push</span><span style="color: #007700">(</span><span style="color: #0000BB">ERROR_CODE_ONE</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$stack</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">push</span><span style="color: #007700">(</span><span style="color: #0000BB">ERROR_CODE_TWO</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$stack</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">push</span><span style="color: #007700">(</span><span style="color: #0000BB">ERROR_CODE_THREE</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">PEAR_ErrorStack</span><span style="color: #007700">::</span><span style="color: #0000BB">staticGetErrors</span><span style="color: #007700">());<br /><br /></span><span style="color: #FF8000">//&nbsp;simulate&nbsp;PEAR_ERROR_CALLBACK,&nbsp;with&nbsp;specific&nbsp;callback&nbsp;for&nbsp;mypackage<br />//&nbsp;every&nbsp;other&nbsp;package&nbsp;will&nbsp;only&nbsp;log&nbsp;errors,&nbsp;only&nbsp;mypackage's&nbsp;errors<br />//&nbsp;are&nbsp;pushed&nbsp;on&nbsp;the&nbsp;stack,&nbsp;conditionally<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">myclass&nbsp;</span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">acallback</span><span style="color: #007700">(</span><span style="color: #0000BB">$err</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">PEAR_ERRORSTACK_LOG</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">$stack2&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">PEAR_ErrorStack</span><span style="color: #007700">::</span><span style="color: #0000BB">singleton</span><span style="color: #007700">(</span><span style="color: #DD0000">'anotherpackage'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$stack3&nbsp;</span><span style="color: #007700">=&nbsp;&amp;</span><span style="color: #0000BB">PEAR_ErrorStack</span><span style="color: #007700">::</span><span style="color: #0000BB">singleton</span><span style="color: #007700">(</span><span style="color: #DD0000">'thirdpackage'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">PEAR_ErrorStack</span><span style="color: #007700">::</span><span style="color: #0000BB">setDefaultCallback</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'myclass'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'acallback'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+   <div class="refsection" id="core.pear.pear-errorstack.intro.advanced.callback.repackage"><div class="info"><h1>Repackaging errors from one package to another</h1>
+</div>
+    
+    <p class="para">
+     The most obvious usage for an error callback involves a common scenario
+     in many user-level applications that use system-level packages.
+
+     If you write a Content Management System (CMS) with the PEAR DB package,
+     it is usually a bad idea to display database-level errors when a user
+     clicks on a link to add a message to a forum.
+
+     PEAR_ErrorStack can be used to repackage this error as a MyPackage error.
+    </p>
+    <p class="para">
+     </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />define</span><span style="color: #007700">(</span><span style="color: #DD0000">'MYPACKAGE_ERROR_DBDOWN'</span><span style="color: #007700">,</span><span style="color: #0000BB">1</span><span style="color: #007700">);<br />require_once&nbsp;</span><span style="color: #DD0000">'PEAR/ErrorStack.php'</span><span style="color: #007700">;<br />function&nbsp;</span><span style="color: #0000BB">repackage</span><span style="color: #007700">(</span><span style="color: #0000BB">$err</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$err</span><span style="color: #007700">[</span><span style="color: #DD0000">'package'</span><span style="color: #007700">]&nbsp;==&nbsp;</span><span style="color: #DD0000">'DB'</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$mystack&nbsp;</span><span style="color: #007700">=&nbsp;&amp;</span><span style="color: #0000BB">PEAR_ErrorStack</span><span style="color: #007700">::</span><span style="color: #0000BB">singleton</span><span style="color: #007700">(</span><span style="color: #DD0000">'mypackage'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$mystack</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">push</span><span style="color: #007700">(</span><span style="color: #0000BB">MYPACKAGE_ERROR_DBDOWN</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'error'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'olderror'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$err</span><span style="color: #007700">));<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;ignore&nbsp;the&nbsp;DB&nbsp;error,&nbsp;but&nbsp;save&nbsp;it&nbsp;in&nbsp;the&nbsp;mypackage&nbsp;error,&nbsp;for&nbsp;logging<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">return&nbsp;</span><span style="color: #0000BB">PEAR_ERRORSTACK_IGNORE</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    
+   </div>
+   <div class="refsection" id="core.pear.pear-errorstack.intro.advanced.callback.silence"><div class="info"><h1>Emulating the @ operator</h1>
+</div>
+    
+    <p class="para">
+     One of the difficult-to-use strengths of PEAR_Error involves the
+     <a href="core.pear.pear.expecterror.html" class="link"><strong class="function">PEAR::expectError()</strong></a>
+     method.
+
+     With regular PHP errors, it is possible to silence them using
+     the @ operator like so:
+    </p>
+    <p class="para">
+     </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">@</span><span style="color: #0000BB">file_get_contents</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    
+    <p class="para">
+     Emulating this behavior with PEAR_ErrorStack is simple.
+    </p>
+    <p class="para">
+     </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />define</span><span style="color: #007700">(</span><span style="color: #DD0000">'ERROR_CODE_SOMETHING'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">);<br />require_once&nbsp;</span><span style="color: #DD0000">'PEAR/ErrorStack.php'</span><span style="color: #007700">;<br />function&nbsp;</span><span style="color: #0000BB">silence</span><span style="color: #007700">(</span><span style="color: #0000BB">$err</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;ignore&nbsp;all&nbsp;errors<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">return&nbsp;</span><span style="color: #0000BB">PEAR_ERRORSTACK_IGNORE</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">$stack&nbsp;</span><span style="color: #007700">=&nbsp;&amp;</span><span style="color: #0000BB">PEAR_ErrorStack</span><span style="color: #007700">::</span><span style="color: #0000BB">singleton</span><span style="color: #007700">(</span><span style="color: #DD0000">'mypackage'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$stack</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">pushCallback</span><span style="color: #007700">(</span><span style="color: #DD0000">'silence'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$stack</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">push</span><span style="color: #007700">(</span><span style="color: #0000BB">ERROR_CODE_SOMETHING</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    
+    <p class="para">
+     PEAR_ErrorStack can take this one step further,
+     and only log errors or only put errors on the error stack,
+     using the other two constants.
+
+     Finally, particular errors can be singled out, and all others ignored.
+    </p>
+    <p class="para">
+     </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />define</span><span style="color: #007700">(</span><span style="color: #DD0000">'SOMEPACKAGE_ERROR_THING'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">);<br />require_once&nbsp;</span><span style="color: #DD0000">'PEAR/ErrorStack.php'</span><span style="color: #007700">;<br />function&nbsp;</span><span style="color: #0000BB">silenceSome</span><span style="color: #007700">(</span><span style="color: #0000BB">$err</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$err</span><span style="color: #007700">[</span><span style="color: #DD0000">'package'</span><span style="color: #007700">]&nbsp;!=&nbsp;</span><span style="color: #DD0000">'somepackage'</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;ignore&nbsp;all&nbsp;errors&nbsp;from&nbsp;other&nbsp;packages<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">return&nbsp;</span><span style="color: #0000BB">PEAR_ERROR_IGNORE</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$err</span><span style="color: #007700">[</span><span style="color: #DD0000">'code'</span><span style="color: #007700">]&nbsp;!=&nbsp;</span><span style="color: #0000BB">SOMEPACKAGE_ERROR_THING</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;ignore&nbsp;all&nbsp;other&nbsp;error&nbsp;codes<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">return&nbsp;</span><span style="color: #0000BB">PEAR_ERRORSTACK_IGNORE</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">$stack&nbsp;</span><span style="color: #007700">=&nbsp;&amp;</span><span style="color: #0000BB">PEAR_ErrorStack</span><span style="color: #007700">::</span><span style="color: #0000BB">singleton</span><span style="color: #007700">(</span><span style="color: #DD0000">'mypackage'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$stack</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">pushCallback</span><span style="color: #007700">(</span><span style="color: #DD0000">'silenceSome'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$stack</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">push</span><span style="color: #007700">(</span><span style="color: #0000BB">ERROR_CODE_SOMETHING</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    
+   </div>
+  </div>
+ </div>
+ <div class="refsection" id="core.pear.pear-errorstack.intro.merging"><div class="info"><h1>
+   Backwards compatibility with PEAR_Error,
+   Forward compatibility with PHP 5 Exception and PEAR_Exception
+  </h1>
+</div>
+  
+  <p class="para">
+   <strong class="classname">PEAR_ErrorStack</strong>
+   can also be programmed to automatically raise a PEAR_Error using
+   <a href="core.pear.pear.raiseerror.html" class="link"><strong class="function">PEAR::raiseError()</strong></a>,
+   simply pass in true to the PEAR_Error compatibility like so:
+  </p>
+  <p class="para">
+   </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'PEAR/ErrorStack.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$stack&nbsp;</span><span style="color: #007700">=&nbsp;&amp;</span><span style="color: #0000BB">PEAR_ErrorStack</span><span style="color: #007700">::</span><span style="color: #0000BB">singleton</span><span style="color: #007700">(</span><span style="color: #DD0000">'mypackage'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   PEAR_ErrorStack can coordinate with the new PEAR_Exception class to
+   convert into an exception with this code:
+
+   You can set the exception class name that will be returned
+   using the following code:
+  </p>
+  <p class="para">
+   </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'PEAR/ErrorStack.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'PEAR/Exception.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$stack&nbsp;</span><span style="color: #007700">=&nbsp;&amp;</span><span style="color: #0000BB">PEAR_ErrorStack</span><span style="color: #007700">::</span><span style="color: #0000BB">singleton</span><span style="color: #007700">(</span><span style="color: #DD0000">'mypackage'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$stack</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">push</span><span style="color: #007700">(</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'test&nbsp;error'</span><span style="color: #007700">);<br />throw&nbsp;new&nbsp;</span><span style="color: #0000BB">PEAR_Exception</span><span style="color: #007700">(</span><span style="color: #DD0000">'did&nbsp;not&nbsp;work'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$stack</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">pop</span><span style="color: #007700">());<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="core.pear.pear-errorstack.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="core.pear.pear-errorstack.html">PEAR_ErrorStack</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="core.pear.pear-errorstack.pear-errorstack.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">PEAR_ErrorStack</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">constructor PEAR_ErrorStack::PEAR_ErrorStack</td>
+  </tr>
+ </table>
+</div>
+</body></html>

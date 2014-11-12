@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.http.http-request2.html" title="HTTP_Request2" />
+  <link rel="prev" href="package.http.http-request2.html" title="HTTP_Request2" />
+  <link rel="next" href="package.http.http-request2.config.html" title="Configuration" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.http.http-request2.html" title="HTTP_Request2">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.http.http-request2.config.html" title="Configuration">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.http.http-request2.intro">
+ 
+  <h1 class="refname">Introduction</h1>
+  <div class="refnamediv">Introduction &ndash; Introduction to <strong class="classname">HTTP_Request2</strong></div>
+
+ 
+ <div class="refsection" id="package.http.http-request2.intro.overview">
+  <div class="info"><h1>Package Overview</h1>
+</div>
+  <p class="para">
+   <strong class="classname">HTTP_Request2</strong> package provides an easy way for <span class="acronym">PHP</span>
+   applications to perform <span class="acronym">HTTP</span> requests. It supports a large subset of Hypertext
+   Transfer Protocol features, and can be used for the following:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara">
+     Working with web services (numerous <span class="acronym">PEAR</span> packages in Web Services category
+     are using <strong class="classname">HTTP_Request2</strong> under the hood);
+    </span></li>
+    <li class="listitem"><span class="simpara">
+     Checking the validity of web links;
+    </span></li>
+    <li class="listitem"><span class="simpara">
+     Grabbing and parsing remote web pages;
+    </span></li>
+    <li class="listitem"><span class="simpara">
+     Automated form submission.
+    </span></li>
+   </ul>
+  
+ </div>
+ <div class="refsection" id="package.http.http-request2.intro.basic-example">
+  <div class="info"><h1>Basic Usage Example</h1>
+</div>
+   <p class="para">
+    Performing a request with <strong class="classname">HTTP_Request2</strong> consists of the following steps
+    </p><ul class="itemizedlist">
+     <li class="listitem"><span class="simpara">
+      Creating, <a href="package.http.http-request2.config.html" class="link">configuring</a> and <a href="package.http.http-request2.request.html" class="link">populating</a> an instance of
+      <strong class="classname">HTTP_Request2</strong> class. At the very least you should set request URL and
+      maybe proxy parameters (if you are using proxy).
+     </span></li>
+     <li class="listitem"><span class="simpara">
+      Calling <strong class="function"><a href="http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2.html#methodsend" class="apidoclink">send</a></strong> method of that instance. This
+      will pass control to <a href="package.http.http-request2.adapters.html" class="link">an Adapter</a> that will send
+      the request and read remote server&#039;s response. Request&#039;s progress may be monitored by
+      <a href="package.http.http-request2.observers.html" class="link">Observers</a>.
+     </span></li>
+     <li class="listitem"><span class="simpara">
+      Processing the returned instance of <a href="package.http.http-request2.response.html" class="link"><strong class="classname">HTTP_Request2_Response</strong></a>.
+      An instance of <a href="package.http.http-request2.exceptions.html" class="link"><strong class="classname">HTTP_Request2_Exception</strong></a>
+      can also be thrown by <strong class="function">send()</strong> if response could not be received (completely
+      or at all) or parsed. 
+     </span></li>
+    </ul>
+   
+  <div class="example">
+   <div class="info">
+    <p><strong>
+     Fetches and displays PEAR website homepage
+    </strong></p>
+   </div>
+   <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTTP/Request2.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$request&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTTP_Request2</span><span style="color: #007700">(</span><span style="color: #DD0000">'http://pear.php.net/'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">HTTP_Request2</span><span style="color: #007700">::</span><span style="color: #0000BB">METHOD_GET</span><span style="color: #007700">);<br />try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$response&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$request</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">send</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">200&nbsp;</span><span style="color: #007700">==&nbsp;</span><span style="color: #0000BB">$response</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getStatus</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$response</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getBody</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Unexpected&nbsp;HTTP&nbsp;status:&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$response</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getStatus</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">'&nbsp;'&nbsp;</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$response</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getReasonPhrase</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">HTTP_Request2_Exception&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Error:&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">();<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.http.http-request2.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.http.http-request2.html">HTTP_Request2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.http.http-request2.config.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">HTTP_Request2</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Configuration</td>
+  </tr>
+ </table>
+</div>
+</body></html>

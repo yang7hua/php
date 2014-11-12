@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Annotated ruleset.xml</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.php.php-codesniffer.html" title="PHP_CodeSniffer" />
+  <link rel="prev" href="package.php.php-codesniffer.coding-standard-tutorial.html" title="Coding Standard Tutorial" />
+  <link rel="next" href="package.php.php-codesniffer.svn-pre-commit.html" title="Using the Subversion pre-commit Hook" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Annotated ruleset.xml</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.php.php-codesniffer.coding-standard-tutorial.html" title="Coding Standard Tutorial">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.php.php-codesniffer.svn-pre-commit.html" title="Using the Subversion pre-commit Hook">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.php.php-codesniffer.annotated-ruleset">
+ 
+  <h1 class="refname">Annotated ruleset.xml</h1>
+  <div class="refnamediv">Annotated ruleset.xml &ndash; A sample ruleset.xml file that describes all features of the format</div>
+
+ 
+
+ <div class="refsection"><div class="info"><h1>Introduction</h1>
+</div>
+  <p class="para">
+   PHP_CodeSniffer allows developers to design their own coding standards by creating a simple ruleset XML file that both pulls in sniffs from existing standards and customises them for the developer&#039;s needs. This XML file can be named anything you like, as long as it has an <code class="literal">xml</code> extension and complies to the ruleset.xml format. The file can be stored anywhere, making it perfect for placing under version control with a project&#039;s source code and unit tests.
+  </p>
+  <p class="para">
+   Once created, a ruleset file can be used with the <code class="literal">--standard</code> command line argument. In the following example, PHP_CodeSniffer will use the coding standard defined in a custom ruleset file called custom_ruleset.xml:
+  </p>
+  <div class="example"><div class="info"><p><strong>Using a custom ruleset file</strong></p></div>
+   <pre class="screen">
+<br/>$&nbsp;phpcs&nbsp;--standard=/path/to/custom_ruleset.xml&nbsp;test.php<br/>
+   </pre>
+
+  </div>
+ </div>
+
+ <div class="refsection"><div class="info"><h1>The Annotated Sample File</h1>
+</div>
+  <p class="para">
+   The following sample file documents the ruleset.xml format and shows you the complete range of features that the format supports. The file is designed for documentation purposes only and is not a working coding standard.
+  </p>
+  <p class="para">
+   </p><div class="xmlcode">
+<pre class="xmlcode">
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ruleset name=&quot;Custom Standard&quot;&gt;
+
+ &lt;!--
+    The name attribute of the ruleset tag is displayed
+    when running PHP_CodeSniffer with the -v command line
+    argument. The description tag below is not displayed anywhere
+    except in this file, so it can contain information for
+    developers who may change this file in the future.
+ --&gt;
+ &lt;description&gt;A custom coding standard&lt;/description&gt;
+
+ &lt;!--
+    You can hard-code ignore patterns directly into your
+    custom standard so you don&#039;t have to specify the
+    patterns on the command line.
+    
+    The following two tags are equivalent to the command line
+    argument: --ignore=*/tests/*,*/data/*
+ --&gt;
+ &lt;exclude-pattern&gt;*/tests/*&lt;/exclude-pattern&gt;
+ &lt;exclude-pattern&gt;*/data/*&lt;/exclude-pattern&gt;
+
+ &lt;!--
+    Include all sniffs in the PEAR standard. Note that the
+    path to the standard does not have to be specified as the
+    PEAR standard exists inside the PHP_CodeSniffer install
+    directory.
+ --&gt;
+ &lt;rule ref=&quot;PEAR&quot;/&gt;
+
+ &lt;!--
+    Include all sniffs in an external standard directory. Note
+    that we have to specify the full path to the standard&#039;s
+    directory because it does not exist inside the PHP_CodeSniffer
+    install directory.
+ --&gt;
+ &lt;rule ref=&quot;/home/username/standards/mystandard&quot;/&gt;
+
+ &lt;!--
+    Include everything in another ruleset.xml file. This is
+    really handy if you want to customise another developer&#039;s
+    custom standard. They just need to distribute their single
+    ruleset file to allow this.
+ --&gt;
+ &lt;rule ref=&quot;/home/username/standards/custom.xml&quot;/&gt;
+
+ &lt;!--
+    Include all sniffs in the Squiz standard except one. Note that
+    the name of the sniff being excluded is the code that the sniff
+    is given by PHP_CodeSniffer and is based on the file name and
+    path of the sniff class. You can display these codes using the
+    -s command line argument when checking a file.
+ --&gt;
+ &lt;rule ref=&quot;Squiz&quot;&gt;
+  &lt;exclude name=&quot;Squiz.PHP.CommentedOutCode&quot;/&gt;
+ &lt;/rule&gt;
+
+ &lt;!--
+    Include some specific sniffs from the Generic standard.
+    Note again that the name of the sniff is the code that
+    PHP_CodeSniffer gives it.
+ --&gt;
+ &lt;rule ref=&quot;Generic.CodeAnalysis.UnusedFunctionParameter&quot;/&gt;
+ &lt;rule ref=&quot;Generic.Commenting.Todo&quot;/&gt;
+ &lt;rule ref=&quot;Generic.ControlStructures.InlineControlStructure&quot;/&gt;
+
+ &lt;!--
+    Here we are including a specific sniff but also changing
+    the error message of a specific message inside the sniff.
+    Note that the specific code for the message, which is
+    CommentFound in this case, is defined by the sniff developer.
+    You can display these codes by using the -s command line
+    argument when checking a file.
+
+    Also note that this message has a variable inside it,
+    which is why it is important that sniffs use a printf style
+    format for their error messages.
+
+    We also drop the severity of this message from the
+    default value (5) so that it is hidden by default. It can be
+    displayed by setting the minimum severity on the PHP_CodeSniffer
+    command line. This is great if you want to use some messages
+    only in code reviews and not have them block code commits.
+ --&gt;
+ &lt;rule ref=&quot;Generic.Commenting.Todo.CommentFound&quot;&gt;
+  &lt;message&gt;Please review this TODO comment: %s&lt;/message&gt;
+  &lt;severity&gt;3&lt;/severity&gt;
+ &lt;/rule&gt;
+
+ &lt;!--
+    Here we change two messages from the same sniff. Note how the
+    codes are slightly different because the sniff developer has
+    defined both a MaxExceeded message and a TooLong message. In the
+    case of this sniff, one is used for warnings and one is used
+    for errors.
+ --&gt;
+ &lt;rule ref=&quot;Generic.Files.LineLength.MaxExceeded&quot;&gt;
+  &lt;message&gt;Line contains %s chars, which is longer than the max limit of %s&lt;/message&gt;
+ &lt;/rule&gt;
+ &lt;rule ref=&quot;Generic.Files.LineLength.TooLong&quot;&gt;
+  &lt;message&gt;Line longer than %s characters; contains %s characters&lt;/message&gt;
+ &lt;/rule&gt;
+
+ &lt;!--
+    Some sniffs have public member vars that allow you to
+    customise specific elements of the sniff. In the case of
+    the Generic LineLength sniff, you can customise the limit
+    at which the sniff will throw warnings and the limit at
+    which it will throw errors.
+
+    The rule below includes the LineLength sniff but changes the
+    settings so the sniff will show warnings for any line longer
+    than 90 chars and errors for any line longer than 100 chars.
+ --&gt;
+ &lt;rule ref=&quot;Generic.Files.LineLength&quot;&gt;
+  &lt;properties&gt;
+   &lt;property name=&quot;lineLimit&quot; value=&quot;90&quot;/&gt;
+   &lt;property name=&quot;absoluteLineLimit&quot; value=&quot;100&quot;/&gt;
+  &lt;/properties&gt;
+ &lt;/rule&gt;
+
+ &lt;!--
+    Another useful example of changing sniff settings is
+    to specify the end of line character that your standard
+    should check for.
+ --&gt;
+ &lt;rule ref=&quot;Generic.Files.LineEndings&quot;&gt;
+  &lt;properties&gt;
+   &lt;property name=&quot;eolChar&quot; value=&quot;\r\n&quot;/&gt;
+  &lt;/properties&gt;
+ &lt;/rule&gt;
+
+ &lt;!--
+    Boolean values should be specified by using the strings
+    &quot;true&quot; and &quot;false&quot; rather than the integers 0 and 1.
+ --&gt;
+ &lt;rule ref=&quot;Generic.Formatting.MultipleStatementAlignment&quot;&gt;
+  &lt;properties&gt;
+   &lt;property name=&quot;maxPadding&quot; value=&quot;8&quot;/&gt;
+   &lt;property name=&quot;ignoreMultiLine&quot; value=&quot;true&quot;/&gt;
+   &lt;property name=&quot;error&quot; value=&quot;true&quot;/&gt;
+  &lt;/properties&gt;
+ &lt;/rule&gt;
+
+ &lt;!--
+    If you want to completely disable an error message in a sniff
+    but you don&#039;t want to exclude the whole sniff, you can
+    change the severity of the message to 0. In this case, we
+    want the Squiz DoubleQuoteUsage sniff to be included in our
+    standard, but we don&#039;t want the ContainsVar error message to
+    ever be displayed.
+ --&gt;
+ &lt;rule ref=&quot;Squiz.Strings.DoubleQuoteUsage.ContainsVar&quot;&gt;
+  &lt;severity&gt;0&lt;/severity&gt;
+ &lt;/rule&gt;
+
+ &lt;!--
+    There is a special internal error message produced by PHP_CodeSniffer
+    when it is unable to detect code in a file, possible due to
+    the use of short open tags even though php.ini disables them.
+    You can disable this message in the same way as sniff messages.
+
+    Again, the code here will be displayed in the PHP_CodeSniffer
+    output when using the -s command line argument while checking a file.
+ --&gt;
+ &lt;rule ref=&quot;Internal.NoCodeFound&quot;&gt;
+  &lt;severity&gt;0&lt;/severity&gt;
+ &lt;/rule&gt;
+
+ &lt;!--
+    You can also hard-code ignore patterns for specific sniffs,
+    a feature not available on the command line.
+
+    The code here will hide all messages from the Squiz DoubleQuoteUsage
+    sniff for files that match either of the two exclude patterns.
+ --&gt;
+ &lt;rule ref=&quot;Squiz.Strings.DoubleQuoteUsage&quot;&gt;
+    &lt;exclude-pattern&gt;*/tests/*&lt;/exclude-pattern&gt;
+    &lt;exclude-pattern&gt;*/data/*&lt;/exclude-pattern&gt;
+ &lt;/rule&gt;
+
+ &lt;!--
+    You can also be more specific and just exclude some messages.
+
+    The code here will just hide the ContainsVar error generated by the
+    Squiz DoubleQuoteUsage sniff for files that match either of the two
+    exclude patterns.
+ --&gt;
+ &lt;rule ref=&quot;Squiz.Strings.DoubleQuoteUsage.ContainsVar&quot;&gt;
+    &lt;exclude-pattern&gt;*/tests/*&lt;/exclude-pattern&gt;
+    &lt;exclude-pattern&gt;*/data/*&lt;/exclude-pattern&gt;
+ &lt;/rule&gt;
+
+&lt;/ruleset&gt;</pre>
+
+   </div>
+  
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.php.php-codesniffer.coding-standard-tutorial.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.php.php-codesniffer.html">PHP_CodeSniffer</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.php.php-codesniffer.svn-pre-commit.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Coding Standard Tutorial</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Using the Subversion pre-commit Hook</td>
+  </tr>
+ </table>
+</div>
+</body></html>

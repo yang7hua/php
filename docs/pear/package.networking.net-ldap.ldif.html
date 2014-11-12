@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>LDIF files</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.networking.net-ldap.html" title="Net_LDAP" />
+  <link rel="prev" href="package.networking.net-ldap.filter.html" title="LDAP filters" />
+  <link rel="next" href="package.networking.net-ldap2.html" title="Net_LDAP2" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">LDIF files</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.networking.net-ldap.filter.html" title="LDAP filters">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.networking.net-ldap2.html" title="Net_LDAP2">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.networking.net-ldap.ldif">
+    
+        <h1 class="refname">LDIF files</h1>
+        <div class="refnamediv">LDIF files &ndash; Converting between Net_LDAP_Entries and LDIF files</div>
+
+    
+    <div class="refsection"><div class="info"><h1>Avaible since</h1>
+</div>
+        
+        <p class="para">LDIF support was added to Net_LDAP in release 1.1.0a1.</p>
+    </div>
+
+    <div class="refsection"><div class="info"><h1>What are LDIF files?</h1>
+</div>
+        
+
+        <p class="para">
+            LDIF files are in detail described at <a href="http://www.ietf.org/rfc/rfc2849.txt" class="link external">RFC 2849</a>.
+            Shortly, they contain directory data in an plain text, human readable kind, much like
+            a SQL file does. However, unlike SQL files LDIF files are mostly data based, not action based.
+            There are two different LDIF file contents, which can be mixed freely - content and change files.
+            The first and most often used one is the LDIF content file:
+        </p>
+        <div class="example"><div class="info"><p><strong>Example LDIF content file</strong></p></div>
+        
+        <div class="textcode"><pre class="textcode">
+#
+# This is a content LDIF file.
+# It contains one single entry featuring several
+# attributes and one comment (this one).
+# attr1, attr4 and cn are single valued, the others are
+# multivalued. objectclass is a special case, LDAP servers
+# will interpret this operational attribute to define the
+# classes the object will belong to and thus, which attributes
+# it may contain. the OCL-attribute is usually multivalued.
+#
+version: 1
+dn: cn=test1,ou=example,dc=cno
+objectclass: someobjectclass
+attr1: 12345
+attr2: 1234
+attr2: baz
+attr3: foo
+attr3: bar
+attr4: brrrzztt
+cn: test1</pre>
+</div>
+        </div>
+
+
+
+        <p class="para">
+            LDIF files could describe not only the data an entry contains, but also various
+            changes to the entry itself. If such an LDIF file would then be given to a
+            LDAP server, he would interpret those changes instead just importing the data.
+            Note in the example below, that even though LDIF content and LDIF change files could be
+            mixed freely, this is not true for individual entries: a specific entry may be either
+            describing content or changes, but not both.
+        </p>
+    <div class="example"><div class="info"><p><strong>Example LDIF change file</strong></p></div>
+        
+        <div class="textcode"><pre class="textcode">
+#
+# This is a content+change LDIF file.
+# It does contain the (shortened) entry from the example above to show
+# that LDIF files can contain multiple entry modes.
+# The second entry is a change entry. In this case, some
+# operations will be done on the entries attributes.
+#
+version: 1
+dn: cn=test1,ou=example,dc=cno
+objectclass: someobjectclass
+attr1: 12345
+cn: test1
+
+# Delete attr1, replace values of attr2 and add new attribute attr42
+# The attribute &quot;changetype&quot; is special: it says, what to do with
+# this entries dataset. It could also be &quot;delete&quot; or &quot;add&quot; to delete
+# a whole entry or to add a completely fresh one. &quot;modrdn&quot; will
+# move the entry to a new location once the LDIF file is imported.
+dn: cn=test2,ou=example,dc=cno
+changetype: modify
+delete: attr1
+-
+replace: attr2
+attr2: 123456_newtest
+-
+add: attr42
+attr42: the answer</pre>
+</div>
+        </div>
+    </div>
+
+    <div class="refsection"><div class="info"><h1>Error handling when using Net_LDAP_LDIF</h1>
+</div>
+        
+
+        <p class="para">
+            Before we can start using Net_LDAP_LDIF we must say some short words about how
+            error handling works. Net_LDAP_LDIF was designed to have mostly the same API as
+            the original PERL Net::LDAP::LDIF has. Because of this, the methods of Net_LDAP_LDIF
+            do not return a Net_LDAP_Error object. You must use the <strong class="function">error()</strong> method
+            that will return a Net_LDAP_Error object in case of failure or true in case everything was ok.
+            In LDIF reading mode, you can additionally use <strong class="function">error_lines()</strong> to get knowledge
+            about where in the input file the error occured.
+        </p>
+    </div>
+
+    <div class="refsection"><div class="info"><h1>Construction and options</h1>
+</div>
+        
+
+        <p class="para">
+            Regardless if you want to read or write a LDIF file, you always have to use the constructor
+            of Net_LDAP_LDIF to initialize your access to the LDIF file.
+            You need to pass at least one parameter to <strong class="function">Net_LDAP_LDIF()</strong>:
+            the path of the file that should be read or written. You may pass the open mode as second parameter.
+            The possible file open modes are &quot;r&quot; (read), &quot;w&quot; (write, clears the file first) and &quot;a&quot; (append to the end).
+            In case you omit the open mode, read mode is assumed.
+            The third optional parameter is an associative array containing one or several of the following
+            options:
+            </p><table class="doctable table"><caption>Possible configuration options</caption>
+                
+                
+                    <thead>
+                    <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Default</th>
+                    </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                    <tr>
+                    <td><code class="literal">encode</code></td>
+                    <td>Some DN values in LDIF cannot be written verbatim and have to be encoded in some way.
+                        Possible values are: &quot;none&quot;, &quot;canonical&quot; and &quot;base64&quot; (RFC default)</td>
+                    <td><code class="literal">base64</code></td>
+                    </tr>
+
+                    <tr>
+                    <td><code class="literal">onerror</code></td>
+                    <td>What should be done on errors? &quot;undef&quot; will let error handling in your hands, in this
+                        case you use <strong class="function">error()</strong> and <strong class="function">error_lines()</strong> to process errors manually.
+                        &quot;die&quot; aborts the script printing the error - this is sometimes useful for CLI scripts.
+                        &quot;warn&quot; just prints out the error but continues like &quot;undef&quot; would.</td>
+                    <td><code class="literal">undef</code></td>
+                    </tr>
+
+                    <tr>
+                    <td><code class="literal">change</code></td>
+                    <td>Turning this to &quot;1&quot; (true) will tell Net_LDAP_LDIF to write change sets instead of content files.</td>
+                    <td><code class="literal">false</code></td>
+                    </tr>
+
+                    <tr>
+                    <td><code class="literal">lowercase</code></td>
+                    <td>Set this to true to convert attribute names to lowercase when writing.</td>
+                    <td><code class="literal">0</code></td>
+                    </tr>
+
+                    <tr>
+                    <td><code class="literal">sort</code></td>
+                    <td>If true, sort attribute names when writing entries according to the rule:
+                        objectclass first then all other attributes alphabetically sorted by attribute name</td>
+                    <td><code class="literal">0</code></td>
+                    </tr>
+
+                    <tr>
+                    <td><code class="literal">version</code></td>
+                    <td>Set the LDIF version to write to the resulting LDIF file.
+                        According to RFC 2849 currently the only legal value for this option is 1 currently.</td>
+                    <td><code class="literal">1</code></td>
+                    </tr>
+
+                    <tr>
+                    <td><code class="literal">wrap</code></td>
+                    <td> Number of columns where output line wrapping shall occur.
+                        Setting it to 40 or lower inhibits wrapping. Useful for better human readability of
+                        the resulting file.</td>
+                    <td><code class="literal">78</code></td>
+                    </tr>
+
+                    
+                    </tbody>
+                
+            </table>
+<p>
+            For advanced users: instead of passing a file path, you also may pass an already initialized file handle.
+            In this case, the mode parameter will be ignored. You may use this, if you want to mix LDIF content and
+            LDIF change mode by using two Net_LDAP_LDIF instances to write to the same filehandle, but it could
+            be very useful in other cases too. To initialize the second instance of Net_LDAP_LDIF, you can use
+            <strong class="function">handle()</strong> to get the filehandle from the first instance.
+       </p>
+    </div>
+
+    <div class="refsection"><div class="info"><h1>Reading a LDIF file into Net_LDAP_Entry-objects</h1>
+</div>
+        
+
+        <p class="para">
+        One of the two modes how Net_LDAP_LDIF can be used is to read a LDIF file and parse its
+        contents into an array of Net_LDAP_Entry objects. This is done using the
+        <strong class="function">read_entry()</strong>-method which will return the next entry. If you want to fetch all
+        entries, you use the <strong class="function">eof()</strong> to detect the end of the input file:
+        </p>
+        <div class="example"><div class="info"><p><strong>Parsing a LDIF file into Net_LDAP_Entry objects</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;open&nbsp;some&nbsp;LDIF&nbsp;file&nbsp;for&nbsp;reading<br /></span><span style="color: #0000BB">$ldif&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Net_LDAP_LDIF</span><span style="color: #007700">(</span><span style="color: #DD0000">'somefile.ldif'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'r'</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">error</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$error_o&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">error</span><span style="color: #007700">();&nbsp;</span><span style="color: #FF8000">//&nbsp;get&nbsp;Net_LDAP_Error&nbsp;object&nbsp;on&nbsp;error<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">die(</span><span style="color: #DD0000">'ERROR:&nbsp;'</span><span style="color: #007700">.</span><span style="color: #0000BB">$error_o</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;parse&nbsp;the&nbsp;entries&nbsp;of&nbsp;the&nbsp;LDIF&nbsp;file&nbsp;into&nbsp;objects<br />&nbsp;</span><span style="color: #007700">do&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$entry&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">read_entry</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">error</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;in&nbsp;case&nbsp;of&nbsp;error,&nbsp;print&nbsp;error.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;here&nbsp;we&nbsp;use&nbsp;the&nbsp;shorthand&nbsp;parameter,&nbsp;so&nbsp;error()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;returns&nbsp;a&nbsp;string&nbsp;instead&nbsp;of&nbsp;a&nbsp;Net_LDAP_Object<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">die(</span><span style="color: #DD0000">'ERROR&nbsp;AT&nbsp;INPUT&nbsp;LINE&nbsp;'</span><span style="color: #007700">.</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">error_lines</span><span style="color: #007700">().</span><span style="color: #DD0000">':&nbsp;'</span><span style="color: #007700">.</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">error</span><span style="color: #007700">(</span><span style="color: #0000BB">true</span><span style="color: #007700">));<br />&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;No&nbsp;error:&nbsp;do&nbsp;something&nbsp;with&nbsp;the&nbsp;entry<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;Here&nbsp;we&nbsp;just&nbsp;print&nbsp;the&nbsp;entries&nbsp;DN<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #DD0000">'sucessfully&nbsp;parsed&nbsp;'</span><span style="color: #007700">.</span><span style="color: #0000BB">$entry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">dn</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}&nbsp;while&nbsp;(!</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">eof</span><span style="color: #007700">());<br /><br /></span><span style="color: #FF8000">//&nbsp;We&nbsp;should&nbsp;call&nbsp;done()&nbsp;once&nbsp;we&nbsp;are&nbsp;finished<br /></span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">done</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+    </div>
+
+    <div class="refsection"><div class="info"><h1>Writing Net_LDAP_Entry objects to a LDIF content file</h1>
+</div>
+        
+
+        <p class="para">
+          Writing an LDIF file is very easy too. Just pass the entries you want to have written
+          to the <strong class="function">write_entry()</strong>-method. Beware, that if you have opened the file in &quot;w&quot; write mode
+          this will clear any previous data of that file. Use &quot;a&quot; (append) if you just want add data.
+        </p>
+        <div class="example"><div class="info"><p><strong>Writing entries</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Assume&nbsp;we&nbsp;have&nbsp;some&nbsp;valid&nbsp;Net_LDAP_Entry&nbsp;objects&nbsp;inside&nbsp;$entries<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;$entries&nbsp;=&nbsp;array(&nbsp;...&nbsp;);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;open&nbsp;some&nbsp;file&nbsp;for&nbsp;writing<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$ldif&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Net_LDAP_LDIF</span><span style="color: #007700">(</span><span style="color: #DD0000">'somewritefile.ldif'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'w'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">error</span><span style="color: #007700">())&nbsp;die(</span><span style="color: #DD0000">'ERROR:&nbsp;'</span><span style="color: #007700">.</span><span style="color: #0000BB">$error_o</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;write&nbsp;the&nbsp;data&nbsp;and&nbsp;check&nbsp;for&nbsp;error<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;you&nbsp;could&nbsp;pass&nbsp;one&nbsp;single&nbsp;Net_LDAP_Entry&nbsp;object&nbsp;or<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;several&nbsp;objects&nbsp;inside&nbsp;an&nbsp;array<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">write_entry</span><span style="color: #007700">(</span><span style="color: #0000BB">$entries</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">error</span><span style="color: #007700">())&nbsp;die(</span><span style="color: #DD0000">'WRITE&nbsp;ERROR:&nbsp;'</span><span style="color: #007700">.</span><span style="color: #0000BB">$error_o</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+    </div>
+
+        <div class="refsection"><div class="info"><h1>Writing Net_LDAP_Entry objects to a LDIF change file</h1>
+</div>
+        
+
+        <p class="para">
+          The process of writing changes is exactly the same like writing entry contents.
+          However there are two differences: Firstly you need to pass the &quot;changes&quot; option
+          and secondly, the entries you want to write need changes. Entries not containing
+          changes will silently be ignored since there is nothing to write.
+        </p>
+        <div class="example"><div class="info"><p><strong>Writing entry changes</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;cast&nbsp;some&nbsp;test&nbsp;data&nbsp;and&nbsp;three&nbsp;entries<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$testattrs&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'attr1'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'1234'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'attr2'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'attr3'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'bar'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'baz'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$entries&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">Net_LDAP_Entry</span><span style="color: #007700">::</span><span style="color: #0000BB">createFresh</span><span style="color: #007700">(</span><span style="color: #DD0000">'cn=foo,dc=example,dc=cno'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">array_merge</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'cn'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">),&nbsp;</span><span style="color: #0000BB">$testattrs</span><span style="color: #007700">)),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">Net_LDAP_Entry</span><span style="color: #007700">::</span><span style="color: #0000BB">createFresh</span><span style="color: #007700">(</span><span style="color: #DD0000">'cn=bar,dc=example,dc=cno'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">array_merge</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'cn'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'bar'</span><span style="color: #007700">),&nbsp;</span><span style="color: #0000BB">$testattrs</span><span style="color: #007700">)),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">Net_LDAP_Entry</span><span style="color: #007700">::</span><span style="color: #0000BB">createFresh</span><span style="color: #007700">(</span><span style="color: #DD0000">'cn=baz,dc=example,dc=cno'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">array_merge</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'cn'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'baz'</span><span style="color: #007700">),&nbsp;</span><span style="color: #0000BB">$testattrs</span><span style="color: #007700">))<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;make&nbsp;some&nbsp;changes&nbsp;to&nbsp;the&nbsp;first&nbsp;and&nbsp;the&nbsp;last&nbsp;entry<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$entries</span><span style="color: #007700">[</span><span style="color: #0000BB">0</span><span style="color: #007700">]-&gt;</span><span style="color: #0000BB">add</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'someattr'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'added'</span><span style="color: #007700">));<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$entries</span><span style="color: #007700">[</span><span style="color: #0000BB">0</span><span style="color: #007700">]-&gt;</span><span style="color: #0000BB">replace</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'attr1'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'replaced'</span><span style="color: #007700">));<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$entries</span><span style="color: #007700">[</span><span style="color: #0000BB">2</span><span style="color: #007700">]-&gt;</span><span style="color: #0000BB">delete</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'attr2'</span><span style="color: #007700">));<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$entries</span><span style="color: #007700">[</span><span style="color: #0000BB">2</span><span style="color: #007700">]-&gt;</span><span style="color: #0000BB">delete</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'attr3'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'bar'</span><span style="color: #007700">));<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;open&nbsp;some&nbsp;file&nbsp;for&nbsp;writing,&nbsp;but&nbsp;in&nbsp;change&nbsp;mode<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$ldif&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Net_LDAP_LDIF</span><span style="color: #007700">(</span><span style="color: #DD0000">'somewritefile.ldif'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'w'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'change'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">));<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">error</span><span style="color: #007700">())&nbsp;die(</span><span style="color: #DD0000">'ERROR:&nbsp;'</span><span style="color: #007700">.</span><span style="color: #0000BB">$error_o</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;write&nbsp;the&nbsp;data&nbsp;and&nbsp;check&nbsp;for&nbsp;error<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;you&nbsp;could&nbsp;pass&nbsp;one&nbsp;single&nbsp;Net_LDAP_Entry&nbsp;object&nbsp;or<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;several&nbsp;objects&nbsp;inside&nbsp;an&nbsp;array<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">write_entry</span><span style="color: #007700">(</span><span style="color: #0000BB">$entries</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">error</span><span style="color: #007700">())&nbsp;die(</span><span style="color: #DD0000">'WRITE&nbsp;ERROR:&nbsp;'</span><span style="color: #007700">.</span><span style="color: #0000BB">$error_o</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Now,&nbsp;only&nbsp;two&nbsp;entries&nbsp;are&nbsp;contained&nbsp;in&nbsp;the&nbsp;LDIF&nbsp;file,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;cn=foo,dc=example,dc=cno&nbsp;and&nbsp;cn=baz,dc=example,dc=cno.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;cn=bar,dc=example,dc=cno&nbsp;had&nbsp;no&nbsp;changes&nbsp;and&nbsp;was&nbsp;skipped.<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+        <div class="example"><div class="info"><p><strong>Resulting LDIF change file</strong></p></div>
+        
+        <div class="textcode"><pre class="textcode">
+version: 1
+dn: cn=foo,dc=example,dc=cno
+changetype: modify
+add: someattr
+someattr: added
+-
+replace: attr1
+attr1: replaced
+-
+
+dn: cn=baz,dc=example,dc=cno
+changetype: modify
+delete: attr2
+-
+delete: attr3
+attr3: bar
+-</pre>
+</div>
+        </div>
+        </div>
+
+        <div class="refsection"><div class="info"><h1>Fetching LDIF data</h1>
+</div>
+        
+
+        <p class="para">
+          Sometimes you are interested in the lines inside the LDIF file. For those cases you can use the
+          <strong class="function">current_lines()</strong> and <strong class="function">next_lines()</strong> methods.
+          They work in the current context, which may be confusing:
+          <strong class="function">current_lines()</strong> will always return the lines that have built up the current
+          <strong class="classname">Net_LDAP_Entry</strong> object when called <strong class="function">current_entry()</strong> after <strong class="function">read_entry()</strong>
+          has been called.
+          <strong class="function">next_lines()</strong> will always return the lines, that will build up the next entry from the
+          current point of view, meaning &quot;relative to the entry that was just been read&quot;. However, you can override this by
+          activating the &quot;force&quot; parameter of <strong class="function">next_lines()</strong> which allows you to loop over all entries.
+          <strong class="function">current_entry()</strong> behaves exactly like <strong class="function">current_lines()</strong>.
+        </p>
+        <p class="para">
+            If you think, that the lines you have read would be better in form of an <strong class="classname">Net_LDAP_Entry</strong> object,
+            use the <strong class="function">parseLines()</strong> method to parse those lines into an entry. This is a
+            good way if you need just a few specific entries of a large LDIF file.
+        </p>
+
+        <div class="example"><div class="info"><p><strong>Reading LDIF lines</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;open&nbsp;some&nbsp;LDIF&nbsp;file&nbsp;for&nbsp;reading<br />//&nbsp;(error&nbsp;checking&nbsp;code&nbsp;is&nbsp;ommitted&nbsp;in&nbsp;this&nbsp;example&nbsp;for<br />//&nbsp;&nbsp;better&nbsp;readability&nbsp;-&nbsp;in&nbsp;production,&nbsp;test&nbsp;for&nbsp;errors!)<br /></span><span style="color: #0000BB">$ldif&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Net_LDAP_LDIF</span><span style="color: #007700">(</span><span style="color: #DD0000">'somefile.ldif'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'r'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;since&nbsp;nothing&nbsp;has&nbsp;been&nbsp;read&nbsp;until&nbsp;now,&nbsp;this&nbsp;will<br />//&nbsp;return&nbsp;an&nbsp;empty&nbsp;array<br /></span><span style="color: #0000BB">$empty_array&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">current_lines</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;so&nbsp;let's&nbsp;read&nbsp;the&nbsp;first&nbsp;entries&nbsp;data<br /></span><span style="color: #0000BB">$first_entry_lines&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">next_lines</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;if&nbsp;we&nbsp;call&nbsp;it&nbsp;again,&nbsp;we&nbsp;will&nbsp;not&nbsp;read&nbsp;ahead&nbsp;to&nbsp;the<br />//&nbsp;second&nbsp;entry&nbsp;-&nbsp;we&nbsp;again&nbsp;read&nbsp;the&nbsp;first&nbsp;one!<br /></span><span style="color: #0000BB">$first_entry_lines_again&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">next_lines</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;If&nbsp;we&nbsp;call&nbsp;current_lines()&nbsp;now,&nbsp;we&nbsp;haven't&nbsp;read&nbsp;ahead<br />//&nbsp;like&nbsp;we&nbsp;learned&nbsp;from&nbsp;the&nbsp;last&nbsp;statement.<br /></span><span style="color: #0000BB">$empty_array_again&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">current_lines</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;If&nbsp;we&nbsp;want&nbsp;to&nbsp;shift,&nbsp;we&nbsp;must&nbsp;use<br />//&nbsp;the&nbsp;read_entry()&nbsp;method,&nbsp;which&nbsp;will&nbsp;read&nbsp;ahead.<br /></span><span style="color: #0000BB">$first_entry&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">read_entry</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;Now,&nbsp;current_lines()&nbsp;returns&nbsp;the&nbsp;lines&nbsp;of&nbsp;the<br />//&nbsp;first&nbsp;entry&nbsp;and&nbsp;next_lines()&nbsp;the&nbsp;lines&nbsp;of&nbsp;the&nbsp;second:<br /></span><span style="color: #0000BB">$first_entry_lines&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">current_lines</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$second_entry_lines&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">next_lines</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;There&nbsp;is&nbsp;another&nbsp;way&nbsp;to&nbsp;shift&nbsp;the&nbsp;lines&nbsp;which&nbsp;is&nbsp;faster&nbsp;if<br />//&nbsp;you&nbsp;are&nbsp;just&nbsp;interested&nbsp;in&nbsp;the&nbsp;LDIFs&nbsp;content&nbsp;-&nbsp;you<br />//&nbsp;need&nbsp;to&nbsp;pass&nbsp;the&nbsp;"force"&nbsp;parameter&nbsp;to&nbsp;next_lines():<br /></span><span style="color: #0000BB">$third_entry_lines&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">next_lines</span><span style="color: #007700">(</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$fourth_entry_lines&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">next_lines</span><span style="color: #007700">(</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$fifth_entry_lines&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">next_lines</span><span style="color: #007700">(</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;If&nbsp;you&nbsp;want&nbsp;to&nbsp;convert&nbsp;the&nbsp;lines&nbsp;to&nbsp;an&nbsp;Net_LDAP_Entry,<br />//&nbsp;you&nbsp;may&nbsp;do&nbsp;so&nbsp;anytime&nbsp;by&nbsp;using&nbsp;parseLines()<br /></span><span style="color: #0000BB">$fourth_entry&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parseLines</span><span style="color: #007700">(</span><span style="color: #0000BB">$fourth_entry_lines</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Since&nbsp;we&nbsp;shifted&nbsp;manually&nbsp;only&nbsp;the&nbsp;lines,<br />//&nbsp;current_lines()&nbsp;will&nbsp;return&nbsp;the&nbsp;lines&nbsp;that&nbsp;built&nbsp;up&nbsp;the<br />//&nbsp;last&nbsp;(e.g.&nbsp;the&nbsp;first&nbsp;entry)&nbsp;Net_LDAP_Entry&nbsp;object:<br /></span><span style="color: #0000BB">$first_entry_lines&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">current_lines</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;If&nbsp;we&nbsp;decide&nbsp;to&nbsp;read&nbsp;the&nbsp;next&nbsp;entry,&nbsp;we&nbsp;can&nbsp;do&nbsp;that:<br /></span><span style="color: #0000BB">$sixth_entry&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">read_entry</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;current_lines()&nbsp;is&nbsp;shifted&nbsp;now:<br /></span><span style="color: #0000BB">$sixth_entry_lines&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$ldif</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">current_lines</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.networking.net-ldap.filter.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.networking.net-ldap.html">Net_LDAP</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.networking.net-ldap2.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">LDAP filters</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Net_LDAP2</td>
+  </tr>
+ </table>
+</div>
+</body></html>

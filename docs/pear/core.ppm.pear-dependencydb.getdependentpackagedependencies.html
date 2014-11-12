@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>PEAR_DependencyDB::getDependentPackageDependencies</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="core.ppm.pear-dependencydb.html" title="PEAR_DependencyDB" />
+  <link rel="prev" href="core.ppm.pear-dependencydb.getdependencies.html" title="PEAR_DependencyDB::getDependencies" />
+  <link rel="next" href="package.pear.pear.pear-dependencydb.getdependentpackages.html" title="PEAR_DependencyDB::getDependentPackages" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">PEAR_DependencyDB::getDependentPackageDependencies</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="core.ppm.pear-dependencydb.getdependencies.html" title="PEAR_DependencyDB::getDependencies">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.pear.pear.pear-dependencydb.getdependentpackages.html" title="PEAR_DependencyDB::getDependentPackages">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="core.ppm.pear-dependencydb.getdependentpackagedependencies">
+ 
+  <h1 class="refname">
+   <strong class="function">PEAR_DependencyDB::getDependentPackageDependencies</strong>
+  </h1>
+  <div class="refnamediv"><strong class="function">PEAR_DependencyDB::getDependentPackageDependencies()</strong> &ndash; 
+   Get a list of the actual dependencies of installed packages that depend on
+   a package.
+</div>
+
+ 
+ <h2 class="refsynopsisdiv">Synopsis</h2>
+  <div class="funcsynopsis">
+   <div class="programlisting">require_once &#039;/DependencyDB.php&#039;;</div>
+   <p><code class="funcprototype">
+    
+     <span class="replaceable">array|false</span>
+     <strong class="function">PEAR_DependencyDB::getDependentPackageDependencies</strong>
+     ( 
+    
+     PEAR_PackageFile_v1|PEAR_PackageFile_v2|array
+     &amp;$pkg
+    
+   )</code></p>
+  </div>
+ 
+ <div class="refsection" id="core.ppm.pear-dependencydb.getdependentpackagedependencies.desc">
+  <h1 class="title">Description</h1>
+  <p class="para">
+   This returns the complete tree of extended dependencies of a single installed package.
+  </p>
+  <p class="para">
+   For instance, a real-world example.  package SOAP depends on Mail_Mime, HTTP_Request, Net_URL, Net_DIME.  package HTTP_Request depends on Net_URL, Net_Socket.  This method will return an array
+   similar to:
+  </p>
+  <p class="para">
+   </p><div class="programlisting">
+    <br/>&lt;?php<br/>array(<br/>&nbsp;&nbsp;&nbsp;&nbsp;&#039;pear.php.net&#039;&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#039;mail_mime&#039;&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(&#039;name&#039;&nbsp;=&gt;&nbsp;&#039;Mail_Mime&#039;,<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#039;channel&#039;&nbsp;=&gt;&nbsp;&#039;pear.php.net&#039;),<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#039;http_request&#039;&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(&#039;name&#039;&nbsp;=&gt;&nbsp;&#039;HTTP_Request&#039;,<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#039;channel&#039;&nbsp;=&gt;&nbsp;&#039;pear.php.net&#039;),<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#039;net_url&#039;&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(&#039;name&#039;&nbsp;=&gt;&nbsp;&#039;Net_URL&#039;,<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#039;channel&#039;&nbsp;=&gt;&nbsp;&#039;pear.php.net&#039;,<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#039;min&#039;&nbsp;=&gt;&nbsp;&#039;1.0.12&#039;),<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#039;net_dime&#039;&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(&#039;name&#039;&nbsp;=&gt;&nbsp;&#039;Net_DIME&#039;,<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#039;channel&#039;&nbsp;=&gt;&nbsp;&#039;pear.php.net&#039;),<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#039;net_socket&#039;&nbsp;=&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(&#039;name&#039;&nbsp;=&gt;&nbsp;&#039;Net_Socket&#039;,<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#039;channel&#039;&nbsp;=&gt;&nbsp;&#039;pear.php.net&#039;),<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),<br/>);<br/>?&gt;
+   </div>
+  
+  <p class="para">
+   Note that this should not be relied upon for exact dependencies.  In the example above, the
+   returned dependency will be that of HTTP_Request upon Net_URL, which is stricter than SOAP&#039;s
+   dependency upon Net_URL.  In other words, if there are two similar dependencies, the last
+   one encountered will be returned.
+  </p>
+</div>
+ <div class="refsection" id="core.ppm.pear-dependencydb.getdependentpackagedependencies.param">
+  <h1 class="title">Parameter</h1>
+  <p class="para">
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term">
+      <span class="type">PEAR_PackageFile_v1|PEAR_PackageFile_v2|array</span>
+      <em><code class="parameter">&amp;$pkg</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       This parameter, if an array, should be in format:
+      </p>
+      <p class="para">
+       </p><div class="programlisting">
+        <br/>&lt;?php<br/>array(<br/>&nbsp;&nbsp;&#039;package&#039;&nbsp;=&gt;&nbsp;&#039;packagename&#039;,<br/>&nbsp;&nbsp;&#039;channel&#039;&nbsp;=&gt;&nbsp;&#039;channelname&#039;<br/>);<br/>?&gt;
+       </div>
+      
+     </dd>
+    </dl>
+   </div>
+  
+ </div>
+ <div class="refsection" id="core.ppm.pear-dependencydb.getdependentpackagedependencies.throws">
+  <h1 class="title">Throws</h1>
+  <p class="para">
+   <em class="emphasis">throws</em>
+   no exceptions thrown
+  </p>
+ </div>
+ <div class="refsection" id="core.ppm.pear-dependencydb.getdependentpackagedependencies.note">
+  <h1 class="title">Note</h1>
+  <p class="simpara">This function can not be called
+statically.</p>
+</div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="core.ppm.pear-dependencydb.getdependencies.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="core.ppm.pear-dependencydb.html">PEAR_DependencyDB</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.pear.pear.pear-dependencydb.getdependentpackages.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">PEAR_DependencyDB::getDependencies</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">PEAR_DependencyDB::getDependentPackages</td>
+  </tr>
+ </table>
+</div>
+</body></html>

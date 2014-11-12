@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Installing packages</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="guide.users.commandline.cli.html" title="Command line installer (PEAR)" />
+  <link rel="prev" href="guide.users.commandline.config.html" title="Configuring your PEAR setup" />
+  <link rel="next" href="guide.users.commandline.packageinfo.html" title="Getting information about packages" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Installing packages</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="guide.users.commandline.config.html" title="Configuring your PEAR setup">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="guide.users.commandline.packageinfo.html" title="Getting information about packages">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="guide.users.commandline.installing"><div class="info"><h1>Installing packages</h1>
+</div>
+    
+
+    <p class="para">After getting PEAR working on your machine (see <a href="installation.html" class="link">Installation</a>) you most likely want to
+    install some packages. This guide shows people new to the PEAR command
+    line installer how to get started.</p>
+
+    <div class="section" id="guide.users.commandline.installing.normal"><div class="info"><h2 class="title">Normal installation procedure</h2></div>
+      
+
+      <p class="para">The general command to install a PEAR package named &quot;foo&quot;
+      is</p>
+
+      <pre class="screen">$ pear install foo</pre>
+
+
+      <p class="para">Typing this and pressing return, the package will be downloaded
+      and installed on your computer. It does not matter if you write the
+      package name in lowercase, UPPERCASE or MixedCase - the installer will
+      find the package by lowercasing the name.</p>
+
+      <p class="para">When a package is already installed, you will get the following
+      message:</p>
+
+      <pre class="screen">$ pear install foo
+Ignoring installed package pear/foo
+Nothing to install</pre>
+
+
+      <p class="para">This happens even if there is a newer version of the package! The
+      correct command to upgrade to the lastest version is</p>
+
+      <pre class="screen">$ pear upgrade foo
+upgrade ok: channel://pear.php.net/Foo-1.2.3</pre>
+
+
+      <p class="para">If the package already has the lastest version, you will get a
+      message similar to the following:</p>
+
+      <pre class="screen">Ignoring installed package pear/Foo
+Nothing to upgrade</pre>
+
+
+      <p class="para">In the case you deleted some file and really really want to
+      re-install the package, you have two choices:</p>
+
+      <ul class="itemizedlist">
+        <li class="listitem">
+          <p class="para">Uninstall the package, and reinstall it afterwards</p>
+        </li>
+
+        <li class="listitem">
+          <p class="para">Force the installation</p>
+        </li>
+      </ul>
+
+      <p class="para">Forcing an command should only be done when you absolutely know
+      what you are doing - you might in some circumstances break PEAR
+      otherwise. Forcing something should always be the last option.</p>
+
+      <pre class="screen">$ pear install -f foo
+$ pear upgrade -f foo</pre>
+
+    </div>
+
+    <div class="section" id="guide.users.commandline.installing.unstable"><div class="info"><h2 class="title">Unstable alpha/beta packages</h2></div>
+      
+
+      <p class="para">Now and then, you will get error messages like</p>
+
+      <pre class="screen">Failed to download pear/foo within preferred state &quot;stable&quot;,
+ latest release is version 0.1.2, stability &quot;beta&quot;,
+ use &quot;channel://pear.php.net/foo-0.1.2&quot; to install
+Cannot initialize &#039;channel://pear.php.net/foo&#039;, invalid or missing package file
+Package &quot;channel://pear.php.net/foo&quot; is not valid
+install failed</pre>
+
+
+      <p class="para">Reason for this is that PEAR by default installs stable packages
+      only. When a package is in state <em class="emphasis">devel</em>,
+      <em class="emphasis">alpha</em> or <em class="emphasis">beta</em> it will refuse
+      to install them. You can easily persuade it by adding either the version
+      number or the stability you are willing to accept:</p>
+
+      <pre class="screen">$ pear install Foo-beta
+$ pear install Foo-alpha</pre>
+
+
+      <p class="para">You can also install a specific version, or upgrade to a specific
+      version regardless of the state:</p>
+
+      <pre class="screen">$ pear install Foo-1.2.3
+$ pear upgrade Foo-1.2.3</pre>
+
+
+      <div class="section" id="guide.users.commandline.installing.unstable.edge"><div class="info"><h3 class="title">Living on the edge</h3></div>
+        
+
+        <p class="para">If you don&#039;t care about stability and don&#039;t want to specify the
+        <code class="literal">-alpha</code> or <code class="literal">-beta</code> suffix
+        everytime, you can change the global stability config option:</p>
+
+        <pre class="screen">$ pear config-set preferred_state alpha
+config-set succeeded</pre>
+
+
+        <p class="para">You can switch between the following stability states (sorted by
+        stability):</p>
+
+        <ul class="itemizedlist">
+          <li class="listitem">
+            <p class="para">stable</p>
+          </li>
+
+          <li class="listitem">
+            <p class="para">beta</p>
+          </li>
+
+          <li class="listitem">
+            <p class="para">alpha</p>
+          </li>
+
+          <li class="listitem">
+            <p class="para">devel</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section" id="guide.users.commandline.installing.dependencies"><div class="info"><h2 class="title">Dependencies</h2></div>
+      
+
+      <p class="para">A package often requires other packages to be installed to
+      function correctly. Such a relation is called a dependency. The PEAR
+      installer has full support for dependencies; it can automatically
+      install required and/or optional dependencies if you wish so.</p>
+
+      <p class="para">If you try to install a package with required dependencies, you
+      will get an error that the installation failed. Looking deeper and
+      actually reading the messages shows you that the package needs
+      dependencies that are not installed on your system:</p>
+
+      <pre class="screen">$ pear install html_page2
+Did not download dependencies: pear/HTML_Common,
+ use --alldeps or --onlyreqdeps to download automatically
+pear/HTML_Page2 requires package &quot;pear/HTML_Common&quot; (version &gt;= 1.2)
+No valid packages found
+install failed</pre>
+
+
+      <p class="para">You have several choices:</p>
+
+      <ul class="itemizedlist">
+        <li class="listitem">
+          <p class="para">Install dependent packages by hand</p>
+        </li>
+
+        <li class="listitem">
+          <p class="para">Let PEAR automatically install necessary dependencies
+          only</p>
+        </li>
+
+        <li class="listitem">
+          <p class="para">Let PEAR automatically install necessary and optional
+          dependencies</p>
+        </li>
+      </ul>
+
+      <p class="para">The first method can be a painful and daunting process, because
+      dependent packages itself can have dependencies.</p>
+
+      <p class="para">Both other methods just require a switch to the install command,
+      either <code class="literal">--onlyreqdeps</code> (install required dependencies
+      only) or <code class="literal">--alldeps</code> (install all dependencies).</p>
+
+      <pre class="screen">$ pear install --onlyreqdeps html_page2
+WARNING: &quot;pear/HTML_Common&quot; is deprecated in favor of &quot;pear/HTML_Common2&quot;
+downloading HTML_Page2-0.5.0beta.tgz ...
+Starting to download HTML_Page2-0.5.0beta.tgz (15,467 bytes)
+......done: 15,467 bytes
+downloading HTML_Common-1.2.4.tgz ...
+Starting to download HTML_Common-1.2.4.tgz (4,519 bytes)
+...done: 4,519 bytes
+install ok: channel://pear.php.net/HTML_Common-1.2.4
+install ok: channel://pear.php.net/HTML_Page2-0.5.0beta</pre>
+
+    </div>
+
+    <div class="section" id="guide.users.commandline.installing.offline"><div class="info"><h2 class="title">Offline installation</h2></div>
+      
+
+      <p class="para">You can download individual packages for e.g. offline installation
+      on a second machine just as you would install or upgrade a
+      package:</p>
+
+      <pre class="screen">$ pear download Foo</pre>
+
+
+      <p class="para">After downloading, you will have a file like
+      <code class="filename">Foo-1.2.3.tgz</code> if the latest version of
+      <strong class="classname">Foo</strong> was <code class="literal">1.2.3</code>. Installing it
+      is as easy as typing</p>
+
+      <pre class="screen">$ pear install Foo-1.2.3.tgz</pre>
+
+    </div>
+
+
+    <div class="section" id="guide.users.commandline.installing.manual"><div class="info"><h2 class="title">Manual package installation</h2></div>
+     
+
+     <blockquote class="warning">
+
+      <p class="para">We removed this section, because, today, manually installing a
+      package requires a deeper understanding of the way how packages are
+      organized and what happens during the installation process. You should
+      read the section about the <code class="filename">package.xml</code> in the
+      Developers Guide (<a href="developers.packagedef.html" class="xref">package.xml</a> and <a href="guide.developers.package2.html" class="xref">package.xml 2.0</a>), if you really want install a
+      package without the PEAR installer.</p>
+
+      <p class="para">If you want to install PEAR on a remote host without shell access,
+      you should look into <a href="installation.shared.html" class="xref">Installation of a local PEAR copy on a shared host</a>.</p>
+     </blockquote>
+
+   </div>
+
+
+   <div class="section" id="guide.users.commandline.installing.cvs"><div class="info"><h2 class="title">Installing packages from SVN</h2></div>
+    
+
+    <p class="para">This passage will describe how to install the latest development
+    version of a PEAR package from SVN.</p>
+
+    <p class="para">It is NOT recommended to run a package from SVN in working
+    environments! Because SVN versions are not regular releases, this means:
+    </p><ul class="itemizedlist">
+        <li class="listitem">
+          <span class="simpara">You could get no kind of help from the maintainer or
+          anybody other.</span>
+        </li>
+
+        <li class="listitem">
+          <span class="simpara">Versions in SVN may break the upgrade mechanism of the PEAR
+          Installer.</span>
+        </li>
+      </ul>
+
+    <p class="para">You should use a package from SVN only, if: </p><ul class="itemizedlist">
+        <li class="listitem">
+          <span class="simpara">The maintainer recommended it for you.</span>
+        </li>
+
+        <li class="listitem">
+          <span class="simpara">You want to help in development of a package.</span>
+        </li>
+
+        <li class="listitem">
+          <span class="simpara">You really need a special patch or function, which is not
+          currently released.</span>
+        </li>
+      </ul>
+
+    <p class="para">If you still want to install a package from SVN, you have to do the
+    same steps like a package maintainer creating a new release of a package.
+    If you have problems following the next steps, take a look into the <a href="guide-developers.html" class="link">Developers Section</a> of the manual.</p>
+
+    <ol type="1">
+      <li class="listitem">
+        <p class="para">Get the package files from SVN like described in <a href="http://www.php.net/svn.php" class="link external">http://www.php.net/svn.php</a></p>
+
+        <p class="para">The name of the module to checkout is
+        <code class="filename">pear/&lt;packagename&gt;/trunk</code>, i.e.
+        <strong class="command"> svn checkout http://svn.php.net/repository/pear/packages/HTTP_Client/trunk HTTP_Client</strong>.</p>
+      </li>
+
+      <li class="listitem">
+        <p class="para">Check the <code class="filename">package.xml</code> file, especially the
+        dir and file entries. They must match the existing files and directory
+        structure. If they differ, contact the package maintainer and ask for
+        an update of the <code class="filename">package.xml</code>.</p>
+      </li>
+
+      <li class="listitem">
+        <p class="para">Create a valid package using the PEAR Installer <strong class="command">pear
+        package &lt;path to package.xml&gt;</strong></p>
+      </li>
+
+      <li class="listitem">
+        <p class="para">If you have already installed the package: remove it to avoid
+        version conflicts: <strong class="command">pear uninstall
+        &lt;package&gt;</strong></p>
+      </li>
+
+      <li class="listitem">
+        <p class="para">Install your package archive: <strong class="command">pear install
+        &lt;package-file&gt;</strong></p>
+
+        <p class="para">Now, you have a SVN version installed!</p>
+      </li>
+    </ol>
+
+    <p class="para">You should upgrade to an official release of the package as early as
+    possible. Before you install the official release, uninstall the SVN
+    version to avoid version conflicts.</p>
+   </div>
+
+
+   <div class="section" id="guide.users.commandline.installing.pecl"><div class="info"><h2 class="title">Installing PECL packages</h2></div>
+    
+
+    <p class="para">The procedure of installing PECL packages is described in the <a href="http://www.php.net/manual/en/install.pecl.php" class="link external">pecl manual
+    section</a> on the PHP website.</p>
+   </div>
+
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="guide.users.commandline.config.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="guide.users.commandline.cli.html">Command line installer (PEAR)</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="guide.users.commandline.packageinfo.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Configuring your PEAR setup</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Getting information about packages</td>
+  </tr>
+ </table>
+</div>
+</body></html>

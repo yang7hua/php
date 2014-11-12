@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>API</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.webservices.xml-rpc.html" title="XML_RPC" />
+  <link rel="prev" href="package.webservices.xml-rpc.examples.html" title="Examples" />
+  <link rel="next" href="package.webservices.xml-rpc2.html" title="XML_RPC2" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">API</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.webservices.xml-rpc.examples.html" title="Examples">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.webservices.xml-rpc2.html" title="XML_RPC2">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.webservices.xml-rpc.api">
+
+ 
+  <h1 class="refname">API</h1>
+  <div class="refnamediv">API &ndash; Class documentation of the package</div>
+
+ 
+
+ <div class="refsection" id="package.webservices.xml-rpc.api.client"><div class="info"><h1>XML_RPC_Client</h1>
+</div>
+  
+  <p class="para">
+   This is the basic class used to represent a client of an XML-RPC
+   server.
+  </p>
+
+  <div class="refsection"><div class="info"><h1>Creation</h1>
+</div>
+   
+   <p class="para">
+    The constructor has the following syntax:
+   </p>
+
+   <div class="funcsynopsis">
+    <p><code class="funcprototype">
+     $client = new XML_RPC_Client ( 
+     
+      string $path
+     
+      , 
+      string $server
+     
+      , 
+      integer $port
+     
+      , 
+      string $proxy
+     
+      , 
+      integer $proxy_port
+     
+      , 
+      string $proxy_user
+     
+      , 
+      string $proxy_pass
+     
+    )</code></p>
+   </div>
+
+   <p class="para">
+    </p><div class="variablelist">
+
+     <dl class="varlistentry">
+      <dt class="term">
+       <span class="type">string</span>
+       <em><code class="parameter">$path</code></em>
+      </dt>
+      <dd class="listitem">
+       <p class="para">
+        the path and name of the RPC server script
+        you want the request to go to
+       </p>
+      </dd>
+     </dl>
+
+     <dl class="varlistentry">
+      <dt class="term">
+       <span class="type">string</span>
+       <em><code class="parameter">$server</code></em>
+      </dt>
+      <dd class="listitem">
+       <p class="para">
+        the URL of the remote server to connect to.
+        If this parameter doesn&#039;t specify a
+        protocol and $port is 443, ssl:// is assumed.
+       </p>
+      </dd>
+     </dl>
+
+     <dl class="varlistentry">
+      <dt class="term">
+       <span class="type">integer</span>
+       <em><code class="parameter">$port</code></em>
+      </dt>
+      <dd class="listitem">
+       <p class="para">
+        a port for connecting to the remote server.
+        Defaults to 80 for http:// connections and
+        443 for https:// and ssl:// connections.
+       </p>
+      </dd>
+     </dl>
+
+     <dl class="varlistentry">
+      <dt class="term">
+       <span class="type">string</span>
+       <em><code class="parameter">$proxy</code></em>
+      </dt>
+      <dd class="listitem">
+       <p class="para">
+        the URL of the proxy server to use, if any.
+        If this parameter doesn&#039;t specify a
+        protocol and $port is 443, ssl:// is assumed.
+       </p>
+      </dd>
+     </dl>
+
+     <dl class="varlistentry">
+      <dt class="term">
+       <span class="type">integer</span>
+       <em><code class="parameter">$proxy_port</code></em>
+      </dt>
+      <dd class="listitem">
+       <p class="para">
+        a port for connecting to the remote server.
+        Defaults to 8080 for http:// connections and
+        443 for https:// and ssl:// connections.
+       </p>
+      </dd>
+     </dl>
+
+     <dl class="varlistentry">
+      <dt class="term">
+       <span class="type">string</span>
+       <em><code class="parameter">$proxy_user</code></em>
+      </dt>
+      <dd class="listitem">
+       <p class="para">
+        a user name for accessing the proxy server
+       </p>
+      </dd>
+     </dl>
+
+     <dl class="varlistentry">
+      <dt class="term">
+       <span class="type">string</span>
+       <em><code class="parameter">$proxy_pass</code></em>
+      </dt>
+      <dd class="listitem">
+       <p class="para">
+        a password for accessing the proxy server
+       </p>
+      </dd>
+     </dl>
+
+    </div>
+   
+
+   <p class="para">
+   </p><blockquote class="note">
+    <p class="para">
+     In order to use SSL connections, your PHP installation must
+     have the <a href="http://php.net/openssl" class="link external">
+      <code class="literal">openssl</code></a> extension enabled.
+    </p>
+   </blockquote>
+
+   
+
+   <p class="para">
+    Here&#039;s an example client set up to query Userland&#039;s XML-RPC server
+    at <em class="emphasis">betty.userland.com</em>:
+   </p>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$client&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">XML_RPC_Client</span><span style="color: #007700">(</span><span style="color: #DD0000">'/RPC2'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'betty.userland.com'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+
+  <div class="refsection"><div class="info"><h1>Methods</h1>
+</div>
+   
+
+   <p class="para">
+    This class supports the following methods.
+   </p>
+
+   <div class="refsection"><div class="info"><h1><strong class="function">send()</strong></h1>
+</div>
+    
+    <p class="para">
+     This method takes the form:
+    </p>
+
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $response = $client-&gt;send ( 
+      $xmlrpc_message
+       , $timeout
+     )</code></p>
+    </div>
+
+    <p class="para">
+     Where <em><code class="parameter">$xmlrpc_message</code></em> is an instance of
+     <strong class="classname">XML_RPC_Message</strong> and
+     <em><code class="parameter">$response</code></em> is an instance of
+     <strong class="classname">XML_RPC_Response</strong> (see <a href="package.webservices.xml-rpc.api.html" class="xref">API</a>).
+    </p>
+
+    <p class="para">
+     The <em><code class="parameter">$timeout</code></em> is optional, and will be set to
+     <code class="literal">0</code> (wait forever) if omitted. This timeout value
+     is passed to <strong class="function">fsockopen()</strong>.
+    </p>
+
+    <p class="para">
+     If the value of <em><code class="parameter">$response</code></em> is
+     <code class="literal">0</code> rather than an
+     <strong class="classname">XML_RPC_Response</strong> object, then this signifies
+     an I/O error has occured. You can find out what the I/O error was
+     from the values <code class="varname">$client-&gt;errno</code> and
+     <code class="varname">$client-&gt;errstring</code>.
+    </p>
+
+    <p class="para">
+     In addition to low-level errors, the XML-RPC server you were
+     querying may return an error in the
+     <strong class="classname">XML_RPC_Response</strong> object. See <a href="package.webservices.xml-rpc.api.html" class="xref">API</a> for details
+     of how to handle these errors.
+    </p>
+
+   </div>
+
+   <div class="refsection"><div class="info"><h1><strong class="function">setCredentials()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $client-&gt;setCredentials ( 
+      $username
+       , $password
+     )</code></p>
+    </div>
+
+    <p class="para">
+     This method sets the username and password for authorizing the
+     client to a server. With the default (HTTP) transport, this
+     information is used for HTTP Basic authorization.
+    </p>
+
+   </div>
+
+
+
+   <div class="refsection"><div class="info"><h1><strong class="function">setDebug()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $client-&gt;setDebug ( 
+      $debugOn
+     )</code></p>
+    </div>
+
+    <p class="para">
+     <em><code class="parameter">$debugOn</code></em> is either <code class="literal">0</code> or
+     <code class="literal">1</code> depending on whether you require the client to
+     print debugging information to the browser.  The default is not to
+     output this information.
+    </p>
+
+    <p class="para">
+     The debugging information includes the raw data returned from the
+     XML-RPC server it was querying, and the PHP value the client
+     attempts to create to represent the value returned by the server.
+     This option can be very useful when debugging servers as it allows
+     you to see exactly what the server returns.
+    </p>
+
+   </div>
+
+  </div>
+ </div>
+
+ <div class="refsection" id="package.webservices.xml-rpc.api.message"><div class="info"><h1>XML_RPC_Message</h1>
+</div>
+  
+
+  <p class="para">
+   This class provides a representation for a request to an XML-RPC
+   server. A client sends an <strong class="classname">XML_RPC_Message</strong> to a
+   server, and receives back an <strong class="classname">XML_RPC_Response</strong>.
+  </p>
+
+  <div class="refsection"><div class="info"><h1>Creation</h1>
+</div>
+   
+   <p class="para">
+    The constructor takes the following form:
+   </p>
+
+   <div class="funcsynopsis">
+    <p><code class="funcprototype">
+     $msg = new XML_RPC_Message ( 
+     $methodName
+      , $parameterArray
+    )</code></p>
+   </div>
+
+   <p class="para">
+    Where <em><code class="parameter">$methodName</code></em> is a string indicating the
+    name of the method you wish to invoke, and
+    <em><code class="parameter">$parameterArray</code></em> is a simple
+    <strong class="classname">Array</strong> of <strong class="classname">XML_RPC_Value</strong>
+    objects.  Here&#039;s an example message to the <em class="emphasis">US state
+    name</em> server:
+   </p>
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"XML/RPC.php"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$msg&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">XML_RPC_Message</span><span style="color: #007700">(</span><span style="color: #DD0000">"examples.getStateName"</span><span style="color: #007700">,&nbsp;array(new&nbsp;</span><span style="color: #0000BB">XML_RPC_Value</span><span style="color: #007700">(</span><span style="color: #0000BB">23</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"int"</span><span style="color: #007700">)));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+
+   <p class="para">
+    This example requests the name of state number 23. For more
+    information on <strong class="classname">XML_RPC_Value</strong> objects, see
+    <a href="package.webservices.xml-rpc.api.html" class="xref">API</a>.
+   </p>
+  </div>
+
+  <div class="refsection"><div class="info"><h1>Methods</h1>
+</div>
+   
+   <div class="refsection"><div class="info"><h1><strong class="function">serialize()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $outString = $msg-&gt;serialize ( 
+      
+     )</code></p>
+    </div>
+    <p class="para">
+     Returns the an XML string representing the XML-RPC message.
+    </p>
+
+   </div>
+
+   <div class="refsection"><div class="info"><h1><strong class="function">addParam()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $msg-&gt;addParam ( 
+      $xmlrpcVal
+     )</code></p>
+    </div>
+
+    <p class="para">
+     Adds the <strong class="classname">XML_RPC_Value</strong>
+     <em><code class="parameter">$xmlrpcVal</code></em> to the parameter list for this
+     method call.
+    </p>
+    <p class="para">
+     Returns an <strong class="classname">XML_RPC_Value</strong> object.
+     If the parameter doesn&#039;t exist, an <strong class="classname">XML_RPC_Response</strong>
+     object is returned.
+    </p>
+
+   </div>
+
+   <div class="refsection"><div class="info"><h1><strong class="function">getParam()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $xmlrpcVal = $msg-&gt;getParam ( 
+      $n
+     )</code></p>
+    </div>
+
+    <p class="para">
+     Gets the <em><code class="parameter">$n</code></em>th parameter in the message. Use
+     this method in server implementations. Returns the
+     <code class="literal">undef</code> value if no such parameter exists.
+    </p>
+   </div>
+
+   <div class="refsection"><div class="info"><h1><strong class="function">getNumParams()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $n = $msg-&gt;getNumParams ( 
+      
+     )</code></p>
+    </div>
+    <p class="para">
+     Returns the number of parameters attached to this message.
+    </p>
+   </div>
+
+   <div class="refsection"><div class="info"><h1><strong class="function">method()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $methName=$msg-&gt;method ( 
+      
+     )</code></p>
+     <p><code class="funcprototype">
+      $msg-&gt;method ( 
+      $methName
+     )</code></p>
+    </div>
+    <p class="para">
+     Gets or sets the method contained in the XML-RPC message.
+    </p>
+   </div>
+
+   <div class="refsection"><div class="info"><h1><strong class="function">parseResponse()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $response = $msg-&gt;parseResponse ( 
+      $xmlString
+     )</code></p>
+    </div>
+
+    <p class="para">
+     Given an incoming XML-RPC server response contained in the string
+     <em><code class="parameter">$xmlString</code></em>, this method constructs an
+     <strong class="classname">XML_RPC_Response</strong> response object and returns
+     it, setting error codes as appropriate.
+    </p>
+    <p class="para">
+     This method processes any HTTP/MIME headers it finds.
+    </p>
+   </div>
+
+   <div class="refsection"><div class="info"><h1><strong class="function">parseResponseFile()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $response = $msg-&gt;parseResponseFile ( 
+      $fileHandle
+     )</code></p>
+    </div>
+
+    <p class="para">
+     Given an incoming XML-RPC server response on the file handle
+     <em><code class="parameter">$fileHandle</code></em>, this method reads the data and
+     passes it to <strong class="function">parseResponse()</strong>.
+    </p>
+    <p class="para">
+     This method is useful to construct responses from pre-prepared
+     files. It processes any HTTP headers it finds.
+    </p>
+   </div>
+  </div>
+ </div>
+
+ <div class="refsection" id="package.webservices.xml-rpc.api.response"><div class="info"><h1>XML_RPC_Response</h1>
+</div>
+  
+  <p class="para">
+   This class is used to contain responses to XML-RPC requests. A server
+   method handler will construct an
+   <strong class="classname">XML_RPC_Response</strong> and pass it as a return
+   value. This same value will be returned by the result of an
+   invocation of the <strong class="function">send()</strong> method of the
+   <strong class="classname">XML_RPC_Client</strong> class.
+  </p>
+
+  <div class="refsection"><div class="info"><h1>Creation</h1>
+</div>
+   
+   <div class="funcsynopsis">
+    <p><code class="funcprototype">
+     $resp = new XML_RPC_Response ( 
+     $xmlrpcval
+    )</code></p>
+    <p><code class="funcprototype">
+     $resp = new XML_RPC_Response ( 
+     0
+      , $errcode
+      , $errstring
+    )</code></p>
+   </div>
+
+   <p class="para">
+    The first instance is used when execution has happened without
+    difficulty: <em><code class="parameter">$xmlrpcval</code></em> is an
+    <strong class="classname">XML_RPC_Value</strong> value with the result of the
+    method execution contained in it.
+   </p>
+   <p class="para">
+    The second type of constructor is used in case of
+    failure. <em><code class="parameter">$errcode</code></em> and
+    <em><code class="parameter">$errstring</code></em> are used to provide indication of
+    what has gone wrong.  See <a href="package.webservices.xml-rpc.api.html" class="xref">API</a> for more
+    information on passing error codes.
+   </p>
+  </div>
+
+  <div class="refsection"><div class="info"><h1>Methods</h1>
+</div>
+   
+
+   <div class="refsection"><div class="info"><h1><strong class="function">faultCode()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $fn = $resp-&gt;faultCode ( 
+      
+     )</code></p>
+    </div>
+    <p class="para">
+     Returns the integer fault code return from the XML-RPC response
+     <em><code class="parameter">$resp</code></em>. A zero value indicates success, any
+     other value indicates a failure response.
+    </p>
+   </div>
+
+   <div class="refsection"><div class="info"><h1><strong class="function">faultString()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $fs = $resp-&gt;faultString ( 
+      
+     )</code></p>
+    </div>
+    <p class="para">
+     Returns the human readable explanation of the fault indicated by
+     <code class="varname">$resp-&gt;faultCode</code>.
+    </p>
+   </div>
+
+   <div class="refsection"><div class="info"><h1><strong class="function">value()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $xmlrpcVal = $resp-&gt;value ( 
+      
+     )</code></p>
+    </div>
+    <p class="para">
+     Returns an <strong class="classname">XML_RPC_Value</strong> object  containing
+     the return value sent by the server. If the response&#039;s
+     <code class="varname">faultCode</code> is non-zero then the value returned
+     by this method should not be used (it may  not even be an object).
+    </p>
+   </div>
+
+   <div class="refsection"><div class="info"><h1><strong class="function">serialize()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $outString = $resp-&gt;serialize ( 
+      
+     )</code></p>
+    </div>
+
+    <p class="para">
+     Returns an XML string representation of the response.
+    </p>
+   </div>
+  </div>
+ </div>
+
+ <div class="refsection" id="package.webservices.xml-rpc.api.value"><div class="info"><h1>XML_RPC_Value</h1>
+</div>
+  
+
+  <p class="para">
+   This is where a lot of the hard work gets done.  This class enables
+   the creation and encapsulation of values for XML-RPC.
+  </p>
+  <p class="para">
+   Ensure you&#039;ve read the XML-RPC spec at <a href="http://www.xmlrpc.com/stories/storyReader$7" class="link external">http://www.xmlrpc.com/stories/storyReader$7</a> before reading on
+   as it will make things clearer.
+  </p>
+  <p class="para">
+   The <strong class="classname">XML_RPC_Value</strong> class can store arbitrarily
+   complicated values using the following types:
+   <code class="literal">i4</code>,
+   <code class="literal">int</code>,
+   <code class="literal">boolean</code>,
+   <code class="literal">string</code>,
+   <code class="literal">double</code>,
+   <code class="literal">dateTime.iso8601</code>,
+   <code class="literal">base64</code>,
+   <code class="literal">array</code> or
+   <code class="literal">struct</code>.
+   You
+   should refer to the <a href="http://www.xmlrpc.com/stories/storyReader$7" class="link external">spec</a> for
+   more information on what each of these types mean.
+  </p>
+
+  <div class="refsection"><div class="info"><h1>Notes on types</h1>
+</div>
+   
+   <div class="refsection"><div class="info"><h1>int</h1>
+</div>
+    
+    <p class="para">
+     The type <strong class="classname">i4</strong> is accepted as a synonym for
+     <strong class="classname">int</strong>. The value parsing code will always
+     convert <strong class="classname">i4</strong> to <strong class="classname">int</strong>:
+     <strong class="classname">int</strong> is regarded by this implementation as
+     the canonical name for this type.
+    </p>
+   </div>
+
+   <div class="refsection"><div class="info"><h1>base64</h1>
+</div>
+    
+    <p class="para">
+     Base 64 encoding is performed transparently to the caller when
+     using this type.  Therefore you ought to consider it as a binary
+     data type, for use when you want to pass none 7-bit clean data.
+     Decoding is also transparent.
+    </p>
+   </div>
+
+   <div class="refsection"><div class="info"><h1>boolean</h1>
+</div>
+    
+    <p class="para">
+     The values <code class="literal">true</code> and <code class="literal">1</code> map to
+     <code class="literal">true</code>. All other values (including the empty
+     string) are converted to <code class="literal">false</code>.
+    </p>
+   </div>
+
+   <div class="refsection"><div class="info"><h1>string</h1>
+</div>
+    
+    <p class="para">
+     The characters
+     <code class="literal">&lt;</code>,
+     <code class="literal">&gt;</code>,
+     <code class="literal">&quot;</code> and
+     <code class="literal">&amp;</code>
+     are converted to their entity equivalents
+     <code class="literal">&amp;lt;</code>,
+     <code class="literal">&amp;gt;</code>,
+     <code class="literal">&amp;quot;</code> and
+     <code class="literal">&amp;amp;</code>
+     for transport through XML-RPC.  The
+     current XML-RPC spec recommends only encoding
+     <code class="literal">&lt;</code> and <code class="literal">&amp;</code>
+     but this implementation goes further, for reasons
+     explained by <a href="http://www.w3.org/TR/REC-xml/#syntax" class="link external">the XML 1.0
+     recommendation</a>.
+    </p>
+
+    <blockquote class="note">
+     <p class="para">
+      Currently, passing a string &quot;-1&quot; to <strong class="classname">XML_RPC_Value</strong>&#039;s
+      constructor creates an empty result since it serves as a special/magic
+      value.
+     </p>
+    </blockquote>
+
+
+    <p class="para">
+     TODO: <code class="literal">&amp;apos;</code> entity is not yet supported
+    </p>
+   </div>
+
+  </div>
+
+  <div class="refsection" id="package.webservices.xml-rpc.api.value.creation"><div class="info"><h1>Creation</h1>
+</div>
+   
+   <p class="para">
+    The constructor is the normal way to create an
+    <strong class="classname">XML_RPC_Value</strong>. The constructor can take these
+    forms:
+   </p>
+
+   <div class="funcsynopsis">
+    <p><code class="funcprototype">
+     $myVal = new XML_RPC_Value ( 
+     
+    )</code></p>
+    <p><code class="funcprototype">
+     $myVal = new XML_RPC_Value ( 
+     $stringVal
+    )</code></p>
+    <p><code class="funcprototype">
+     $myVal = new XML_RPC_Value ( 
+     $scalarVal
+      , &#039;int&#039; | &#039;boolean&#039; | &#039;string&#039; | &#039;double&#039; | &#039;dateTime.iso8601&#039; | &#039;base64&#039;
+    )</code></p>
+    <p><code class="funcprototype">
+     $myVal = new XML_RPC_Value ( 
+     $arrayVal
+      , &#039;array&#039; | &#039;struct&#039;
+    )</code></p>
+   </div>
+   <p class="para">
+    The first constructor creates an empty value, which must be altered
+    using the methods <strong class="function">addScalar()</strong>,
+    <strong class="function">addArray()</strong> or <strong class="function">addStruct()</strong>
+    before it can be used.
+   </p>
+   <p class="para">
+    The second constructor creates a simple string value.
+   </p>
+   <p class="para">
+    The third constructor is used to create a scalar value. The second
+    parameter must be a name of an XML-RPC type. Examples:
+   </p>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$myInt&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">XML_RPC_Value</span><span style="color: #007700">(</span><span style="color: #0000BB">1267</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"int"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$myString</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">XML_RPC_Value</span><span style="color: #007700">(</span><span style="color: #DD0000">"Hello,&nbsp;World!"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"string"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$myBool&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">XML_RPC_Value</span><span style="color: #007700">(</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"boolean"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+
+   <p class="para">
+    The fourth constructor form can be used to compose complex XML-RPC
+    values. The first argument is either a simple array in the case of
+    an XML-RPC <strong class="classname">array</strong> or an associative array in
+    the case of a <strong class="classname">struct</strong>. The elements of the
+    array <em class="emphasis">must be <strong class="classname">XML_RPC_Value</strong> objects
+     themselves</em>. Examples:
+   </p>
+
+   <div class="programlisting">
+<br/>$myArray&nbsp;=&nbsp;new&nbsp;XML_RPC_Value(array(<br/>&nbsp;&nbsp;&nbsp;&nbsp;new&nbsp;XML_RPC_Value(&quot;Tom&quot;),&nbsp;new&nbsp;XML_RPC_Value(&quot;Dick&quot;),<br/>&nbsp;&nbsp;&nbsp;&nbsp;new&nbsp;XML_RPC_Value(&quot;Harry&quot;)),&nbsp;&quot;array&quot;);<br/><br/>$myStruct&nbsp;=&nbsp;new&nbsp;XML_RPC_Value(array(<br/>&nbsp;&nbsp;&nbsp;&nbsp;&quot;name&quot;&nbsp;=&gt;&nbsp;new&nbsp;XML_RPC_Value(&quot;Tom&quot;),<br/>&nbsp;&nbsp;&nbsp;&nbsp;&quot;age&quot;&nbsp;=&gt;&nbsp;new&nbsp;XML_RPC_Value(34,&nbsp;&quot;int&quot;),<br/>&nbsp;&nbsp;&nbsp;&nbsp;&quot;geek&quot;&nbsp;=&gt;&nbsp;new&nbsp;XML_RPC_Value(1,&nbsp;&quot;boolean&quot;)),&nbsp;&quot;struct&quot;);
+   </div>
+
+  </div>
+
+  <div class="refsection" id="package.webservices.xml-rpc.api.value.methods"><div class="info"><h1>Methods</h1>
+</div>
+   
+   <div class="refsection"><div class="info"><h1><strong class="function">addScalar()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $ok = $val-&gt;addScalar ( 
+      $stringVal
+     )</code></p>
+     <p><code class="funcprototype">
+      $ok = $val-&gt;addScalar ( 
+      $scalarVal
+       , &#039;int&#039; | &#039;boolean&#039; | &#039;string&#039; | &#039;double&#039; | &#039;dateTime.iso8601&#039; | &#039;base64&#039;
+     )</code></p>
+    </div>
+
+    <p class="para">
+     If <em><code class="parameter">$val</code></em> is an empty
+     <strong class="classname">XML_RPC_Value</strong> this method makes it a scalar
+     value, and sets that value.  If <em><code class="parameter">$val</code></em> is
+     already a scalar value, then no more scalars can be added and
+     <code class="literal">0</code> is returned. If all went OK,
+     <code class="literal">1</code> is returned.
+    </p>
+
+    <p class="para">
+     There is a special case if <em><code class="parameter">$val</code></em> is an
+     <strong class="classname">array</strong>: the scalar value passedis appended to
+     the array.
+    </p>
+   </div>
+
+   <div class="refsection"><div class="info"><h1><strong class="function">addArray()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $ok = $val-&gt;addArray ( 
+      $arrayVal
+     )</code></p>
+    </div>
+
+    <p class="para">
+     Turns an empty <strong class="classname">XML_RPC_Value</strong> into an
+     <strong class="classname">array</strong> with contents as specified by
+     <em><code class="parameter">$arrayVal</code></em>.  See the fourth constructor form
+     for more information.
+    </p>
+   </div>
+
+   <div class="refsection"><div class="info"><h1><strong class="function">addStruct()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $ok = $val-&gt;addStruct ( 
+      $assocArrayVal
+     )</code></p>
+    </div>
+    <p class="para">
+     Turns an empty <strong class="classname">XML_RPC_Value</strong> into a
+     <strong class="classname">struct</strong> with contents as specified by
+     <em><code class="parameter">$assocArrayVal</code></em>.  See the fourth constructor
+     form for more information.
+    </p>
+   </div>
+
+   <div class="refsection"><div class="info"><h1><strong class="function">kindOf()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $kind = $val-&gt;kindOf ( 
+      
+     )</code></p>
+    </div>
+    <p class="para">
+     Returns a string containing <code class="literal">struct</code>, <code class="literal">array</code> or <code class="literal">scalar</code>
+     describing the base type of the value.  If it returns <code class="literal">undef</code> it
+     means that the value hasn&#039;t been initialised.
+    </p>
+   </div>
+
+   <div class="refsection"><div class="info"><h1><strong class="function">serialize()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $outString = $val-&gt;serialize ( 
+      
+     )</code></p>
+    </div>
+    <p class="para">
+     Returns a string containing the XML-RPC representation of this
+     value.
+    </p>
+   </div>
+
+   <div class="refsection"><div class="info"><h1><strong class="function">scalarval()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $scalarVal = $val-&gt;scalarval ( 
+      
+     )</code></p>
+    </div>
+    <p class="para">
+     If <strong class="function">$val-&gt;kindOf()</strong> == &#039;scalar&#039;, this method
+     returns the actual PHP-language value of the scalar (base 64
+     decoding is automatically handled here).
+    </p>
+   </div>
+
+   <div class="refsection"><div class="info"><h1><strong class="function">scalartyp()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $typeName = $val-&gt;scalartyp ( 
+      
+     )</code></p>
+    </div>
+    <p class="para">
+     If <strong class="function">$val-&gt;kindOf()</strong> == &#039;scalar&#039;, this method
+     returns a string denoting the type of the scalar. As mentioned
+     before, <code class="literal">i4</code> is always coerced to
+     <code class="literal">int</code>.
+    </p>
+   </div>
+
+   <div class="refsection"><div class="info"><h1><strong class="function">arraymem()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $xmlrpcVal = $val-&gt;arraymem ( 
+      $n
+     )</code></p>
+    </div>
+    <p class="para">
+     Returns the <em><code class="parameter">$n</code></em>th element in the array
+     represented by the value <em><code class="parameter">$val</code></em>. The value
+     returned is an <strong class="classname">XML_RPC_Value</strong> object.
+    </p>
+   </div>
+
+   <div class="refsection"><div class="info"><h1><strong class="function">arraysize()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $len = $val-&gt;arraysize ( 
+      
+     )</code></p>
+    </div>
+    <p class="para">
+     If <em><code class="parameter">$val</code></em> is an <strong class="classname">array</strong>,
+     returns the number of elements in that array.
+    </p>
+   </div>
+
+   <div class="refsection"><div class="info"><h1><strong class="function">structmem()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $xmlrpcVal = $val-&gt;structmem ( 
+      $memberName
+     )</code></p>
+    </div>
+    <p class="para">
+     Returns the element called <em><code class="parameter">$memberName</code></em> from
+     the struct represented by the value
+     <em><code class="parameter">$val</code></em>. The value returned is an
+     <strong class="classname">XML_RPC_Value</strong> object.
+    </p>
+   </div>
+
+   <div class="refsection"><div class="info"><h1><strong class="function">structeach()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      list($key,$value) = $val-&gt;structeach ( 
+      
+     )</code></p>
+    </div>
+    <p class="para">
+     Returns the next (key,value) pair from the struct, when
+     <em><code class="parameter">$val</code></em> is a struct. See also <a href="package.webservices.xml-rpc.api.html" class="xref">API</a>.
+    </p>
+   </div>
+
+   <div class="refsection" id="package.webservices.xml-rpc.api.value.methods.structreset"><div class="info"><h1><strong class="function">structreset()</strong></h1>
+</div>
+    
+    <div class="funcsynopsis">
+     <p><code class="funcprototype">
+      $val-&gt;structreset ( 
+      
+     )</code></p>
+    </div>
+    <p class="para">
+     Resets the internal pointer for <strong class="function">structeach()</strong>
+     to the beginning of the struct, where <em><code class="parameter">$val</code></em>
+     is a struct.
+    </p>
+   </div>
+
+  </div>
+ </div>
+
+ <div class="refsection" id="package.webservices.xml-rpc.api.server"><div class="info"><h1>XML_RPC_Server</h1>
+</div>
+  
+  <p class="para">
+   The current implementation of this class has been kept as simple as
+   possible. The constructor for the server basically does all the
+   work. Here&#039;s a minimal example:
+  </p>
+
+  <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo&nbsp;</span><span style="color: #007700">(</span><span style="color: #0000BB">$params</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;...<br />}<br /><br /></span><span style="color: #0000BB">$s&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">XML_RPC_Server</span><span style="color: #007700">(array(</span><span style="color: #DD0000">"examples.myFunc"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">"function"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">"foo"</span><span style="color: #007700">)));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+  </div>
+
+  <p class="para">
+   This performs everything you need to do with a server.  The single
+   argument is an associative array from method names to function
+   names. The request is parsed and despatched to the relevant function,
+   which is reponsible for returning a
+   <strong class="classname">XML_RPC_Response</strong> object, which gets serialized
+   back to the caller.
+  </p>
+  <p class="para">
+   Here is a more detailed look at what the handler function
+   <strong class="function">foo()</strong> may do:
+  </p>
+
+  <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo&nbsp;</span><span style="color: #007700">(</span><span style="color: #0000BB">$params</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;global&nbsp;</span><span style="color: #0000BB">$XML_RPC_erruser</span><span style="color: #007700">;&nbsp;</span><span style="color: #FF8000">//&nbsp;import&nbsp;user&nbsp;errcode&nbsp;value<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;$params&nbsp;is&nbsp;the&nbsp;received&nbsp;XML_RPC_Message&nbsp;object.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">$err</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;this&nbsp;is&nbsp;an&nbsp;error&nbsp;condition<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">return&nbsp;new&nbsp;</span><span style="color: #0000BB">XML_RPC_Response</span><span style="color: #007700">(</span><span style="color: #0000BB">0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$XML_RPC_erruser</span><span style="color: #007700">+</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #FF8000">//&nbsp;user&nbsp;error&nbsp;1<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"There's&nbsp;a&nbsp;problem,&nbsp;Captain"</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;this&nbsp;is&nbsp;a&nbsp;successful&nbsp;value&nbsp;being&nbsp;returned<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">return&nbsp;new&nbsp;</span><span style="color: #0000BB">XML_RPC_Response</span><span style="color: #007700">(new&nbsp;</span><span style="color: #0000BB">XML_RPC_Value</span><span style="color: #007700">(</span><span style="color: #DD0000">"All's&nbsp;fine!"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"string"</span><span style="color: #007700">));<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+  </div>
+
+  <div class="refsection"><div class="info"><h1>The dispatch map</h1>
+</div>
+   
+   <p class="para">
+    The first argument to the <strong class="function">XML_RPC_Server()</strong>
+    constructor is an array, called the <em class="emphasis">dispatch
+    map</em>.  In this array is the information the server needs
+    to service the XML-RPC methods you define.
+   </p>
+   <p class="para">
+    The dispatch map takes the form of an associative array of
+    associative arrays: the outer array has one entry for each method,
+    the key being the method name. The corresponding value is another
+    associative array, which can have the following members:
+   </p>
+
+   <ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para">
+      <em><code class="parameter">function</code></em> - this entry is mandatory. It must
+      be a name of a function in the global scope which services the
+      XML-RPC method.
+     </p>
+     <p class="para">
+      It is possible to use regular functions, class names with method
+      names and objects with method names. The Examples page of this
+      manual demonstrates the appropriate syntax for all of these approaches.
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <em><code class="parameter">signature</code></em> - this entry is an array containg
+      the possible signatures (see <a href="package.webservices.xml-rpc.api.html" class="xref">API</a>)
+      for the method. If this entry is present then the server will
+      check that the correct number and type of parameters have been
+      sent for this method before dispatching it.
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <em><code class="parameter">docstring</code></em> - this entry is a string containing
+      documentation for the method. The documentation may contain HTML
+      markup.
+     </p>
+    </li>
+   </ul>
+
+  </div>
+
+  <div class="refsection" id="package.webservices.xml-rpc.api.server.signatures"><div class="info"><h1>Method signatures</h1>
+</div>
+   
+   <p class="para">
+    A signature is a description of a method&#039;s return type and its
+    parameter types.  A method may have more than one signature.
+   </p>
+
+   <p class="para">
+    Within a server&#039;s dispatch map, each method has an array of possible
+    signatures. Each signature is an array of types. The first entry is
+    the return type.
+   </p>
+
+   <p class="para">
+    Let&#039;s run through an example.  Imagine you wanted to write a
+    regular PHP function like this:
+    </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">is_8</span><span style="color: #007700">(</span><span style="color: #0000BB">$input</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$strict&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$strict</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;(</span><span style="color: #0000BB">$input&nbsp;</span><span style="color: #007700">===&nbsp;</span><span style="color: #0000BB">8</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;(</span><span style="color: #0000BB">$input&nbsp;</span><span style="color: #007700">==&nbsp;</span><span style="color: #0000BB">8</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+
+   <p class="para">
+    To get it to work in an XML_RPC server, you would have to
+    write it like this:
+    </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">is_8</span><span style="color: #007700">(</span><span style="color: #0000BB">$params</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;This&nbsp;parameter&nbsp;is&nbsp;required.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$param&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$params</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getParam</span><span style="color: #007700">(</span><span style="color: #0000BB">0</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(!</span><span style="color: #0000BB">XML_RPC_Value</span><span style="color: #007700">::</span><span style="color: #0000BB">isValue</span><span style="color: #007700">(</span><span style="color: #0000BB">$param</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$param</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$input&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$param</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">scalarval</span><span style="color: #007700">();<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;This&nbsp;parameter&nbsp;is&nbsp;optional.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$param&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$params</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getParam</span><span style="color: #007700">(</span><span style="color: #0000BB">1</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(!</span><span style="color: #0000BB">XML_RPC_Value</span><span style="color: #007700">::</span><span style="color: #0000BB">isValue</span><span style="color: #007700">(</span><span style="color: #0000BB">$param</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$strict&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$strict&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$param</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">scalarval</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$strict</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$answer&nbsp;</span><span style="color: #007700">=&nbsp;(</span><span style="color: #0000BB">$input&nbsp;</span><span style="color: #007700">===&nbsp;</span><span style="color: #0000BB">8</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$answer&nbsp;</span><span style="color: #007700">=&nbsp;(</span><span style="color: #0000BB">$input&nbsp;</span><span style="color: #007700">==&nbsp;</span><span style="color: #0000BB">8</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$val&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">XML_RPC_Value</span><span style="color: #007700">(</span><span style="color: #0000BB">$answer</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'boolean'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;new&nbsp;</span><span style="color: #0000BB">XML_RPC_Response</span><span style="color: #007700">(</span><span style="color: #0000BB">$val</span><span style="color: #007700">);<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+
+   <p class="para">
+    Here is a signature covering all of the
+    possible permutations:
+    </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">array(<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'boolean'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'int'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'boolean'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'int'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'boolean'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'boolean'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'string'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'boolean'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'string'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'boolean'</span><span style="color: #007700">),<br />)<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+
+   <p class="para">
+    The server could be instatiated like this:
+    </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$server&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">XML_RPC_Server</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'isan8'&nbsp;</span><span style="color: #007700">=&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'function'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'is_8'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'signature'&nbsp;</span><span style="color: #007700">=&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'boolean'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'int'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'boolean'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'int'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'boolean'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'boolean'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'string'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'boolean'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'string'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'boolean'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'docstring'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Is&nbsp;the&nbsp;value&nbsp;an&nbsp;8?'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">0<br /></span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+
+   <p class="para">
+    The strings representing the XML-RPC types have been
+    encoded as global variables for your convenience:
+   </p>
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$GLOBALS</span><span style="color: #007700">[</span><span style="color: #DD0000">'XML_RPC_I4'</span><span style="color: #007700">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;</span><span style="color: #DD0000">'i4'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$GLOBALS</span><span style="color: #007700">[</span><span style="color: #DD0000">'XML_RPC_Int'</span><span style="color: #007700">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;</span><span style="color: #DD0000">'int'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$GLOBALS</span><span style="color: #007700">[</span><span style="color: #DD0000">'XML_RPC_Boolean'</span><span style="color: #007700">]&nbsp;&nbsp;=&nbsp;</span><span style="color: #DD0000">'boolean'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$GLOBALS</span><span style="color: #007700">[</span><span style="color: #DD0000">'XML_RPC_Double'</span><span style="color: #007700">]&nbsp;&nbsp;&nbsp;=&nbsp;</span><span style="color: #DD0000">'double'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$GLOBALS</span><span style="color: #007700">[</span><span style="color: #DD0000">'XML_RPC_String'</span><span style="color: #007700">]&nbsp;&nbsp;&nbsp;=&nbsp;</span><span style="color: #DD0000">'string'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$GLOBALS</span><span style="color: #007700">[</span><span style="color: #DD0000">'XML_RPC_DateTime'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">'dateTime.iso8601'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$GLOBALS</span><span style="color: #007700">[</span><span style="color: #DD0000">'XML_RPC_Base64'</span><span style="color: #007700">]&nbsp;&nbsp;&nbsp;=&nbsp;</span><span style="color: #DD0000">'base64'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$GLOBALS</span><span style="color: #007700">[</span><span style="color: #DD0000">'XML_RPC_Array'</span><span style="color: #007700">]&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;</span><span style="color: #DD0000">'array'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$GLOBALS</span><span style="color: #007700">[</span><span style="color: #DD0000">'XML_RPC_Struct'</span><span style="color: #007700">]&nbsp;&nbsp;&nbsp;=&nbsp;</span><span style="color: #DD0000">'struct'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+
+  <div class="refsection"><div class="info"><h1>Delaying the server response</h1>
+</div>
+   
+
+   <p class="para">
+    You may want to construct the server, but for some reason not
+    fulfill the request immediately (security verification, for
+    instance). If you pass the constructor a second argument of
+    <code class="literal">0</code> this will have the desired effect. You can then
+    use the <strong class="function">service()</strong> method of the server class to
+    service the request. For example:
+   </p>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$s&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">XML_RPC_Server</span><span style="color: #007700">(</span><span style="color: #0000BB">$myDispMap</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;...&nbsp;some&nbsp;code&nbsp;that&nbsp;does&nbsp;other&nbsp;stuff&nbsp;here<br /><br /></span><span style="color: #0000BB">$s</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">service</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+
+  <div class="refsection"><div class="info"><h1>Fault reporting</h1>
+</div>
+   
+
+   <p class="para">
+    Fault codes for your servers should start at the value indicated by
+    the global <code class="literal">$xmlrpcerruser</code> + 1.
+   </p>
+   <p class="para">
+    Standard errors returned by the server include:
+   </p>
+   <div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term">
+      <code class="literal">1</code> <span class="phrase">Unknown method</span>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       Returned if the server was asked to dispatch a method it didn&#039;t
+       know about
+      </p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      <code class="literal">2</code> <span class="phrase">Invalid return payload</span>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       This error is actually generated by the client, not server, code,
+       but signifies that a server returned something it couldn&#039;t
+       understand.
+      </p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      <code class="literal">3</code> <span class="phrase">Incorrect parameters</span>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       This error is generated when the server has signature(s) defined
+       for a method, and the parameters passed by the client do not
+       match any of signatures.
+      </p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      <code class="literal">4</code> <span class="phrase">Can&#039;t introspect: method
+      unknown</span>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       This error is generated by the builtin
+       <strong class="function">system.*()</strong> methods when any kind of
+       introspection is attempted on a method undefined by the server.
+      </p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      <code class="literal">5</code> <span class="phrase">Didn&#039;t receive 200 OK from remote
+      server</span>
+     </dt>
+
+     <dd class="listitem">
+      <p class="para">
+       This error is generated by the client when a remote server
+       doesn&#039;t return HTTP/1.1 200 OK in response to a request. A more
+       detailed error report is added onto the end of the phrase above.
+      </p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      <code class="literal">100-</code> <span class="phrase">XML parse errors</span>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       Returns 100 plus the XML parser error code for the fault that
+       occurred.  The <code class="varname">faultString</code> returned explains
+       where the parse error was in the incoming XML stream.
+      </p>
+     </dd>
+    </dl>
+   </div>
+  </div>
+ </div>
+
+ <div class="refsection" id="package.webservices.xml-rpc.api.dump"><div class="info"><h1>XML_RPC_Dump</h1>
+</div>
+  
+  <p class="para">
+   This class generates string representations of
+   the data in XML_RPC_Value objects.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.webservices.xml-rpc.api.other"><div class="info"><h1>Other Functions</h1>
+</div>
+  
+  <p class="para">
+   Below are functions that lay outside the various XML_RPC objects.
+  </p>
+
+  <div class="refsection"><div class="info"><h1><strong class="function">XML_RPC_encode()</strong></h1>
+</div>
+   
+
+   <div class="funcsynopsis">
+    <p><code class="funcprototype">
+     $rpc = XML_RPC_encode ( 
+     $php_val
+    )</code></p>
+   </div>
+
+   <p class="para">
+    Takes native php types and encodes them into XML_RPC
+    PHP object format.
+   </p>
+  </div>
+
+  <div class="refsection"><div class="info"><h1><strong class="function">XML_RPC_decode()</strong></h1>
+</div>
+   
+
+   <div class="funcsynopsis">
+    <p><code class="funcprototype">
+     $values = XML_RPC_decode ( 
+     $XML_RPC_val
+    )</code></p>
+   </div>
+
+   <p class="para">
+    Takes a message in PHP XML_RPC object format and
+    translates it into native PHP types.
+   </p>
+
+  </div>
+
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.webservices.xml-rpc.examples.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.webservices.xml-rpc.html">XML_RPC</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.webservices.xml-rpc2.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Examples</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">XML_RPC2</td>
+  </tr>
+ </table>
+</div>
+</body></html>

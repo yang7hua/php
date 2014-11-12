@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Fetching entries</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.networking.net-ldap.html" title="Net_LDAP" />
+  <link rel="prev" href="package.networking.net-ldap.search.html" title="Search" />
+  <link rel="next" href="package.networking.net-ldap.attributes.html" title="Attributes" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Fetching entries</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.networking.net-ldap.search.html" title="Search">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.networking.net-ldap.attributes.html" title="Attributes">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.networking.net-ldap.fetching">
+    
+        <h1 class="refname">Fetching entries</h1>
+        <div class="refnamediv">Fetching entries &ndash; Retrieving entries directly or from a searchresult</div>
+
+    
+
+    <div class="refsection"><div class="info"><h1>Retrieving entries directly</h1>
+</div>
+        
+
+        <p class="para">
+        You can retrieve directory entries in several ways, either directly or from a performed search request.
+        If you want to fetch an entry directly, you need to know its absolute distinguished name (DN).
+
+        To directly fetch an known entry from the directory server, you use
+        <strong class="classname">Net_LDAP</strong>&#039;s <strong class="function">getEntry()</strong> method.
+        It takes two parameters: The DN of the entry and the attributes you want to
+        read from the entry.
+        It returns a <strong class="classname">Net_LDAP_Entry</strong> object if fetching worked, or a
+        <strong class="classname">Net_LDAP_Error</strong> object in case of a failure.
+        </p>
+
+        <p class="para">
+        You may also check if the entry exists in the server before you fetch it. This can be achieved by
+        <strong class="classname">Net_LDAP</strong>&#039;s <strong class="function">dnExists()</strong> which takes the DN to test and returns either true or false.
+        </p>
+
+        <div class="example"><div class="info"><p><strong>Fetching an entry directly</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Defining&nbsp;the&nbsp;DN&nbsp;we&nbsp;want&nbsp;to&nbsp;fetch;<br />//&nbsp;we&nbsp;want&nbsp;to&nbsp;select&nbsp;the&nbsp;given-&nbsp;and&nbsp;the&nbsp;surname<br /></span><span style="color: #0000BB">$dn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'cn=admin,o=example,dc=org'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$entry&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$ldap</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getEntry</span><span style="color: #007700">(</span><span style="color: #0000BB">$dn</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'gn'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'sn'</span><span style="color: #007700">));<br /><br /></span><span style="color: #FF8000">//&nbsp;Error&nbsp;checking&nbsp;is&nbsp;important!<br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">Net_LDAP</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$entry</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #DD0000">'Could&nbsp;not&nbsp;fetch&nbsp;entry:&nbsp;'</span><span style="color: #007700">.</span><span style="color: #0000BB">$entry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+
+    </div>
+
+
+    <div class="refsection"><div class="info"><h1>Retrieving entries from a searchresult</h1>
+</div>
+        
+
+        <p class="para">
+        The second way to retrieve entries is from a searchresult. As described in chapter &quot;<a href="package.networking.net-ldap.search.html" class="link">Search</a>&quot;,
+        you access the entries of a search result through the <strong class="classname">Net_LDAP_Search</strong>-object resulting from
+        <strong class="classname">Net_LDAP</strong>&#039;s <strong class="function">search()</strong> method.
+        Each of the following methods return a <strong class="classname">Net_LDAP_Error</strong>-object if something goes wrong, so
+        remember to test for errors!
+        You have several ways to read the entries:
+        </p><table class="doctable table"><caption>Possible ways to fetch entries</caption>
+        
+        
+            <thead>
+            <tr>
+            <th>Method of <strong class="classname">Net_LDAP_Search</strong></th>
+            <th>Description</th>
+            </tr>
+
+            </thead>
+
+
+            <tbody class="tbody">
+            <tr>
+            <td><strong class="function">entries()</strong></td>
+            <td>This returns the entries at once unsorted.</td>
+            </tr>
+
+
+            <tr>
+            <td><strong class="function">as_struct()</strong></td>
+            <td>This returns all entries as multidimensional array instead of <strong class="classname">Net_LDAP_Entry</strong>-objects.
+                   The array keys of the first dimension are the DNs and the value is an array containing all attributes.
+                   The array keys of the second level are the attributes names; the value of the second level is an array containing all the
+                   attributes values. Note, that even if there are no or just one value, an array is present.</td>
+            </tr>
+
+
+            <tr>
+            <td><strong class="function">sorted()</strong></td>
+            <td>Use this if you want to get the entries at once but sorted. You can sort by several attributes which can contain multiple values.
+                   You can of course sort ascending (default) or descending - just pass the PHP constant <code class="literal">SORT_ASC</code> or <code class="literal">SORT_DESC</code> as second parameter.</td>
+            </tr>
+
+
+            <tr>
+            <td><strong class="function">sorted_as_struct()</strong></td>
+            <td>Like <strong class="function">as_struct()</strong>, this returns the entries as multidimensional array, but in this case sorted. For parameters, see <strong class="function">sorted()</strong></td>
+            </tr>
+
+
+            <tr>
+            <td><strong class="function">shiftEntry()</strong></td>
+            <td>This returns one entry from the beginning of the search result.
+                   Since this returns <code class="literal">FALSE</code> if all entries are fetched, <strong class="function">shiftEntry()</strong> is perfectly
+                   appropriate to get used inside a while-loop.
+                   Take care not to mix <strong class="function">shiftEntry()</strong> and <strong class="function">popEntry()</strong>!</td>
+            </tr>
+
+
+            <tr>
+            <td><strong class="function">popEntry()</strong></td>
+            <td>Exactly the same as shiftEntry, but returns the entry from the end of the searchresult. Again, be sure to not mix
+                   <strong class="function">shiftEntry()</strong> and <strong class="function">popEntry()</strong>!</td>
+            </tr>
+
+            </tbody>
+        
+        </table>
+<p>
+
+        To directly fetch an known entry from the directory server, you use
+        <strong class="classname">Net_LDAP</strong>&#039;s <strong class="function">getEntry()</strong> method.
+        It takes two parameters: The DN of the entry and the attributes you want to
+        read from the entry.
+        It returns a <strong class="classname">Net_LDAP_Entry</strong> object if fetching worked, or a
+        <strong class="classname">Net_LDAP_Error</strong> object in case of a failure.
+        </p>
+
+        <p class="para">
+        You may also check if the entry exists in the server before you fetch it. This can be achieved by
+        <strong class="classname">Net_LDAP</strong>&#039;s <strong class="function">dnExists()</strong> which takes the DN to test and returns either true or false.
+        </p>
+
+        <div class="example"><div class="info"><p><strong>Fetching all entries from searchresult</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;return&nbsp;all&nbsp;entries:<br /></span><span style="color: #0000BB">$entry&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$search</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">entries</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+
+        <div class="example"><div class="info"><p><strong>Fetching all entries from searchresult: sorted</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;return&nbsp;sorted&nbsp;by&nbsp;first&nbsp;'sn'&nbsp;then&nbsp;'gn',&nbsp;but&nbsp;descending:<br /></span><span style="color: #0000BB">$entry&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$search</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">sorted</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'sn'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'gn'</span><span style="color: #007700">),&nbsp;</span><span style="color: #0000BB">SORT_DESC</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+
+        <div class="example"><div class="info"><p><strong>Fetching entries one by one inside a while loop</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;return&nbsp;entries&nbsp;one&nbsp;by&nbsp;one:<br /></span><span style="color: #007700">while&nbsp;(&nbsp;</span><span style="color: #0000BB">$entry&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$search</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">shiftEntry</span><span style="color: #007700">()&nbsp;)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;do&nbsp;something,&nbsp;like&nbsp;printing&nbsp;the&nbsp;DN&nbsp;of&nbsp;the&nbsp;entry;<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;in&nbsp;a&nbsp;real&nbsp;case,&nbsp;dont&nbsp;forget&nbsp;to&nbsp;test&nbsp;for&nbsp;errors!<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #DD0000">"ENTRY:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$entry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">dn</span><span style="color: #007700">();<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.networking.net-ldap.search.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.networking.net-ldap.html">Net_LDAP</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.networking.net-ldap.attributes.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Search</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Attributes</td>
+  </tr>
+ </table>
+</div>
+</body></html>

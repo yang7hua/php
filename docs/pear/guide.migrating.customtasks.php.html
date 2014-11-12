@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>coding custom tasks</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="guide.migrating.customtasks.html" title="Custom File Tasks" />
+  <link rel="prev" href="guide.migrating.customtasks.xml.html" title="custom tasks in package.xml" />
+  <link rel="next" href="guide.migrating.postinstall.html" title="Post-installation Scripts" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">coding custom tasks</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="guide.migrating.customtasks.xml.html" title="custom tasks in package.xml">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="guide.migrating.postinstall.html" title="Post-installation Scripts">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="guide.migrating.customtasks.php"><div class="info"><h1>Creating customized tasks in PHP</h1>
+</div>
+  
+  
+
+  <p class="para">
+   Creating a custom task involves creating a class that validates xml, and performs the
+   task when called upon.  Tasks can be invoked in two situations: at package-time and
+   at install-time.  Each task can control whether it should be called at package-time,
+   install-time, or at both times.
+  </p>
+  <p class="para">
+   There are two kinds of tasks: simple and multiple.  Most tasks are simple tasks.  Simple
+   tasks are self-contained: all customization is limited to that file.  Multiple tasks
+   are collected during installation and processed fully as a unit after files have been
+   committed to disk, allowing more complex processing.
+  </p>
+  <p class="para">
+   All simple tasks must define 3 methods, all multiple tasks must define 4 methods.
+   These are:
+  </p>
+  <p class="para">
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para">
+      <a href="guide.migrating.customtasks.php.html#guide.migrating.customtasks.php.validatexml" class="link"><strong class="function">validateXml()</strong></a>
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <a href="guide.migrating.customtasks.php.html#guide.migrating.customtasks.php.init" class="link"><strong class="function">init()</strong></a>
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <a href="guide.migrating.customtasks.php.html#guide.migrating.customtasks.php.startsession" class="link"><strong class="function">startSession()</strong></a>
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <a href="guide.migrating.customtasks.php.html#guide.migrating.customtasks.php.run" class="link"><strong class="function">run()</strong></a>
+      (multiple tasks only)
+     </p>
+    </li>
+   </ul>
+  
+  <div class="section" id="guide.migrating.customtasks.php.validatexml"><div class="info"><h2 class="title"><strong class="function">validateXml()</strong></h2></div>
+   
+   <p class="para">
+    </p><div class="funcsynopsis">
+     <p><code class="funcprototype">
+      true|array <strong class="function">validateXml</strong> ( 
+      PEAR_PackageFile_v2 $pkg
+       , string|array $xml
+       , PEAR_Config &amp;$config
+       , array $fileAttributes
+     )</code></p>
+    </div>
+   </p>
+   <p class="para">
+    This method is called upon package.xml validation and should be used to validate
+    the task&#039;s xml content.  Upon error, a simple array of format
+    <code class="literal">array(CODE, message)</code> must be returned.  The code must be one
+    of the following constants, as defined in <code class="filename">PEAR/Task/Common.php</code>:
+   </p>
+   <p class="para">
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+       <strong class="constant">PEAR_TASK_ERROR_NOATTRIBS</strong> - Attributes were expected, but
+       none were present.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <strong class="constant">PEAR_TASK_ERROR_MISSING_ATTRIB</strong> - A specific attribute is not
+       present.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <strong class="constant">PEAR_TASK_ERROR_WRONG_ATTRIB_VALUE</strong> - The value of an attribute
+       is incorrect.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       <strong class="constant">PEAR_TASK_ERROR_INVALID</strong> - Any other error in validation.
+      </p>
+     </li>
+    </ul>
+   
+   <p class="para">
+    The error message should include the file name as defined by <code class="literal">$fileAttributes[&#039;name&#039;]</code>, and include as much useful information about the location
+    of the validation error as possible.
+   </p>
+   <p class="para">
+    </p><div class="variablelist">
+     <dl class="varlistentry">
+      <dt class="term">
+       PEAR_PackageFile_v2 <em><code class="parameter">$pkg</code></em>
+      </dt>
+      <dd class="listitem">
+       <p class="para">
+        This is the package.xml object that contains the task.
+       </p>
+      </dd>
+     </dl>
+     <dl class="varlistentry">
+      <dt class="term">
+       string|array <em><code class="parameter">$xml</code></em>
+      </dt>
+      <dd class="listitem">
+       <p class="para">
+        The raw parsed content of the task&#039;s xml as parsed from package.xml.  Tags
+        like &lt;tasks:windowseol&gt; that have no attributes or child elements will
+        be passed an empty string <code class="literal">&#039;&#039;</code>.  Otherwise, simple text content
+        will be a string, and nested tags/attributes will be passed in as an array.  Here
+        is a list of sample xml and their parsed values:
+       </p>
+       <p class="para">
+        </p><ul class="itemizedlist">
+         <li class="listitem">
+          <p class="para">
+           </p><div class="xmlcode">
+<pre class="xmlcode">&lt;tasks:blah/&gt;</pre>
+
+           </div>
+          
+          <p class="para">
+           <code class="literal">string(&quot;&quot;);</code>
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para">
+           </p><div class="xmlcode">
+<pre class="xmlcode">
+&lt;tasks:blah&gt;hello
+&lt;/tasks:blah&gt;</pre>
+
+           </div>
+          
+          <p class="para">
+           <code class="literal">string(&quot;hello&quot;);</code>
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para">
+           </p><div class="xmlcode">
+<pre class="xmlcode">
+&lt;tasks:blah&gt;hello
+ &lt;tasks:boo/&gt;
+&lt;/tasks:blah&gt;</pre>
+
+           </div>
+          
+          <p class="para">
+           <code class="literal">array(&#039;_content&#039;&nbsp;=&gt;&nbsp;&#039;hello&#039;,&nbsp;&#039;tasks:boo&#039;&nbsp;=&gt;&nbsp;string(&#039;&#039;))</code>
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para">
+           </p><div class="xmlcode">
+<pre class="xmlcode">
+&lt;tasks:blah foo=&quot;one&quot;&gt;
+ &lt;tasks:boo/&gt;
+&lt;/tasks:blah&gt;</pre>
+
+           </div>
+          
+          <p class="para">
+           <code class="literal"><br/>array(&#039;attribs&#039;&nbsp;=&gt;&nbsp;array(&#039;foo&#039;&nbsp;=&gt;&nbsp;&#039;one&#039;),<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#039;tasks:boo&#039;&nbsp;=&gt;&nbsp;string(&#039;&#039;))</code>
+          </p>
+         </li>
+        </ul>
+       
+      </dd>
+     </dl>
+     <dl class="varlistentry">
+      <dt class="term">
+       PEAR_Config <em><code class="parameter">$config</code></em>
+      </dt>
+      <dd class="listitem">
+       <p class="para">
+        This is the current configuration object
+       </p>
+      </dd>
+     </dl>
+     <dl class="varlistentry">
+      <dt class="term">
+       array <em><code class="parameter">$fileAttributes</code></em>
+      </dt>
+      <dd class="listitem">
+       <p class="para">
+        The parsed attributes of the &lt;file&gt; tag that encloses this tag.  This
+        is guaranteed to contain indices <code class="literal">name</code>, specifying the file name,
+        and <code class="literal">role</code>, specifying the file role.  Other attributes like
+        <code class="literal">baseinstalldir</code> may be present but are not required, and so will
+        not be guaranteed to be present for every file.
+       </p>
+      </dd>
+     </dl>
+    </div>
+   
+  </div>
+  <div class="section" id="guide.migrating.customtasks.php.init"><div class="info"><h2 class="title"><strong class="function">init()</strong></h2></div>
+   
+   <p class="para">
+    </p><div class="funcsynopsis">
+     <p><code class="funcprototype">
+      void <strong class="function">init</strong> ( 
+      string|array $xml
+       , array $fileAttributes
+       , string|null $lastVersion
+     )</code></p>
+    </div>
+   </p>
+   <p class="para">
+    The <strong class="function">init()</strong> function is called immediately prior to the
+    <strong class="function">startSession()</strong> method, and should be used for initialization
+    that is not directly related to file modification.  This method may move to another
+    location in the installation process at any time.  The logical separation of
+    initialization from task action is important and the order of execution can be
+    depended upon.
+   </p>
+   <p class="para">
+    </p><div class="variablelist">
+     <dl class="varlistentry">
+      <dt class="term">
+       string|array <em><code class="parameter">$xml</code></em>
+      </dt>
+      <dd class="listitem">
+       <p class="para">
+        The raw parsed content of the task&#039;s xml as parsed from package.xml.  Tags
+        like &lt;tasks:windowseol&gt; that have no attributes or child elements will
+        be passed an empty string <code class="literal">&#039;&#039;</code>.  Otherwise, simple text content
+        will be a string, and nested tags/attributes will be passed in as an array.  Here
+        is a list of sample xml and their parsed values:
+       </p>
+       <p class="para">
+        </p><ul class="itemizedlist">
+         <li class="listitem">
+          <p class="para">
+           </p><div class="xmlcode">
+<pre class="xmlcode">&lt;tasks:blah/&gt;</pre>
+
+           </div>
+          
+          <p class="para">
+           <code class="literal">string(&quot;&quot;);</code>
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para">
+           </p><div class="xmlcode">
+<pre class="xmlcode">
+&lt;tasks:blah&gt;hello
+&lt;/tasks:blah&gt;</pre>
+
+           </div>
+          
+          <p class="para">
+           <code class="literal">string(&quot;hello&quot;);</code>
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para">
+           </p><div class="xmlcode">
+<pre class="xmlcode">
+&lt;tasks:blah&gt;hello
+ &lt;tasks:boo/&gt;
+&lt;/tasks:blah&gt;</pre>
+
+           </div>
+          
+          <p class="para">
+           <code class="literal">array(&#039;_content&#039;&nbsp;=&gt;&nbsp;&#039;hello&#039;,&nbsp;&#039;tasks:boo&#039;&nbsp;=&gt;&nbsp;string(&#039;&#039;))</code>
+          </p>
+         </li>
+         <li class="listitem">
+          <p class="para">
+           </p><div class="xmlcode">
+<pre class="xmlcode">
+&lt;tasks:blah foo=&quot;one&quot;&gt;
+ &lt;tasks:boo/&gt;
+&lt;/tasks:blah&gt;</pre>
+
+           </div>
+          
+          <p class="para">
+           <code class="literal"><br/>array(&#039;attribs&#039;&nbsp;=&gt;&nbsp;array(&#039;foo&#039;&nbsp;=&gt;&nbsp;&#039;one&#039;),<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#039;tasks:boo&#039;&nbsp;=&gt;&nbsp;string(&#039;&#039;))</code>
+          </p>
+         </li>
+        </ul>
+       
+      </dd>
+     </dl>
+     <dl class="varlistentry">
+      <dt class="term">
+       array <em><code class="parameter">$fileAttributes</code></em>
+      </dt>
+      <dd class="listitem">
+       <p class="para">
+        The parsed attributes of the &lt;file&gt; tag that encloses this tag.  This
+        is guaranteed to contain indices <code class="literal">name</code>, specifying the file name,
+        and <code class="literal">role</code>, specifying the file role.  Other attributes like
+        <code class="literal">baseinstalldir</code> may be present but are not required, and so will
+        not be guaranteed to be present for every file.
+       </p>
+      </dd>
+     </dl>
+     <dl class="varlistentry">
+      <dt class="term">
+       string|null <em><code class="parameter">$lastVersion</code></em>
+      </dt>
+      <dd class="listitem">
+       <p class="para">
+        This will be set to the string representing the version of the last installed
+        version of this package.  This is useful for determining whether the package
+        is being upgraded or is a fresh installation.  If the package is being installed
+        for the first time, <strong class="constant">NULL</strong> will be passed in.
+       </p>
+      </dd>
+     </dl>
+    </div>
+   
+  </div>
+  <div class="section" id="guide.migrating.customtasks.php.startsession"><div class="info"><h2 class="title"><strong class="function">startSession()</strong></h2></div>
+   
+   <p class="para">
+    </p><div class="funcsynopsis">
+     <p><code class="funcprototype">
+      string|false|PEAR_Error <strong class="function">startSession</strong> ( 
+      string $contents
+       , string $dest
+     )</code></p>
+    </div>
+   </p>
+   <p class="para">
+    For non-script tasks, <strong class="function">startSession()</strong> is called to actually
+    execute a task.  The task should perform all needed operations on the file contents,
+    and on success return the file contents regardless of any modification.  These contents
+    will be written to disk, so it is imperative that they be the full, original file
+    contents if no modification is made to them.
+   </p>
+   <p class="para">
+    For script tasks, <strong class="function">startSession()</strong> is called
+    to determine whether the script can be safely executed.  For both task types,
+    script and non-script, a return value of <strong class="constant">FALSE</strong> will cause the task to be silently
+    skipped.  A return value of a PEAR_Error will cause processing of all operations
+    to stop, and an error message to be displayed by the installer prior to exiting.
+    Any other return value will cause the script to be processed normally by the frontend
+    as a post-installation script.
+   </p>
+   <p class="para">
+    </p><div class="variablelist">
+     <dl class="varlistentry">
+      <dt class="term">
+       string <em><code class="parameter">$contents</code></em>
+      </dt>
+      <dd class="listitem">
+       <p class="para">
+        The original contents of the file whose &lt;file&gt; tag in package.xml
+        contains the task tag.
+       </p>
+      </dd>
+     </dl>
+     <dl class="varlistentry">
+      <dt class="term">
+       string <em><code class="parameter">$dest</code></em>
+      </dt>
+      <dd class="listitem">
+       <p class="para">
+        The full path to the final installed file location.  This is strictly
+        informational, as the file does not yet exist, and should only be used
+        for error messages or other processing that does not attempt to modify
+        the file.
+       </p>
+      </dd>
+     </dl>
+    </div>
+   
+  </div>
+  <div class="section" id="guide.migrating.customtasks.php.run"><div class="info"><h2 class="title"><strong class="function">run()</strong></h2></div>
+   
+   <p class="para">
+    </p><div class="funcsynopsis">
+     <p><code class="funcprototype">
+      false|string <strong class="function">run</strong> ( 
+      array $tasks
+     )</code></p>
+    </div>
+   </p>
+   <p class="para">
+    The <strong class="function">run()</strong> method should return <strong class="constant">FALSE</strong> on success, and an
+    error message if there is a problem.  This method is called only for tasks
+    that define <code class="varname">$this-&gt;type</code> as <code class="literal">multiple</code>.
+    For each task within package.xml that has this task, the <strong class="function">run()</strong>
+    method will be called with an array containing all of the task objects from
+    the package.xml.
+   </p>
+   <p class="para">
+    </p><div class="variablelist">
+     <dl class="varlistentry">
+      <dt class="term">
+       array <em><code class="parameter">$tasks</code></em>
+      </dt>
+      <dd class="listitem">
+       <p class="para">
+        An array of task objects.
+       </p>
+      </dd>
+     </dl>
+    </div>
+   
+  </div>
+ </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="guide.migrating.customtasks.xml.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="guide.migrating.customtasks.html">Custom File Tasks</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="guide.migrating.postinstall.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">custom tasks in package.xml</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Post-installation Scripts</td>
+  </tr>
+ </table>
+</div>
+</body></html>

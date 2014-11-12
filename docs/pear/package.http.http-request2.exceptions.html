@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Exceptions</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.http.http-request2.html" title="HTTP_Request2" />
+  <link rel="prev" href="package.http.http-request2.observers.html" title="Observers" />
+  <link rel="next" href="package.http.http-session.html" title="HTTP_Session" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Exceptions</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.http.http-request2.observers.html" title="Observers">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.http.http-session.html" title="HTTP_Session">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.http.http-request2.exceptions">
+ 
+  <h1 class="refname">Exceptions</h1>
+  <div class="refnamediv">Exceptions &ndash; Handling package errors</div>
+
+ 
+ <div class="refsection" id="package.http.http-request2.exceptions.overview">
+  <div class="info">
+   <h1>Exceptions overview</h1>
+
+  </div>
+  <p class="para">
+   All exceptions thrown in HTTP_Request2 are instances of <a href="http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2_Exception.html" class="apidoclink">HTTP_Request2_Exception</a>.
+   Since release 2.0.0beta1, HTTP_Request2 tries to throw a specialized subclass of that class and
+   provide an error code when possible.
+  </p>
+  <p class="para">
+   Checking for exception subclass and error code can help your application identify transient
+   failures (e.g. <strong class="classname">HTTP_Request2_MessageException</strong> with error code
+   <strong class="constant">HTTP_Request2_Exception::TIMEOUT</strong>). You can also use this information to
+   display a user friendly error message instead of displaying Exception message that is more
+   programmer friendly.
+  </p>
+  <p class="para">
+   The following <strong class="classname">HTTP_Request2_Exception</strong> subclasses are available:
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term"><strong class="classname">HTTP_Request2_NotImplementedException</strong></dt>
+     <dd class="listitem"><span class="simpara">Exception thrown in case of missing package features.</span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><strong class="classname">HTTP_Request2_LogicException</strong></dt>
+     <dd class="listitem">
+      <span class="simpara">Exception that represents error in the program logic. These are usually thrown before
+       request even starts.</span>
+      <span class="simpara">This exception implies an error on part of the programmer, like passing an invalid
+       argument to a method or trying to use Curl Adapter when curl extension is disabled. They
+       are unlikely to happen in production except for those dealing with local files.</span>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><strong class="classname">HTTP_Request2_ConnectionException</strong></dt>
+     <dd class="listitem">
+      <span class="simpara">Exception thrown when connection to a web or proxy server fails.</span>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><strong class="classname">HTTP_Request2_MessageException</strong></dt>
+     <dd class="listitem"><span class="simpara">Thrown when sending or receiving HTTP message fails (this implies that
+      connection succeeded, at least). Can be caused by network problems (e.g. timeout) or remote
+      server sending invalid data.</span></dd>
+    </dl>
+   </div>
+  
+  
+ </div>
+ <div class="refsection" id="package.http.http-request2.exceptions.codes">
+  <div class="info">
+   <h1>Error codes</h1>
+
+  </div>
+  <p class="para">
+   Subclasses of <strong class="classname">HTTP_Request2_Exception</strong> can contain two error codes: 
+   </p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara">Package error code, one of the constants described below. Can be accessed via
+     <strong class="function">getCode()</strong> method.</span></li>
+    <li class="listitem"><span class="simpara">Native error code, as returned by an underlying PHP extension used by
+     <a href="package.http.http-request2.adapters.html" class="link">the Adapter</a>. Specifically, these are
+     the error codes returned by <a href="http://www.php.net/manual-lookup.php?pattern=stream_socket_client" class="link external"><strong class="function">stream_socket_client()</strong></a>
+     for Socket Adapter and <a href="http://www.php.net/manual-lookup.php?pattern=curl_errno" class="link external"><strong class="function">curl_errno()</strong></a> for Curl
+     Adapter. Native error code can be accessed via <a href="http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2_Exception.html#methodgetNativeCode" class="apidoclink">HTTP_Request2_Exception::getNativeCode()</a>.</span></li>
+   </ul>
+  
+  
+  <p class="para">
+   The following package error codes are currently used:
+   </p><table class="doctable table">
+    <caption>Error codes used by <strong class="classname">HTTP_Request2_LogicException</strong></caption>
+    
+     <thead>
+      <tr style="vertical-align: top;">
+       <th>Constant</th>
+       <th>Meaning</th>
+      </tr>
+
+     </thead>
+
+     
+     <tbody class="tbody">
+      <tr style="vertical-align: top;">
+       <td><strong class="constant">HTTP_Request2_Exception::INVALID_ARGUMENT</strong></td>
+       <td>An invalid argument was passed to a method.</td>
+      </tr>
+
+      <tr style="vertical-align: top;">
+       <td><strong class="constant">HTTP_Request2_Exception::MISSING_VALUE</strong></td>
+       <td>Some required value was not available.</td>
+      </tr>
+
+      <tr style="vertical-align: top;">
+       <td><strong class="constant">HTTP_Request2_Exception::MISCONFIGURATION</strong></td>
+       <td>Request cannot be processed due to errors in PHP configuration (e.g. trying to use
+        disabled PHP extension).</td>
+      </tr>
+
+      <tr style="vertical-align: top;">
+       <td><strong class="constant">HTTP_Request2_Exception::READ_ERROR</strong></td>
+       <td>Error reading the local file.</td>
+      </tr>
+
+     </tbody>
+    
+    
+   </table>
+
+
+   <table class="doctable table">
+    <caption>Error codes used by <strong class="classname">HTTP_Request2_MessageException</strong></caption>
+    
+     <thead>
+      <tr style="vertical-align: top;">
+       <th>Constant</th>
+       <th>Meaning</th>
+      </tr>
+
+     </thead>
+
+     
+     <tbody class="tbody">
+      <tr style="vertical-align: top;">
+       <td><strong class="constant">HTTP_Request2_Exception::MALFORMED_RESPONSE</strong></td>
+       <td>Server returned a response that does not conform to HTTP protocol. This means that
+        even status line of response message could not be parsed.</td>
+      </tr>
+
+      <tr style="vertical-align: top;">
+       <td><strong class="constant">HTTP_Request2_Exception::DECODE_ERROR</strong></td>
+       <td>Failure decoding Content-Encoding or Transfer-Encoding of response.</td>
+      </tr>
+
+      <tr style="vertical-align: top;">
+       <td><strong class="constant">HTTP_Request2_Exception::TIMEOUT</strong></td>
+       <td>Operation timed out.</td>
+      </tr>
+
+      <tr style="vertical-align: top;">
+       <td><strong class="constant">HTTP_Request2_Exception::TOO_MANY_REDIRECTS</strong></td>
+       <td>Number of redirects exceeded <code class="literal">&#039;max_redirects&#039;</code> <a href="package.http.http-request2.config.html#package.http.http-request2.config.table" class="link">configuration parameter</a>.</td>
+      </tr>
+
+      <tr style="vertical-align: top;">
+       <td><strong class="constant">HTTP_Request2_Exception::NON_HTTP_REDIRECT</strong></td>
+       <td>Redirect to a protocol other than <code class="literal">http(s)://</code>.</td>
+      </tr>
+
+     </tbody>
+    
+    
+   </table>
+
+  
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.http.http-request2.observers.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.http.http-request2.html">HTTP_Request2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.http.http-session.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Observers</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">HTTP_Session</td>
+  </tr>
+ </table>
+</div>
+</body></html>

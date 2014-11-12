@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Migration from HTML_QuickForm</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-quickform2.introduction.html" title="Introduction" />
+  <link rel="prev" href="package.html.html-quickform2.tutorial.html" title="QuickForm2 Tutorial" />
+  <link rel="next" href="package.html.html-quickform2.examples.html" title="Additional examples" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Migration from HTML_QuickForm</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-quickform2.tutorial.html" title="QuickForm2 Tutorial">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-quickform2.examples.html" title="Additional examples">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-quickform2.qf-migration">
+ 
+  <h1 class="refname">Migration from HTML_QuickForm</h1>
+  <div class="refnamediv">Migration from HTML_QuickForm &ndash; Step-by-step guide for porting your scripts to HTML_QuickForm2</div>
+
+ 
+
+ <div class="refsection" id="package.html.html-quickform2.qf-migration.creating">
+  <div class="info">
+   <h1>Creating elements</h1>
+
+  </div>
+  <p class="para">
+   Constructors of all the elements now have the same list of parameters:
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term"><span class="type">string</span> <em><code class="parameter">$name</code></em></dt>
+     <dd class="listitem"><p class="para">Element name</p></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><span class="type">string</span>|<span class="type">array</span> <em><code class="parameter">$attributes</code></em></dt>
+     <dd class="listitem"><p class="para">HTML attributes</p></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><span class="type">array</span> <em><code class="parameter">$data</code></em></dt>
+     <dd class="listitem"><p class="para">Additional element-specific data. A <code class="literal">&#039;label&#039;</code> key in this
+      array is understood by every element and is used for element&#039;s label.</p></dd>
+    </dl>
+   </div><p>
+   Consequently <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Factory.html#methodcreateElement" class="apidoclink">HTML_QuickForm2_Factory::createElement()</a> and <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Container.html#methodaddElement" class="apidoclink">HTML_QuickForm2_Container::addElement()</a> that pass
+   their arguments to the element&#039;s constructor have fixed signatures, too.
+  </p>
+  <p class="para">
+   For example, the following HTML_QuickForm code which adds a radio button and a select element to
+   the form
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'radio'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'iradTest'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Test&nbsp;Radio&nbsp;Buttons:'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Check&nbsp;the&nbsp;radio&nbsp;button&nbsp;#1'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'class'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'fancyRadio'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'select'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'iselTest'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Test&nbsp;Select:'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'A'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'A'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'B'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'B'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'C'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'C'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'D'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'D'</span><span style="color: #007700">),&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">3</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'multiple'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'multiple'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   in HTML_QuickForm2 will be transformed to
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'radio'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'iradTest'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'class'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'fancyRadio'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'value'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'label'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Test&nbsp;Radio&nbsp;Buttons:'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'content'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Check&nbsp;the&nbsp;radio&nbsp;button&nbsp;#1'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'select'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'iselTest'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">3</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'multiple'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'multiple'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'label'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Test&nbsp;Select:'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'options'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'A'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'A'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'B'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'B'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'C'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'C'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'D'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'D'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   Another possibility is using fluent interfaces
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'radio'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'iradTest'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'value'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">))<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">addClass</span><span style="color: #007700">(</span><span style="color: #DD0000">'fancyRadio'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">setLabel</span><span style="color: #007700">(</span><span style="color: #DD0000">'Test&nbsp;Radio&nbsp;Buttons:'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">setContent</span><span style="color: #007700">(</span><span style="color: #DD0000">'Check&nbsp;the&nbsp;radio&nbsp;button&nbsp;#1'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'select'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'iselTest'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">3</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'multiple'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'multiple'</span><span style="color: #007700">))<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">setLabel</span><span style="color: #007700">(</span><span style="color: #DD0000">'Test&nbsp;Select:'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">loadOptions</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'A'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'A'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'B'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'B'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'C'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'C'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'D'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'D'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   which has the benefits of improved readability and code completion in IDEs.
+  </p>
+ </div>
+
+
+ <div class="refsection" id="package.html.html-quickform2.qf-migration.building">
+  <div class="info">
+   <h1>Adding elements to the form</h1>
+
+  </div>
+  <p class="para">
+   Unlike HTML_QuickForm, where nesting of form elements was limited (elements could be added either
+   directly to the form or to a group added directly to the form) HTML_QuickForm2 supports unlimited
+   nesting. Elements that can contain other elements are subclasses of <a href="package.html.html-quickform2.elements.container.html" class="link"><strong class="classname">HTML_QuickForm2_Container</strong></a>
+   which implements DOM-like API: <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Container.html#methodappendChild" class="apidoclink">appendChild()</a>, <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Container.html#methodinsertBefore" class="apidoclink">insertBefore()</a>, <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Container.html#methodremoveChild" class="apidoclink">removeChild()</a>, <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Container.html#methodgetElementById" class="apidoclink">getElementById()</a>, <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Container.html#methodgetElementsByName" class="apidoclink">getElementsByName()</a>.
+   Convenience method <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Container.html#methodaddElement" class="apidoclink">addElement()</a> that creates an
+   element of the given type and adds it to the Container is still available, too. Thanks to
+   method overloading you can also perform <strong class="function">addEltype()</strong> calls where
+   <code class="literal">&#039;eltype&#039;</code> is an element type known to <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Factory.html" class="apidoclink">HTML_QuickForm2_Factory</a>:
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addText</span><span style="color: #007700">(</span><span style="color: #DD0000">'testTextBox'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'style'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'width:&nbsp;20ex;'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   Note that HTML_QuickForm2 does not use HTML tables for rendering the form, so there is no
+   equivalent to <a href="http://pear.php.net/package/HTML_QuickForm/docs/latest/HTML_QuickForm/HTML_QuickForm_header.html" class="apidoclink">'header' element of
+   HTML_QuickForm</a>, fieldsets should be used to group form elements. Also there is no
+   special <a href="http://pear.php.net/package/HTML_QuickForm/docs/latest/HTML_QuickForm/HTML_QuickForm.html#methodaddGroup" class="apidoclink">HTML_QuickForm::addGroup()</a>,
+   groups are treated as any other element (<strong class="function">addGroup()</strong> <em class="emphasis">will</em>
+   work, though, thanks to abovementioned method overloading). Thus code from HTML_QuickForm
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'header'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'personal'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Personal&nbsp;Information'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addGroup</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">HTML_QuickForm</span><span style="color: #007700">::</span><span style="color: #0000BB">createElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'first'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'First'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'size=10'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">HTML_QuickForm</span><span style="color: #007700">::</span><span style="color: #0000BB">createElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'last'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Last'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'size=10'</span><span style="color: #007700">)<br />),&nbsp;</span><span style="color: #DD0000">'name'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Name:'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">',&amp;nbsp;'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   can be changed to the following in HTML_QuickForm2
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$fieldset&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addFieldset</span><span style="color: #007700">(</span><span style="color: #DD0000">'personal'</span><span style="color: #007700">)-&gt;</span><span style="color: #0000BB">setLabel</span><span style="color: #007700">(</span><span style="color: #DD0000">'Personal&nbsp;Information'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$group&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$fieldset</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addGroup</span><span style="color: #007700">(</span><span style="color: #DD0000">'name'</span><span style="color: #007700">)-&gt;</span><span style="color: #0000BB">setLabel</span><span style="color: #007700">(</span><span style="color: #DD0000">'Name:'</span><span style="color: #007700">)-&gt;</span><span style="color: #0000BB">setSeparator</span><span style="color: #007700">(</span><span style="color: #DD0000">',&amp;nbsp;'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$group</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addText</span><span style="color: #007700">(</span><span style="color: #DD0000">'first'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'size=10'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'label'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'First'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$group</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addText</span><span style="color: #007700">(</span><span style="color: #DD0000">'last'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'size=10'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'label'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Last'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+ </div>
+
+ 
+ <div class="refsection" id="package.html.html-quickform2.qf-migration.defaults">
+  <div class="info">
+   <h1>Setting default values</h1>
+
+  </div>
+  <p class="para">
+   Elements&#039; incoming values in HTML_QuickForm2 are kept in an array of <a href="package.html.html-quickform2.values-datasources.html#package.html.html-quickform2.values-datasources.datasources-overview" class="link">DataSources</a>,
+   which are searched for a value in the order they were added to the form. A DataSource containing
+   submit values will be added automatically to that list if the form was submitted. The equivalent
+   to <a href="http://pear.php.net/package/HTML_QuickForm/docs/latest/HTML_QuickForm/HTML_QuickForm.html#methodsetDefaults" class="apidoclink">HTML_QuickForm::setDefaults()</a> call
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setDefaults</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'foo'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'default&nbsp;foo&nbsp;value'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'bar'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'default&nbsp;bar&nbsp;value'<br /></span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   is the following call to <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2.html#methodaddDataSource" class="apidoclink">HTML_QuickForm2::addDataSource()</a>:
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addDataSource</span><span style="color: #007700">(new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_DataSource_Array</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'foo'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'default&nbsp;foo&nbsp;value'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'bar'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'default&nbsp;bar&nbsp;value'<br /></span><span style="color: #007700">)));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   It is possible to replace the whole array of form&#039;s DataSources using <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2.html#methodsetDataSources" class="apidoclink">HTML_QuickForm2::setDataSources()</a>, so you can
+   change <a href="http://pear.php.net/package/HTML_QuickForm/docs/latest/HTML_QuickForm/HTML_QuickForm.html#methodsetConstants" class="apidoclink">HTML_QuickForm::setConstants()</a> call
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setConstants</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'const'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'this&nbsp;will&nbsp;override&nbsp;submitted&nbsp;value'<br /></span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   to
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$datasources&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getDataSources</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">array_unshift</span><span style="color: #007700">(</span><span style="color: #0000BB">$datasources</span><span style="color: #007700">,&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_DataSource_Array</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'const'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'this&nbsp;will&nbsp;override&nbsp;submitted&nbsp;value'<br /></span><span style="color: #007700">)));<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setDataSources</span><span style="color: #007700">(</span><span style="color: #0000BB">$datasources</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   Here we use the fact that new DataSource will be searched before one containing submitted values,
+   so its values will override submitted ones.
+  </p>
+ </div>
+
+ 
+ <div class="refsection" id="package.html.html-quickform2.qf-migration.values">
+  <div class="info">
+   <h1>Getting the elements&#039; values</h1>
+
+  </div>
+  <p class="para">
+   While HTML_QuickForm contained several methods for getting form&#039;s and elements&#039; 
+   values, HTML_QuickForm2 only has <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodgetValue" class="apidoclink">getValue()</a> and
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodgetRawValue" class="apidoclink">getRawValue()</a>, the difference
+   being that the former applies filters to the value and the latter does not. There is no longer a
+   special &quot;submit value&quot; stored separately from form element and returned by
+   <a href="http://pear.php.net/package/HTML_QuickForm/docs/latest/HTML_QuickForm/HTML_QuickForm.html#methodgetSubmitValue" class="apidoclink">HTML_QuickForm::getSubmitValue()</a> /
+   <a href="http://pear.php.net/package/HTML_QuickForm/docs/latest/HTML_QuickForm/HTML_QuickForm.html#methodgetSubmitValues" class="apidoclink">HTML_QuickForm::getSubmitValues()</a>.
+  </p>
+  <p class="para">
+   Calling <strong class="function">getValue()</strong> on an element returns <a href="package.html.html-quickform2.values-datasources.html#package.html.html-quickform2.values-datasources.values-overview" class="link">the element&#039;s submit
+    value</a> or <strong class="constant">NULL</strong> for elements that do not currently have a submit value or can not have
+   such a value at all. The value also passes &quot;intrinsic validation&quot; to make sure that it
+   could possibly originate from that element (e.g. select will only return values for options that
+   <em class="emphasis">were</em> added to select). This behaviour is closest to that of old <a href="http://pear.php.net/package/HTML_QuickForm/docs/latest/HTML_QuickForm/HTML_QuickForm.html#methodexportValue" class="apidoclink">HTML_QuickForm::exportValue()</a>.
+  </p>
+  <p class="para">
+   Calling <strong class="function">getValue()</strong> on a <strong class="classname">HTML_QuickForm2</strong> object is
+   equivalent to old <a href="http://pear.php.net/package/HTML_QuickForm/docs/latest/HTML_QuickForm/HTML_QuickForm.html#methodexportValues" class="apidoclink">HTML_QuickForm::exportValues()</a>.
+  </p>
+ </div>
+
+
+ <div class="refsection" id="package.html.html-quickform2.qf-migration.filters">
+  <div class="info">
+   <h1>Filters</h1>
+
+  </div>
+  <p class="para">
+   Main differences to filters in HTML_QuickForm:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara">Filters are added to the element rather than to the form and applied to the
+     element&#039;s value rather than a separate &quot;submit value&quot;.</span></li>
+    <li class="listitem"><span class="simpara">Additional arguments can be passed to filter callbacks.</span></li>
+    <li class="listitem"><span class="simpara">There are separate <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodaddFilter" class="apidoclink">HTML_QuickForm2_Node::addFilter()</a> and <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodaddRecursiveFilter" class="apidoclink">HTML_QuickForm2_Node::addRecursiveFilter()</a> methods. The former will be
+     applied directly to element&#039;s value on <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodgetValue" class="apidoclink">getValue()</a> call and the latter will
+     be propagated to contained elements if the element is a Container or applied recursively to the
+     value if the element&#039;s value is an array.
+    </span></li>
+   </ul>
+  
+  <p class="para">
+   The following <a href="http://pear.php.net/package/HTML_QuickForm/docs/latest/HTML_QuickForm/HTML_QuickForm.html#methodapplyFilter" class="apidoclink">HTML_QuickForm::applyFilter()</a> calls in HTML_QuickForm
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">applyFilter</span><span style="color: #007700">(</span><span style="color: #DD0000">'__ALL__'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'trim'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">applyFilter</span><span style="color: #007700">(</span><span style="color: #DD0000">'amount'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'intval'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   can be converted to the following in HTML_QuickForm2
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRecursiveFilter</span><span style="color: #007700">(</span><span style="color: #DD0000">'trim'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$amount</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addFilter</span><span style="color: #007700">(</span><span style="color: #DD0000">'intval'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+ </div>
+
+ 
+ <div class="refsection" id="package.html.html-quickform2.qf-migration.rules">
+  <div class="info">
+   <h1>Rules and validation</h1>
+
+  </div>
+  <p class="para">
+   Main differences to HTML_QuickForm:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara">Rules are added to the element rather than to the form and applied to the
+     element&#039;s value rather than a separate &quot;submit value&quot;.</span></li>
+    <li class="listitem"><span class="simpara">Rules can be chained with <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Rule.html#methodand_" class="apidoclink">and_()</a> and <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Rule.html#methodor_" class="apidoclink">or_()</a> methods allowing for very complex
+     validation scenarios even with builtin Rules.</span></li>
+   </ul><p>
+   Simple <strong class="function">addRule()</strong> call in HTML_QuickForm
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'username'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Username&nbsp;should&nbsp;be&nbsp;at&nbsp;least&nbsp;5&nbsp;symbols&nbsp;long'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'minlength'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">5</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'client'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   can be changed to the following in HTML_QuickForm2
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$username</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'minlength'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Username&nbsp;should&nbsp;be&nbsp;at&nbsp;least&nbsp;5&nbsp;symbols&nbsp;long'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">5</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Rule</span><span style="color: #007700">::</span><span style="color: #0000BB">CLIENT_SERVER</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   There is no longer a special <a href="http://pear.php.net/package/HTML_QuickForm/docs/latest/HTML_QuickForm/HTML_QuickForm.html#methodaddGroupRule" class="apidoclink">HTML_QuickForm::addGroupRule()</a> method. <code class="literal">&#039;nonempty&#039;</code> /
+   <code class="literal">&#039;required&#039;</code> Rule can directly validate a group or other Container making sure
+   that it contains a given number of nonempty elements, there is also a special
+   <code class="literal">&#039;each&#039;</code> Rule that applies a given template Rule to each element in a Container.
+   Thus the following <strong class="function">addGroupRule()</strong> calls
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addGroupRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'phoneNo'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Please&nbsp;fill&nbsp;all&nbsp;phone&nbsp;fields'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'required'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">3</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'client'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addGroupRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'phoneNo'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Values&nbsp;must&nbsp;be&nbsp;numeric'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'regex'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'/^\\d+$/'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">3</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'client'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   can be changed to
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$phoneNo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'required'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Please&nbsp;fill&nbsp;all&nbsp;phone&nbsp;fields'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">3</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Rule</span><span style="color: #007700">::</span><span style="color: #0000BB">CLIENT_SERVER</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$phoneNo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'each'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Values&nbsp;must&nbsp;be&nbsp;numeric'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$phoneNo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'regex'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">''</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'/^\\d+$/'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Rule</span><span style="color: #007700">::</span><span style="color: #0000BB">CLIENT_SERVER</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   There is no longer a special <a href="package.html.html-quickform.html-quickform.addformrule.html" class="link"><strong class="function">addFormRule()</strong></a>
+   method. You can achieve similar behaviour by creating a subclass of <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Rule.html" class="apidoclink">HTML_QuickForm2_Rule</a>, implementing its
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Rule.html#methodvalidateOwner" class="apidoclink">validateOwner()</a> and
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Rule.html#methodsetOwnerError" class="apidoclink">setOwnerError()</a> methods and
+   adding an instance of that Rule directly to the form: 
+   </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">FormRule&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Rule<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;protected&nbsp;function&nbsp;</span><span style="color: #0000BB">validateOwner</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$fooValue&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">owner</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getElementById</span><span style="color: #007700">(</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">)-&gt;</span><span style="color: #0000BB">getValue</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$barValue&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">owner</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getElementById</span><span style="color: #007700">(</span><span style="color: #DD0000">'bar'</span><span style="color: #007700">)-&gt;</span><span style="color: #0000BB">getValue</span><span style="color: #007700">();<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">someComplexCheck</span><span style="color: #007700">(</span><span style="color: #0000BB">$fooValue</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$barValue</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;protected&nbsp;function&nbsp;</span><span style="color: #0000BB">setOwnerError</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">owner</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getElementById</span><span style="color: #007700">(</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">)-&gt;</span><span style="color: #0000BB">setError</span><span style="color: #007700">(</span><span style="color: #DD0000">'foo&nbsp;error'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">owner</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getElementById</span><span style="color: #007700">(</span><span style="color: #DD0000">'bar'</span><span style="color: #007700">)-&gt;</span><span style="color: #0000BB">setError</span><span style="color: #007700">(</span><span style="color: #DD0000">'bar&nbsp;error'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /><br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRule</span><span style="color: #007700">(new&nbsp;</span><span style="color: #0000BB">FormRule</span><span style="color: #007700">(</span><span style="color: #0000BB">$form</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div><p>
+   Note, though, that it may be easier to use <a href="package.html.html-quickform2.rules.html#package.html.html-quickform2.rules.chaining" class="link">Rule chaining</a> instead in most cases.
+  </p>
+  <p class="para">
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Element_InputFile.html" class="apidoclink">File
+   elements</a> no longer require special <code class="literal">&#039;uploadedfile&#039;</code> and
+   <code class="literal">&#039;filename&#039;</code> rules, standard <code class="literal">&#039;required&#039;</code> and
+   <code class="literal">&#039;regex&#039;</code> can be used (client-side as well).
+  </p>
+  <p class="para">
+   There is now a javascript library provided with the package which contains code necessary for
+   client-side validation to run. This library <a href="package.html.html-quickform2.javascript.html#package.html.html-quickform2.javascript.libraries" class="link">should be included in the
+    page</a> if you intend to use client-side validation.
+  </p>
+ </div>
+
+ 
+ <div class="refsection" id="package.html.html-quickform2.qf-migration.outputting">
+  <div class="info">
+   <h1>Outputting the form</h1>
+
+  </div>
+  <p class="para">
+   Basic form output in <strong class="package">HTML_QuickForm2</strong> is quite easy thanks to a magic
+   <strong class="function">__toString()</strong> method:
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$form</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   Under the hood the package uses Renderer setup similar to that of HTML_QuickForm. Currently
+   HTML_QuickForm2 contains ports of <a href="package.html.html-quickform2.renderers.default.html" class="link">Default</a> and <a href="package.html.html-quickform2.renderers.array.html" class="link">Array</a> renderers from
+   <strong class="package">HTML_QuickForm</strong>, renderers for specific template engines are unlikely to be
+   added to the base package.
+  </p>
+  <p class="para">
+   Method that accepts a Renderer instance to output the element is now called <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodrender" class="apidoclink">render()</a>
+   rather than <strong class="function">accept()</strong> as in <strong class="package">HTML_QuickForm</strong>. 
+  </p>
+  <p class="para">
+   Default renderer in HTML_QuickForm2 is different from that in HTML_QuickForm:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara">Form is output without HTML tables, similar to <a href="package.html.html-quickform-renderer-tableless.html" class="link"><strong class="classname">HTML_QuickForm_Renderer_Tableless</strong></a>.
+     There is a default CSS file to properly style its output. 
+    </span></li>
+    <li class="listitem"><span class="simpara">Template syntax in Default renderer is a bit less verbose.</span></li>
+    <li class="listitem"><span class="simpara">Rules for finding an appropriate template for an element are more
+     complex.</span></li>
+   </ul><p>
+   Consider <a href="package.html.html-quickform2.examples.html" class="link">reviewing the
+    examples</a> installed with the package, they contain useful bits on styling the form.
+  </p>
+  <p class="para">
+   It is also quite easy to output the form manually by <a href="package.html.html-quickform2.elements.container.html#package.html.html-quickform2.elements.container.spl" class="link">iterating over its
+    elements</a>,
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">foreach&nbsp;(</span><span style="color: #0000BB">$form&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$element</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'&lt;label&nbsp;for="'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$element</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getId</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">'"&gt;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$element</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getLabel</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;</span><span style="color: #DD0000">'&lt;/label&gt;&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$element</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">__toString</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">'&lt;br&nbsp;/&gt;'</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   but <a href="package.html.html-quickform2.rules.html#package.html.html-quickform2.rules.clientside" class="link">client-side validation
+   rules</a> are built in the course of the <strong class="function">render()</strong> call, so there is a
+   special <a href="package.html.html-quickform2.renderers.stub.html" class="link">Stub renderer</a> to
+   assist with manual output. 
+  </p>
+  <p class="para">
+   If you are using client-side validation or javascript-backed elements like <a href="package.html.html-quickform2.elements.custom.html#package.html.html-quickform2.elements.custom.hierselect" class="link">hierselect</a> or <a href="package.html.html-quickform2.elements.repeat.html" class="link">repeat</a>, you should take care that
+   necessary javascript libraries are included in the page before the form. Consult the <a href="package.html.html-quickform2.javascript.html" class="link">section on Javascript support</a>.
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-quickform2.tutorial.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-quickform2.introduction.html">Introduction</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-quickform2.examples.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">QuickForm2 Tutorial</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Additional examples</td>
+  </tr>
+ </table>
+</div>
+</body></html>

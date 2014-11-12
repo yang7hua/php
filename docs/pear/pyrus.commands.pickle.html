@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>pickle - automatically create a PECL package.xml and package release from source directory</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="pyrus.commands.html" title="Commands available in Pyrus" />
+  <link rel="prev" href="pyrus.commands.package.html" title="package - create a packaged release in phar, tar, tgz or zip format" />
+  <link rel="next" href="pyrus.commands.build.html" title="build - build a PECL PHP extension package" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">pickle - automatically create a PECL package.xml and package release from source directory</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="pyrus.commands.package.html" title="package - create a packaged release in phar, tar, tgz or zip format">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="pyrus.commands.build.html" title="build - build a PECL PHP extension package">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="pyrus.commands.pickle">
+ <div class="info"><h1>pickle - automatically create a PECL package.xml and package release from source directory</h1>
+</div>
+
+ <div class="section" id="pyrus.commands.pickle.intro">
+  <div class="info"><h2 class="title">Introduction</h2></div>
+  <p class="para">
+   The pickle command is designed to make the creation of an extension for
+   <span class="acronym">PECL</span> developers very easy.  It scans a SVN checkout
+   of a PECL package directory, generates package.xml, and packages a
+   release in one step.
+  </p>
+  <p class="para">
+   The pickle command looks for these standard files:
+
+   </p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara">CREDITS</span></li>
+    <li class="listitem"><span class="simpara">README</span></li>
+    <li class="listitem"><span class="simpara">RELEASE-X.Y.Z (where X.Y.Z is the release version)</span></li>
+    <li class="listitem"><span class="simpara">API-X.Y.Z (where X.Y.Z is the API version)</span></li>
+   </ul><p>
+
+   and for a standard directory layout of
+
+</p><pre class="screen">
+/                Extension source files
+data/            Data files
+tests/           Test files
+doc/             Documentation files
+examples/        Example files (documentation)
+</pre>
+<p>
+
+   The CREDITS file must have this format for the pickle command to recognize it:
+
+</p><pre class="screen">
+ <br/>;;&nbsp;extensionname<br/>Maintainer&nbsp;One&nbsp;[handle1]&nbsp;&lt;email@example.com&gt;&nbsp;(role)<br/>Maintainer&nbsp;Two&nbsp;[handle2]&nbsp;&lt;email@example.com&gt;&nbsp;(role)<br/>&nbsp;
+</pre>
+<p>
+
+   Where role is one of lead, developer, contributor, helper.
+
+   The first line of README is used as the summary of the package.
+   RELEASE-X.Y.Z is used as the release notes.
+  </p>
+  <p class="para">
+   <code class="literal">X.Y.Z</code> in the filename <code class="literal">RELEASE-X.Y.Z</code> is
+   also used to automatically calculate the stability, and
+   <code class="literal">X.Y.Z</code> in the filename <code class="literal">API-X.Y.Z</code> is used
+   to calculate the API stability.  The formula is relatively simple: if X is
+   <code class="literal">0</code>, the stability is set to <code class="literal">alpha</code>.
+   Otherwise, if X is <code class="literal">1</code> or greater, the following methods are
+   used to calculate the stability.
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para">
+      If Z contains <code class="literal">a</code> as in the version <code class="literal">1.0.0a1</code>
+      the stability is set to <code class="literal">alpha</code>
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      If Z contains <code class="literal">b</code> as in the version <code class="literal">1.0.0b1</code>
+      the stability is set to <code class="literal">beta</code>
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      If Z contains <code class="literal">RC</code> as in the version <code class="literal">1.0.0RC1</code>
+      the stability is set to <code class="literal">beta</code>
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      Otherwise, stability is set to <code class="literal">stable</code>.
+     </p>
+    </li>
+   </ul>
+  
+ </div>
+ <div class="section" id="pyrus.commands.pickle.args">
+  <h2 class="title">Arguments to the pickle command</h2>
+  <p class="para">
+   The pickle command has 4 arguments:
+   </p><pre class="screen">php pyrus.phar pickle extname channelname /path/to/packagedir extensions...</pre>
+
+  
+  <p class="para">
+   <code class="literal">/path/to/packagedir</code> specifies the location in which to
+   package up the release.  If not present, it defaults to the current working
+   directory.  The pickle command usually should be executed from that directory,
+   this argument is present to allow batch creation of package.xml files for
+   multiple extensions with a single shell script.
+  </p>
+  <p class="para">
+   If <code class="literal">package.xml</code> does not exist in the location packaging
+   will take place, then the first argument is required.  The first argument
+   is the name of the package, which is usually the same name as the extension,
+   and the second argument is the channel name.  If not specified, the package
+   is assumed to be in the <code class="literal">pecl.php.net</code> channel.
+  </p>
+  <p class="para">
+   The final argument, <code class="literal">extensions</code> is a list of file extensions
+   that should be considered source files.  By default, the file extensions
+   recognized as source files are:
+
+   </p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara">c</span></li>
+    <li class="listitem"><span class="simpara">cc</span></li>
+    <li class="listitem"><span class="simpara">h</span></li>
+    <li class="listitem"><span class="simpara">m4</span></li>
+    <li class="listitem"><span class="simpara">w32</span></li>
+    <li class="listitem"><span class="simpara">re</span></li>
+    <li class="listitem"><span class="simpara">y</span></li>
+    <li class="listitem"><span class="simpara">l</span></li>
+    <li class="listitem"><span class="simpara">frag</span></li>
+   </ul>
+  
+ </div>
+ <div class="section" id="pyrus.commands.pickle.donotpackage">
+  <h2 class="title">--donotpackage</h2>
+  <p class="para">
+   If <code class="literal">--donotpackage</code> or <code class="literal">-n</code> is specified,
+   then the pickle command will only generate package.xml, and will not
+   package up a release.  The <a href="pyrus.commands.package.html" class="link">package</a>
+   command can be used to build the release after reviewing package.xml.
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="pyrus.commands.package.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="pyrus.commands.html">Commands available in Pyrus</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="pyrus.commands.build.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">package - create a packaged release in phar, tar, tgz or zip format</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">build - build a PECL PHP extension package</td>
+  </tr>
+ </table>
+</div>
+</body></html>

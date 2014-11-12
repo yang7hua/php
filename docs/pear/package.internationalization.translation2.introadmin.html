@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Admin Introduction</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.internationalization.translation2.html" title="Translation2" />
+  <link rel="prev" href="package.internationalization.translation2.intro.html" title="Introduction" />
+  <link rel="next" href="package.internationalization.translation2.intro-containers.html" title="Containers Overview" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Admin Introduction</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.internationalization.translation2.intro.html" title="Introduction">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.internationalization.translation2.intro-containers.html" title="Containers Overview">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.internationalization.translation2.introadmin">
+   
+    <h1 class="refname">Admin Introduction</h1>
+    <div class="refnamediv">Admin Introduction &ndash; Usage of <strong class="classname">Translation2_Admin</strong></div>
+
+   
+  <div class="refsection" id="package.internationalization.translation2.introadmin.whatis"><div class="info"><h1>What is Translation2_Admin?</h1>
+</div>
+   
+   <p class="para">
+    <strong class="classname">Translation2_Admin</strong> is a class meant to help with
+    translation management (add/remove a language, add/remove a string).
+   </p>
+  </div>
+
+  <div class="refsection" id="package.internationalization.translation2.introadmin.setup"><div class="info"><h1>Setup</h1>
+</div>
+    <p class="para">
+      <strong class="classname">Translation2</strong> can use different storage containers. 
+      Have a look in the /docs/examples dir of the package for some example setups 
+      (gettext ini files, SQL DDLs, PHP configuration files, etc).
+    </p>
+  </div>
+
+  <div class="refsection" id="package.internationalization.translation2.introadmin.addlang"><div class="info"><h1>Adding a new language</h1>
+</div>
+   
+    <p class="para">
+     This simple example will show how you can add a new language
+     [<a href="package.internationalization.translation2.translation2-admin.addlang.html" class="link"><strong class="function">addLang()</strong></a>],
+     using the <strong class="classname">MDB2</strong> driver:
+     </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;set&nbsp;the&nbsp;parameters&nbsp;to&nbsp;connect&nbsp;to&nbsp;your&nbsp;db<br /></span><span style="color: #0000BB">$dbinfo&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'hostspec'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'host'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'database'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'dbname'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'phptype'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'mysql'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'username'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'user'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'password'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'pwd'<br /></span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;tell&nbsp;Translation2&nbsp;about&nbsp;your&nbsp;db-tables&nbsp;structure,<br />//&nbsp;if&nbsp;it's&nbsp;different&nbsp;from&nbsp;the&nbsp;default&nbsp;one.<br /></span><span style="color: #0000BB">$params&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'langs_avail_table'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'langs_avail'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'lang_id_col'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'id'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'lang_name_col'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'name'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'lang_meta_col'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'meta'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'lang_errmsg_col'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'error_text'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'lang_encoding_col'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'encoding'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'strings_tables'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'it'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'i18n'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'de'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'i18n'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//OR,&nbsp;if&nbsp;you&nbsp;use&nbsp;only&nbsp;one&nbsp;table,<br />&nbsp;&nbsp;&nbsp;&nbsp;//'strings_default_table'&nbsp;=&gt;&nbsp;'i18n',<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'string_id_col'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'id'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'string_page_id_col'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'page_id'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'string_page_id_col_length'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">50</span><span style="color: #007700">,&nbsp;</span><span style="color: #FF8000">//&nbsp;db&nbsp;field&nbsp;size<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'string_text_col'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'%s'&nbsp;&nbsp;</span><span style="color: #FF8000">//'%s'&nbsp;will&nbsp;be&nbsp;replaced&nbsp;by&nbsp;the&nbsp;lang&nbsp;code<br /></span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$driver&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'MDB2'</span><span style="color: #007700">;<br /><br />require_once&nbsp;</span><span style="color: #DD0000">'Translation2/Admin.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$tr&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">Translation2_Admin</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #0000BB">$driver</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$dbinfo</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$params</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;set&nbsp;some&nbsp;info&nbsp;about&nbsp;the&nbsp;new&nbsp;lang<br /></span><span style="color: #0000BB">$newLang&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'lang_id'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'en'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'table_name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'i18n'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'name'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'english'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'meta'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'some&nbsp;meta&nbsp;info'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'error_text'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'not&nbsp;available'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'encoding'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'iso-8859-1'</span><span style="color: #007700">,<br />);<br /><br /></span><span style="color: #0000BB">$tr</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addLang</span><span style="color: #007700">(</span><span style="color: #0000BB">$newLang</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div><p>
+     That&#039;s it. If you specified a new table, it will be created,
+     if you used the same table name as the one of your other translations,
+     it will be ALTERed to host the new language too.
+    </p>
+   </div>
+   
+   <div class="refsection" id="package.internationalization.translation2.introadmin.updatelang"><div class="info"><h1>Updating a language</h1>
+</div>
+   
+    <p class="para">
+     This simple example will show how you can update an existing language
+     [<a href="package.internationalization.translation2.translation2-admin.updatelang.html" class="link"><strong class="function">updateLang()</strong></a>]:
+     </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;set&nbsp;some&nbsp;info&nbsp;about&nbsp;the&nbsp;new&nbsp;lang<br /></span><span style="color: #0000BB">$langData&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'lang_id'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'en'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'table_name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'i18n'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'name'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'English'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'meta'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'some&nbsp;updated&nbsp;meta&nbsp;info'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'error_text'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'this&nbsp;text&nbsp;is&nbsp;not&nbsp;available&nbsp;in&nbsp;English'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'encoding'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'iso-8859-15'</span><span style="color: #007700">,<br />);<br /><br /></span><span style="color: #0000BB">$tr</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">updateLang</span><span style="color: #007700">(</span><span style="color: #0000BB">$langData</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    
+   </div>
+
+   <div class="refsection" id="package.internationalization.translation2.introadmin.removelang"><div class="info"><h1>Removing an existing language</h1>
+</div>
+    
+    <p class="para">
+     If you want to remove all the translated strings and the info
+     for a certain language, all you have to do is
+     </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$tr</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">removeLang</span><span style="color: #007700">(</span><span style="color: #DD0000">'fr'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+     <p><a href="package.internationalization.translation2.translation2-admin.removelang.html" class="link"><strong class="function">removeLang()</strong></a>
+     can accept a 2nd parameter (<em><code class="parameter">$force</code></em>):
+     if you want to remove the whole strings table (regardless it being used
+     for other languages as well), you can do it this way:
+     </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$tr</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">removeLang</span><span style="color: #007700">(</span><span style="color: #DD0000">'fr'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div><p>
+     Be warned it won&#039;t do any check, so you&#039;re responsible for what you do ;-)
+    </p>
+   </div>
+
+   <div class="refsection" id="package.internationalization.translation2.introadmin.addtranslation"><div class="info"><h1>Adding new translations</h1>
+</div>
+    
+    <p class="para">
+     Now let&#039;s see how we can
+     <a href="package.internationalization.translation2.translation2-admin.add.html" class="link"><strong class="function">add()</strong></a>
+     a new translation for a new or an existing string.
+     </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$stringArray&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'en'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'sample'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'it'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'esempio'</span><span style="color: #007700">,<br />);<br /><br /></span><span style="color: #FF8000">//&nbsp;add&nbsp;the&nbsp;English&nbsp;and&nbsp;Italian&nbsp;translations&nbsp;associated&nbsp;to<br />//&nbsp;the&nbsp;'smallTest'&nbsp;stringID&nbsp;and&nbsp;to&nbsp;the&nbsp;'testGroup'&nbsp;pageID<br /><br /></span><span style="color: #0000BB">$tr</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">add</span><span style="color: #007700">(</span><span style="color: #DD0000">'smallTest'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'testGroup'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$stringArray</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    
+   </div>
+
+   <div class="refsection" id="package.internationalization.translation2.introadmin.removetranslation"><div class="info"><h1>Remove a translation</h1>
+</div>
+    
+    <p class="para">
+     You can
+     <a href="package.internationalization.translation2.translation2-admin.remove.html" class="link"><strong class="function">remove()</strong></a>
+     the translations for a certain stringID:
+     </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$tr</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">remove</span><span style="color: #007700">(</span><span style="color: #DD0000">'smallTest'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'testGroup'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    
+   </div>
+
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.internationalization.translation2.intro.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.internationalization.translation2.html">Translation2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.internationalization.translation2.intro-containers.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Containers Overview</td>
+  </tr>
+ </table>
+</div>
+</body></html>

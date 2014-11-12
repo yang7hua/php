@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction - template syntax</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-template-sigma.html" title="HTML_Template_Sigma" />
+  <link rel="prev" href="package.html.html-template-sigma.html" title="HTML_Template_Sigma" />
+  <link rel="next" href="package.html.html-template-sigma.intro-cache.html" title="Introduction - cache" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction - template syntax</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-template-sigma.html" title="HTML_Template_Sigma">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-template-sigma.intro-cache.html" title="Introduction - cache">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-template-sigma.intro-syntax">
+   
+    <h1 class="refname">Introduction - template syntax</h1>
+    <div class="refnamediv">Introduction - template syntax &ndash; Creating and editing templates</div>
+
+   
+  <div class="refsection" id="package.html.html-template-sigma.intro-syntax.placeholder"><div class="info"><h1>Placeholders</h1>
+</div>
+   
+   <p class="para">
+    The default format of placeholder is
+    </p><div class="programlisting"><pre class="programlisting">{[0-9A-Za-z_-]+}</pre>
+</div><p>
+    This means, the name of the placeholder can consist of upper- and lowercase
+    letters, numbers, underscores and hyphens. The name must be placed between curly
+    brackets without any spaces.
+   </p>
+   <p class="para">
+    Actual values for the placeholders are set using <a href="package.html.html-template-sigma.html-template-sigma.setvariable.html" class="link"><strong class="function">setVariable()</strong></a> and <a href="package.html.html-template-sigma.html-template-sigma.setglobalvariable.html" class="link"><strong class="function">setGlobalVariable()</strong></a> methods. Placeholders for which no values were set are removed from output by default.
+   </p>
+  </div>
+  <div class="refsection" id="package.html.html-template-sigma.intro-syntax.block"><div class="info"><h1>Blocks</h1>
+</div>
+   
+   <p class="para">
+    The format of a block is
+    </p><div class="programlisting">
+    <br/>&lt;!--&nbsp;BEGIN&nbsp;[0-9A-Za-z_-]+&nbsp;--&gt;<br/>...&nbsp;block&nbsp;content&nbsp;...<br/>&lt;!--&nbsp;END&nbsp;[0-9A-Za-z_-]+&nbsp;--&gt;
+    </div><p>
+    The rules for the block name are the same like for placeholders.
+    In contrast to placeholders the spaces in the block markup are
+    required.
+   </p>
+   <p class="para">
+    The nesting of blocks is permitted, but be careful while
+    parsing. You have to <a href="package.html.html-template-sigma.html-template-sigma.parse.html" class="link"><strong class="function">parse()</strong></a> the innermost block first and then go from inner to outer.
+   </p>
+   <p class="para">
+    In Sigma the whole template itself is treated as a virtual block called
+    <code class="literal">&quot;__global__&quot;</code>. Most block-related functions use this block
+    name as default.
+   </p>
+  </div>
+  <div class="refsection" id="package.html.html-template-sigma.intro-syntax.include"><div class="info"><h1>&lt;!-- INCLUDE --&gt; statements</h1>
+</div>
+    
+    <p class="para">
+      It is possible to include a template file from within another template file using an <code class="literal">&lt;!-- INCLUDE filename --&gt;</code> statement:
+      </p><div class="programlisting">
+      <br/>...&nbsp;some&nbsp;content&nbsp;...<br/>&lt;!--&nbsp;INCLUDE&nbsp;filename.html&nbsp;--&gt;<br/>...&nbsp;some&nbsp;more&nbsp;content&nbsp;...
+      </div><p>
+      When such a template file gets loaded, the <code class="literal">&lt;!-- INCLUDE filename.html --&gt;</code> will be replaced by contents of <code class="filename">filename.html</code>.
+    </p>
+    <p class="para">
+    Some things to note:
+    </p><ul class="itemizedlist">
+        <li class="listitem">
+            <p class="para">
+                <code class="literal">&lt;!-- INCLUDE --&gt;</code> statements are only processed when loading the
+                template files from disk. If you use
+                <a href="package.html.html-template-sigma.html-template-sigma.settemplate.html" class="link"><strong class="function">setTemplate()</strong></a>
+                method to set the template or
+                <a href="package.html.html-template-sigma.html-template-sigma.addblock.html" class="link"><strong class="function">addBlock()</strong></a> and
+                <a href="package.html.html-template-sigma.html-template-sigma.replaceblock.html" class="link"><strong class="function">replaceBlock()</strong></a>
+                to work with its blocks, then <code class="literal">&lt;!-- INCLUDE --&gt;</code> statements in
+                these templates will not be replaced!
+            </p>
+        </li>
+        <li class="listitem">
+            <p class="para">Although this functionality is implemented using <a href="package.html.html-template-sigma.html-template-sigma.addblockfile.html" class="link"><strong class="function">addBlockfile()</strong></a>, unlike <strong class="function">addBlockfile()</strong> no new blocks are created in the template.</p>
+        </li>
+        <li class="listitem">
+            <p class="para"><code class="literal">&lt;!-- INCLUDE --&gt;</code> statements are processed before any variable substitution can take place. So <code class="literal">&lt;!-- INCLUDE {placeholder} --&gt;</code> will not work unless you actually have a file named <code class="filename">{placeholder}</code> and want to load it.</p>
+        </li>
+    </ul>
+    
+  </div>
+
+  <div class="refsection" id="package.html.html-template-sigma.intro-syntax.callback"><div class="info"><h1>Template functions</h1>
+</div>
+    
+    <p class="para">
+      Sigma templates can contain simple function calls. This means that the  author of the template can add a special placeholder to it
+     </p><div class="programlisting"><pre class="programlisting">... some content ...
+func_h1(&quot;embedded in h1&quot;)
+... some more content ...</pre>
+</div><p>
+Sigma will parse the template for these placeholders and will allow  you to define a callback function for them via <a href="package.html.html-template-sigma.html-template-sigma.setcallbackfunction.html" class="link"><strong class="function">setCallbackFunction()</strong></a>. Callback will be called  automatically when the block containing such function call is <a href="package.html.html-template-sigma.html-template-sigma.parse.html" class="link"><strong class="function">parse()</strong></a>&#039;d.
+    </p>
+    <p class="para">
+    Format of such function name is as follows
+     </p><div class="programlisting"><pre class="programlisting">func_[_a-zA-Z]+[A-Za-z_0-9]*</pre>
+</div><p>
+that means that it should start with a &#039;func_&#039; prefix, then has a letter or an undercore and then a sequence of letters, digits or underscores. Arguments to these template functions can contain  variable placeholders
+     </p><div class="programlisting"><pre class="programlisting">func_translate(&#039;Hello, {username}&#039;)</pre>
+</div><p>
+     but not  blocks or other function calls.
+    </p>
+    <div class="refsection" id="package.html.html-template-sigma.intro-syntax.callback.quoting"><div class="info"><h1>Quoting of template function arguments</h1>
+</div>
+      
+      <blockquote class="note">
+        <p class="para">
+          The information in this section applies to <strong class="classname">HTML_Template_Sigma</strong>
+          version 1.1.2 and later, please upgrade if you have problems with template
+          function arguments in previous versions.
+        </p>
+      </blockquote>
+
+      <p class="para">
+        Quoting of function arguments is not mandatory, the following is a perfectly
+        valid template function:
+</p><div class="programlisting">
+<br/>func_uppercase(Some&nbsp;unquoted&nbsp;text)
+</div><p>
+        But consider the following: function arguments are contained within
+        parentheses and separated by commas. Therefore if closing parenthesis
+        <code class="literal">&#039;)&#039;</code> or comma <code class="literal">&#039;,&#039;</code>
+        appears in function argument, it should be quoted.
+      </p>
+      <p class="para">
+        The next thing to consider is that <strong class="classname">HTML_Template_Sigma</strong>
+        is mostly targeted for generating <span class="acronym">HTML</span>. Therefore a quoted
+        string within an argument is most probably a tag attribute. The contents of
+        such strings are <em class="emphasis">not</em> parsed for commas and parentheses.
+        Therefore the following is also a perfectly valid template function:
+</p><div class="programlisting">
+<br/>func_foo(&lt;a&nbsp;href=&quot;javascript:foo(bar,&nbsp;baz)&quot;&gt;Do&nbsp;foo&lt;/a&gt;)
+</div><p>
+        But if you have an unmatched single or double quote in your argument or if the
+        argument starts with a quote, it should be quoted.
+      </p>
+      <p class="para">
+        Finally, the argument should be quoted if it is an empty string or if its
+        leading or trailing whitespace is significant (leading and trailing whitespace
+        will be removed from unquoted arguments).
+      </p>
+      <p class="para">
+        The arguments can be quoted using either single or double quotes. If an
+        argument contains a quote of the same type, then it should be escaped using
+        the backslash symbol <code class="literal">&#039;\&#039;</code>. The backslash symbol
+        itself should also be escaped,
+</p><div class="programlisting">
+<br/>func_foo(&#039;O\&#039;really&#039;)<br/>func_foo(&#039;AC\\DC&#039;)
+</div><p>
+        will pass <code class="literal">O&#039;really</code> and <code class="literal">AC\DC</code> to
+        the relevant callbacks.
+      </p>
+      <div class="example"><div class="info"><p><strong>Valid and invalid template function arguments</strong></p></div>
+        
+<div class="programlisting">
+<br/>Valid&nbsp;arguments:<br/>func_foo(Some&nbsp;unquoted&nbsp;text)<br/>func_foo(&quot;Some&nbsp;quoted&nbsp;text&quot;)<br/>func_foo(&lt;a&nbsp;href=&quot;javascript:foo(bar,&nbsp;baz)&quot;&gt;Do&nbsp;foo&lt;/a&gt;)<br/>func_foo(&#039;O\&#039;really&#039;)<br/>func_foo(&#039;AC\\DC&#039;)<br/><br/>Invalid&nbsp;arguments:<br/>func_foo(Hello,&nbsp;{username})&nbsp;contains&nbsp;a&nbsp;comma,&nbsp;will&nbsp;yield&nbsp;two&nbsp;arguments&nbsp;instead&nbsp;of&nbsp;one<br/>func_foo(O&#039;really)&nbsp;unmatched&nbsp;single&nbsp;quote<br/>func_foo(&#039;O&#039;really&#039;)&nbsp;unescaped&nbsp;single&nbsp;quote<br/>func_foo(,&nbsp;&#039;whatever&#039;)&nbsp;empty&nbsp;arguments&nbsp;should&nbsp;be&nbsp;quoted
+</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="refsection" id="package.html.html-template-sigma.intro-syntax.callback-shorthand"><div class="info"><h1>Shorthand for template functions</h1>
+</div>
+    
+    <p class="para">
+    Since release 1.1.0, instead of using
+    </p><div class="programlisting"><pre class="programlisting">func_callback({var})</pre>
+</div><p>
+    you can write
+    </p><div class="programlisting"><pre class="programlisting">{var:callback}</pre>
+</div><p>
+    There are 3 automatically registered template functions
+</p><ul class="itemizedlist">
+  <li class="listitem"><span class="simpara">&#039;h&#039; for <a href="http://www.php.net/manual-lookup.php?pattern=htmlspecialchars" class="link external"><strong class="function">htmlspecialchars()</strong></a></span></li>
+  <li class="listitem"><span class="simpara">
+     &#039;e&#039; for <a href="http://www.php.net/manual-lookup.php?pattern=htmlentities" class="link external"><strong class="function">htmlentities()</strong></a>
+     (available since release 1.2.0)
+  </span></li>
+  <li class="listitem"><span class="simpara">&#039;u&#039; for <a href="http://www.php.net/manual-lookup.php?pattern=urlencode" class="link external"><strong class="function">urlencode()</strong></a></span></li>
+  <li class="listitem"><span class="simpara">
+     &#039;r&#039; for <a href="http://www.php.net/manual-lookup.php?pattern=rawurlencode" class="link external"><strong class="function">rawurlencode()</strong></a>
+     (available since release 1.2.0)
+  </span></li>
+  <li class="listitem"><span class="simpara">&#039;j&#039; for a method of <strong class="classname">Sigma</strong> that escapes the string for usage in Javascript string constants.</span></li>
+</ul>
+    
+    <p class="para">Thus, if you add <code class="literal">{var:h}</code> placeholder to the template, var will be have unsafe characters replaced by corresponding HTML entitites.</p>
+    <p class="para">
+	  Since release 1.2.0 it is possible to provide the charset parameter for &#039;h&#039; and &#039;e&#039;
+	  callbacks via <a href="package.html.html-template-sigma.html-template-sigma.setoption.html" class="link"><strong class="function">setOption()</strong></a>.
+    </p>
+  </div>
+
+  <div class="refsection" id="package.html.html-template-sigma.intro-syntax.comment"><div class="info"><h1>Template comments</h1>
+</div>
+   
+    <p class="para">
+      Since release 1.2.0 it is possible to add comments to the template file:
+      </p><div class="programlisting">
+      <br/>&lt;!--&nbsp;COMMENT&nbsp;--&gt;<br/>Some&nbsp;text&nbsp;here<br/>&lt;!--&nbsp;/COMMENT&nbsp;--&gt;
+      </div><p>
+      These comments will be removed from the output, unlike standard HTML comments.
+    </p>
+  </div>
+
+  <div class="refsection" id="package.html.html-template-sigma.intro-syntax.customization">
+   <div class="info">
+       <h1>Customizing the template syntax</h1>
+
+   </div>
+   <p class="para">
+    It is possible to somewhat customize the syntax of templates by changing regular
+    expressions (or their parts) used by Sigma for parsing.
+   </p>
+   <p class="para">
+       The actual regular expressions used to parse templates are generated in constructor
+       using parts specified as class properties. It is generally <em class="emphasis">not</em> safe 
+       to change the generated regular expressions (as their format is hardcoded in several places 
+       throughout Sigma), but you can override the properties:
+       </p><div class="variablelist">
+        <dl class="varlistentry">
+            <dt class="term"><a href="http://pear.php.net/package/HTML_Template_Sigma/docs/latest/HTML_Template_Sigma/HTML_Template_Sigma.html#var$openingDelimiter" class="apidoclink">$openingDelimiter</a></dt>
+            <dd class="listitem"><span class="simpara">Start of variable placeholder, defaults to 
+                <code class="literal">&#039;{&#039;</code></span></dd>
+        </dl>
+        <dl class="varlistentry">
+            <dt class="term"><a href="http://pear.php.net/package/HTML_Template_Sigma/docs/latest/HTML_Template_Sigma/HTML_Template_Sigma.html#var$closingDelimiter" class="apidoclink">$closingDelimiter</a></dt>
+            <dd class="listitem"><span class="simpara">Start of variable placeholder, defaults to 
+                <code class="literal">&#039;}&#039;</code></span></dd>
+        </dl>
+        <dl class="varlistentry">
+            <dt class="term"><a href="http://pear.php.net/package/HTML_Template_Sigma/docs/latest/HTML_Template_Sigma/HTML_Template_Sigma.html#var$blocknameRegExp" class="apidoclink">$blocknameRegExp</a></dt>
+            <dd class="listitem"><span class="simpara">Regular expression part for block names, defaults to 
+                <code class="literal">&#039;[0-9A-Za-z_-]+&#039;</code></span></dd>
+        </dl>
+        <dl class="varlistentry">
+            <dt class="term"><a href="http://pear.php.net/package/HTML_Template_Sigma/docs/latest/HTML_Template_Sigma/HTML_Template_Sigma.html#var$variablenameRegExp" class="apidoclink">$variablenameRegExp</a></dt>
+            <dd class="listitem"><span class="simpara">Regular expression part for placeholder names, defaults to 
+                <code class="literal">&#039;[0-9A-Za-z._-]+&#039;</code></span></dd>
+        </dl>
+        <dl class="varlistentry">
+            <dt class="term"><a href="http://pear.php.net/package/HTML_Template_Sigma/docs/latest/HTML_Template_Sigma/HTML_Template_Sigma.html#var$functionnameRegExp" class="apidoclink">$functionnameRegExp</a></dt>
+            <dd class="listitem"><span class="simpara">Regular expression part for function names, defaults to
+                <code class="literal">&#039;[_a-zA-Z][A-Za-z_0-9]*&#039;</code></span></dd>
+        </dl>
+        <dl class="varlistentry">
+            <dt class="term"><a href="http://pear.php.net/package/HTML_Template_Sigma/docs/latest/HTML_Template_Sigma/HTML_Template_Sigma.html#var$includeRegExp" class="apidoclink">$includeRegExp</a></dt>
+            <dd class="listitem"><span class="simpara">Complete regular expression for processing file inclusion, defaults to
+                <code class="literal">&#039;#&lt;!--\s+INCLUDE\s+(\S+)\s+--&gt;#im&#039;</code></span></dd>
+        </dl>
+        <dl class="varlistentry">
+            <dt class="term"><a href="http://pear.php.net/package/HTML_Template_Sigma/docs/latest/HTML_Template_Sigma/HTML_Template_Sigma.html#var$commentRegExp" class="apidoclink">$commentRegExp</a></dt>
+            <dd class="listitem"><span class="simpara">Complete regular expression for removing template comments, defaults to
+                <code class="literal">&#039;#&lt;!--\s+COMMENT\s+--&gt;.*?&lt;!--\s+/COMMENT\s+--&gt;#sm&#039;</code></span></dd>
+        </dl>
+       </div>
+   
+   <p class="para">
+       To customize some of the above parts you need to subclass
+       <strong class="classname">HTML_Template_Sigma</strong> and override the relevant properties
+       so that generated regular expressions will use the new parts. For example,
+       if you want to prevent Sigma treating <code class="literal">{1}</code> (which may appear
+       as a part of Javascript regular expression) as a placeholder (see 
+       <a href="http://pear.php.net/bugs/bug.php?id=18147" class="link external">bug #18147</a>)
+       you can do the following
+       </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">SanerPlaceholders&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">HTML_Template_Sigma<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$variablenameRegExp&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'[A-Za-z_][0-9A-Za-z._-]*'</span><span style="color: #007700">;<br />}<br /><br /></span><span style="color: #0000BB">$tpl&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">SanerPlaceholders</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$tpl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setTemplate</span><span style="color: #007700">(</span><span style="color: #DD0000">'{foo}&nbsp;{1}&nbsp;{bar}'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$tpl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setVariable</span><span style="color: #007700">(</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'foo&nbsp;value'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$tpl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">show</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+       </div>
+   
+  </div>
+
+  <div class="refsection" id="package.html.html-template-sigma.intro-syntax.example"><div class="info"><h1>Usage Example</h1>
+</div>
+   
+   <blockquote class="note"><div class="info"><strong>Other usage examples</strong><br /></div>
+     
+     <p class="para">There are several usage examples in the package archive that cover most of its functionality. You are encouraged to review them along with the docs.</p>
+   </blockquote>
+
+   <div class="example"><div class="info"><p><strong>The <code class="filename">table.html</code> template file</strong></p></div>
+    
+    <div class="programlisting">
+    <br/>&lt;html&gt;<br/>&lt;body&gt;<br/>&lt;table&nbsp;cellpadding=&quot;2&quot;&nbsp;cellspacing=&quot;0&quot;&nbsp;border=&quot;1&quot;&gt;<br/>&lt;!--&nbsp;INCLUDE&nbsp;table_header.html&nbsp;--&gt;<br/>&lt;!--&nbsp;BEGIN&nbsp;table_row&nbsp;--&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;tr&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&nbsp;bgcolor=&quot;func_bgcolor(&#039;#CCCCCC&#039;,&nbsp;&#039;#F0F0F0&#039;)&quot;&gt;{first_name}&lt;/td&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&nbsp;bgcolor=&quot;func_bgcolor(&#039;#CCCCCC&#039;,&nbsp;&#039;#F0F0F0&#039;)&quot;&gt;{last_name}&lt;/td&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/tr&gt;<br/>&lt;!--&nbsp;END&nbsp;table_row&nbsp;--&gt;<br/>&lt;/table&gt;<br/>&lt;/body&gt;<br/>&lt;/html&gt;
+    </div>
+   </div>
+   <div class="example"><div class="info"><p><strong>The <code class="filename">table_header.html</code> template file</strong></p></div>
+   
+    <div class="programlisting">
+    <br/>&lt;!--&nbsp;COMMENT&nbsp;--&gt;<br/>This&nbsp;text&nbsp;will&nbsp;not&nbsp;appear&nbsp;in&nbsp;output.<br/>&lt;!--&nbsp;/COMMENT&nbsp;--&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;tr&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;th&gt;First&nbsp;name&lt;/th&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;th&gt;Last&nbsp;name&lt;/th&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/tr&gt;
+    </div>
+   </div>
+
+   <div class="example"><div class="info"><p><strong>The script</strong></p></div>
+    
+    <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/Template/Sigma.php'</span><span style="color: #007700">;<br /><br />function&nbsp;</span><span style="color: #0000BB">toggle</span><span style="color: #007700">(</span><span style="color: #0000BB">$item1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$item2</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;</span><span style="color: #0000BB">$i&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$i</span><span style="color: #007700">++&nbsp;%&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">?&nbsp;</span><span style="color: #0000BB">$item1</span><span style="color: #007700">:&nbsp;</span><span style="color: #0000BB">$item2</span><span style="color: #007700">;<br />}<br /><br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&nbsp;array&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">"Stig"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"Bakken"</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">"Martin"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"Jansen"</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">"Alexander"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"Merz"</span><span style="color: #007700">)<br />);<br /><br /></span><span style="color: #0000BB">$tpl&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_Template_Sigma</span><span style="color: #007700">(</span><span style="color: #DD0000">'.'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$tpl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">loadTemplateFile</span><span style="color: #007700">(</span><span style="color: #DD0000">'table.html'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$tpl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setCallbackFunction</span><span style="color: #007700">(</span><span style="color: #DD0000">'bgcolor'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'toggle'</span><span style="color: #007700">);<br /><br />foreach&nbsp;(</span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$name</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;assign&nbsp;data<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$tpl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setVariable</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'first_name'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$name</span><span style="color: #007700">[</span><span style="color: #0000BB">0</span><span style="color: #007700">],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'last_name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$name</span><span style="color: #007700">[</span><span style="color: #0000BB">1</span><span style="color: #007700">]<br />&nbsp;&nbsp;&nbsp;&nbsp;));<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;process&nbsp;the&nbsp;block<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$tpl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parse</span><span style="color: #007700">(</span><span style="color: #DD0000">'table_row'</span><span style="color: #007700">);<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;print&nbsp;out&nbsp;the&nbsp;output<br /></span><span style="color: #0000BB">$tpl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">show</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   </div>
+   <div class="example"><div class="info"><p><strong>The output</strong></p></div>
+    
+    <div class="programlisting">
+    <br/>&lt;html&gt;<br/>&lt;body&gt;<br/>&lt;table&nbsp;cellpadding=&quot;2&quot;&nbsp;cellspacing=&quot;0&quot;&nbsp;border=&quot;1&quot;&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;tr&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;th&gt;First&nbsp;name&lt;/th&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;th&gt;Last&nbsp;name&lt;/th&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/tr&gt;<br/><br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;tr&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&nbsp;bgcolor=&quot;#CCCCCC&quot;&gt;Stig&lt;/td&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&nbsp;bgcolor=&quot;#CCCCCC&quot;&gt;Bakken&lt;/td&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/tr&gt;<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;tr&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&nbsp;bgcolor=&quot;#F0F0F0&quot;&gt;Martin&lt;/td&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&nbsp;bgcolor=&quot;#F0F0F0&quot;&gt;Jansen&lt;/td&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/tr&gt;<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;tr&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&nbsp;bgcolor=&quot;#CCCCCC&quot;&gt;Alexander&lt;/td&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&nbsp;bgcolor=&quot;#CCCCCC&quot;&gt;Merz&lt;/td&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/tr&gt;<br/><br/>&lt;/table&gt;<br/>&lt;/body&gt;<br/>&lt;/html&gt;
+    </div>
+   </div>
+  </div>
+
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-template-sigma.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-template-sigma.html">HTML_Template_Sigma</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-template-sigma.intro-cache.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">HTML_Template_Sigma</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Introduction - cache</td>
+  </tr>
+ </table>
+</div>
+</body></html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.configuration.config.html" title="Config" />
+  <link rel="prev" href="package.configuration.config.html" title="Config" />
+  <link rel="next" href="package.configuration.config.intro-editing.html" title="Editing a configuration" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.configuration.config.html" title="Config">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.configuration.config.intro-editing.html" title="Editing a configuration">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="chapter" id="package.configuration.config.intro">
+
+ <div class="info">
+  <h1>Introduction</h1>
+<div class="TOC">
+<strong>Table of Contents</strong><ul class="chunklist chunklist_chapter">
+<li><a href="package.configuration.config.intro-editing.html">Editing a configuration</a></li>
+</ul>
+</div>
+
+ </div>
+
+  <p class="para">
+   <strong class="classname">Config</strong> 
+   helps you manipulate your configuration whether they are stored in XML files, 
+   PHP arrays or other kind of datasources. 
+   
+   It supports these features:
+  </p>
+  <p class="para">
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <span class="simpara">Parse different configuration formats.</span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">Manipulate sections, directives, comments, blanks the way you want.</span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">Write them back to a datasource in your preferred format.</span>
+    </li>
+   </ul>
+  
+  <p class="para">
+   The
+   <a href="package.configuration.config.config.html" class="link"><strong class="classname">Config</strong></a>
+   object acts as a container 
+   for other <strong class="classname">Config_Container</strong> objects. 
+
+   It doesn&#039;t do much but makes handling IO operations easier. 
+
+   It contains the root <strong class="classname">Config_Container</strong> object which in 
+   turn contains a child <strong class="classname">Config_Container</strong> object. 
+   
+   <strong class="classname">Config_Container</strong> objects store references to their 
+   parent and have an array of children. 
+   
+   This structure makes it easy to access the different 
+   containers and their contents. 
+  </p>
+  <p class="para">
+   A
+   <a href="package.configuration.config.config-container.html" class="link"><strong class="classname">Config_Container</strong></a>
+   object can be of different type:
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <span class="simpara">Section: a section contains other <strong class="classname">Config_Container</strong> objects.</span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">Directive: a directive does not contain any other object but has content and a name. See them as key-value pairs.</span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">Comment: just like directives, comments have content but they don&#039;t have a name. They are rendered in a special way according to the configuration type you choosed.</span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">Blank: they don&#039;t have neither content or name but are used to indicate blank lines if your renderer uses them.</span>
+    </li>
+   </ul>
+  
+  <p class="para">
+   When using the <strong class="classname">Config</strong> package, 
+   most of the work is done with <strong class="classname">Config_Container</strong> objects.
+  </p>
+  <div class="example"><div class="info"><p><strong>An example that will create a new <strong class="classname">Config_Container</strong></strong></p></div>
+   
+   <div class="phpcode">
+   <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;initialize&nbsp;a&nbsp;Config_Container&nbsp;object<br /><br /></span><span style="color: #007700">require_once(</span><span style="color: #DD0000">'Config.php'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$conf&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">Config_Container</span><span style="color: #007700">(</span><span style="color: #DD0000">'section'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'conf'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$conf_DB&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$conf</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createSection</span><span style="color: #007700">(</span><span style="color: #DD0000">'DB'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$conf_DB</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createDirective</span><span style="color: #007700">(</span><span style="color: #DD0000">'type'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'mysql'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$conf_DB</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createDirective</span><span style="color: #007700">(</span><span style="color: #DD0000">'host'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'localhost'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$conf_DB</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createDirective</span><span style="color: #007700">(</span><span style="color: #DD0000">'user'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'root'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$conf_DB</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">createDirective</span><span style="color: #007700">(</span><span style="color: #DD0000">'pass'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'root'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;set&nbsp;this&nbsp;container&nbsp;as&nbsp;our&nbsp;root&nbsp;container&nbsp;child&nbsp;in&nbsp;Config<br /><br /></span><span style="color: #0000BB">$config&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Config</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$config</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setRoot</span><span style="color: #007700">(</span><span style="color: #0000BB">$conf</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;write&nbsp;the&nbsp;container&nbsp;to&nbsp;a&nbsp;php&nbsp;array<br />&nbsp;&nbsp;<br /></span><span style="color: #0000BB">$config</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">writeConfig</span><span style="color: #007700">(</span><span style="color: #DD0000">'/tmp/config_test.php'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'phparray'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'test'</span><span style="color: #007700">));<br /><br /></span><span style="color: #FF8000">//&nbsp;print&nbsp;the&nbsp;content&nbsp;of&nbsp;our&nbsp;conf&nbsp;section&nbsp;to&nbsp;screen<br />&nbsp;&nbsp;<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$conf</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">toString</span><span style="color: #007700">(</span><span style="color: #DD0000">'phparray'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'test'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  <p class="para">
+   The above example illustrates how <strong class="classname">Config</strong> 
+   and <strong class="classname">Config_Container</strong> can interact. 
+   
+   There are other ways. 
+   
+   You could have for example first created the Config object and then used 
+   <a href="package.configuration.config.config.getroot.html" class="link"><strong class="function">$config-&gt;getRoot()</strong></a> 
+   to add sections and directives to the returned object reference.
+  </p>
+  <div class="example"><div class="info"><p><strong>Reading configuration from an XML file</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Config.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$conf&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Config</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$root&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$conf</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parseConfig</span><span style="color: #007700">(</span><span style="color: #DD0000">'config.xml'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'XML'</span><span style="color: #007700">);<br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$root</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #DD0000">'Error&nbsp;while&nbsp;reading&nbsp;configuration:&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$root</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /><br /></span><span style="color: #0000BB">$settings&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$root</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">toArray</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">printf</span><span style="color: #007700">(</span><span style="color: #DD0000">'User&nbsp;settings:&nbsp;&lt;a&nbsp;href="%s"&gt;%s&nbsp;%s&lt;/a&gt;'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$settings</span><span style="color: #007700">[</span><span style="color: #DD0000">'root'</span><span style="color: #007700">][</span><span style="color: #DD0000">'conf'</span><span style="color: #007700">][</span><span style="color: #DD0000">'www'</span><span style="color: #007700">],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$settings</span><span style="color: #007700">[</span><span style="color: #DD0000">'root'</span><span style="color: #007700">][</span><span style="color: #DD0000">'conf'</span><span style="color: #007700">][</span><span style="color: #DD0000">'firstname'</span><span style="color: #007700">],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$settings</span><span style="color: #007700">[</span><span style="color: #DD0000">'root'</span><span style="color: #007700">][</span><span style="color: #DD0000">'conf'</span><span style="color: #007700">][</span><span style="color: #DD0000">'lastname'</span><span style="color: #007700">]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <div class="example-contents"><p>
+    In this example the XML file <code class="filename">config.xml</code>
+    looks like this:
+   </p></div>
+   <div class="xmlcode">
+    <pre class="xmlcode">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+
+&lt;conf&gt;
+  &lt;firstname&gt;John&lt;/firstname&gt;
+  &lt;lastname&gt;Doe&lt;/lastname&gt;
+
+  &lt;www&gt;http://example.com/&lt;/www&gt;
+&lt;/conf&gt;</pre>
+
+   </div>
+  </div>
+  <p class="para">
+   For more information,
+   You can read 
+   <a href="http://pear.php.net/package/Config/docs" class="link external">API doc</a>,
+   <a href="http://cvs.php.net/cvs.php/pear/Config/docs" class="link external">sample of package</a>,
+   <a href="http://cvs.php.net/cvs.php/pear/Config/test" class="link external">tests of package</a>,
+   and a great 
+   <a href="http://www.devshed.com/c/a/PHP/Configuration-Manipulation-With-PHP-Config/" class="link external">tutorial</a> 
+   of DevShed about the Config package.
+  </p>
+
+
+ 
+
+
+
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.configuration.config.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.configuration.config.html">Config</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.configuration.config.intro-editing.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Config</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Editing a configuration</td>
+  </tr>
+ </table>
+</div>
+</body></html>

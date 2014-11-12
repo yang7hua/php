@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Array Renderer</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-quickform2.output.html" title="Form output and Javascript support" />
+  <link rel="prev" href="package.html.html-quickform2.renderers.default.html" title="Default Renderer" />
+  <link rel="next" href="package.html.html-quickform2.renderers.stub.html" title="Stub Renderer" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Array Renderer</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-quickform2.renderers.default.html" title="Default Renderer">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-quickform2.renderers.stub.html" title="Stub Renderer">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-quickform2.renderers.array">
+ 
+  <h1 class="refname">Array Renderer</h1>
+  <div class="refnamediv">Array Renderer &ndash; Represents the form as an array</div>
+
+ 
+ <div class="refsection" id="package.html.html-quickform2.renderers.array.overview">
+  <div class="info">
+   <h1>Overview</h1>
+
+  </div>
+  <p class="para">
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Renderer_Array.html" class="apidoclink">HTML_QuickForm2_Renderer_Array</a> does
+   not generate <span class="acronym">HTML</span> itself but rather converts the form structure to an array,
+   which can later be used for generating the actual output. It is a port of <a href="package.html.html-quickform.html-quickform-renderer-array.html" class="link">HTML_QuickForm_Renderer_Array</a>
+   from <strong class="package">HTML_QuickForm</strong> though generated arrays have some differences due to
+   differences in form structure.  
+  </p>
+  
+  <p class="para">
+   Array Renderer defines a new configuration parameter for <strong class="function">setOption()</strong> /
+   <strong class="function">getOption()</strong>:
+   </p><table class="doctable table">
+    <caption>Array Renderer parameters</caption>
+    
+     <thead>
+      <tr>
+       <th>Parameter name</th>
+       <th>Description</th>
+       <th>Expected type</th>
+       <th>Default value</th>
+      </tr>
+
+     </thead>
+
+     
+     <tbody class="tbody">
+      <tr style="vertical-align: top;">
+       <td><code class="literal">static_labels</code></td>
+       <td>
+        Applies only to elements having several labels. If <strong class="constant">FALSE</strong>, <code class="literal">label</code> key of
+        the element&#039;s array will contain an array of labels as returned by <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodgetLabel" class="apidoclink">getLabel()</a>. If <strong class="constant">TRUE</strong> element&#039;s
+        array will contain several <code class="literal">label_*</code> keys corresponding to the keys in
+        label array.
+       </td>
+       <td><span class="type">boolean</span></td>
+       <td><strong class="constant">FALSE</strong></td>
+      </tr>
+
+     </tbody>
+    
+   </table>
+
+  
+  
+  <p class="para">
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Renderer_Array.html#methodtoArray" class="apidoclink">HTML_QuickForm2_Renderer_Array::toArray()</a> returns the resultant array and
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Renderer_Array.html#methodsetStyleForId" class="apidoclink">HTML_QuickForm2_Renderer_Array::setStyleForId()</a> adds some (opaque) style
+   information to the element&#039;s array that can later be used by a template engine.
+  </p>
+  <blockquote class="tip">
+   <p class="para">
+    <code class="filename">renderers/array-twig.php</code> example installed with the package shows how to
+    use Array Renderer together with <a href="http://twig.sensiolabs.org/" class="link external">Twig template engine</a>.
+   </p>
+  </blockquote>
+
+  </div>
+  
+ <div class="refsection" id="package.html.html-quickform2.renderers.array.structure">
+  <div class="info">
+   <h1>Structure of the resultant array</h1>
+
+  </div>
+  
+  <p class="para">
+   </p><pre class="screen">
+<br/>array(<br/>&nbsp;&nbsp;&#039;id&#039;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;form&#039;s&nbsp;&quot;id&quot;&nbsp;attribute&nbsp;(string),<br/>&nbsp;&nbsp;&#039;frozen&#039;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;whether&nbsp;the&nbsp;form&nbsp;is&nbsp;frozen&nbsp;(bool),<br/>&nbsp;&nbsp;&#039;attributes&#039;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;attributes&nbsp;for&nbsp;&lt;form&gt;&nbsp;tag&nbsp;(string),<br/>&nbsp;&nbsp;//&nbsp;if&nbsp;form&nbsp;contains&nbsp;required&nbsp;elements:<br/>&nbsp;&nbsp;&#039;required_note&#039;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;note&nbsp;about&nbsp;the&nbsp;required&nbsp;elements&nbsp;(string),<br/>&nbsp;&nbsp;//&nbsp;if&nbsp;&#039;group_hiddens&#039;&nbsp;option&nbsp;is&nbsp;true:<br/>&nbsp;&nbsp;&#039;hidden&#039;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;array&nbsp;with&nbsp;html&nbsp;of&nbsp;hidden&nbsp;elements&nbsp;(array),<br/>&nbsp;&nbsp;//&nbsp;if&nbsp;form&nbsp;has&nbsp;some&nbsp;javascript&nbsp;for&nbsp;setup&nbsp;or&nbsp;validation:<br/>&nbsp;&nbsp;&#039;javascript&#039;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;form&nbsp;javascript&nbsp;(string)<br/>&nbsp;&nbsp;//&nbsp;if&nbsp;&#039;group_errors&#039;&nbsp;option&nbsp;is&nbsp;true:<br/>&nbsp;&nbsp;&#039;errors&#039;&nbsp;=&gt;&nbsp;array(<br/>&nbsp;&nbsp;&nbsp;&nbsp;&#039;1st&nbsp;element&nbsp;id&#039;&nbsp;=&gt;&nbsp;&#039;Error&nbsp;for&nbsp;the&nbsp;1st&nbsp;element&#039;,<br/>&nbsp;&nbsp;&nbsp;&nbsp;...<br/>&nbsp;&nbsp;&nbsp;&nbsp;&#039;nth&nbsp;element&nbsp;id&#039;&nbsp;=&gt;&nbsp;&#039;Error&nbsp;for&nbsp;the&nbsp;nth&nbsp;element&#039;<br/>&nbsp;&nbsp;),<br/>&nbsp;&nbsp;&#039;elements&#039;&nbsp;=&gt;&nbsp;array(<br/>&nbsp;&nbsp;&nbsp;&nbsp;element_1,<br/>&nbsp;&nbsp;&nbsp;&nbsp;...<br/>&nbsp;&nbsp;&nbsp;&nbsp;element_N<br/>&nbsp;&nbsp;)<br/>);<br/>
+   </pre>
+<p>
+   where members of the <code class="literal">&#039;elements&#039;</code> array have the following structure
+   </p><pre class="screen">
+<br/>array(<br/>&nbsp;&nbsp;&#039;id&#039;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;element&nbsp;id&nbsp;(string),<br/>&nbsp;&nbsp;&#039;type&#039;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;type&nbsp;of&nbsp;the&nbsp;element&nbsp;(string),<br/>&nbsp;&nbsp;&#039;frozen&#039;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;whether&nbsp;element&nbsp;is&nbsp;frozen&nbsp;(bool),<br/>&nbsp;&nbsp;//&nbsp;if&nbsp;element&nbsp;has&nbsp;a&nbsp;label:<br/>&nbsp;&nbsp;&#039;label&#039;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;&#039;label&nbsp;for&nbsp;the&nbsp;element&#039;,<br/>&nbsp;&nbsp;//&nbsp;note&nbsp;that&nbsp;if&nbsp;&#039;static_labels&#039;&nbsp;option&nbsp;is&nbsp;true&nbsp;and&nbsp;element&#039;s&nbsp;label&nbsp;is&nbsp;an<br/>&nbsp;&nbsp;//&nbsp;array&nbsp;then&nbsp;there&nbsp;will&nbsp;be&nbsp;several&nbsp;&#039;label_*&#039;&nbsp;keys&nbsp;corresponding&nbsp;to<br/>&nbsp;&nbsp;//&nbsp;labels&#039;&nbsp;array&nbsp;keys<br/>&nbsp;&nbsp;&#039;required&#039;&nbsp;&nbsp;=&gt;&nbsp;whether&nbsp;element&nbsp;is&nbsp;required&nbsp;(bool),<br/>&nbsp;&nbsp;//&nbsp;if&nbsp;a&nbsp;validation&nbsp;error&nbsp;is&nbsp;present&nbsp;and&nbsp;&#039;group_errors&#039;&nbsp;option&nbsp;is&nbsp;false:<br/>&nbsp;&nbsp;&#039;error&#039;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;error&nbsp;associated&nbsp;with&nbsp;the&nbsp;element&nbsp;(string),<br/>&nbsp;&nbsp;//&nbsp;if&nbsp;some&nbsp;style&nbsp;was&nbsp;associated&nbsp;with&nbsp;an&nbsp;element:<br/>&nbsp;&nbsp;&#039;style&#039;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;some&nbsp;information&nbsp;about&nbsp;element&nbsp;style&nbsp;(e.g.&nbsp;for&nbsp;Smarty),<br/><br/>&nbsp;&nbsp;//&nbsp;if&nbsp;element&nbsp;is&nbsp;not&nbsp;a&nbsp;Container<br/>&nbsp;&nbsp;&#039;value&#039;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;element&nbsp;value&nbsp;(mixed),<br/>&nbsp;&nbsp;&#039;html&#039;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;HTML&nbsp;for&nbsp;the&nbsp;element&nbsp;(string),<br/><br/>&nbsp;&nbsp;//&nbsp;if&nbsp;element&nbsp;is&nbsp;a&nbsp;Container<br/>&nbsp;&nbsp;&#039;attributes&#039;&nbsp;=&gt;&nbsp;container&nbsp;attributes&nbsp;(string)<br/>&nbsp;&nbsp;//&nbsp;only&nbsp;for&nbsp;groups,&nbsp;if&nbsp;separator&nbsp;is&nbsp;set:<br/>&nbsp;&nbsp;&#039;separator&#039;&nbsp;&nbsp;=&gt;&nbsp;separator&nbsp;for&nbsp;group&nbsp;elements&nbsp;(array),<br/>&nbsp;&nbsp;&#039;elements&#039;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;array(<br/>&nbsp;&nbsp;&nbsp;&nbsp;element_1,<br/>&nbsp;&nbsp;&nbsp;&nbsp;...<br/>&nbsp;&nbsp;&nbsp;&nbsp;element_N<br/>&nbsp;&nbsp;)<br/>);<br/>
+   </pre>
+
+    
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-quickform2.renderers.default.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-quickform2.output.html">Form output and Javascript support</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-quickform2.renderers.stub.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Default Renderer</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Stub Renderer</td>
+  </tr>
+ </table>
+</div>
+</body></html>

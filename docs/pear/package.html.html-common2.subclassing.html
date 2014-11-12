@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Subclassing HTML_Common2</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-common2.html" title="HTML_Common2" />
+  <link rel="prev" href="package.html.html-common2.options.html" title="Options" />
+  <link rel="next" href="package.html.html-crypt.html" title="HTML_Crypt" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Subclassing HTML_Common2</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-common2.options.html" title="Options">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-crypt.html" title="HTML_Crypt">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-common2.subclassing">
+ 
+  <h1 class="refname">Subclassing <strong class="classname">HTML_Common2</strong></h1>
+  <div class="refnamediv">Subclassing  <strong class="classname">HTML_Common2</strong> &ndash;  Protected methods, output formatting, &quot;watched&quot; attributes. </div>
+
+ 
+ <div class="refsection" id="package.html.html-common2.subclassing.overview">
+  <div class="info">
+   <h1>Output formatting</h1>
+
+  </div>
+  <p class="para">
+   <strong class="classname">HTML_Common2</strong> does not generate any HTML itself, except for a HTML
+   attribute string. However, it provides several methods and configuration parameters that can be
+   used by child classes to format their output. </p>
+  <p class="para"> It is possible to specify indentation level of the current tag via <a href="http://pear.php.net/package/HTML_Common2/docs/latest/HTML_Common2/HTML_Common2.html#methodsetIndentLevel" class="apidoclink">HTML_Common2::setIndentLevel()</a> and HTML comment to
+   output beside tag via <a href="http://pear.php.net/package/HTML_Common2/docs/latest/HTML_Common2/HTML_Common2.html#methodsetComment" class="apidoclink">HTML_Common2::setComment()</a>. These methods have corresponding getters <a href="http://pear.php.net/package/HTML_Common2/docs/latest/HTML_Common2/HTML_Common2.html#methodgetIndentLevel" class="apidoclink">HTML_Common2::getIndentLevel()</a> and <a href="http://pear.php.net/package/HTML_Common2/docs/latest/HTML_Common2/HTML_Common2.html#methodgetComment" class="apidoclink">HTML_Common2::getComment()</a>. </p>
+  <p class="para">There is also a protected <a href="http://pear.php.net/package/HTML_Common2/docs/latest/HTML_Common2/HTML_Common2.html#methodgetIndent" class="apidoclink">HTML_Common2::getIndent()</a> method that returns a string to indent the current tag
+   based on indent level and <code class="literal">&#039;indent&#039;</code> configuration parameter.</p>
+ </div>
+ <div class="refsection" id="package.html.html-common2.subclassing.protected">
+  <div class="info">
+   <h1>Protected Methods</h1>
+
+  </div>
+  <p class="para"> Child classes may take advantage of protected static methods for handling of attributes
+   strings and arrays: </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term"><a href="http://pear.php.net/package/HTML_Common2/docs/latest/HTML_Common2/HTML_Common2.html#methodgetAttributesString" class="apidoclink">HTML_Common2::getAttributesString()</a></dt>
+     <dd class="listitem">
+      <span class="simpara">Creates a HTML attribute string from a given attribute array.</span>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><a href="http://pear.php.net/package/HTML_Common2/docs/latest/HTML_Common2/HTML_Common2.html#methodparseAttributes" class="apidoclink">HTML_Common2::parseAttributes()</a></dt>
+     <dd class="listitem">
+      <span class="simpara">Parses a given attribute string into an attribute array, properly handles non-XHTML
+       strings.</span>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><a href="http://pear.php.net/package/HTML_Common2/docs/latest/HTML_Common2/HTML_Common2.html#methodprepareAttributes" class="apidoclink">HTML_Common2::prepareAttributes()</a></dt>
+     <dd class="listitem">
+      <span class="simpara">Creates a proper attribute array from given array or string. Attribute names are
+       lowercased, integer-based keys are converted to <code class="literal">(&#039;value&#039; =&gt; &#039;value&#039;)</code>. This
+       is the preferred method to handle incoming attributes.</span>
+     </dd>
+    </dl>
+   </div>
+ </div>
+ <div class="refsection" id="package.html.html-common2.subclassing.watched">
+  <div class="info">
+   <h1>Monitoring Changes to Specific Attributes</h1>
+
+  </div>
+  <p class="para"> It is sometimes necessary either to prevent changing some attribute of a HTML tag (e.g.
+    <code class="literal">type</code> attribute of <code class="literal">&lt;input /&gt;</code> element) or monitor
+   changes to an attribute to do some additional processing (e.g. on changing element&#039;s
+    <code class="literal">id</code> attribute we should also update some references to that attribute). </p>
+  <p class="para">
+   <strong class="classname">HTML_Common2</strong> provides means to do this additional processing in the form
+   of <a href="http://pear.php.net/package/HTML_Common2/docs/latest/HTML_Common2/HTML_Common2.html#var$watchedAttributes" class="apidoclink">HTML_Common2::$watchedAttributes</a>
+   property and <a href="http://pear.php.net/package/HTML_Common2/docs/latest/HTML_Common2/HTML_Common2.html#methodonAttributeChange" class="apidoclink">HTML_Common2::onAttributeChange()</a> method. When a change of an attribute with name
+   in <code class="varname">$watchedAttributes</code> array is attempted,
+    <strong class="function">onAttributeChange()</strong> is called instead of performing the attempted change. It
+   is up to the programmer implementing the method to decide what to do with the attribute. </p>
+ </div>
+ <div class="refsection" id="package.html.html-common2.subclassing.example">
+  <div class="info">
+   <h1>Usage Example</h1>
+
+  </div>
+  <p class="para"> The following code prevents setting <code class="literal">type</code> attribute except via
+   constructor and to update the <code class="literal">value</code> attribute when <code class="literal">name</code>
+   attribute changes. It also shows how to use methods provided by
+   <strong class="classname">HTML_Common2</strong> to format the resultant HTML. </p>
+  <div class="example">
+   <p><strong>Complex subclass of HTML_Common2</strong></p>
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$_REQUEST&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'foo'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Foo&nbsp;value'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'bar'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Bar&nbsp;value'<br /></span><span style="color: #007700">);<br /><br />class&nbsp;</span><span style="color: #0000BB">HTML_Tag_Input&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">HTML_Common2<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;protected&nbsp;</span><span style="color: #0000BB">$watchedAttributes&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'name'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'type'</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;function&nbsp;</span><span style="color: #0000BB">__construct</span><span style="color: #007700">(</span><span style="color: #0000BB">$type</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$name</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$attributes&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">attributes</span><span style="color: #007700">[</span><span style="color: #DD0000">'type'</span><span style="color: #007700">]&nbsp;=&nbsp;(string)</span><span style="color: #0000BB">$type</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setName</span><span style="color: #007700">(</span><span style="color: #0000BB">$name</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">parent</span><span style="color: #007700">::</span><span style="color: #0000BB">__construct</span><span style="color: #007700">(</span><span style="color: #0000BB">$attributes</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;function&nbsp;</span><span style="color: #0000BB">setName</span><span style="color: #007700">(</span><span style="color: #0000BB">$name</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">attributes</span><span style="color: #007700">[</span><span style="color: #DD0000">'name'</span><span style="color: #007700">]&nbsp;=&nbsp;(string)</span><span style="color: #0000BB">$name</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(!empty(</span><span style="color: #0000BB">$_REQUEST</span><span style="color: #007700">[</span><span style="color: #0000BB">$name</span><span style="color: #007700">]))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">attributes</span><span style="color: #007700">[</span><span style="color: #DD0000">'value'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #0000BB">$_REQUEST</span><span style="color: #007700">[</span><span style="color: #0000BB">$name</span><span style="color: #007700">];<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;protected&nbsp;function&nbsp;</span><span style="color: #0000BB">onAttributeChange</span><span style="color: #007700">(</span><span style="color: #0000BB">$name</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$value</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">==&nbsp;</span><span style="color: #0000BB">$name</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;</span><span style="color: #0000BB">Exception</span><span style="color: #007700">(</span><span style="color: #DD0000">"Attribute&nbsp;'type'&nbsp;is&nbsp;read-only"</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;elseif&nbsp;(</span><span style="color: #DD0000">'name'&nbsp;</span><span style="color: #007700">==&nbsp;</span><span style="color: #0000BB">$name</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">null&nbsp;</span><span style="color: #007700">===&nbsp;</span><span style="color: #0000BB">$value</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;</span><span style="color: #0000BB">Exception</span><span style="color: #007700">(</span><span style="color: #DD0000">"Required&nbsp;attribute&nbsp;'name'&nbsp;cannot&nbsp;be&nbsp;removed"</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setName</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;function&nbsp;</span><span style="color: #0000BB">__toString</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getComment</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;?&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getIndent</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">'&lt;!--&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getComment</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">'&nbsp;--&gt;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">HTML_Common2</span><span style="color: #007700">::</span><span style="color: #0000BB">getOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'linebreak'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;</span><span style="color: #DD0000">''</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getIndent</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">'&lt;input'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAttributes</span><span style="color: #007700">(</span><span style="color: #0000BB">true</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">'&nbsp;/&gt;'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /><br /></span><span style="color: #0000BB">$input&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_Tag_Input</span><span style="color: #007700">(</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">);<br /><br />echo&nbsp;</span><span style="color: #0000BB">$input&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$input</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setAttribute</span><span style="color: #007700">(</span><span style="color: #DD0000">'type'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'file'</span><span style="color: #007700">);<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Exception&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">$input</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setAttribute</span><span style="color: #007700">(</span><span style="color: #DD0000">'name'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'bar'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">setIndentLevel</span><span style="color: #007700">(</span><span style="color: #0000BB">1</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">setComment</span><span style="color: #007700">(</span><span style="color: #DD0000">'Simplified&nbsp;version&nbsp;of&nbsp;HTML_QuickForm2_Element_Input'</span><span style="color: #007700">);<br />echo&nbsp;</span><span style="color: #0000BB">$input</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   <div class="example-contents"><p> The above code will produce the following output: </p></div>
+   <pre class="screen"><br/>&lt;input&nbsp;type=&quot;text&quot;&nbsp;name=&quot;foo&quot;&nbsp;value=&quot;Foo&nbsp;value&quot;&nbsp;/&gt;<br/>Attribute&nbsp;&#039;type&#039;&nbsp;is&nbsp;read-only<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--&nbsp;Simplified&nbsp;version&nbsp;of&nbsp;HTML_QuickForm2_Element_Input&nbsp;--&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;input&nbsp;type=&quot;text&quot;&nbsp;name=&quot;bar&quot;&nbsp;value=&quot;Bar&nbsp;value&quot;&nbsp;/&gt;<br/></pre>
+
+  </div>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-common2.options.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-common2.html">HTML_Common2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-crypt.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Options</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">HTML_Crypt</td>
+  </tr>
+ </table>
+</div>
+</body></html>

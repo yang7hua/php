@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Logging</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.authentication.auth.html" title="Auth" />
+  <link rel="prev" href="package.authentication.auth.intro-options.html" title="Auth Options" />
+  <link rel="next" href="package.authentication.auth.intro-storage.html" title="Storage drivers" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Logging</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.authentication.auth.intro-options.html" title="Auth Options">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.authentication.auth.intro-storage.html" title="Storage drivers">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.authentication.auth.intro-logging">
+ 
+  <h1 class="refname">Logging</h1>
+  <div class="refnamediv">Logging &ndash; Introduction</div>
+
+ 
+ <div class="refsection" id="package.authentication.auth.intro-logging.overview"><div class="info"><h1>Overview</h1>
+</div>
+  
+  <p class="para">
+   Since version 1.5.0 <strong class="classname">PEAR::Auth</strong> provides a facility
+   for retrieving logs of its internal behaviour. This is implemented using
+   <a href="package.logging.log.html" class="link"><strong class="classname">PEAR::Log</strong></a>
+   and its log observer components.
+  </p>
+  <p class="para">
+   <strong class="classname">Auth</strong> provides two levels of log messages which map
+   to the <strong class="classname">Log</strong> priority levels
+   <strong class="constant">PEAR_LOG_INFO</strong> and <strong class="constant">PEAR_LOG_DEBUG</strong>.
+  </p>
+  <p class="para">
+   <strong class="constant">PEAR_LOG_INFO</strong> messages provide basic information about
+   <strong class="classname">Auth</strong>&#039;s decisions, for example user authentication
+   successful/failed, rendering login screen.
+  </p>
+  <p class="para">
+   <strong class="constant">PEAR_LOG_DEBUG</strong> messages provide detailed information
+   about what is happening within the internals of Auth, for example which
+   functions are called, logic tracking for the Authentication method, what
+   SQL queries are being run against the database backends.
+  </p>
+ </div>
+ <div class="refsection" id="package.authentication.auth.intro-logging.example"><div class="info"><h1>Example</h1>
+</div>
+  
+  <div class="example"><div class="info"><p><strong>Typical usage example for accessing the logs from
+   <strong class="classname">PEAR::Auth</strong></strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"Auth.php"</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'Log.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'Log/observer.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Callback&nbsp;function&nbsp;to&nbsp;display&nbsp;login&nbsp;form<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">loginFunction</span><span style="color: #007700">(</span><span style="color: #0000BB">$username&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$status&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;&amp;</span><span style="color: #0000BB">$auth&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/*<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Change&nbsp;the&nbsp;HTML&nbsp;output&nbsp;so&nbsp;that&nbsp;it&nbsp;fits&nbsp;to&nbsp;your<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;application.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #DD0000">"&lt;form&nbsp;method=\"post\"&nbsp;action=\""</span><span style="color: #007700">.</span><span style="color: #0000BB">$_SERVER</span><span style="color: #007700">[</span><span style="color: #DD0000">'PHP_SELF'</span><span style="color: #007700">].</span><span style="color: #DD0000">"\"&gt;"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Username:&nbsp;&lt;input&nbsp;type=\"text\"&nbsp;name=\"username\"&gt;&lt;br/&gt;"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Password:&nbsp;&lt;input&nbsp;type=\"password\"&nbsp;name=\"password\"&gt;&lt;br/&gt;"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"&lt;input&nbsp;type=\"submit\"&gt;"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"&lt;/form&gt;"</span><span style="color: #007700">;<br />}<br /><br />class&nbsp;</span><span style="color: #0000BB">Auth_Log_Observer&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">Log_observer&nbsp;</span><span style="color: #007700">{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$messages&nbsp;</span><span style="color: #007700">=&nbsp;array();<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">notify</span><span style="color: #007700">(</span><span style="color: #0000BB">$event</span><span style="color: #007700">)&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">messages</span><span style="color: #007700">[]&nbsp;=&nbsp;</span><span style="color: #0000BB">$event</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />}<br /><br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'enableLogging'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'cryptType'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'md5'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'users'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'guest'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">md5</span><span style="color: #007700">(</span><span style="color: #DD0000">'password'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);<br /></span><span style="color: #0000BB">$a&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Auth</span><span style="color: #007700">(</span><span style="color: #DD0000">"Array"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"loginFunction"</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$infoObserver&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Auth_Log_Observer</span><span style="color: #007700">(</span><span style="color: #0000BB">PEAR_LOG_INFO</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$a</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">attachLogObserver</span><span style="color: #007700">(</span><span style="color: #0000BB">$infoObserver</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$debugObserver&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Auth_Log_Observer</span><span style="color: #007700">(</span><span style="color: #0000BB">PEAR_LOG_DEBUG</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$a</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">attachLogObserver</span><span style="color: #007700">(</span><span style="color: #0000BB">$debugObserver</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$a</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">start</span><span style="color: #007700">();<br /><br />if&nbsp;(</span><span style="color: #0000BB">$a</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">checkAuth</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/*<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;The&nbsp;output&nbsp;of&nbsp;your&nbsp;site&nbsp;goes&nbsp;here.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">print&nbsp;</span><span style="color: #DD0000">"Authentication&nbsp;Successful.&lt;br/&gt;"</span><span style="color: #007700">;<br />}<br /><br />print&nbsp;</span><span style="color: #DD0000">'&lt;h3&gt;Logging&nbsp;Output:&lt;/h3&gt;'<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">.</span><span style="color: #DD0000">'&lt;b&gt;PEAR_LOG_INFO&nbsp;level&nbsp;messages:&lt;/b&gt;&lt;br/&gt;'</span><span style="color: #007700">;<br /><br />foreach&nbsp;(</span><span style="color: #0000BB">$infoObserver</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">messages&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$event</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #0000BB">$event</span><span style="color: #007700">[</span><span style="color: #DD0000">'priority'</span><span style="color: #007700">].</span><span style="color: #DD0000">':&nbsp;'</span><span style="color: #007700">.</span><span style="color: #0000BB">$event</span><span style="color: #007700">[</span><span style="color: #DD0000">'message'</span><span style="color: #007700">].</span><span style="color: #DD0000">'&lt;br/&gt;'</span><span style="color: #007700">;<br />}<br /><br />print&nbsp;</span><span style="color: #DD0000">'&lt;br/&gt;'<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">.</span><span style="color: #DD0000">'&lt;b&gt;PEAR_LOG_DEBUG&nbsp;level&nbsp;messages:&lt;/b&gt;&lt;br/&gt;'</span><span style="color: #007700">;<br /><br />foreach&nbsp;(</span><span style="color: #0000BB">$debugObserver</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">messages&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$event</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #0000BB">$event</span><span style="color: #007700">[</span><span style="color: #DD0000">'priority'</span><span style="color: #007700">].</span><span style="color: #DD0000">':&nbsp;'</span><span style="color: #007700">.</span><span style="color: #0000BB">$event</span><span style="color: #007700">[</span><span style="color: #DD0000">'message'</span><span style="color: #007700">].</span><span style="color: #DD0000">'&lt;br/&gt;'</span><span style="color: #007700">;<br />}<br /><br />print&nbsp;</span><span style="color: #DD0000">'&lt;br/&gt;'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <div class="example-contents"><p>
+    To enable logging pass the option "<span class="quote">enableLogging</span>" with the
+    value <strong class="constant">TRUE</strong> in the options array in the second parameter to the Auth
+    constructor.
+   </p></div>
+   <div class="example-contents"><p>
+    To retrieve the log messages from Auth create a new subclass of
+    <strong class="classname">Log_Observer</strong> that implements a
+    <strong class="function">notify()</strong> function to perform whatever actions you want
+    on the log messages.
+   </p></div>
+   <div class="example-contents"><p>
+    Once defined pass an instance of your new
+    <strong class="classname">Log_Observer</strong> instance to <a href="package.authentication.auth.auth.attachlogobserver.html" class="link">
+    <strong class="classname">Auth</strong>::<strong class="function">attachLogObserver()</strong></a>.
+   </p></div>
+   <div class="example-contents"><p>
+    To limit the types of messages you receive in the
+    <strong class="classname">Log_Observer</strong> pass either
+    <strong class="constant">PEAR_LOG_INFO</strong> or <strong class="constant">PEAR_LOG_DEBUG</strong>
+    as the first parameter to the <strong class="classname">Log_Observer</strong>. The
+    default is <strong class="constant">PEAR_LOG_INFO</strong>. For more information on
+    this filtering see the <a href="package.logging.log.html" class="link">Log
+    Documentation</a>.
+   </p></div>
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$observer&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">My_Log_Observer</span><span style="color: #007700">(</span><span style="color: #0000BB">PEAR_LOG_DEBUG</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+ </div>
+ <div class="refsection" id="package.authentication.auth.intro-logging.note">
+  <h1 class="title">Note</h1>
+  <p class="para">
+   This container has only been available since version 1.5.0.
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.authentication.auth.intro-options.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.authentication.auth.html">Auth</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.authentication.auth.intro-storage.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Auth Options</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Storage drivers</td>
+  </tr>
+ </table>
+</div>
+</body></html>

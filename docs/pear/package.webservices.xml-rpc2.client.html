@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Client Side</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.webservices.xml-rpc2.html" title="XML_RPC2" />
+  <link rel="prev" href="package.webservices.xml-rpc2.intro.html" title="Introduction" />
+  <link rel="next" href="package.webservices.xml-rpc2.server.html" title="Server Side" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Client Side</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.webservices.xml-rpc2.intro.html" title="Introduction">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.webservices.xml-rpc2.server.html" title="Server Side">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.webservices.xml-rpc2.client">
+
+ 
+  <h1 class="refname">Client Side</h1>
+  <div class="refnamediv">Client Side &ndash; 
+ 
+
+ <div class="refsection" id="package.webservices.xml-rpc2.client.intro"><div class="info"><h1>Introduction about the XML_RPC2 client side usage</h1>
+</div>
+  
+  <p class="para">
+   Thanks to PHP5, it&#039;s really easy to do XMLRPC client requests with
+   XML_RPC2. The usage is really straightforward.
+  </p>
+  <p class="para">
+   First, you include &#039;XML/RPC2/Client.php&#039; file (only this one).
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'XML/RPC2/Client.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   Second, you make an assocative arrays of options to tune XML_RPC2 (prefix,
+   proxy, manual backend choice...).
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$options&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'prefix'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'package.'<br /></span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   Third, you make a XML_RPC2_Client object with the server URL and the with
+   the options array.
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$client&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">XML_RPC2_Client</span><span style="color: #007700">::</span><span style="color: #0000BB">create</span><span style="color: #007700">(</span><span style="color: #DD0000">'http://pear.php.net/xmlrpc.php'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   Then, you send your request by calling the server method as it was a local
+   method of the $client object.
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$client</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">info</span><span style="color: #007700">(</span><span style="color: #DD0000">'XML_RPC2'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   This single line will encode a XMLRPC client request for the package.info() (prefix + method name)
+   method with a single argument (the string &#039;XML_RPC2&#039;), will send the request over HTTP to the
+   server and will decode the response into PHP native types. With a single line !
+  </p>
+  <p class="para">
+   Of course, to catch server errors, you have to add a few lines around you client call like for example :
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$client</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">info</span><span style="color: #007700">(</span><span style="color: #DD0000">'XML_RPC2'</span><span style="color: #007700">);&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$result</span><span style="color: #007700">);<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">XML_RPC2_FaultException&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;The&nbsp;XMLRPC&nbsp;server&nbsp;returns&nbsp;a&nbsp;XMLRPC&nbsp;error<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">die(</span><span style="color: #DD0000">'Exception&nbsp;#'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getFaultCode</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">'&nbsp;:&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getFaultString</span><span style="color: #007700">());<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Exception&nbsp;$e</span><span style="color: #007700">)&nbsp;{&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Other&nbsp;errors&nbsp;(HTTP&nbsp;or&nbsp;networking&nbsp;problems...)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">die(</span><span style="color: #DD0000">'Exception&nbsp;:&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   
+ </div>
+ <div class="refsection" id="package.webservices.xml-rpc2.client.options"><div class="info"><h1>The options array</h1>
+</div>
+  
+  <p class="para">
+   This array is completely optional but really usefull. The following keys
+   are available :
+   </p><table class="doctable table"><caption>Options available keys</caption>
+    
+    
+     <thead>
+      <tr>
+       <th>Option</th>
+       <th>Data Type</th>
+       <th>Default Value</th>
+       <th>Description</th>
+      </tr>
+
+     </thead>
+
+     <tbody class="tbody">
+      <tr>
+       <td>prefix</td>
+       <td><span class="type">string</span></td>
+       <td>&#039;&#039;</td>
+       <td>Prefix added before XMLRPC called method name</td>
+      </tr>
+
+      <tr>
+       <td>proxy</td>
+       <td><span class="type">string</span></td>
+       <td>&#039;&#039;</td>
+       <td>Proxy used for the HTTP request (default : no proxy)</td>
+      </tr>
+
+      <tr>
+       <td>debug</td>
+       <td><span class="type">boolean</span></td>
+       <td><strong class="constant">FALSE</strong></td>
+       <td>Debug mode ?</td>
+      </tr>
+
+      <tr>
+       <td>encoding</td>
+       <td><span class="type">string</span></td>
+       <td>&#039;&#039;</td>
+       <td>Encoding of the request &#039;utf-8&#039;, &#039;iso-8859-1&#039; (for now, only these two ones are officialy supported)</td>
+      </tr>
+
+      <tr>
+       <td>uglyStructHack</td>
+       <td><span class="type">boolean</span></td>
+       <td><strong class="constant">TRUE</strong></td>
+       <td>ugly hack to circumvent a XMLRPCEXT bug/feature , see
+        <a href="http://bugs.php.net/bug.php?id=21949" class="link external">this PHP bug</a>
+        for more details. The only (reasonable) counterpart of this hack is 
+        that you can&#039;t use structs with a key beginning with the string 
+        &#039;xml_rpc2_ugly_struct_hack_&#039; as arguments of the called method.
+       </td>
+      </tr>
+
+     </tbody>  
+    
+   </table>
+ 
+  
+ </div>
+ <div class="refsection" id="package.webservices.xml-rpc2.client.create"><div class="info"><h1>Making the XML_RPC2_Client object</h1>
+</div>
+  
+  <p class="para">
+   It&#039;s really easy to make the XML_RPC2_Client object. Use the following syntax :
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;$XMLRPCServerURL&nbsp;is&nbsp;a&nbsp;string&nbsp;:&nbsp;'http://pear.php.net/xmlrpc.php'&nbsp;(for&nbsp;example)<br />//&nbsp;$options&nbsp;is&nbsp;an&nbsp;optional&nbsp;array&nbsp;:&nbsp;see&nbsp;previous&nbsp;section&nbsp;for&nbsp;more&nbsp;informations<br /></span><span style="color: #0000BB">$client&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">XML_RPC2_Client</span><span style="color: #007700">::</span><span style="color: #0000BB">create</span><span style="color: #007700">(</span><span style="color: #0000BB">$XMLRPCServerURL</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   Don&#039;t try to call the XML_RPC2_Client constructor directly, use the call() static method.
+  </p>
+ </div>
+ <div class="refsection" id="package.webservices.xml-rpc2.client.call"><div class="info"><h1>Call the XMLRPC exported method</h1>
+</div>
+  
+  <p class="para">
+   When the XML_RPC2_Client object is created, you can directly call the remote method as
+   it was local. For example :
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;We&nbsp;call&nbsp;the&nbsp;remote&nbsp;foo()&nbsp;method&nbsp;without&nbsp;any&nbsp;arguments<br /></span><span style="color: #0000BB">$result1&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$client</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">foo</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;We&nbsp;call&nbsp;the&nbsp;remote&nbsp;bar()&nbsp;method&nbsp;with&nbsp;two&nbsp;arguments&nbsp;(an&nbsp;integer&nbsp;:&nbsp;123,&nbsp;a&nbsp;string&nbsp;:&nbsp;'foo')<br /></span><span style="color: #0000BB">$result2&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$client</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">bar</span><span style="color: #007700">(</span><span style="color: #0000BB">123</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;We&nbsp;call&nbsp;the&nbsp;remote&nbsp;foobar()&nbsp;method&nbsp;with&nbsp;complex&nbsp;data&nbsp;types&nbsp;(2&nbsp;integer,&nbsp;a&nbsp;string,&nbsp;a&nbsp;structure)<br /></span><span style="color: #0000BB">$result3&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$client</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">foobar</span><span style="color: #007700">(</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'foo'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'bar'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   Be careful, XMLRPC spec allows some remote method names with some special characters like &quot;.&quot; or &quot;/&quot;... which are
+   not available as PHP method names. To deal with them, you have to fix a prefix in a the options array. For example :
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$options&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'prefix'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'foo.'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$client&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">XML_RPC2_Client</span><span style="color: #007700">::</span><span style="color: #0000BB">create</span><span style="color: #007700">(</span><span style="color: #DD0000">'http://...'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;We&nbsp;call&nbsp;the&nbsp;foo.bar()&nbsp;method&nbsp;because&nbsp;of&nbsp;the&nbsp;prefix&nbsp;'foo.'&nbsp;fixed&nbsp;in&nbsp;$options&nbsp;array<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$client</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">bar</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   In most cases, XML_RPC2 transforms automatically PHP native types into XMLRPC 
+   types (as described in the SPEC) for the request. In most cases too, XML_RPC2
+   transforms the XML server response into PHP native types too. Yet, there are
+   two exceptions : &#039;dateTime.iso8601&#039; and &#039;base64&#039; which doesn&#039;t really exist in PHP.
+  </p>
+  <p class="para">
+   To manipulate explicitely these two types, you have to use special objects. Let&#039;s see a
+   complete example :
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;Classic&nbsp;usage<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'XML/RPC2/Client.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;To&nbsp;manipulate&nbsp;these&nbsp;types,&nbsp;we&nbsp;need&nbsp;to&nbsp;include&nbsp;this&nbsp;file&nbsp;too<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'XML/RPC2/Value.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;To&nbsp;get&nbsp;a&nbsp;'dateTime.iso8601'&nbsp;object,&nbsp;you&nbsp;have&nbsp;first&nbsp;to&nbsp;set&nbsp;a&nbsp;string&nbsp;with&nbsp;an&nbsp;iso8601&nbsp;encoded&nbsp;date&nbsp;:<br /></span><span style="color: #0000BB">$tmp&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"20060116T19:14:03"</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Then,&nbsp;you&nbsp;call&nbsp;this&nbsp;static&nbsp;method&nbsp;to&nbsp;get&nbsp;your&nbsp;'dateTime.iso8601'&nbsp;object<br /></span><span style="color: #0000BB">$time&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">XML_RPC2_Value</span><span style="color: #007700">::</span><span style="color: #0000BB">createFromNative</span><span style="color: #007700">(</span><span style="color: #0000BB">$tmp</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'datetime'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;For&nbsp;'base64',&nbsp;you&nbsp;call&nbsp;the&nbsp;same&nbsp;static&nbsp;method&nbsp;with&nbsp;your&nbsp;string&nbsp;to&nbsp;get&nbsp;a&nbsp;'base64'&nbsp;object<br /></span><span style="color: #0000BB">$base64&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">XML_RPC2_Value</span><span style="color: #007700">::</span><span style="color: #0000BB">createFromNative</span><span style="color: #007700">(</span><span style="color: #DD0000">'foobar'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'base64'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Then,&nbsp;you&nbsp;can&nbsp;use&nbsp;XML_RPC2_Client&nbsp;as&nbsp;usual&nbsp;:<br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'prefix'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'validator1.'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$client&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">XML_RPC2_Client</span><span style="color: #007700">::</span><span style="color: #0000BB">create</span><span style="color: #007700">(</span><span style="color: #DD0000">'http://phpxmlrpc.sourceforge.net/server.php'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$client</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">manyTypesTest</span><span style="color: #007700">(</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">3.14159</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$time</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$base64</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;The&nbsp;remote&nbsp;validator1.manyTypesTest()&nbsp;method&nbsp;returns&nbsp;an&nbsp;array&nbsp;with&nbsp;the&nbsp;6&nbsp;given&nbsp;arguments<br /></span><span style="color: #0000BB">$result_datetime&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$result</span><span style="color: #007700">[</span><span style="color: #0000BB">4</span><span style="color: #007700">];&nbsp;</span><span style="color: #FF8000">//&nbsp;a&nbsp;'dateTime.iso8601'&nbsp;object<br /></span><span style="color: #0000BB">$result_base64&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$result</span><span style="color: #007700">[</span><span style="color: #0000BB">5</span><span style="color: #007700">];&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;a&nbsp;'base64'&nbsp;object<br /><br />//&nbsp;To&nbsp;transform&nbsp;these&nbsp;objects&nbsp;into&nbsp;PHP&nbsp;native&nbsp;types,&nbsp;you&nbsp;have&nbsp;to&nbsp;use&nbsp;public&nbsp;properties&nbsp;of<br />//&nbsp;these&nbsp;objects&nbsp;as&nbsp;follow&nbsp;:<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$result_datetime</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">scalar</span><span style="color: #007700">);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;will&nbsp;return&nbsp;string(17)&nbsp;"20060116T19:14:03"<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$result_datetime</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">xmlrpc_type</span><span style="color: #007700">);&nbsp;</span><span style="color: #FF8000">//&nbsp;will&nbsp;return&nbsp;string(8)&nbsp;"datetime"<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$result_datetime</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">timestamp</span><span style="color: #007700">);&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;will&nbsp;return&nbsp;int(1137435243)<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$result_base64</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">scalar</span><span style="color: #007700">);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;will&nbsp;return&nbsp;string(6)&nbsp;"foobar"<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$result_base64</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">xmlrpc_type</span><span style="color: #007700">);&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;will&nbsp;return&nbsp;string(6)&nbsp;"base64"<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.webservices.xml-rpc2.intro.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.webservices.xml-rpc2.html">XML_RPC2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.webservices.xml-rpc2.server.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Server Side</td>
+  </tr>
+ </table>
+</div>
+</body></html>

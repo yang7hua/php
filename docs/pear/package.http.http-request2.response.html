@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>HTTP_Request2_Response</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.http.http-request2.html" title="HTTP_Request2" />
+  <link rel="prev" href="package.http.http-request2.adapters.html" title="Adapters" />
+  <link rel="next" href="package.http.http-request2.observers.html" title="Observers" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">HTTP_Request2_Response</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.http.http-request2.adapters.html" title="Adapters">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.http.http-request2.observers.html" title="Observers">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.http.http-request2.response">
+ 
+  <h1 class="refname"><strong class="classname">HTTP_Request2_Response</strong></h1>
+  <div class="refnamediv"><strong class="classname">HTTP_Request2_Response</strong> &ndash; Class representing a HTTP response message</div>
+
+ 
+ <div class="refsection" id="package.http.http-request2.response.overview">
+  <div class="info"><h1>Overview</h1>
+</div>
+  <p class="para">
+   <strong class="classname">HTTP_Request2_Response</strong> encapsulates a HTTP response message and provides
+   easy access to different parts of it. It also contains static helper methods
+   <a href="http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2_Response.html#methoddecodeGzip" class="apidoclink">HTTP_Request2_Response::decodeGzip()</a> and
+   <a href="http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2_Response.html#methoddecodeDeflate" class="apidoclink">HTTP_Request2_Response::decodeDeflate()</a>
+   for decoding response bodies encoded by <code class="literal">Content-Encoding: gzip</code> (as defined in
+   <a href="http://www.faqs.org/rfcs/rfc1952" class="link external">RFC 1952</a>) and
+   <code class="literal">Content-Encoding: deflate</code> (<a href="http://www.faqs.org/rfcs/rfc1950" class="link external">RFC 1950</a>), respectively.
+  </p>
+  <p class="para">
+   An instance of this class will usually be returned by
+   <a href="http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2.html#methodsend" class="apidoclink">HTTP_Request2::send()</a>
+   method. You can also build an instance yourself using either helper methods of
+   <strong class="classname">HTTP_Request2_Adapter_Mock</strong> or manually (see below).
+  </p>
+  <p class="para">
+   You can use the following methods for accessing various parts of HTTP response:
+   <a href="http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2_Response.html#methodgetStatus" class="apidoclink">getStatus()</a>,
+   <a href="http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2_Response.html#methodgetReasonPhrase" class="apidoclink">getReasonPhrase()</a>,
+   <a href="http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2_Response.html#methodgetVersion" class="apidoclink">getVersion()</a>,
+   <a href="http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2_Response.html#methodgetHeader" class="apidoclink">getHeader()</a>,
+   <a href="http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2_Response.html#methodgetCookies" class="apidoclink">getCookies()</a>,
+   <a href="http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2_Response.html#methodgetBody" class="apidoclink">getBody()</a>.
+   Note that the response object will not contain the response body if
+   <code class="literal">&#039;store_body&#039;</code> configuration parameter was set to <strong class="constant">FALSE</strong>. Also note that
+   <strong class="function">getBody()</strong> always returns body completely decoded, if for some reason you want 
+   to access body still encoded by <code class="literal">gzip</code> / <code class="literal">deflate</code> you&#039;ll need
+   to use Observers <em class="emphasis">and</em> Socket adapter.
+   </p><div class="example">
+    <p><strong>Accessing response parts</strong></p>
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$request&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTTP_Request2</span><span style="color: #007700">(</span><span style="color: #DD0000">'http://www.example.com/'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$response&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$request</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">send</span><span style="color: #007700">();<br /><br />echo&nbsp;</span><span style="color: #DD0000">"Response&nbsp;status:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$response</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getStatus</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />echo&nbsp;</span><span style="color: #DD0000">"Human-readable&nbsp;reason&nbsp;phrase:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$response</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getReasonPhrase</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />echo&nbsp;</span><span style="color: #DD0000">"Response&nbsp;HTTP&nbsp;version:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$response</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getVersion</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />echo&nbsp;</span><span style="color: #DD0000">"Response&nbsp;headers:\n"</span><span style="color: #007700">;<br />foreach&nbsp;(</span><span style="color: #0000BB">$response</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getHeader</span><span style="color: #007700">()&nbsp;as&nbsp;</span><span style="color: #0000BB">$k&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$v</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"\t</span><span style="color: #007700">{</span><span style="color: #0000BB">$k</span><span style="color: #007700">}</span><span style="color: #DD0000">:&nbsp;</span><span style="color: #007700">{</span><span style="color: #0000BB">$v</span><span style="color: #007700">}</span><span style="color: #DD0000">\n"</span><span style="color: #007700">;<br />}<br />echo&nbsp;</span><span style="color: #DD0000">"Value&nbsp;of&nbsp;a&nbsp;specific&nbsp;header&nbsp;(Content-Type):&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$response</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getHeader</span><span style="color: #007700">(</span><span style="color: #DD0000">'content-type'</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />echo&nbsp;</span><span style="color: #DD0000">"Cookies&nbsp;set&nbsp;in&nbsp;response:\n"</span><span style="color: #007700">;<br />foreach&nbsp;(</span><span style="color: #0000BB">$response</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getCookies</span><span style="color: #007700">()&nbsp;as&nbsp;</span><span style="color: #0000BB">$c</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"\tname:&nbsp;</span><span style="color: #007700">{</span><span style="color: #0000BB">$c</span><span style="color: #007700">[</span><span style="color: #DD0000">'name'</span><span style="color: #007700">]}</span><span style="color: #DD0000">,&nbsp;value:&nbsp;</span><span style="color: #007700">{</span><span style="color: #0000BB">$c</span><span style="color: #007700">[</span><span style="color: #DD0000">'value'</span><span style="color: #007700">]}</span><span style="color: #DD0000">"&nbsp;</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(empty(</span><span style="color: #0000BB">$c</span><span style="color: #007700">[</span><span style="color: #DD0000">'expires'</span><span style="color: #007700">])?&nbsp;</span><span style="color: #DD0000">''</span><span style="color: #007700">:&nbsp;</span><span style="color: #DD0000">",&nbsp;expires:&nbsp;</span><span style="color: #007700">{</span><span style="color: #0000BB">$c</span><span style="color: #007700">[</span><span style="color: #DD0000">'expires'</span><span style="color: #007700">]}</span><span style="color: #DD0000">"</span><span style="color: #007700">)&nbsp;.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(empty(</span><span style="color: #0000BB">$c</span><span style="color: #007700">[</span><span style="color: #DD0000">'domain'</span><span style="color: #007700">])?&nbsp;</span><span style="color: #DD0000">''</span><span style="color: #007700">:&nbsp;</span><span style="color: #DD0000">",&nbsp;domain:&nbsp;</span><span style="color: #007700">{</span><span style="color: #0000BB">$c</span><span style="color: #007700">[</span><span style="color: #DD0000">'domain'</span><span style="color: #007700">]}</span><span style="color: #DD0000">"</span><span style="color: #007700">)&nbsp;.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(empty(</span><span style="color: #0000BB">$c</span><span style="color: #007700">[</span><span style="color: #DD0000">'path'</span><span style="color: #007700">])?&nbsp;</span><span style="color: #DD0000">''</span><span style="color: #007700">:&nbsp;</span><span style="color: #DD0000">",&nbsp;path:&nbsp;</span><span style="color: #007700">{</span><span style="color: #0000BB">$c</span><span style="color: #007700">[</span><span style="color: #DD0000">'path'</span><span style="color: #007700">]}</span><span style="color: #DD0000">"</span><span style="color: #007700">)&nbsp;.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">",&nbsp;secure:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;(</span><span style="color: #0000BB">$c</span><span style="color: #007700">[</span><span style="color: #DD0000">'secure'</span><span style="color: #007700">]?&nbsp;</span><span style="color: #DD0000">'yes'</span><span style="color: #007700">:&nbsp;</span><span style="color: #DD0000">'no'</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />}<br />echo&nbsp;</span><span style="color: #DD0000">"Response&nbsp;body:\n"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$response</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getBody</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   </div>
+  
+ </div>
+ <div class="refsection" id="package.http.http-request2.response.building">
+  <div class="info"><h1>Building the Response Manually</h1>
+</div>
+  <p class="para">
+   The class is designed to be used in &quot;streaming&quot; scenario, building the response as it is being received:
+   </p><div class="example">
+    <p><strong>Building the response (pseudocode)</strong></p>
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$statusLine&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">read_status_line</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$response&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTTP_Request2_Response</span><span style="color: #007700">(</span><span style="color: #0000BB">$statusLine</span><span style="color: #007700">);<br /><br />do&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$headerLine&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">read_header_line</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$response</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parseHeaderLine</span><span style="color: #007700">(</span><span style="color: #0000BB">$headerLine</span><span style="color: #007700">);<br />}&nbsp;while&nbsp;(</span><span style="color: #0000BB">$headerLine&nbsp;</span><span style="color: #007700">!=&nbsp;</span><span style="color: #DD0000">''</span><span style="color: #007700">);<br /><br />while&nbsp;(</span><span style="color: #0000BB">$chunk&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">read_body</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$response</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">appendBody</span><span style="color: #007700">(</span><span style="color: #0000BB">$chunk</span><span style="color: #007700">);<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   </div>    
+  
+  <p class="para">
+   Everything is straightforward enough, but a few things need considering:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara">
+     <a href="http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2_Response.html#method__construct" class="apidoclink">Constructor</a> will throw an
+     exception if the provided string does not look like a valid response status line. 
+    </span></li>
+    <li class="listitem"><span class="simpara">
+     It is necessary to pass an empty string to <a href="http://pear.php.net/package/HTTP_Request2/docs/latest/HTTP_Request2/HTTP_Request2_Response.html#methodparseHeaderLine" class="apidoclink">parseHeaderLine()</a> to
+     indicate the end of response headers: this triggers some additional processing (e.g. cookie
+     parsing).
+    </span></li>
+   </ul>
+  
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.http.http-request2.adapters.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.http.http-request2.html">HTTP_Request2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.http.http-request2.observers.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Adapters</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Observers</td>
+  </tr>
+ </table>
+</div>
+</body></html>

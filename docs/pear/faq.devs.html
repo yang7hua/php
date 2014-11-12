@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Developer FAQ</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="faq.html" title="FAQ" />
+  <link rel="prev" href="faq.users.html" title="User FAQ" />
+  <link rel="next" href="faq.documentation.html" title="Documentation/translation FAQ" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Developer FAQ</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="faq.users.html" title="User FAQ">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="faq.documentation.html" title="Documentation/translation FAQ">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="faq.devs"><div class="info"><h1>Developer FAQ</h1>
+</div>
+ 
+
+
+ <div class="section" id="faq.contributor"><div class="info"><h2 class="title">
+    How do I become a PEAR contributor and/or how do I get SVN access to
+    PEAR?
+   </h2></div>
+  
+  
+  <p class="para">
+    This is described <a href="developers.intro.html" class="link">here</a>.
+   </p>
+ </div>
+
+
+ <div class="section" id="faq.c-module"><div class="info"><h2 class="title">
+    I have written a PHP module in C. What are the rules of including
+    this in PEAR?
+   </h2></div>
+  
+  
+  <p class="para">
+    The <a href="http://pecl.php.net/" class="link external">PECL project</a> (a spin-off from
+    PEAR) is the place where C extensions for PHP are published.
+   </p>
+ </div>
+
+
+ <div class="section" id="faq.separated"><div class="info"><h2 class="title">
+    Why is PEAR separated into pear/ and pear-core/?
+   </h2></div>
+  
+  
+  <p class="simpara">
+    The first elements of PEAR were stored in the directory pear-core (once php-src/pear)
+    and so they were bundled with each new PHP release.
+   </p>
+  <p class="simpara">
+    For future releases of PEAR this isn&#039;t workable because PEAR will
+    become too big to be bundled with every release of PHP. So there
+    was a decision to commit all new elements to an own top level
+    directory pear. The other elements which are currently remaining
+    in php-src/pear will be moved to the new top level directory soon.
+    Only the PEAR package manager code will be bundled with every new
+    release automatically.
+   </p>
+ </div>
+
+
+ <div class="section" id="faq.directory-structure"><div class="info"><h2 class="title">
+    Why does the directory structure of pear/ and pear-core/ differ?
+   </h2></div>
+  
+  
+  <p class="para">
+    The directory structure of <code class="filename">pear-core/</code>
+    matches that of the install tree (by default
+    <code class="filename">/usr/local/lib/php</code>), and are organized as a
+    simple hierarchy.  However, the directory structure of
+    <code class="filename">pear/</code> is based on what package the files
+    belong to.  Where files are located in each package directory is
+    completely independent from where they end up being installed,
+    this is all determined by the package description file.
+   </p>
+ </div>
+
+
+ <div class="section" id="faq.flat-structure"><div class="info"><h2 class="title">
+    Why a flat directory structure instead of a deep?
+   </h2></div>
+  
+  
+  <p class="simpara">
+    In SVN, PEAR code is organized by package instead of hierarchical
+    like it would finally be installed.  For example, if you want to
+    use the XML_RPC class, you include &quot;XML/RPC.php&quot;.  It&#039;s easy to
+    think that in SVN, this file should be in pear/XML/RPC.php, but
+    that&#039;s not the case.  XML_RPC is an independent package with its
+    own directory in SVN, in this case the RPC.php file is actually
+    located at pear/XML_RPC/RPC.php.  The package description file
+    (package.xml) is used to say where the files should finally be
+    installed.
+   </p>
+  <p class="simpara">
+    The reason SVN is organized this way is that it makes package
+    administration much easier.
+   </p>
+ </div>
+
+
+ <div class="section" id="faq.unstable-code"><div class="info"><h2 class="title">
+    Can I commit experimental/unstable stuff?
+   </h2></div>
+  
+  
+  <p class="para">
+    Yes. But make sure, that you mark up the experimental/unstable
+    status of the project in the documentation. The best place to do
+    this is in the <code class="filename">package.xml</code> in the
+    &lt;state&gt;-tag.
+    The values for this tag are
+    </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term">alpha</dt>
+     <dd class="listitem">
+      <span class="simpara">
+        early stages of development, all things could change (API,
+        behavoir) without notice, expect lots of bugs
+       </span>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">beta</dt>
+     <dd class="listitem">
+      <span class="simpara">
+        API should normally not change, usable software, expect bugs
+       </span>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">devel</dt>
+     <dd class="listitem">
+      <span class="simpara">
+        a release for other developers who want early access to test
+        and give feedback, code quality may vary from pre-alpha to
+        stable
+       </span>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">stable</dt>
+     <dd class="listitem">
+      <span class="simpara">
+        the software has a fixed <span class="acronym">API</span>, it has
+        undergone tests, and documentation exists.  This release is a
+        recommended release for use in production environments.
+       </span>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">snapshot</dt>
+     <dd class="listitem">
+      <span class="simpara">
+        a SVN snapshot from a certain date
+       </span>
+     </dd>
+    </dl>
+   </div>
+  
+ </div>
+
+
+ <div class="section" id="faq.add-examples"><div class="info"><h2 class="title">
+    Am I expected to add examples and/or test files to my package and
+    where to store them?
+   </h2></div>
+  
+  
+  <p class="para">
+    Examples are a good idea, especially when your class has a complex
+    API. But examples are only a part of a documentation. Don&#039;t create
+    examples instead of a documentation. You should store the
+    documentation and the examples in a sub directory &#039;docs&#039; of the
+    package directory.
+   </p>
+  <p class="para">
+    Test scripts are recommended when your class has to be compiled,
+    requires special extensions/programs or needs correctly installed
+    additional files (i.e. templates, graphics). Store them in sub
+    directory called &#039;tests&#039;.
+   </p>
+ </div>
+
+
+ <div class="section" id="faq.competitive-packages"><div class="info"><h2 class="title">
+    Are different packages or classes with similar features allowed?
+   </h2></div>
+  
+  
+  <p class="simpara">
+    There is no problem with competitive packages, but we want to
+    avoid pollution with 10 template classes, 7 different mail classes,
+    and 3 different layers for databases doing the same only with
+    different function names.
+   </p>
+  <p class="para">
+    First of all, do a reality check: Why do I want to commit a new
+    package? Really bad answers are "<span class="quote">To see my name in
+    PEAR</span>" or "<span class="quote">I didn&#039;t understand the API of the existing
+    class</span>".
+   </p>
+  <p class="para">
+    A good reason for a new class is often, that you are missing a
+    function, behaviour or speed in an existing implementation. In
+    this case, you  should take a look at this class, if it possible
+    to extend this class. If not, then you have a good reason to
+    commit a new class. "<span class="quote">If not</span>" means, it isn&#039;t possible
+    to add the required functionality without changing the basics of
+    this class.
+   </p>
+  <p class="simpara">
+    If you write a new class, try to keep API compatibility with
+    existing classes as far as possible! If it isn&#039;t  possible to keep
+    the class compatible himself, try to create a wrapper class to
+    keep compatibility. Don&#039;t care, if this wrapper needs a lot of
+    time or memory, a wrapper class only has to keep compatibility and
+    make migration easier.
+   </p>
+  <p class="para">
+    Committing a competitive class has to be announced on the
+    <a href="mailto:pear-dev@lists.php.net" class="link external">PEAR developers mailinglist</a>!
+   </p>
+ </div>
+
+
+ <div class="section" id="faq.require"><div class="info"><h2 class="title">
+    A required package includes a package, my package needs it too.
+    Should I include it again?
+   </h2></div>
+  
+  <p class="para">
+    Yes. You should include every package, you need with
+    <strong class="function">require_once()</strong> or <strong class="function">include_once
+    ()</strong>, also when it is included already by another package.
+   </p>
+ </div>
+
+
+ <div class="section" id="faq.licenses"><div class="info"><h2 class="title">
+    What licenses are allowed in PEAR/PECL?
+   </h2></div>
+  
+  
+  <p class="para">
+    Currently PEAR supports the following list of licenses:
+   </p>
+  <ul class="itemizedlist">
+   <li class="listitem">
+    <span class="simpara">
+      <a href="http://www.php.net/license/" class="link external">PHP License</a>
+     </span>
+   </li>
+   <li class="listitem">
+    <span class="simpara">
+      <a href="http://www.opensource.org/licenses/apache2.0.php" class="link external">Apache License</a>
+     </span>
+   </li>
+   <li class="listitem">
+    <span class="simpara">
+      <a href="http://www.fsf.org/licensing/licenses/lgpl.txt" class="link external">LGPL</a>
+     </span>
+   </li>
+   <li class="listitem">
+    <span class="simpara">
+      <a href="http://www.opensource.org/licenses/bsd-license.html" class="link external">BSD style</a>
+     </span>
+   </li>
+   <li class="listitem">
+    <span class="simpara">
+      <a href="http://www.opensource.org/licenses/mit-license.php" class="link external">MIT License</a>
+     </span>
+   </li>
+  </ul>
+  <p class="para">
+    Other licenses may be added to this list on a case-by-case
+    basis. Please get in touch with the
+    <a href="mailto:pear-dev@lists.php.net" class="link external">PEAR developers mailing list</a>
+    for this.
+   </p>
+  <p class="para">
+    The allowed licenses were chosen to allow integration into closed source,
+    open source as well as commercial applications.  The only limitation is that
+    the original credits must stay in the sources.  For LGPL the license additionally
+    requires that all changes to the source code must be licensed under the LGPL
+    to anyone the source is distributed to.
+   </p>
+   <p class="para">
+     From time to time people raise concerns of using PEAR packages
+     licensed under the PHP license in GPL&#039;ed code.  In a discussion
+     about this topic, the creator of PHP, Rasmus Lerdorf, issued the
+     <a href="http://news.php.net/php.pear.dev/45245" class="link external">following statement</a>:
+   </p>
+   <blockquote class="blockquote">
+     <p class="para">
+       It all comes down to semantics of what linking means.  The PHP
+       license is pretty much identical to the Apache license and you
+       could indeed make a case for not allowing any GPL&#039;ed software to
+       be &quot;linked to&quot; from Apache either.
+     </p>
+     <p class="para">
+       See <a href="http://www.apache.org/licenses/LICENSE-1.1" class="link external">http://www.apache.org/licenses/LICENSE-1.1</a>.
+     </p>
+     <p class="para">
+       The PHP license was chosen to match the Apache license because
+       Apache and PHP are tied so closely to each other.
+     </p>
+     <p class="para">
+       This hair splitting over linking, derivation and aggregation has
+       been going on since the beginning of time.  My stance is that you
+       can indeed ship PHP licensed PEAR components on the same cd or in
+       the same tarball as GPL&#039;ed code because I see it as an aggregate
+       work.  This changes if you take PEAR code, modify it and
+       copy-paste it directly into your own work.  Then it moves from
+       aggregate to derived.  But the intent of the PEAR components is
+       to be used in aggregate form.  The PHP license allows you to use
+       it in derived form as well, of course, but then you should be
+       choosing a license other than the GPL for the derived work.
+     </p>
+     <p class="para">
+       The FSF has a FAQ on aggregation here: <a href="http://www.fsf.org/licensing/licenses/gpl-faq.html#MereAggregation" class="link external">http://www.fsf.org/licensing/licenses/gpl-faq.html#MereAggregation</a>
+     </p>
+     <p class="para">
+       That text is heavily biased towards compiled software and they
+       talk about executables and memory spaces which don&#039;t really apply
+       in this case.  If you don&#039;t consider using a PEAR component as
+       aggregation then it logically follows that you also cannot have
+       Apache call your code so you will have to stipulate that nobody
+       can use your code from Apache. I think this is an extreme
+       interpretation that pretty much nobody out there shares.
+     </p>
+     <p class="para">
+       In short, I don&#039;t see an issue here.  Move along.
+     </p>
+   </blockquote>
+  <p class="para">
+    For PECL extensions that are linked into PHP, the license
+    must be compatible with the PHP license.  That means you can not GPL
+    a PECL extension or you would be violating the GPL.  Note also that if
+    you write an extension that links against a GPL&#039;ed library you will be
+    violating the GPL.  If you need to link against a GPL&#039;ed library, get
+    permission from the author of the library to use the library under a
+    compatible license.
+   </p>
+  <p class="para">
+    The license of any PEAR/PECL package can be found in the head of
+    all source code files, inside the &lt;license&gt; tag of the package
+    description file (<code class="filename">package.xml</code>) and also on the package
+    homepage.
+   </p>
+ </div>
+
+
+ <div class="section" id="faq.tabs-vs-spaces"><div class="info"><h2 class="title">
+    Why does the PEAR coding standard insist on space-only indentation?
+   </h2></div>
+  
+  
+  <p class="para">
+    Using spaces and avoiding tabs is the only way to ensure that a
+    piece of code is rendered consistently in all editors and viewers.
+    Many editors render tabs as 4 spaces, and a lot of editors,
+    terminal programs and utilities render tabs as 8 spaces.  Example:
+
+    <p class="literallayout">printf(&quot;%s&quot;,<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$arg);</p>
+<p>
+
+    Here, there are 7 spaces before &quot;$arg&quot;.  If this code was written
+    in an editor with 4-space tabs, it would store it as one tab and
+    three spaces.  Now, if another developer edits the same file in an
+    editor with 8-space tabs, it will look like this:
+
+    <p class="literallayout">printf(&quot;%s&quot;,<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$arg);</p>
+
+  
+  <p class="para">
+    Likewise, consider this code written with 8-space tabs:
+
+    <p class="literallayout">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;($foo&nbsp;&amp;&amp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$bar)&nbsp;{<br/>&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+<p>
+
+    If viewed in a 4-space-tab editor, it will look like this:
+
+    <p class="literallayout">&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;($foo&nbsp;&amp;&amp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;$bar)&nbsp;{<br/>&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+
+  
+  <p class="simpara">
+    In a community like PEAR where people use lots of different
+    systems and editors, using tabs simply doesn&#039;t work.  People will
+    end up doing whitespace commits fixing rendering in their editor,
+    while breaking it for others.
+
+    With only spaces it will look the same to everyone.
+   </p>
+  <p class="para">
+    Jamie Zawinski has written a
+    <a href="http://www.jwz.org/doc/tabs-vs-spaces.html" class="link external">piece on
+    the subject too</a>.
+   </p>
+  <p class="para">
+    There is also a tool called <a href="http://astyle.sourceforge.net/" class="link external">
+    Astyle</a> which can help you convert your code to the appropriate
+    style.
+   </p>
+ </div>
+
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="faq.users.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="faq.html">FAQ</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="faq.documentation.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">User FAQ</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Documentation/translation FAQ</td>
+  </tr>
+ </table>
+</div>
+</body></html>

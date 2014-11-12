@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Benchmark_Profiler</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.benchmarking.benchmark.html" title="Benchmarking_Benchmark" />
+  <link rel="prev" href="package.benchmarking.benchmark.timer.html" title="Benchmark_Timer" />
+  <link rel="next" href="package.benchmarking.benchmark.iterate.html" title="Benchmark_Iterate" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Benchmark_Profiler</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.benchmarking.benchmark.timer.html" title="Benchmark_Timer">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.benchmarking.benchmark.iterate.html" title="Benchmark_Iterate">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.benchmarking.benchmark.profiler">
+ 
+  <h1 class="refname">Benchmark_Profiler</h1>
+  <div class="refnamediv">Benchmark_Profiler &ndash; About Benchmark_Profiler</div>
+
+ 
+ <div class="refsection"><div class="info"><h1>About Benchmark_Profiler</h1>
+</div>
+  
+  <p class="para">
+   This class behaves mostly like
+   <strong class="classname">Benchmark_Timer</strong> with the
+   exception that you are allowed to specify the beginning
+   and end of <em class="emphasis">sections</em> within the code
+   to be profiled. <em class="emphasis">sections</em> are different
+   from <em class="emphasis">markers</em> (<em class="emphasis">markers</em>)
+   don&#039;t have <em class="emphasis">ends</em> in the sense that they are
+   stateful and remember how many times they have been
+   <em class="emphasis">entered</em>.
+  </p>
+  <p class="para">
+   Timing information is recorded at the beginning and end of the code
+   to be profiled and at the beginning and end of every
+   <em class="emphasis">section</em> everytime it is encountered. An
+   example follows.
+  </p>
+  <div class="example"><div class="info"><p><strong>
+   	Benchmark_Profiler in manual mode
+   </strong></p></div>
+   
+   <div class="phpcode">
+   <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Benchmark/Profiler.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$profiler&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Benchmark_Profiler</span><span style="color: #007700">;<br /><br />function&nbsp;</span><span style="color: #0000BB">wasteTime</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$j&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(</span><span style="color: #0000BB">$i&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">;&nbsp;</span><span style="color: #0000BB">$i&nbsp;</span><span style="color: #007700">&lt;&nbsp;</span><span style="color: #0000BB">100</span><span style="color: #007700">;&nbsp;</span><span style="color: #0000BB">$i</span><span style="color: #007700">++)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$j&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$j&nbsp;</span><span style="color: #007700">*&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;return;<br />}&nbsp;&nbsp;&nbsp;&nbsp;<br /><br />function&nbsp;</span><span style="color: #0000BB">myFunction</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;global&nbsp;</span><span style="color: #0000BB">$profiler</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$profiler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">enterSection</span><span style="color: #007700">(</span><span style="color: #DD0000">'myFunction'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">wasteTime</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$profiler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">leaveSection</span><span style="color: #007700">(</span><span style="color: #DD0000">'myFunction'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;return;<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;Manual&nbsp;mode,&nbsp;so&nbsp;start&nbsp;manually<br /></span><span style="color: #0000BB">$profiler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">start</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">wasteTime</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">myFunction</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">myFunction</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">wasteTime</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;Manual&nbsp;mode,&nbsp;stop&nbsp;and&nbsp;display&nbsp;results<br /></span><span style="color: #0000BB">$profiler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">stop</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$profiler</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">display</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  <p class="para">
+   The example above will generate an output as shown below
+   when run with the PHP CLI SAPI. Running it with the 
+   Apache SAPI will produce the same results, but formatted
+   as HTML.
+  </p>
+  <div class="example"><div class="info"><p><strong>
+    Results of a test run of Benchmark_Profiler
+   </strong></p></div>
+   
+   <div class="htmlcode">
+   <pre class="htmlcode">
+------------------------------------------------------------------------------------
+Section             Total Ex Time         Netto Ex Time         #Calls    Percentage
+------------------------------------------------------------------------------------
+myFunction          5.8174133300781E-5    5.8174133300781E-5    2          17.22%
+Global              0.00033783912658691   0.00027966499328613   1         100.00%</pre>
+
+   </div>
+  </div>
+  <p class="para">
+   As you can see, the default output may not be too helpful.
+   You can obtain detailed section by section profiling
+   information in <em class="emphasis">manual</em> mode through methods like
+   <strong class="function">getSectionInformations()</strong> and
+   <strong class="function">getAllSectionsInformations()</strong>. Refer to
+   the API documentation for more information.
+  </p>
+ </div> 
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.benchmarking.benchmark.timer.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.benchmarking.benchmark.html">Benchmarking_Benchmark</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.benchmarking.benchmark.iterate.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Benchmark_Timer</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Benchmark_Iterate</td>
+  </tr>
+ </table>
+</div>
+</body></html>

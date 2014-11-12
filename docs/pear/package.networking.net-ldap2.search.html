@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Search</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.networking.net-ldap2.html" title="Net_LDAP2" />
+  <link rel="prev" href="package.networking.net-ldap2.connecting.html" title="Configuration and connecting" />
+  <link rel="next" href="package.networking.net-ldap2.fetching.html" title="Fetching entries" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Search</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.networking.net-ldap2.connecting.html" title="Configuration and connecting">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.networking.net-ldap2.fetching.html" title="Fetching entries">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.networking.net-ldap2.search">
+    
+        <h1 class="refname">Search</h1>
+        <div class="refnamediv">Search &ndash; Searching entries</div>
+
+    
+
+    <div class="refsection"><div class="info"><h1>A short note on DNs</h1>
+</div>
+        
+        <p class="para">
+            It may be possible that restricted characters (&quot;,&quot;, &quot;+&quot;, &quot;&quot;&quot;, &quot;\&quot;, &quot;&lt;&quot;, &quot;&gt;&quot;, &quot;;&quot;, &quot;#&quot;, &quot;=&quot;, space or a hexpair) are used in attributes or values inside the DN.
+            You should have a look to the APIdoc of <strong class="classname">Net_LDAP2_Util::</strong><strong class="function">escape_dn_value()</strong>,
+            <strong class="classname">Net_LDAP2_Util::</strong><strong class="function">unescape_dn_value()</strong>, <strong class="classname">Net_LDAP2_Util::</strong><strong class="function">ldap_explode_dn()</strong> and <strong class="classname">Net_LDAP2_Util::</strong><strong class="function">canonical_dn()</strong>.
+            These functions can be used to safely handle DNs.
+        </p>
+    </div>
+
+    <div class="refsection"><div class="info"><h1>Searching some entries</h1>
+</div>
+        
+        <p class="para">
+        After connecting to the server, you can use <strong class="classname">Net_LDAP2</strong>&#039;s
+        <strong class="function">search()</strong> method to search the directory. The method takes
+        three parameters:
+        </p><ul class="itemizedlist">
+        <li class="listitem">
+            <p class="para">
+            <code class="literal">$base</code> is the base search DN. If kept
+            <code class="literal">null</code>, the default base DN configured when connecting
+            is used.
+            </p>
+        </li>
+        
+        <li class="listitem">
+            <p class="para">
+            <code class="literal">$filter</code> is the query filter that determines which
+            results are returned. It is either a string (experts use only) or better a <strong class="classname">Net_LDAP2_Filter</strong>-object.
+            <strong class="classname">Net_LDAP2_Filter</strong> automatically deals with LDAP-Filter escaping issues.
+            LDAP filters are extensively explained at the chapter <a href="package.networking.net-ldap2.filter.html" class="link">LDAP filters</a>.
+            </p>
+        </li>
+        
+        <li class="listitem">
+            <p class="para">
+            <code class="literal">$params</code> is an array of configuration options for
+            the current query.
+            </p><table class="doctable table"><caption>Possible configuration parameters</caption>
+            
+            
+            <thead>
+                <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Default</th>
+                </tr>
+
+            </thead>
+
+            <tbody class="tbody">
+                <tr>
+                <td><code class="literal">scope</code></td>
+                <td>
+                The scope used for searching:
+                <ul class="itemizedlist">
+                <li class="listitem">
+                    <p class="para">
+                    <code class="literal">base</code> - Just one entry
+                    </p>
+                </li>
+        
+                <li class="listitem">
+                    <p class="para">
+                    <code class="literal">sub</code> - The whole tree
+                    </p>
+                </li>
+        
+                <li class="listitem">
+                    <p class="para">
+                    <code class="literal">one</code> - Immediately below
+                    <code class="literal">$base</code>
+                    </p>
+                </li>
+        
+                </ul>
+                </td>
+                <td><code class="literal">sub</code></td>
+                </tr>
+
+        
+                <tr>
+                <td><code class="literal">sizelimit</code></td>
+                <td>Number of entries returned at maximum</td>
+                <td><code class="literal">0</code> (no limit)</td>
+                </tr>
+
+        
+                <tr>
+                <td><code class="literal">timelimit</code></td>
+                <td>Seconds to spent for searching</td>
+                <td><code class="literal">0</code> (no limit)</td>
+                </tr>
+
+        
+                <tr>
+                <td><code class="literal">attrsonly</code></td>
+                <td>If <code class="literal">true</code>, only attribute names are returned</td>
+                <td><code class="literal">false</code></td>
+                </tr>
+
+        
+                <tr>
+                <td><code class="literal">attributes</code></td>
+                <td>
+                Array of attribute names, which the entry should contain.
+                It is good practice to limit this to just the ones you need.
+                </td>
+                <td><code class="literal">array()</code> (all attributes)</td>
+                </tr>
+
+        
+            </tbody>
+            
+            </table>
+
+            
+        </li>
+        
+        </ul><p>
+        
+        The <strong class="function">search()</strong> method will return either a <strong class="classname">Net_LDAP2_Search</strong> object or a <strong class="classname">Net_LDAP2_Error</strong>.
+        You can use the <strong class="classname">Net_LDAP2_Search</strong>-object to trigger further actions
+        like counting how many entries where found or to retrieve the found entries.
+        </p>
+        
+        <div class="example"><div class="info"><p><strong>Making a search query</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Building&nbsp;a&nbsp;very&nbsp;basic&nbsp;filter<br />//&nbsp;we&nbsp;want&nbsp;to&nbsp;find&nbsp;all&nbsp;Entries&nbsp;whose&nbsp;surnames&nbsp;start&nbsp;with&nbsp;"Joe":<br /></span><span style="color: #0000BB">$filter&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Net_LDAP2_Filter</span><span style="color: #007700">::</span><span style="color: #0000BB">create</span><span style="color: #007700">(</span><span style="color: #DD0000">'sn'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'begins'</span><span style="color: #007700">,&nbsp;&nbsp;</span><span style="color: #DD0000">'Joe'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;We&nbsp;define&nbsp;a&nbsp;custom&nbsp;searchbase&nbsp;here.&nbsp;If&nbsp;you&nbsp;pass&nbsp;NULL,&nbsp;the&nbsp;basedn&nbsp;provided<br />//&nbsp;in&nbsp;the&nbsp;Net_LDAP2&nbsp;configuration&nbsp;will&nbsp;be&nbsp;used.&nbsp;This&nbsp;is&nbsp;often&nbsp;not&nbsp;what&nbsp;you&nbsp;want.<br /></span><span style="color: #0000BB">$searchbase&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'ou=addressbook,dc=example,dc=org'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Some&nbsp;options:<br />//&nbsp;We&nbsp;search&nbsp;all&nbsp;subtrees&nbsp;beneath&nbsp;'ou=addressbook,dc=example,dc=org'<br />//&nbsp;and&nbsp;we&nbsp;select&nbsp;the&nbsp;attribute&nbsp;'sn'.&nbsp;It&nbsp;is&nbsp;a&nbsp;good&nbsp;practice&nbsp;to&nbsp;limit&nbsp;the<br />//&nbsp;requested&nbsp;attributes&nbsp;to&nbsp;only&nbsp;those&nbsp;you&nbsp;actually&nbsp;want&nbsp;to&nbsp;use&nbsp;later.<br />//&nbsp;However,&nbsp;note&nbsp;that&nbsp;it&nbsp;is&nbsp;faster&nbsp;to&nbsp;select&nbsp;unneeded&nbsp;attributes&nbsp;than<br />//&nbsp;refetching&nbsp;an&nbsp;entry&nbsp;later&nbsp;to&nbsp;just&nbsp;get&nbsp;those&nbsp;attributes.<br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'scope'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'sub'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'attributes'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'sn'</span><span style="color: #007700">)<br />);<br /><br /></span><span style="color: #FF8000">//&nbsp;Perform&nbsp;the&nbsp;search!<br /></span><span style="color: #0000BB">$search&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$ldap</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">search</span><span style="color: #007700">(</span><span style="color: #0000BB">$searchbase</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$filter</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Test&nbsp;for&nbsp;search&nbsp;errors:<br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$search</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$search</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">);<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;Say&nbsp;how&nbsp;many&nbsp;entries&nbsp;we&nbsp;have&nbsp;found:<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #DD0000">"Found&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$search</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">count</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">"&nbsp;entries!"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.networking.net-ldap2.connecting.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.networking.net-ldap2.html">Net_LDAP2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.networking.net-ldap2.fetching.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Configuration and connecting</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Fetching entries</td>
+  </tr>
+ </table>
+</div>
+</body></html>

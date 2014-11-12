@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Using channels</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="guide.users.commandline.cli.html" title="Command line installer (PEAR)" />
+  <link rel="prev" href="guide.users.commandline.packageinfo.html" title="Getting information about packages" />
+  <link rel="next" href="guide.users.commandline.commands.html" title="Command list" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Using channels</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="guide.users.commandline.packageinfo.html" title="Getting information about packages">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="guide.users.commandline.commands.html" title="Command list">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="guide.users.commandline.channels"><div class="info"><h1>Using channels</h1>
+</div>
+    
+
+    <div class="section" id="guide.users.commandline.channels.channels"><div class="info"><h2 class="title">Channels?</h2></div>
+      
+
+      <p class="para">Channels are alternative package sources. See the <a href="channels.whatarethey.html" class="link">channel section</a> of the manual
+      for more information.</p>
+
+      <p class="para">What you need to know now: By using channels, you can install
+      packages that are not part of PEAR. Prominent PHP projects like Horde
+      and PHPUnit distribute their software through PEAR-compatible
+      channels.</p>
+    </div>
+
+    <div class="section" id="guide.users.commandline.channels.discovery"><div class="info"><h2 class="title">Channel discovery</h2></div>
+      
+
+      <p class="para">Before you can use a channel, your pear installation needs to know
+      about it. This process is called &quot;channel discovery&quot;.</p>
+
+      <p class="para">Once you know the project&#039;s channel url, just type:</p>
+
+      <pre class="screen">$ pear channel-discover pear.phpunit.de
+Adding Channel &quot;pear.phpunit.de&quot; succeeded</pre>
+
+
+      <p class="para">Downloading a channel.xml file, you can add a channel just using
+      that file using <strong class="command">channel-add</strong>:</p>
+
+      <pre class="screen">$ pear channel-add my-channel.xml
+...</pre>
+
+
+      <p class="para">Using <strong class="command">list-channels</strong>, you can get an overview of
+      known channels:</p>
+
+      <pre class="screen">$ pear list-channels
+Registered Channels:
+====================
+Channel                  Summary
+components.ez.no         eZ Enterprise components
+demochanserv.bogo        Simple demo channel server
+gnope.org                PHP-Gtk2 applications
+pear.chiaraquartet.net   Chiara Testing Channel
+pear.phing.info          Channel for Phing build tool releases
+pear.php.net             PHP Extension and Application Repository
+pear.phpunit.de          PHPUnit channel server
+pear.symfony-project.com symfony project PEAR channel
+pearified.com            PEAR-Compatible Extension and Application
+                         Repository
+pecl.php.net             PHP Extension Community Library
+__uri                    Pseudo-channel for static packages</pre>
+
+
+      <p class="para">More insight about a channel can be gotten with
+      <strong class="command">channel-info</strong>. It prints out a description, the
+      channel&#039;s shortcut name (alias) as well as mirror information.</p>
+
+      <pre class="screen">$ pear channel-info pear.php.net
+Channel pear.php.net Information:
+=================================
+Name and Server         pear.php.net
+Alias                   pear
+Summary                 PHP Extension and Application Repository
+...</pre>
+
+    </div>
+
+    <div class="section" id="guide.users.commandline.channels.packages"><div class="info"><h2 class="title">Work with packages on a channel</h2></div>
+      
+
+      <p class="para">When installing or doing anything else with a package that is not
+      in your <a href="guide.users.commandline.config.html#guide.users.commandline.config.options.default_channel" class="link">default
+      channel</a>, you need to specify the channel by full name or
+      alias:</p>
+
+      <pre class="screen">$ pear install gnope/Dev_Inspector
+... installation of package &quot;Dev_Inspector&quot; in channel &quot;gnope&quot;
+
+$ pear list -c pear.phpunit.de
+Installed packages, channel pear.phpunit.de:
+============================================
+Package Version State
+PHPUnit 3.2.5   stable</pre>
+
+
+      <p class="para">General rule is that when you would specify a package name, use
+      <code class="literal">$channel/$packagename</code> now. All other functions with
+      channel support have a <code class="literal">-c</code> option to specify the
+      channel name or alias.</p>
+    </div>
+
+    <div class="section" id="guide.users.commandline.channels.passwordprotected"><div class="info"><h2 class="title">Password protected channels</h2></div>
+      
+
+      <p class="para">PEAR compatible channels can be password protected. You could use
+      this to e.g. distribute custom proprietary software to your clients, and
+      don&#039;t want to publicy publish those packages anywhere.</p>
+
+      <p class="para">Password protection is done via a HTTP Basic Authentication
+      (<code class="filename">.htaccess</code> and <code class="filename">.htpassword</code> on
+      Apache). When trying to discover such a password protected channel, you
+      will get a message like this:</p>
+
+      <pre class="screen">$ pear channel-discover pear.company.com
+Discovery of channel &quot;pear.company.com&quot; failed
+ (channel-add: Cannot open &quot;http://pear.company.com/channel.xml&quot;
+ (File http://pear.company.com:80/channel.xml not valid
+ (received: HTTP/1.1 401 Authorization Required
+)))</pre>
+
+
+      <p class="para">In this case, download the <code class="filename">channel.xml</code> file
+      manually, for example with your browser or wget. A
+      <code class="filename">channel.xml</code> is always in the root directory of the
+      channel server. After that, discover the channel with the saved
+      file:</p>
+
+      <pre class="screen">$ pear channel-add /path/to/saved/channel.xml
+Adding Channel &quot;pear.company.com&quot; succeeded</pre>
+
+
+      <p class="para">Now the PEAR manager needs to know about the channel&#039;s username
+      and password. We tell him by using <strong class="command">set-config</strong> in
+      connection with the channel option:</p>
+
+      <pre class="screen">$ pear config-set -c pear.company.com username johndoe
+config-set succeeded
+$ pear config-set -c pear.company.com password secret
+config-set succeeded</pre>
+
+
+      <p class="para">Now test if we did everything right by showing available packages
+      on the channel:</p>
+
+      <pre class="screen">$ pear list-all -c pear.company.com
+Retrieving data...0%
+All packages [Channel pear.company.com]:
+==========================
+Package             Latest Local
+comp/WorldDominator 0.8.1        Tool to dominate the world</pre>
+
+
+      <blockquote class="note">
+        <p class="para">If you changed your creditentials, you should issue a
+        <strong class="command">pear clear-cache</strong> command to make sure that the
+        installer does not use cached data.</p>
+      </blockquote>
+
+    </div>
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="guide.users.commandline.packageinfo.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="guide.users.commandline.cli.html">Command line installer (PEAR)</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="guide.users.commandline.commands.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Getting information about packages</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Command list</td>
+  </tr>
+ </table>
+</div>
+</body></html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Element values and Data sources</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-quickform2.values.html" title="Element values and validation" />
+  <link rel="prev" href="package.html.html-quickform2.values.html" title="Element values and validation" />
+  <link rel="next" href="package.html.html-quickform2.rules.html" title="Rules and validation" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Element values and Data sources</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-quickform2.values.html" title="Element values and validation">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-quickform2.rules.html" title="Rules and validation">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-quickform2.values-datasources">
+ 
+  <h1 class="refname">Element values and Data sources</h1>
+  <div class="refnamediv">Element values and Data sources &ndash; Setting and getting values for the whole form and for individual elements</div>
+
+ 
+
+ <div class="refsection" id="package.html.html-quickform2.values-datasources.values-overview">
+  <div class="info">
+   <h1>Individual elements&#039; values</h1>
+
+  </div>
+  <p class="para">
+   Each element in HTML_QuickForm2 implements <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodgetRawValue" class="apidoclink">getRawValue()</a> and <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodgetValue" class="apidoclink">getValue()</a> methods that
+   return its unfiltered and filtered submit value, respectively, and <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodsetValue" class="apidoclink">setValue()</a> that sets the element&#039;s
+   display value. These are not always the same, consider
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$text&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Element_InputText</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'testText'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'disabled'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'disabled'</span><span style="color: #007700">)<br />);<br /></span><span style="color: #0000BB">$text</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setValue</span><span style="color: #007700">(</span><span style="color: #DD0000">'a&nbsp;value'</span><span style="color: #007700">);<br />echo&nbsp;</span><span style="color: #0000BB">$text&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$text</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getValue</span><span style="color: #007700">());<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   which produces
+   </p><pre class="screen">
+<br/>&lt;input&nbsp;type=&quot;text&quot;&nbsp;disabled=&quot;disabled&quot;&nbsp;name=&quot;testText&quot;&nbsp;id=&quot;testText-0&quot;&nbsp;value=&quot;a&nbsp;value&quot;&nbsp;/&gt;<br/>NULL<br/>
+   </pre>
+<p>
+   as disabled elements cannot have a submit value.
+  </p>
+  <p class="para">
+   If an element can not have a submit value (e.g. reset button, static element) or does not
+   currently have one (e.g. disabled element, unchecked checkbox) then <strong class="function">getValue()</strong>
+   will return <strong class="constant">NULL</strong>. The value also passes &quot;intrinsic validation&quot; which ensures that it
+   could possibly come from that element:
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$select&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Factory</span><span style="color: #007700">::</span><span style="color: #0000BB">createElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'select'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'testSelect'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'multiple'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'multiple'</span><span style="color: #007700">))<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">loadOptions</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'a'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'letter&nbsp;A'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'b'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'letter&nbsp;B'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'c'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'letter&nbsp;C'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$select</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setValue</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'a'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'z'</span><span style="color: #007700">));<br /></span><span style="color: #FF8000">//&nbsp;select&nbsp;will&nbsp;only&nbsp;return&nbsp;values&nbsp;for&nbsp;options&nbsp;that&nbsp;were&nbsp;present&nbsp;in&nbsp;it<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$select</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getValue</span><span style="color: #007700">());<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   will output
+   </p><pre class="screen">
+<br/>array(1)&nbsp;{<br/>&nbsp;&nbsp;[0]=&gt;<br/>&nbsp;&nbsp;string(1)&nbsp;&quot;a&quot;<br/>}<br/>
+   </pre>
+
+  
+  <p class="para">
+   On the other hand, some of the elements cannot have a display value (<code class="literal">&lt;input
+   type=&quot;image&quot; /&gt;</code>, file uploads), <strong class="function">setValue()</strong> will be a
+   no-op for such elements and they will only get their values (click coordinates and file upload
+   data, respectively) from submit data sources.
+  </p>
+  <p class="para">
+   <strong class="function">getValue()</strong> / <strong class="function">getRawValue()</strong> also work for 
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Container.html" class="apidoclink">Containers</a> and return an array with values
+   of contained elements. <strong class="function">setValue()</strong> is only implemented for groups, data sources
+   should be used to set the values for the whole form.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.values-datasources.datasources-overview">
+  <div class="info">
+   <h1>Data sources overview</h1>
+
+  </div>
+  <p class="para">
+   Instance of <strong class="classname">HTML_QuickForm2</strong> contains an array of Data sources - objects
+   storing elements&#039; incoming values. These values may either originate from HTTP request data
+   (submit values) or be provided by the programmer (default values). Data sources implement
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_DataSource.html" class="apidoclink">HTML_QuickForm2_DataSource</a> interface
+   defining a single <strong class="function">getValue()</strong> method, which receives element name and returns
+   either element value or <strong class="constant">NULL</strong> if such value is not present.  
+  </p>
+  <p class="para">
+   There is also a <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_DataSource_Submit.html" class="apidoclink">HTML_QuickForm2_DataSource_Submit</a> interface that defines an additional
+   <strong class="function">getUpload()</strong> method that receives file upload name and returns either file
+   upload data from <code class="varname">$_FILES</code> array or <strong class="constant">NULL</strong> if it doesn&#039;t contain this data.
+  </p>
+  <p class="para">
+   A data source containing submit values will be added to the list automatically if <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2.html#method__construct" class="apidoclink">constructor</a> of
+   <strong class="classname">HTML_QuickForm2</strong> considers the form submitted. You can add another data
+   source to the list using <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2.html#methodaddDataSource" class="apidoclink">HTML_QuickForm2::addDataSource()</a> and completely replace the list using
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2.html#methodsetDataSources" class="apidoclink">HTML_QuickForm2::setDataSources()</a>.
+  </p>
+  <p class="para">
+   An element will try to update its value from data sources in the following cases:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara">It is added to the form;</span></li>
+    <li class="listitem"><span class="simpara">Its name is changed;</span></li>
+    <li class="listitem"><span class="simpara">Form data sources list is changed.</span></li>
+   </ul><p>
+   To perform that update it gets the data sources array from the form and iterates over it calling
+   <strong class="function">getValue()</strong> until a non-<strong class="constant">NULL</strong> value is returned. This value is then used as
+   element&#039;s value.
+  </p>
+  <p class="para">
+   Some of the elements (submit buttons, obviously file uploads) will only consider getting their
+   values from instances of <span class="interfacename">HTML_QuickForm2_DataSource_Submit</span>. Some
+   (e.g. checkboxes) will stop iterating over the array as soon as an instance of
+   <span class="interfacename">HTML_QuickForm2_DataSource_Submit</span> is found, even if its
+   <strong class="function">getValue()</strong> method returns <strong class="constant">NULL</strong>. Static elements will only consider a
+   datasource if it is <em class="emphasis">not</em> an instance of
+   <span class="interfacename">HTML_QuickForm2_DataSource_Submit</span>.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.values-datasources.datasources-implementation">
+  <div class="info">
+   <h1>Implementations of <span class="interfacename">HTML_QuickForm2_DataSource</span></h1>
+
+  </div>
+  <p class="para">
+   The package contains several classes implementing the
+   <span class="interfacename">HTML_QuickForm2_DataSource</span> interface, but the only one that should
+   be used directly is <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_DataSource_Array.html" class="apidoclink">HTML_QuickForm2_DataSource_Array</a>, other classes are used internally by the
+   package.
+  </p>
+  <p class="para">
+   An instance of <strong class="classname">HTML_QuickForm2_DataSource_Array</strong> wraps around an array
+   with a structure similar to that of superglobal <code class="varname">$_GET</code> /
+   <code class="varname">$_POST</code> arrays. This wrapper allows searching for values of elements with
+   complex names:
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$ds&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_DataSource_Array</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'foo'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'foo&nbsp;value'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'bar'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'bar&nbsp;1'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'bar&nbsp;2'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'baz'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'first'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'second'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'found&nbsp;a&nbsp;value'</span><span style="color: #007700">))<br />));<br />echo&nbsp;</span><span style="color: #0000BB">$ds</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getValue</span><span style="color: #007700">(</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />echo&nbsp;</span><span style="color: #0000BB">$ds</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getValue</span><span style="color: #007700">(</span><span style="color: #DD0000">'bar[1]'</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />echo&nbsp;</span><span style="color: #0000BB">$ds</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getValue</span><span style="color: #007700">(</span><span style="color: #DD0000">'baz[first][second]'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   outputs
+   </p><pre class="screen">
+<br/>foo&nbsp;value<br/>bar&nbsp;2<br/>found&nbsp;a&nbsp;value<br/>
+   </pre>
+
+  
+  <p class="para">
+   Instead of loading data from a database unconditionally and passing it to this data source in
+   an array, it may make sense to create your own data source implementation, which will only
+   perform a query when asked for a value. This way you will probably save a query on form submit,
+   as all values will be found in a submit data source.
+  </p>
+ </div>
+
+
+ <div class="refsection" id="package.html.html-quickform2.values-datasources.order">
+  <div class="info">
+   <h1>Maintaining correct order</h1>
+
+  </div>
+  <p class="para">
+   A most popular value-related error happens when a programmer uses an element&#039;s
+   <strong class="function">setValue()</strong> method before adding that element to the form: 
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addDataSource</span><span style="color: #007700">(new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_DataSource_Array</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'testDefault'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'duh!'<br /></span><span style="color: #007700">)));<br /></span><span style="color: #0000BB">$element&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Factory</span><span style="color: #007700">::</span><span style="color: #0000BB">createElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'testDefault'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">setValue</span><span style="color: #007700">(</span><span style="color: #DD0000">'my&nbsp;carefully&nbsp;prepared&nbsp;value'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">appendChild</span><span style="color: #007700">(</span><span style="color: #0000BB">$element</span><span style="color: #007700">);<br />echo&nbsp;</span><span style="color: #0000BB">$element</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getValue</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   As described above, the element will immediately try to update its value from form&#039;s data sources
+   and overwrite whatever was set on the previous step, so the above results in
+   </p><pre class="screen">
+<br/>duh!<br/>
+   </pre>
+
+  
+  <p class="para">
+   A less obvious problem is adding data sources after elements:
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;an&nbsp;element&nbsp;updates&nbsp;its&nbsp;value&nbsp;from&nbsp;existing&nbsp;(e.g.&nbsp;submit)&nbsp;data&nbsp;sources<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'testDefault'</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;it&nbsp;updates&nbsp;its&nbsp;value&nbsp;again<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addDataSource</span><span style="color: #007700">(new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_DataSource_Array</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'testDefault'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'my&nbsp;carefully&nbsp;prepared&nbsp;value'<br /></span><span style="color: #007700">)));<br /></span><span style="color: #FF8000">//&nbsp;...and&nbsp;yet&nbsp;again<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addDataSource</span><span style="color: #007700">(new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_DataSource_Array</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'unrelated'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'a&nbsp;completely&nbsp;unrelated&nbsp;value'<br /></span><span style="color: #007700">)));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   That code behaves as expected, but performs lots of unneeded work.
+  </p>
+  <p class="para">
+   To sum it up, a correct order is:
+   </p><ol type="1">
+    <li class="listitem"><span class="simpara">Add all data sources to the form;</span></li>
+    <li class="listitem"><span class="simpara">Add all elements to the form;</span></li>
+    <li class="listitem"><span class="simpara">Call <strong class="function">setValue()</strong> on some elements, if still needed.</span></li>
+   </ol>
+  
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-quickform2.values.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-quickform2.values.html">Element values and validation</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-quickform2.rules.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Element values and validation</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Rules and validation</td>
+  </tr>
+ </table>
+</div>
+</body></html>

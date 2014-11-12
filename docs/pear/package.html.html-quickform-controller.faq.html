@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>FAQ</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-quickform-controller.html" title="HTML_QuickForm_Controller" />
+  <link rel="prev" href="package.html.html-quickform-controller.intro.html" title="Introduction" />
+  <link rel="next" href="package.html.html-quickform-controller.html-quickform-controller-summary.html" title="Class Summary HTML_QuickForm_Controller" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">FAQ</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-quickform-controller.intro.html" title="Introduction">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-quickform-controller.html-quickform-controller-summary.html" title="Class Summary HTML_QuickForm_Controller">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-quickform-controller.faq">
+   
+    <h1 class="refname">FAQ</h1>
+    <div class="refnamediv">FAQ &ndash; Understanding package features</div>
+
+   
+   <div class="refsection" id="package.html.html-quickform-controller.faq.desc">
+    <h1 class="title">Description</h1>
+    <p class="para">
+This document is based on questions asked on <a href="mailto:pear-general@lists.php.net" class="link external">PEAR general mailing list</a>. You are encouraged to search the list archives to find more verbose answers and examples.
+    </p>
+   </div>
+   <div class="refsection" id="package.html.html-quickform-controller.faq.formaction"><div class="info"><h1>How do I change the <code class="varname">action</code> attribute of the <code class="varname">&lt;form&gt;</code> tag?</h1>
+</div>
+    
+    <p class="para">
+      The only reason constructor of <strong class="classname">HTML_QuickForm_Page</strong> does not provide a means to set the <code class="varname">action</code> attribute is to make it harder to shoot oneself in the foot. That being said, the attribute can still be changed by <strong class="function">setAttribute()</strong> or <strong class="function">updateAttributes()</strong> method of <strong class="classname">HTML_QuickForm_Page</strong> (these are inherited from <strong class="classname">HTML_Common</strong>, and you should really consider learning its API).
+    </p>
+   </div>
+   <div class="refsection" id="package.html.html-quickform-controller.faq.actions"><div class="info"><h1>Meta-question: actions</h1>
+</div>
+    
+    <p class="para">
+To avoid confusion lets use the terms &quot;action&quot; for the string containing the name of the action and &quot;action handler&quot; for the subclass of <a href="package.html.html-quickform-controller.html-quickform-action-back-summary.html" class="link"><strong class="classname">HTML_QuickForm_Action</strong></a>.
+    </p>
+    <div class="refsection" id="package.html.html-quickform-controller.faq.actions.default"><div class="info"><h1>Default actions and default action handlers</h1>
+</div>
+      
+      <p class="para">
+While you can invent your own action names and create custom handlers for them, you&#039;ll most certainly have to deal with the default actions and their handlers first. 
+      </p>
+
+<div class="variablelist">
+  
+
+  <dl class="varlistentry">
+    <dt class="term"><code class="literal">&#039;display&#039;</code></dt>
+    <dd class="listitem"><p class="para">
+    This action has a default handler, <a href="package.html.html-quickform-controller.html-quickform-action-display-summary.html" class="link"><strong class="classname">HTML_QuickForm_Action_Display</strong></a>, which displays the form using the Default renderer. You should subclass this handler if you want to customize the form output. This action is called automatically when the page needs to be displayed and should <em class="emphasis">not</em> be bound to buttons via <strong class="function">getButtonName()</strong>.
+    </p></dd>
+  </dl>
+
+  <dl class="varlistentry">
+    <dt class="term"><code class="literal">&#039;submit&#039;</code></dt>
+    <dd class="listitem"><p class="para">
+    This action should be bound to a &quot;global&quot; submit button for a form. It can be the &quot;submit&quot; button of a single-page or tabbed multi-page form, &quot;finish&quot; button of a wizard. This action has a default handler, <a href="package.html.html-quickform-controller.html-quickform-action-submit-summary.html" class="link"><strong class="classname">HTML_QuickForm_Action_Submit</strong></a>, which checks whether all the pages of the form are valid, then either calls the <code class="literal">&#039;process&#039;</code> handler or displays the invalid page.
+    </p></dd>
+  </dl>
+
+  <dl class="varlistentry">
+    <dt class="term"><code class="literal">&#039;next&#039;</code></dt>
+    <dd class="listitem"><p class="para">
+    This action should be bound to the &quot;Next&quot; button of (usually) a modal multipage form (AKA wizard). This action has a default handler, <a href="package.html.html-quickform-controller.html-quickform-action-next-summary.html" class="link"><strong class="classname">HTML_QuickForm_Action_Next</strong></a>, which checks the validity of the current page and redirects to the next one if the current is valid (or if the form is not modal). On the last page of a modal multipage form this behaves like the default <code class="literal">&#039;submit&#039;</code> handler.
+    </p></dd>
+  </dl>
+
+  <dl class="varlistentry">
+    <dt class="term"><code class="literal">&#039;back&#039;</code></dt>
+    <dd class="listitem"><p class="para">
+    This action should be bound to the &quot;Back&quot; button of (usually) a modal multipage form (AKA wizard). This action has a default handler, <a href="package.html.html-quickform-controller.html-quickform-action-back-summary.html" class="link"><strong class="classname">HTML_QuickForm_Action_Back</strong></a>, which redirects to the previous page if one exists. As of QFC 0.9.3, no form validation takes place on <code class="literal">&#039;back&#039;</code> action.
+    </p></dd>
+  </dl>
+
+  <dl class="varlistentry">
+    <dt class="term"><code class="literal">&#039;jump&#039;</code></dt>
+    <dd class="listitem"><p class="para">
+      This action has a default handler, <a href="package.html.html-quickform-controller.html-quickform-action-jump-summary.html" class="link"><strong class="classname">HTML_QuickForm_Action_Jump</strong></a>, which just makes HTTP redirect to the given page of the form. This action should <em class="emphasis">not</em> be bound to buttons via <strong class="function">getButtonName()</strong>.
+    </p></dd>
+  </dl>
+  
+  <dl class="varlistentry">
+    <dt class="term"><code class="literal">&#039;process&#039;</code></dt>
+    <dd class="listitem"><p class="para">
+      This is the action called by default <code class="literal">&#039;submit&#039;</code> and <code class="literal">&#039;next&#039;</code> (on the last page of the wizard only) handlers after successful (i.e. without validation errors) form submit. This action doesn&#039;t have a default handler, you should define the custom one yourself and implement all the necessary logic to process the form&#039;s values in it.
+    </p></dd>
+  </dl>
+</div>
+    
+      <p class="para">There is also a default handler, <a href="package.html.html-quickform-controller.html-quickform-action-direct-summary.html" class="link"><strong class="classname">HTML_QuickForm_Action_Direct</strong></a>, that does <em class="emphasis">not</em> have a default action name. It is used to go to the specific page of the form and should be explicitly added via <a href="package.html.html-quickform-controller.html-quickform-page.addaction.html" class="link"><strong class="function">Page::addAction()</strong></a> or <a href="package.html.html-quickform-controller.html-quickform-controller.addaction.html" class="link"><strong class="function">Controller::addAction()</strong></a> with the name of the target page as <em><code class="parameter">$actionName</code></em> and bound to buttons via <strong class="function">getButtonName()</strong> using the same name.
+      </p>
+    </div>
+    <div class="refsection" id="package.html.html-quickform-controller.faq.actions.call"><div class="info"><h1>How to call an action handler?</h1>
+</div>
+      
+      <p class="para">
+You should use <strong class="classname">Page</strong>&#039;s <a href="package.html.html-quickform-controller.html-quickform-page.handle.html" class="link"><strong class="function">handle()</strong></a> method:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$page</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">handle</span><span style="color: #007700">(</span><span style="color: #DD0000">'action'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+<p><strong class="classname">Controller</strong>&#039;s <a href="package.html.html-quickform-controller.html-quickform-controller.handle.html" class="link"><strong class="function">handle()</strong></a> method will be called automatically if needed.
+      </p>
+    </div>
+       
+    <div class="refsection" id="package.html.html-quickform-controller.faq.actions.custom"><div class="info"><h1>How to make a custom action?</h1>
+</div>
+      
+      <p class="para">
+      Create a subclass of <a href="package.html.html-quickform-controller.html-quickform-action-summary.html" class="link"><strong class="classname">HTML_QuickForm_Action</strong></a>, add the necessary logic to its <strong class="function">perform()</strong> method. Add it to the <strong class="classname">Page</strong> or to the <strong class="classname">Controller</strong> via <strong class="function">addAction()</strong> with the appropriate name.
+      </p>
+      <p class="para">
+      If you intend to bind this action to some button via <strong class="function">getButtonName()</strong>, you should care about storing values in the <a href="package.html.html-quickform-controller.html-quickform-controller.container.html" class="link"><strong class="function">container()</strong></a>:
+</p><ol type="1">
+    <li class="listitem"><p class="para">Build the form.</p></li>
+    <li class="listitem"><p class="para">Get a reference to container.</p></li>
+    <li class="listitem"><p class="para">Fill the container&#039;s <code class="varname">[&#039;values&#039;][$pageName]</code> and  <code class="varname">[&#039;valid&#039;][$pageName]</code> elements.</p></li>
+</ol>
+      
+      <p class="para">
+      As usual, see the default action handlers&#039; source for the examples.
+      </p>
+    </div>
+    
+    <div class="refsection" id="package.html.html-quickform-controller.faq.actions.bind"><div class="info"><h1>Can actions be bound to something other than submit buttons?</h1>
+</div>
+      
+      <p class="para">
+Controller is able to properly handle actions bound to <code class="literal">&lt;input type=&quot;image&quot; /&gt;</code> controls, too. You don&#039;t have to do anything special, just set the control&#039;s name via <strong class="function">getButtonName()</strong>.
+      </p>
+      <p class="para">
+If you want to bind an action to something like a hyperlink, you must consider the following: <em class="emphasis">the form must be submitted</em> to be able to get its values, thus you need to write some javascript that will submit the form and somehow pass the action name to the controller.
+      </p>
+    </div>
+
+   </div>
+   
+   <div class="refsection" id="package.html.html-quickform-controller.faq.clear-container"><div class="info"><h1>How do I reset the form?</h1>
+</div>
+     
+     <p class="para">
+       Controller keeps the form data and validation status in session in so-called container, accessible via 
+       <a href="package.html.html-quickform-controller.html-quickform-controller.container.html" class="link"><strong class="function">container()</strong></a> 
+       method. To reset the form you need to clear this container, which is achieved by passing <strong class="constant">TRUE</strong> to 
+       <strong class="function">container()</strong>.
+     </p>
+   </div>
+   
+   <div class="refsection" id="package.html.html-quickform-controller.faq.additional-data"><div class="info"><h1>How to pass additional data between pages of the form?</h1>
+</div>
+    
+    <p class="para">
+    The answer is quite simple: you need to use the <a href="package.html.html-quickform-controller.html-quickform-controller.container.html" class="link"><strong class="function">container()</strong></a> method of <strong class="classname">HTML_QuickForm_Controller</strong>, like this:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Note&nbsp;the&nbsp;reference<br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$page</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">controller</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">container</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$data</span><span style="color: #007700">[</span><span style="color: #DD0000">'_my_stuff'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #0000BB">$stuff</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+On the target page you do
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$data&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$page</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">controller</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">container</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$stuff&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">[</span><span style="color: #DD0000">'_my_stuff'</span><span style="color: #007700">];<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+Please use some prefix for your fields or start their names with underscore to prevent possible name conflicts with the future versions of QFC.
+    </p>
+    <p class="para">
+    Please note that <strong class="classname">Controller</strong> knows nothing about your additional data, so do not expect it to return it via <a href="package.html.html-quickform-controller.html-quickform-controller.exportvalues.html" class="link"><strong class="function">exportValues()</strong></a> method or the like. You&#039;ll have to use the <a href="package.html.html-quickform-controller.html-quickform-controller.container.html" class="link"><strong class="function">container()</strong></a> method and extract the data yourself. However, your data <em class="emphasis">will</em> be deleted when the container is reset.
+    </p>
+   </div>
+
+   
+   <div class="refsection" id="package.html.html-quickform-controller.faq.renderers"><div class="info"><h1>How to use template-based renderers?</h1>
+</div>
+    
+    <p class="para">
+    First of all, please understand that <strong class="classname">HTML_QuickForm_Page</strong> is a subclass of <strong class="classname">HTML_QuickForm</strong>, thus everything that applies to the parent class will apply to the child. You are encouraged to read the <a href="package.html.html-quickform.intro-renderers.html" class="link">section about renderers</a> in <strong class="classname">HTML_QuickForm</strong> and the docs to the renderer you are trying to use. The usage examples are available in <code class="filename">docs/renderers/</code> directory of QuickForm distribution.
+    </p>
+    <p class="para">
+    As was already pointed out, you should subclass the <a href="package.html.html-quickform-controller.html-quickform-action-display-summary.html" class="link"><strong class="classname">HTML_QuickForm_Action_Display</strong></a> class if you want to customize the form output and add an instance of this subclass as a handler for Page&#039;s <code class="literal">&#039;display&#039;</code> action. Its <strong class="function">_renderForm()</strong> will contain all renderer-specific code.
+    </p>
+    <p class="para">
+    The only new problem <strong class="classname">Controller</strong> introduces is the buttons bound to specific actions via <a href="package.html.html-quickform-controller.html-quickform-page.getbuttonname.html" class="link"><strong class="function">getButtonName()</strong></a>. If you are using some kind of Dynamic renderer this will not be a problem, as you need not care about the elements names, but you need these names to output the form via Static renderer.
+    </p>
+    <p class="para">
+    We&#039;ll assume using <a href="package.html.html-quickform.html-quickform-renderer-itstatic.html" class="link">ITStatic renderer</a> but the same can be applied to other Static renderers as well. You basically have 3 options:
+</p><ol type="1">
+    
+    <li class="listitem"><p class="para">Manually add the buttons/placeholders with the names that should be autogenerated via <a href="package.html.html-quickform-controller.html-quickform-page.getbuttonname.html" class="link"><strong class="function">getButtonName()</strong></a> to the form. This is <em class="emphasis">not recommended</em>, as the names should not be of interest to anyone except <strong class="classname">Controller</strong> itself and should not be used directly.</p></li>
+    
+    <li class="listitem"><p class="para">Put the auto-named buttons into <a href="package.html.html-quickform.groups.html" class="link">group</a>. You can name the group any way you like, just be sure to set <em><code class="parameter">$appendName</code></em> to false. When ITStatic sees <code class="varname">{form_element_html}</code> placeholder, it&#039;ll assign group&#039;s HTML to it.</p></li>
+    
+    <li class="listitem"><p class="para">Call <strong class="function">getButtonName()</strong> from within template. Add the following to the template
+</p><div class="programlisting">
+<br/>&lt;input&nbsp;type=&quot;submit&quot;&nbsp;value=&quot;Bla-bla&quot;&nbsp;name=&quot;func_buttonName(&#039;action&#039;)&quot;&nbsp;...&nbsp;/&gt;
+</div><p>
+and the following to the <strong class="function">_renderForm()</strong> method of your custom <strong class="classname">HTML_QuickForm_Action_Display</strong> subclass
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$tpl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setCallbackFunction</span><span style="color: #007700">(</span><span style="color: #DD0000">'buttonName'</span><span style="color: #007700">,&nbsp;array(&amp;</span><span style="color: #0000BB">$page</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'getButtonName'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+This code will work with <strong class="classname">HTML_Template_Sigma</strong>, <strong class="classname">HTML_Template_ITX</strong> (note the X) will require some more tweaking.
+     </p></li>
+</ol>
+    
+   </div>
+   
+   <div class="refsection" id="package.html.html-quickform-controller.faq.nonlinear"><div class="info"><h1>How to create a wizard with optional pages?</h1>
+</div>
+    
+    <p class="para">Thanks to Donald Lobo for this contribution.</p>
+    <p class="para">Lets assume we have a three-page wizard:
+</p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara">Page 1 has a control that lets the user choose the next page.</span></li>
+    <li class="listitem"><span class="simpara">Based on input, the user is directed to either page 2A or page 2B.</span></li>
+    <li class="listitem"><span class="simpara">Both page 2A and 2B go to page 3 (this is commonly referred to as a 
+StateMachine in programming books). </span></li>
+</ul>
+    
+    <p class="para">
+    You need to create several action handlers based on QFC&#039;s default <a href="package.html.html-quickform-controller.html-quickform-action-next-summary.html" class="link"><strong class="classname">HTML_QuickForm_Action_Next</strong></a> and <a href="package.html.html-quickform-controller.html-quickform-action-back-summary.html" class="link"><strong class="classname">HTML_QuickForm_Action_Back</strong></a>. You can do this either at the Page level or at the Controller level. The Page level subclassing is simple, but if you have a complex StateMachine you will end up having multiple subclasses. 
+    </p>
+    <p class="para">
+For the above example, the <code class="literal">&#039;next&#039;</code> action on page 1 sends the &#039;user&#039; to either page 2 or page 3 based on input. The handler also sets the <code class="literal">&#039;valid&#039;</code> flag of the page that will not be visited.
+    </p>
+    <p class="para">
+The <code class="literal">&#039;back&#039;</code> action on pages 2A and 2B sends the user back to page 1, while the <code class="literal">&#039;next&#039;</code> action sends him to page 3.
+    </p>
+    <p class="para">
+Finally, the <code class="literal">&#039;back&#039;</code> action handler on page 3 should examine the input on page 1 and send the user to either 2A or 2B.
+    </p>
+    <p class="para">
+The working example is available in <code class="filename">statemachine.php</code> file.
+    </p>
+   </div>
+
+  <div class="refsection" id="package.html.html-quickform-controller.faq.back-validation"><div class="info"><h1>I use client-side validation. How do I switch it off for <code class="literal">&#039;Back&#039;</code> button?</h1>
+</div>
+    
+    <p class="para">
+      Client-side validation is called by form&#039;s <code class="varname">onSubmit</code> handler, if you remove
+      the handler, the validation will not run. Therefore you need to remove it if user clicks on 
+      <code class="literal">&#039;Back&#039;</code> button. This can be achieved f.e. by adding the following as
+      the button&#039;s <code class="varname">onClick</code> handler:
+</p><div class="javascriptcode">
+<pre class="javascriptcode">
+this.form.onsubmit = null; return true;</pre>
+
+</div>
+    
+  </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-quickform-controller.intro.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-quickform-controller.html">HTML_QuickForm_Controller</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-quickform-controller.html-quickform-controller-summary.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Class Summary HTML_QuickForm_Controller</td>
+  </tr>
+ </table>
+</div>
+</body></html>

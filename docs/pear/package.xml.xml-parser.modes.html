@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Modes</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.xml.xml-parser.html" title="XML_Parser" />
+  <link rel="prev" href="package.xml.xml-parser.example.html" title="Example" />
+  <link rel="next" href="package.xml.xml-parser.input.html" title="Choosing input" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Modes</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.xml.xml-parser.example.html" title="Example">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.xml.xml-parser.input.html" title="Choosing input">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.xml.xml-parser.modes">
+   
+    <h1 class="refname">Modes</h1>
+    <div class="refnamediv">Modes &ndash; Explanation of possible parsing modes</div>
+
+  
+  <div class="refsection" id="package.xml.xml-parser.modes.refsect1"><div class="info"><h1>Parser modes of XML_Parser</h1>
+</div>
+   
+   <p class="para">
+    XML_Parser provides two modes for parsing:
+    </p><ul class="itemizedlist">
+        <li class="listitem">
+            <p class="para">func</p>
+        </li>
+        <li class="listitem">
+            <p class="para">event</p>
+        </li>
+    </ul>
+   
+   <p class="para">
+    In the &#039;event&#039; mode, XML_Parser will always call the methods
+    <strong class="function">startHandler()</strong> and <strong class="function">endHandler()</strong>,
+    independent of the tag name. In these methods you&#039;ll have to check
+    for the tagname, which is passed as the second parameter and decide
+    what you need to do. In most cases, this is done with a switch/case
+    statement.
+   </p>
+   <p class="para">
+    In the &#039;func&#039; mode, XML_Parser will call different methods
+    based on the name of the tag. This allows you to dispatch different
+    tags to different methods. The methods to handle the start tag have
+    to be called <strong class="function">xmltag_[tagname]()</strong>, where [tagname]
+    has to be substituted by the name of the element that you
+    wish to process. That means if you wish to write a method to process all opening
+    &lt;title&gt; tags, it has to be called xmltag_title.
+   </p>
+   <p class="para">
+    Methods to handle closing tags have to be named
+    <strong class="function">xmltag_[tagname]_()</strong> (distinguishes from the start
+    element handler using a traling underscore).
+   </p>
+   <p class="para">
+    As XML tags may contain chars like &quot;.&quot;, &quot;:&quot; and &quot;-&quot; and
+    those chars are not allowed in PHP function names, XML_Parser will replace them with &quot;_&quot;
+    when building the name of the callback function.
+   </p>
+   <p class="para">
+    If a method does not exist, XML_Parser will skip the tag without
+    handling the element, unless you implemented the methods
+    <strong class="function">xmltag()</strong> and <strong class="function">xmltag_()</strong>, which will
+    be used as fallback methods.
+   </p>
+  </div>
+
+  <div class="refsection" id="package.xml.xml-parser.modes.refsect2"><div class="info"><h1>Setting the mode</h1>
+</div>
+   
+   <p class="para">
+    There are two ways of setting the mode:
+    </p><ul class="itemizedlist">
+        <li class="listitem">
+            <p class="para">
+              Specifying the mode in the constructor as the second parameter.
+            </p>
+            <p class="para">
+              In the subclass of XML_Parser that you implemented to process the XML
+              documents, you will have to call <strong class="function">XML_Parser::XML_Parser()</strong>
+              in the constructor. This method accepts the mode as its second parameter.
+            </p>
+        </li>
+        <li class="listitem">
+            <p class="para">Setting the mode using <strong class="function">XML_Parser::setMode()</strong>.</p>
+        </li>
+    </ul>
+   
+  </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.xml.xml-parser.example.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.xml.xml-parser.html">XML_Parser</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.xml.xml-parser.input.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Example</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Choosing input</td>
+  </tr>
+ </table>
+</div>
+</body></html>

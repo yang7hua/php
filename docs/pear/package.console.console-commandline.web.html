@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Using Console_CommandLine in web environments</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.console.console-commandline.html" title="Console_CommandLine" />
+  <link rel="prev" href="package.console.console-commandline.extending.html" title="Extending Console_CommandLine" />
+  <link rel="next" href="package.console.console-commandline.examples.html" title="Examples" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Using Console_CommandLine in web environments</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.console.console-commandline.extending.html" title="Extending Console_CommandLine">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.console.console-commandline.examples.html" title="Examples">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.console.console-commandline.web">
+ 
+  <h1 class="refname">Using Console_CommandLine in web environments</h1>
+  <div class="refnamediv">Using Console_CommandLine in web environments &ndash; How to use the same script from your browser</div>
+
+ 
+
+ <div class="refsection">
+  <div class="info">
+   <h1>Introduction</h1>
+
+  </div>
+  <p class="para">
+   So there is a nice shell script that does everything it ever should do,
+   and other people - without shell access - have to use it now.
+   Or the script needs to be called
+   regularly from outside the server it is running on. What now?
+  </p>
+  <p class="para">
+   If your server runs a HTTP server with PHP, the problem is already solved
+   because <strong class="classname">Console_Commandline</strong> supports reading HTTP
+   <code class="literal">$_GET</code> and <code class="literal">$_POST</code> variables
+   out of the box.
+  </p>
+ </div>
+ 
+ <div class="refsection">
+  <div class="info">
+   <h1>A simple example</h1>
+
+  </div>
+  <p class="para">
+   The scripts task in this example is to print out the current time. The
+   user may customize the output by specifying the format string.
+  </p>
+  <p class="para">
+   Between shell and web access is only one difference: On the web, the text
+   shall be printed out in large letters by wrapping it in a
+   <code class="literal">h1</code> tag.
+  </p>
+  <p class="para">
+   <strong class="classname">Console_CommandLine</strong> by itself cares about reading
+   HTTP GET and POST variables when it is run through PHP&#039;s CGI or web
+   server (e.g. Apache with <code class="literal">mod_php</code>). Let&#039;s try it:
+  </p>
+
+  <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Console/CommandLine.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$parser&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Console_CommandLine</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">description&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'Print&nbsp;out&nbsp;the&nbsp;current&nbsp;time'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">version&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'1.23'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addOption</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'format'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'short_name'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'-f'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'long_name'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'--format'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'action'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'StoreString'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'default'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Y-m-d&nbsp;H:i:s'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'description'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'date()-compatible&nbsp;format&nbsp;string'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;)<br />);<br /><br /></span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parse</span><span style="color: #007700">();<br />echo&nbsp;</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #0000BB">$result</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">options</span><span style="color: #007700">[</span><span style="color: #DD0000">'format'</span><span style="color: #007700">])&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  
+  <div class="example">
+   <div class="info">
+    <p><strong>Shell output</strong></p>
+   </div>
+   <pre class="screen">$&nbsp;php&nbsp;web.php&nbsp;<br/>2009-06-13&nbsp;10:10:15<br/>$&nbsp;php&nbsp;web.php&nbsp;--help<br/>Print&nbsp;out&nbsp;the&nbsp;current&nbsp;time<br/><br/>Usage:<br/>&nbsp;&nbsp;web.php&nbsp;[options]<br/><br/>Options:<br/>&nbsp;&nbsp;-f&nbsp;format,&nbsp;--format=format&nbsp;&nbsp;date()-compatible&nbsp;format&nbsp;string<br/>&nbsp;&nbsp;-h,&nbsp;--help&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;show&nbsp;this&nbsp;help&nbsp;message&nbsp;and&nbsp;exit<br/>&nbsp;&nbsp;-v,&nbsp;--version&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;show&nbsp;the&nbsp;program&nbsp;version&nbsp;and&nbsp;exit<br/><br/>$&nbsp;php&nbsp;web.php&nbsp;--format=d.m.Y<br/>13.06.2009</pre>
+
+  </div>
+  
+  <div class="example">
+   <div class="info">
+    <p><strong>Web output without parameters</strong></p>
+   </div>
+   <pre class="screen">2009-06-13&nbsp;10:10:15</pre>
+
+  </div>
+  
+  <div class="example">
+   <div class="info">
+    <p><strong>Web output for web.php?--help</strong></p>
+   </div>
+   <pre class="screen">Print&nbsp;out&nbsp;the&nbsp;current&nbsp;time&nbsp;Usage:&nbsp;--help&nbsp;[options]<br/>Options:&nbsp;-f&nbsp;format,&nbsp;--format=format&nbsp;date()-compatible&nbsp;format&nbsp;string&nbsp;-h,<br/>--help&nbsp;show&nbsp;this&nbsp;help&nbsp;message&nbsp;and&nbsp;exit&nbsp;-v,&nbsp;--version&nbsp;show&nbsp;the&nbsp;program<br/>version&nbsp;and&nbsp;exit</pre>
+
+  </div>
+  
+  <div class="example">
+   <div class="info">
+    <p><strong>Web output for web.php?format=d.m.Y</strong></p>
+   </div>
+   <pre class="screen">13.06.2009</pre>
+
+  </div>
+  
+  <p class="para">
+   The functionality is there, but it does not look nice.
+  </p>
+  
+  <blockquote class="note">
+   <p class="para">
+    When using <code class="literal">GET</code> and <code class="literal">POST</code>
+    parameters, <strong class="classname">Console_CommandLine</strong> accepts
+    three types of parameter names:
+   </p>
+   <ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para"><code class="literal">short_name</code> as configured for the option</p>
+    </li>
+    <li class="listitem">
+     <p class="para"><code class="literal">long_name</code> as configured</p>
+    </li>
+    <li class="listitem">
+     <p class="para"><em class="emphasis">option name</em> as passed as first parameter
+      to <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine.html#methodaddOption" class="apidoclink">Console_CommandLine::addOption()</a>.
+     </p>
+    </li>
+   </ul>
+   <p class="para">
+    So in our example, one can call
+   </p>
+   <ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para"><code class="literal">web.php?-f=d.m.Y</code></p>
+    </li>
+    <li class="listitem">
+     <p class="para"><code class="literal">web.php?--format=d.m.Y</code></p>
+    </li>
+    <li class="listitem">
+     <p class="para"><code class="literal">web.php?format=d.m.Y</code></p>
+    </li>
+   </ul>
+   
+   <p class="para">
+    For arguments, the <em class="emphasis">argument name</em> has to be
+    used as GET or POST key.
+   </p>
+  </blockquote>
+
+ </div>
+
+
+ <div class="refsection">
+  <div class="info">
+   <h1>A prettier example</h1>
+
+  </div>
+  
+  <p class="para">
+   Building upon our previous example, we care about pretty output here:
+  </p>
+  <ul class="itemizedlist">
+   <li class="listitem">
+    <p class="para">Time wrapped in <code class="literal">h1</code> tags.</p>
+   </li>
+   <li class="listitem">
+    <p class="para">Monospaced help text</p>
+   </li>
+   <li class="listitem">
+    <p class="para">Monospaced error text</p>
+   </li>
+  </ul>
+  
+  <p class="para">
+   While we did not catch any errors - as there are nearly none to produce
+   in that example - the code contains it now for completeness.
+  </p>
+  
+  <p class="para">
+   First and foremost, we check if we are in an HTTP environment by checking
+   the SAPI (Server API) name. If we are not in CLI, we echo out
+   <code class="literal">&lt;h1&gt;</code> and <code class="literal">&lt;/h1&gt;</code>.
+  </p>
+  <p class="para">
+   To get the help text printed with monospaced text, a custom
+   <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine_Renderer.html" class="apidoclink">renderer</a>
+   is defined. For the sake of easiness, the
+   <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine_Renderer_Default.html" class="apidoclink">default console
+   renderer</a> is extendet since it does nearly everything we
+   need here.
+  </p>
+
+  <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Console/CommandLine.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$parser&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Console_CommandLine</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">description&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'Print&nbsp;out&nbsp;the&nbsp;current&nbsp;time'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">version&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'1.23'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addOption</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'format'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'short_name'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'-f'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'long_name'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'--format'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'action'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'StoreString'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'default'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Y-m-d&nbsp;H:i:s'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'description'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'date()-compatible&nbsp;format&nbsp;string'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;)<br />);<br /><br />class&nbsp;</span><span style="color: #0000BB">HtmlRenderer&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">Console_CommandLine_Renderer_Default<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;function&nbsp;</span><span style="color: #0000BB">usage</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #DD0000">'&lt;pre&gt;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">parent</span><span style="color: #007700">::</span><span style="color: #0000BB">usage</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">'&lt;/pre&gt;'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;function&nbsp;</span><span style="color: #0000BB">error</span><span style="color: #007700">(</span><span style="color: #0000BB">$error</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #DD0000">'&lt;pre&gt;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">parent</span><span style="color: #007700">::</span><span style="color: #0000BB">error</span><span style="color: #007700">(</span><span style="color: #0000BB">$error</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">'&lt;/pre&gt;'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /><br /></span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">accept</span><span style="color: #007700">(new&nbsp;</span><span style="color: #0000BB">HtmlRenderer</span><span style="color: #007700">());<br /><br /></span><span style="color: #0000BB">$http&nbsp;</span><span style="color: #007700">=&nbsp;(</span><span style="color: #0000BB">php_sapi_name</span><span style="color: #007700">()&nbsp;!=&nbsp;</span><span style="color: #DD0000">'cli'</span><span style="color: #007700">);<br />try&nbsp;{<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parse</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$http</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'&lt;h1&gt;'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #0000BB">$result</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">options</span><span style="color: #007700">[</span><span style="color: #DD0000">'format'</span><span style="color: #007700">])&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$http</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'&lt;/h1&gt;'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;}<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Exception&nbsp;$exc</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">displayError</span><span style="color: #007700">(</span><span style="color: #0000BB">$exc</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  
+  
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.console.console-commandline.extending.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.console.console-commandline.html">Console_CommandLine</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.console.console-commandline.examples.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Extending Console_CommandLine</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Examples</td>
+  </tr>
+ </table>
+</div>
+</body></html>

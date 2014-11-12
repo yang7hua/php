@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Renderers</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-quickform2.output.html" title="Form output and Javascript support" />
+  <link rel="prev" href="package.html.html-quickform2.output.html" title="Form output and Javascript support" />
+  <link rel="next" href="package.html.html-quickform2.renderers.default.html" title="Default Renderer" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Renderers</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-quickform2.output.html" title="Form output and Javascript support">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-quickform2.renderers.default.html" title="Default Renderer">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-quickform2.renderers">
+ 
+  <h1 class="refname">Renderers</h1>
+  <div class="refnamediv">Renderers &ndash; Customizing the form output</div>
+
+ 
+ <div class="refsection" id="package.html.html-quickform2.renderers.overview">
+  <div class="info">
+   <h1>Introduction</h1>
+
+  </div>
+  <p class="para">
+   Renderers in <strong class="package">HTML_QuickForm2</strong> are classes that output the form. They either
+   generate the resultant HTML themselves or represent the form in some intermediate format that can
+   later be used by e.g. a template engine.
+  </p>
+  <p class="para">
+   Renderers also contain a <a href="package.html.html-quickform2.javascript.html#package.html.html-quickform2.javascript.builder" class="link">Javascript builder</a> object that 
+   aggregates code needed for client-side validation and Javascript-backed elements. This means that
+   rendering step is mandatory if you are using any of these.
+  </p>
+  <p class="para">
+   A new feature in <strong class="package">HTML_QuickForm2</strong> compared to <strong class="package">HTML_QuickForm</strong>
+   is the ability to extend Renderer functionality by plugins. 
+  </p>
+  <p class="para">
+   Typical form output workflow:
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/QuickForm2/Renderer.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$renderer&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Renderer</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">'custom'</span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;common&nbsp;options<br /></span><span style="color: #0000BB">$renderer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setOption</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'group_errors'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'required_note'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Fields&nbsp;labeled&nbsp;in&nbsp;36pt&nbsp;bold&nbsp;red&nbsp;font&nbsp;are&nbsp;required'<br /></span><span style="color: #007700">));<br /></span><span style="color: #FF8000">//&nbsp;renderer-specific&nbsp;setup<br /></span><span style="color: #0000BB">$renderer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">doSomeOutputCustomization</span><span style="color: #007700">();<br /></span><span style="color: #FF8000">//&nbsp;...<br /></span><span style="color: #0000BB">$renderer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">doAnotherOutputCustomization</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;process&nbsp;the&nbsp;form<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">render</span><span style="color: #007700">(</span><span style="color: #0000BB">$renderer</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Output&nbsp;the&nbsp;links&nbsp;to&nbsp;JS&nbsp;libraries,&nbsp;if&nbsp;used<br /></span><span style="color: #007700">foreach&nbsp;(</span><span style="color: #0000BB">$renderer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getJavascriptBuilder</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">getLibraries</span><span style="color: #007700">()&nbsp;as&nbsp;</span><span style="color: #0000BB">$link</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$link&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #FF8000">//&nbsp;Assuming&nbsp;the&nbsp;renderer&nbsp;implements&nbsp;__toString()<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$renderer</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   The following renderers are installed with the package:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><p class="para">
+     <a href="package.html.html-quickform2.renderers.default.html" class="link">Default</a> - supports the
+     possibility to do
+     </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$form</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    </li>
+    <li class="listitem"><p class="para">
+     <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Renderer_Callback.html" class="apidoclink">Callback</a> - uses PHP callback
+     functions to output the form.
+    </p></li>
+    <li class="listitem"><p class="para">
+     <a href="package.html.html-quickform2.renderers.array.html" class="link">Array</a> - converts form
+     structure to an array.
+    </p></li>
+    <li class="listitem"><p class="para">
+     <a href="package.html.html-quickform2.renderers.stub.html" class="link">Stub</a> - does minimal form
+     processing when actual output is done manually.
+    </p></li>
+   </ul>
+  
+ </div>
+ 
+ 
+ <div class="refsection" id="package.html.html-quickform2.renderers.common">
+  <div class="info">
+   <h1>Common Renderer API</h1>
+
+  </div>
+  <p class="para">
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Renderer.html#methodsetOption" class="apidoclink">setOption()</a>
+   method is used to set the values of configuration parameters and <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Renderer.html#methodgetOption" class="apidoclink">getOption()</a> method to
+   read them. Passing an unknown parameter name to these methods will result in an Exception. The
+   following parameters are defined in the base class and known to all Renderers:
+   </p><table class="doctable table">
+    <caption>Common parameters</caption>
+    
+     <thead>
+      <tr>
+       <th>Parameter name</th>
+       <th>Description</th>
+       <th>Expected type</th>
+       <th>Default value</th>
+      </tr>
+
+     </thead>
+
+     
+     <tbody class="tbody">
+      <tr style="vertical-align: top;">
+       <td><code class="literal">group_hiddens</code></td>
+       <td>Whether to group hidden elements together or render them where they were added.</td>
+       <td><span class="type">boolean</span></td>
+       <td><strong class="constant">TRUE</strong></td>
+      </tr>
+
+      <tr style="vertical-align: top;">
+       <td><code class="literal">group_errors</code></td>
+       <td>Whether to group error messages or render them alongside elements they apply to.</td>
+       <td><span class="type">boolean</span></td>
+       <td><strong class="constant">FALSE</strong></td>
+      </tr>
+
+      <tr style="vertical-align: top;">
+       <td><code class="literal">errors_prefix</code></td>
+       <td>Leading message for grouped errors.</td>
+       <td><span class="type">string</span></td>
+       <td><code class="literal">&#039;Invalid information entered:&#039;</code></td>
+      </tr>
+
+      <tr style="vertical-align: top;">
+       <td><code class="literal">errors_suffix</code></td>
+       <td>Trailing message for grouped errors.</td>
+       <td><span class="type">string</span></td>
+       <td><code class="literal">&#039;Please correct these fields.&#039;</code></td>
+      </tr>
+
+      <tr style="vertical-align: top;">
+       <td><code class="literal">required_note</code></td>
+       <td>Note displayed if the form contains required elements.</td>
+       <td><span class="type">string</span></td>
+       <td><code class="literal">&#039;&lt;em&gt;*&lt;/em&gt; denotes required fields.&#039;</code></td>
+      </tr>
+
+     </tbody>
+    
+   </table>
+
+  
+
+  <p class="para">
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Renderer.html#methodsetJavascriptBuilder" class="apidoclink">setJavascriptBuilder()</a>
+   sets a Javascript builder object used during form rendering and <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Renderer.html#methodgetJavascriptBuilder" class="apidoclink">getJavascriptBuilder()</a>
+   returns that object (if an object was not set previosly a new instance is created). Package users
+   will mostly need to interact with this object to properly include <a href="package.html.html-quickform2.javascript.html#package.html.html-quickform2.javascript.libraries" class="link">Javascript library files</a>.
+  </p>
+
+  <p class="para">
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Renderer.html#methodreset" class="apidoclink">reset()</a> method clears all
+   accumulated data. It is called automatically when rendering a
+   <strong class="classname">HTML_QuickForm2</strong> object, but must be called manually when rendering form
+   elements separately.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.renderers.creation">
+  <div class="info">
+   <h1>Creating Renderer objects</h1>
+
+  </div>
+  
+  <p class="para">
+   It is only possible to instantiate built-in Renderers through <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Renderer.html#methodfactory" class="apidoclink">HTML_QuickForm2_Renderer::factory()</a> as their
+   <strong class="function">__construct()</strong> methods are declared <em class="emphasis">protected</em>. Moreover,
+   <strong class="function">factory()</strong> returns an instance of <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Renderer_Proxy.html" class="apidoclink">HTML_QuickForm2_Renderer_Proxy</a> wrapping around a specific Renderer instance.
+   This setup is needed for plugin support and serves as a workaround for PHP shortcomings:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara">
+     It is impossible (before PHP 5.4) to add methods to an object at runtime without using some
+     esoteric extension like <strong class="package">runkit</strong>;
+    </span></li>
+    <li class="listitem"><span class="simpara">
+     It is impossible to define properties/methods accessible to class and related classes (e.g.
+     Java&#039;s <em class="emphasis">protected</em> modifier allows access from classes of the same package).
+    </span></li>
+   </ul>
+   <p><strong class="classname">Proxy</strong> and <strong class="function">factory()</strong> are used to aggregate methods from
+   several classes and to limit access to them from outside: all fields and methods of a Renderer
+   instance are public, but the only path to that instance is through a <strong class="classname">Proxy</strong>
+   that only allows access to explicitly &quot;published&quot; methods and methods defined in base
+   class. Plugins, however, have direct access to a Renderer instance and thus can freely use its
+   <span class="acronym">API</span>.
+  </p>
+  
+  <blockquote class="note">
+   <p class="para">
+    It is definitely possible to create a subclass of a built-in Renderer with a public
+    <strong class="function">__construct()</strong> method and do not use <strong class="function">factory()</strong>. This will,
+    however, prevent plugins from working.
+   </p>
+  </blockquote>
+
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.renderers.plugins">
+  <div class="info">
+   <h1>Renderer Plugins</h1>
+
+  </div>
+  <p class="para">
+   Plugins are the means to enhance Renderer functionality at runtime. From user&#039;s point of view the
+   Renderer object simply gets a new method:
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/QuickForm2/Renderer.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">HTML_QuickForm2_Renderer</span><span style="color: #007700">::</span><span style="color: #0000BB">registerPlugin</span><span style="color: #007700">(</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Foo_PluginBar'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$foo&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Renderer</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$foo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">doBar</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;This&nbsp;will&nbsp;also&nbsp;work<br /></span><span style="color: #0000BB">HTML_QuickForm2_Renderer</span><span style="color: #007700">::</span><span style="color: #0000BB">registerPlugin</span><span style="color: #007700">(</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Foo_PluginMore'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$foo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">performMore</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   The main puprose of plugins is to allow custom elements which require some complex output
+   behaviour to define that behaviour in separate classes leveraging existing Renderer code.
+   Previously it was usually implemented in the element class itself, leading to unnecessary bloat
+   and code duplication.
+  </p>
+  <blockquote class="tip">
+   <p class="para">
+    <code class="filename">dualselect.php</code> example installed with the package shows, among other things,
+    how to create a renderer plugin for a custom element. 
+   </p>
+  </blockquote>
+
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-quickform2.output.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-quickform2.output.html">Form output and Javascript support</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-quickform2.renderers.default.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Form output and Javascript support</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Default Renderer</td>
+  </tr>
+ </table>
+</div>
+</body></html>

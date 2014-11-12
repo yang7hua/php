@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>The solution</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="rfc.estrict-compatibility.html" title="Requiring E_STRICT Compatibility for New PEAR Packages" />
+  <link rel="prev" href="rfc.estrict-compatibility.issue.html" title="The issue" />
+  <link rel="next" href="rfc.estrict-compatibility.notes.html" title="Notes" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">The solution</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="rfc.estrict-compatibility.issue.html" title="The issue">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="rfc.estrict-compatibility.notes.html" title="Notes">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="rfc.estrict-compatibility.solution">
+    <h1>The solution</h1>
+
+
+    <p class="para">The proposed solution is to focus on &quot;forward compatibility&quot;
+    instead. PHP version 5 has a builtin means to ensure that code is forward
+    compatible, which is <code class="token">E_STRICT</code> error reporting level.</p>
+
+    <div class="section" id="rfc.estrict-compatibility.solution.definition">
+      <h2 class="title">Definition of E_STRICT-compatible package</h2>
+
+      <p class="para">The package is considered <code class="token">E_STRICT</code>-compatible
+      if</p>
+
+      <ul class="itemizedlist">
+        <li class="listitem">
+          <p class="para">it can be used under PHP 5.1.4+</p>
+        </li>
+
+        <li class="listitem">
+          <p class="para">its files do not emit error messages when used with error
+          reporting level set to <code class="literal">E_ALL | E_STRICT</code> under PHP
+          5.1.4+</p>
+        </li>
+
+        <li class="listitem">
+          <p class="para">it follows PEAR coding standards that apply to PHP5-only
+          packages</p>
+        </li>
+
+        <li class="listitem">
+          <p class="para">it has only <code class="literal">E_STRICT</code>-compatible required
+          dependencies</p>
+        </li>
+      </ul>
+
+      <p class="para"><code class="token">E_STRICT</code>-compatible package may have optional
+      dependencies that are not <code class="token">E_STRICT</code>-compatible, but this
+      is discouraged.</p>
+    </div>
+
+    <div class="section" id="rfc.estrict-compatibility.solution.changes">
+      <h2 class="title">Proposed changes</h2>
+
+      <p class="para">After this RFC is accepted, a deadline for accepting the new non
+      <code class="token">E_STRICT</code>-compatible packages is set as January 1, 2007.
+      This deadline should be prominently announced on PEAR website and in
+      PEAR manual. All new PHP5-related <a href="standards.html" class="link">coding
+      standards</a> should also be integrated into the manual.</p>
+
+      <p class="para">Developers wishing to propose a new non
+      <code class="token">E_STRICT</code>-compatible package or start work on a non
+      <code class="token">E_STRICT</code>-compatible new major version (as defined in
+      <a href="http://pear.php.net/group/docs/20031114-bbr.php" class="link external">New
+      guidelines for BC breaking releases</a>) of an existing package
+      should do so before the deadline.</p>
+
+      <p class="para">After January 1, 2007 all new packages proposed via PEPr and all
+      new major versions of existing packages should be
+      <code class="token">E_STRICT</code>-compatible. Proposals for non
+      <code class="token">E_STRICT</code>-compatible packages that reach this deadline not
+      in &quot;Called for votes&quot; state should not be called for votes until the
+      package is reworked to be <code class="token">E_STRICT</code>-compatible.</p>
+
+      <div class="section">
+        <h3 class="title">Two versions exception</h3>
+
+        <p class="para">the person proposing a new package may choose to also provide a
+        version of said package that can be run under PHP version 4. Such a
+        version requires a separate proposal that may only be called for votes
+        after the proposal of <code class="token">E_STRICT</code>-compatible version is
+        accepted. The package must have the name of
+        <code class="token">E_STRICT</code>-compatible version with &#039;PHP4&#039; appended (ex.:
+        <strong class="package">Example_Foo</strong> and
+        <strong class="package">Example_FooPhp4</strong>).</p>
+      </div>
+
+      <div class="section">
+        <h3 class="title">Subpackages exception</h3>
+
+        <p class="para">if a package does not yet have
+        <code class="token">E_STRICT</code>-compatible version then non
+        <code class="token">E_STRICT</code>-compatible subpackages for it may be accepted
+        at the discretion of base package&#039;s developers. If base package
+        already has <code class="token">E_STRICT</code>-compatible version then acceptance
+        of such subpackages falls under the previous exception.</p>
+      </div>
+    </div>
+
+    <div class="section" id="rfc.estrict-compatibility.solution.impactexisting">
+      <h2 class="title">Impact on existing packages</h2>
+
+      <p class="para">Development and release process of existing PEAR packages which
+      are not <code class="token">E_STRICT</code>-compatible may continue as usual. The
+      only new requirement is that if a new major version of a package is
+      started, it should be <code class="token">E_STRICT</code>-compatible.</p>
+
+      <p class="para">If a new major version of an existing package was registered on
+      PEAR website before the deadline is reached or the code of this new
+      major version was present in PEAR SVN then this version is considered an
+      &quot;existing package&quot; for the purpose of this RFC.</p>
+
+      <p class="para">Nevertheless, developers of existing packages are strongly
+      encouraged to update their packages for
+      <code class="token">E_STRICT</code>-compatibility if a BC break is still allowed by
+      <a href="http://pear.php.net/group/docs/20040226-vn.php" class="link external">Version
+      Naming guidelines</a>.</p>
+    </div>
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="rfc.estrict-compatibility.issue.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="rfc.estrict-compatibility.html">Requiring E_STRICT Compatibility for New PEAR Packages</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="rfc.estrict-compatibility.notes.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">The issue</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Notes</td>
+  </tr>
+ </table>
+</div>
+</body></html>

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Quick API reference</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.mdb-querytool.html" title="MDB_QueryTool" />
+  <link rel="prev" href="package.database.mdb-querytool.object.html" title="Object" />
+  <link rel="next" href="package.database.mdb2-schema.html" title="MDB2_Schema" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Quick API reference</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.mdb-querytool.object.html" title="Object">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.mdb2-schema.html" title="MDB2_Schema">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.mdb-querytool.api">
+    
+      <h1 class="refname">Quick API reference</h1>
+      <div class="refnamediv">Quick API reference &ndash; 
+	   A quick overview of the available methods. Please refer to the full
+       API docs for a detailed documentation.
+      </div>
+
+    
+   <div class="refsection" id="package.database.mdb-querytool.api.methodlist"><div class="info"><h1><strong class="classname">MDB_QueryTool</strong> available methods</h1>
+</div>
+   
+    <p class="para">
+     <strong class="classname">MDB_QueryTool</strong> provides the following methods:
+     </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para"><strong class="function">autoJoin()</strong></p>
+      <p class="para">
+       Join the given tables, using the column names, to find out how to join
+       the tables; i.e., if table1 has a column named &quot;table2_id&quot;,
+       this method will join &quot;WHERE table1.table2_id=table2.id&quot;.
+       All joins made here are only concatenated via AND.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para"><strong class="function">getDbInstance()</strong></p>
+      <p class="para">Return a PEAR::DB object</p>
+     </li>
+     <li class="listitem">
+      <p class="para"><strong class="function">setDbInstance()</strong></p>
+      <p class="para">Pass an existing PEAR::DB object to <strong class="classname">MDB_QueryTool</strong></p>
+     </li>
+     <li class="listitem">
+      <p class="para">get($id, $column)</p>
+      <p class="para">
+        Get the data of a single entry. If the second parameter is only one column,
+        the result will be returned directly, not as an array!
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">getMultiple($ids, $column)</p>
+      <p class="para">
+        Same as <strong class="function">get()</strong>, but for all the elements in the $ids array.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para"><strong class="function">getAll()</strong></p>
+      <p class="para">Get all the entries from the db.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">getCol($column)</p>
+      <p class="para">
+        This method only returns one column, so the result will be a one dimensional array.
+        This does also mean that using <strong class="function">setSelect()</strong> should be set
+        to *one* column, the one you want to have returned.
+        A common use case for this could be:
+        </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$table</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setSelect</span><span style="color: #007700">(</span><span style="color: #DD0000">'id'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$ids&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$table</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getCol</span><span style="color: #007700">();<br /></span><span style="color: #FF8000">//OR<br /></span><span style="color: #0000BB">$ids&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$table</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getCol</span><span style="color: #007700">(</span><span style="color: #DD0000">'id'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div><p>
+        so ids will be an array with all the id&#039;s.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para"><strong class="function">getCount()</strong></p>
+      <p class="para">Get the number of entries.</p>
+     </li>
+     <li class="listitem">
+      <p class="para"><strong class="function">getDefaultValues()</strong></p>
+      <p class="para">
+        return an empty element where all the array elements do already exist
+        corresponding to the columns in the DB
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para"><strong class="function">getQueryString()</strong></p>
+      <p class="para">Render the current query and return it as a string.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">save($data)</p>
+      <p class="para">
+        Save data, calls either <strong class="function">update()</strong> or <strong class="function">add()</strong>.
+        If the primaryCol is given in the data this method knows that the
+        data passed to it are meant to be updated (call <strong class="function">update()</strong>),
+        otherwise it will call the method <strong class="function">add()</strong>.
+        If you don&#039;t like this behaviour simply stick with the methods
+        <strong class="function">add()</strong> and <strong class="function">update()</strong> and ignore this one here.
+        This method is very useful when you have validation checks that have to
+        be done for both adding and updating, then you can simply overwrite this
+        method and do the checks in here, and both cases will be validated first.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">update($data)</p>
+      <p class="para">Update the member data of a data set.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">add($data)</p>
+      <p class="para">Add a new member in the db.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">addMultiple($data)</p>
+      <p class="para">Adds multiple new members in the db.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">remove($data, $whereCol)</p>
+      <p class="para">
+        Removes a member from the db.
+        <em><code class="parameter">data</code></em> is the value of the column that shall be removed
+        (integer/string); if an array is used, it must contain multiple columns
+        that shall be matched (in this case, the second parameter will be ignored);
+        <em><code class="parameter">$whereCol</code></em>: the column to match the data against,
+        only if <em><code class="parameter">data</code></em> is not an array
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para"><strong class="function">removeAll()</strong></p>
+      <p class="para">Empty a table.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">removeMultiple($ids, $colName)</p>
+      <p class="para">
+        Remove the datasets with the given ids. If <em><code class="parameter">colName</code></em>
+        is set, it is used as the primary key column name.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">removePrimary($ids, $colName, $atLeastOneObject)</p>
+      <p class="para">
+        Removes a member from the db and calls the <strong class="function">remove()</strong>
+        methods of the given objects so all rows in another table that refer
+        to this table are erased too.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">setLimit($from=0, $count=0)</p>
+      <p class="para">Set the limits for the following query.</p>
+     </li>
+     <li class="listitem">
+      <p class="para"><strong class="function">getLimit()</strong></p>
+      <p class="para">Get the limits for the following query.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">setWhere($whereCondition)</p>
+      <p class="para">Sets the where condition which is used for the current instance.</p>
+     </li>
+     <li class="listitem">
+      <p class="para"><strong class="function">getWhere()</strong></p>
+      <p class="para">Gets the where condition which is used for the current instance.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">addWhere($whereCondition, $condition)</p>
+      <p class="para">Adds a string to the where clause. The default <em><code class="parameter">condition</code></em> is AND.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">addWhereSearch($column, $stringToSearch, $condition)</p>
+      <p class="para">
+        Add a where-like clause which works like a search for the given string;
+        i.e. calling it like this:
+        </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addWhereSearch</span><span style="color: #007700">(</span><span style="color: #DD0000">'name'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'otto&nbsp;hans'</span><span style="color: #007700">)<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div><p>
+        produces a where clause like this one
+        </p><div class="programlisting"><pre class="programlisting">UPPER(name) LIKE &quot;%OTTO%HANS%&quot;</pre>
+</div><p>
+        so the search finds the given string.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">setOrder($orderCondition, $desc=<strong class="constant">FALSE</strong>)</p>
+      <p class="para">Sets the order condition which is used for the current instance.</p>
+     </li>
+     <li class="listitem">
+      <p class="para"><strong class="function">getOrder()</strong></p>
+      <p class="para">Gets the order condition which is used for the current instance.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">addOrder($orderCondition, $desc=<strong class="constant">FALSE</strong>)</p>
+      <p class="para">Adds an order parameter to the query.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">setHaving($havingCondition)</p>
+      <p class="para">Sets the having condition which is used for the current instance.</p>
+     </li>
+     <li class="listitem">
+      <p class="para"><strong class="function">getHaving()</strong></p>
+      <p class="para">Gets the having condition which is used for the current instance.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">addHaving($what, $connectString)</p>
+      <p class="para">Adds an having parameter to the query.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">setJoin($table, $where, $joinType)</p>
+      <p class="para">Sets the join condition which is used for the current instance.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">setLeftJoin($table, $where)</p>
+      <p class="para">Sets a left join on $this-&gt;table.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">addLeftJoin($table, $where, $type)</p>
+      <p class="para">Adds a left join to the query.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">setRightJoin($table, $where)</p>
+      <p class="para">Sets a right join on $this-&gt;table.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">getJoin($what)</p>
+      <p class="para">Gets the join-condition.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">addJoin($table, $where, $type)</p>
+      <p class="para">
+        adds a table and a where clause that shall be used for the join
+        instead of calling
+        </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />setJoin</span><span style="color: #007700">(array(</span><span style="color: #0000BB">table1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">table2</span><span style="color: #007700">),&nbsp;</span><span style="color: #DD0000">'&lt;where&nbsp;clause1&gt;&nbsp;AND&nbsp;&lt;where&nbsp;clause2&gt;'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div><p>
+        you can also call
+        </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />setJoin</span><span style="color: #007700">(</span><span style="color: #0000BB">table1</span><span style="color: #007700">,</span><span style="color: #DD0000">'&lt;where&nbsp;clause1&gt;'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">addJoin</span><span style="color: #007700">(</span><span style="color: #0000BB">table2</span><span style="color: #007700">,</span><span style="color: #DD0000">'&lt;where&nbsp;clause2&gt;'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+      
+     </li>
+     <li class="listitem">
+      <p class="para">setTable($table)</p>
+      <p class="para">Sets the table this class is currently working on.</p>
+     </li>
+     <li class="listitem">
+      <p class="para"><strong class="function">getTable()</strong></p>
+      <p class="para">Gets the table this class is currently working on.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">setGroup($group)</p>
+      <p class="para">Sets the group-by condition.</p>
+     </li>
+     <li class="listitem">
+      <p class="para"><strong class="function">getGroup()</strong></p>
+      <p class="para">Gets the group-by condition.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">setSelect($what)</p>
+      <p class="para">Limit the result to return only the columns given in <em><code class="parameter">what</code></em>.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">addSelect($what, $connectString)</p>
+      <p class="para">
+        Add a string to the select-part of the query and connects it to an existing
+        string using the <em><code class="parameter">connectString</code></em>, which by default is a comma.
+       (&quot;SELECT xxx FROM...&quot;    xxx is the select-part of a query)
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para"><strong class="function">getSelect()</strong></p>
+      <p class="para">Gets the select-part of the query.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">setDontSelect($what)</p>
+      <p class="para">Exclude some columns from the resultset.</p>
+     </li>
+     <li class="listitem">
+      <p class="para"><strong class="function">getDontSelect()</strong></p>
+      <p class="para">Gets the columns excluded from the resultset.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">reset($what)</p>
+      <p class="para">Reset all the set* settings, with no parameter given it resets them all.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">setOption($option, $value)</p>
+      <p class="para">
+        Set mode the class shall work in. The &#039;raw&#039; mode does not quote the data
+        before building the query
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">getOption($option)</p>
+      <p class="para">Get the given option.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">debug($string)</p>
+      <p class="para">override this method and i.e. print the queryString to see the final query.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">getTableShortName($table)</p>
+      <p class="para">Gets the short name for a table.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">execute($query, $method)</p>
+      <p class="para">
+        Execute a query (the current query is executed when <em><code class="parameter">query</code></em>
+        is null.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">writeLog($text)</p>
+      <p class="para">
+        Write events to the logfile. It does some additional work,
+        like time measuring etc. to see some additional info.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">returnResult($result)</p>
+      <p class="para">
+        Return the chosen result type
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">setIndex($key)</p>
+      <p class="para">
+        Format the result to be indexed by <em><code class="parameter">key</code></em>.
+        NOTE: be careful, when using this you should be aware, that if you
+        use an index which&#039;s value appears multiple times you may loose data
+        since a key can&#039;t exist multiple times!
+        The result for a result to be indexed by a key(=columnName)
+        (i.e. &#039;relationtoMe&#039;) which&#039;s values are &#039;brother&#039;
+        and &#039;sister&#039; or alike normally returns this:
+        </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$res</span><span style="color: #007700">[</span><span style="color: #DD0000">'brother'</span><span style="color: #007700">]&nbsp;=&nbsp;array(</span><span style="color: #DD0000">'name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'xxx'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$res</span><span style="color: #007700">[</span><span style="color: #DD0000">'sister'</span><span style="color: #007700">]&nbsp;&nbsp;=&nbsp;array(</span><span style="color: #DD0000">'name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'xxx'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div><p>
+        but if the column &#039;relationtoMe&#039; contains multiple entries for
+        &#039;brother&#039; then the returned dataset will only contain one brother,
+        since the value from the column &#039;relationtoMe&#039; is used
+        and which &#039;brother&#039; you get depends on a lot of things,
+        like the sort order, how the db saves the data, and whatever else.
+        You can also set indexes which depend on 2 columns, simply pass the parameters
+        like &#039;table1.id,table2.id&#039; it will be used as a string for indexing
+        the result and the index will be built using the 2 values given, so a possible
+        index might be &#039;1,2&#039; or &#039;2108,29389&#039; this way you can access
+        data which have 2 primary keys. Be sure to remember that the index is a string!
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para"><strong class="function">getIndex()</strong></p>
+      <p class="para">Gets the index.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">useResult($type)</p>
+      <p class="para">
+        Choose the type of the returned result
+        (&#039;array&#039;, &#039;object&#039;, &#039;none&#039;)
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">setErrorCallback($param)</p>
+      <p class="para">Set both callbacks.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">setErrorLogCallback($param)</p>
+      <p class="para">Set the error log callback.</p>
+     </li>
+     <li class="listitem">
+      <p class="para">setErrorSetCallback($param)</p>
+      <p class="para">Set the error set callback.</p>
+     </li>
+    </ul>
+     
+     
+    
+   </div>
+
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.mdb-querytool.object.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.mdb-querytool.html">MDB_QueryTool</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.mdb2-schema.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Object</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">MDB2_Schema</td>
+  </tr>
+ </table>
+</div>
+</body></html>

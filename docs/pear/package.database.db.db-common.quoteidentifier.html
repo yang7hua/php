@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>DB_common::quoteIdentifier()</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.db.html" title="DB" />
+  <link rel="prev" href="package.database.db.db-common.quote.html" title="DB_common::quote()" />
+  <link rel="next" href="package.database.db.db-common.quotesmart.html" title="DB_common::quoteSmart()" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">DB_common::quoteIdentifier()</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.db.db-common.quote.html" title="DB_common::quote()">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.db.db-common.quotesmart.html" title="DB_common::quoteSmart()">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.db.db-common.quoteidentifier">
+ 
+  <h1 class="refname">DB_common::quoteIdentifier()</h1>
+  <div class="refnamediv">DB_common::quoteIdentifier() &ndash; Formats a string so it can be safely used as an identifier</div>
+
+ 
+
+ <h2 class="refsynopsisdiv">Synopsis</h2>
+  <div class="funcsynopsis">
+   <p><code class="funcprototype">
+    string <strong class="function">quoteIdentifier</strong> ( 
+    
+     string $str
+    
+   )</code></p>
+  </div>
+ 
+
+ <div class="refsection" id="package.database.db.db-common.quoteidentifier.desc">
+  <h1 class="title">Description</h1>
+  <p class="para">
+   Format input so it can be safely used as a delimited identifier
+   in a query.  Identifiers are objects such as table or column names.
+  </p>
+  <p class="para">
+   The format returned depends on the database type being used.
+  </p>
+  <p class="para">
+   Delimited identifiers are known to generally work correctly under
+   the following drivers:
+   </p><ul class="simplelist">
+    <li class="member">mssql</li>
+    <li class="member">mysql</li>
+    <li class="member">mysqli</li>
+    <li class="member">oci8</li>
+    <li class="member">odbc(access)</li>
+    <li class="member">odbc(db2)</li>
+    <li class="member">pgsql</li>
+    <li class="member">sqlite</li>
+    <li class="member">sybase</li>
+   </ul>
+  
+  <p class="para">
+   InterBase doesn&#039;t seem to be able to use delimited identifiers
+   via PHP 4.  They work fine under PHP 5.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.quoteidentifier.parameter">
+  <h1 class="title">Parameter</h1>
+  <p class="para">
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term">
+      <span class="type">string</span>
+      <em><code class="parameter">$str</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       the input to be quoted
+      </p>
+     </dd>
+    </dl>
+   </div>
+  
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.quoteidentifier.return">
+  <h1 class="title">Return value</h1>
+  <p class="para">
+   <span class="type">string</span> - the formatted string
+  </p>
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.quoteidentifier.note">
+  <h1 class="title">Note</h1>
+  <p class="simpara">This function can not be called
+statically.</p>
+  <p class="simpara">
+   Function available since: Release 1.6.0
+  </p>
+  <blockquote class="warning">
+
+   <p class="para">
+    Just because you CAN use delimited identifiers doesn&#039;t mean
+    you SHOULD use them.  In general, they end up causing way more
+    problems than they solve.
+   </p>
+   <p class="para">
+    Portability is broken by using the following characters inside
+    delimited identifiers:
+    </p><ul class="simplelist">
+     <li class="member">backtick (<code class="literal">`</code>) -- due to MySQL</li>
+     <li class="member">double quote (<code class="literal">&quot;</code>) -- due to Oracle</li>
+     <li class="member">brackets (<code class="literal">[</code> or <code class="literal">]</code>) -- due to Access</li>
+    </ul>
+   
+  </blockquote>
+
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.quoteidentifier.example">
+  <h1 class="title">Example</h1>
+  <div class="example"><div class="info"><p><strong>Using <strong class="function">quoteIdentifier()</strong></strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /></span><span style="color: #0000BB">$sql&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'SELECT&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">quoteIdentifier</span><span style="color: #007700">(</span><span style="color: #DD0000">'company&nbsp;name'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;</span><span style="color: #DD0000">',&nbsp;address&nbsp;FROM&nbsp;clients'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.quoteidentifier.see">
+  <h1 class="title">See</h1>
+  <p class="para">
+   <a href="package.database.db.db-common.quotesmart.html" class="link">
+    <strong class="function">quoteSmart()</strong></a>,
+   <a href="package.database.db.db-common.escapesimple.html" class="link">
+    <strong class="function">escapeSimple()</strong></a>
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.db.db-common.quote.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.db.html">DB</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.db.db-common.quotesmart.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">DB_common::quote()</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">DB_common::quoteSmart()</td>
+  </tr>
+ </table>
+</div>
+</body></html>

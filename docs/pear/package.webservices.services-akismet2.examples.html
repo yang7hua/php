@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Examples</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.webservices.services-akismet2.html" title="Services_Akismet2" />
+  <link rel="prev" href="package.webservices.services-akismet2.methods.submit-false-positive.html" title="submitFalsePositive()" />
+  <link rel="next" href="package.webservices.services-amazon-s3.html" title="Services_Amazon_S3" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Examples</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.webservices.services-akismet2.methods.submit-false-positive.html" title="submitFalsePositive()">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.webservices.services-amazon-s3.html" title="Services_Amazon_S3">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="package.webservices.services-akismet2.examples">
+
+ <div class="info">
+  <h1>Examples</h1>
+
+ </div>
+
+ <p class="para">
+  </p><blockquote class="note">
+   <p class="para">
+    If you are using the Akismet API, it is recommended you build a system to
+    enter data back into the API either by submitting missed spam, or by
+    submitting false positives. While not strictly required, passing data back
+    using the API will allow the service to learn from its mistakes, and will
+    ensure the service stays relevant for your needs.
+   </p>
+  </blockquote>
+
+ 
+
+ <div class="section" id="package.webservices.services-akismet2.examples.is-spam">
+
+  <div class="info">
+   <h2 class="title">Handling User-Submitted Comments</h2>
+  </div>
+
+  <p class="para">
+   </p><div class="informalexample">
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Services/Akismet2.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'Services/Akismet2/Comment.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$comment&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Services_Akismet2_Comment</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'comment_author'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Test&nbsp;Author'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'comment_author_email'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'test@example.com'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'comment_author_url'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'http://example.com/'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'comment_content'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Hello,&nbsp;World!'<br /></span><span style="color: #007700">));<br /><br />try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$apiKey&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'AABBCCDDEEFF'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$akismet&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Services_Akismet2</span><span style="color: #007700">(</span><span style="color: #DD0000">'http://blog.example.com/'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$apiKey</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$akismet</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">isSpam</span><span style="color: #007700">(</span><span style="color: #0000BB">$comment</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;rather&nbsp;than&nbsp;simply&nbsp;ignoring&nbsp;the&nbsp;spam&nbsp;comment,&nbsp;it&nbsp;is&nbsp;recommended<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;to&nbsp;save&nbsp;the&nbsp;comment&nbsp;and&nbsp;mark&nbsp;it&nbsp;as&nbsp;spam&nbsp;in&nbsp;case&nbsp;the&nbsp;comment&nbsp;is&nbsp;a<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;false&nbsp;positive.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;save&nbsp;comment&nbsp;as&nbsp;normal&nbsp;comment<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Services_Akismet2_InvalidApiKeyException&nbsp;$keyException</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Invalid&nbsp;API&nbsp;key!'</span><span style="color: #007700">;<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Services_Akismet2_HttpException&nbsp;$httpException</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Error&nbsp;communicating&nbsp;with&nbsp;Akismet&nbsp;API&nbsp;server:&nbsp;'&nbsp;</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$httpException</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">();<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Services_Akismet2_InvalidCommentException&nbsp;$commentException</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Specified&nbsp;comment&nbsp;is&nbsp;missing&nbsp;one&nbsp;or&nbsp;more&nbsp;required&nbsp;fields.'&nbsp;</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$commentException</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">();<br />}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   </div>
+  
+
+ </div>
+
+ <div class="section" id="package.webservices.services-akismet2.examples.submit-spam">
+
+  <div class="info">
+   <h2 class="title">Marking a Missed Comment as Spam</h2>
+  </div>
+
+  <p class="para">
+   </p><div class="informalexample">
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Services/Akismet2.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'Services/Akismet2/Comment.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$comment&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Services_Akismet2_Comment</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'comment_author'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Test&nbsp;Author'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'comment_author_email'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'test@example.com'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'comment_author_url'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'http://example.com/'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'comment_content'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Hello,&nbsp;World!'<br /></span><span style="color: #007700">));<br /><br />try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$apiKey&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'AABBCCDDEEFF'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$akismet&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Services_Akismet2</span><span style="color: #007700">(</span><span style="color: #DD0000">'http://blog.example.com/'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$apiKey</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$akismet</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">submitSpam</span><span style="color: #007700">(</span><span style="color: #0000BB">$comment</span><span style="color: #007700">);<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Services_Akismet2_InvalidApiKeyException&nbsp;$keyException</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Invalid&nbsp;API&nbsp;key!'</span><span style="color: #007700">;<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Services_Akismet2_HttpException&nbsp;$httpException</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Error&nbsp;communicating&nbsp;with&nbsp;Akismet&nbsp;API&nbsp;server:&nbsp;'&nbsp;</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$httpException</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">();<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Services_Akismet2_InvalidCommentException&nbsp;$commentException</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Specified&nbsp;comment&nbsp;is&nbsp;missing&nbsp;one&nbsp;or&nbsp;more&nbsp;required&nbsp;fields.'&nbsp;</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$commentException</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">();<br />}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   </div>
+  
+
+ </div>
+
+ <div class="section" id="package.webservices.services-akismet2.examples.submit-false-positive">
+
+  <div class="info">
+   <h2 class="title">Marking a Comment as a False Positive</h2>
+  </div>
+
+  <p class="para">
+   </p><div class="informalexample">
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Services/Akismet2.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'Services/Akismet2/Comment.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$comment&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Services_Akismet2_Comment</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'comment_author'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Test&nbsp;Author'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'comment_author_email'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'test@example.com'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'comment_author_url'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'http://example.com/'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'comment_content'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Hello,&nbsp;World!'<br /></span><span style="color: #007700">));<br /><br />try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$apiKey&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'AABBCCDDEEFF'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$akismet&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Services_Akismet2</span><span style="color: #007700">(</span><span style="color: #DD0000">'http://blog.example.com/'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$apiKey</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$akismet</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">submitFalsePositive</span><span style="color: #007700">(</span><span style="color: #0000BB">$comment</span><span style="color: #007700">);<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Services_Akismet2_InvalidApiKeyException&nbsp;$keyException</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Invalid&nbsp;API&nbsp;key!'</span><span style="color: #007700">;<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Services_Akismet2_HttpException&nbsp;$httpException</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Error&nbsp;communicating&nbsp;with&nbsp;Akismet&nbsp;API&nbsp;server:&nbsp;'&nbsp;</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$httpException</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">();<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Services_Akismet2_InvalidCommentException&nbsp;$commentException</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'Specified&nbsp;comment&nbsp;is&nbsp;missing&nbsp;one&nbsp;or&nbsp;more&nbsp;required&nbsp;fields.'&nbsp;</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$commentException</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">();<br />}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   </div>
+  
+
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.webservices.services-akismet2.methods.submit-false-positive.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.webservices.services-akismet2.html">Services_Akismet2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.webservices.services-amazon-s3.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">submitFalsePositive()</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Services_Amazon_S3</td>
+  </tr>
+ </table>
+</div>
+</body></html>

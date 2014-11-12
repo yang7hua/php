@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>-&gt;set*() and -&gt;get*()</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.db-dataobject.html" title="DB_DataObject" />
+  <link rel="prev" href="package.database.db-dataobject.db-dataobject.joinadd.html" title="-&gt;joinAdd()" />
+  <link rel="next" href="package.database.db-dataobject.db-dataobject.setfrom.html" title="-&gt;setFrom()" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">-&gt;set*() and -&gt;get*()</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.db-dataobject.db-dataobject.joinadd.html" title="-&gt;joinAdd()">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.db-dataobject.db-dataobject.setfrom.html" title="-&gt;setFrom()">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.db-dataobject.db-dataobject.settersgetters">
+   
+    <h1 class="refname">-&gt;set*() and -&gt;get*()</h1>
+    <div class="refnamediv">-&gt;set*() and -&gt;get*() &ndash; Automatic Setters and Getters using overload</div>
+
+   
+   <h2 class="refsynopsisdiv">Synopsis</h2>
+    <div class="funcsynopsis">
+     
+     <p><code class="funcprototype">
+      true | string <strong class="function">$DB_DataObject-&gt;set*</strong> ( 
+      mixed $value
+                  
+     )</code></p>
+     
+     
+     <p><code class="funcprototype">
+      mixed <strong class="function">$DB_DataObject-&gt;get*</strong> ( 
+     
+                  
+     )</code></p>
+     
+    </div>
+   
+   <div class="refsection" id="package.database.db-dataobject.db-dataobject.settersgetters.desc">
+    <h1 class="title">Description</h1>
+    <p class="para">
+     From version PHP 4.3.2RC2 onwards, DB_DataObject is automatically overloaded, providing
+     access to all variables using $object-&gt;set{ColumnName}() and $object-&gt;set{ColumnName}($value)
+     even if you have not defined the method.
+    </p>
+    <p class="para">
+     It is assumed that set methods return strings as errors or <strong class="constant">TRUE</strong>, so that it can interact with setFrom and
+     return array&#039;s of error strings.
+    </p>
+    <p class="para">
+     The get Methods are used by toArray(), if defined they can be used to alter the appearance of columns 
+     ,like making dates human readable
+    </p>
+    <p class="para">
+     The logic is very simple, if you call $object-&gt;setXXX() and it is not defined, it will just set the value,
+     if you define a method setXXXX, that will be called instead of the default handler,  same applies to getXXX().
+    </p>
+    <p class="para">
+     Due to the naming conflict possiblity of a column named from, the associated method for column &#039;from&#039; is set_from, 
+     rather than setFrom()
+    </p>
+   </div>   
+  
+      <div class="refsection" id="package.database.db-dataobject.db-dataobject.settersgetters.parameter">
+    <h1 class="title">Parameter</h1>
+    <p class="para">
+     </p><ul class="itemizedlist">
+      
+      <li class="listitem">
+       <p class="para">
+        <em><code class="parameter">mixed $value</code></em> - on setters only (the value to assign to the column), on getters you may like to implement date formating
+        or sprintf formating as the argument.
+       </p>
+      </li>      
+            
+     </ul>
+    
+   </div>   
+              
+         
+   <div class="refsection" id="package.database.db-dataobject.db-dataobject.settersgetters.return">
+    <h1 class="title">Return value</h1>
+    <p class="para">
+     <em><code class="parameter">mixed</code></em> - setters will return <strong class="constant">TRUE</strong> from the default method, 
+     in your implementations of setters. It is expected that setXXX($value) will return 
+     a string (the error) if it is invalid or <strong class="constant">TRUE</strong> on success.
+     getXXX may return the value or a formated value, remember though it affects 
+     $object-&gt;toArray().
+    </p>
+   </div>      
+            
+               
+                
+   <div class="refsection" id="package.database.db-dataobject.db-dataobject.settersgetters.note">
+    <h1 class="title">Note</h1>  
+                 
+    <p class="simpara">This function can not be called
+statically.</p>
+    
+                         
+                             
+  <p class="simpara">Warning: This is experimental, its behavour may change slightly in the future.</p>
+   </div>    
+                   
+   <div class="refsection" id="package.database.db-dataobject.db-dataobject.settersgetters.example">
+    <h1 class="title">Example</h1>
+    <div class="example"><div class="info"><p><strong>Simple find and fetch of data based on Object Vars</strong></p></div>
+     
+      <div class="phpcode">
+       <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">DataObjects_Person&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">DB_DataObject&nbsp;</span><span style="color: #007700">{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$id</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$name</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$date_of_birth</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;you&nbsp;can&nbsp;define&nbsp;this&nbsp;method&nbsp;after&nbsp;you&nbsp;implement&nbsp;a&nbsp;call&nbsp;to&nbsp;it!<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;as&nbsp;it&nbsp;is&nbsp;automatically&nbsp;implemented&nbsp;to&nbsp;return&nbsp;$this-&gt;date_of_birth&nbsp;by&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;the&nbsp;overload&nbsp;__call()&nbsp;method.<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">getDate_of_Birth</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #DD0000">'d&nbsp;M&nbsp;Y'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">strtotime</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">date_of_birth</span><span style="color: #007700">));<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br /></span><span style="color: #0000BB">$person&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">DataObjects_Person</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">get</span><span style="color: #007700">(</span><span style="color: #0000BB">12</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;now&nbsp;lets&nbsp;use&nbsp;the&nbsp;getters&nbsp;and&nbsp;setters&nbsp;even&nbsp;though&nbsp;some&nbsp;are&nbsp;not&nbsp;defined.<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getName</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">'&nbsp;was&nbsp;born&nbsp;on&nbsp;&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getDate_of_Birth</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>    
+     </div>
+    </div>
+    <div class="example"><div class="info"><p><strong>Resulting Output </strong></p></div>
+     
+     <div class="programlisting">
+       &nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fred&nbsp;Blogs&nbsp;was&nbsp;born&nbsp;on&nbsp;1&nbsp;April&nbsp;1970    
+     </div>
+    </div>    
+   </div>         
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.db-dataobject.db-dataobject.joinadd.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.db-dataobject.html">DB_DataObject</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.db-dataobject.db-dataobject.setfrom.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">-&gt;joinAdd()</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">-&gt;setFrom()</td>
+  </tr>
+ </table>
+</div>
+</body></html>

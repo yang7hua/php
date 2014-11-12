@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>creating custom roles</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="guide.migrating.customroles.html" title="Custom File Roles" />
+  <link rel="prev" href="guide.migrating.customroles.xml.html" title="custom roles in package.xml" />
+  <link rel="next" href="guide.migrating.customtasks.html" title="Custom File Tasks" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">creating custom roles</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="guide.migrating.customroles.xml.html" title="custom roles in package.xml">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="guide.migrating.customtasks.html" title="Custom File Tasks">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="guide.migrating.customroles.defining"><div class="info"><h1>Defining a customized role for use in a package.xml</h1>
+</div>
+  
+  
+  <p class="para">
+   To define a custom role, you need to create a package containing a single file.  Here is
+   a sample package.xml that could be a custom role:
+  </p>
+  <p class="para">
+   </p><div class="xmlcode">
+    <pre class="xmlcode">
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;package version=&quot;2.0&quot; xmlns=&quot;http://pear.php.net/dtd/package-2.0&quot;
+    xmlns:tasks=&quot;http://pear.php.net/dtd/tasks-1.0&quot;
+    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xsi:schemaLocation=&quot;http://pear.php.net/dtd/tasks-1.0
+http://pear.php.net/dtd/tasks-1.0.xsd
+http://pear.php.net/dtd/package-2.0
+http://pear.php.net/dtd/package-2.0.xsd&quot;&gt;
+ &lt;name&gt;Chiarafoo&lt;/name&gt;
+ &lt;channel&gt;pear.chiaraquartet.net&lt;/channel&gt;
+ &lt;summary&gt;Chiarafoo role&lt;/summary&gt;
+ &lt;description&gt;
+  The chiarafoo role installs files into your customized Foo directory
+ &lt;/description&gt;
+ &lt;lead&gt;
+  &lt;name&gt;Greg Beaver&lt;/name&gt;
+  &lt;user&gt;cellog&lt;/user&gt;
+  &lt;email&gt;cellog@php.net&lt;/email&gt;
+  &lt;active&gt;yes&lt;/active&gt;
+ &lt;/lead&gt;
+ &lt;date&gt;2005-03-21&lt;/date&gt;
+ &lt;version&gt;
+  &lt;release&gt;1.0.0&lt;/release&gt;
+  &lt;api&gt;1.0.0&lt;/api&gt;
+ &lt;/version&gt;
+ &lt;stability&gt;
+  &lt;release&gt;stable&lt;/release&gt;
+  &lt;api&gt;stable&lt;/api&gt;
+ &lt;/stability&gt;
+ &lt;license uri=&quot;http://www.php.net/license&quot;&gt;PHP License&lt;/license&gt;
+ &lt;notes&gt;
+  Provides the chiarafoo file role
+ &lt;/notes&gt;
+ &lt;contents&gt;
+  &lt;dir name=&quot;/&quot; baseinstalldir=&quot;PEAR/Installer/Role&quot;&gt;
+   &lt;file name=&quot;Chiarafoo.xml&quot; role=&quot;php&quot;/&gt;
+   &lt;file name=&quot;Chiarafoo.php&quot; role=&quot;php&quot;&gt;
+    &lt;tasks:replace from=&quot;@package_version@&quot; to=&quot;version&quot; type=&quot;package-info&quot;/&gt;
+   &lt;/file&gt;
+  &lt;/dir&gt; &lt;!-- / --&gt;
+ &lt;/contents&gt;
+ &lt;dependencies&gt;
+  &lt;required&gt;
+   &lt;php&gt;
+    &lt;min&gt;4.2.0&lt;/min&gt;
+   &lt;/php&gt;
+   &lt;pearinstaller&gt;
+    &lt;min&gt;1.4.3&lt;/min&gt;
+   &lt;/pearinstaller&gt;
+  &lt;/required&gt;
+ &lt;/dependencies&gt;
+ &lt;phprelease/&gt;
+&lt;/package&gt;</pre>
+
+   </div>
+  
+  <p class="para">
+   The XML file Chiarafoo.xml should be similar to this file:
+  </p>
+  <p class="para">
+   </p><div class="xmlcode">
+    <pre class="xmlcode">
+&lt;role version=&quot;1.0&quot;&gt;
+ &lt;releasetypes&gt;php&lt;/releasetypes&gt;
+ &lt;installable&gt;1&lt;/installable&gt;
+ &lt;locationconfig&gt;foo_dir&lt;/locationconfig&gt;
+ &lt;honorsbaseinstall&gt;1&lt;/honorsbaseinstall&gt;
+ &lt;unusualbaseinstall /&gt;
+ &lt;phpfile&gt;1&lt;/phpfile&gt;
+ &lt;executable /&gt;
+ &lt;phpextension /&gt;
+ &lt;config_vars&gt;
+  &lt;foo_dir&gt;
+   &lt;type&gt;directory&lt;/type&gt;
+   &lt;default&gt;&lt;php_dir/&gt;&lt;constant&gt;DIRECTORY_SEPARATOR&lt;/constant&gt;&lt;text&gt;Foo&lt;/text&gt;&lt;/default&gt;
+   &lt;doc&gt;directory where foo files are installed&lt;/doc&gt;
+   &lt;prompt&gt;PHP foo directory&lt;/prompt&gt;
+   &lt;group&gt;File Locations&lt;/group&gt;
+  &lt;/foo_dir&gt;
+ &lt;/config_vars&gt;
+&lt;/role&gt;</pre>
+
+   </div>
+  
+  <p class="para">
+   The script in Chiarafoo.php is incredibly simple:
+  </p>
+  <p class="para">
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/**<br />&nbsp;*&nbsp;PEAR_Installer_Role_Chiarafoo<br />&nbsp;*<br />&nbsp;*&nbsp;PHP&nbsp;versions&nbsp;4&nbsp;and&nbsp;5<br />&nbsp;*<br />&nbsp;*&nbsp;LICENSE:&nbsp;This&nbsp;source&nbsp;file&nbsp;is&nbsp;subject&nbsp;to&nbsp;version&nbsp;3.0&nbsp;of&nbsp;the&nbsp;PHP&nbsp;license<br />&nbsp;*&nbsp;that&nbsp;is&nbsp;available&nbsp;through&nbsp;the&nbsp;world-wide-web&nbsp;at&nbsp;the&nbsp;following&nbsp;URI:<br />&nbsp;*&nbsp;http://www.php.net/license/3_0.txt.&nbsp;&nbsp;If&nbsp;you&nbsp;did&nbsp;not&nbsp;receive&nbsp;a&nbsp;copy&nbsp;of<br />&nbsp;*&nbsp;the&nbsp;PHP&nbsp;License&nbsp;and&nbsp;are&nbsp;unable&nbsp;to&nbsp;obtain&nbsp;it&nbsp;through&nbsp;the&nbsp;web,&nbsp;please<br />&nbsp;*&nbsp;send&nbsp;a&nbsp;note&nbsp;to&nbsp;license@php.net&nbsp;so&nbsp;we&nbsp;can&nbsp;mail&nbsp;you&nbsp;a&nbsp;copy&nbsp;immediately.<br />&nbsp;*<br />&nbsp;*&nbsp;@category&nbsp;&nbsp;&nbsp;pear<br />&nbsp;*&nbsp;@package&nbsp;&nbsp;&nbsp;&nbsp;Chiarafoo<br />&nbsp;*&nbsp;@author&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Greg&nbsp;Beaver&nbsp;&lt;cellog@php.net&gt;<br />&nbsp;*&nbsp;@copyright&nbsp;&nbsp;2005&nbsp;Greg&nbsp;Beaver<br />&nbsp;*&nbsp;@license&nbsp;&nbsp;&nbsp;&nbsp;http://www.php.net/license/3_0.txt&nbsp;&nbsp;PHP&nbsp;License&nbsp;3.0<br />&nbsp;*&nbsp;@version&nbsp;&nbsp;&nbsp;&nbsp;SVN:&nbsp;$Id:&nbsp;customroles.xml,v&nbsp;1.6&nbsp;2008-10-09&nbsp;15:16:18&nbsp;cweiske&nbsp;Exp&nbsp;$<br />&nbsp;*&nbsp;@link&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://pear.chiaraquartet.net/index.php?package=Chiarafoo<br />&nbsp;*&nbsp;@since&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;File&nbsp;available&nbsp;since&nbsp;Release&nbsp;0.1.0<br />&nbsp;*/<br /><br />/**<br />&nbsp;*&nbsp;@category&nbsp;&nbsp;&nbsp;pear<br />&nbsp;*&nbsp;@package&nbsp;&nbsp;&nbsp;&nbsp;Chiarafoo<br />&nbsp;*&nbsp;@author&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Greg&nbsp;Beaver&nbsp;&lt;cellog@php.net&gt;<br />&nbsp;*&nbsp;@copyright&nbsp;&nbsp;2005&nbsp;Greg&nbsp;Beaver<br />&nbsp;*&nbsp;@license&nbsp;&nbsp;&nbsp;&nbsp;http://www.php.net/license/3_0.txt&nbsp;&nbsp;PHP&nbsp;License&nbsp;3.0<br />&nbsp;*&nbsp;@version&nbsp;&nbsp;&nbsp;&nbsp;Release:&nbsp;@package_version@<br />&nbsp;*&nbsp;@link&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://pear.chiaraquartet.net/index.php?package=Chiarafoo<br />&nbsp;*&nbsp;@since&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Class&nbsp;available&nbsp;since&nbsp;Release&nbsp;0.1.0<br />&nbsp;*/<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">PEAR_Installer_Role_Chiarafoo&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">PEAR_Installer_Role_Common<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/**<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;PEAR_Installer<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;PEAR_PackageFile_v2<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;array&nbsp;file&nbsp;attributes<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;string&nbsp;relative&nbsp;path&nbsp;to&nbsp;file&nbsp;in&nbsp;package.xml<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">setup</span><span style="color: #007700">(&amp;</span><span style="color: #0000BB">$installer</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$pkg</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$atts</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$file</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;do&nbsp;something&nbsp;special&nbsp;with&nbsp;the&nbsp;installer<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <p class="para">
+   Since PEAR 1.4.3, nothing else is necessary for a successful implementation of a file
+   role.
+  </p>
+  <p class="para">
+   The contents of the role&#039;s XML file must contain these tags:
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <p class="para">
+      <a href="guide.migrating.customroles.defining.html#guide.migrating.customroles.defining.releasetypes" class="link">&lt;releasetypes&gt;</a>
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <a href="guide.migrating.customroles.defining.html#guide.migrating.customroles.defining.installable" class="link">&lt;installable&gt;</a>
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <a href="guide.migrating.customroles.defining.html#guide.migrating.customroles.defining.locationconfig" class="link">&lt;locationconfig&gt;</a>
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <a href="guide.migrating.customroles.defining.html#guide.migrating.customroles.defining.honorsbaseinstall" class="link">&lt;honorsbaseinstall&gt;</a>
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <a href="guide.migrating.customroles.defining.html#guide.migrating.customroles.defining.unusualbaseinstall" class="link">&lt;unusualbaseinstall&gt;</a>
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <a href="guide.migrating.customroles.defining.html#guide.migrating.customroles.defining.phpfile" class="link">&lt;phpfile&gt;</a>
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <a href="guide.migrating.customroles.defining.html#guide.migrating.customroles.defining.executable" class="link">&lt;executable&gt;</a>
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <a href="guide.migrating.customroles.defining.html#guide.migrating.customroles.defining.phpextension" class="link">&lt;phpextension&gt;</a>
+     </p>
+    </li>
+    <li class="listitem">
+     <p class="para">
+      <a href="guide.migrating.customroles.defining.html#guide.migrating.customroles.defining.config-vars" class="link">(optional) &lt;config_vars&gt;</a>
+     </p>
+    </li>
+   </ul>
+  
+  <div class="section" id="guide.migrating.customroles.defining.releasetypes"><div class="info"><h2 class="title">The &lt;releasetypes&gt; tag</h2></div>
+   
+   <p class="para">
+    This tag can only contain one of the following values:
+   </p>
+   <p class="para">
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+       php
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       extsrc
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       extbin
+      </p>
+     </li>
+    </ul>
+   
+   <p class="para">
+    In order to specify compatibility with multiple release types, use multiple
+    &lt;releasetypes&gt; tags as in:
+   </p>
+   <p class="para">
+    </p><div class="xmlcode">
+     <pre class="xmlcode">
+ &lt;releasetypes&gt;php&lt;/releasetypes&gt;
+ &lt;releasetypes&gt;extsrc&lt;/releasetypes&gt;
+ &lt;releasetypes&gt;extbin&lt;/releasetypes&gt;</pre>
+
+    </div>
+   
+   <p class="para">
+    releasetypes defines the kind of releases that this role can be used in.  For instance,
+    the &quot;src&quot; role is reserved for extsrc packages, and cannot be used in regular
+    PEAR-style php releases.  The &quot;data&quot; role can be used in any release, and would
+    define &lt;releasetypes&gt; as:
+   </p>
+   <p class="para">
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">&lt;</span><span style="color: #0000BB">releasetypes</span><span style="color: #007700">&gt;</span><span style="color: #0000BB">php</span><span style="color: #007700">&lt;/</span><span style="color: #0000BB">releasetypes</span><span style="color: #007700">&gt;<br />&nbsp;&lt;</span><span style="color: #0000BB">releasetypes</span><span style="color: #007700">&gt;</span><span style="color: #0000BB">extsrc</span><span style="color: #007700">&lt;/</span><span style="color: #0000BB">releasetypes</span><span style="color: #007700">&gt;<br />&nbsp;&lt;</span><span style="color: #0000BB">releasetypes</span><span style="color: #007700">&gt;</span><span style="color: #0000BB">extbin</span><span style="color: #007700">&lt;/</span><span style="color: #0000BB">releasetypes</span><span style="color: #007700">&gt;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+  </div>
+  <div class="section" id="guide.migrating.customroles.defining.installable"><div class="info"><h2 class="title">The &lt;installable&gt; tag</h2></div>
+   
+   <p class="para">
+    This tag must be either &lt;installable&gt;1&lt;/installable&gt; or empty
+    (&lt;installable/&gt;) and determines whether files utilizing
+    this custom role can be installed.  Any file that should be installed must set this to
+    1.  Only roles such as the &quot;src&quot; role that is processed and used to create
+    the files that are eventually installed should set this to an empty tag.
+   </p>
+  </div>
+  <div class="section" id="guide.migrating.customroles.defining.locationconfig"><div class="info"><h2 class="title">The &lt;locationconfig&gt; tag</h2></div>
+   
+   <p class="para">
+    This tag is used for all installable files to determine which configuration variable
+    contains the directory in which the file should be installed.  For instance, the php role
+    uses the &quot;php_dir&quot; locationconfig, the data role uses &quot;data_dir&quot;.
+   </p>
+   <p class="para">
+    Our example role, chiarafoo, uses the &quot;foo_dir&quot; configuration variable,
+    and then through the definition of &lt;config_vars&gt; tells the installer what
+    foo_dir means.  Note that once a custom role is installed, the user can config-set/
+    config-get/config-show the variable just like any other configuration variable!
+   </p>
+   <p class="para">
+    &lt;config_vars&gt; can define more than one configuration
+    variable, but note that more than 3 variables will trigger an error, disallowing any
+    of them, as a security precaution.
+   </p>
+  </div>
+  <div class="section" id="guide.migrating.customroles.defining.honorsbaseinstall"><div class="info"><h2 class="title">The &lt;honorsbaseinstall&gt; tag</h2></div>
+   
+   <p class="para">
+    This tag controls whether a role reacts to the &quot;baseinstalldir&quot; attribute
+    of a &lt;file&gt; or &lt;dir&gt; tag.  Any role that honors baseinstalldir can potentially
+    allow conflicting files from different packages, and so a check has to be made.  A file
+    role that does not honor baseinstalldir is always installed into:
+   </p>
+   <p class="para">
+    <code class="filename">Packagename/full/path/from/contents/file.ext</code>
+   </p>
+   <p class="para">
+    To specify this value, use
+    &lt;honorsbaseinstall&gt;1&lt;/honorsbaseinstall&gt;
+    For all other cases, it should be an empty tag (&lt;honorsbaseinstall/&gt;)
+   </p>
+  </div>
+  <div class="section" id="guide.migrating.customroles.defining.unusualbaseinstall"><div class="info"><h2 class="title">The &lt;unusualbaseinstall&gt; tag</h2></div>
+   
+   <p class="para">
+    This tag controls whether a role that would normally ignore the
+    &quot;baseinstalldir&quot; attribute of a &lt;file&gt; or &lt;dir&gt; tag would honor it,
+    but still use the <code class="filename">Packagename/baseinstalldir/full/path/from/contents/file.ext</code> instead of
+    <code class="filename">baseinstalldir/full/path/from/contents/file.ext</code>.  Any role that
+    supports the unusual baseinstalldir type cannot conflict with other files because the
+    package name is always the parent directory.  To specify this value, use
+    &lt;unusualbaseinstall&gt;1&lt;/unusualbaseinstall&gt;
+    For all other cases, it should be an empty tag (&lt;unusualbaseinstall/&gt;)
+   </p>
+  </div>
+  <div class="section" id="guide.migrating.customroles.defining.phpfile"><div class="info"><h2 class="title">The &lt;phpfile&gt; tag</h2></div>
+   
+   <p class="para">
+    This tag should be set to 1 (&lt;phpfile&gt;1&lt;/phpfile&gt;) for any roles that
+    contain php script files.  These files are analyzed at package time, possibly
+    catching errors before release.  For all other cases, it should be an empty tag
+    (&lt;phpfile/&gt;)
+   </p>
+  </div>
+  <div class="section" id="guide.migrating.customroles.defining.executable"><div class="info"><h2 class="title">The &lt;executable&gt; tag</h2></div>
+   
+   <p class="para">
+    This tag should be set to 1 (&lt;executable&gt;1&lt;/executable&gt;) for roles
+    like the &quot;script&quot; role that should have
+    their executable attribute set via <strong class="function">chmod()</strong> on install.
+    For all other cases, it should be an empty tag (&lt;executable/&gt;)
+   </p>
+  </div>
+  <div class="section" id="guide.migrating.customroles.defining.phpextension"><div class="info"><h2 class="title">The &lt;phpextension&gt; tag</h2></div>
+   
+   <p class="para">
+    This tag should be used for roles like the &quot;ext&quot; role that provide a
+    binary PHP extension.
+    To specify this value, use
+    &lt;phpextension&gt;1&lt;/phpextension&gt;
+    For all other cases, it should be an empty tag (&lt;phpextension/&gt;)
+   </p>
+  </div>
+  <div class="section" id="guide.migrating.customroles.defining.config-vars"><div class="info"><h2 class="title">The optional &lt;config_vars&gt; tag</h2></div>
+   
+   <p class="para">
+    This tag is used to define configuration variables that should be added
+    to the installer by this custom file role.  Note that the installer will
+    not allow a custom file role to create more than 3 configuration variables.
+    To define configuration variables, create tags with the name of the configuration
+    variable, and then sub-tags defining information about the configuration variable.
+   </p>
+   <p class="para">
+    These tags are transformed into the PHP array format expected by the PEAR_Config
+    class using an adapted version of Stephan Schmidt&#039;s excellent
+    <strong class="classname">XML_Unserializer</strong> class (from the XML_Serializer package).
+    As such, it is easiest to understand the XML format by examining existing
+    configuration variables.
+   </p>
+   <p class="para">
+    </p><div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'password'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'password'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'default'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">''</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'doc'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'(maintainers)&nbsp;your&nbsp;PEAR&nbsp;account&nbsp;password'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'prompt'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'PEAR&nbsp;password&nbsp;(for&nbsp;maintainers)'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'group'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Maintainers'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Advanced<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'verbose'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'integer'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'default'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">PEAR_CONFIG_DEFAULT_VERBOSE</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'doc'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'verbosity&nbsp;level<br />0:&nbsp;really&nbsp;quiet<br />1:&nbsp;somewhat&nbsp;quiet<br />2:&nbsp;verbose<br />3:&nbsp;debug'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'prompt'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Debug&nbsp;Log&nbsp;Level'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'group'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Advanced'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'preferred_state'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'set'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'default'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">PEAR_CONFIG_DEFAULT_PREFERRED_STATE</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'doc'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'the&nbsp;installer&nbsp;will&nbsp;prefer&nbsp;releases&nbsp;with&nbsp;this&nbsp;state&nbsp;when&nbsp;installing&nbsp;packages&nbsp;without&nbsp;a&nbsp;version&nbsp;or&nbsp;state&nbsp;specified'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'valid_set'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'stable'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'beta'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'alpha'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'devel'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'snapshot'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'prompt'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Preferred&nbsp;Package&nbsp;State'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'group'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Advanced'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+   
+   <p class="para">
+    These sample configuration values from the actual PEAR_Config class would
+    translate into this XML:
+   </p>
+   <p class="para">
+    </p><div class="xmlcode">
+     <pre class="xmlcode">
+&lt;config_vars&gt;
+ &lt;password&gt;
+  &lt;type&gt;password&lt;/type&gt;
+  &lt;default /&gt;
+  &lt;doc&gt;(maintainers) your PEAR account password&#039;&lt;/doc&gt;
+  &lt;prompt&gt;PEAR password (for maintainers)&lt;/prompt&gt;
+  &lt;group&gt;Maintainers&lt;/group&gt;
+ &lt;/password&gt;
+ &lt;verbose&gt;
+  &lt;type&gt;integer&lt;/type&gt;
+  &lt;default&gt;&lt;constant&gt;PEAR_CONFIG_DEFAULT_VERBOSE&lt;/constant&gt;&lt;/default&gt;
+  &lt;doc&gt;verbosity level
+0: really quiet
+1: somewhat quiet
+2: verbose
+3: debug&lt;/doc&gt;
+  &lt;prompt&gt;Debug Log Level&lt;/prompt&gt;
+  &lt;group&gt;Advanced&lt;/group&gt;
+ &lt;/verbose&gt;
+ &lt;preferred_state&gt;
+  &lt;type&gt;set&lt;/type&gt;
+  &lt;default&gt;&lt;constant&gt;PEAR_CONFIG_DEFAULT_PREFERRED_STATE&lt;/constant&gt;&lt;/default&gt;
+  &lt;doc&gt;the installer will prefer releases with this state when installing packages without a version or state specified&lt;/doc&gt;
+  &lt;valid_set&gt;stable&lt;/valid_set&gt;
+  &lt;valid_set&gt;beta&lt;/valid_set&gt;
+  &lt;valid_set&gt;alpha&lt;/valid_set&gt;
+  &lt;valid_set&gt;devel&lt;/valid_set&gt;
+  &lt;valid_set&gt;snapshot&lt;/valid_set&gt;
+  &lt;prompt&gt;Preferred Package State&lt;/prompt&gt;
+  &lt;group&gt;Advanced&lt;/group&gt;
+ &lt;/preferred_state&gt;
+&lt;/config_vars&gt;</pre>
+
+    </div>
+   
+   <p class="para">
+    Note that the simple array defining the set converts each value into a
+    separate &lt;valid_set&gt; tag for the preferred_state configuration variable.
+   </p>
+   <p class="para">
+    The &lt;default&gt; tag&#039;s value can accept either a simple string, or
+    three different kinds of tags:
+    </p><ul class="itemizedlist">
+     <li class="listitem">
+      <p class="para">
+       &lt;text&gt; - this will be converted into a PHP string
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       &lt;constant&gt; - the contents of this sub-tag will be used to retrieve
+       the value of a pre-defined PHP constant, or a pre-defined PEAR constant
+       (as defined in PEAR_Config or PEAR_Common) and substitute the value for
+       the &lt;constant&gt; tag.
+      </p>
+     </li>
+     <li class="listitem">
+      <p class="para">
+       any default configuration variable.  These include default_channel,
+       preferred_mirror, remote_config, auto_discover, master_server,
+       http_proxy, php_dir, ext_dir, doc_dir, bin_dir, data_dir,
+       test_dir, cache_dir, php_bin, username, password, verbose,
+       preferred_state, umask, cache_ttl, sig_type, sig_bin, sig_keyid,
+       and sig_keydir.
+      </p>
+      <p class="para">
+       when used, the configuration variable should simply be an empty tag like
+       &lt;php_dir/&gt;.  The tag will be replaced with the <em class="emphasis">default</em>
+       value of the configuration variable, <em class="emphasis">not</em> the currently
+       assigned value.
+      </p>
+     </li>
+    </ul>
+   
+   <p class="para">
+    For instance, this example default value:
+   </p>
+   <p class="para">
+    </p><div class="xmlcode">
+     <pre class="xmlcode">
+ &lt;default&gt;&lt;text0&gt;hi there &lt;/text0&gt;&lt;constant&gt;PHP_OS&lt;/constant&gt;&lt;text1&gt; user, your default php_dir is &lt;/text1&gt;&lt;php_dir/&gt;&lt;/default&gt;</pre>
+
+    </div>
+   
+   <p class="para">
+    might convert into something like &quot;hi there Linux user, your default php_dir is
+    /usr/local/lib/php/pear&quot;.
+   </p>
+   <p class="para">
+    Our example Chiarafoo role&#039;s foo_dir default value:
+    </p><div class="xmlcode">
+     <pre class="xmlcode">
+ &lt;default&gt;&lt;php_dir/&gt;&lt;constant&gt;DIRECTORY_SEPARATOR&lt;/constant&gt;&lt;text&gt;Foo&lt;/text&gt;&lt;/default&gt;</pre>
+
+    </div>
+   
+   <p class="para">
+    might convert into something like &quot;/usr/local/lib/php/Foo&quot; or
+    &quot;C:\php5\pear\Foo&quot;.
+   </p>
+   <p class="para">
+    Note that in order to use multiple &lt;constant&gt; or &lt;text&gt; tags,
+    you must append a numbered suffix as in the &lt;text0&gt; &lt;text1&gt; example above.
+    Only one PEAR configuration variable may be used per default value.
+   </p>
+   <p class="para">
+    Note that if you use &lt;type&gt;integer&lt;/type&gt;, no matter what default value
+    is specified, it will be casted into an integer by PEAR_Config.
+   </p>
+  </div>
+ </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="guide.migrating.customroles.xml.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="guide.migrating.customroles.html">Custom File Roles</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="guide.migrating.customtasks.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">custom roles in package.xml</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Custom File Tasks</td>
+  </tr>
+ </table>
+</div>
+</body></html>

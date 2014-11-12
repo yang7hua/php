@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Extending Console_CommandLine</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.console.console-commandline.html" title="Console_CommandLine" />
+  <link rel="prev" href="package.console.console-commandline.sub-commands.html" title="Managing command line sub-commands" />
+  <link rel="next" href="package.console.console-commandline.web.html" title="Using Console_CommandLine in web environments" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Extending Console_CommandLine</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.console.console-commandline.sub-commands.html" title="Managing command line sub-commands">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.console.console-commandline.web.html" title="Using Console_CommandLine in web environments">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.console.console-commandline.extending">
+ 
+  <h1 class="refname">Extending Console_CommandLine</h1>
+  <div class="refnamediv">Extending Console_CommandLine &ndash; how to customize this package to achieve specific tasks</div>
+
+ 
+ <div class="refsection"><div class="info"><h1>Adding custom actions</h1>
+</div>
+  <p class="para">
+  <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine.html" class="apidoclink">Console_CommandLine</a>
+  allows you to register custom actions when you need it.
+  Basically, you just create a action class that inherits from
+  <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine_Action.html" class="apidoclink">Console_CommandLine_Action</a>
+  and you call the 
+  <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine.html#methodregisterAction" class="apidoclink">Console_CommandLine::registerAction()</a>
+  method to register it.
+  </p>
+  <p class="para">
+  Let&#039;s take a simple example, suppose we want to create a &quot;range&quot; action that 
+  would allow the user to type:
+     </p><div class="textcode">
+       <pre class="textcode">
+$ &lt;yourprogram&gt; -r 1,5</pre>
+
+     </div><p>
+  And in our 
+  <a href="http://pear.php.net/package/Console_CommandLine/docs/latest/Console_CommandLine/Console_CommandLine_Result.html" class="apidoclink">Console_CommandLine_Result</a>
+  instance we would have:
+     </p><div class="textcode">
+       <pre class="textcode">
+// $result-&gt;options[&#039;range&#039;]: array(&#039;min&#039; =&gt; 1, &#039;max&#039; =&gt; 5)</pre>
+
+     </div><p>
+  Here&#039;s how we would do:
+     </p><div class="phpcode">
+       <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Console/CommandLine.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'Console/CommandLine/Action.php'</span><span style="color: #007700">;<br /><br />class&nbsp;</span><span style="color: #0000BB">ActionRange&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">Console_CommandLine_Action<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;function&nbsp;</span><span style="color: #0000BB">execute</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">=</span><span style="color: #0000BB">false</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$params</span><span style="color: #007700">=array())<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$range&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">explode</span><span style="color: #007700">(</span><span style="color: #DD0000">','</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">str_replace</span><span style="color: #007700">(</span><span style="color: #DD0000">'&nbsp;'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">''</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$value</span><span style="color: #007700">));<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">count</span><span style="color: #007700">(</span><span style="color: #0000BB">$range</span><span style="color: #007700">)&nbsp;!=&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;</span><span style="color: #0000BB">Exception</span><span style="color: #007700">(</span><span style="color: #0000BB">sprintf</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'Option&nbsp;"%s"&nbsp;must&nbsp;be&nbsp;2&nbsp;integers&nbsp;separated&nbsp;by&nbsp;a&nbsp;comma'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">option</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">name<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">));<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setResult</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'min'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$range</span><span style="color: #007700">[</span><span style="color: #0000BB">0</span><span style="color: #007700">],&nbsp;</span><span style="color: #DD0000">'max'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$range</span><span style="color: #007700">[</span><span style="color: #0000BB">1</span><span style="color: #007700">]));<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;then&nbsp;we&nbsp;can&nbsp;register&nbsp;our&nbsp;action<br /></span><span style="color: #0000BB">Console_CommandLine</span><span style="color: #007700">::</span><span style="color: #0000BB">registerAction</span><span style="color: #007700">(</span><span style="color: #DD0000">'Range'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'ActionRange'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;and&nbsp;now&nbsp;our&nbsp;action&nbsp;is&nbsp;available&nbsp;!<br /></span><span style="color: #0000BB">$parser&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Console_CommandLine</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$parser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'range'</span><span style="color: #007700">,&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'short_name'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'-r'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'long_name'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'--range'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'action'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Range'</span><span style="color: #007700">,&nbsp;</span><span style="color: #FF8000">//&nbsp;note&nbsp;our&nbsp;custom&nbsp;action<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'description'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'A&nbsp;range&nbsp;of&nbsp;two&nbsp;integers&nbsp;separated&nbsp;by&nbsp;a&nbsp;comma'<br /></span><span style="color: #007700">));<br /></span><span style="color: #FF8000">//&nbsp;etc...<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+  
+ </div>
+
+ <div class="refsection"><div class="info"><h1>Using a custom renderer</h1>
+</div>
+  <p class="para">TODO: write this section</p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.console.console-commandline.sub-commands.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.console.console-commandline.html">Console_CommandLine</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.console.console-commandline.web.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Managing command line sub-commands</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Using Console_CommandLine in web environments</td>
+  </tr>
+ </table>
+</div>
+</body></html>

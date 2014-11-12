@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Examples</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.networking.net-url-mapper.html" title="Net_URL_Mapper" />
+  <link rel="prev" href="package.networking.net-url-mapper.features.html" title="Features" />
+  <link rel="next" href="package.networking.net-whois.html" title="Net_Whois" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Examples</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.networking.net-url-mapper.features.html" title="Features">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.networking.net-whois.html" title="Net_Whois">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="chapter" id="package.networking.net-url-mapper.example">
+ <div class="info">
+  <h1>Examples</h1>
+
+ </div>
+
+ <p class="para">
+  The coming examples assume/need the following setup:
+ </p>
+
+ <div class="example">
+  <div class="info">
+   <p><strong>.htaccess</strong></p>
+  </div>
+  <div class="programlisting"><br/>DirectoryIndex&nbsp;router.php<br/>RewriteEngine&nbsp;On<br/>RewriteCond&nbsp;%{REQUEST_FILENAME}&nbsp;!-f<br/>RewriteCond&nbsp;%{REQUEST_FILENAME}&nbsp;!-d<br/>RewriteRule&nbsp;!\.(js|ico|gif|jpg|png|css)$&nbsp;/router.php</div>
+ </div>
+
+ <div class="example">
+  <div class="info">
+   <p><strong>init.php</strong></p>
+  </div>
+  <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Net/URL/Mapper.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$m&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Net_URL_Mapper</span><span style="color: #007700">::</span><span style="color: #0000BB">getInstance</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+ </div>
+
+ <div class="phd-toc">
+
+
+ <div class="section" id="package.networking.net-url-mapper.example.blog">
+  <div class="info">
+   <h1>Blog routing</h1>
+
+  </div>
+
+  <p class="para">
+   The following snippets maps a couple blog URLs.
+  </p>
+
+  <div class="example">
+   <div class="info">
+    <p><strong>blog-router.php</strong></p>
+   </div>
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require&nbsp;</span><span style="color: #DD0000">'init.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$m</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #DD0000">'blog'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'page'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'frontpage.php'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$m</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">connect</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'blog/feed/:type'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'page'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'feed.php'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'rss'</span><span style="color: #007700">)<br />);<br /></span><span style="color: #0000BB">$m</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">connect</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'blog/archives/:year/:month'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'page'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'archive.php'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'year'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #DD0000">'Y'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'month'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #DD0000">'m'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;)<br />);<br /><br /></span><span style="color: #0000BB">$route&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$m</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">match</span><span style="color: #007700">(</span><span style="color: #0000BB">$_SERVER</span><span style="color: #007700">[</span><span style="color: #DD0000">'REQUEST_URI'</span><span style="color: #007700">]);<br />if&nbsp;(</span><span style="color: #0000BB">$route&nbsp;</span><span style="color: #007700">===&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;no&nbsp;match<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$route&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'page'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'frontpage.php'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;);<br />}<br />include&nbsp;</span><span style="color: #0000BB">dirname</span><span style="color: #007700">(</span><span style="color: #0000BB">__FILE__</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">'/inc/'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$route</span><span style="color: #007700">[</span><span style="color: #DD0000">'page'</span><span style="color: #007700">];<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+ </div>
+
+
+
+ <div class="section" id="package.networking.net-url-mapper.example.zf">
+  <div class="info">
+   <h1>Zend Framework routing</h1>
+
+  </div>
+
+  <p class="para">
+   A really simple example for Zend Framework-style URL routing. ;-) This is not
+   meant to work in production, it&#039;s not necessarily secure and serves as a proof
+   of concept or base for a real implementation.
+  </p>
+
+  <div class="example">
+   <div class="info">
+    <p><strong>zf-router.php</strong></p>
+   </div>
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require&nbsp;</span><span style="color: #DD0000">'init.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$path&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'/:module/:controller/:action'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$defaults&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'module'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'default'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'controller'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'index'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'action'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'index'</span><span style="color: #007700">,<br />);<br /><br /></span><span style="color: #0000BB">$m</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #0000BB">$path</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$defaults</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$route&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$m</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">match</span><span style="color: #007700">(</span><span style="color: #0000BB">$_SERVER</span><span style="color: #007700">[</span><span style="color: #DD0000">'REQUEST_URI'</span><span style="color: #007700">]);<br /><br /></span><span style="color: #FF8000">//&nbsp;Fix&nbsp;the&nbsp;controller's&nbsp;name&nbsp;to&nbsp;adhere&nbsp;to&nbsp;ZF's&nbsp;standard,&nbsp;FooController<br /></span><span style="color: #0000BB">$controllerClass&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">ucfirst</span><span style="color: #007700">(</span><span style="color: #0000BB">strtolower</span><span style="color: #007700">(</span><span style="color: #0000BB">$route</span><span style="color: #007700">[</span><span style="color: #DD0000">'controller'</span><span style="color: #007700">]))&nbsp;.&nbsp;</span><span style="color: #DD0000">'Controller'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;Fix&nbsp;the&nbsp;action's&nbsp;name&nbsp;to&nbsp;adhere&nbsp;to&nbsp;ZF's&nbsp;standard,&nbsp;barAction()<br /></span><span style="color: #0000BB">$controllerAction&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">strtolower</span><span style="color: #007700">(</span><span style="color: #0000BB">$route</span><span style="color: #007700">[</span><span style="color: #DD0000">'action'</span><span style="color: #007700">])&nbsp;.&nbsp;</span><span style="color: #DD0000">'Action'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;load&nbsp;the&nbsp;controller&nbsp;class<br /></span><span style="color: #007700">require&nbsp;</span><span style="color: #DD0000">'app/modules/'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$route</span><span style="color: #007700">[</span><span style="color: #DD0000">'module'</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">'/'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$class&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">'.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$controllerObj&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">$controllerClass</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">call_user_func</span><span style="color: #007700">(array(</span><span style="color: #0000BB">$controllerObj</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$controllerAction</span><span style="color: #007700">));&nbsp;</span><span style="color: #FF8000">//&nbsp;pseudo&nbsp;dispatcher<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+ </div>
+
+
+
+ <div class="section" id="package.networking.net-url-mapper.example.generate">
+  <div class="info">
+   <h1>Generate a URL</h1>
+
+  </div>
+
+  <p class="para">
+   The following snippet explains how to generate a fancy URL
+   automatically from the defined routes.
+  </p>
+
+  <div class="example">
+   <div class="info">
+    <p><strong>generate-url.php</strong></p>
+   </div>
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require&nbsp;</span><span style="color: #DD0000">'init.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$m</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #DD0000">'blog'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'page'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'frontpage.php'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">$m</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">connect</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'blog/feed/:type'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'page'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'feed.php'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'rss'</span><span style="color: #007700">)<br />);<br /></span><span style="color: #0000BB">$m</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">connect</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'blog/archives/:year/:month'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'page'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'archive.php'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'year'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #DD0000">'Y'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'month'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #DD0000">'m'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;)<br />);<br /><br /></span><span style="color: #0000BB">$url1&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$m</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">generate</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'page'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'feed.php'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'atom'</span><span style="color: #007700">,<br />));&nbsp;</span><span style="color: #FF8000">//&nbsp;blog/feed/atom<br /><br /></span><span style="color: #0000BB">$url2&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$m</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">generate</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'page'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'archive.php'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'year'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'2008'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'month'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'06'</span><span style="color: #007700">,<br />));&nbsp;</span><span style="color: #FF8000">//&nbsp;blog/archives/2008/06<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+ </div>
+
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.networking.net-url-mapper.features.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.networking.net-url-mapper.html">Net_URL_Mapper</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.networking.net-whois.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Features</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Net_Whois</td>
+  </tr>
+ </table>
+</div>
+</body></html>

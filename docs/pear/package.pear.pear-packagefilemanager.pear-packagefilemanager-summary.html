@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Class Summary PEAR_PackageFileManager</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.pear.pear-packagefilemanager.html" title="PEAR_PackageFileManager" />
+  <link rel="prev" href="package.pear.pear-packagefilemanager.html" title="PEAR_PackageFileManager" />
+  <link rel="next" href="package.pear.pear-packagefilemanager.pear-packagefilemanager.pear-packagefilemanager.html" title="constructor PEAR_PackageFileManager::PEAR_PackageFileManager" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Class Summary PEAR_PackageFileManager</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.pear.pear-packagefilemanager.html" title="PEAR_PackageFileManager">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.pear.pear-packagefilemanager.pear-packagefilemanager.pear-packagefilemanager.html" title="constructor PEAR_PackageFileManager::PEAR_PackageFileManager">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.pear.pear-packagefilemanager.pear-packagefilemanager-summary">
+    
+    <h1 class="refname">Class Summary <strong class="classname">PEAR_PackageFileManager</strong></h1>
+    <div class="refnamediv">Class Summary  <strong class="classname">PEAR_PackageFileManager</strong> &ndash; PEAR :: PackageFileManager updates the &lt;filelist&gt;&lt;/filelist&gt;
+   section  of a PEAR package.xml file to reflect the current files in
+   preparation for a release.</div>
+
+    
+   <div class="refsection"><div class="info"><h1>PEAR :: PackageFileManager updates the &lt;filelist&gt;&lt;/filelist&gt;
+   section  of a PEAR package.xml file to reflect the current files in
+   preparation for a release.</h1>
+</div>
+    <p class="para">The PEAR_PackageFileManager class uses a plugin system to generate the  list of files in a package.  This allows both standard recursive  directory parsing (plugin type file) and more intelligent options  such as the CVS browser PEAR_PackageFileManager_Cvs, which  grabs all files in a local CVS checkout to create the list, ignoring  any other local files.</p>
+   <p class="para">Other options include specifying roles for file extensions (all .php  files are role=&quot;php&quot;, for example), roles for directories (all directories  named &quot;tests&quot; are given role=&quot;tests&quot; by default), and exceptions.  Exceptions are specific pathnames with * and ? wildcards that match  a default role, but should have another.  For example, perhaps  a debug.tpl template would normally be data, but should be included  in the docs role.  Along these lines, to exclude files entirely,  use the ignore option.</p>
+   <p class="para">Required options for a release include version, baseinstalldir, state,  and packagedirectory (the full path to the local location of the  package to create a package.xml file for)</p>
+   <p class="para">Example usage:  </p><div class="php-highlightedcode"><pre class="php-highlightedcode">1      &lt;?php
+   2      require_once(&#039;PEAR/PackageFileManager.php&#039;);
+   3      $packagexml = new</pre>
+<a href="package.pear.pear-packagefilemanager.pear-packagefilemanager.pear-packagefilemanager.html" class="link">PEAR_PackageFileManager</a><pre class="php-highlightedcode">;
+   4      $e = $packagexml-&gt;</pre>
+<a href="package.pear.pear-packagefilemanager.pear-packagefilemanager.setoptions.html" class="link">setOptions</a><pre class="php-highlightedcode">(
+   5      array(&#039;baseinstalldir&#039; =&gt; &#039;PhpDocumentor&#039;,
+   6       &#039;version&#039; =&gt; &#039;1.2.1&#039;,
+   7       &#039;packagedirectory&#039; =&gt; &#039;C:/Web Pages/chiara/phpdoc2/&#039;,
+   8       &#039;state&#039; =&gt; &#039;stable&#039;,
+   9       &#039;filelistgenerator&#039; =&gt; &#039;cvs&#039;, // generate from cvs, use file for directory
+   10      &#039;notes&#039; =&gt; &#039;We\&#039;ve implemented many new and exciting features&#039;,
+   11      &#039;ignore&#039; =&gt; array(&#039;TODO&#039;, &#039;tests/&#039;), // ignore TODO, all files in tests/
+   12      &#039;installexceptions&#039; =&gt; array(&#039;phpdoc&#039; =&gt; &#039;/*&#039;), // baseinstalldir =&quot;/&quot; for phpdoc
+   13      &#039;dir_roles&#039; =&gt; array(&#039;tutorials&#039; =&gt; &#039;doc&#039;),
+   14      &#039;exceptions&#039; =&gt; array(&#039;README&#039; =&gt; &#039;doc&#039;, // README would be data, now is doc
+   15                            &#039;PHPLICENSE.txt&#039; =&gt; &#039;doc&#039;))); // same for the license
+   16     if (PEAR::isError($e)) {
+   17         echo $e-&gt;getMessage();
+   18         die();
+   19     }
+   20     $e = $test-&gt;</pre>
+<a href="package.pear.pear-packagefilemanager.pear-packagefilemanager.addplatformexception.html" class="link">addPlatformException</a><pre class="php-highlightedcode">(&#039;pear-phpdoc.bat&#039;, &#039;windows&#039;);
+   21     if (PEAR::isError($e)) {
+   22         echo $e-&gt;getMessage();
+   23         exit;
+   24     }
+   25     $packagexml-&gt;</pre>
+<a href="package.pear.pear-packagefilemanager.pear-packagefilemanager.addrole.html" class="link">addRole</a><pre class="php-highlightedcode">(&#039;pkg&#039;, &#039;doc&#039;); // add a new role mapping
+   26     if (PEAR::isError($e)) {
+   27         echo $e-&gt;getMessage();
+   28         exit;
+   29     }
+   30     // replace @PHP-BIN@ in this file with the path to php executable!  pretty neat
+   31     $e = $test-&gt;</pre>
+<a href="package.pear.pear-packagefilemanager.pear-packagefilemanager.addreplacement.html" class="link">addReplacement</a><pre class="php-highlightedcode">(&#039;pear-phpdoc&#039;, &#039;pear-config&#039;, &#039;@PHP-BIN@&#039;, &#039;php_bin&#039;);
+   32     if (PEAR::isError($e)) {
+   33         echo $e-&gt;getMessage();
+   34         exit;
+   35     }
+   36     $e = $test-&gt;</pre>
+<a href="package.pear.pear-packagefilemanager.pear-packagefilemanager.addreplacement.html" class="link">addReplacement</a><pre class="php-highlightedcode">(&#039;pear-phpdoc.bat&#039;, &#039;pear-config&#039;, &#039;@PHP-BIN@&#039;, &#039;php_bin&#039;);
+   37     if (PEAR::isError($e)) {
+   38         echo $e-&gt;getMessage();
+   39         exit;
+   40     }
+   41     // note use of</pre>
+<a href="package.pear.pear-packagefilemanager.pear-packagefilemanager.debugpackagefile.html" class="link"><strong class="function">debugPackageFile()</strong></a><pre class="php-highlightedcode">- this is VERY important
+   42     if (isset($_GET[&#039;make&#039;]) || $_SERVER[&#039;argv&#039;][1] == &#039;make&#039;) {
+   43         $e = $packagexml-&gt;</pre>
+<a href="package.pear.pear-packagefilemanager.pear-packagefilemanager.writepackagefile.html" class="link">writePackageFile</a><pre class="php-highlightedcode">();
+   44     } else {
+   45         $e = $packagexml-&gt;</pre>
+<a href="package.pear.pear-packagefilemanager.pear-packagefilemanager.debugpackagefile.html" class="link">debugPackageFile</a><pre class="php-highlightedcode">();
+   46     }
+   47     if (PEAR::isError($e)) {
+   48         echo $e-&gt;getMessage();
+   49         die();
+   50     }
+   51     ?&gt;</pre>
+</div>
+   <p class="para">In addition, a package.xml file can now be generated from  scratch, with the usage of new options package, summary, description, and  the use of the <a href="package.pear.pear-packagefilemanager.pear-packagefilemanager.addmaintainer.html" class="link"><strong class="function">addMaintainer()</strong></a> method</p>
+   </div>
+   <div class="refsection"><div class="info"><h1>Class Trees for <strong class="classname">PEAR_PackageFileManager</strong></h1>
+</div>
+    <p class="para">
+       </p><ul class="itemizedlist">
+      <li class="listitem"><p class="para">
+      PEAR_PackageFileManager
+         </p></li>
+     </ul>
+      
+   </div>
+   </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.pear.pear-packagefilemanager.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.pear.pear-packagefilemanager.html">PEAR_PackageFileManager</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.pear.pear-packagefilemanager.pear-packagefilemanager.pear-packagefilemanager.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">PEAR_PackageFileManager</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">constructor PEAR_PackageFileManager::PEAR_PackageFileManager</td>
+  </tr>
+ </table>
+</div>
+</body></html>

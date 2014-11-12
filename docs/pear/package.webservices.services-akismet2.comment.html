@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>The Comment Class</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.webservices.services-akismet2.html" title="Services_Akismet2" />
+  <link rel="prev" href="package.webservices.services-akismet2.setup.html" title="Setup" />
+  <link rel="next" href="package.webservices.services-akismet2.methods.html" title="API Methods" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">The Comment Class</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.webservices.services-akismet2.setup.html" title="Setup">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.webservices.services-akismet2.methods.html" title="API Methods">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="package.webservices.services-akismet2.comment">
+
+ <div class="info">
+  <h1>The Comment Class</h1>
+
+ </div>
+
+ <div class="section" id="package.webservices.services-akismet2.comment.overview">
+
+  <div class="info">
+   <h2 class="title">Overview</h2>
+  </div>
+
+  <p class="para">
+   The class <strong class="classname"><a href="http://pear.php.net/package/Services_Akismet2/docs/latest/Services_Akismet2/Services_Akismet2_Comment.html" class="link external">Services_Akismet2_Comment</a></strong>
+   represents a comment on a website. All Akismet API methods take a comment as
+   the first parameter. The comment class contains content-related information
+   such as the comment text, author name, author email and Web link; as well as
+   server-related information such as the HTTP referer, timestamp and IP
+   address. The accuracy provided by the Akismet API increases as more fields
+   are included in the comment.
+  </p>
+
+ </div>
+
+ <div class="section" id="package.webservices.services-akismet2.comment.required-fields">
+
+  <div class="info">
+   <h2 class="title">Required Fields</h2>
+  </div>
+
+  <p class="para">
+   There are two required fields:
+   </p><ul class="itemizedlist">
+    <li class="listitem">
+     <span class="simpara">
+      User Agent (the browser used to submit the comment), and
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      User IP (IP address from which the comment was submitted).
+     </span>
+    </li>
+   </ul><p>
+   The blog URL, as referenced in the Akismet
+   <a href="http://akismet.com/development/api/#comment-check" class="link external">API documentation</a>,
+   is specified in the <strong class="classname">Services_Akismet2</strong> constructor and
+   does not need to be specified in the comment object.
+  </p>
+
+ </div>
+
+ <div class="section" id="package.webservices.services-akismet2.comment.auto-fields">
+
+  <div class="info">
+   <h2 class="title">Auto-Setting Server Fields</h2>
+  </div>
+
+  <p class="para">
+   When checking if a comment is spam, it is possible to set the required
+   fields, and several other server-related fields automatically. To do so, use
+   the second parameter of the
+   <code class="methodname">Services_Akismet2::<a href="http://pear.php.net/package/Services_Akismet2/docs/latest/Services_Akismet2/Services_Akismet2.html#methodisSpam" class="link external">isSpam()</a></code>
+   method. When using this parameter, usually only the content-related fields
+   need to be specified manually.
+  </p>
+
+  <p class="para">
+   </p><blockquote class="note">
+    <p class="para">
+     Only auto-set server-related fields on actual comments submitted in
+     real-time. If you check comments using an external system, you run the
+     risk of submitting your own server information as spam. Instead, save the
+     server information in the database and set it manually using the
+     <code class="methodname">Services_Akismet2::<a href="http://pear.php.net/package/Services_Akismet2/docs/latest/Services_Akismet2/Services_Akismet2_Comment.html#methodsetField" class="link external">setField()</a></code>
+     method.
+    </p>
+   </blockquote>
+
+  
+
+ </div>
+
+ <div class="section" id="package.webservices.services-akismet2.comment.examples">
+
+  <div class="info">
+   <h2 class="title">Examples</h2>
+  </div>
+
+  <p class="para">
+   There are two ways to specify fields in the comment object: setter methods,
+   and in the <a href="http://pear.php.net/package/Services_Akismet2/docs/latest/Services_Akismet2/Services_Akismet2_Comment.html#method__construct" class="link external">constructor</a>.
+   As a shortcut, <strong class="classname">Services_Akismet2</strong> methods that require
+   a comment also accept an array of fields. For example:
+   </p><div class="informalexample">
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Services/Akismet2/Comment.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;set&nbsp;in&nbsp;constructor<br /></span><span style="color: #0000BB">$comment&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Services_Akismet2_Comment</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'comment_author'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Test&nbsp;User'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'comment_author_email'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'test@example.com'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'comment_author_url'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'http://myblog.example.com'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'comment_content'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Buy&nbsp;V1agra!'<br /></span><span style="color: #007700">));<br /><br /></span><span style="color: #FF8000">//&nbsp;using&nbsp;setter&nbsp;methods<br /></span><span style="color: #0000BB">$comment&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Services_Akismet2_Comment</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$comment</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setAuthor</span><span style="color: #007700">(</span><span style="color: #DD0000">'Test&nbsp;User'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">setAuthorEmail</span><span style="color: #007700">(</span><span style="color: #DD0000">'test@example.com'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">setAuthorUrl</span><span style="color: #007700">(</span><span style="color: #DD0000">'http://myblog.example.com'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;</span><span style="color: #0000BB">setContent</span><span style="color: #007700">(</span><span style="color: #DD0000">'Buy&nbsp;V1agra!'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;using&nbsp;an&nbsp;array&nbsp;as&nbsp;a&nbsp;shortcut<br /></span><span style="color: #0000BB">$akismet</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">isSpam</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'comment_author'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Test&nbsp;User'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'comment_author_email'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'test@example.com'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'comment_author_url'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'http://myblog.example.com'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'comment_content'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Buy&nbsp;V1agra!'<br /></span><span style="color: #007700">));<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   </div>
+  
+
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.webservices.services-akismet2.setup.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.webservices.services-akismet2.html">Services_Akismet2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.webservices.services-akismet2.methods.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Setup</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">API Methods</td>
+  </tr>
+ </table>
+</div>
+</body></html>

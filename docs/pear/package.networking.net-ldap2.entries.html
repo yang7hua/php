@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Managing entries</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.networking.net-ldap2.html" title="Net_LDAP2" />
+  <link rel="prev" href="package.networking.net-ldap2.attributes.html" title="Attributes" />
+  <link rel="next" href="package.networking.net-ldap2.filter.html" title="LDAP filters" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Managing entries</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.networking.net-ldap2.attributes.html" title="Attributes">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.networking.net-ldap2.filter.html" title="LDAP filters">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.networking.net-ldap2.entries">
+    
+        <h1 class="refname">Managing entries</h1>
+        <div class="refnamediv">Managing entries &ndash; Adding/renaming/moving/deleting entries</div>
+
+    
+
+    <div class="refsection"><div class="info"><h1>Adding (fresh or old) entries to the directory</h1>
+</div>
+        
+
+        <p class="para">
+           Adding new entries is performed in two ways. First, you need to establish a fresh <strong class="classname">Net_LDAP2_Entry</strong> object.
+           After that, you can add that entry like you would add already-existent entries using
+           <strong class="classname">Net_LDAP2</strong>&#039;s <strong class="function">add()</strong> method.
+        </p>
+
+        <div class="example"><div class="info"><p><strong>Adding a fresh entry</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Build&nbsp;a&nbsp;new&nbsp;fresh&nbsp;entry:<br /></span><span style="color: #0000BB">$dn&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'cn=new-admin,o=example,dc=org'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$attributes&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'cn'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'new-admin'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'mail'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'new-admin@exaple.org'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'n.admin@example.de'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'telephoneNumber'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'1234567890'<br /></span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$entry&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Net_LDAP2_Entry</span><span style="color: #007700">::</span><span style="color: #0000BB">createFresh</span><span style="color: #007700">(</span><span style="color: #0000BB">$dn</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$attributes</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Add&nbsp;the&nbsp;entry&nbsp;to&nbsp;the&nbsp;directory:<br /></span><span style="color: #0000BB">$ldap</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">add</span><span style="color: #007700">(</span><span style="color: #0000BB">$entry</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+    </div>
+
+
+    <div class="refsection"><div class="info"><h1>Renaming or moving entries</h1>
+</div>
+        
+
+        <p class="para">
+        Renaming and/or moving an entry is an operation on the DN of an entry. Moving an entry means, to rename a DN in such a way, that
+        the entry becomes a new base-DN. You can rename or move an entry, if you call the <strong class="function">dn()</strong> method of the entry you
+        want to relocate. Alternatively, you may call <strong class="classname">Net_LDAP2</strong>&#039;s <strong class="function">move()</strong> method that also ca handle
+        only DNs. Remember that you must call the entires <strong class="function">update()</strong> method to carry out the move/rename.
+        <strong class="classname">Net_LDAP2</strong>&#039;s <strong class="function">move()</strong> will move the entry immediately. If you use an entryobject togehter with
+        <strong class="classname">Net_LDAP2</strong>&#039;s <strong class="function">move()</strong>, you are able to perform cross directory moves.
+        </p>
+        <div class="example"><div class="info"><p><strong>Moving an entry using Net_LDAP2_Entry</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Defining&nbsp;the&nbsp;DN&nbsp;we&nbsp;want&nbsp;to&nbsp;fetch;<br /></span><span style="color: #0000BB">$dn&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'cn=admin,o=example,dc=org'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$newdn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'cn=admin,o=new-example,dc=org'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$entry&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$ldap</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getEntry</span><span style="color: #007700">(</span><span style="color: #0000BB">$dn</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$entry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">dn</span><span style="color: #007700">(</span><span style="color: #0000BB">$newdn</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+        <div class="example"><div class="info"><p><strong>Moving an entry using Net_LDAP2 and Net_LDAP2_Entry</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Defining&nbsp;the&nbsp;DN&nbsp;we&nbsp;want&nbsp;to&nbsp;fetch;<br /></span><span style="color: #0000BB">$dn&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'cn=admin,o=example,dc=org'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$newdn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'cn=admin,o=new-example,dc=org'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$entry&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$ldap</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getEntry</span><span style="color: #007700">(</span><span style="color: #0000BB">$dn</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$ldap</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">move</span><span style="color: #007700">(</span><span style="color: #0000BB">$entry</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$newdn</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+        <div class="example"><div class="info"><p><strong>Renaming an entry using Net_LDAP2 and DNs</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Defining&nbsp;the&nbsp;DN&nbsp;we&nbsp;want&nbsp;to&nbsp;fetch;<br /></span><span style="color: #0000BB">$dn&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'cn=admin,o=example,dc=org'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$newdn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'cn=admin2,o=new-example,dc=org'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$ldap</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">move</span><span style="color: #007700">(</span><span style="color: #0000BB">$dn</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$newdn</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+<div class="example"><div class="info"><p><strong>Performing a cross directory move</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;$ldap_src&nbsp;is&nbsp;the&nbsp;source&nbsp;ldap&nbsp;and&nbsp;$ldap_tgt&nbsp;the&nbsp;target<br /></span><span style="color: #0000BB">$dn&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'cn=admin,o=example,dc=org'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$newdn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'cn=admin,o=new-example,dc=org'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$entry&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$ldap_src</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getEntry</span><span style="color: #007700">(</span><span style="color: #0000BB">$dn</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$ldap_src</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">move</span><span style="color: #007700">(</span><span style="color: #0000BB">$entry</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$newdn</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$ldap_tgt</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+
+    </div>
+
+    <div class="refsection"><div class="info"><h1>Deleting entries</h1>
+</div>
+        
+
+        <p class="para">
+          Deleting entries is performed using <strong class="classname">Net_LDAP2</strong>&#039;s <strong class="function">delete()</strong> method.
+          Just pass the <strong class="classname">Net_LDAP2_Entry</strong> object or the DN of the entry you want to delete.
+          In the case that the DN contains subentrys, you need to pass <code class="literal">TRUE</code> as second parameter
+          which will make <strong class="function">delete()</strong> delete recursive.
+        </p>
+        <p class="para">
+          A second way exist: You may simply call <strong class="function">delete()</strong> from the <strong class="classname">Net_LDAP2_Entry</strong> you want to delete.
+          Don&#039;t forget that you must call <strong class="function">update()</strong> to carry out the delete in this case.
+        </p>
+
+        <div class="example"><div class="info"><p><strong>Deleting an entry</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$dn&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'cn=new-admin,o=example,dc=org'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$ldap</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">delete</span><span style="color: #007700">(</span><span style="color: #0000BB">$dn</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+        <div class="example"><div class="info"><p><strong>Deleting an entry using a Net_LDAP2_Entry object</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$entry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">delete</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$entry</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">update</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.networking.net-ldap2.attributes.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.networking.net-ldap2.html">Net_LDAP2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.networking.net-ldap2.filter.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Attributes</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">LDAP filters</td>
+  </tr>
+ </table>
+</div>
+</body></html>

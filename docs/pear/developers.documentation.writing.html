@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Writing documentation</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="developers.documentation.html" title="Documentation" />
+  <link rel="prev" href="developers.documentation.docbook.html" title="Docbook XML" />
+  <link rel="next" href="developers.documentation.translating.html" title="Translating PEAR's documentation" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Writing documentation</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="developers.documentation.docbook.html" title="Docbook XML">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="developers.documentation.translating.html" title="Translating PEAR's documentation">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="developers.documentation.writing">
+    <h1>Writing documentation</h1>
+
+
+    <p class="para">Instead of a long and boring description for writing documentation
+    using DocBook, we would like to point you to a bunch of &quot;reference
+    documents&quot;, from which you should be able to learn quickly:</p>
+
+    <ul class="itemizedlist">
+      <li class="listitem">
+        <p class="para"><a href="package.console.console-progressbar.html" class="link">Console_ProgressBar</a>
+        - small documentation for a small package</p>
+      </li>
+
+      <li class="listitem">
+        <p class="para"><a href="package.system.system-daemon.html" class="link">System_Daemon</a> - medium
+        sized documentation on several pages</p>
+      </li>
+    </ul>
+
+    <p class="para">The scope of your package&#039;s documentation should be:</p>
+
+    <ul class="itemizedlist">
+      <li class="listitem">
+        <p class="para">Explain which problem your package solves</p>
+      </li>
+
+      <li class="listitem">
+        <p class="para">Describe differences to other packages solving identical or
+        similar problems</p>
+      </li>
+
+      <li class="listitem">
+        <p class="para">Give example how to use the package</p>
+      </li>
+
+      <li class="listitem">
+        <p class="para">(Maybe) give an introduction to concepts your package uses and
+        that the user probably does not know/is not aware of</p>
+      </li>
+    </ul>
+
+    <p class="para">The documentation should not repeat the API docs! You should only
+    <a href="http://doc.php.net/phd/docs/#ext-phd-pearapi" class="link external">link to
+    it</a>. The documentation for older packages often contains the whole
+    API reference, but that is not the manual&#039;s scope anymore - phpDocumentor
+    does a much better job at generating it automatically.</p>
+
+    <div class="section" id="developers.documentation.writing.filestructure">
+      <h2 class="title">Package documentation file structure</h2>
+
+      <table class="doctable table">
+        <caption>Files in peardoc</caption>
+
+        
+          <thead>
+            <tr>
+              <th>Filename</th>
+
+              <th>Description</th>
+            </tr>
+
+          </thead>
+
+
+          <tbody class="tbody">
+            <tr>
+              <td><code class="filename">packages/</code></td>
+
+              <td>Directory containing all package-specific
+              documentation</td>
+            </tr>
+
+
+            <tr>
+              <td><code class="filename"> category.xml</code></td>
+
+              <td>Description of a category</td>
+            </tr>
+
+
+            <tr>
+              <td><code class="filename"> category-entities.xml</code></td>
+
+              <td>File with links to all packages in that category. Exists
+              in english documentation only.</td>
+            </tr>
+
+
+            <tr>
+              <td><code class="filename"> category/</code></td>
+
+              <td>Directory with documentation of packages in that
+              category</td>
+            </tr>
+
+
+            <tr>
+              <td><code class="filename"> package.xml</code></td>
+
+              <td>Main file for documentation of a specific package</td>
+            </tr>
+
+
+            <tr>
+              <td><code class="filename"> package/</code></td>
+
+              <td>Files for the package documentation are collected in
+              here, e.g. <code class="filename">examples.xml</code></td>
+            </tr>
+
+          </tbody>
+        
+      </table>
+
+    </div>
+
+    <div class="section" id="developers.documentation.writing.committing">
+      <h2 class="title">Committing changes into SVN</h2>
+
+      <p class="para">Before committing your changes into peardoc SVN, test and build
+      it! This is absolutely necessary - it makes sure that other people
+      writing documentation can build the manual without problems, and that
+      the official pear.php.net build works.</p>
+
+      <blockquote class="warning">
+
+        <p class="para">The manual on pear.php.net is build once a week, 12:00 UTC every
+        sunday. If it breaks, it will take a whole week until the next build
+        attempt is made!</p>
+
+        <p class="para">So do <em class="emphasis">not</em> commit updates shortly before the
+        main build happens.</p>
+      </blockquote>
+
+      
+      <blockquote class="note">
+        <p class="para">
+         If you don&#039;t have peardoc karma, write to the peardoc mailing list
+         to get it. It is also possible to send a patch to the list and get
+         someone with karma to commit it.
+        </p>
+      </blockquote>
+
+    </div>
+
+    <div class="section" id="developers.documentation.writing.tips">
+      <h2 class="title">Tips for good documentation</h2>
+
+      <p class="para">This section of the chapter does not deal with the specifics of
+      organizing documentation in the peardoc standard, but instead with how
+      to organize documentation logically.</p>
+
+      <ol type="1">
+        <li class="listitem">
+          <p class="para">Every package solves a problem. What is this problem? Try to
+          figure out what assumptions your end-users might not have about the
+          problem (they may not realize that this is a problem that needs
+          solving). For instance, a template package solves the problem of
+          both separating design from code, and separating business logic from
+          display logic. If possible, explain the problem in terms that even a
+          novice programmer can understand.</p>
+        </li>
+
+        <li class="listitem">
+          <p class="para">Next, how does the package uniquely solve the problem? This is
+          something that most documentation lacks. For example, there are many
+          template engines. All of them solve the same problem, but none of
+          them do it in the same way. A block-based template engine does not
+          have any logic at all, whereas a template like Smarty defines a
+          whole new template language. Some template engines compile their
+          templates, others don&#039;t. What is unique about your package? Can
+          someone who has never seen the code get a good idea of how it solves
+          the problem?</p>
+        </li>
+
+        <li class="listitem">
+          <p class="para">Provide examples! Start right away with simple examples that
+          show the basic feature set -- they will show users how to quickly
+          start using the package. More complex examples will help the users
+          in understanding advanced ways of using the package.</p>
+        </li>
+
+        <li class="listitem">
+          <p class="para">If your package exposes complex interfaces or multiple
+          constants that can&#039;t be fully explained in one or two examples
+          (which is very likely), it is still important to explain them
+          thoroughly in the documentation. Document any interfaces that users
+          must use, such as a database DSN, command-line arguments for
+          applications, configuration file contents, or any other non-code
+          elements.</p>
+        </li>
+
+        <li class="listitem">
+          <p class="para">Last, proofread your documentation. If possible, have someone
+          else who is not as familiar with your project take a look at the
+          documentation. They will catch assumptions that you have
+          missed.</p>
+        </li>
+      </ol>
+    </div>
+
+    <div class="section" id="developers.documentation.writing.software">
+      <h2 class="title">Software assistance</h2>
+
+      <p class="para">PEAR documentation is mostly written using plain text editors like
+      <code class="literal">vim</code> or <code class="literal">Kate</code>. XML editors mostly
+      don&#039;t help enough to be more useful than text editors; plus no tool yet
+      is able to work with the entity linking structure used in
+      peardoc.</p>
+
+      <p class="para">One way to get documentation easily is writing initial package
+      documentation using an XML editor like XXE, and make the necessary
+      adjustments for peardoc after that. After doing that, you probably won&#039;t
+      be able to use the XML editor anymore without losing data.</p>
+    </div>
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="developers.documentation.docbook.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="developers.documentation.html">Documentation</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="developers.documentation.translating.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Docbook XML</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Translating PEAR's documentation</td>
+  </tr>
+ </table>
+</div>
+</body></html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Auth_Container_MDB2</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.authentication.auth.html" title="Auth" />
+  <link rel="prev" href="package.authentication.auth.storage.mdb.html" title="Auth_Container_MDB" />
+  <link rel="next" href="package.authentication.auth.storage.multiple.html" title="Auth_Container_Multiple" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Auth_Container_MDB2</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.authentication.auth.storage.mdb.html" title="Auth_Container_MDB">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.authentication.auth.storage.multiple.html" title="Auth_Container_Multiple">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.authentication.auth.storage.mdb2">
+ 
+  <h1 class="refname">Auth_Container_MDB2</h1>
+  <div class="refnamediv">Auth_Container_MDB2 &ndash; Authenticate against a database using MDB2</div>
+
+ 
+ <div class="refsection" id="package.authentication.auth.storage.mdb2.overview"><div class="info"><h1>MDB2 Container</h1>
+</div>
+  
+  <p class="para">
+   This container makes use of
+   <a href="package.database.mdb2.html" class="link"><strong class="classname">PEAR::MDB2</strong></a>
+   abstraction layer for database access. That means that you can
+   use all databases that are supported by the MDB2 abstraction layer
+   to store the login data.
+  </p>
+  <p class="para">
+   The storage-specific argument for the 
+   <a href="package.authentication.auth.auth.auth.html" class="link">
+    <strong class="function">Auth constructor()</strong>
+   </a>
+   is an array of options.
+   </p><table class="doctable table"><caption>Available Options</caption>
+    
+    
+     <thead>
+      <tr>
+       <th>Option</th>
+       <th>Data Type</th>
+       <th>Default value</th>
+       <th>Description</th>
+      </tr>
+
+     </thead>
+
+     <tbody class="tbody">
+      <tr>
+       <td>
+        "<span class="quote">dsn</span>"
+       </td>
+       <td>
+        <span class="type">string</span>
+       </td>
+       <td>
+        "<span class="quote">
+       </td>        
+       <td>
+        A valid and well-formed 
+        <a href="package.database.mdb2.intro-dsn.html" class="link">
+         DSN
+        </a>.
+       </td>
+      </tr>
+       
+      <tr>
+       <td>
+        "<span class="quote">table</span>"
+       </td>
+       <td>
+        <span class="type">string</span>
+       </td>
+       <td>
+        "<span class="quote">auth</span>"
+       </td>                 
+       <td>
+        The name of the database table, where the 
+        authorization data is stored.
+       </td>
+      </tr>
+               
+      <tr>
+       <td>"<span class="quote">usernamecol</span>"</td>
+       <td>
+        <span class="type">string</span>
+       </td>
+       <td>
+        "<span class="quote">username</span>"
+       </td>                 
+       <td>
+        The name of the column, where the username is stored
+       </td>
+      </tr>
+                       
+      <tr>
+       <td>"<span class="quote">passwordcol</span>"</td>
+       <td>
+        <span class="type">string</span>
+       </td>
+       <td>
+        "<span class="quote">password</span>"
+       </td>                 
+       <td>
+        The name of the column, where the crypted password is stored.
+       </td>
+      </tr>
+                               
+      <tr>
+       <td>"<span class="quote">db_fields</span>"</td>
+       <td>
+        <span class="type">array</span>
+       </td>
+       <td>
+        array()
+       </td>                 
+       <td>
+        An array of extra fields to retrieve when loading the user details.
+       </td>
+      </tr>
+                       
+      <tr>
+       <td>"<span class="quote">cryptType</span>"</td>
+       <td>
+        <span class="type">string</span>
+       </td>
+       <td>
+        "<span class="quote">md5</span>"
+       </td>                 
+       <td>
+        The encryption type the password is stored in.
+       </td>
+      </tr>
+                       
+      <tr>
+       <td>"<span class="quote">auto_quote</span>"</td>
+       <td>
+        <span class="type">boolean</span>
+       </td>
+       <td>
+        <strong class="constant">TRUE</strong>
+       </td>                 
+       <td>
+        Whether to enable automatic quoting of database table and field names.
+       </td>
+      </tr>
+                       
+      <tr>
+       <td>"<span class="quote">db_options</span>"</td>
+       <td>
+        <span class="type">array</span>
+       </td>
+       <td>
+        array()
+       </td>                 
+       <td>
+        An array of options to be passed to the
+        <strong class="classname">PEAR::MDB2</strong> constructor. See
+        <a href="package.database.mdb2.html" class="link"><strong class="classname">PEAR::MDB2</strong></a> for more information.
+       </td>
+      </tr>
+                       
+      <tr>
+       <td>"<span class="quote">db_where</span>"</td>
+       <td>
+        <span class="type">string</span>
+       </td>
+       <td>
+        "<span class="quote">
+       </td>
+       <td>
+        A string to be appended to the WHERE clause of queries against the
+        database. It is appended to the queries used in
+        <strong class="function">fetchData()</strong>, <strong class="function">listUsers()</strong>,
+        <strong class="function">removeUser()</strong> and
+        <strong class="function">changePassword()</strong>. Available since Auth 1.5.0.
+       </td>
+      </tr>
+
+     </tbody>
+    
+   </table>
+
+  
+ </div>
+ <div class="refsection" id="package.authentication.auth.storage.mdb2.note">
+  <h1 class="title">Note</h1>
+  <p class="para">
+   By default, MDB2&#039;s default portability setting of
+   <a href="package.database.mdb2.intro-portability.html" class="link"><strong class="constant">MDB2_PORTABILITY_ALL</strong></a>
+   is used. This setting may cause unexpected behaviour, such as field names
+   being converted to lowercase regardless of their definition in the database
+   schema. The "<span class="quote">db_options</span>" option can be used to override this,
+   as shown in the following example.
+  </p>
+  <div class="example"><div class="info"><p><strong>Example overriding MDB2&#039;s default portability</strong></p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$options&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'dsn'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'mysql://user:password@localhost/database'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'usernamecol'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'UserName'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'passwordcol'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'PassWord'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'db_options'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'portability'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">MDB2_PORTABILITY_ALL&nbsp;</span><span style="color: #007700">^&nbsp;</span><span style="color: #0000BB">MDB2_PORTABILITY_FIX_CASE</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);<br /></span><span style="color: #0000BB">$auth&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Auth</span><span style="color: #007700">(</span><span style="color: #DD0000">'MDB2'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'loginFunction'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.authentication.auth.storage.mdb.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.authentication.auth.html">Auth</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.authentication.auth.storage.multiple.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Auth_Container_MDB</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Auth_Container_Multiple</td>
+  </tr>
+ </table>
+</div>
+</body></html>

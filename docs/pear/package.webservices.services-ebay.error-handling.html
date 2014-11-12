@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Error Handling</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.webservices.services-ebay.html" title="Services_Ebay" />
+  <link rel="prev" href="package.webservices.services-ebay.encoding.html" title="XML encoding" />
+  <link rel="next" href="package.webservices.services-ebay.architecture.html" title="Architecture" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Error Handling</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.webservices.services-ebay.encoding.html" title="XML encoding">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.webservices.services-ebay.architecture.html" title="Architecture">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.webservices.services-ebay.error-handling">
+   
+    <h1 class="refname">Error Handling</h1>
+    <div class="refnamediv">Error Handling &ndash; Error Handling in Services_Ebay</div>
+
+  
+  <div class="refsection" id="package.webservices.services-ebay.error-handling.refsect1"><div class="info"><h1>Exceptions in Services_Ebay</h1>
+</div>
+   
+   <p class="para">
+    As Services_Ebay is a PHP 5 only package, it uses exception handling and
+    the PEAR_Exception class as base class for all exceptions. Exceptions can be
+    thrown, whenever you try to call any of the API calls provided by Services_Ebay, which
+    means you should always nest those in a try/catch-block:
+   </p>
+   <div class="example"><div class="info"><p><strong>Exception handling</strong></p></div>
+    
+    <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Services/Ebay.php'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;<br /></span><span style="color: #FF8000">//&nbsp;pass&nbsp;some&nbsp;authentication&nbsp;data<br /></span><span style="color: #0000BB">$session&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Services_Ebay</span><span style="color: #007700">::</span><span style="color: #0000BB">getSession</span><span style="color: #007700">(</span><span style="color: #0000BB">$devId</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$appId</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$certId</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$session</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setToken</span><span style="color: #007700">(</span><span style="color: #0000BB">$token</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;create&nbsp;new&nbsp;proxy&nbsp;object<br /></span><span style="color: #0000BB">$ebay&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Services_Ebay</span><span style="color: #007700">(</span><span style="color: #0000BB">$session</span><span style="color: #007700">);<br />try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;call&nbsp;a&nbsp;method<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$ebay</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">GeteBayOfficialTime</span><span style="color: #007700">();<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Exception&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Something&nbsp;went&nbsp;wrong."</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  <p class="para">
+   When calling a non-existent API call or passing the wrong parameters to the API, eBay
+   will abort the API call and return an XML-document that contains error information.
+   Services_Ebay will automatically convert this into an exception that can be easily
+   handled by your PHP application.
+  </p>
+  </div>
+
+  <div class="refsection" id="package.webservices.services-ebay.error-handling.refsect2"><div class="info"><h1>Warnings in Services_Ebay</h1>
+</div>
+   
+   <p class="para">
+    In some cases, the eBay API will still process your request, even if you passed invalid
+    parameters and include error information in the resulting XML-document alongside the actual
+    response of your request.
+   </p>
+   <p class="para">
+    In this case, the errors will be tagged as warnings, as they were not serious errors. Services_Ebay
+    will not convert these errors to exceptions, but only to instances of <strong class="classname">Services_Ebay_Error</strong>.
+    These objects will be stored in the <strong class="classname">Services_Ebay_Session</strong> and can be retrieved by your application
+    at a later point.
+   </p>
+   <div class="example"><div class="info"><p><strong>Handling warnings</strong></p></div>
+    
+    <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Services/Ebay.php'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;<br /></span><span style="color: #FF8000">//&nbsp;pass&nbsp;some&nbsp;authentication&nbsp;data<br /></span><span style="color: #0000BB">$session&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Services_Ebay</span><span style="color: #007700">::</span><span style="color: #0000BB">getSession</span><span style="color: #007700">(</span><span style="color: #0000BB">$devId</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$appId</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$certId</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$session</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setToken</span><span style="color: #007700">(</span><span style="color: #0000BB">$token</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;create&nbsp;new&nbsp;proxy&nbsp;object<br /></span><span style="color: #0000BB">$ebay&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Services_Ebay</span><span style="color: #007700">(</span><span style="color: #0000BB">$session</span><span style="color: #007700">);<br />try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;call&nbsp;a&nbsp;method<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$ebay</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">GeteBayOfficialTime</span><span style="color: #007700">();<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Exception&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Just&nbsp;ignore&nbsp;the&nbsp;exception&nbsp;and&nbsp;handle&nbsp;them<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;with&nbsp;any&nbsp;warnings,&nbsp;that&nbsp;might&nbsp;have&nbsp;occured.<br /></span><span style="color: #007700">}<br /><br /></span><span style="color: #0000BB">$errors&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$session</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getErrors</span><span style="color: #007700">();<br />if&nbsp;(</span><span style="color: #0000BB">count</span><span style="color: #007700">(</span><span style="color: #0000BB">$errors</span><span style="color: #007700">)&nbsp;==&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"No&nbsp;errors&nbsp;or&nbsp;warnings.\n"</span><span style="color: #007700">;<br />}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;foreach&nbsp;(</span><span style="color: #0000BB">$errors&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$error</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">printf</span><span style="color: #007700">(</span><span style="color: #DD0000">"%s:&nbsp;%s&nbsp;(%d))\n"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$error</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getSeverity</span><span style="color: #007700">(),&nbsp;</span><span style="color: #0000BB">$error</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getLongMessage</span><span style="color: #007700">(),&nbsp;</span><span style="color: #0000BB">$error</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getCode</span><span style="color: #007700">());<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+  </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.webservices.services-ebay.encoding.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.webservices.services-ebay.html">Services_Ebay</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.webservices.services-ebay.architecture.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">XML encoding</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Architecture</td>
+  </tr>
+ </table>
+</div>
+</body></html>

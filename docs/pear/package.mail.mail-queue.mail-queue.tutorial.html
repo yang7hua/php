@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Tutorial</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.mail.mail-queue.html" title="Mail_Queue" />
+  <link rel="prev" href="package.mail.mail-queue.mail-queue-summary.html" title="Class Summary Mail_Queue" />
+  <link rel="next" href="package.mail.mail-queue.mail-queue.mail-queue.html" title="constructor Mail_Queue::Mail_Queue" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Tutorial</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.mail.mail-queue.mail-queue-summary.html" title="Class Summary Mail_Queue">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.mail.mail-queue.mail-queue.mail-queue.html" title="constructor Mail_Queue::Mail_Queue">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.mail.mail-queue.mail-queue.tutorial">
+   
+    <h1 class="refname">Tutorial</h1>
+    <div class="refnamediv">Tutorial &ndash; A tutorial for Mail_Queue</div>
+
+   
+
+
+
+<div class="refsection" id="package.mail.mail-queue.mail-queue.tutorial.part1"><div class="info"><h1>Mail_Queue usage with a simple example</h1>
+</div>
+
+<p class="para">
+We are using the db-container for the example and a mysql database.
+You need to create some tables in the mysql-database to store the messages:
+</p>
+</div>
+
+
+
+<div class="refsection" id="package.mail.mail-queue.mail-queue.tutorial.part2"><div class="info"></div>
+
+<p class="para">
+ </p><div class="example"><div class="info"><p><strong>mysql.sql</strong></p></div>
+  
+  <div class="sqlcode">
+<pre class="sqlcode">
+CREATE TABLE mail_queue (
+  id bigint(20) NOT NULL default &#039;0&#039;,
+  create_time datetime NOT NULL default &#039;0000-00-00 00:00:00&#039;,
+  time_to_send datetime NOT NULL default &#039;0000-00-00 00:00:00&#039;,
+  sent_time datetime default NULL,
+  id_user bigint(20) NOT NULL default &#039;0&#039;,
+  ip varchar(20) NOT NULL default &#039;unknown&#039;,
+  sender varchar(50) NOT NULL default &#039;&#039;,
+  recipient text NOT NULL,
+  headers text NOT NULL,
+  body longtext NOT NULL,
+  try_sent tinyint(4) NOT NULL default &#039;0&#039;,
+  delete_after_send tinyint(1) NOT NULL default &#039;1&#039;,
+  PRIMARY KEY  (id),
+  KEY id (id),
+  KEY time_to_send (time_to_send),
+  KEY id_user (id_user)
+);</pre>
+
+
+</div>
+</div>
+
+</div>
+
+
+
+<div class="refsection" id="package.mail.mail-queue.mail-queue.tutorial.part3"><div class="info"></div>
+
+<p class="para">
+First you need to define some options.
+As you need them two times (once for adding messages, once for sending the messages)
+its always good to add them to a config-file. Let&#039;s call it config.php
+</p>
+</div>
+
+
+<div class="refsection" id="package.mail.mail-queue.mail-queue.tutorial.part4"><div class="info"></div>
+
+ <div class="example"><div class="info"><p><strong>config.php</strong></p></div>
+  
+  <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"Mail/Queue.php"</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;options&nbsp;for&nbsp;storing&nbsp;the&nbsp;messages<br />//&nbsp;type&nbsp;is&nbsp;the&nbsp;container&nbsp;used,&nbsp;currently&nbsp;there&nbsp;are&nbsp;'creole',&nbsp;'db',&nbsp;'mdb'&nbsp;and&nbsp;'mdb2'&nbsp;available<br /></span><span style="color: #0000BB">$db_options</span><span style="color: #007700">[</span><span style="color: #DD0000">'type'</span><span style="color: #007700">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;</span><span style="color: #DD0000">'mdb2'</span><span style="color: #007700">;<br /></span><span style="color: #FF8000">//&nbsp;the&nbsp;others&nbsp;are&nbsp;the&nbsp;options&nbsp;for&nbsp;the&nbsp;used&nbsp;container<br />//&nbsp;here&nbsp;are&nbsp;some&nbsp;for&nbsp;db<br /></span><span style="color: #0000BB">$db_options</span><span style="color: #007700">[</span><span style="color: #DD0000">'dsn'</span><span style="color: #007700">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;</span><span style="color: #DD0000">'mysql://user:password@host/database'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$db_options</span><span style="color: #007700">[</span><span style="color: #DD0000">'mail_table'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">'mail_queue'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;here&nbsp;are&nbsp;the&nbsp;options&nbsp;for&nbsp;sending&nbsp;the&nbsp;messages&nbsp;themselves<br />//&nbsp;these&nbsp;are&nbsp;the&nbsp;options&nbsp;needed&nbsp;for&nbsp;the&nbsp;Mail-Class,&nbsp;especially&nbsp;used&nbsp;for&nbsp;Mail::factory()<br /></span><span style="color: #0000BB">$mail_options</span><span style="color: #007700">[</span><span style="color: #DD0000">'driver'</span><span style="color: #007700">]&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;</span><span style="color: #DD0000">'smtp'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$mail_options</span><span style="color: #007700">[</span><span style="color: #DD0000">'host'</span><span style="color: #007700">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;</span><span style="color: #DD0000">'your_server_smtp.com'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$mail_options</span><span style="color: #007700">[</span><span style="color: #DD0000">'port'</span><span style="color: #007700">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;</span><span style="color: #0000BB">25</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$mail_options</span><span style="color: #007700">[</span><span style="color: #DD0000">'localhost'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">'localhost'</span><span style="color: #007700">;&nbsp;</span><span style="color: #FF8000">//optional&nbsp;Mail_smtp&nbsp;parameter<br /></span><span style="color: #0000BB">$mail_options</span><span style="color: #007700">[</span><span style="color: #DD0000">'auth'</span><span style="color: #007700">]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$mail_options</span><span style="color: #007700">[</span><span style="color: #DD0000">'username'</span><span style="color: #007700">]&nbsp;&nbsp;=&nbsp;</span><span style="color: #DD0000">''</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$mail_options</span><span style="color: #007700">[</span><span style="color: #DD0000">'password'</span><span style="color: #007700">]&nbsp;&nbsp;=&nbsp;</span><span style="color: #DD0000">''</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+
+</div>
+</div>
+</div>
+
+
+
+<div class="refsection" id="package.mail.mail-queue.mail-queue.tutorial.part5"><div class="info"></div>
+
+<p class="para">
+So we are done configuring it, now let&#039;s use it.
+
+First we need to construct a mail-message and add it to the queue:
+</p>
+</div>
+
+
+
+<div class="refsection" id="package.mail.mail-queue.mail-queue.tutorial.part6"><div class="info"></div>
+
+ <div class="example"><div class="info"><p><strong>add_message.php</strong></p></div>
+  
+  <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">include&nbsp;</span><span style="color: #DD0000">'./config.php'</span><span style="color: #007700">;<br /></span><span style="color: #FF8000">/*&nbsp;we&nbsp;use&nbsp;the&nbsp;db_options&nbsp;and&nbsp;mail_options&nbsp;here&nbsp;*/<br /></span><span style="color: #0000BB">$mail_queue&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">Mail_Queue</span><span style="color: #007700">(</span><span style="color: #0000BB">$db_options</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$mail_options</span><span style="color: #007700">);<br /><br /><br /></span><span style="color: #0000BB">$from&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'user@server.com'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$to&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"user2@server.com"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$message&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'Hi!&nbsp;This&nbsp;is&nbsp;test&nbsp;message!!&nbsp;:)'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$hdrs&nbsp;</span><span style="color: #007700">=&nbsp;array(&nbsp;</span><span style="color: #DD0000">'From'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$from</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'To'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">$to</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'Subject'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">"test&nbsp;message&nbsp;body"&nbsp;&nbsp;</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">/*&nbsp;we&nbsp;use&nbsp;Mail_mime()&nbsp;to&nbsp;construct&nbsp;a&nbsp;valid&nbsp;mail&nbsp;*/<br /></span><span style="color: #0000BB">$mime&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">Mail_mime</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$mime</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setTXTBody</span><span style="color: #007700">(</span><span style="color: #0000BB">$message</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$body&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mime</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">get</span><span style="color: #007700">();<br /></span><span style="color: #FF8000">//&nbsp;the&nbsp;2nd&nbsp;parameter&nbsp;allows&nbsp;the&nbsp;header&nbsp;to&nbsp;be&nbsp;overwritten<br />//&nbsp;@see&nbsp;http://pear.php.net/bugs/18256<br /></span><span style="color: #0000BB">$hdrs&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mime</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">headers</span><span style="color: #007700">(</span><span style="color: #0000BB">$hdrs</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);&nbsp;<br /><br /><br /></span><span style="color: #FF8000">/*&nbsp;Put&nbsp;message&nbsp;to&nbsp;queue&nbsp;*/<br /></span><span style="color: #0000BB">$mail_queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">put</span><span style="color: #007700">(</span><span style="color: #0000BB">$from</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$to</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$hdrs</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$body</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+
+</div>
+</div>
+<p class="para">
+    NB: the first time you call <strong class="function">put()</strong>, PEAR::DB and
+    PEAR::MDB2 will create a new table to keep the sequence number, so
+    make sure the db user you are using has &quot;CREATE TABLE&quot; privileges.
+    Or you can create the table separately, calling the <strong class="function">createSequence()</strong>
+    method of PEAR::DB or PEAR::MDB2 (you should also be aware that the 
+    two DBAL will create a table with a different field name: &quot;id&quot; for DB, 
+    &quot;sequence&quot; for MDB2).
+</p>
+</div>
+
+
+
+<div class="refsection" id="package.mail.mail-queue.mail-queue.tutorial.part7"><div class="info"></div>
+
+<p class="para">
+Ok, now we&#039;ve used the simple way to add a message ... there are more advanced options, please check
+docs of the put-function for these.
+
+Now we need to send the messages. This is most often done by using a cron-job which regularly runs
+a script to send the messages.
+
+Here is a simple script to achieve this:
+</p>
+</div>
+
+
+<div class="refsection" id="package.mail.mail-queue.mail-queue.tutorial.part8"><div class="info"></div>
+
+ <div class="example"><div class="info"><p><strong>send_messages.php</strong></p></div>
+  
+  <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">include&nbsp;</span><span style="color: #DD0000">'./config.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">/*&nbsp;How&nbsp;many&nbsp;mails&nbsp;could&nbsp;we&nbsp;send&nbsp;each&nbsp;time&nbsp;the&nbsp;script&nbsp;is&nbsp;called&nbsp;*/<br /></span><span style="color: #0000BB">$max_amount_mails&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">50</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">/*&nbsp;we&nbsp;use&nbsp;the&nbsp;db_options&nbsp;and&nbsp;mail_options&nbsp;from&nbsp;the&nbsp;config&nbsp;again&nbsp;&nbsp;*/<br /></span><span style="color: #0000BB">$mail_queue&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">Mail_Queue</span><span style="color: #007700">(</span><span style="color: #0000BB">$db_options</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$mail_options</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">/*&nbsp;really&nbsp;sending&nbsp;the&nbsp;messages&nbsp;*/<br /></span><span style="color: #0000BB">$mail_queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">sendMailsInQueue</span><span style="color: #007700">(</span><span style="color: #0000BB">$max_amount_mails</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+
+</div>
+</div>
+</div>
+
+
+<div class="refsection" id="package.mail.mail-queue.mail-queue.tutorial.part9"><div class="info"></div>
+
+<p class="para">
+We are done.
+Now run the last script regularly and add your mails to the queue as needed.
+</p>
+</div>
+
+<div class="refsection" id="package.mail.mail-queue.mail-queue.tutorial.part10"><div class="info"></div>
+
+<p class="para">
+Since <strong class="classname">Mail_Queue</strong> v.1.1, the <strong class="function">preload()</strong>
+method doesn&#039;t preload ALL the mails in memory, but just a few of them each time.
+When the buffer is empty, it is filled again automatically. You can set the size
+of the buffer via the new <strong class="function">setBufferSize()</strong> method.
+</p>
+</div>
+
+<div class="refsection" id="package.mail.mail-queue.mail-queue.tutorial.part11"><div class="info"></div>
+
+<p class="para">
+You can also send the stored emails one by one.
+Here is a simple script to achieve this:
+</p>
+</div>
+
+<div class="refsection" id="package.mail.mail-queue.mail-queue.tutorial.part12"><div class="info"></div>
+
+ <div class="example"><div class="info"><p><strong>send_messages_one_by_one.php</strong></p></div>
+  
+  <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;set&nbsp;the&nbsp;internal&nbsp;buffer&nbsp;size&nbsp;according&nbsp;your<br />//&nbsp;memory&nbsp;resources&nbsp;(the&nbsp;number&nbsp;indicates&nbsp;how<br />//&nbsp;many&nbsp;emails&nbsp;can&nbsp;stay&nbsp;in&nbsp;the&nbsp;buffer&nbsp;at&nbsp;any<br />//&nbsp;given&nbsp;time)<br /><br /></span><span style="color: #0000BB">$mail_queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setBufferSize</span><span style="color: #007700">(</span><span style="color: #0000BB">20</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//set&nbsp;the&nbsp;queue&nbsp;size&nbsp;(i.e.&nbsp;the&nbsp;number&nbsp;of&nbsp;mails&nbsp;to&nbsp;send)<br /></span><span style="color: #0000BB">$limit&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">50</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$mail_queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">container</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setOption</span><span style="color: #007700">(</span><span style="color: #0000BB">$limit</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;loop&nbsp;through&nbsp;the&nbsp;stored&nbsp;emails&nbsp;and&nbsp;send&nbsp;them<br /></span><span style="color: #007700">while&nbsp;(</span><span style="color: #0000BB">$mail&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mail_queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">get</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mail_queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">sendMail</span><span style="color: #007700">(</span><span style="color: #0000BB">$mail</span><span style="color: #007700">);<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+
+</div>
+</div>
+</div>
+
+<div class="refsection" id="package.mail.mail-queue.mail-queue.tutorial.part13"><div class="info"><h1>Utilising Callbacks for Report Generation</h1>
+</div>
+
+<p class="para">
+The sendMailsInQueue method, since version 1.2.3, has callback support. This may be utilised for report generation and postprocessing.
+</p>
+<p class="para">
+The callback function is called before the relevant entry is deleted from the mail_queue table in the database so if necessary you could add extra fields to it for inserting into your log/report table. The function should accept only one parameter - an associative array of values; &#039;id&#039;, &#039;queued_as&#039; and &#039;greeting&#039;.</p>
+<p class="para">
+You&#039;ll need to use recent releases of the <a href="package.mail.mail.html" class="link"><strong class="classname">PEAR::Mail</strong></a> (version 1.2.0b3 or higher) and <a href="package.networking.net-smtp.html" class="link"><strong class="classname">PEAR::Net_SMTP</strong></a> (version 1.3.3 or higher) packages to be able to retrieve the esmtp id and greeting details if you need them for your reports. Also, if you want to decode the body of the email and store that for your report you&#039;ll need to install the <a href="package.mail.mail-mimedecode.html" class="link"><strong class="classname">PEAR::Mail_mimeDecode</strong></a> package.</p>
+<p class="para">
+Provide the callback function like so:</p>
+  <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$returned&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mail_queue</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">sendMailsInQueue</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">MAILQUEUE_ALL</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">MAILQUEUE_START</span><span style="color: #007700">,&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">MAILQUEUE_TRY</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'mailqueue_callback'</span><span style="color: #007700">);<br /><br />function&nbsp;</span><span style="color: #0000BB">mailqueue_callback</span><span style="color: #007700">(</span><span style="color: #0000BB">$args</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$row&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">get_mail_queue_row</span><span style="color: #007700">(</span><span style="color: #0000BB">$args</span><span style="color: #007700">[</span><span style="color: #DD0000">'id'</span><span style="color: #007700">]);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$headers&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">unserialize</span><span style="color: #007700">(</span><span style="color: #0000BB">$row</span><span style="color: #007700">[</span><span style="color: #DD0000">'headers'</span><span style="color: #007700">]);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$subject&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$headers</span><span style="color: #007700">[</span><span style="color: #DD0000">'Subject'</span><span style="color: #007700">];<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$body&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">unserialize</span><span style="color: #007700">(</span><span style="color: #0000BB">$row</span><span style="color: #007700">[</span><span style="color: #DD0000">'body'</span><span style="color: #007700">]);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$mail_headers&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">''</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;foreach(</span><span style="color: #0000BB">$headers&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$key</span><span style="color: #007700">=&gt;</span><span style="color: #0000BB">$value</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$mail_headers&nbsp;</span><span style="color: #007700">.=&nbsp;</span><span style="color: #DD0000">"</span><span style="color: #0000BB">$key</span><span style="color: #DD0000">:</span><span style="color: #0000BB">$value</span><span style="color: #DD0000">\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$mail&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mail_headers&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"\n"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$body</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$decoder&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Mail_mimeDecode</span><span style="color: #007700">(</span><span style="color: #0000BB">$mail</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$decoded&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$decoder</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">decode</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'include_bodies'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">TRUE</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'decode_bodies'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">TRUE</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'decode_headers'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">TRUE</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;));<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$body&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$decoded</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">body</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$esmtp_id&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">[</span><span style="color: #DD0000">'queued_as'</span><span style="color: #007700">];<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(isset(</span><span style="color: #0000BB">$args</span><span style="color: #007700">[</span><span style="color: #DD0000">'greeting'</span><span style="color: #007700">]))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$greeting&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$args</span><span style="color: #007700">[</span><span style="color: #DD0000">'greeting'</span><span style="color: #007700">];<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$greets&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">explode</span><span style="color: #007700">(</span><span style="color: #DD0000">'&nbsp;'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$greeting</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$server&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$greets</span><span style="color: #007700">[</span><span style="color: #0000BB">0</span><span style="color: #007700">];<br />&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$server&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'localhost'</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">insert_to_log</span><span style="color: #007700">(</span><span style="color: #0000BB">compact</span><span style="color: #007700">(</span><span style="color: #DD0000">'server'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'esmtp_id'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'subject'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'body'</span><span style="color: #007700">));<br />}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+
+</div>
+
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.mail.mail-queue.mail-queue-summary.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.mail.mail-queue.html">Mail_Queue</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.mail.mail-queue.mail-queue.mail-queue.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Class Summary Mail_Queue</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">constructor Mail_Queue::Mail_Queue</td>
+  </tr>
+ </table>
+</div>
+</body></html>

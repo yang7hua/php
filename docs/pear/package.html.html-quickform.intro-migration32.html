@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Migration to version 3.2</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-quickform.introduction.html" title="Introduction" />
+  <link rel="prev" href="package.html.html-quickform.intro-elements.html" title="QuickForm element types" />
+  <link rel="next" href="package.html.html-quickform.intro-subpackages.html" title="Subpackages" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Migration to version 3.2</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-quickform.intro-elements.html" title="QuickForm element types">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-quickform.intro-subpackages.html" title="Subpackages">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-quickform.intro-migration32">
+   
+    <h1 class="refname">Migration to version 3.2</h1>
+    <div class="refnamediv">Migration to version 3.2 &ndash; API changes to observe</div>
+
+   
+   <div class="refsection" id="package.html.html-quickform.intro-migration32.overview"><div class="info"><h1>Why these changes?</h1>
+</div>
+    
+    <p class="para">
+HTML_QuickForm has improved a lot since version 2.x. With the addition of a new renderer layer, a lot of methods that were located in the main QuickForm class were actually duplicates of methods in the renderers. Those methods were kept to give user time to adjust their code. With release 3.2 they will be removed, making QuickForm class much lighter and consistent.
+</p>
+<p class="para">
+At the same time, file upload validation was moved to the file element as this is a more appropriate place.
+</p>
+<p class="para">Removed methods
+</p><ul class="itemizedlist">
+
+  <li class="listitem"><p class="para">QuickForm related
+    </p><ul class="itemizedlist">
+        <li class="listitem"><span class="simpara"><strong class="function">HTML_QuickForm::getAttributesString()</strong></span></li>
+        <li class="listitem"><span class="simpara"><strong class="function">HTML_QuickForm::addElementGroup()</strong></span></li>
+        <li class="listitem"><span class="simpara"><strong class="function">HTML_QuickForm::addHeader()</strong></span></li>
+        <li class="listitem"><span class="simpara"><strong class="function">HTML_QuickForm::addData()</strong></span></li>
+    </ul>
+  </li>
+
+  <li class="listitem"><p class="para">Renderer related
+    </p><ul class="itemizedlist">
+        <li class="listitem"><span class="simpara"><strong class="function">HTML_QuickForm::setElementTemplate()</strong></span></li>
+        <li class="listitem"><span class="simpara"><strong class="function">HTML_QuickForm::setHeaderTemplate()</strong></span></li>
+        <li class="listitem"><span class="simpara"><strong class="function">HTML_QuickForm::setFormTemplate()</strong></span></li>
+        <li class="listitem"><span class="simpara"><strong class="function">HTML_QuickForm::setRequiredNoteTemplate()</strong></span></li>
+        <li class="listitem"><span class="simpara"><strong class="function">HTML_QuickForm::clearAllTemplates()</strong></span></li>
+        <li class="listitem"><span class="simpara"><strong class="function">HTML_QuickForm_group::setElementTemplate()</strong></span></li>
+        <li class="listitem"><span class="simpara"><strong class="function">HTML_QuickForm_group::setGroupTemplate()</strong></span></li>
+    </ul>
+  </li>
+
+  <li class="listitem"><p class="para">File upload related
+    </p><ul class="itemizedlist">
+        <li class="listitem"><span class="simpara"><strong class="function">HTML_QuickForm::isUploadedFile()</strong></span></li>
+        <li class="listitem"><span class="simpara"><strong class="function">HTML_QuickForm::getUploadedFile()</strong></span></li>
+        <li class="listitem"><span class="simpara"><strong class="function">HTML_QuickForm::moveUploadedFile()</strong></span></li>
+    </ul>
+  </li>
+</ul>
+
+   </div>
+
+
+   <div class="refsection" id="package.html.html-quickform.intro-migration32.adjust"><div class="info"><h1>How to adjust your code</h1>
+</div>
+     
+     <div class="refsection" id="package.html.html-quickform.intro-migration32.adjust.quickform"><div class="info"><h1>QuickForm related</h1>
+</div>
+       
+<div class="variablelist">
+
+  <dl class="varlistentry">
+    <dt class="term"><strong class="function">HTML_QuickForm::getAttributesString()</strong></dt>
+    <dd class="listitem"><p class="para">
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getAttributes</span><span style="color: #007700">(</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+will return the same value by using <strong class="function">HTML_Common::getAttributes()</strong> method.
+    </p></dd>
+  </dl>
+
+  <dl class="varlistentry">
+    <dt class="term"><strong class="function">HTML_QuickForm::addElementGroup()</strong></dt>
+    <dd class="listitem"><p class="para">
+Arguments order was changed to conform to the way elements are usually added to QuickForm by <a href="package.html.html-quickform.html-quickform.addelement.html" class="link"><strong class="function">addElement()</strong></a>. Use <a href="package.html.html-quickform.html-quickform.addgroup.html" class="link"><strong class="function">HTML_QuickForm::addGroup()</strong></a> instead and swap the element label with the element name.
+    </p></dd>
+  </dl>
+
+  <dl class="varlistentry">
+    <dt class="term"><strong class="function">HTML_QuickForm::addHeader()</strong></dt>
+    <dd class="listitem"><p class="para">
+A header is now considered like any other element. There is a new <a href="package.html.html-quickform.html-quickform-header.html" class="link"><strong class="classname">HTML_QuickForm_header</strong></a> element that extends <a href="package.html.html-quickform.html-quickform-static.html" class="link"><strong class="classname">HTML_QuickForm_static</strong></a>. Just use
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'header'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$header_name</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$header_text</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+This will also allow you to customize the header rendering based on its name.    </p></dd>
+  </dl>
+
+  <dl class="varlistentry">
+    <dt class="term"><strong class="function">HTML_QuickForm::addData()</strong></dt>
+    <dd class="listitem"><p class="para">
+If you absolutely need this feature, use
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'html'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">)<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+or consider using some template-based renderer.
+    </p></dd>
+  </dl>
+</div>
+
+     </div>
+
+     <div class="refsection" id="package.html.html-quickform.intro-migration32.adjust.renderer"><div class="info"><h1>Renderer related</h1>
+</div>
+       
+       <p class="para">
+Those methods are now handled by the renderers. How to use these methods depends on your choice of renderer. With QuickForm default renderer, you can use these methods like that:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm</span><span style="color: #007700">(</span><span style="color: #DD0000">'myform'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$renderer&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">defaultRenderer</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$renderer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setFormTemplate</span><span style="color: #007700">(</span><span style="color: #DD0000">'&lt;table&gt;&lt;form{attributes}&gt;{content}&lt;/form&gt;&lt;/table&gt;'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$renderer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setHeaderTemplate</span><span style="color: #007700">(</span><span style="color: #DD0000">'&lt;tr&gt;&lt;td&nbsp;colspan="2"&gt;&lt;b&gt;{header}&lt;/b&gt;&lt;/td&gt;&lt;/tr&gt;'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$renderer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setGroupTemplate</span><span style="color: #007700">(</span><span style="color: #DD0000">'&lt;table&gt;&lt;tr&gt;{content}&lt;/tr&gt;&lt;/table&gt;'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$renderer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setGroupElementTemplate</span><span style="color: #007700">(</span><span style="color: #DD0000">'&lt;td&gt;{element}&lt;br&nbsp;/&gt;&lt;!--&nbsp;BEGIN&nbsp;required&nbsp;--&gt;*&lt;!--&nbsp;END&nbsp;required&nbsp;--&gt;{label}&lt;/td&gt;'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+<p><a href="package.html.html-quickform.html-quickform.defaultrenderer.html" class="link"><strong class="function">defaultRenderer()</strong></a>will return a reference to QuickForm integrated renderer. You can of course use <a href="package.html.html-quickform.intro-renderers.html" class="link">any other renderer</a> available in QuickForm such as Sigma, ITX, Smarty, Flexy and so on. Have a look at their documentation to see which methods are available for them.
+       </p>
+     </div>
+
+     <div class="refsection" id="package.html.html-quickform.intro-migration32.adjust.file"><div class="info"><h1>File upload related</h1>
+</div>
+       
+       <p class="para">
+File-related methods and rules have been moved to the file element <a href="package.html.html-quickform.html-quickform-file.html" class="link"><strong class="classname">HTML_QuickForm_file</strong></a> because it makes more sense this way and you don&#039;t have to include upload-related code if you are not using uploads. You have access to these methods like that:
+
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm</span><span style="color: #007700">(</span><span style="color: #DD0000">'myform'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$file&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'file'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'myfile'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Your&nbsp;file:'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'myfile'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Cannot&nbsp;exceed&nbsp;1776&nbsp;bytes'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'maxfilesize'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1776</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">$file</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">isUploadedFile</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$file</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">moveUploadedFile</span><span style="color: #007700">(</span><span style="color: #DD0000">'/tmp'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'testfile.txt'</span><span style="color: #007700">);<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+
+or like that:
+
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$file&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'myfile'</span><span style="color: #007700">);<br />if&nbsp;(</span><span style="color: #0000BB">$file</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">isUploadedFile</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$fileInfo&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$file</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getValue</span><span style="color: #007700">();<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+       
+     </div>
+   </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-quickform.intro-elements.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-quickform.introduction.html">Introduction</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-quickform.intro-subpackages.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">QuickForm element types</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Subpackages</td>
+  </tr>
+ </table>
+</div>
+</body></html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Documenting Exceptions</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="rfc.error-handling.html" title="Error Handling Guidelines for PHP5 packages" />
+  <link rel="prev" href="rfc.error-handling.hierarchies.html" title="Exception class hierarchies" />
+  <link rel="next" href="rfc.error-handling.api.html" title="Exceptions as part of the API" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Documenting Exceptions</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="rfc.error-handling.hierarchies.html" title="Exception class hierarchies">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="rfc.error-handling.api.html" title="Exceptions as part of the API">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="rfc.error-handling.documentation">
+    <h1>Documenting Exceptions</h1>
+
+
+    <p class="para">Because PHP, unlike Java, does not require you to explicitly state
+    which Exceptions a method throws in the method signature, it is critical
+    that Exceptions be thoroughly documented in your method headers.</p>
+
+    <p class="para">Exceptions should be documented using the <code class="token">@throws</code>
+    phpdoc keyword:</p>
+
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/**<br />&nbsp;*&nbsp;This&nbsp;method&nbsp;searches&nbsp;for&nbsp;aliens.<br />&nbsp;*<br />&nbsp;*&nbsp;@return&nbsp;array&nbsp;Array&nbsp;of&nbsp;Aliens&nbsp;objects.<br />&nbsp;*<br />&nbsp;*&nbsp;@throws&nbsp;AntennaBrokenException&nbsp;If&nbsp;the&nbsp;impedence&nbsp;readings&nbsp;indicate<br />&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;that&nbsp;the&nbsp;antenna&nbsp;is&nbsp;broken.<br />&nbsp;*&nbsp;@throws&nbsp;AntennaInUseException&nbsp;&nbsp;If&nbsp;another&nbsp;process&nbsp;is&nbsp;using&nbsp;the<br />&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;antenna&nbsp;already.<br />&nbsp;*/<br /></span><span style="color: #007700">public&nbsp;function&nbsp;</span><span style="color: #0000BB">findAliens</span><span style="color: #007700">(</span><span style="color: #0000BB">$color&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'green'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+    <p class="para">In many cases middle layers of an application will rewrap any
+    lower-level exceptions into more meaningful application exceptions. This
+    also needs to be made clear:</p>
+
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/**<br />&nbsp;*&nbsp;Load&nbsp;session&nbsp;objects&nbsp;into&nbsp;shared&nbsp;memory.<br />&nbsp;*<br />&nbsp;*&nbsp;@throws&nbsp;LoadingException&nbsp;Any&nbsp;lower-level&nbsp;IOException&nbsp;will&nbsp;be&nbsp;wrapped<br />&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;re-thrown&nbsp;as&nbsp;a&nbsp;LoadingException.<br />&nbsp;*/<br /></span><span style="color: #007700">public&nbsp;function&nbsp;</span><span style="color: #0000BB">loadSessionObjects</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+    <p class="para">In other cases your method may simply be a conduit through which
+    lower level exceptions can pass freely. As challenging as it may be, your
+    method should also document which exceptions it is
+    <em class="emphasis">not</em> catching.</p>
+
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/**<br />&nbsp;*&nbsp;Performs&nbsp;a&nbsp;batch&nbsp;of&nbsp;database&nbsp;queries&nbsp;(atomically,&nbsp;not&nbsp;in&nbsp;transaction).<br />&nbsp;*<br />&nbsp;*&nbsp;@throws&nbsp;SQLException&nbsp;Low-level&nbsp;SQL&nbsp;errors&nbsp;will&nbsp;bubble&nbsp;up&nbsp;through&nbsp;this&nbsp;method.<br />&nbsp;*/<br /></span><span style="color: #007700">public&nbsp;function&nbsp;</span><span style="color: #0000BB">batchExecute</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="rfc.error-handling.hierarchies.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="rfc.error-handling.html">Error Handling Guidelines for PHP5 packages</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="rfc.error-handling.api.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Exception class hierarchies</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Exceptions as part of the API</td>
+  </tr>
+ </table>
+</div>
+</body></html>

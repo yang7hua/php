@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Using Pyrus to create PECL packages</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="pyrus.developers.html" title="Developer Tools for Pyrus" />
+  <link rel="prev" href="pyrus.developers.pear.html" title="Using Pyrus to create PEAR packages" />
+  <link rel="next" href="pyrus.extending.html" title="Using Pyrus in your programs: Pyrus's Public API" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Using Pyrus to create PECL packages</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="pyrus.developers.pear.html" title="Using Pyrus to create PEAR packages">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="pyrus.extending.html" title="Using Pyrus in your programs: Pyrus's Public API">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="pyrus.developers.pecl">
+ <div class="info"><h1>Using Pyrus to create PECL packages</h1>
+</div>
+
+ <div class="section" id="pyrus.developers.pecl.intro">
+  <div class="info"><h2 class="title">Introduction</h2></div>
+  <p class="para">
+   As a PECL developer, managing your extensions could not be simpler with
+   Pyrus.  The new <a href="pyrus.commands.pickle.html" class="link">pickle</a>
+   command makes creating a package.xml as simple as creating a few text files
+   and then running the command.  In addition, the PECL packages created
+   with the <code class="literal">pickle</code> command are installable by the most
+   widely installed version of PEAR as well as by the newest versions of PEAR
+   and by Pyrus.
+  </p>
+  <p class="para">
+   Pyrus&#039;s <code class="literal">pickle</code> command fully eliminates the need to ever
+   even look at package.xml, greatly simplifying the lives of PECL extension
+   developers.
+  </p>
+  <p class="para">
+   In addition, the <a href="pyrus.commands.runphpt.html" class="link">run-phpt</a>
+   command can be used to run all the extension&#039;s phpt test files.
+  </p>
+ </div>
+ <div class="section" id="pyrus.developers.pecl.newpackage">
+  <h2 class="title">Creating a new PECL package with Pyrus</h2>
+  <p class="para">
+   If you are creating a brand new extension, you should use the
+   <a href="pyrus.commands.generateext.html" class="link">generate-ext</a>
+   command to create the basic structure of your extension.
+  </p>
+  <p class="para">
+   After creating your extension, edit the newly-created <code class="literal">CREDITS</code>
+   file to have the correct information:
+  </p>
+<pre class="screen">
+ <br/>;;&nbsp;extensionname<br/>My&nbsp;Name&nbsp;(myhandle)&nbsp;&lt;myemail@php.net&gt;&nbsp;(lead)<br/>&nbsp;
+</pre>
+
+  <p class="para">
+   Add any additional maintainers using the same format.
+  </p>
+  <p class="para">
+   Next, edit the <code class="literal">README</code> file that describes your package.
+   The first line should be a brief summary of what the extension does, and the
+   rest of the file should be a detailed description of information the user
+   should know about the origin of the extension, and perhaps a simple example
+   of its usage.
+  </p>
+  <p class="para">
+   Finally, edit the file named <code class="literal">RELEASE-0.1.0</code>.  Put any
+   release notes in here.  Generally <code class="literal">initial release</code> is
+   enough information for the first release.
+  </p>
+  <p class="para">
+   Last, you can optionally create a file named <code class="literal">API-0.1.0</code>.
+   Pyrus and the PEAR Installer differentiate between API version and
+   release version, to allow clearly defining an API change or backwards
+   compatibility break.  Put information on any API changes into
+   <code class="literal">API-0.1.0</code>.
+  </p>
+  <p class="para">
+   After creating these files, simply run:
+   </p><pre class="screen">php pyrus.phar pickle extensionname</pre>
+<p>
+   where <code class="literal">extensionname</code> is the name of your extension.  If
+   you have not yet installed the developer tools, Pyrus will ask if you would
+   like to download and install them.  Choose <code class="literal">yes</code> and then
+   re-run the command.
+  </p>
+  <p class="para">
+   Pyrus will create a package.xml and a release called
+   <code class="literal">extensionname-0.1.0.tgz</code>, or
+   <code class="literal">extensionname-0.1.0.tar</code> if the <code class="literal">zlib</code>
+   extension is not enabled.  This release can be uploaded to pecl.php.net
+   for immediate distribution.
+  </p>
+  <p class="para">
+   Note that the directory structure described in
+   <a href="pyrus.commands.pickle.html" class="link">pickle command documentation</a> is
+   required for pickle to detect documentation, tests, or data files.
+  </p>
+ </div>
+ <div class="section" id="pyrus.developers.pecl.existingpackage">
+  <h2 class="title">Readying an existing PECL package for Pyrus</h2>
+  <p class="para">
+   To prepare an existing PECL package for Pyrus, you should create all of the
+   information files described in the section
+   <a href="pyrus.developers.pecl.html#pyrus.developers.pecl.newpackage" class="link">Creating a new PECL Package with Pyrus</a>,
+   but instead of creating <code class="literal">RELEASE-0.1.0</code> and
+   <code class="literal">API-0.1.0</code>, you would create a file named
+   <code class="literal">RELEASE-X.Y.Z</code> where <code class="literal">X.Y.Z</code> is the
+   version of the extension.  So if your extension&#039;s version is <code class="literal">1.2.3</code>
+   you would create a file named <code class="literal">RELEASE-1.2.3</code>.  For each
+   of the files above, rather than putting new content, you can copy/paste the
+   existing description, summary and release notes from your existing package.xml.
+   Note that any entities such as <code class="literal">&amp;lt;</code> should be
+   converted to their values <code class="literal">&lt;</code>, as Pyrus escapes automatically
+   from the text files.
+  </p>
+  <p class="para">
+   Note that the directory structure described in
+   <a href="pyrus.commands.pickle.html" class="link">pickle command documentation</a> is
+   required for pickle to detect documentation, tests, or data files.
+  </p>
+ </div>
+ <div class="section" id="pyrus.developers.pecl.future">
+  <h2 class="title">Future releases</h2>
+  <p class="para">
+   When the time rolls around for the next release, readying for this is also
+   simple.  If you are about to release version <code class="literal">0.2.0</code>, create
+   a file named <code class="literal">RELEASE-0.2.0</code> and put the release notes
+   into the file.  Pyrus will automatically detect that <code class="literal">0.2.0</code>
+   is newer than <code class="literal">0.1.0</code> and create a new release with those notes.
+  </p>
+ </div> 
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="pyrus.developers.pear.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="pyrus.developers.html">Developer Tools for Pyrus</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="pyrus.extending.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Using Pyrus to create PEAR packages</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Using Pyrus in your programs: Pyrus's Public API</td>
+  </tr>
+ </table>
+</div>
+</body></html>

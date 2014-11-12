@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-template-it.html" title="HTML_Template_IT" />
+  <link rel="prev" href="package.html.html-template-it.html" title="HTML_Template_IT" />
+  <link rel="next" href="package.html.html-template-it.html-template-it.html" title="HTML_Template_IT::HTML_Template_IT()" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-template-it.html" title="HTML_Template_IT">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-template-it.html-template-it.html" title="HTML_Template_IT::HTML_Template_IT()">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-template-it.intro">
+   
+    <h1 class="refname">Introduction</h1>
+    <div class="refnamediv">Introduction &ndash; Creating and Parsing templates</div>
+
+   
+  <div class="refsection" id="package.html.html-template-it.intro.templates"><div class="info"><h1>Templates</h1>
+</div>
+   
+   <p class="para">
+    A template consists of text and special labeled blocks and placeholders.
+    The content of blocks can be re-used and parsed multiple times with different
+    placeholder values.
+   </p>
+   <div class="example"><div class="info"><p><strong>A typical template</strong></p></div>
+    
+     <div class="htmlcode">
+      <pre class="htmlcode">
+&lt;html&gt;
+ &lt;body&gt;
+  Userlist
+  &lt;table&gt;
+&lt;!-- BEGIN row --&gt;
+   &lt;tr&gt;
+    &lt;td&gt;{USERNAME}&lt;/td&gt;
+    &lt;td&gt;{EMAIL}&lt;/td&gt;
+   &lt;/tr&gt;
+&lt;!-- END row --&gt;
+  &lt;/table&gt;
+ &lt;/body&gt;
+&lt;/html&gt;</pre>
+
+    </div>
+   </div>
+  </div>
+
+  <div class="refsection" id="package.html.html-template-it.intro.placeholder"><div class="info"><h1>Placeholder</h1>
+</div>
+   
+   <p class="para">
+    Placeholders can be defined in templates and are filled from 
+    PHP code with content.
+    The format of placeholder up to version (1.1.x) is
+    </p>
+    <div class="programlisting"><pre class="programlisting">{[0-9A-Za-z_-]+}</pre>
+</div>
+   <p class="para">
+    Since version 1.2.x dots are allowed, too.
+   </p>
+    <div class="programlisting"><pre class="programlisting">{[\.0-9A-Za-z_-]+}</pre>
+</div>
+   <p class="para">
+    This means, the name of the placeholder can consist of upper- and lowercase 
+    letters, underscores and hypens. The name must be placed between curly 
+    brackets without any spaces. 
+    Valid names are i.e.:    
+    </p>
+     <ul class="simplelist">
+      <li class="member">{Placeholder}</li>
+      <li class="member">{place2_holder}</li>
+      <li class="member">{PLACEHOLDER1}</li>
+      <li class="member">{Place-Holder}</li>
+     </ul>
+   <p class="para">
+    Valid names since version 1.2.x
+    </p>
+     <ul class="simplelist">
+       <li class="member">{Place.Holder}</li>
+     </ul>
+   <p class="para">
+    Non-valid names are i.e.
+    </p>
+     <ul class="simplelist">
+      <li class="member">{ Placeholder 3 } (spaces)</li>       
+      <li class="member">{place*holder} (char isn&#039;t permitted)</li> 
+     </ul>
+  </div>
+  <div class="refsection" id="package.html.html-template-it.intro.block"><div class="info"><h1>Blocks</h1>
+</div>
+   
+   <p class="para">
+    The format of a block is
+    </p>
+    <div class="programlisting">
+    <br/>&lt;!--&nbsp;BEGIN&nbsp;[0-9A-Za-z_-]+&nbsp;--&gt;<br/>...&nbsp;block&nbsp;content&nbsp;...<br/>&lt;!--&nbsp;END&nbsp;[0-9A-Za-z_-]+&nbsp;--&gt;
+    </div>
+   <p class="para">
+    Since version 1.2.x dots are allowed in block definitions
+   </p>
+    <div class="programlisting">
+    <br/>&lt;!--&nbsp;BEGIN&nbsp;[\.0-9A-Za-z_-]+&nbsp;--&gt;<br/>...&nbsp;block&nbsp;content&nbsp;...<br/>&lt;!--&nbsp;END&nbsp;[\.0-9A-Za-z_-]+&nbsp;--&gt;
+    </div>
+   <p class="para">
+    The rules for the block name are the same like for placeholders. 
+    In contrast to placeholders the spaces in the block markup are 
+    required.
+   </p>
+   <p class="para">
+    The nesting of blocks is permitted, but be careful while 
+    parsing. You have to set and parse the deepest inner block first
+    and then set and parse from inner to outer.
+   </p>       
+   <p class="para">
+    In IT the whole template file itself is nested in a meta block called
+    "<span class="quote">__global__</span>". Most block-related functions use this block
+    name as default.
+   </p>
+  </div>
+  
+  <div class="refsection" id="package.html.html-template-it.intro.example"><div class="info"><h1>Usage Example</h1>
+</div>
+   
+   <div class="example"><div class="info"><p><strong>The template</strong></p></div>
+    
+    <div class="programlisting">
+    <br/>&lt;html&gt;&nbsp;<br/>&nbsp;&lt;table&nbsp;border&gt;&nbsp;<br/>&lt;!--&nbsp;BEGIN&nbsp;row&nbsp;--&gt;&nbsp;<br/>&nbsp;&nbsp;&lt;tr&gt;<br/>&lt;!--&nbsp;BEGIN&nbsp;cell&nbsp;--&gt;&nbsp;&nbsp;<br/>&nbsp;&nbsp;&nbsp;&lt;td&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;{DATA}<br/>&nbsp;&nbsp;&nbsp;&lt;/td&gt;<br/>&lt;!--&nbsp;END&nbsp;cell&nbsp;--&gt;&nbsp;&nbsp;<br/>&nbsp;&nbsp;&lt;/tr&gt;<br/>&lt;!--&nbsp;END&nbsp;row&nbsp;--&gt;&nbsp;<br/>&nbsp;&lt;/table&gt;&nbsp;<br/>&lt;/html&gt;
+    </div>
+   </div>
+   
+   <div class="example"><div class="info"><p><strong>The script</strong></p></div>
+    
+    <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />&nbsp;&nbsp;</span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"HTML/Template/IT.php"</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;</span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&nbsp;array<br />&nbsp;&nbsp;(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"0"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">"Stig"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"Bakken"</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"1"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">"Martin"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"Jansen"</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"2"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">"Alexander"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"Merz"</span><span style="color: #007700">)<br />&nbsp;&nbsp;);<br /><br />&nbsp;&nbsp;</span><span style="color: #0000BB">$tpl&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_Template_IT</span><span style="color: #007700">(</span><span style="color: #DD0000">"./templates"</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;</span><span style="color: #0000BB">$tpl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">loadTemplatefile</span><span style="color: #007700">(</span><span style="color: #DD0000">"main.tpl.htm"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;foreach(</span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$name</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;foreach(</span><span style="color: #0000BB">$name&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$cell</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Assign&nbsp;data&nbsp;to&nbsp;the&nbsp;inner&nbsp;block<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$tpl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setCurrentBlock</span><span style="color: #007700">(</span><span style="color: #DD0000">"cell"</span><span style="color: #007700">)&nbsp;;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$tpl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setVariable</span><span style="color: #007700">(</span><span style="color: #DD0000">"DATA"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$cell</span><span style="color: #007700">)&nbsp;;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$tpl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parseCurrentBlock</span><span style="color: #007700">(</span><span style="color: #DD0000">"cell"</span><span style="color: #007700">)&nbsp;;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;parse&nbsp;outter&nbsp;block<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$tpl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">parse</span><span style="color: #007700">(</span><span style="color: #DD0000">"row"</span><span style="color: #007700">);<br />&nbsp;&nbsp;}<br />&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;print&nbsp;the&nbsp;output<br />&nbsp;&nbsp;</span><span style="color: #0000BB">$tpl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">show</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>    
+   </div>
+   <div class="example"><div class="info"><p><strong>The output</strong></p></div>
+    
+    <div class="programlisting">
+    &nbsp;&nbsp;&nbsp;<br/>&lt;html&gt;<br/>&nbsp;&lt;table&nbsp;border&gt;<br/>&nbsp;&nbsp;&lt;tr&gt;<br/>&nbsp;&nbsp;&nbsp;&lt;td&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;Stig<br/>&nbsp;&nbsp;&nbsp;&lt;/td&gt;<br/>&nbsp;&nbsp;&nbsp;&lt;td&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;Bakken<br/>&nbsp;&nbsp;&nbsp;&lt;/td&gt;<br/>&nbsp;&nbsp;&lt;/tr&gt;<br/>&nbsp;&nbsp;&lt;tr&gt;<br/>&nbsp;&nbsp;&nbsp;&lt;td&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;Martin<br/>&nbsp;&nbsp;&nbsp;&lt;/td&gt;<br/>&nbsp;&nbsp;&nbsp;&lt;td&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;Jansen<br/>&nbsp;&nbsp;&nbsp;&lt;/td&gt;<br/>&nbsp;&nbsp;&lt;/tr&gt;<br/>&nbsp;&nbsp;&lt;tr&gt;<br/>&nbsp;&nbsp;&nbsp;&lt;td&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;Alexander<br/>&nbsp;&nbsp;&nbsp;&lt;/td&gt;<br/>&nbsp;&nbsp;&nbsp;&lt;td&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;Merz<br/>&nbsp;&nbsp;&nbsp;&lt;/td&gt;<br/>&nbsp;&nbsp;&lt;/tr&gt;<br/>&nbsp;&lt;/table&gt;<br/>&lt;/html&gt;
+    </div>        
+   </div>
+  </div>
+ </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-template-it.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-template-it.html">HTML_Template_IT</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-template-it.html-template-it.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">HTML_Template_IT</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">HTML_Template_IT::HTML_Template_IT()</td>
+  </tr>
+ </table>
+</div>
+</body></html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Schema caching</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.networking.net-ldap2.html" title="Net_LDAP2" />
+  <link rel="prev" href="package.networking.net-ldap2.ldif.html" title="LDIF files" />
+  <link rel="next" href="package.networking.net-mac.html" title="Net_MAC" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Schema caching</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.networking.net-ldap2.ldif.html" title="LDIF files">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.networking.net-mac.html" title="Net_MAC">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.networking.net-ldap2.schemacache">
+    
+        <h1 class="refname">Schema caching</h1>
+        <div class="refnamediv">Schema caching &ndash; How to enable schema caching</div>
+
+    
+
+    <div class="refsection"><div class="info"><h1>Net_LDAP2s schema caching facility</h1>
+</div>
+    <p class="para">
+            <strong class="classname">Net_LDAP2</strong> features an easy schema caching facility.
+            Caching the schema can gain some performance, especially with slow servers or connections.
+            The facility works with an plugin object that must be passed to <strong class="classname">Net_LDAP2</strong>s
+            <strong class="function">registerSchemaCache()</strong> method. The cache object can be registered (or unregistered)
+            at any time, but of course it is the best time right after initializing <strong class="classname">Net_LDAP2</strong>.
+
+            </p><div class="example"><div class="info"><p><strong>Enabling/disabling Net_LDAP2s schema caching facility</strong></p></div>
+                <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;registering&nbsp;a&nbsp;valid&nbsp;schema&nbsp;cache&nbsp;object&nbsp;is&nbsp;enough&nbsp;to&nbsp;enable&nbsp;the&nbsp;caching&nbsp;facility:<br /></span><span style="color: #0000BB">$ldap</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">registerSchemaCache</span><span style="color: #007700">(</span><span style="color: #0000BB">$myCacheObject</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;unregistering&nbsp;is&nbsp;easy&nbsp;too:&nbsp;just&nbsp;supply&nbsp;null&nbsp;as&nbsp;schema&nbsp;cache&nbsp;object:<br /></span><span style="color: #0000BB">$ldap</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">registerSchemaCache</span><span style="color: #007700">(</span><span style="color: #0000BB">null</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+                </div>
+            </div>
+        
+        <p class="para">
+            The object that gets passed to <strong class="function">registerSchemaCache()</strong> must implement the
+            <strong class="classname">Net_LDAP2_SchemaCache</strong> interface which demands two methods.
+            Initialisation of the cache object is dependent on the class itself but should
+            be handled inside the cache class constructor, however this may vary. Please refer to the cache
+            class documentation for those details.
+            </p><table class="doctable table"><caption><strong class="classname">Net_LDAP2_SchemaCache</strong> interface methods</caption>
+                
+                    <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>Parameter</th>
+                            <th>Return value</th>
+                            <th>Description</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td><strong class="function">loadSchema()</strong></td>
+                            <td>none</td>
+                            <td>
+                                <strong class="classname">Net_LDAP2_Schema</strong>,
+                                <strong class="classname">Net_LDAP2_Error</strong> or <code class="literal">false</code></td>
+                            <td>
+                                Returns the cached schema object.
+                                Net_LDAP2 will consider anything returned invalid, except a valid Net_LDAP2_Schema object.
+                                In case you return a Net_LDAP2_Error, this error will be routed to the return of the
+                                $ldap-&gt;schema() call. If you return something else, Net_LDAP2 will fetch a fresh
+                                Schema object from the LDAP server and tries to cache it via <strong class="function">store()</strong>.
+                                You may also want to implement a cache aging mechanism here too.
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><strong class="function">storeSchema()</strong></td>
+                            <td><strong class="classname">Net_LDAP2_Schema</strong> object</td>
+                            <td><code class="literal">true</code> or (in special cases) <strong class="classname">Net_LDAP2_Error</strong></td>
+                            <td>
+                                Stores a schema object in the cache.
+                                This method will be called, if Net_LDAP2 has fetched a fresh schema object from LDAP
+                                and wants to init or refresh the cache. In case of errors you may return a
+                                <strong class="classname">Net_LDAP2_Error</strong> which will be routet to the client.
+                                Note that doing this prevents, that the schema object fetched from LDAP
+                                will be given back to the client, so only return errors if storing of the cache is
+                                something crucial (e.g. for doing something else with it). Normaly you dont want to
+                                give back errors in which case Net_LDAP2 needs to fetch the schema once per script run and
+                                use the error functionality of <strong class="function">loadSchema()</strong>.
+                            </td>
+                        </tr>
+
+                    </tbody>
+                
+            </table>
+
+        
+    </div>
+
+    <div class="refsection"><div class="info"><h1>Packaged schema cache classes</h1>
+</div>
+        <p class="para">
+            As of Net_LDAP2 2.0.0, there is one default schema caching class: <strong class="classname">Net_LDAP2_SimpleFileSchemaCache</strong>
+            to make your life a little easier. Caching to files should also be the most commonly used case.
+        </p>
+        <p class="para">
+            This cache class is built to be flexible yet simple to use and may serve as example to write own caching classes.
+            This cache stores the schema object in a flat file. The path is freely configurable. It also servers a cache aging
+            mechanism that can be used to invalidate the cached schema after some time so it will be refreshed regularly.
+        </p>
+        <p class="para">
+            To use this cache, you firstly need to initialize and configure a fresh cache object. Then the cache must
+            be registered with the <strong class="classname">Net_LDAP2</strong> instance. After that, Net_LDAP2 will use the cache.
+            </p><div class="example"><div class="info"><p><strong>Initializing the SimpleFileSchemaCache</strong></p></div>
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$myCacheConfig&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'path'&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'/tmp/Net_LDAP_Schema.cache'</span><span style="color: #007700">,&nbsp;</span><span style="color: #FF8000">//&nbsp;may&nbsp;reside&nbsp;on&nbsp;an&nbsp;linux&nbsp;tmpfs&nbsp;for&nbsp;improved&nbsp;performance<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'max_age'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">1200&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;in&nbsp;seconds,&nbsp;use&nbsp;0&nbsp;for&nbsp;endlessly<br /></span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$myCacheObject&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Net_LDAP2_SimpleFileSchemaCache</span><span style="color: #007700">(</span><span style="color: #0000BB">$myCacheConfig</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$ldap</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">registerSchemaCache</span><span style="color: #007700">(</span><span style="color: #0000BB">$myCacheObject</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+            </div>
+        
+        <p class="para">
+            </p><table class="doctable table"><caption><strong class="classname">Net_LDAP2_SimpleFileSchemaCache</strong> config options</caption>
+                
+                    <thead>
+                        <tr>
+                            <th>Option</th>
+                            <th>Mandatory?</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td><code class="literal">path</code></td>
+                            <td>No</td>
+                            <td><code class="literal">/tmp/Net_LDAP_Schema.cache</code></td>
+                            <td>
+                                The full path to the cache file. To improve the caches performance under linux,
+                                you can place the cache file in a tmpfs mounted directory. This will put the file
+                                in the computers memory instead on disk, enabling nearly instant access.
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><code class="literal">max_age</code></td>
+                            <td>No</td>
+                            <td><code class="literal">1200</code></td>
+                            <td>
+                                Maximum cache age in seconds. The age of the cache is determined by the files
+                                last change time. If <code class="literal">max_age</code> is reached, Net_LDAP2 will fetch
+                                a fresh Net_LDAP2_Schema object which is then stored in the cache file again.
+                                Setting this to &quot;0&quot; will make the cache endlessly valid.
+                            </td>
+                        </tr>
+
+                     </tbody>
+                
+            </table>
+
+        
+    </div>
+
+    <div class="refsection"><div class="info"><h1>Writing own schema cache classes</h1>
+</div>
+        <p class="para">
+            However this is basicly an easy task, this is beyond the scope of this manual. If you want to write your
+            own custom schema cache, please refer to the detailed example at
+            <code class="literal">/your/pear/path/docs/Net_LDAP2/examples/schema_cache.php</code> as well as the source/APIdoc of
+            the interface <strong class="classname">Net_LDAP2_SchemaCache</strong>.
+        </p>
+    </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.networking.net-ldap2.ldif.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.networking.net-ldap2.html">Net_LDAP2</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.networking.net-mac.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">LDIF files</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Net_MAC</td>
+  </tr>
+ </table>
+</div>
+</body></html>

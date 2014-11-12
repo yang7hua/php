@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Message Providers</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-quickform2.elements.html" title="Form elements" />
+  <link rel="prev" href="package.html.html-quickform2.elements.repeat.html" title="Repeat element" />
+  <link rel="next" href="package.html.html-quickform2.values.html" title="Element values and validation" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Message Providers</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-quickform2.elements.repeat.html" title="Repeat element">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-quickform2.values.html" title="Element values and validation">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-quickform2.elements.message-provider">
+ 
+  <h1 class="refname">Message Providers</h1>
+  <div class="refnamediv">Message Providers &ndash; Supplying (localized) messages to form elements</div>
+
+ 
+ <div class="refsection" id="package.html.html-quickform2.elements.message-provider.overview">
+  <div class="info">
+   <h1>Overview</h1>
+
+  </div>
+  <p class="para">
+   Some of the form elements need to automatically obtain (possibly localized) messages:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara">
+     <a href="package.html.html-quickform2.elements.custom.html#package.html.html-quickform2.elements.custom.date" class="link">Date</a> element needs
+     month and weekday names;
+    </span></li>
+    <li class="listitem"><span class="simpara">
+     <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Element_InputFile.html" class="apidoclink">HTML_QuickForm2_Element_InputFile</a>
+     needs error messages to display if its internal validation (checking <code class="literal">&#039;error&#039;</code>
+     field within <code class="varname">$_FILES</code> array) fails.
+    </span></li>
+   </ul>
+  
+  <p class="para">
+   Instead of giving all possible messages to each element, an object implementing <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_MessageProvider.html" class="apidoclink">HTML_QuickForm2_MessageProvider</a> interface (or a
+   <span class="type">callback</span> with a signature similar to <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_MessageProvider.html#methodget" class="apidoclink">HTML_QuickForm2_MessageProvider::get()</a>) is given
+   which returns messages on-demand. 
+  </p>
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.elements.message-provider.default">
+  <div class="info">
+   <h1>Default message provider</h1>
+
+  </div>
+  <p class="para">
+   Default message provider will be used by <code class="literal">&#039;date&#039;</code> and <code class="literal">&#039;file&#039;</code>
+   elements if another one is not explicitly given. It contains an array of pre-translated messages
+   and allows overriding them and setting additional translations for new languages. As this message
+   provider is a Singleton, the updated translations will be available throughout the application.
+  </p>
+  <div class="example">
+   <p><strong>Adding a new &quot;translation&quot;</strong></p>
+   <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />HTML_QuickForm2_MessageProvider_Default</span><span style="color: #007700">::</span><span style="color: #0000BB">getInstance</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">set</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'date'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'months_long'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'elderscrolls'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">"Morning&nbsp;Star"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"Sun's&nbsp;Dawn"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"First&nbsp;Seed"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"Rain's&nbsp;Hand"</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"Second&nbsp;Seed"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"Mid&nbsp;Year"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"Sun's&nbsp;Height"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"Last&nbsp;Seed"</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">"Heartfire"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"Frostfall"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"Sun's&nbsp;Dusk"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"Evening&nbsp;Star"</span><span style="color: #007700">)&nbsp;<br />);<br /><br /></span><span style="color: #0000BB">$date&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Factory</span><span style="color: #007700">::</span><span style="color: #0000BB">createElement</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'date'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'test'</span><span style="color: #007700">,&nbsp;array(),<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'format'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'d&nbsp;F&nbsp;Y'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'language'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'elderscrolls'</span><span style="color: #007700">)<br />)-&gt;</span><span style="color: #0000BB">setValue</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'2012-04-01'<br /></span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;remove&nbsp;all&nbsp;tags&nbsp;from&nbsp;the&nbsp;output<br /></span><span style="color: #0000BB">$date</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">toggleFrozen</span><span style="color: #007700">(</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$date</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">persistentFreeze</span><span style="color: #007700">(</span><span style="color: #0000BB">false</span><span style="color: #007700">);<br />echo&nbsp;</span><span style="color: #0000BB">$date</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <div class="example-contents"><p>the output of the above code being</p></div>
+   <pre class="screen">
+<br/>01&amp;nbsp;Rain&#039;s&nbsp;Hand&amp;nbsp;2012<br/>
+   </pre>
+
+  </div>
+  <p class="para">
+   If <code class="literal">&#039;language&#039;</code> field is not explicitly given to element&#039;s constructor,
+   <code class="literal">&#039;language&#039;</code> <a href="package.html.html-common2.options.html#package.html.html-common2.options.overview" class="link">option</a> set with
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />HTML_Common2</span><span style="color: #007700">::</span><span style="color: #0000BB">setOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'language'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'...'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+   will be used, defaulting to <code class="literal">&#039;en&#039;</code>.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.elements.message-provider.strftime">
+  <div class="info">
+   <h1>Strftime message provider</h1>
+
+  </div>
+  <p class="para">
+   This message provider will only work for <code class="literal">&#039;date&#039;</code> elements and relies on <a href="http://www.php.net/manual-lookup.php?pattern=strtotime" class="link external"><strong class="function">strftime()</strong></a> function to generate
+   lists of months and weekdays. You will need to properly set <strong class="constant">LC_TIME</strong> locale
+   category for it to work.
+  </p>
+  <div class="example">
+   <p><strong>Using Strftime message provider</strong></p>
+   <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />setlocale</span><span style="color: #007700">(</span><span style="color: #0000BB">LC_TIME</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'ru_RU.CP1251'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Russian_Russia.1251'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Strftime&nbsp;message&nbsp;provider&nbsp;will&nbsp;be&nbsp;used&nbsp;if&nbsp;'locale'&nbsp;is&nbsp;given&nbsp;as&nbsp;'language'&nbsp;value<br /></span><span style="color: #0000BB">$date&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Factory</span><span style="color: #007700">::</span><span style="color: #0000BB">createElement</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'date'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'test'</span><span style="color: #007700">,&nbsp;array(),&nbsp;array(</span><span style="color: #DD0000">'format'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'d&nbsp;F&nbsp;Y'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'language'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'locale'</span><span style="color: #007700">)<br />)-&gt;</span><span style="color: #0000BB">setValue</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'2012-04-01'<br /></span><span style="color: #007700">);<br /></span><span style="color: #FF8000">//&nbsp;remove&nbsp;all&nbsp;tags&nbsp;from&nbsp;the&nbsp;output<br /></span><span style="color: #0000BB">$date</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">toggleFrozen</span><span style="color: #007700">(</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$date</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">persistentFreeze</span><span style="color: #007700">(</span><span style="color: #0000BB">false</span><span style="color: #007700">);<br />echo&nbsp;</span><span style="color: #0000BB">$date</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <div class="example-contents"><p>which outputs (in CP1251 encoding, actually):</p></div>
+   <pre class="screen">
+<br/>01&amp;nbsp;Апрель&amp;nbsp;2012<br/>
+   </pre>
+
+  </div>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-quickform2.elements.repeat.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-quickform2.elements.html">Form elements</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-quickform2.values.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Repeat element</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Element values and validation</td>
+  </tr>
+ </table>
+</div>
+</body></html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Dynamic generation of archive files for a gallery</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.fileformats.file-archive.html" title="File_Archive" />
+  <link rel="prev" href="package.fileformats.file-archive.examples.html" title="Examples" />
+  <link rel="next" href="package.fileformats.file-archive.readers.html" title="Readers" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Dynamic generation of archive files for a gallery</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.fileformats.file-archive.examples.html" title="Examples">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.fileformats.file-archive.readers.html" title="Readers">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.fileformats.file-archive.examples-gallery">
+ 
+  <h1 class="refname">Dynamic generation of archive files for a gallery</h1>
+  <div class="refnamediv">Dynamic generation of archive files for a gallery &ndash; How to use File_Archive for a photo/video gallery</div>
+
+ 
+
+
+ <div class="refsection" id="package.fileformats.file-archive.examples-gallery.intro"><div class="info"></div>
+  
+   <p class="para">
+    One possible use case of <strong class="classname">File_Archive</strong> is to
+    dynamically generate archives that contain pictures or videos from a gallery.
+   </p>
+   <p class="para">
+    The choice of the file format is important if you want an efficient
+    generation. Let&#039;s see what are the possibilities:
+   </p>
+   <div class="qandaset"><ol class="qandaset_questions"><li><a href="#phd5461faccac5ba">Tar</a></li><li><a href="#phd5461faccac9a0">Tgz, Tbz</a></li><li><a href="#phd5461faccacd88">Zip</a></li></ol></div>
+    <dl class="qandaentry">
+     <dt><strong>Tar</strong></dt>
+     <dd class="answer">
+      <p class="para">
+       <em class="emphasis">Pros</em>:
+       Generation very efficient, constant memory usage, no need to cache
+      </p>
+     </dd>
+     <dd class="answer">
+      <p class="para">
+       <em class="emphasis">Cons</em>:
+       No compression (but anyway images or video can hardly be
+       compressed), not as widely used as Zip
+      </p>
+     </dd>
+    </dl>
+
+    <dl class="qandaentry">
+     <dt><strong>Tgz, Tbz</strong></dt>
+     <dd class="answer">
+      <p class="para">
+       <em class="emphasis">Pros</em>:
+       Very high compression ratio, constant memory usage
+      </p>
+     </dd>
+     <dd class="answer">
+      <p class="para">
+       <em class="emphasis">Cons</em>:
+       Can&#039;t be cached, needs a lot of CPU at each generation
+      </p>
+     </dd>
+    </dl>
+
+    <dl class="qandaentry">
+     <dt><strong>Zip</strong></dt>
+     <dd class="answer">
+      <p class="para">
+       <em class="emphasis">Pros</em>:
+       Intermediate result can be cached, compressed, you can choose
+       the compression level, widely used
+      </p>
+     </dd>
+     <dd class="answer">
+      <p class="para">
+       <em class="emphasis">Cons</em>:
+       Compression ratio lower than for Tgz/Tbz
+      </p>
+     </dd>
+    </dl>
+   
+
+   <p class="para">
+    We will focus on Tar and Zip generation, Tgz and Tbz are too
+    CPU expensive for an &quot;on the fly&quot; archive generation.
+   </p>
+  </div>
+
+
+  <div class="refsection" id="package.fileformats.file-archive.examples-gallery.targen"><div class="info"><h1>Tar generation</h1>
+</div>
+   
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"File/Archive.php"</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;$files&nbsp;is&nbsp;an&nbsp;array&nbsp;of&nbsp;path&nbsp;to&nbsp;the&nbsp;files&nbsp;that&nbsp;must&nbsp;be&nbsp;added&nbsp;to&nbsp;the&nbsp;archive<br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">extract</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$files</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toArchive</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'myGallery.tar'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toOutput</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;)<br />);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+
+
+  <div class="refsection" id="package.fileformats.file-archive.examples-gallery.zipgen"><div class="info"><h1>Zip generation</h1>
+</div>
+   
+   <p class="para">
+    The main advantages of the Zip generation is that it is not very expensive
+    (due to the ability to cache the result), and widely used.
+    I think 2 viable options are to generate uncompressed Zip archives
+    (since you don&#039;t reduce a lot the size of picture and video files by
+    compressing them)
+    or to generate compressed Zip archive using a cache system.
+   </p>
+
+   <div class="example"><div class="info"><p><strong>On the fly creation of an uncompressed ZIP archive</strong></p></div>
+    
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"File/Archive.php"</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">setOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'zipCompressionLevel'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;$files&nbsp;is&nbsp;an&nbsp;array&nbsp;of&nbsp;path&nbsp;to&nbsp;the&nbsp;files&nbsp;that&nbsp;must&nbsp;be&nbsp;added&nbsp;to&nbsp;the&nbsp;archive<br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">extract</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$files</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toArchive</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'myGallery.zip'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toOutput</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;)<br />);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   </div>
+
+   <div class="example"><div class="info"><p><strong>On the fly creation of a compressed ZIP archive with a cache</strong></p></div>
+    
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"File/Archive.php"</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">"Cache/Lite.php"</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;See&nbsp;the&nbsp;documentation&nbsp;of&nbsp;cache&nbsp;lite&nbsp;for&nbsp;the&nbsp;meaning&nbsp;of&nbsp;the&nbsp;$options&nbsp;array<br />//&nbsp;fileNameProtection&nbsp;must&nbsp;be&nbsp;left&nbsp;to&nbsp;the&nbsp;default&nbsp;true&nbsp;value<br />//&nbsp;automaticSerialization&nbsp;is&nbsp;not&nbsp;required&nbsp;and&nbsp;should&nbsp;be&nbsp;left&nbsp;to&nbsp;false<br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'cacheDir'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'tmp'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">setOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'cache'</span><span style="color: #007700">,&nbsp;new&nbsp;</span><span style="color: #0000BB">Cache_Lite</span><span style="color: #007700">(</span><span style="color: #0000BB">$options</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">setOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'zipCompressionLevel'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">9</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;$files&nbsp;is&nbsp;an&nbsp;array&nbsp;of&nbsp;path&nbsp;to&nbsp;the&nbsp;files&nbsp;that&nbsp;must&nbsp;be&nbsp;added&nbsp;to&nbsp;the&nbsp;archive<br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">extract</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$files</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toArchive</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'myGallery.zip'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toOutput</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;)<br />);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   </div>
+
+  </div>
+
+
+  <div class="refsection" id="package.fileformats.file-archive.examples-gallery.puttingtogether"><div class="info"><h1>Putting it all together</h1>
+</div>
+   
+
+   <p class="para">
+    Since generating a zip or a tar archive is pretty much the same code,
+    you can write a simple code that lets the user choose what format he wants.
+    The following code is taken from a code I really use in my gallery.
+   </p>
+
+   <div class="example"><div class="info"><p><strong>Custom archive</strong></p></div>
+    
+    <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$allowedFormats&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'tar'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'zip'</span><span style="color: #007700">);<br /><br />if&nbsp;(!</span><span style="color: #0000BB">in_array</span><span style="color: #007700">(</span><span style="color: #0000BB">$_GET</span><span style="color: #007700">[</span><span style="color: #DD0000">'type'</span><span style="color: #007700">],&nbsp;</span><span style="color: #0000BB">$allowedFormats</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #DD0000">'Type&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">htmlspecialchars</span><span style="color: #007700">(</span><span style="color: #0000BB">$_GET</span><span style="color: #007700">[</span><span style="color: #DD0000">'type'</span><span style="color: #007700">])&nbsp;.&nbsp;</span><span style="color: #DD0000">'&nbsp;is&nbsp;either&nbsp;unknown&nbsp;or&nbsp;not&nbsp;allowed'</span><span style="color: #007700">);<br />}<br /><br />require_once&nbsp;</span><span style="color: #DD0000">"File/Archive.php"</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">setOption</span><span style="color: #007700">(</span><span style="color: #DD0000">'zipCompressionLevel'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">/**<br />&nbsp;*&nbsp;I&nbsp;skipped&nbsp;the&nbsp;generation&nbsp;of&nbsp;the&nbsp;$files&nbsp;array&nbsp;since&nbsp;it&nbsp;really<br />&nbsp;*&nbsp;depends&nbsp;on&nbsp;you&nbsp;gallery&nbsp;and&nbsp;what&nbsp;files&nbsp;the&nbsp;user&nbsp;requires<br />&nbsp;*/<br /><br /></span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">extract</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$files</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toArchive</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'myGallery.'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$_GET</span><span style="color: #007700">[</span><span style="color: #DD0000">'type'</span><span style="color: #007700">],<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">File_Archive</span><span style="color: #007700">::</span><span style="color: #0000BB">toOutput</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;)<br />);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   </div>
+  </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.fileformats.file-archive.examples.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.fileformats.file-archive.html">File_Archive</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.fileformats.file-archive.readers.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Examples</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Readers</td>
+  </tr>
+ </table>
+</div>
+</body></html>

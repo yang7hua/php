@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Tutorial</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.authentication.auth-prefmanager.html" title="Auth_PrefManager" />
+  <link rel="prev" href="package.authentication.auth-prefmanager.intro.html" title="Introduction to
+    Auth_PrefManager" />
+  <link rel="next" href="package.authentication.auth-prefmanager.auth-prefmanager.auth-prefmanager.html" title="constructor
+   Auth_PrefManager::Auth_PrefManager" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Tutorial</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.authentication.auth-prefmanager.intro.html" title="Introduction to
+    Auth_PrefManager">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.authentication.auth-prefmanager.auth-prefmanager.auth-prefmanager.html" title="constructor
+   Auth_PrefManager::Auth_PrefManager">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.authentication.auth-prefmanager.tutorial">
+  
+   <h1 class="refname">
+    Tutorial
+   </h1>
+   <div class="refnamediv">
+    Tutorial
+    &ndash; 
+    A short guide to using <strong class="classname">Auth_PrefManager</strong>
+   </div>
+
+  
+  <div class="refsection" id="package.authentication.auth-prefmanager.tutorial.table"><div class="info"><h1>
+    Setting up the database
+   </h1>
+</div>
+   
+   <p class="para">
+     The first step is to setup a database to store the values in. 
+     For this tutorial it&#039;s assumed that you already know 
+     the basics of using the PEAR 
+     <a href="package.database.db.html" class="link">DB</a> class.
+   </p>
+   <p class="para">
+     To set up the default table layout run the following SQL statement:
+   </p>
+   <div class="example"><div class="info"><p><strong>SQL to setup the table</strong></p></div>
+     
+     <div class="sqlcode">
+     <pre class="sqlcode">
+CREATE TABLE `preferences` (
+   `user_id` varchar( 255 ) NOT NULL default &#039;&#039;,
+   `pref_id` varchar( 32 ) NOT NULL default &#039;&#039;,
+   `pref_value` longtext NOT NULL ,
+    PRIMARY KEY ( `user_id` , `pref_id` )
+);</pre>
+
+     </div> 
+   </div>
+  </div>
+  <div class="refsection" id="package.authentication.auth-prefmanager.tutorial.create"><div class="info"><h1>Setting up your first PrefManager object</h1>
+</div>
+    
+    <p class="para">
+      To use Auth_PrefManager we must first create an instance of the base object, as shown below.
+    </p>
+    <div class="example"><div class="info"><p><strong>Setting up the object</strong></p></div>
+     
+     <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once(</span><span style="color: #DD0000">'Auth/PrefManager.php'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$dsn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'mysql://user:password@localhost/database'</span><span style="color: #007700">;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Change&nbsp;the&nbsp;DSN&nbsp;to&nbsp;fit&nbsp;your&nbsp;database.<br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'serialize'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Enable&nbsp;serialization&nbsp;of&nbsp;data&nbsp;before&nbsp;saving,&nbsp;this&nbsp;ensures&nbsp;that&nbsp;the&nbsp;values&nbsp;are&nbsp;retrieved&nbsp;cleanly.<br /></span><span style="color: #0000BB">$prefmanager&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Auth_PrefManager</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);&nbsp;</span><span style="color: #FF8000">//&nbsp;Create&nbsp;the&nbsp;object.<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div> 
+   </div>
+  </div>
+  <div class="refsection" id="package.authentication.auth-prefmanager.tutorial.setdefaultpref"><div class="info"><h1>Setting and displaying default preferences</h1>
+</div>
+   
+    <p class="para">
+      Now that we have a PrefManager object, 
+	  we can make use of it to set some preferences.
+    </p>
+    <p class="para">
+      For this tutorial we&#039;re going 
+	  to allow users to specify their country, 
+	  and assume that any user who hasn&#039;t 
+	  set their country is somewhere on Earth.
+    </p>
+    <p class="para">
+      First we need to set the default value, using 
+	  <a href="package.authentication.auth-prefmanager.auth-prefmanager.setdefaultpref.html" class="link">setDefaultPref</a>.
+    </p>
+    <div class="example"><div class="info"><p><strong>Setting up the object</strong></p></div>
+     
+     <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Continued&nbsp;from&nbsp;example&nbsp;1.<br /></span><span style="color: #0000BB">$prefmanager</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setDefaultPref</span><span style="color: #007700">(</span><span style="color: #DD0000">"country"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"Earth"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div> 
+   </div>
+   <p class="para">
+     Now that the default is set, 
+	 we can create a (very) basic page, 
+	 welcoming users with a customised message.
+   </p>
+   <p class="para">
+     Currently this message will only ever display 
+	 &quot;Welcome to the people of Earth!&quot;, 
+	 since no users have their country set.
+   </p>
+   <div class="example"><div class="info"><p><strong>Getting preferences</strong></p></div>
+     
+     <div class="phpcode">
+     <code><span style="color: #000000">
+$username&nbsp;=&nbsp;"guest";<br />&lt;h1&gt;Welcome&nbsp;to&nbsp;the&nbsp;people&nbsp;of&nbsp;&lt;?=$prefmanager-&gt;getPref($username,&nbsp;"country")?&gt;!&lt;/h1&gt;</span>
+</code>
+     </div>
+   </div>
+  </div>
+  <div class="refsection" id="package.authentication.auth-prefmanager.tutorial.setpref"><div class="info"><h1>Setting a user&#039;s preferences</h1>
+</div>
+    
+    <p class="para">
+      Finally we need a way for people to choose which country they&#039;re in.
+    </p>
+    <p class="para">
+      This is going to be done with a simple text box, 
+	  and you should obviously be a little more careful 
+	  in a real application about allowing users to set preferences for people!
+    </p>
+    <p class="para">
+      The Reset Country button will delete the user&#039;s preference, 
+	  and cause the default to be displayed again.
+    </p>
+    <div class="example"><div class="info"><p><strong>Setting preferences</strong></p></div>
+     
+     <div class="phpcode">
+     <code><span style="color: #000000">
+&lt;h1&gt;Set&nbsp;Country&lt;/h1&gt;<br />//&nbsp;Allow&nbsp;users&nbsp;to&nbsp;set&nbsp;their&nbsp;country&nbsp;and&nbsp;username.<br />if&nbsp;(isset($_POST['submit']))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;$username&nbsp;=&nbsp;htmlspecialchars($_POST['username']);<br />&nbsp;&nbsp;&nbsp;&nbsp;$prefmanager-&gt;setPref($username,&nbsp;'country',&nbsp;$_POST['country']);<br />}&nbsp;else&nbsp;if&nbsp;(isset($_POST['reset']))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;$username&nbsp;=&nbsp;htmlspecialchars($_POST['username']);<br />&nbsp;&nbsp;&nbsp;&nbsp;$prefmanager-&gt;deletePref($username,&nbsp;'country');<br />}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;$username&nbsp;=&nbsp;'guest';<br />}<br />?&gt;<br />&lt;h1&gt;Welcome&nbsp;to&nbsp;the&nbsp;people&nbsp;of&nbsp;&lt;?=$prefmanager-&gt;getPref($username,&nbsp;"country")?&gt;!&lt;/h1&gt;<br />&lt;h2&gt;Set&nbsp;Country&nbsp;And&nbsp;Username&lt;/h2&gt;<br />&lt;form&nbsp;method="post"&nbsp;action="<span style="color: #0000BB">&lt;?php&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">htmlspecialchars</span><span style="color: #007700">(</span><span style="color: #0000BB">$_SERVER</span><span style="color: #007700">[</span><span style="color: #DD0000">'PHP_SELF'</span><span style="color: #007700">])&nbsp;</span><span style="color: #0000BB">?&gt;</span>"&gt;<br />&nbsp;&nbsp;&lt;label&nbsp;for="username"&gt;Username&lt;/label&gt;&nbsp;&lt;input&nbsp;name="username"&nbsp;value="&lt;?=$username?&gt;"&nbsp;/&gt;&lt;br/&gt;<br />&nbsp;&nbsp;&lt;label&nbsp;for="country"&gt;Country&lt;/label&gt;&nbsp;&lt;input&nbsp;name="country"&nbsp;value="&lt;?=$prefmanager-&gt;getPref($username,&nbsp;'country')?&gt;"/&gt;&lt;br/&gt;<br />&nbsp;&nbsp;&lt;input&nbsp;type="submit"&nbsp;name="submit"&nbsp;value="Set&nbsp;Country"&nbsp;/&gt;&nbsp;&lt;input&nbsp;type="submit"&nbsp;name="reset"&nbsp;value="Reset&nbsp;Country"&nbsp;/&gt;<br />&lt;/form&gt;</span>
+</code>
+     </div>
+   </div>
+   <p class="para">
+     Now once a user has entered their username, 
+	 and their country, whenever they login they&#039;ll get a personalized welcome.
+   </p>
+  </div>
+  <div class="refsection" id="package.authentication.auth-prefmanager.tutorial.source"><div class="info"><h1>Full sourcecode</h1>
+</div>
+    
+    <div class="example"><div class="info"><p><strong>Sourcecode for the example page</strong></p></div>
+     
+     <div class="phpcode">
+     <code><span style="color: #000000">
+&lt;h1&gt;Set&nbsp;Country&lt;/h1&gt;<br /><span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once(</span><span style="color: #DD0000">'Auth/PrefManager.php'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Create&nbsp;the&nbsp;PrefManager&nbsp;object.<br /><br />//&nbsp;Change&nbsp;the&nbsp;DSN&nbsp;to&nbsp;fit&nbsp;your&nbsp;database.<br /></span><span style="color: #0000BB">$dsn&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'mysql://user:password@localhost/database'</span><span style="color: #007700">;&nbsp;&nbsp;&nbsp;<br /><br /></span><span style="color: #FF8000">//&nbsp;Enable&nbsp;serialization&nbsp;of&nbsp;data&nbsp;before&nbsp;saving,&nbsp;this&nbsp;ensures&nbsp;that&nbsp;the&nbsp;values&nbsp;are&nbsp;retrieved&nbsp;cleanly.<br /></span><span style="color: #0000BB">$options&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'serialize'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br /><br /></span><span style="color: #FF8000">//&nbsp;Create&nbsp;the&nbsp;object.<br /></span><span style="color: #0000BB">$prefmanager&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Auth_PrefManager</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$options</span><span style="color: #007700">);&nbsp;<br /><br /></span><span style="color: #FF8000">//&nbsp;Set&nbsp;the&nbsp;default&nbsp;value&nbsp;(this&nbsp;doesn't&nbsp;need&nbsp;to&nbsp;be&nbsp;done&nbsp;everytime&nbsp;the&nbsp;script&nbsp;is&nbsp;run).<br /></span><span style="color: #0000BB">$prefmanager</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setDefaultPref</span><span style="color: #007700">(</span><span style="color: #DD0000">"country"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"Earth"</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Allow&nbsp;users&nbsp;to&nbsp;set&nbsp;their&nbsp;country&nbsp;and&nbsp;username.<br /></span><span style="color: #007700">if&nbsp;(isset(</span><span style="color: #0000BB">$_POST</span><span style="color: #007700">[</span><span style="color: #DD0000">'submit'</span><span style="color: #007700">]))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$username&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">htmlspecialchars</span><span style="color: #007700">(</span><span style="color: #0000BB">$_POST</span><span style="color: #007700">[</span><span style="color: #DD0000">'username'</span><span style="color: #007700">]);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$prefmanager</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setPref</span><span style="color: #007700">(</span><span style="color: #0000BB">$username</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'country'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$_POST</span><span style="color: #007700">[</span><span style="color: #DD0000">'country'</span><span style="color: #007700">]);<br />}&nbsp;else&nbsp;if&nbsp;(isset(</span><span style="color: #0000BB">$_POST</span><span style="color: #007700">[</span><span style="color: #DD0000">'reset'</span><span style="color: #007700">]))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$username&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">htmlspecialchars</span><span style="color: #007700">(</span><span style="color: #0000BB">$_POST</span><span style="color: #007700">[</span><span style="color: #DD0000">'username'</span><span style="color: #007700">]);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$prefmanager</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">deletePref</span><span style="color: #007700">(</span><span style="color: #0000BB">$username</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'country'</span><span style="color: #007700">);<br />}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$username&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'guest'</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;<br /></span>&lt;h1&gt;Welcome&nbsp;to&nbsp;the&nbsp;people&nbsp;of&nbsp;&lt;?=$prefmanager-&gt;getPref($username,&nbsp;"country")?&gt;!&lt;/h1&gt;<br />&lt;h2&gt;Set&nbsp;Country&nbsp;And&nbsp;Username&lt;/h2&gt;<br />&lt;form&nbsp;method="post"&nbsp;action="<span style="color: #0000BB">&lt;?php&nbsp;</span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">htmlspecialchars</span><span style="color: #007700">(</span><span style="color: #0000BB">$_SERVER</span><span style="color: #007700">[</span><span style="color: #DD0000">'PHP_SELF'</span><span style="color: #007700">])&nbsp;</span><span style="color: #0000BB">?&gt;</span>"&gt;<br />&nbsp;&nbsp;&lt;label&nbsp;for="username"&gt;Username&lt;/label&gt;&nbsp;&lt;input&nbsp;name="username"&nbsp;value="&lt;?=$username?&gt;"&nbsp;/&gt;&lt;br/&gt;<br />&nbsp;&nbsp;&lt;label&nbsp;for="country"&gt;Country&lt;/label&gt;&nbsp;&lt;input&nbsp;name="country"&nbsp;value="&lt;?=$prefmanager-&gt;getPref($username,&nbsp;'country')?&gt;"/&gt;&lt;br/&gt;<br />&nbsp;&nbsp;&lt;input&nbsp;type="submit"&nbsp;name="submit"&nbsp;value="Set&nbsp;Country"&nbsp;/&gt;&nbsp;&lt;input&nbsp;type="submit"&nbsp;name="reset"&nbsp;value="Reset&nbsp;Country"&nbsp;/&gt;<br />&lt;/form&gt;</span>
+</code>
+     </div>
+   </div>
+  </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.authentication.auth-prefmanager.intro.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.authentication.auth-prefmanager.html">Auth_PrefManager</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.authentication.auth-prefmanager.auth-prefmanager.auth-prefmanager.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction to
+    Auth_PrefManager</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">constructor
+   Auth_PrefManager::Auth_PrefManager</td>
+  </tr>
+ </table>
+</div>
+</body></html>

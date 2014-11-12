@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Default Renderer</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-quickform2.output.html" title="Form output and Javascript support" />
+  <link rel="prev" href="package.html.html-quickform2.renderers.html" title="Renderers" />
+  <link rel="next" href="package.html.html-quickform2.renderers.array.html" title="Array Renderer" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Default Renderer</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-quickform2.renderers.html" title="Renderers">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-quickform2.renderers.array.html" title="Array Renderer">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-quickform2.renderers.default">
+ 
+  <h1 class="refname">Default Renderer</h1>
+  <div class="refnamediv">Default Renderer &ndash; Directly generates HTML using primitive templates</div>
+
+ 
+
+ <div class="refsection" id="package.html.html-quickform2.renderers.default.overview">
+  <div class="info">
+   <h1>Overview</h1>
+
+  </div>
+  <p class="para">
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Renderer_Default.html" class="apidoclink">HTML_QuickForm2_Renderer_Default</a> is
+   essentially a primitive template engine (only supporting blocks and variable placeholders) that
+   is intended for quick prototyping. This Renderer is used under the hood by a magic
+   <strong class="function">__toString()</strong> method of <strong class="classname">HTML_QuickForm2_Container</strong> (and
+   consequently <strong class="classname">HTML_QuickForm2</strong> itself). It is similar to <a href="package.html.html-quickform.html-quickform-renderer-default.html" class="link"><strong class="classname">HTML_QuickForm_Renderer_Default</strong></a>
+   of <strong class="package">HTML_QuickForm</strong> though has different template format and more customization
+   possibilities.
+  </p>
+  <p class="para">
+   Generated <span class="acronym">HTML</span> is returned by a magic <strong class="function">__toString()</strong> method,
+   so the renderer can be used in string contexts.
+  </p>
+ </div>
+  
+ <div class="refsection" id="package.html.html-quickform2.renderers.default.syntax">
+  <div class="info">
+   <h1>Template syntax</h1>
+
+  </div>
+  
+  <p class="para">
+   The elements are output in the order they were added using an appropriate template, which looks
+   similar to the following:
+   </p><div class="htmlcode">
+    <pre class="htmlcode">
+&lt;div class=&quot;row&quot;&gt;
+ &lt;p class=&quot;label&quot;&gt;
+  &lt;qf:required&gt;&lt;span class=&quot;required&quot;&gt;*&lt;/span&gt;&lt;/qf:required&gt;
+  &lt;qf:label&gt;&lt;label for=&quot;{id}&quot;&gt;{label}&lt;/label&gt;&lt;/qf:label&gt;
+ &lt;/p&gt;
+ &lt;div class=&quot;element&lt;qf:error&gt; error&lt;/qf:error&gt;&quot;&gt;
+  &lt;qf:error&gt;&lt;span class=&quot;error&quot;&gt;{error}&lt;br /&gt;&lt;/span&gt;&lt;/qf:error&gt;
+  {element}
+ &lt;/div&gt;
+&lt;/div&gt;</pre>
+    
+   </div><p>
+   Here <code class="literal">{foo}</code> are placeholders that will be replaced by actual element data and
+   <code class="literal">&lt;qf:bar&gt;...&lt;/qf:bar&gt;</code> are blocks that will be either removed if an
+   element does not have a <code class="literal">bar</code> property or will be retained without their
+   <code class="literal">&lt;qf:bar&gt;</code> delimiters if said property is present.
+  </p>
+  
+  <p class="para">
+   The following placeholders are recognized and will be replaced:
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term"><code class="literal">{id}</code></dt>
+     <dd class="listitem"><span class="simpara">
+      <code class="literal">&#039;id&#039;</code> attribute of an element.
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><code class="literal">{class}</code></dt>
+     <dd class="listitem"><span class="simpara">
+      <code class="literal">&#039;class&#039;</code> attribute of an element. Mostly needed to put repeat-specific
+      <code class="literal">repeatItem</code> and <code class="literal">repeatPrototype</code> CSS classes on a outer
+      <code class="literal">&lt;div&gt;</code> for a group. 
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><code class="literal">{attributes}</code></dt>
+     <dd class="listitem"><span class="simpara">
+      Complete <a href="http://pear.php.net/package/HTML_Common2/docs/latest/HTML_Common2/HTML_Common2.html#methodgetAttributes" class="apidoclink">attribute string</a> for an element.
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><code class="literal">{error}</code></dt>
+     <dd class="listitem"><span class="simpara">
+      Error message for an element if it failed validation.
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><code class="literal">{label}</code></dt>
+     <dd class="listitem"><span class="simpara">
+      (Main) label for an element. If an array was passed to <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Node.html#methodsetLabel" class="apidoclink">setLabel()</a> then this placeholder
+      will be replaced by first element of that array. 
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><code class="literal">{label_more}</code></dt>
+     <dd class="listitem"><span class="simpara">
+      Additional label for an element. If an array was passed to <strong class="function">setLabel()</strong> then
+      it will be replaced by be an element of that array with <code class="literal">&#039;more&#039;</code> key.
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><code class="literal">{element}</code></dt>
+     <dd class="listitem"><span class="simpara">
+      String representation of an element returned by its <strong class="function">__toString()</strong> method.
+      Only in templates for &quot;scalar&quot; elements.
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><code class="literal">{content}</code></dt>
+     <dd class="listitem"><span class="simpara">
+      Contained elements. Only in templates for Containers.
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><code class="literal">{hidden}</code></dt>
+     <dd class="listitem"><span class="simpara">
+      Collected hidden elements if <code class="literal">group_hiddens</code> is on. Only in template for
+      form.
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><code class="literal">{errors}</code></dt>
+     <dd class="listitem"><span class="simpara">
+      Collected form errors if <code class="literal">group_errors</code> is on. Only in template for form.
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><code class="literal">{reqnote}</code></dt>
+     <dd class="listitem"><span class="simpara">
+      Required note if form has required elements. Only in template for form.
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><code class="literal">{message}</code></dt>
+     <dd class="listitem"><span class="simpara">
+      Leading and trailing message for grouped errors. Only in template for errors.
+     </span></dd>
+    </dl>
+   </div>
+  
+  
+  <p class="para">
+   The following blocks are possible:
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term"><code class="literal">&lt;qf:required&gt;</code></dt>
+     <dd class="listitem"><span class="simpara">
+      Block containing the &quot;element is required&quot; mark. Will be kept if an element has a
+      Required Rule attached. 
+     </span></dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term"><code class="literal">&lt;qf:error&gt;, &lt;qf:label&gt;, &lt;qf:label_more&gt;, &lt;qf:reqnote&gt;, &lt;qf:message&gt;</code></dt>
+     <dd class="listitem"><span class="simpara">
+      These blocks usually wrap around placeholders having the same name. In the example above,
+      <code class="literal">&lt;qf:error&gt;</code> is also used to set a special <span class="acronym">CSS</span> class
+      for an invalid element.
+     </span></dd>
+    </dl>
+   </div>
+  
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.renderers.default.customization">
+  <div class="info">
+   <h1>Template customization</h1>
+
+  </div> 
+  <p class="para">
+   Form element templates are set by <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Renderer_Default.html#methodsetTemplateForId" class="apidoclink">setTemplateForId()</a>,
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Renderer_Default.html#methodsetTemplateForClass" class="apidoclink">setTemplateForClass()</a>,
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Renderer_Default.html#methodsetElementTemplateForGroupId" class="apidoclink">setElementTemplateForGroupId()</a>
+   and <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Renderer_Default.html#methodsetElementTemplateForGroupClass" class="apidoclink">setElementTemplateForGroupClass()</a>.
+   The latter two methods apply to elements that are inside Groups. Note that the word
+   &quot;class&quot; in these method names refers to PHP class name rather than to CSS class name.
+   The renderer will also try going up the class hierarchy, so it will use a template for
+   <strong class="classname">HTML_QuickForm2_Element</strong> to render <code class="literal">&lt;input type=&quot;text&quot;
+   /&gt;</code> if more specific templates for
+   <strong class="classname">HTML_QuickForm2_Element_InputText</strong> and
+   <strong class="classname">HTML_QuickForm2_Element_Input</strong> are not available.
+  </p>
+  <p class="para">
+   Another template-related method is <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Renderer_Default.html#methodsetErrorTemplate" class="apidoclink">setErrorTemplate()</a>
+   which sets templates for errors output when <code class="literal">group_errors</code> is <strong class="constant">TRUE</strong>.
+  </p>
+  
+  <p class="para">
+   When searching for an appropriate template for a given element, the following order is used:
+   </p><ol type="1">
+    <li class="listitem"><span class="simpara">
+     If a template was set for that element by <strong class="function">setTemplateForId()</strong>, it will be
+     used, no matter if the element belongs to a group or not.
+    </span></li>
+    <li class="listitem"><span class="simpara">
+     If the element does not belong to a group, templates set via
+     <strong class="function">setTemplateForClass()</strong> are checked using the element class and going up the
+     class hierarchy.
+    </span></li>
+    <li class="listitem"><span class="simpara">
+     If the element belongs to a group, templates set by <strong class="function">setTemplateForClass()</strong>
+     are ignored, instead templates set by <strong class="function">setElementTemplateForGroupId()</strong> are
+     searched first using the containing group id, then templates set by
+     <strong class="function">setElementTemplateForGroupClass()</strong> using the containing group class and going
+     up the class hierarchy.
+    </span></li>
+    <li class="listitem"><span class="simpara">
+     If no template was found on previous steps (which is unlikely as Renderer is set up with
+     default templates), some minimal hardcoded template is used.
+    </span></li>
+   </ol>
+  
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.renderers.default.groups">
+  <div class="info">
+   <h1>Rendering groups</h1>
+
+  </div>
+  <p class="para">
+   When rendering elements inside Container, two templates are actually used:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara">Container template, having <code class="literal">{content}</code> placeholder;</span></li>
+    <li class="listitem"><span class="simpara">Element template.</span></li>
+   </ul><p>
+   Elements are first wrapped in their own templates, then <code class="literal">{content}</code> placeholder
+   in Container template is replaced by HTML for all contained elements. 
+  </p>
+  <p class="para">
+   This is true for Groups as well, but is less obvious:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara">Default (outer) template for groups looks like template for a scalar element;</span></li>
+    <li class="listitem"><span class="simpara">Default (inner) template for elements inside group is minimal:
+     <code class="literal">&#039;{element}&#039;</code>. So you will only get elements&#039; HTML, maybe with separators in
+     between, no additional markup.</span></li>
+   </ul>
+  
+  <p class="para">
+   The above also means that you will see neither labels for grouped elements, nor their validation
+   errors by default. If you want to output these, you&#039;ll need to set a new template for grouped
+   elements using either of <strong class="function">setTemplateForId()</strong>,
+   <strong class="function">setElementTemplateForGroupId()</strong>,
+   <strong class="function">setElementTemplateForGroupClass()</strong>:
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;setElementTemplateForGroupId()&nbsp;may&nbsp;be&nbsp;used&nbsp;if&nbsp;you&nbsp;want&nbsp;to&nbsp;customize&nbsp;a&nbsp;specific&nbsp;group<br /></span><span style="color: #0000BB">$renderer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setElementTemplateForGroupClass</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'HTML_QuickForm2_Container_Group'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'HTML_QuickForm2_Element'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'a&nbsp;complex&nbsp;template&nbsp;with&nbsp;{element},&nbsp;{label}&nbsp;and&nbsp;{error}&nbsp;placeholders'<br /></span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+  <blockquote class="tip">
+   <p class="para">
+    <code class="filename">controller/wizard.php</code> example <a href="package.html.html-quickform2.examples.html" class="link">installed with the package</a> shows setting
+    a complex template for grouped elements. 
+   </p>
+  </blockquote>
+
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-quickform2.renderers.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-quickform2.output.html">Form output and Javascript support</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-quickform2.renderers.array.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Renderers</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Array Renderer</td>
+  </tr>
+ </table>
+</div>
+</body></html>

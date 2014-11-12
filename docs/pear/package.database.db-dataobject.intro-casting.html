@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Casting - Dates, Blobs and Null</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.db-dataobject.html" title="DB_DataObject" />
+  <link rel="prev" href="package.database.db-dataobject.db-dataobject.raiseerror.html" title="DB_DataObject::raiseError" />
+  <link rel="next" href="package.database.db-dataobject-formbuilder.html" title="DB_DataObject_FormBuilder" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Casting - Dates, Blobs and Null</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.db-dataobject.db-dataobject.raiseerror.html" title="DB_DataObject::raiseError">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.db-dataobject-formbuilder.html" title="DB_DataObject_FormBuilder">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.db-dataobject.intro-casting">
+    
+      <h1 class="refname">Casting - Dates, Blobs and Null</h1>
+      <div class="refnamediv">Casting - Dates, Blobs and Null &ndash; 
+       DB_DataObject_Cast   ::date(), ::blob(), ::sql()
+      </div>
+
+    
+
+
+
+    <div class="refsection"><div class="info"><h1>Dealing with Casting, (everything except strings and numbers)</h1>
+</div>
+      
+      
+        <blockquote class="warning">
+<p class="para">
+        This is experimental!, although it is documented, it currently only supports a limited amount of databases (send
+        me fixes if you want it to support your favorite database), and the internal operations/API may change in the future..
+        </p></blockquote>
+
+        
+        
+      
+      <p class="para">
+        DataObjects is a very easy way to work with databases that are focused on numbers and strings. You can also 
+        use it on date fields (although you must format your strings correctly), and you can use it with other types
+        by using raw SQL query(), and the string value &quot;null&quot; is automatically converted to NULL in the database.
+      </p>
+
+      <p class="para">
+       In an effort to provide a cleaner way to code to the richer database types, the DB_DataObject_Cast object was created.
+       It&#039;s purpose is to simply create an object to represent some of the more unusual types. Below is an example of using it
+       to create a few simple types.
+      </p>
+      <p class="para">
+       Cast Objects can be used in both building queries, and assigning values
+    
+
+      </p><div class="example"><div class="info"><p><strong> Cast Objects for building and assigning values</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;using&nbsp;Cast&nbsp;Objects&nbsp;for&nbsp;building&nbsp;a&nbsp;query.<br /><br /></span><span style="color: #0000BB">$person&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">DB_DataObject</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">'person'</span><span style="color: #007700">);<br /><br /><br /></span><span style="color: #FF8000">//&nbsp;assign&nbsp;the&nbsp;value&nbsp;of&nbsp;birthday&nbsp;to&nbsp;a&nbsp;Cast&nbsp;object&nbsp;with&nbsp;a&nbsp;date.<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">birthday&nbsp;</span><span style="color: #007700">=&nbsp;&nbsp;</span><span style="color: #0000BB">DB_DataObject_Cast</span><span style="color: #007700">::</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #0000BB">2000</span><span style="color: #007700">,</span><span style="color: #0000BB">12</span><span style="color: #007700">,</span><span style="color: #0000BB">30</span><span style="color: #007700">);<br /><br /><br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">find</span><span style="color: #007700">();<br />while&nbsp;(</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"</span><span style="color: #007700">{</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">name</span><span style="color: #007700">}</span><span style="color: #DD0000">&nbsp;has&nbsp;a&nbsp;birthday&nbsp;on&nbsp;30&nbsp;december&nbsp;2002&lt;BR&gt;"</span><span style="color: #007700">;<br />}<br /><br /><br /><br /></span><span style="color: #FF8000">//&nbsp;use&nbsp;Cast&nbsp;Objects&nbsp;for&nbsp;assigning&nbsp;values.<br /><br /><br /></span><span style="color: #0000BB">$person&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">DB_DataObject</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">'person'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">get</span><span style="color: #007700">(</span><span style="color: #0000BB">12</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;set&nbsp;the&nbsp;persons's&nbsp;birthday&nbsp;to&nbsp;30&nbsp;december&nbsp;2000<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">birthday&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">DB_DataObject_Cast</span><span style="color: #007700">::</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #0000BB">2000</span><span style="color: #007700">,</span><span style="color: #0000BB">12</span><span style="color: #007700">,</span><span style="color: #0000BB">30</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;now&nbsp;update&nbsp;the&nbsp;database.<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">update</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+        </div>
+        
+        
+      <p class="para">
+      As you can see, This component is in it&quot;s infancy, so if you have any feature requests, ideas, please do not hesitate
+      to contact me at alan_k at php dot net.
+
+      </p>
+      
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="refsection"><div class="info"><h1>The blob and string type</h1>
+</div>
+      
+      <p class="para">
+        Blobs are fields which can store large amounts of binary data in the databases. 
+        
+      </p>
+      <p class="para">
+        At present only blobs is only supported in postgres using the bytea type. 
+        (please email me with code for other databases.)
+        
+      </p>
+      <p class="para">
+        
+        </p><div class="example"><div class="info"><p><strong> Inserting a photo and a big text file</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /><br />$person&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">DB_DataObject</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">'person'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">name&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'fred'<br /><br /></span><span style="color: #FF8000">//&nbsp;use&nbsp;blob&nbsp;for&nbsp;binary&nbsp;data.<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">photo&nbsp;</span><span style="color: #007700">=&nbsp;&nbsp;</span><span style="color: #0000BB">DB_DataObject_Cast</span><span style="color: #007700">::</span><span style="color: #0000BB">blob</span><span style="color: #007700">(</span><span style="color: #0000BB">file_get_contents</span><span style="color: #007700">(</span><span style="color: #DD0000">'xxx.jpg'</span><span style="color: #007700">));<br /><br /></span><span style="color: #FF8000">//&nbsp;use&nbsp;string&nbsp;for&nbsp;textural&nbsp;data&nbsp;into&nbsp;a&nbsp;blob&nbsp;type.<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">xmldocs&nbsp;</span><span style="color: #007700">=&nbsp;&nbsp;</span><span style="color: #0000BB">DB_DataObject_Cast</span><span style="color: #007700">::</span><span style="color: #0000BB">string</span><span style="color: #007700">(</span><span style="color: #0000BB">file_get_contents</span><span style="color: #007700">(</span><span style="color: #DD0000">'xxx.xml'</span><span style="color: #007700">));<br /><br /></span><span style="color: #FF8000">//&nbsp;now&nbsp;insert&nbsp;into&nbsp;the&nbsp;database.<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">insert</span><span style="color: #007700">();<br />&nbsp;<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+        </div>
+      
+    </div>
+   
+
+
+    <div class="refsection"><div class="info"><h1>The date type</h1>
+</div>
+      
+      <p class="para">
+        Most dates are stored in a database in ISO standard format, this method, allows you to create date types, from
+        either Year,month,day,  Human readable day/month/year, or standard iso format year-month-day.
+        It fills in the remaining values based on simple rules.
+        
+        
+      </p>
+     
+      <p class="para">
+        
+        </p><div class="example"><div class="info"><p><strong> Inserting a date in various formats</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /><br />$person&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">DB_DataObject</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">'person'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">name&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'fred'<br /><br /></span><span style="color: #FF8000">//&nbsp;use&nbsp;a&nbsp;human&nbsp;readable&nbsp;date<br /><br />//&nbsp;full&nbsp;format<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">birthday&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">DB_DataObject_Cast</span><span style="color: #007700">::</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #DD0000">'21/12/2003'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;use&nbsp;only&nbsp;a&nbsp;month/year&nbsp;-&nbsp;actually&nbsp;sets&nbsp;to&nbsp;1&nbsp;december&nbsp;2003<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">expires&nbsp;</span><span style="color: #007700">=&nbsp;&nbsp;</span><span style="color: #0000BB">DB_DataObject_Cast</span><span style="color: #007700">::</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #DD0000">'12/2003'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;use&nbsp;only&nbsp;a&nbsp;year&nbsp;only&nbsp;-&nbsp;actually&nbsp;sets&nbsp;to&nbsp;1&nbsp;jan&nbsp;2003<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">expires&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">DB_DataObject_Cast</span><span style="color: #007700">::</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #0000BB">2003</span><span style="color: #007700">);<br /><br /><br /><br /><br /><br /></span><span style="color: #FF8000">//&nbsp;use&nbsp;a&nbsp;iso&nbsp;formated<br /><br />//&nbsp;full&nbsp;formated<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">birthday&nbsp;</span><span style="color: #007700">=&nbsp;&nbsp;</span><span style="color: #0000BB">DB_DataObject_Cast</span><span style="color: #007700">::</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #DD0000">'2003-12-21'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;use&nbsp;only&nbsp;a&nbsp;year-month&nbsp;-&nbsp;actually&nbsp;sets&nbsp;to&nbsp;1&nbsp;december&nbsp;2003<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">expires&nbsp;</span><span style="color: #007700">=&nbsp;&nbsp;</span><span style="color: #0000BB">DB_DataObject_Cast</span><span style="color: #007700">::</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #DD0000">'2003-12'</span><span style="color: #007700">);<br /><br /><br /><br /><br /></span><span style="color: #FF8000">//&nbsp;using&nbsp;array&nbsp;syntax<br /><br />//&nbsp;full&nbsp;formated<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">birthday&nbsp;</span><span style="color: #007700">=&nbsp;&nbsp;</span><span style="color: #0000BB">DB_DataObject_Cast</span><span style="color: #007700">::</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #0000BB">2003</span><span style="color: #007700">,</span><span style="color: #0000BB">12</span><span style="color: #007700">,</span><span style="color: #0000BB">21</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;use&nbsp;only&nbsp;a&nbsp;year-month&nbsp;&nbsp;-&nbsp;actually&nbsp;sets&nbsp;to&nbsp;1&nbsp;december&nbsp;2003<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">expires&nbsp;</span><span style="color: #007700">=&nbsp;&nbsp;</span><span style="color: #0000BB">DB_DataObject_Cast</span><span style="color: #007700">::</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #0000BB">2003</span><span style="color: #007700">,</span><span style="color: #0000BB">12</span><span style="color: #007700">);<br /><br /><br /><br /></span><span style="color: #FF8000">//&nbsp;the&nbsp;real&nbsp;values&nbsp;are&nbsp;stored&nbsp;in&nbsp;object&nbsp;variables&nbsp;<br /><br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">birthday</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">year</span><span style="color: #007700">;&nbsp;</span><span style="color: #FF8000">//&nbsp;prints&nbsp;2003<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">birthday</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">month</span><span style="color: #007700">;&nbsp;</span><span style="color: #FF8000">//&nbsp;prints&nbsp;12<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">birthday</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">day</span><span style="color: #007700">;&nbsp;</span><span style="color: #FF8000">//&nbsp;prints&nbsp;21<br /><br /><br /><br /><br />//&nbsp;you&nbsp;can&nbsp;do&nbsp;simple&nbsp;date&nbsp;addition&nbsp;(similar&nbsp;to&nbsp;mktime)<br /><br /></span><span style="color: #0000BB">$d&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">DB_DataObject_Cast</span><span style="color: #007700">::</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #DD0000">'01/12/2003'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$nextMonth&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">DB_DataObject_Cast</span><span style="color: #007700">::</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #0000BB">$d</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">year</span><span style="color: #007700">,</span><span style="color: #0000BB">$d</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">month</span><span style="color: #007700">+</span><span style="color: #0000BB">1</span><span style="color: #007700">,</span><span style="color: #0000BB">1</span><span style="color: #007700">);<br /><br /><br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+        </div>
+      
+    </div>
+    
+    
+     <div class="refsection"><div class="info"><h1>The sql type</h1>
+</div>
+      
+      <p class="para">
+        Some types are sql specific, or may even be database specific, you can use the sql type to put raw strings
+        as part of the sql statement.
+        
+        
+      </p>
+     
+      <p class="para">
+        
+        </p><div class="example"><div class="info"><p><strong> using raw sql</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$person&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">DB_DataObject</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">'person'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">get</span><span style="color: #007700">(</span><span style="color: #0000BB">12</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;set&nbsp;the&nbsp;birthday&nbsp;to&nbsp;null.<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">birthday&nbsp;</span><span style="color: #007700">=&nbsp;&nbsp;</span><span style="color: #0000BB">DB_DataObject_Cast</span><span style="color: #007700">::</span><span style="color: #0000BB">sql</span><span style="color: #007700">(</span><span style="color: #DD0000">'NULL'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;do&nbsp;a&nbsp;sql&nbsp;cast&nbsp;statement&nbsp;(postgres&nbsp;specific)<br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">DB_DataObject_Cast</span><span style="color: #007700">::</span><span style="color: #0000BB">sql</span><span style="color: #007700">(</span><span style="color: #DD0000">'cast("123123",datetime)'</span><span style="color: #007700">);<br /><br /><br /><br /></span><span style="color: #FF8000">//&nbsp;now&nbsp;insert&nbsp;into&nbsp;the&nbsp;database.<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">insert</span><span style="color: #007700">();<br />&nbsp;<br /><br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.db-dataobject.db-dataobject.raiseerror.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.db-dataobject.html">DB_DataObject</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.db-dataobject-formbuilder.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">DB_DataObject::raiseError</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">DB_DataObject_FormBuilder</td>
+  </tr>
+ </table>
+</div>
+</body></html>

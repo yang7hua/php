@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Rendering the manual</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="developers.documentation.html" title="Documentation" />
+  <link rel="prev" href="developers.documentation.sources.html" title="Obtaining the manual sources" />
+  <link rel="next" href="developers.documentation.docbook.html" title="Docbook XML" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Rendering the manual</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="developers.documentation.sources.html" title="Obtaining the manual sources">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="developers.documentation.docbook.html" title="Docbook XML">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="developers.documentation.building">
+    <h1>Rendering the manual</h1>
+
+
+    <p class="para">The PEAR documentation gets - like the PHP Manual - built using
+    PHP&#039;s very own DocBook rendering system called PhD. Installation is a
+    breeze using pear:</p>
+
+    <pre class="screen">$&nbsp;pear&nbsp;install&nbsp;doc.php.net/phd-beta&nbsp;doc.php.net/phd_pear-beta<br/>...<br/>$&nbsp;phd&nbsp;--version<br/>PhD&nbsp;version:&nbsp;phd-from-cvs<br/>Copyright&nbsp;(c)&nbsp;2007-2009&nbsp;The&nbsp;PHP&nbsp;Documentation&nbsp;Group</pre>
+
+
+    <blockquote class="note">
+      <p class="para">When using PEAR before verson 1.8.0, you need to <a href="guide.users.commandline.channels.html#guide.users.commandline.channels.discovery" class="link">discover the
+      channel</a> first.</p>
+    </blockquote>
+
+
+    <p class="para">Besides that, one only needs a <a href="developers.documentation.sources.html" class="link">SVN checkout of the peardoc
+    module</a>.</p>
+
+    <div class="section" id="developers.documentation.building.preparing">
+      <h2 class="title">Preparing the build</h2>
+
+      <p class="para">Before building, you need to use the
+      <code class="filename">configure.php</code> script provided by
+      <code class="filename">peardoc</code>. This script serves two purposes:</p>
+
+      <ul class="itemizedlist">
+        <li class="listitem">
+          <p class="para">Validate XML</p>
+        </li>
+
+        <li class="listitem">
+          <p class="para">Combine all xml files into one large single file to speed up
+          the build process</p>
+        </li>
+      </ul>
+
+      <p class="para">Just change into your <code class="filename"> peardoc </code> source folder
+      and run:</p>
+
+      <pre class="screen">$&nbsp;php&nbsp;configure.php<br/>Generating&nbsp;chapters.ent&nbsp;for&nbsp;en<br/>&nbsp;3376&nbsp;xml&nbsp;files<br/>&nbsp;6&nbsp;php&nbsp;example&nbsp;files<br/>&nbsp;done<br/>Loading&nbsp;manual&nbsp;into&nbsp;one&nbsp;giant&nbsp;file<br/>Validating&nbsp;done<br/>Now&nbsp;call&nbsp;phd:&nbsp;phd&nbsp;-L&nbsp;en&nbsp;-P&nbsp;PEAR&nbsp;-f&nbsp;xhtml&nbsp;-o&nbsp;build/en&nbsp;-d&nbsp;.manual.xml</pre>
+
+
+      <p class="para">If you see those lines, everything is fine and you can continue
+      compiling the manual.</p>
+
+      <blockquote class="note">
+        <p class="para">Like with every proper unix tool, you can use <strong class="command">php
+        configure.php --help</strong> to get an overview about the supported
+        command line parameters.</p>
+      </blockquote>
+
+
+      <p class="para">In case something goes wrong, the config script will tell you
+      either where it failed, or which commands to execute to find the right
+      spot:</p>
+
+      <pre class="screen">$&nbsp;php&nbsp;configure.php<br/>Generating&nbsp;chapters.ent&nbsp;for&nbsp;en<br/>&nbsp;3376&nbsp;xml&nbsp;files<br/>&nbsp;6&nbsp;php&nbsp;example&nbsp;files<br/>&nbsp;done<br/>Loading&nbsp;manual&nbsp;into&nbsp;one&nbsp;giant&nbsp;file<br/>There&nbsp;were&nbsp;warnings&nbsp;loading&nbsp;the&nbsp;manual&nbsp;Warning:<br/>&nbsp;DOMDocument::load():&nbsp;Opening&nbsp;and&nbsp;ending&nbsp;tag&nbsp;mismatch:<br/>&nbsp;set&nbsp;line&nbsp;46&nbsp;and&nbsp;book&nbsp;in<br/>&nbsp;/home/cweiske/Dev/cvs/pear/peardoc/manual.xml,&nbsp;line:&nbsp;67&nbsp;in<br/>&nbsp;/home/cweiske/Dev/cvs/pear/peardoc/configure.php&nbsp;on&nbsp;line&nbsp;278<br/>....<br/>Exception:&nbsp;Failed&nbsp;to&nbsp;load&nbsp;manual.xml</pre>
+
+
+      <p class="para">Fix the error and run <code class="filename">configure.php</code> again
+      until it tells you everything is ok.</p>
+    </div>
+
+    <div class="section" id="developers.documentation.building.compiling">
+      <h2 class="title">Compiling the manual</h2>
+
+      <p class="para">Now that you configured everything properly, run the command that
+      <code class="filename">configure.php</code> told you. The command will be
+      something along that:</p>
+
+      <pre class="screen">$ phd -L en -P PEAR -f xhtml -o build/en/ -d .manual.xml</pre>
+
+
+      <blockquote class="note">
+        <p class="para"><code class="filename">configure.php</code> generated a giant manual file
+        named <code class="filename">.manual.xml</code>. If you use plain
+        <code class="filename">manual.xml</code> your build will take about double as
+        long as with <code class="filename">.manual.xml</code> (note the leading
+        dot).</p>
+      </blockquote>
+
+
+      <p class="para">When PhD doesn&#039;t report any errors, your generated HTML
+      documentation will be available in
+      <code class="filename">build/en/html/</code>.</p>
+
+      <div class="section">
+        <h3 class="title">Partial builds</h3>
+
+        <p class="para">When writing documentation for a single package, you probably
+        don&#039;t always want to compile the whole manual. PhD allows you to
+        compile a small part of the manual which is faster than doing the
+        whole thing. Just pass &quot;<code class="literal">-p
+        package.category.packagename</code>&quot; as parameter to PhD, and only
+        the part of the manual below that ID will be created.</p>
+
+        <blockquote class="note">
+          <p class="para">At the time of writing, partial rendering in PhD is not
+          noticable faster than creating the whole manual. This will change in
+          the future, though.</p>
+        </blockquote>
+
+
+        <blockquote class="tip">
+          <p class="para">In case you didn&#039;t change the structure (adding or removing
+          IDs), you can skip PhD index creation (<code class="literal">-I</code>) which
+          will save you about 15-20 seconds build time.</p>
+        </blockquote>
+
+      </div>
+    </div>
+
+    <div class="section" id="developers.documentation.building.buildservers">
+      <h2 class="title">Other sources to test your documentation</h2>
+
+      <p class="para">Several PEAR members regularly build the documentation on their
+      own machine in shorter cycles than the pear.php.net server. When you
+      don&#039;t have the chance to test and build your changes, you can use any of
+      this build servers to check everything is fine:</p>
+
+      <table class="doctable table">
+        <caption>Regular builds provided by PEAR members</caption>
+
+        
+          <thead>
+            <tr>
+              <th>PEAR member</th>
+
+              <th>Build interval</th>
+
+              <th>Format</th>
+
+              <th>Build log</th>
+            </tr>
+
+          </thead>
+
+
+          <tbody class="tbody">
+            <tr>
+              <td><a href="http://pear.php.net/user/saltybeagle" class="link external">Brett Bieber</a></td>
+
+              <td>2 hours</td>
+
+              <td><a href="http://ucommbieber.unl.edu/peardoc/build/en/pear_manual_en/" class="link external">Chunked HTML</a></td>
+
+              <td><a href="http://ucommbieber.unl.edu/peardoc/build/build.log" class="link external">log</a></td>
+            </tr>
+
+            <tr>
+              <td><a href="http://pear.php.net/user/beni" class="link external">Benedikt Hallinger</a></td>
+
+              <td>at 06:00 and 18:00 CEST</td>
+
+              <td><a href="http://beni.hallinger.org/peardoc/en/html/" class="link external">Chunked HTML</a></td>
+
+              <td><a href="http://beni.hallinger.org/peardoc/build.log" class="link external">log</a></td>
+            </tr>
+
+          </tbody>
+        
+      </table>
+
+    </div>
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="developers.documentation.sources.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="developers.documentation.html">Documentation</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="developers.documentation.docbook.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Obtaining the manual sources</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Docbook XML</td>
+  </tr>
+ </table>
+</div>
+</body></html>

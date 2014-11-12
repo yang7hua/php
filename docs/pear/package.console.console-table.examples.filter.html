@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Using addFilter</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.console.console-table.examples.html" title="Examples" />
+  <link rel="prev" href="package.console.console-table.examples.html" title="Examples" />
+  <link rel="next" href="package.console.console-table.console-table.console-table.html" title="Console_Table::Console_Table" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Using addFilter</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.console.console-table.examples.html" title="Examples">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.console.console-table.console-table.console-table.html" title="Console_Table::Console_Table">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="package.console.console-table.examples.filter">
+  <div class="info">
+   <h1>Using column filtering with Console_Color</h1>
+
+   
+  </div>
+
+  <p class="para">
+   In this example we use
+   <a href="http://pear.php.net/package/Console_Table/docs/latest/Console_Table/Console_Table.html#methodaddFilter" class="apidoclink">Console_Table::addFilter()</a>
+   to colorize our table cells according to their value. Colorization is
+   very easy using PEAR&#039;s
+   <a href="package.console.console-color.html" class="link">Console_Color</a>
+   package. Just make sure you set the &quot;color&quot; parameter of
+   <a href="http://pear.php.net/package/Console_Table/docs/latest/Console_Table/Console_Table.html#methodConsole_Table" class="apidoclink">Console_Color's constructor</a>
+   - otherwise you will see weird column widths.
+  </p>
+
+  <p class="para">
+   After filling our table object with headers and data, we add an output filter
+   by specifying a callback function.
+   The first parameter to <code class="methodname">addFilter</code> is the column
+   number that shall be formatted, beginning with 0.
+   Due to backwards compatibility with PHP4,
+   <code class="methodname">addFilter</code> requires a variable as second parameter,
+   even if you just want to specfiy a simple function name.
+  </p>
+
+  <p class="para">
+   We also have <strong class="classname">Console_Table</strong> align the &quot;Profit&quot; column
+   right so that the commas are aligned equally.
+  </p>
+
+  <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'Console/Table.php'</span><span style="color: #007700">;<br />require_once&nbsp;</span><span style="color: #DD0000">'Console/Color.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//those&nbsp;could&nbsp;come&nbsp;e.g.&nbsp;from&nbsp;database<br /></span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">2001</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">128.23</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">2002</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">256.42</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">2003</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">10.21</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">2004</span><span style="color: #007700">,&nbsp;-</span><span style="color: #0000BB">25.79</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">2005</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">2006</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">982.12</span><span style="color: #007700">),<br />);<br /><br /></span><span style="color: #FF8000">//prepare&nbsp;table<br /></span><span style="color: #0000BB">$tbl&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Console_Table</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">CONSOLE_TABLE_ALIGN_LEFT</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">CONSOLE_TABLE_BORDER_ASCII</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #FF8000">//this&nbsp;is&nbsp;important&nbsp;when&nbsp;using&nbsp;Console_Color<br /></span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$tbl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setHeaders</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'Year'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Profit'</span><span style="color: #007700">)<br />);<br /></span><span style="color: #0000BB">$tbl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addData</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//add&nbsp;filter&nbsp;callback&nbsp;to&nbsp;colorize&nbsp;our&nbsp;profit&nbsp;column&nbsp;values<br /></span><span style="color: #0000BB">$callback&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'colorize'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$tbl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addFilter</span><span style="color: #007700">(</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$callback</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//Values&nbsp;should&nbsp;be&nbsp;aligned&nbsp;right<br /></span><span style="color: #0000BB">$tbl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setAlign</span><span style="color: #007700">(</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">CONSOLE_TABLE_ALIGN_RIGHT</span><span style="color: #007700">);<br /><br /><br />echo&nbsp;</span><span style="color: #0000BB">$tbl</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getTable</span><span style="color: #007700">();<br /><br /><br /></span><span style="color: #FF8000">/**<br />*&nbsp;Wraps&nbsp;Console&nbsp;color&nbsp;codes&nbsp;around&nbsp;$value,<br />*&nbsp;depending&nbsp;if&nbsp;its&nbsp;larger&nbsp;or&nbsp;smaller&nbsp;0.<br />*<br />*&nbsp;@param&nbsp;float&nbsp;$value&nbsp;Value&nbsp;(column&nbsp;1)<br />*<br />*&nbsp;@return&nbsp;string&nbsp;Colorful&nbsp;value<br />*/<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">colorize</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$str&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">number_format</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">','</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">''</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$value&nbsp;</span><span style="color: #007700">&lt;&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">Console_Color</span><span style="color: #007700">::</span><span style="color: #0000BB">convert</span><span style="color: #007700">(</span><span style="color: #DD0000">'%r'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$str&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">'%n'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;if&nbsp;(</span><span style="color: #0000BB">$value&nbsp;</span><span style="color: #007700">==&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$str</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">Console_Color</span><span style="color: #007700">::</span><span style="color: #0000BB">convert</span><span style="color: #007700">(</span><span style="color: #DD0000">'%g'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$str&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">'%n'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+  <p class="para">
+   The code above creates the following output, except that &quot;Profit&quot;
+   values larger than 0 are colored in green, while the ones smaller zero
+   are in red.
+  </p>
+
+  <pre class="screen"><br/>+------+--------+<br/>|&nbsp;Year&nbsp;|&nbsp;Profit&nbsp;|<br/>+------+--------+<br/>|&nbsp;2001&nbsp;|&nbsp;128,23&nbsp;|<br/>|&nbsp;2002&nbsp;|&nbsp;256,42&nbsp;|<br/>|&nbsp;2003&nbsp;|&nbsp;&nbsp;10,21&nbsp;|<br/>|&nbsp;2004&nbsp;|&nbsp;-25,79&nbsp;|<br/>|&nbsp;2005&nbsp;|&nbsp;&nbsp;&nbsp;0,00&nbsp;|<br/>|&nbsp;2006&nbsp;|&nbsp;982,12&nbsp;|<br/>+------+--------+<br/></pre>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.console.console-table.examples.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.console.console-table.examples.html">Examples</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.console.console-table.console-table.console-table.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Examples</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Console_Table::Console_Table</td>
+  </tr>
+ </table>
+</div>
+</body></html>

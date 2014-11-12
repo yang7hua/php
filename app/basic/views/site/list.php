@@ -40,7 +40,10 @@ use yii\widgets\LinkPager;
 <?php
 $js = '
 	$(function(){
-		$(".sidebar").height($(".content").height() - 30);
+		var minH = $(".sidebar").height(),
+			conH = $(".content").height();
+		if (minH < conH)
+			$(".sidebar").height($(".content").height() - 30);
 	});
 ';
 $this->registerJs($js);

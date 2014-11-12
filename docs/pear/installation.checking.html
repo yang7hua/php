@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Checking if PEAR works</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="installation.html" title="Installation (PEAR)" />
+  <link rel="prev" href="installation.shared.html" title="Installation of a local PEAR copy on a shared host" />
+  <link rel="next" href="guide.users.commandline.cli.html" title="Command line installer (PEAR)" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Checking if PEAR works</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="installation.shared.html" title="Installation of a local PEAR copy on a shared host">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="guide.users.commandline.cli.html" title="Command line installer (PEAR)">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="installation.checking">
+  <div class="info">
+    <h1>Checking if PEAR works</h1>
+
+  </div>
+
+
+  <div class="section" id="installation.checking.cli">
+    <div class="info">
+      <h2 class="title">Verifying command line tool</h2>
+    </div>
+
+
+    <p class="para">
+     Both <strong class="command">pear</strong> and <strong class="command">pecl</strong> tools
+     should be available everywhere on command line.
+     For that to work, pear&#039;s binary (<code class="literal">bin</code>) directory
+     should be in your <code class="literal">PATH</code> variable.
+    </p>
+
+    <p class="para">
+     To verify it works, simply type <strong class="command">pear</strong>.
+     A list of commands should be shown:
+    </p>
+
+    <pre class="screen">$&nbsp;pear<br/>Commands:<br/>build&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Build&nbsp;an&nbsp;Extension&nbsp;From&nbsp;C&nbsp;Source<br/>bundle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Unpacks&nbsp;a&nbsp;Pecl&nbsp;Package<br/>channel-add&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add&nbsp;a&nbsp;Channel<br/>...</pre>
+
+
+   <p class="para">
+    You should further test that PEAR is up to date:
+   </p>
+
+    <pre class="screen">$&nbsp;pear&nbsp;version<br/>PEAR&nbsp;Version:&nbsp;1.7.2<br/>PHP&nbsp;Version:&nbsp;5.2.6RC4-pl0-gentoo<br/>Zend&nbsp;Engine&nbsp;Version:&nbsp;2.2.0<br/>Running&nbsp;on:&nbsp;Linux&nbsp;...</pre>
+
+
+  </div>
+
+
+  <div class="section" id="installation.checking.includepath">
+    <div class="info">
+      <h2 class="title">Verifying the include path</h2>
+    </div>
+
+
+    <p class="para">
+     To use PEAR and PEAR compatible packages in your applications,
+     you normally include them into your PHP scripts using
+     <a href="http://www.php.net/require_once" class="link external"><strong class="function">require_once()</strong></a>.
+     For this to work, PEAR&#039;s <code class="literal">php_dir</code> must be a
+     part of PHP&#039;s include path.
+    </p>
+
+    <ol type="1">
+     <li class="listitem" id="installation.checking.cli.phpdir">
+
+      <p class="para">
+       First, check where PEAR installs <code class="filename">.php</code> files:
+      </p>
+
+      <pre class="screen">$&nbsp;pear&nbsp;config-get&nbsp;php_dir<br/>/usr/share/lib/php/</pre>
+
+
+      <p class="para">
+       This directory will contain <code class="filename">System.php</code>.
+      </p>
+
+     </li>
+     <li class="listitem" id="installation.checking.cli.inilocation">
+
+      <p class="para">
+       Now it&#039;s time to find which configuration file is used by
+       your PHP installation. On command line, execute:
+      </p>
+
+      <pre class="screen">$&nbsp;php&nbsp;--ini<br/>Configuration&nbsp;File&nbsp;(php.ini)&nbsp;Path:&nbsp;/etc/php/cli-php5<br/>Loaded&nbsp;Configuration&nbsp;File:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/etc/php/cli-php5/php.ini<br/>Scan&nbsp;for&nbsp;additional&nbsp;.ini&nbsp;files&nbsp;in:&nbsp;/etc/php/cli-php5/ext-active<br/>Additional&nbsp;.ini&nbsp;files&nbsp;parsed:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/etc/php/cli-php5/ext-active/php_gtk2.ini,<br/>/etc/php/cli-php5/ext-active/xdebug.ini</pre>
+
+
+      <p class="para">
+       To see which <code class="filename">php.ini</code> is used by PHP on your
+       web server, create a file with only <code class="literal">&lt;?php phpinfo(); ?&gt;</code>
+       as the contents, and save it in your local web root as
+       <code class="filename">check_php.php</code>. Open the file in your browser as
+       <code class="literal">http://localhost/check_php.php</code>, to find the path to
+       the <code class="filename">php.ini</code> file your web server is using.
+      </p>
+
+     </li>
+     <li class="listitem" id="installation.checking.cli.checkincludepath">
+
+      <p class="para">
+       Now check PHP&#039;s
+       <a href="http://www.php.net/manual/ini.core.php#ini.include-path" class="link external">include_path</a>
+       setting on command line:
+      </p>
+
+      <pre class="screen">$&nbsp;php&nbsp;-c&nbsp;/path/to/php.ini&nbsp;-r&nbsp;&#039;echo&nbsp;get_include_path().&quot;\n&quot;;&#039;</pre>
+
+
+      <p class="para">
+       To check PHP&#039;s include_path in your web server, create a file with
+       only <code class="literal">&lt;?php phpinfo(); ?&gt;</code> as the contents, and
+       save it in your local web root as <code class="filename">check_php.php</code>.
+       Open the file in your browser as <code class="literal">http://localhost/check_php.php</code>,
+       to verify the include_path your web server is using.
+      </p>
+
+      <p class="para">
+       In every case, PEAR&#039;s <code class="literal">php_dir</code> should be in the
+       include path. If not, add it in your system&#039;s <code class="filename">php.ini</code>.
+      </p>
+
+     </li>
+     <li class="listitem">
+
+      <p class="para">
+       Now that this is done, try including a file. Create a new
+       <code class="literal">check_pear.php</code> file with the following contents:
+      </p>
+
+      <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'System.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">class_exists</span><span style="color: #007700">(</span><span style="color: #DD0000">'System'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+
+      <p class="para">
+       <code class="filename">System.php</code> is shipped with every PEAR installation
+       and thus should be on your computer, too.
+       Open the file with the browser from your web server, and also try
+       it on command line. The only output should be
+      </p>
+      <pre class="screen">bool(true)</pre>
+
+
+      <p class="para">
+       A message like:
+      </p>
+      <pre class="screen"><br/>Warning:&nbsp;require_once(System.php):&nbsp;failed&nbsp;to&nbsp;open&nbsp;stream:<br/>&nbsp;No&nbsp;such&nbsp;file&nbsp;or&nbsp;directory&nbsp;in&nbsp;/path/to/check_pear.php&nbsp;on&nbsp;line&nbsp;2<br/>&nbsp;&nbsp;&nbsp;</pre>
+
+
+      <p class="para">
+       means that your include path is not correct.
+       (So go and <a href="installation.checking.html#installation.checking.cli.modifyingphpini" class="link">fix it</a>!)
+      </p>
+
+      <p class="para">
+       A completely white page in your browser hints two things:
+      </p>
+
+      <ul class="itemizedlist">
+       <li class="listitem">
+        <p class="para">
+         Your server is configured to not display any errors to the
+         user/browser (<code class="varname">display_errors</code> Off)
+        </p>
+       </li>
+       <li class="listitem">
+        <p class="para">
+         There was an error including <code class="filename">System.php</code>, and
+         you should check you server&#039;s error log.
+        </p>
+       </li>
+      </ul>
+
+     </li>
+    </ol>
+
+    <p class="para">
+     That&#039;s it! Now go on and
+     <a href="guide.users.commandline.cli.html" class="link">install some packages</a>.
+    </p>
+
+
+    <div class="section" id="installation.checking.cli.inyourway">
+      <div class="info">
+        <h3 class="title">Things that could be in your way</h3>
+      </div>
+
+     <ul class="itemizedlist">
+      <li class="listitem">
+       <p class="para">
+        After changing <code class="filename">php.ini</code>, you need to restart
+        your web server.
+       </p>
+       <p class="para">
+        Few people also reported they had to restart the whole machine
+        physically, probably due to PATH changes not propagating correctly.
+        Before wasting hours and after you tried everything else, just try that.
+       </p>
+      </li>
+
+      <li class="listitem">
+       <p class="para">
+        Newer Linux distributions use multiple <code class="filename">php.ini</code>
+        files; mostly one for the web server
+        (e.g. <code class="filename">/etc/php/apache2-php5/</code>)
+        and one for command line
+        (like <code class="filename">/etc/php/cli-php5/</code>).
+        Make sure you edit the right ones.
+       </p>
+      </li>
+
+      <li class="listitem">
+       <p class="para">
+        On Windows, recent versions of PHP use <code class="filename">php.ini</code>
+        from their own directory (where <code class="filename">php.exe</code> is).
+        You still might have an old <code class="filename">php.ini</code>
+        in your <code class="filename">windows</code> or <code class="filename">system(32)</code>
+        directory that fools you.
+       </p>
+      </li>
+
+      <li class="listitem">
+       <p class="para">
+        You cannot get away with using absolute paths in your own
+        <strong class="function">require_once()</strong> statements as an
+        altervative to fixing your <code class="literal">include_path</code>,
+        because all the other files that are then required by your scripts
+        are all coded for relative pathing based on
+        <code class="literal">include_path</code>.
+       </p>
+      </li>
+
+     </ul>
+    </div>
+
+
+    <div class="section" id="installation.checking.cli.modifyingphpini">
+      <div class="info">
+        <h3 class="title">Modifying <code class="filename">php.ini</code></h3>
+      </div>
+
+      <p class="para">
+       To get PEAR working properly, you need to adjust PHP&#039;s include_path.
+       After you found <a href="installation.checking.html#installation.checking.cli.inilocation" class="link">php.ini</a>,
+       open it in an editor.
+      </p>
+      <p class="para">
+       Search for the line <code class="literal">include_path</code>.
+      </p>
+      <p class="para">
+       Now that you found it, you probably will see a semicolon
+       <code class="literal">;</code> at the beginning. This means the line is a comment.
+       Add a new line below it.
+      </p>
+      <p class="para">
+       In this line, write:
+      </p>
+      <pre class="screen">include_path=&quot;.&quot;</pre>
+
+      <p class="para">
+       Depending on your operating system, add a
+       <code class="literal">:</code> (Unix/Linux/FreeBSD/Mac OS X)
+       or a <code class="literal">;</code> (Windows) after the dot.
+       Add <a href="installation.checking.html#installation.checking.cli.phpdir" class="link">PEAR&#039;s <code class="literal">php_dir</code></a>
+       after it.
+       (The directory <code class="filename">System.php</code> is located in!)
+      </p>
+
+      <p class="para">
+       The result should look like that:
+      </p>
+      <div class="inicode"><pre class="inicode">
+; Unix
+include_path=&quot;.:/usr/local/php/pear/&quot;</pre>
+</div>
+      <p class="para">
+       or
+      </p>
+      <div class="inicode"><pre class="inicode">
+; Windows
+include_path=&quot;.;C:\php\pear\&quot;</pre>
+</div>
+    </div>
+  </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="installation.shared.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="installation.html">Installation (PEAR)</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="guide.users.commandline.cli.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Installation of a local PEAR copy on a shared host</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Command line installer (PEAR)</td>
+  </tr>
+ </table>
+</div>
+</body></html>

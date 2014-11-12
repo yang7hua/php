@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Rules</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="pear2cs.html" title="PEAR2 Coding Standards" />
+  <link rel="prev" href="pear2cs.introduction.html" title="Introduction" />
+  <link rel="next" href="pear2policies.html" title="PEAR2 Policies" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Rules</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="pear2cs.introduction.html" title="Introduction">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="pear2policies.html" title="PEAR2 Policies">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="pear2cs.rules"><div class="info"><h1>Rules</h1>
+</div>
+   
+   <p class="para">
+    We will describe the list of rules that form the standards
+   </p>
+
+   <div class="section" id="pear2cs.rules.namespace"><div class="info"><h2 class="title">Namespace prefix</h2></div>
+    
+
+    <p class="para">
+     All classes and functions must have a namespace of at the minimum PEAR2.  An example:
+    </p>
+     <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">namespace&nbsp;</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">;<br />class&nbsp;</span><span style="color: #0000BB">MyClass&nbsp;</span><span style="color: #007700">{}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    <p class="para">
+     Classes may use longer namespaces, for instance an
+     <strong class="classname">HTTP_Request</strong> class may instead
+     choose to use this declarative syntax:
+    </p>
+     <div class="phpcode">
+     <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">namespace&nbsp;</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">HTTP</span><span style="color: #007700">;<br />class&nbsp;</span><span style="color: #0000BB">Request&nbsp;</span><span style="color: #007700">{}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+     </div>
+    <p class="para">
+     As such, underscores are no longer required of any classes if there is a namespace.
+     Class <strong class="classname">PEAR2_HTTP_Request</strong> instead becomes
+     <strong class="classname">PEAR2\HTTP\Request</strong>.
+
+     Package names, however, will use underscores, making
+     <strong class="classname">PEAR2_HTTP_Request</strong> the package name.
+    </p>
+     <div class="section" id="pear2cs.rules.namespace.requirement"><div class="info"><h3 class="title">Requirement</h3></div>
+      
+      <p class="simpara">No Exceptions to this rule</p>
+     </div>
+   </div>
+
+
+   <div class="section" id="pear2cs.rules.requireonce"><div class="info"><h2 class="title">use of include/require/require_once/include_once not allowed</h2></div>
+    
+    <p class="para">
+     include/require/require_once/include_once is not allowed for loading class
+     files.  Users will be expected to
+     load files either with <code class="literal">__autoload()</code> or a customized 
+     solution for more advanced users.
+
+      Instead, classes should simply be used.  import with a comment describing
+      the class&#039;s location must be used to document all internal 
+      dependencies (as written below). Instead of: 
+     </p>
+      <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'PEAR2/OtherPackage.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$class&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">OtherPackage</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+      </div>
+      <p class="para">this class should simply be used:</p>
+      <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$class&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">OtherPackage</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+      </div>
+      <p class="para">
+      This allows packages to work without modification no matter how they are
+      structured on-disk, including running out of a single large file, inside
+      a phar archive, and provides much-needed flexibility.
+     </p>
+    <div class="section" id="pear2cs.rules.requireonce.requirement"><div class="info"><h3 class="title">Requirement</h3></div>
+      
+      <p class="simpara">No Exceptions to this rule</p>
+    </div>
+   </div>
+
+   <div class="section" id="pear2cs.rules.dirstructure"><div class="info"><h2 class="title">Directory structure</h2></div>
+    
+    <p class="para">Follows the directory structure in the PEAR2 Subversion
+     repository:</p>
+     <div class="doccode">
+     <pre class="doccode">
+PEAR2/Package_Name/
+    src/      &lt;-- all role=&quot;php&quot;
+    data/     &lt;-- all role=&quot;data&quot;
+    tests/    &lt;-- all role=&quot;tests&quot;
+    docs/     &lt;-- all role=&quot;doc&quot;
+    www/      &lt;-- all role=&quot;www&quot;
+    examples/ &lt;-- role=&quot;doc&quot; example files 
+                  (php executable files that exemplify package usage)</pre>
+
+     </div>
+     <p class="para">
+     Note that all package.xml files must specify a baseinstalldir of &quot;/&quot; for
+     the src/ directory:
+     </p>
+     <div class="doccode">
+     <pre class="doccode">
+&lt;contents&gt;
+  &lt;dir name=&quot;/&quot;&gt;
+  &lt;dir name=&quot;src&quot; baseinstalldir=&quot;/&quot;&gt;
+  ...
+&lt;/contents&gt;</pre>
+
+     </div>
+    <div class="section" id="pear2cs.rules.dirstructure.requirement"><div class="info"><h3 class="title">Requirement</h3></div>
+      
+      <p class="simpara">Exceptions may be made to this rule with approval from the PEAR
+      Group</p>
+    </div>
+   </div>
+
+   <div class="section" id="pear2cs.rules.classtofile"><div class="info"><h2 class="title">Class-to-file convention</h2></div>
+    
+    <p class="para">
+     All public classes must be in their own file with underscores (_) or
+     namespace separators (\) replaced by directory separator, so that
+     <strong class="classname">PEAR2_PackageName_Base</strong> class or
+     <strong class="classname">PEAR2\PackageName\Base</strong> class is always
+     located in <code class="literal">PEAR2/PackageName/Base.php</code> (this is required to make autoload
+     work)
+    </p>
+    <div class="section" id="pear2cs.rules.classtofile.requirement"><div class="info"><h3 class="title">Requirement</h3></div>
+      
+      <p class="simpara">Exceptions may be made to this rule only with explicit approval
+      from the PEAR Group via a public vote</p>
+    </div>
+   </div>
+
+   <div class="section" id="pear2cs.rules.baseexception"><div class="info"><h2 class="title">Base Exception class</h2></div>
+    
+    <p class="para">
+     <strong class="classname">PEAR2\Exception</strong> is used as base class for all exception classes.  Each
+     package must define a base class that is packagename_Exception.  For
+     example, the <strong class="classname">PEAR2\PackageName</strong> class defines an exception as follows in
+     <code class="literal">PEAR2/PackageName/Exception.php</code>:
+    </p>
+      <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">namespace&nbsp;</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">PackageName</span><span style="color: #007700">;<br />class&nbsp;</span><span style="color: #0000BB">Exception&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">Exception&nbsp;</span><span style="color: #007700">{}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+      </div>
+      <p class="para">
+       &#039;PEAR2\Exception will be its own package&#039;
+      </p>
+    <div class="section" id="pear2cs.rules.baseexception.requirement"><div class="info"><h3 class="title">Requirement</h3></div>
+      
+      <p class="simpara">No Exceptions to this rule</p>
+    </div>
+   </div>
+
+   <div class="section" id="pear2cs.rules.datafiles"><div class="info"><h2 class="title">Data files</h2></div>
+    
+    <p class="para">
+     <code class="literal">package.xml</code> replacement tasks should not be used to retrieve path
+     locations for php, data, or www files.  Replacements
+     are still allowed in doc and test files.
+    </p>
+    <p class="para">
+     The installation structure of a package has implicit
+     <code class="literal">php_dir/src</code>
+     installation location, and data files are always located in
+     <code class="literal">php_dir/data/channel/PackageName/</code>.  To retrieve a data
+     file within <code class="filename">PEAR2/PackageName/Subfile.php</code>, you could
+     use code like this example
+    </p>
+      <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">...<br /></span><span style="color: #FF8000">//&nbsp;retrieve&nbsp;data&nbsp;from&nbsp;info.txt<br /></span><span style="color: #0000BB">$info&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">file_get_contents</span><span style="color: #007700">(</span><span style="color: #0000BB">dirname</span><span style="color: #007700">(</span><span style="color: #0000BB">__FILE__</span><span style="color: #007700">)&nbsp;.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'../../../data/pear2.php.net/PEAR2_PackageName/info.txt'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+      </div>
+    <div class="section" id="pear2cs.rules.datafiles.requirement"><div class="info"><h3 class="title">Requirement</h3></div>
+      
+      <p class="simpara">No Exceptions to this rule</p>
+    </div>
+   </div>
+
+   <div class="section" id="pear2cs.rules.otherclasses"><div class="info"><h2 class="title">Loading other classes</h2></div>
+    
+    <p class="para">
+     Inside optional component loading methods (like factory or driver
+     loading, etc.)
+     <code class="methodname">class_exists</code>($classname, true) should be used where a &quot;class not found&quot;
+     fatal error
+     would be confusing.  For example, when loading a driver, a graceful exit
+     via exception
+     with helpful error message is preferrable to the fatal error:
+    </p>
+      <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">if&nbsp;(!</span><span style="color: #0000BB">class_exists</span><span style="color: #007700">(</span><span style="color: #DD0000">"PEAR2_PackageName_Driver_</span><span style="color: #0000BB">$class</span><span style="color: #DD0000">"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;new&nbsp;</span><span style="color: #0000BB">PEAR2</span><span style="color: #007700">\</span><span style="color: #0000BB">PackageName</span><span style="color: #007700">\</span><span style="color: #0000BB">Exception</span><span style="color: #007700">(</span><span style="color: #DD0000">'Unknown&nbsp;driver&nbsp;'&nbsp;</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$class&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">',&nbsp;be&nbsp;sure&nbsp;the&nbsp;driver&nbsp;exists&nbsp;and&nbsp;is&nbsp;loaded<br />&nbsp;&nbsp;&nbsp;&nbsp;prior&nbsp;to&nbsp;use'</span><span style="color: #007700">);<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+      </div>
+    <div class="section" id="pear2cs.rules.otherclasses.requirement"><div class="info"><h3 class="title">Requirement</h3></div>
+      
+      <p class="simpara">This rule is optional and is a suggested coding practice</p>
+    </div>
+   </div>
+
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="pear2cs.introduction.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="pear2cs.html">PEAR2 Coding Standards</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="pear2policies.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">PEAR2 Policies</td>
+  </tr>
+ </table>
+</div>
+</body></html>

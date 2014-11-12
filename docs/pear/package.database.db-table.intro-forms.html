@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>DB_Table Forms Tutorial</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.db-table.html" title="DB_Table" />
+  <link rel="prev" href="package.database.db-table.intro-table.html" title="DB_Table Class Tutorial" />
+  <link rel="next" href="package.database.db-table.intro-database.html" title="DB_Table_Database Class Tutorial" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">DB_Table Forms Tutorial</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.db-table.intro-table.html" title="DB_Table Class Tutorial">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.db-table.intro-database.html" title="DB_Table_Database Class Tutorial">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.db-table.intro-forms">
+ 
+  <h1 class="refname"><strong class="classname">DB_Table</strong> Forms Tutorial</h1>
+  <div class="refnamediv"><strong class="classname">DB_Table</strong>  Forms Tutorial &ndash; 
+  Creating <strong class="classname">HTML_QuickForm</strong> forms
+  </div>
+
+ 
+
+<div class="refsection" id="package.database.db-table.intro-forms.desc">
+<h1 class="title">Description</h1>
+
+<p class="para">
+This page documents the use of the <strong class="classname">DB_Table</strong> class to 
+create <strong class="classname">HTML_QuickForm</strong> form elements appropriate for 
+the columns of a table, and to create entire data entry forms.  
+<strong class="classname">DB_Table</strong> can use the column definitions to automatically 
+create default form elements for you. Although your plain column definitions 
+will do fine at first, you will want to customize the labels and options for 
+your form elements. You can do so by adding &#039;qf_*&#039; keys to your column 
+definitions
+</p>
+
+<p class="para">
+Note: The underlying <strong class="classname">HTML_QuickForm</strong> package is a 
+very powerful library with many options.  While <strong class="classname">DB_Table</strong> 
+automates away much of the complexity for simple forms, the full power of 
+<strong class="classname">HTML_QuickForm</strong> can only be realized by combining 
+the automatic element creation from <strong class="classname">DB_Table</strong> with 
+custom-created <strong class="classname">HTML_QuickForm</strong> objects. 
+<strong class="classname">DB_Table</strong> makes it easy to get started with 
+<strong class="classname">HTML_QuickForm</strong>, but does not replace it. 
+</p>
+
+</div>
+<div class="refsection" id="package.database.db-table.intro-forms.default"><div class="info"><h1>Simple Form with Default Elements </h1>
+</div>
+
+
+<p class="para">
+Once you have defined your columns and instantiated an object, you can 
+generate a complete <strong class="classname">HTML_QuickForm</strong> object using 
+the <strong class="function">getForm()</strong> method. If <strong class="function">getForm()</strong>
+is called with no parameters, it will return a form with all of the 
+$GuestBook object columns as input fields.
+</p>
+
+<div class="example"><div class="info"><p><strong>A default form with all columns</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;[snip]&nbsp;create&nbsp;the&nbsp;GuestBook_Table&nbsp;object&nbsp;($GuestBook)<br /><br />//&nbsp;create&nbsp;the&nbsp;&lt;classname&gt;HTML_QuickForm&lt;/classname&gt;&nbsp;object<br /></span><span style="color: #0000BB">$form&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$GuestBook</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getForm</span><span style="color: #007700">();&nbsp;</span><span style="color: #FF8000">//&nbsp;note&nbsp;the&nbsp;"=&amp;"&nbsp;--&nbsp;very&nbsp;important<br /><br />//&nbsp;display&nbsp;the&nbsp;form<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">display</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-forms.default.columns"><div class="info"><h1>Specifying Columns</h1>
+</div>
+
+<p class="para">
+To limit the fields you want to display, or to change the order, pass a
+sequential array of column names as the first parameter to getForm()
+</p>
+<div class="example"><div class="info"><p><strong>Specifying column names in <strong class="function">getForm()</strong></strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;[snip]&nbsp;create&nbsp;the&nbsp;Guesbook&nbsp;object&nbsp;($GuestBook)<br /><br />//&nbsp;only&nbsp;show&nbsp;the&nbsp;first&nbsp;name,&nbsp;last&nbsp;name,&nbsp;and&nbsp;email&nbsp;in&nbsp;the&nbsp;form<br /></span><span style="color: #0000BB">$cols&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'fname'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'lname'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'email'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;create&nbsp;the&nbsp;&lt;classname&gt;HTML_QuickForm&lt;/classname&gt;&nbsp;object<br /></span><span style="color: #0000BB">$form&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$GuestBook</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getForm</span><span style="color: #007700">(</span><span style="color: #0000BB">$cols</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;display&nbsp;the&nbsp;form<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">display</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-forms.default.buttons"><div class="info"><h1>Add Buttons</h1>
+</div>
+
+<p class="para">
+Unfortunately, the form only has the input fields; it does not yet have
+&quot;Submit&quot; or &quot;Reset&quot; buttons, which are not automatically generated. 
+</p>
+<div class="example"><div class="info"><p><strong>
+Adding &quot;Submit&quot; and &quot;Reset&quot; buttons with <strong class="function">getForm()</strong>
+</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;[snip]&nbsp;create&nbsp;the&nbsp;$GuestBook&nbsp;GuestBook_Table&nbsp;object<br /><br />//&nbsp;create&nbsp;the&nbsp;HMTL_QuickForm&nbsp;object<br /></span><span style="color: #0000BB">$form&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$GuestBook</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getForm</span><span style="color: #007700">(</span><span style="color: #0000BB">$cols</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;add&nbsp;a&nbsp;"submit"&nbsp;button&nbsp;named&nbsp;"op"&nbsp;that&nbsp;says&nbsp;"Go!"<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'submit'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'op'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Go!'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;add&nbsp;a&nbsp;reset&nbsp;button<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'reset'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;display&nbsp;the&nbsp;form<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">display</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-forms.custom"><div class="info"><h1>Simple Form with Custom Elements</h1>
+</div>
+
+<p class="para">
+The basic form is nice, but it&#039;s very generic. It doesn&#039;t have descriptive
+labels for the input fields, all the fields are text boxes, and so on. This
+section shows you how to include form element properties along with your
+column definitions so that your forms are customized in a somewhat consistent
+fashion.
+</p>
+
+<p class="para">
+In every case you will modify the $col property by adding &#039;qf_*&#039; keys and
+values.
+</p><ul class="itemizedlist">
+  <li class="listitem">
+    <span class="simpara">
+    &#039;qf_label&#039; (string) Adds a text label to the field
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    &#039;qf_type&#039; (string) Sets the input type (text, hidden, select, checkbox, etc.)
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    &#039;qf_vals&#039; (array) Sets list of values for select, radio, and checkbox
+    elements
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    &#039;qf_attrs&#039; (array) Sets additional HTML attributes for the input element
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    &#039;qf_opts&#039; (array) Sets options for date elements (date, time, timestamp,
+    jscalendar)
+    </span>
+  </li>
+</ul>
+
+
+<div class="refsection" id="package.database.db-table.intro-forms.custom.label"><div class="info"><h1>Element Label</h1>
+</div>
+
+<p class="para">
+When a column appears in a form, you can make sure the same label is always
+applied to it. Let&#039;s say we have a column called &quot;other&quot; defined as a
+32-character string. We always want it to be labelled as &quot;Other Information&quot;
+in our forms; use &#039;qf_label&#039; key like this:
+</p>
+<div class="example"><div class="info"><p><strong>Setting &#039;qf_label&#039;</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">GuestBook_Table&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">DB_Table<br /></span><span style="color: #007700">{<br />&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$col&nbsp;</span><span style="color: #007700">=&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;...&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'example'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;table&nbsp;column&nbsp;definition&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'varchar'</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">32</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;form&nbsp;element&nbsp;definition&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'qf_label'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Other&nbsp;Information'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;);&nbsp;<br />}&nbsp;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-forms.custom.type"><div class="info"><h1>Element Type</h1>
+</div>
+
+
+<p class="para">
+By default, <strong class="classname">DB_Table</strong> will try to figure out what kind 
+of form field input type to use for your column. Most column types translate 
+into text fields, but there are some exceptions.
+</p><ul class="itemizedlist">
+  <li class="listitem">
+    <span class="simpara">
+    Boolean columns become <strong class="classname">HTML_QuickForm</strong> &#039;advcheckbox&#039; 
+    fields with values of 0 for not-checked and 1 for checked. 
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    CLOB columns become <strong class="classname">HTML_QuickForm</strong> &#039;textarea&#039; fields
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    Date columns become <strong class="classname">HTML_QuickForm</strong> &#039;date&#039; select 
+    fields in &#039;Y-m-d&#039; format.
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    Time columns become <strong class="classname">HTML_QuickForm</strong> &#039;date&#039; select 
+    fields in &#039;H:i:s&#039; format.
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    Timestamp columns become <strong class="classname">HTML_QuickForm</strong> &#039;date&#039; select 
+    fields in &#039;Y-m-d H:i:s&#039; format
+    </span>
+  </li>
+</ul>
+
+
+<p class="para">
+To explicitly set the <strong class="classname">HTML_QuickForm</strong> element type for 
+a column, rather than relying on the above defaults, you add a &#039;qf_type&#039; element 
+to your column definition. You can tell <strong class="classname">DB_Table</strong> to 
+create any of several supported <strong class="classname">HTML_QuickForm</strong> element 
+types by setting the &#039;qf_type&#039; element to one of these string values:
+</p><ul class="itemizedlist">
+  <li class="listitem">
+    <span class="simpara">
+      &#039;checkbox&#039; for a single checkbox; maps to the &#039;advcheckbox&#039; 
+      <strong class="classname">HTML_QuickForm</strong> type
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+      &#039;hidden&#039; for a hidden element
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+      &#039;password&#039; for a password text box
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+      &#039;radio&#039; for a set of radio buttons
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+      &#039;select&#039; for a select menu
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+      &#039;text&#039; for a text box
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+     &#039;textarea&#039; for a text area
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+      &#039;date&#039; for a date selector; formats as &#039;Y-m-d&#039;
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+     &#039;time&#039; for a time selector; maps to &#039;date&#039;, formats as &#039;H:i:s&#039;
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+      &#039;timestamp&#039; for a timestamp selector; maps to &#039;date&#039;, 
+      formats as &#039;Y-m-d H:i:s&#039;
+    </span>
+  </li>
+</ul><p>
+If you use any other element name, <strong class="classname">DB_Table</strong> will 
+attempt to map to the proper <strong class="classname">HTML_QuickForm</strong> element 
+(thanks to Moritz Heidkamp for the patch), but it&#039;s not guaranteed to work.
+</p>
+
+<p class="para">
+In this example, we&#039;ll make the &#039;example&#039; column a text field:
+</p>
+<div class="example"><div class="info"><p><strong>Setting an element type</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">GuestBook_Table&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">DB_Table<br /></span><span style="color: #007700">{<br />&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$col&nbsp;</span><span style="color: #007700">=&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;...&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'example'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;table&nbsp;column&nbsp;definition&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'varchar'</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">32</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;form&nbsp;element&nbsp;definition&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'qf_label'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Other&nbsp;Information'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'qf_type'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'text'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;);<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-forms.custom.values"><div class="info"><h1>Element Values</h1>
+</div>
+
+<p class="para">
+If your column form element is &#039;checkbox&#039;, &#039;radio&#039;, or &#039;select&#039;, you can set
+the values of the available choices for the form element. You do so via an
+&#039;sq_vals&#039; element in the corresponding column definition.
+</p>
+
+<div class="example" id="package.database.db-table.intro-forms.custom.values.checkbox"><div class="info"><p><strong>Setting CheckBox Values</strong></p></div>
+
+<div class="example-contents"><p>
+For a checkbox, use a sequential array of two elements: the first is the value
+if the box is not checked, and the second is the value if it is checked.
+</p></div>
+<div class="example-contents"><p>
+In this example, the checkbox values are 0 if not checked,and 1 if checked;
+these are the values that will be stored in the column.
+</p></div>
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">GuestBook_Table&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">DB_Table<br /></span><span style="color: #007700">{<br />&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$col&nbsp;</span><span style="color: #007700">=&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;...&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'example'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;table&nbsp;column&nbsp;definition&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'varchar'</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">32</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;form&nbsp;element&nbsp;definition&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'qf_label'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Other&nbsp;Information'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'qf_type'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'qf_vals'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #0000BB">0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br />&nbsp;&nbsp;&nbsp;&nbsp;);<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+
+<div class="example" id="package.database.db-table.intro-forms.custom.values.radio"><div class="info"><p><strong>Radio and Select Values</strong></p></div>
+
+<div class="example-contents"><p>
+For radio buttons and select menus, use an associative array. Each array key
+is the value that will be stored in the column, and each array value is the
+text that will be displayed to the user.
+</p></div>
+<div class="example-contents"><p>
+This example creates a select menu with three possible values (&#039;a&#039;, &#039;b&#039;, and
+&#039;c&#039;) and the corresponding labels:
+</p></div>
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">GuestBook_Table&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">DB_Table<br /></span><span style="color: #007700">{<br />&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$col&nbsp;</span><span style="color: #007700">=&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;...&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'example'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;table&nbsp;column&nbsp;definition&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'varchar'</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">32</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;form&nbsp;element&nbsp;definition&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'qf_label'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Other&nbsp;Information'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'qf_type'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'qf_vals'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'a'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'This&nbsp;is&nbsp;the&nbsp;letter&nbsp;"a"'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'b'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'I&nbsp;choose&nbsp;"b"'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'c'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'No,&nbsp;"c"&nbsp;is&nbsp;always&nbsp;the&nbsp;right&nbsp;answer'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br />&nbsp;&nbsp;&nbsp;&nbsp;);<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-forms.custom.html-attributes"><div class="info"><h1>Element HTML Attributes</h1>
+</div>
+
+<p class="para">
+If you like, you can add HTML attributes to the form element using the
+&#039;qf_attrs&#039; keys. Attributes are assigned as key-value pairs in an associative
+array; the keys is the attribute name, and the value is the attribute value.
+For example, to set the number of rows and columns for a textarea element:
+</p>
+<div class="example"><div class="info"><p><strong>Setting rows and column number for a textarea</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">GuestBook_Table&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">DB_Table<br /></span><span style="color: #007700">{<br />&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$col&nbsp;</span><span style="color: #007700">=&nbsp;array(&nbsp;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;...&nbsp;&nbsp;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'example'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;table&nbsp;column&nbsp;definition&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'varchar'</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">32</span><span style="color: #007700">,<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;form&nbsp;element&nbsp;definition&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'qf_label'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Other&nbsp;Information'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'qf_type'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'textarea'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'qf_attrs'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'rows'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">24</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'cols'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">80<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br />&nbsp;&nbsp;&nbsp;&nbsp;);<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+<p class="para">
+DB_Table automatically adds a &quot;maxlength&quot; attribute to text and password
+elements based on the column size, so that users cannot type in values longer
+than the column allows. 
+</p>
+
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-forms.custom.rules"><div class="info"><h1>Element Rules</h1>
+</div>
+
+<p class="para">
+<strong class="classname">HTML_QuickForm</strong> allows you to add validation rules to the 
+input form. These rules are not the same as the <strong class="classname">DB_Table</strong>
+automated validations; the <strong class="classname">HTML_QuickForm</strong> rules apply 
+only to the values as they relate to the form itself, not the values related 
+to the table proper.  This is an important distinction that will become 
+apparent as you use <strong class="classname">HTML_QuickForm</strong>.
+</p>
+<p class="para">
+The available rules are:
+</p><ul class="itemizedlist">
+  <li class="listitem">
+    <span class="simpara">
+    email - the form input must be an email address
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    lettersonly -- the form nput must consist only of letters
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    maxlength -- the form input cannot have more than this many characters
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    maxlength -- the form input cannot have fewer than this many characters
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    nonzero -- the form input must be greater than or less than zero
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    nopunctuation -- the form input may not contain punctuation
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    numeric -- the form input must be a number of some sort (no letters)
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    regex -- the form input must match a regular expression
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    required -- the form input is required to be filled (even with a single
+    space)
+    </span>
+  </li>
+</ul><p>
+DB_Table will automatically add <strong class="classname">HTML_QuickForm</strong> rules for you in most cases.
+</p><ul class="itemizedlist">
+  <li class="listitem">
+    <span class="simpara">
+    If the column is required (&#039;require&#039; =&gt; true), then 
+    <strong class="classname">DB_Table</strong> will add a &#039;required&#039; 
+    <strong class="classname">HTML_QuickForm</strong> rule.
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    If the column is numeric (&#039;smallint&#039;, &#039;integer&#039;, &#039;bigint&#039;, &#039;single&#039;, 
+    &#039;double&#039;, or &#039;timestep&#039;) then <strong class="classname">DB_Table</strong> will a 
+    &#039;numeric&#039; <strong class="classname">HTML_QuickForm</strong> rule.
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    If the column has a specific size (&#039;size&#039;), then 
+    <strong class="classname">DB_Table</strong> will add a &#039;maxlength&#039; rule.
+    </span>
+  </li>
+</ul><p>
+If you want to use a specific <strong class="classname">HTML_QuickForm</strong> rule for a 
+column when that column appears in a form, set &#039;qf_rules&#039; key to the name of 
+the rule and set the value for that rule; in most cases, the value is an error 
+message, but in some cases the value is a sequential array. You can add as 
+many different rules as you like, but you can add only one of each type.
+</p>
+
+<div class="example"><div class="info"><p><strong>QuickForm Rules</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">GuestBook_Table&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">DB_Table<br /></span><span style="color: #007700">{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$col&nbsp;</span><span style="color: #007700">=&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;...&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'example1'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;table&nbsp;column&nbsp;definition&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'integer'</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;form&nbsp;element&nbsp;definition&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'qf_label'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Information'</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'qf_type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;a&nbsp;set&nbsp;of&nbsp;QuickForm&nbsp;rules&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'qf_rules'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'required'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'This&nbsp;field&nbsp;is&nbsp;required.'</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'numeric'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Please&nbsp;use&nbsp;only&nbsp;numbers,&nbsp;no&nbsp;letters.'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'example2'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;table&nbsp;column&nbsp;definition&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'varchar'</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'size'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">,&nbsp;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;form&nbsp;element&nbsp;definition&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'qf_label'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Something:'</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'qf_type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;a&nbsp;set&nbsp;of&nbsp;QuickForm&nbsp;rules&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'qf_rules'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'minlength'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'Minimum&nbsp;length&nbsp;is&nbsp;6&nbsp;characters.'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">6</span><span style="color: #007700">),&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'maxlength'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'Maximum&nbsp;length&nbsp;is&nbsp;10&nbsp;characters.'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">10</span><span style="color: #007700">),&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'regex'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'Must&nbsp;be&nbsp;only&nbsp;upper-case&nbsp;letters&nbsp;and&nbsp;underscores.'</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'/^[A-Z_]+$/'<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">)&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br />&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+<div class="example-contents"><p>
+<strong class="classname">HTML_QuickForm</strong> supports rules for groups and entire 
+forms, but <strong class="classname">DB_Table</strong> does not automate these; you will 
+need to add them to the form object yourself. 
+</p></div>
+</div>
+</div>
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-forms.default-values"><div class="info"><h1>Setting Default Values</h1>
+</div>
+
+<p class="para">
+Sometimes you will want to populate your input form with default values, such
+as the current values from the database. Doing so is easy.
+</p>
+<p class="para">
+When you call <strong class="function">getForm()</strong>, instead of passing a sequential
+array of column names, pass an associative array in which the key is the 
+column name and the value is the column value. 
+</p>
+<div class="example"><div class="info"><p><strong>Setting Default Values for Form Fields</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;[snip]&nbsp;create&nbsp;the&nbsp;GuestBook_Table&nbsp;object&nbsp;($GuestBook)<br /><br />//&nbsp;Show&nbsp;only&nbsp;the&nbsp;first&nbsp;name,&nbsp;last&nbsp;name,&nbsp;and&nbsp;email&nbsp;in&nbsp;the&nbsp;form<br />//&nbsp;Provide&nbsp;default&nbsp;values&nbsp;for&nbsp;the&nbsp;form&nbsp;elements<br /></span><span style="color: #0000BB">$cols&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'fname'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Thomas'</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'lname'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'Anderson'</span><span style="color: #007700">,&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'email'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'neo@matrix.net'<br /></span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;create&nbsp;the&nbsp;HTML_QuickForm&nbsp;object<br /></span><span style="color: #0000BB">$form&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$GuestBook</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getForm</span><span style="color: #007700">(</span><span style="color: #0000BB">$cols</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;display&nbsp;the&nbsp;form<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">display</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-forms.element-names"><div class="info"><h1>Element Names as Array Keys</h1>
+</div>
+
+<p class="para">
+By default, when you call <strong class="function">getForm()</strong>, the form elements are
+named for their columns. For example, the column &#039;fname&#039; is called &#039;fname&#039; in
+the form.
+</p><div class="screencode">
+<pre class="screencode">
+&lt;!-- [snip] the beginning of the form --&gt;
+
+&lt;input type=&quot;text&quot; name=&quot;fname&quot; ... /&gt;
+
+&lt;!-- [snip] the end of the form --&gt;</pre>
+
+</div><p>
+However, often you will want the form elements to be keys in any array instead
+of their own separate variables. This is particularly useful when you are going 
+to use the values in a <strong class="classname">DB_Table</strong> 
+<strong class="function">insert()</strong> or <strong class="function">update()</strong> call.
+</p>
+
+<p class="para"> 
+To do so, pass the name of an array as the second argument to 
+<strong class="function">getForm()</strong> (after the list of columns to use in the form). 
+For example, if you want the column names to be keys in an array called
+&#039;new_row&#039;, do this:
+</p>
+<div class="example"><div class="info"><p><strong>Returning form values in an array</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;[snip]&nbsp;create&nbsp;the&nbsp;$GuestBook&nbsp;object&nbsp;of&nbsp;class&nbsp;GuestBook_Table<br /><br />//&nbsp;choose&nbsp;which&nbsp;columns&nbsp;to&nbsp;display&nbsp;in&nbsp;the&nbsp;form<br /></span><span style="color: #0000BB">$cols&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'fname'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'lname'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'email'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;create&nbsp;the&nbsp;HTML_QuickForm&nbsp;object,&nbsp;with&nbsp;elements<br />//&nbsp;named&nbsp;as&nbsp;part&nbsp;of&nbsp;an&nbsp;array&nbsp;called&nbsp;'new_row'<br /></span><span style="color: #0000BB">$form&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$GuestBook</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getForm</span><span style="color: #007700">(</span><span style="color: #0000BB">$cols</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'new_row'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;display&nbsp;the&nbsp;form<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">display</span><span style="color: #007700">()<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+
+</div>
+
+<div class="refsection" id="package.database.db-table.intro-forms.custom-objects"><div class="info"><h1>Custom <strong class="classname">HTML_QuickForm</strong> Objects</h1>
+</div>
+
+<p class="para">
+Although the <strong class="function">getForm()</strong> method supports all 
+<strong class="classname">HTML_QuickForm</strong> parameters (such as the name of 
+the form, the method, the action, and so on), you don&#039;t need to use 
+<strong class="classname">DB_Table</strong> to create the entire form.  
+If you like, you can create your own <strong class="classname">HTML_QuickForm</strong> 
+object, and add <strong class="classname">DB_Table</strong> columns to it one-by-one or 
+in groups.
+</p>
+
+<p class="para">
+<strong class="classname">DB_Table</strong> provides these methods to add 
+automatically-defined elements to pre-existing
+<strong class="classname">HTML_QuickForm</strong> objects:
+</p><ul class="itemizedlist">
+  <li class="listitem">
+    <span class="simpara">
+    <strong class="function">addFormElements()</strong> 
+    to add one or more automatically-defined form element objects to a
+    pre-existing <strong class="classname">HTML_QuickForm</strong> object, along 
+    with their associated <strong class="classname">DB_Table</strong> defined rules.
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    <strong class="function">getFormGroup()</strong> 
+    to get an <strong class="classname">HTML_QuickForm</strong> group array of
+    automatically-defined element objects
+    </span>
+  </li>
+  <li class="listitem">
+    <span class="simpara">
+    <strong class="function">getFormElement()</strong> 
+    to get a single automatically defined element object.
+    </span>
+  </li>
+</ul><p>
+Here are example uses of each:
+</p>
+
+<div class="example"><div class="info"><p><strong>Custom HTML Element</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;[snip]&nbsp;Create&nbsp;the&nbsp;GuestBook_Table&nbsp;object&nbsp;$GuestBook<br /><br />//&nbsp;load&nbsp;the&nbsp;class&nbsp;file&nbsp;and&nbsp;create&nbsp;a&nbsp;QuickForm&nbsp;object<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/QuickForm.php'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$form&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;add&nbsp;one&nbsp;or&nbsp;more&nbsp;elements&nbsp;from&nbsp;the&nbsp;GuestBook<br />//&nbsp;object&nbsp;to&nbsp;the&nbsp;QuickForm&nbsp;object,&nbsp;along&nbsp;with<br />//&nbsp;the&nbsp;rules&nbsp;for&nbsp;those&nbsp;elements<br /></span><span style="color: #0000BB">$cols&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'email'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'signdate'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$GuestBook</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addFormElements</span><span style="color: #007700">(</span><span style="color: #0000BB">$form</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$cols</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;add&nbsp;an&nbsp;element&nbsp;group&nbsp;of&nbsp;GuestBook&nbsp;columns<br />//&nbsp;to&nbsp;the&nbsp;QuickForm&nbsp;object&nbsp;(does&nbsp;not&nbsp;add&nbsp;rules)<br /></span><span style="color: #0000BB">$cols&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'fname'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'lname'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$group&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$GuestBook</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getFormGroup</span><span style="color: #007700">(</span><span style="color: #0000BB">$cols</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addGroup</span><span style="color: #007700">(</span><span style="color: #0000BB">$group</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;get&nbsp;back&nbsp;a&nbsp;single&nbsp;form&nbsp;element&nbsp;object&nbsp;with&nbsp;a<br />//&nbsp;custom&nbsp;name,&nbsp;then&nbsp;add&nbsp;it&nbsp;to&nbsp;the&nbsp;form<br /></span><span style="color: #0000BB">$col&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'id'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$name&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'new_row[id]'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$element&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$GuestBook</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getFormElement</span><span style="color: #007700">(</span><span style="color: #0000BB">$col</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$name</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #0000BB">$element</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.db-table.intro-table.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.db-table.html">DB_Table</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.db-table.intro-database.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">DB_Table Class Tutorial</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">DB_Table_Database Class Tutorial</td>
+  </tr>
+ </table>
+</div>
+</body></html>

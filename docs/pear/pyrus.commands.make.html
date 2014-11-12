@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>make - create a package.xml from its source directory</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="pyrus.commands.html" title="Commands available in Pyrus" />
+  <link rel="prev" href="pyrus.commands.generateext.html" title="generate-ext - Create the subversion source layout for a new PHP extension that is PECL-ready" />
+  <link rel="next" href="pyrus.commands.package.html" title="package - create a packaged release in phar, tar, tgz or zip format" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">make - create a package.xml from its source directory</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="pyrus.commands.generateext.html" title="generate-ext - Create the subversion source layout for a new PHP extension that is PECL-ready">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="pyrus.commands.package.html" title="package - create a packaged release in phar, tar, tgz or zip format">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="pyrus.commands.make">
+ <div class="info"><h1>make - create a package.xml from its source directory</h1>
+</div>
+
+ <div class="section" id="pyrus.commands.make.intro">
+  <div class="info"><h2 class="title">Introduction</h2></div>
+  <blockquote class="note">
+   <span class="simpara">
+    The <code class="literal">make</code> command is available through the developer tools.
+    If you do not have the developer tools installed, simply run
+   </span>
+   <pre class="screen">php pyrus.phar make</pre>
+
+   <span class="simpara">
+    and Pyrus will ask if you would like to install the developer tools.  If you
+    assent with the word <code class="literal">yes</code>, Pyrus will automatically
+    download them and install them for you.
+   </span>
+  </blockquote>
+
+  <p class="para">
+   This command creates a package.xml file from a standard PEAR2 directory layout,
+   and then optionally creates a package release.
+  </p>
+  <p class="para">
+   This command looks for these standard files:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><span class="simpara"><code class="literal">CREDITS</code></span></li>
+    <li class="listitem"><span class="simpara"><code class="literal">README</code></span></li>
+    <li class="listitem"><span class="simpara"><code class="literal">RELEASE-X.Y.Z</code> (where X.Y.Z is the release version)</span></li>
+    <li class="listitem"><span class="simpara"><code class="literal">API-X.Y.Z</code> (where X.Y.Z is the API version)</span></li>
+   </ul><p>
+
+   and for a standard directory layout of
+
+   </p><table class="doctable table">
+    <caption>Standard directory layout</caption>
+    
+     <thead>
+      <tr>
+       <th>Sub-directory</th>
+       <th>Description</th>
+      </tr>
+
+     </thead>
+
+
+     <tbody class="tbody">
+      <tr>
+       <td><code class="literal">src/</code></td>
+       <td>PHP files</td>
+      </tr>
+
+      <tr>
+       <td><code class="literal">data/</code></td>
+       <td>Data files</td>
+      </tr>
+
+      <tr>
+       <td><code class="literal">test/</code></td>
+       <td>Test files</td>
+      </tr>
+
+      <tr>
+       <td><code class="literal">doc/</code></td>
+       <td>Documentation files</td>
+      </tr>
+
+      <tr>
+       <td><code class="literal">examples/</code></td>
+       <td>Example files (documentation)</td>
+      </tr>
+
+      <tr>
+       <td><code class="literal">scripts/</code></td>
+       <td>Executable files, scripts</td>
+      </tr>
+
+      <tr>
+       <td><code class="literal">www/</code></td>
+       <td>Web files</td>
+      </tr>
+
+      <tr>
+       <td><code class="literal">customrole/</code></td>
+       <td>Custom installer role XML definition files</td>
+      </tr>
+
+      <tr>
+       <td><code class="literal">customtask/</code></td>
+       <td>Custom installer task XML definition files</td>
+      </tr>
+
+      <tr>
+       <td><code class="literal">customcommand/</code></td>
+       <td>Custom command XML definition files</td>
+      </tr>
+
+     </tbody>
+    
+   </table>
+
+  
+  <p class="para">
+   The <code class="literal">CREDITS</code> file must have this format:
+
+   </p><div class="txtcode">
+    <pre class="txtcode">
+;; comments ignored
+Maintainer One [handle1] &lt;email@example.com&gt; (role)
+Maintainer Two [handle2] &lt;email@example.com&gt; (role)</pre>
+
+   </div><p>
+
+   Where role is one of <code class="literal">lead</code>, <code class="literal">developer</code>,
+   <code class="literal">contributor</code>, or <code class="literal">helper</code>.
+  </p>
+  <p class="para">
+   The first line of <code class="literal">README</code> is used as the summary of the
+   package, the rest is used as the description.
+   <code class="literal">RELEASE-X.Y.Z</code> is used as the release notes.  Pyrus will
+   scan all release notes (such as <code class="literal">RELEASE-1.0.0</code> and
+   <code class="literal">RELEASE-1.2.3</code>) and use the most recent version number
+   (<code class="literal">1.2.3</code> in our example) as the version, and the contents
+   of the file (<code class="literal">RELEASE-1.2.3</code> in our example) as the release
+   notes.
+  </p>
+  <p class="para">
+   <code class="literal">API-X.Y.Z</code> is used as notes about the
+   <a href="guide.users.concepts.api.html" class="link">API</a> and the version
+   <code class="literal">X.Y.Z</code> is used as the API version.
+  </p>
+ </div>
+ <div class="section" id="pyrus.commands.make.packagexmlsetup">
+  <h2 class="title">--packagexmlsetup</h2>
+  <p class="para">
+   if <code class="literal">--packagexmlsetup</code> or <code class="literal">-s</code> is specified,
+   it should be passed the name of a file in the package base directory that is
+   used to fine-tune the generated package.xml.  This file should work with variable
+   <code class="literal">$package</code> for modifying the package.xml, and
+   <code class="literal">$compatible</code> for the compatible
+   one (if present).  If --packagexmlsetup is not specified, and
+   <code class="literal">packagexmlsetup.php</code>
+   exists in the package base directory, it will be used.
+  </p>
+  <p class="para">
+   Here is an example <code class="literal">packagexmlsetup.php</code>:
+   </p><div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$package</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">dependencies</span><span style="color: #007700">[</span><span style="color: #DD0000">'required'</span><span style="color: #007700">]-&gt;</span><span style="color: #0000BB">package</span><span style="color: #007700">[</span><span style="color: #DD0000">'pear2.php.net/PEAR2_Autoload'</span><span style="color: #007700">]-&gt;</span><span style="color: #0000BB">save</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$package</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">dependencies</span><span style="color: #007700">[</span><span style="color: #DD0000">'required'</span><span style="color: #007700">]-&gt;</span><span style="color: #0000BB">package</span><span style="color: #007700">[</span><span style="color: #DD0000">'pear2.php.net/PEAR2_Exception'</span><span style="color: #007700">]-&gt;</span><span style="color: #0000BB">save</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$package</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">dependencies</span><span style="color: #007700">[</span><span style="color: #DD0000">'required'</span><span style="color: #007700">]-&gt;</span><span style="color: #0000BB">package</span><span style="color: #007700">[</span><span style="color: #DD0000">'pear2.php.net/PEAR2_MultiErrors'</span><span style="color: #007700">]-&gt;</span><span style="color: #0000BB">save</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">$compatible</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">dependencies</span><span style="color: #007700">[</span><span style="color: #DD0000">'required'</span><span style="color: #007700">]-&gt;</span><span style="color: #0000BB">package</span><span style="color: #007700">[</span><span style="color: #DD0000">'pear2.php.net/PEAR2_Autoload'</span><span style="color: #007700">]-&gt;</span><span style="color: #0000BB">save</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$compatible</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">dependencies</span><span style="color: #007700">[</span><span style="color: #DD0000">'required'</span><span style="color: #007700">]-&gt;</span><span style="color: #0000BB">package</span><span style="color: #007700">[</span><span style="color: #DD0000">'pear2.php.net/PEAR2_Exception'</span><span style="color: #007700">]-&gt;</span><span style="color: #0000BB">save</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$compatible</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">dependencies</span><span style="color: #007700">[</span><span style="color: #DD0000">'required'</span><span style="color: #007700">]-&gt;</span><span style="color: #0000BB">package</span><span style="color: #007700">[</span><span style="color: #DD0000">'pear2.php.net/PEAR2_MultiErrors'</span><span style="color: #007700">]-&gt;</span><span style="color: #0000BB">save</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  
+ </div>
+ <div class="section" id="pyrus.commands.make.nocompatible">
+  <h2 class="title">--nocompatible</h2>
+  <p class="para">
+   If <code class="literal">--nocompatible</code> or <code class="literal">-n</code> option
+   is passed in, Pyrus will not generate a package.xml that is compatible
+   with the PEAR Installer.
+  </p>
+ </div>
+ <div class="section" id="pyrus.commands.make.package">
+  <h2 class="title">--package</h2>
+  <p class="para">
+   This option instruct the <code class="literal">make</code> command to pass off the
+   finished package.xml to the
+   <a href="pyrus.commands.package.html" class="link"><code class="literal">package</code></a>
+   command.  It accepts a comma-delimited list of file formats, and can be any
+   of <code class="literal">phar</code>, <code class="literal">tar</code>, <code class="literal">tgz</code>
+   or <code class="literal">zip</code>.
+  </p>
+ </div>
+ <div class="section" id="pyrus.commands.make.stub">
+  <h2 class="title">--stub</h2>
+  <p class="para">
+   This option is identical to the option for the
+   <a href="pyrus.commands.package.html#pyrus.commands.package.stub" class="link"><code class="literal">--stub</code></a>
+   option of the <a href="pyrus.commands.package.html" class="link"><code class="literal">package</code></a>
+   command, and is ignored if <code class="literal">--package</code> or <code class="literal">-p</code>
+   is not also specified.
+  </p>
+ </div>
+ <div class="section" id="pyrus.commands.make.extrasetup">
+  <h2 class="title">--extrasetup</h2>
+  <p class="para">
+   This option is identical to the option for the
+   <a href="pyrus.commands.package.html#pyrus.commands.package.extrasetup" class="link"><code class="literal">--extrasetup</code></a>
+   option of the <a href="pyrus.commands.package.html" class="link"><code class="literal">package</code></a>
+   command, and is ignored if <code class="literal">--package</code> or <code class="literal">-p</code>
+   is not also specified.
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="pyrus.commands.generateext.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="pyrus.commands.html">Commands available in Pyrus</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="pyrus.commands.package.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">generate-ext - Create the subversion source layout for a new PHP extension that is PECL-ready</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">package - create a packaged release in phar, tar, tgz or zip format</td>
+  </tr>
+ </table>
+</div>
+</body></html>

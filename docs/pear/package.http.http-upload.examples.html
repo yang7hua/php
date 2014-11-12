@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Examples</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.http.http-upload.html" title="HTTP_Upload" />
+  <link rel="prev" href="package.http.http-upload.intro.html" title="Introduction" />
+  <link rel="next" href="package.http.http-upload.information.html" title="Extensive information about uploaded files" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Examples</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.http.http-upload.intro.html" title="Introduction">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.http.http-upload.information.html" title="Extensive information about uploaded files">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="package.http.http-upload.examples">
+ <div class="info">
+  <h1>Examples</h1>
+
+ </div>
+
+
+  <p class="para">
+    In the following examples it is assumed that you are using an
+    <span class="acronym">HTML</span> form field <code class="literal">&lt;input type=&quot;file&quot; name=&quot;f&quot; /&gt;</code>
+    in order to upload files.  For example:
+  </p>
+
+  <div class="example"><div class="info"><p><strong>HTML form for simple file upload</strong></p></div>
+
+   <div class="example-contents"><p>
+    The following form can be used in order to test the single file upload example.
+   </p></div>
+   <div class="htmlcode">
+<pre class="htmlcode">
+&lt;?php
+// sample code from below goes here
+?&gt;
+&lt;html&gt;
+ &lt;head&gt;
+ &lt;/head&gt;
+ &lt;body&gt;
+  &lt;form name=&quot;fileuploadexample&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;
+   action=&quot;&lt;?php echo htmlspecialchars($_SERVER[&#039;PHP_SELF&#039;]) ?&gt;&quot;&gt;
+   &lt;input type=&quot;file&quot; name=&quot;f&quot; /&gt;
+   &lt;input type=&quot;submit&quot; name=&quot;submit&quot; value=&quot;Submit&quot; /&gt;
+  &lt;/form&gt;
+ &lt;/body&gt;
+&lt;/html&gt;</pre>
+
+   </div>
+  </div>
+
+  <div class="example">
+   <div class="info">
+    <p><strong>Simple file upload</strong></p>
+   </div>
+
+    <div class="example-contents"><p>
+      The following code looks at the request and checks if a valid
+      file was uploaded through the form.  If that is the case, the
+      file is moved to the subdirectory <code class="filename">uploads</code>.
+    </p></div>
+
+    <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"HTTP/Upload.php"</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$upload&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTTP_Upload</span><span style="color: #007700">(</span><span style="color: #DD0000">"en"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$file&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$upload</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getFiles</span><span style="color: #007700">(</span><span style="color: #DD0000">"f"</span><span style="color: #007700">);<br /><br />if&nbsp;(</span><span style="color: #0000BB">$file</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">isValid</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$moved&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$file</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">moveTo</span><span style="color: #007700">(</span><span style="color: #DD0000">'uploads/'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(!</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$moved</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">'File&nbsp;was&nbsp;moved&nbsp;to&nbsp;uploads/'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$file</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getProp</span><span style="color: #007700">(</span><span style="color: #DD0000">'name'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$moved</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}&nbsp;elseif&nbsp;(</span><span style="color: #0000BB">$file</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">isMissing</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"No&nbsp;file&nbsp;was&nbsp;provided."</span><span style="color: #007700">;<br />}&nbsp;elseif&nbsp;(</span><span style="color: #0000BB">$file</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">isError</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$file</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">errorMsg</span><span style="color: #007700">();<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+
+    <blockquote class="note">
+     <p class="para">
+     Internally,
+     <a href="http://pear.php.net/package/HTTP_Upload/docs/latest/HTTP_Upload/HTTP_Upload_File.html#methodmoveTo" class="apidoclink">HTTP_Upload_File::moveTo()</a>
+     calls
+     <code class="literal">$file-&gt;<a href="http://pear.php.net/package/HTTP_Upload/docs/latest/HTTP_Upload/HTTP_Upload_File.html#methodsetName" class="apidoclink">setName</a>(&#039;safe&#039;);</code>
+     which replaces
+     special characters in the name with an underscore.
+     You should always use
+     <code class="literal">$file-&gt;<a href="http://pear.php.net/package/HTTP_Upload/docs/latest/HTTP_Upload/HTTP_Upload_File.html#methodgetProp" class="apidoclink">getProp</a>(&#039;name&#039;)</code>
+     after moving to retrieve the new filename.
+     </p>
+    </blockquote>
+
+  </div>
+
+
+  <div class="example">
+   <div class="info">
+    <p><strong>HTML form for multiple file upload</strong></p>
+   </div>
+
+   <div class="example-contents"><p>
+    The following form can be used in order to test the multiple file upload example.
+   </p></div>
+   <div class="htmlcode">
+<pre class="htmlcode">
+&lt;?php
+// sample code from below goes here
+?&gt;
+&lt;html&gt;
+ &lt;head&gt;
+ &lt;/head&gt;
+ &lt;body&gt;
+  &lt;form name=&quot;fileuploadexample2&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;
+   action=&quot;&lt;?php echo htmlspecialchars($_SERVER[&#039;PHP_SELF&#039;]) ?&gt;&quot;&gt;
+   &lt;input type=&quot;file&quot; name=&quot;f1&quot; /&gt;
+   &lt;input type=&quot;file&quot; name=&quot;f2&quot; /&gt;
+   &lt;input type=&quot;submit&quot; name=&quot;submit&quot; value=&quot;Submit&quot; /&gt;
+  &lt;/form&gt;
+ &lt;/body&gt;
+&lt;/html&gt;</pre>
+
+   </div>
+  </div>
+
+  <div class="example" id="package.http.http-upload.examples.multiple"><div class="info"><p><strong>Multiple files, more extensive checks</strong></p></div>
+
+
+    <div class="example-contents"><p>
+      Multiple files can uploaded by replacing the name of the form
+      field (<code class="literal">f</code>) with <code class="literal">f[]</code> and
+      creating multiple <code class="literal">&lt;input /&gt;</code> fields
+      with this name.
+    </p></div>
+
+    <div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$upload&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTTP_Upload</span><span style="color: #007700">(</span><span style="color: #DD0000">"en"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$files&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$upload</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getFiles</span><span style="color: #007700">();<br /><br />foreach(</span><span style="color: #0000BB">$files&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$file</span><span style="color: #007700">){<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$file</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$file</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$file</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">isValid</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$file</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setName</span><span style="color: #007700">(</span><span style="color: #DD0000">"uniq"</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$dest_name&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$file</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">moveTo</span><span style="color: #007700">(</span><span style="color: #DD0000">"uploads/"</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$dest_name</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$dest_name</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$real&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$file</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getProp</span><span style="color: #007700">(</span><span style="color: #DD0000">"real"</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;elseif&nbsp;(</span><span style="color: #0000BB">$file</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">isMissing</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"No&nbsp;file&nbsp;was&nbsp;provided."</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;elseif&nbsp;(</span><span style="color: #0000BB">$file</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">isError</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$file</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">errorMsg</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$file</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getProp</span><span style="color: #007700">());<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+  </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.http.http-upload.intro.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.http.http-upload.html">HTTP_Upload</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.http.http-upload.information.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Extensive information about uploaded files</td>
+  </tr>
+ </table>
+</div>
+</body></html>

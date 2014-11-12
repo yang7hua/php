@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Groups</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-quickform2.elements.html" title="Form elements" />
+  <link rel="prev" href="package.html.html-quickform2.elements.list.html" title="Built-in Elements" />
+  <link rel="next" href="package.html.html-quickform2.elements.custom.html" title="Custom Group-based elements" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Groups</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-quickform2.elements.list.html" title="Built-in Elements">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-quickform2.elements.custom.html" title="Custom Group-based elements">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-quickform2.groups">
+ 
+  <h1 class="refname">Groups</h1>
+  <div class="refnamediv">Groups &ndash; Combining several form elements into a single entity</div>
+
+ 
+ <div class="refsection" id="package.html.html-quickform2.groups.overview">
+  <div class="info">
+   <h1>Groups overview</h1>
+
+  </div>
+  <p class="para">
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Container_Group.html" class="apidoclink">HTML_QuickForm2_Container_Group</a> is a
+   specialized subclass of <a href="package.html.html-quickform2.elements.container.html" class="link">Container</a> which allows to
+   combine several form elements into an entity behaving like a single form element. Key features:
+   </p><ul class="itemizedlist">
+    <li class="listitem"><p class="para">
+     A named group prepends its name to the contained elements&#039; names;
+    </p></li>
+    <li class="listitem"><p class="para">
+     <strong class="classname">HTML_QuickForm2_Container_Group</strong> implements <a href="package.html.html-quickform2.values-datasources.html#package.html.html-quickform2.values-datasources.values-overview" class="link"><strong class="function">setValue()</strong></a>
+     method;
+    </p></li>
+    <li class="listitem"><p class="para">
+     Grouped elements are processed in a different way than ungrouped ones by <a href="package.html.html-quickform2.renderers.html" class="link">renderers</a>.
+    </p></li>
+   </ul>
+  
+  <p class="para">
+   Groups can be used for
+   </p><ul class="itemizedlist">
+    <li class="listitem"><p class="para">
+     Keeping together elements having the same name (checkboxes and radios).
+    </p></li>
+    <li class="listitem"><p class="para">
+     Visual grouping of elements (e.g. &#039;Back&#039;, &#039;Next&#039; and &#039;Cancel&#039; buttons of a wizard). 
+    </p></li>
+    <li class="listitem"><p class="para">
+     Logical grouping of elements (e.g. fields to input first and last name of a person).
+    </p></li>
+   </ul>
+  
+  <p class="para">
+   Groups are also used as a base for custom elements like <a href="package.html.html-quickform2.elements.custom.html#package.html.html-quickform2.elements.custom.date" class="link">Date</a> and <a href="package.html.html-quickform2.elements.custom.html#package.html.html-quickform2.elements.custom.hierselect" class="link">Hierselect</a>.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.groups.names">
+  <div class="info">
+   <h1>Names of grouped elements</h1>
+
+  </div>
+  <p class="para">
+   If you add an element to a group having a name itself, group&#039;s name will be prepended to the
+   element&#039;s name. If an element is added to a group without a name, its name will not be changed:
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$named&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addGroup</span><span style="color: #007700">(</span><span style="color: #DD0000">'groupName'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$innerNamed&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$named</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addText</span><span style="color: #007700">(</span><span style="color: #DD0000">'elementName'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$innerComplex&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$named</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addText</span><span style="color: #007700">(</span><span style="color: #DD0000">'elementOuter[elementInner]'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$nameless&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addGroup</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$innerNameless&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$nameless</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addText</span><span style="color: #007700">(</span><span style="color: #DD0000">'elementName'</span><span style="color: #007700">);<br /><br />echo&nbsp;</span><span style="color: #0000BB">$innerNamed</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getName</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">',&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$innerComplex</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getName</span><span style="color: #007700">()<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;</span><span style="color: #DD0000">',&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$innerNameless</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getName</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   results in the following output
+   </p><pre class="screen">
+<br/>groupName[elementName],&nbsp;groupName[elementOuter][elementInner],&nbsp;elementName<br/>
+   </pre>
+
+  
+  <p class="para">
+   Note also the difference between a nameless element in a named group and vice versa:
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$namedGroup&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addGroup</span><span style="color: #007700">(</span><span style="color: #DD0000">'groupName'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$namelessElement&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$namedGroup</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addText</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">$namelessGroup&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addGroup</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$namedElement&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$namelessGroup</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addText</span><span style="color: #007700">(</span><span style="color: #DD0000">'elementName'</span><span style="color: #007700">);<br /><br />echo&nbsp;</span><span style="color: #0000BB">$namelessElement</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getName</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">',&nbsp;'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$namedElement</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getName</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div><p>
+   which results in
+   </p><pre class="screen">
+<br/>groupName[],&nbsp;elementName<br/>    
+   </pre>
+
+  
+  <blockquote class="note">
+   <p class="para">
+    The only elements which will work reliably if given a name like <code class="literal">foo[]</code> are
+    checkboxes (assuming they have unique <code class="literal">value</code> attributes). Do not give such
+    names to any other elements, use explicit indexes: <code class="literal">foo[0]</code>,
+    <code class="literal">foo[1]</code>.
+   </p>
+  </blockquote>
+
+ </div>
+ 
+ <div class="refsection" id="package.html.html-quickform2.groups.values">
+  <div class="info">
+   <h1>Groups&#039; values</h1>
+
+  </div>
+  <p class="para">
+   Unlike other <strong class="classname">Container</strong>-based elements, <strong class="classname">Group</strong>
+   implements a working <strong class="function">setValue()</strong> method. Values for the
+   <strong class="classname">Group</strong> should be given as an associative array having a structure similar
+   to what <code class="varname">$_GET</code> / <code class="varname">$_POST</code> will contain on form submit:
+   </p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$foo&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addGroup</span><span style="color: #007700">(</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$foo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addText</span><span style="color: #007700">(</span><span style="color: #DD0000">'bar'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$foo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addText</span><span style="color: #007700">(</span><span style="color: #DD0000">'baz[quux]'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$foo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setValue</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'bar'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'bar&nbsp;value'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'baz'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'quux'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'baz[quux]&nbsp;value'</span><span style="color: #007700">)<br />));<br /><br /></span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$foo</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getValue</span><span style="color: #007700">());<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+   <p><strong class="function">getValue()</strong> will return array having the same structure, output of the above
+   code being
+   </p><pre class="screen">
+<br/>Array<br/>(<br/>&nbsp;&nbsp;&nbsp;&nbsp;[bar]&nbsp;=&gt;&nbsp;bar&nbsp;value<br/>&nbsp;&nbsp;&nbsp;&nbsp;[baz]&nbsp;=&gt;&nbsp;Array<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[quux]&nbsp;=&gt;&nbsp;baz[quux]&nbsp;value<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br/><br/>)<br/>
+   </pre>
+
+  
+ </div>
+
+ <div class="refsection" id="package.html.html-quickform2.groups.output">
+  <div class="info">
+   <h1>Outputting groups</h1>
+
+  </div>
+  <p class="para">
+   <code class="varname">$data</code> parameter for <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Container_Group.html#method__construct" class="apidoclink">group's constructor</a> may
+   contain the custom <code class="literal">&#039;separator&#039;</code> key. It is either a string or an array of
+   strings that will be used to separate elements&#039; HTML in output. <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Container_Group.html#methodsetSeparator" class="apidoclink">setSeparator()</a> / <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Container_Group.html#methodgetSeparator" class="apidoclink">getSeparator()</a> methods
+   are also available:
+   </p><div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$group&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Container_Group</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'separator'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">"&lt;br&nbsp;/&gt;\n"</span><span style="color: #007700">)<br />);<br /><br /></span><span style="color: #0000BB">$group</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addText</span><span style="color: #007700">(</span><span style="color: #DD0000">'first'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$group</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addText</span><span style="color: #007700">(</span><span style="color: #DD0000">'second'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$group</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addText</span><span style="color: #007700">(</span><span style="color: #DD0000">'third'</span><span style="color: #007700">);<br /><br />echo&nbsp;</span><span style="color: #0000BB">$group</span><span style="color: #007700">;<br /><br />echo&nbsp;</span><span style="color: #DD0000">"\n\n"</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$group</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setSeparator</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'&amp;nbsp;'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"&lt;br&nbsp;/&gt;\n"</span><span style="color: #007700">));<br />echo&nbsp;</span><span style="color: #0000BB">$group</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div><p>
+   results in output
+   </p><pre class="screen"><br/>&lt;input&nbsp;type=&quot;text&quot;&nbsp;name=&quot;foo[first]&quot;&nbsp;id=&quot;first-0&quot;&nbsp;/&gt;&lt;br&nbsp;/&gt;<br/>&lt;input&nbsp;type=&quot;text&quot;&nbsp;name=&quot;foo[second]&quot;&nbsp;id=&quot;second-0&quot;&nbsp;/&gt;&lt;br&nbsp;/&gt;<br/>&lt;input&nbsp;type=&quot;text&quot;&nbsp;name=&quot;foo[third]&quot;&nbsp;id=&quot;third-0&quot;&nbsp;/&gt;<br/><br/>&lt;input&nbsp;type=&quot;text&quot;&nbsp;name=&quot;foo[first]&quot;&nbsp;id=&quot;first-0&quot;&nbsp;/&gt;&amp;nbsp;&lt;input&nbsp;type=&quot;text&quot;&nbsp;name=&quot;foo[second]&quot;&nbsp;id=&quot;second-0&quot;&nbsp;/&gt;&lt;br&nbsp;/&gt;<br/>&lt;input&nbsp;type=&quot;text&quot;&nbsp;name=&quot;foo[third]&quot;&nbsp;id=&quot;third-0&quot;&nbsp;/&gt;<br/>&nbsp;&nbsp;&nbsp;&nbsp;</pre>
+
+  
+  <p class="para">
+   The default output for groups is quite simple, containing only elements&#039; HTML and separators. You
+   will need to use <strong class="function">render()</strong> instead of <strong class="function">__toString()</strong> to
+   customize the output (the latter uses Default Renderer under the hood, but does not allow output
+   customization). Consult the <a href="package.html.html-quickform2.renderers.default.html#package.html.html-quickform2.renderers.default.groups" class="link">section on Default
+    Renderer</a> for additional info.   
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-quickform2.elements.list.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-quickform2.elements.html">Form elements</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-quickform2.elements.custom.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Built-in Elements</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Custom Group-based elements</td>
+  </tr>
+ </table>
+</div>
+</body></html>

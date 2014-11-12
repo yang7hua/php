@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Introduction - validation and filters</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-quickform.values.validation.html" title="Validation and filters" />
+  <link rel="prev" href="package.html.html-quickform.values.validation.html" title="Validation and filters" />
+  <link rel="next" href="package.html.html-quickform.html-quickform.addrule.html" title="HTML_QuickForm::addRule()" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Introduction - validation and filters</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-quickform.values.validation.html" title="Validation and filters">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-quickform.html-quickform.addrule.html" title="HTML_QuickForm::addRule()">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-quickform.intro-validation">
+   
+    <h1 class="refname">Introduction - validation and filters</h1>
+    <div class="refnamediv">Introduction - validation and filters &ndash; How to process submitted data</div>
+
+   
+   <div class="refsection" id="package.html.html-quickform.intro-validation.rules"><div class="info"><h1>Validation rules</h1>
+</div>
+    
+    <p class="para">
+QuickForm makes client-side and server-side form validation easy. It allows for validation against regular
+expressions or custom functions and methods. You can define your own validation rules and apply them to
+the elements or groups you want. In this section, we will explore the different possibilities QuickForm
+offers to make validation easier.
+    </p>
+    <p class="para">
+QuickForm can verify if required elements are filled when the form is submitted. This works with every type of elements or groups, integer 0 is not considered as an empty value.
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">'HTML/QuickForm.php'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$form&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm</span><span style="color: #007700">(</span><span style="color: #DD0000">'myform'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'post'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'email'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Your&nbsp;email:'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'submit'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'submit'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Submit'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Validation&nbsp;rules<br /><br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'email'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'E-Mail&nbsp;is&nbsp;required'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'required'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Validation<br /><br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">validate</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">freeze</span><span style="color: #007700">();<br />}<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">display</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+    
+     <blockquote class="note"><div class="info"><strong>On empty elements validation</strong><br /></div>
+       
+       <p class="para">
+If the element is empty, no validation rules other than <code class="varname">required</code> are checked for it. This means that empty element can be invalid <em class="emphasis">only</em> when it is required.
+       </p>
+     </blockquote>
+
+     <blockquote class="note"><div class="info"><strong>On required uploads</strong><br /></div>
+       
+       <p class="para">
+<code class="varname">required</code> rule does not work for file elements. Use <code class="varname">uploadedfile</code>.
+       </p>
+     </blockquote>
+
+    <p class="para">
+The <strong class="function">HTML_QuickForm::validate()</strong> method will scan through each rules in the order they have been set. If a rule is not validated, the error message corresponding to the element will be displayed and the form will be shown once again. You can use templates to set the position of this error message. The order you decide to set your validation rules is important because it will determine which error message is used.
+    </p>
+
+   <div class="refsection" id="package.html.html-quickform.intro-validation.rules.client"><div class="info"><h1>Client-side validation</h1>
+</div>
+    
+    <p class="para">
+QuickForm can generate the javascript necessary to validate the form on the client side. This feature works for all standard elements and for groups. Server side validation is always performed in case the client has javascript turned off.
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'email'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'E-Mail&nbsp;is&nbsp;required'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'required'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'client'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+    
+    <blockquote class="tip"><p class="para">
+By setting the parameter <code class="literal">&#039;client&#039;</code>, you trigger the javascript automatic generation.
+    </p></blockquote>
+
+   </div>
+   <div class="refsection" id="package.html.html-quickform.intro-validation.rules.builtin"><div class="info"><h1>Built-in validation rules</h1>
+</div>
+    
+    <p class="para">
+QuickForm offers a few registered rules that are often used when validating 
+forms. Some of the rules may need an extra <code class="varname">$format</code> parameter
+passed to <a href="package.html.html-quickform.html-quickform.addrule.html" class="link"><strong class="function">addRule()</strong></a> /
+<a href="package.html.html-quickform.html-quickform.addgrouprule.html" class="link"><strong class="function">addGroupRule()</strong></a>
+to work properly.
+      </p><table class="doctable table"><caption>List of built-in validation rules</caption>
+        
+        
+          <col />
+          <col />
+          <col />
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th><code class="varname">$format</code> parameter</th>
+            </tr>
+
+          </thead>
+
+          <tbody class="tbody">
+            <tr>
+              <td><code class="varname">required</code></td>
+              <td>value is not empty</td>
+              <td class="empty">&nbsp;</td>
+            </tr>
+
+            <tr>
+              <td><code class="varname">maxlength</code></td>
+              <td>value must not exceed given number of characters</td>
+              <td>number of characters, integer</td>
+            </tr>
+
+            <tr>
+              <td><code class="varname">minlength</code></td>
+              <td>value must have more than given number of characters</td>
+              <td>number of characters, integer</td>
+            </tr>
+
+            <tr>
+              <td><code class="varname">rangelength</code></td>
+              <td>value must have between min and max characters</td>
+              <td>array(min characters, max characters)</td>
+            </tr>
+
+            <tr>
+              <td><code class="varname">regex</code></td>
+              <td>value must pass the regular expression</td>
+              <td>regular expression to check, string</td>
+            </tr>
+
+            <tr>
+              <td><code class="varname">email</code></td>
+              <td>value is a correctly formatted email</td>
+              <td>whether to perform an additional domain check via <a href="http://www.php.net/manual-lookup.php?pattern=checkdnsrr" class="link external"><strong class="function">checkdnsrr()</strong></a> function, boolean</td>
+            </tr>
+
+            <tr>
+              <td><code class="varname">lettersonly</code></td>
+              <td>value must contain only letters</td>
+              <td class="empty">&nbsp;</td>
+            </tr>
+
+            <tr>
+              <td><code class="varname">alphanumeric</code></td>
+              <td>value must contain only letters and numbers</td>
+              <td class="empty">&nbsp;</td>
+            </tr>
+
+            <tr>
+              <td><code class="varname">numeric</code></td>
+              <td>value must be a number</td>
+              <td class="empty">&nbsp;</td>
+            </tr>
+
+            <tr>
+              <td><code class="varname">nopunctuation</code></td>
+              <td>value must not contain punctuation characters</td>
+              <td class="empty">&nbsp;</td>
+            </tr>
+
+            <tr>
+              <td><code class="varname">nonzero</code></td>
+              <td>value must be a number not starting with 0</td>
+              <td class="empty">&nbsp;</td>
+            </tr>
+
+            <tr>
+              <td><code class="varname">compare</code></td>
+              <td>
+                The rule allows to compare the values of two form fields. 
+                This can be used for e.g. &#039;Password repeat must match 
+                password&#039; kind of rule. Please note that you need to pass an
+                array of elements&#039; names to compare as a first parameter to
+                <a href="package.html.html-quickform.html-quickform.addrule.html" class="link"><strong class="function">addRule()</strong></a>.
+              </td>
+              <td><p class="para">Type of comparison to perform, string:
+                </p><div class="variablelist">
+                  <dl class="varlistentry">
+                    <dt class="term"><em><code class="parameter">&#039;eq&#039;</code></em> or <em><code class="parameter">&#039;==&#039;</code></em></dt>
+                    <dd class="listitem"><span class="simpara">(default) the elements should have the same values</span></dd>
+                  </dl>
+                  <dl class="varlistentry">
+                    <dt class="term"><em><code class="parameter">&#039;neq&#039;</code></em> or <em><code class="parameter">&#039;!=&#039;</code></em></dt>
+                    <dd class="listitem"><span class="simpara">the elements should have different values</span></dd>
+                  </dl>
+                  <dl class="varlistentry">
+                    <dt class="term"><em><code class="parameter">&#039;gt&#039;</code></em> or <em><code class="parameter">&#039;&gt;&#039;</code></em></dt>
+                    <dd class="listitem"><span class="simpara">first element&#039;s value should be greater (compared as numbers)</span></dd>
+                  </dl>
+                  <dl class="varlistentry">
+                    <dt class="term"><em><code class="parameter">&#039;gte&#039;</code></em> or <em><code class="parameter">&#039;&gt;=&#039;</code></em></dt>
+                    <dd class="listitem"><span class="simpara">first element&#039;s value should be greater or equal (compared as numbers)</span></dd>
+                  </dl>
+                  <dl class="varlistentry">
+                    <dt class="term"><em><code class="parameter">&#039;lt&#039;</code></em> or <em><code class="parameter">&#039;&lt;&#039;</code></em></dt>
+                    <dd class="listitem"><span class="simpara">first element&#039;s value should be smaller (compared as numbers)</span></dd>
+                  </dl>
+                  <dl class="varlistentry">
+                    <dt class="term"><em><code class="parameter">&#039;lte&#039;</code></em> or <em><code class="parameter">&#039;&lt;=&#039;</code></em></dt>
+                    <dd class="listitem"><span class="simpara">first element&#039;s value should be smaller or equal (compared as numbers)</span></dd>
+                  </dl>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td><code class="varname">callback</code></td>
+              <td>
+                This rule allows to use an external function/method for 
+                validation. This can be done either explicitly, by passing a
+                callback as a format parameter or implicitly, by registering 
+                it via <a href="package.html.html-quickform.html-quickform.registerrule.html" class="link"><strong class="function">registerRule()</strong></a>.
+              </td>
+              <td>Function/method to use, <a href="http://www.php.net/manual/language.pseudo-types.php" class="link external"><span class="type">callback</span></a>.</td>
+            </tr>
+
+            <tr>
+              <td colspan="3" style="text-align: center;">Validation rules for file uploads</td>
+            </tr>
+
+            <tr>
+              <td><code class="varname">uploadedfile</code></td>
+              <td>required file upload</td>
+              <td class="empty">&nbsp;</td>
+            </tr>
+
+            <tr>
+              <td><code class="varname">maxfilesize</code></td>
+              <td>the file size must not exceed the given number of bytes</td>
+              <td>maximum file size, integer</td>
+            </tr>
+
+            <tr>
+              <td><code class="varname">mimetype</code></td>
+              <td>the file must have a correct MIME type</td>
+              <td>either a string for single allowed MIME type, or an array of allowed MIME types</td>
+            </tr>
+
+            <tr>
+              <td><code class="varname">filename</code></td>
+              <td>the filename must match the given regex</td>
+              <td>regular expression to test, string</td>
+            </tr>
+
+          </tbody>
+        
+      </table>
+
+    
+    
+    <blockquote class="note"><div class="info"><strong>On rules for file uploads</strong><br /></div>
+      
+      <p class="para">
+These rules are defined in <code class="filename">HTML/QuickForm/file.php</code>, and are automatically registered when a <code class="varname">file</code> type element is added to the form. These rules are server-side only, for obvious reasons.
+      </p>
+    </blockquote>
+
+
+    <p class="para">
+      Usage of builtin rules is covered in <code class="filename">rules-builtin.php</code>
+      example provided with the package. The <code class="filename">rules-custom.php</code>
+      example covers the usage of custom rule classes and <code class="varname">callback</code> 
+      type rules. It also contains a <strong class="classname">NumericRange</strong> class for 
+      checking whether a number is between a maximum and a minimum.
+    </p>
+
+   </div>
+   <div class="refsection" id="package.html.html-quickform.intro-validation.rules.classes"><div class="info"><h1>Validation classes</h1>
+</div>
+    
+    <p class="para">
+Since release 3.2 all builtin validation is performed by subclasses of <strong class="classname">HTML_QuickForm_Rule</strong> class. You can create your own subclass of it and implement <strong class="function">validate()</strong> and <strong class="function">getValidationScript()</strong> methods. Consult the source for the examples.
+    </p>
+   </div>
+   <div class="refsection" id="package.html.html-quickform.intro-validation.rules.functions"><div class="info"><h1>Validation functions and methods</h1>
+</div>
+    
+    <p class="para">
+When you need a more complex validation, QuickForm can use your own custom-made functions to validate an element or a group. QuickForm can also call a method of a class. This way, it is possible to use PEAR&#039;s <strong class="classname">Validate</strong> package or any other class. If you want to use your own functions, you basically have two options:
+</p><ol type="1">
+  <li class="listitem"><p class="para">Register the function via <a href="package.html.html-quickform.html-quickform.registerrule.html" class="link"><strong class="function">registerRule()</strong></a> using <code class="literal">&#039;callback&#039;</code> as <code class="varname">$type</code> and giving the new rule a custom <code class="varname">$ruleName</code>. Later you add the rule with this name via <a href="package.html.html-quickform.html-quickform.addrule.html" class="link"><strong class="function">addRule()</strong></a> like any buitin rule.</p></li>
+  <li class="listitem"><p class="para">Add the rule of <code class="varname">callback</code> type via <a href="package.html.html-quickform.html-quickform.addrule.html" class="link"><strong class="function">addRule()</strong></a> passing the name of your function as <code class="varname">$format</code>. This way you&#039;ll have less characters to type, but will be unable to pass additional data to your function.</p></li>
+</ol>
+    
+<div class="example"><div class="info"><p><strong>Email validation function</strong></p></div>
+
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/**<br />&nbsp;*&nbsp;Validate&nbsp;an&nbsp;email&nbsp;address<br />&nbsp;*<br />&nbsp;*&nbsp;@param&nbsp;string&nbsp;&nbsp;&nbsp;&nbsp;$email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Email&nbsp;address&nbsp;to&nbsp;validate<br />&nbsp;*&nbsp;@param&nbsp;boolean&nbsp;&nbsp;&nbsp;$domainCheck&nbsp;&nbsp;&nbsp;Check&nbsp;if&nbsp;the&nbsp;domain&nbsp;exists<br />&nbsp;*/<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">checkEmail</span><span style="color: #007700">(</span><span style="color: #0000BB">$email</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$domainCheck&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">preg_match</span><span style="color: #007700">(</span><span style="color: #DD0000">'/^[a-zA-Z0-9\._-]+\@(\[?)[a-zA-Z0-9\-\.]+'</span><span style="color: #007700">.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'\.([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$email</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$domainCheck&nbsp;</span><span style="color: #007700">&amp;&amp;&nbsp;</span><span style="color: #0000BB">function_exists</span><span style="color: #007700">(</span><span style="color: #DD0000">'checkdnsrr'</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;list&nbsp;(,&nbsp;</span><span style="color: #0000BB">$domain</span><span style="color: #007700">)&nbsp;&nbsp;=&nbsp;</span><span style="color: #0000BB">explode</span><span style="color: #007700">(</span><span style="color: #DD0000">'@'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$email</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">checkdnsrr</span><span style="color: #007700">(</span><span style="color: #0000BB">$domain</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'MX'</span><span style="color: #007700">)&nbsp;||&nbsp;</span><span style="color: #0000BB">checkdnsrr</span><span style="color: #007700">(</span><span style="color: #0000BB">$domain</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'A'</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">registerRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'checkmail'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'callback'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'checkEmail'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'email'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Email&nbsp;is&nbsp;incorrect'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'checkmail'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+    <p class="para">
+You can pass an extra parameter of the type you want to your function when set with <strong class="function">HTML_QuickForm::addRule()</strong>. Here we used <strong class="constant">TRUE</strong> to enable the DNS check of our function.
+    </p>
+    <p class="para">
+If you use a method, you must specify the class your method is in. Use this syntax when you register your rule:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Method&nbsp;checkEmail&nbsp;is&nbsp;in&nbsp;class&nbsp;Validate<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">registerRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'checkmail'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'callback'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'checkEmail'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Validate'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+    
+    <blockquote class="tip"><p class="para">
+You can also use a javascript function to validate your form, give it the same name as your PHP function, have it return a boolean and set the <em><code class="parameter">&#039;client&#039;</code></em> parameter.
+    </p></blockquote>
+
+   </div>
+   <div class="refsection" id="package.html.html-quickform.intro-validation.rules.groups"><div class="info"><h1>Group validation</h1>
+</div>
+    
+    <p class="para">
+Groups of elements can be validated the same way other elements are, or use a more complex validation scheme. To validate a group as a whole, just use <strong class="function">HTML_QuickForm::addRule()</strong>. The group elements&#039; values will be passed to the validation function as an array.
+    </p>
+    <p class="para">
+You can have more complex validation for your groups using the <strong class="function">HTML_QuickForm::addGroupRule()</strong> method. This allows for a per element validation. It also makes it possible to specify the number of elements that need to be valid for the group to be valid too.
+    </p>
+<div class="example"><div class="info"><p><strong>Complex group validation</strong></p></div>
+ 
+<div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;Group<br /></span><span style="color: #0000BB">$id</span><span style="color: #007700">[]&nbsp;=&nbsp;&amp;</span><span style="color: #0000BB">HTML_QuickForm</span><span style="color: #007700">::</span><span style="color: #0000BB">createElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'username'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Username'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$id</span><span style="color: #007700">[]&nbsp;=&nbsp;&amp;</span><span style="color: #0000BB">HTML_QuickForm</span><span style="color: #007700">::</span><span style="color: #0000BB">createElement</span><span style="color: #007700">(</span><span style="color: #DD0000">'text'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'code'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Code'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addGroup</span><span style="color: #007700">(</span><span style="color: #0000BB">$id</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'id'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Your&nbsp;ID:'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'-'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Validation&nbsp;rules&nbsp;per&nbsp;element<br /><br /></span><span style="color: #0000BB">$rule</span><span style="color: #007700">[</span><span style="color: #DD0000">'username'</span><span style="color: #007700">][]&nbsp;=&nbsp;array(</span><span style="color: #DD0000">'Username&nbsp;is&nbsp;required'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'required'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$rule</span><span style="color: #007700">[</span><span style="color: #DD0000">'username'</span><span style="color: #007700">][]&nbsp;=&nbsp;array(</span><span style="color: #DD0000">'Username&nbsp;contains&nbsp;only&nbsp;letters'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'lettersonly'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$rule</span><span style="color: #007700">[</span><span style="color: #DD0000">'username'</span><span style="color: #007700">][]&nbsp;=&nbsp;array(</span><span style="color: #DD0000">'Username&nbsp;has&nbsp;between&nbsp;5-8&nbsp;characters'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'rangelength'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #0000BB">5</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">8</span><span style="color: #007700">));<br /><br /></span><span style="color: #0000BB">$rule</span><span style="color: #007700">[</span><span style="color: #DD0000">'code'</span><span style="color: #007700">][]&nbsp;=&nbsp;array(</span><span style="color: #DD0000">'Code&nbsp;is&nbsp;required'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'required'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$rule</span><span style="color: #007700">[</span><span style="color: #DD0000">'code'</span><span style="color: #007700">][]&nbsp;=&nbsp;array(</span><span style="color: #DD0000">'Code&nbsp;contains&nbsp;numbers&nbsp;only'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'regex'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'/^\d+$/'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$rule</span><span style="color: #007700">[</span><span style="color: #DD0000">'code'</span><span style="color: #007700">][]&nbsp;=&nbsp;array(</span><span style="color: #DD0000">'Code&nbsp;is&nbsp;5&nbsp;numbers&nbsp;long'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'rangelength'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #0000BB">5</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">5</span><span style="color: #007700">));<br /><br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addGroupRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'id'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$rule</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+</div>
+    <p class="para">
+In this example, we have set rules for the elements inside our group. Instead of using their names, we could have used their index (determined by the order they were created) in the group, it would speed up the validation process.
+    </p>
+    <p class="para">
+The following example takes the same group and will validate the form only if at least one of our two elements is not empty. To achieve this, we use the <em><code class="parameter">howmany</code></em> parameter and set it to 1.
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addGroupRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'id'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Fill&nbsp;at&nbsp;least&nbsp;one&nbsp;element'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'required'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+    
+   </div>
+   <div class="refsection" id="package.html.html-quickform.intro-validation.rules.conclusion"><div class="info"><h1>Conclusion</h1>
+</div>
+    
+    <p class="para">
+You have seen that QuickForm makes it easy to validate your elements and groups without having to write all the usually necessary code to find the different values. It takes care of required elements, generates the javascript automatically and adds a lot of flexibility by allowing you to use your own validation functions and regular expressions. It&#039;s time to experiment...
+    </p>
+   </div>
+   </div>
+   <div class="refsection" id="package.html.html-quickform.intro-validation.filters"><div class="info"><h1>Filters</h1>
+</div>
+    
+    <p class="para">
+If we add a rule like
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRule</span><span style="color: #007700">(</span><span style="color: #DD0000">'element'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'The&nbsp;element&nbsp;is&nbsp;required'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'required'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div><p>
+to the form, then any input will satisfy it, including, for example, a single space. This is because
+the rule simply ensures that there are one or more characters present, and a space character
+satisfies the rule.
+    </p>
+    <p class="para">
+Of course this can be fixed by making a custom regex rule, but there is an easier solution. We usually do
+not care about leading and trailing spaces at all, and we can make the element&#039;s value pass through
+builtin <a href="http://www.php.net/manual-lookup.php?pattern=trim" class="link external"><strong class="function">trim()</strong></a> function before doing any
+validation on it:
+</p><div class="phpcode">
+<code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">applyFilter</span><span style="color: #007700">(</span><span style="color: #DD0000">'element'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'trim'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+</div>
+    
+    <p class="para">
+Filters are applied recursively, which means that <strong class="function">trim()</strong> on an array will work, too. You can
+pass any valid <a href="http://www.php.net/manual/language.pseudo-types.php" class="link external"><span class="type">callback</span></a> as an argument to
+<a href="package.html.html-quickform.html-quickform.applyfilter.html" class="link"><strong class="function">applyFilter()</strong></a> method.
+    </p>
+    <p class="para">
+Use filters if you want to &#039;sanitize&#039; user input and do not really care about invalid values.
+    </p>
+
+   </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-quickform.values.validation.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-quickform.values.validation.html">Validation and filters</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-quickform.html-quickform.addrule.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Validation and filters</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">HTML_QuickForm::addRule()</td>
+  </tr>
+ </table>
+</div>
+</body></html>

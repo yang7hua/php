@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Examples</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.webservices.services-yahoo.html" title="Services_Yahoo" />
+  <link rel="prev" href="package.webservices.services-yahoo.intro.html" title="Introduction" />
+  <link rel="next" href="package.webservices.services-yahoo.design.html" title="Design" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Examples</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.webservices.services-yahoo.intro.html" title="Introduction">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.webservices.services-yahoo.design.html" title="Design">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.webservices.services-yahoo.examples">
+ 
+  <h1 class="refname">Examples</h1>
+  <div class="refnamediv">Examples &ndash; 
+   Using <strong class="classname">Services_Yahoo</strong>
+  </div>
+
+ 
+
+ <div class="refsection"><div class="info"><h1>About the examples</h1>
+</div>
+  
+
+  <p class="para">
+   The following sections provide you with examples of using the
+   different feature sets of <strong class="classname">Services_Yahoo</strong>.
+   Currently this includes documentation for the interfaces to
+   <a href="package.webservices.services-yahoo.examples.html#package.webservices.services-yahoo.example.search" class="link">Yahoo!
+   Search</a> and <a href="package.webservices.services-yahoo.examples.html#package.webservices.services-yahoo.example.contentanalysis" class="link">Content
+   Analysis</a>.
+  </p>
+
+  <p class="para">
+   All public methods in <strong class="classname">Services_Yahoo</strong> have in
+   common that <a href="http://php.net/manual/en/language.exceptions.php" class="link external">exceptions</a>
+   will be raised when something goes wrong.  This is why <code class="literal">try {
+   ... } catch { }</code> blocks are wrapped around all examples.
+  </p>
+
+  <blockquote class="note">
+   <p class="para">
+    The examples are designed to be run from a command line shell.  If
+    you would like to test them in a web browser you should replace
+    <code class="literal">\n</code> with <code class="literal">&lt;br /&gt;</code> for
+    better readability.
+   </p>
+  </blockquote>
+
+ </div>
+
+ <div class="refsection" id="package.webservices.services-yahoo.example.search"><div class="info"><h1>Speaking to Yahoo! Search</h1>
+</div>
+  
+
+  <p class="para">
+   The following examples will communicate with <a href="http://search.yahoo.com/" class="link external">Yahoo! Search</a>.
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Web search: Listing results</strong></p></div>
+   
+
+   <div class="example-contents"><p>
+    This snippet issues a search query for the term <code class="literal">Steve
+    Fossett</code> to Yahoo! Search.  For each result in the returned
+    result set the title is printed.
+   </p></div>
+   
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"Services/Yahoo/Search.php"</span><span style="color: #007700">;<br /><br />try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$client&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Services_Yahoo_Search</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">"web"</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$results&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$client</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">searchFor</span><span style="color: #007700">(</span><span style="color: #DD0000">"Steve&nbsp;Fossett"</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Number&nbsp;of&nbsp;results:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$results</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getTotalResultsReturned</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n\n"</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;foreach&nbsp;(</span><span style="color: #0000BB">$results&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$result</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$result</span><span style="color: #007700">[</span><span style="color: #DD0000">'Title'</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Services_Yahoo_Exception&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Error:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;foreach&nbsp;(</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getErrors</span><span style="color: #007700">()&nbsp;as&nbsp;</span><span style="color: #0000BB">$error</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"*&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$error&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+
+   <div class="example-contents"><p>
+    By default 10 results are returned per request.  This number can be
+    modified using the method <strong class="function">setResultNumber()</strong>:
+   </p></div>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"Services/Yahoo/Search.php"</span><span style="color: #007700">;<br /><br />try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$client&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Services_Yahoo_Search</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">"web"</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Get&nbsp;20&nbsp;results&nbsp;per&nbsp;query<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$results&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$client</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">withResults</span><span style="color: #007700">(</span><span style="color: #0000BB">20</span><span style="color: #007700">)-&gt;</span><span style="color: #0000BB">searchFor</span><span style="color: #007700">(</span><span style="color: #DD0000">"Steve&nbsp;Fossett"</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/*&nbsp;...&nbsp;*/<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+
+  </div>
+
+  <div class="example"><div class="info"><p><strong>Web search: Result details</strong></p></div>
+   
+
+   <div class="example-contents"><p>
+    This code again queries Yahoo! Search for <code class="literal">Steve
+    Fossett</code>, but this time the details of the first result in
+    the result set are printed.
+   </p></div>
+
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"Services/Yahoo/Search.php"</span><span style="color: #007700">;<br /><br />try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$client&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Services_Yahoo_Search</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">"web"</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$results&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$client</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">searchFor</span><span style="color: #007700">(</span><span style="color: #DD0000">"Steve&nbsp;Fossett"</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$results</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getTotalResultsReturned</span><span style="color: #007700">()&nbsp;&gt;&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$info&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$results</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">current</span><span style="color: #007700">();<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Title:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$info</span><span style="color: #007700">[</span><span style="color: #DD0000">'Title'</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Summary:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$info</span><span style="color: #007700">[</span><span style="color: #DD0000">'Summary'</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"URL:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$info</span><span style="color: #007700">[</span><span style="color: #DD0000">'Url'</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"clickable&nbsp;URL:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$info</span><span style="color: #007700">[</span><span style="color: #DD0000">'ClickUrl'</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Modification&nbsp;date:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$info</span><span style="color: #007700">[</span><span style="color: #DD0000">'ModificationDate'</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Mime&nbsp;type:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$info</span><span style="color: #007700">[</span><span style="color: #DD0000">'MimeType'</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Services_Yahoo_Exception&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Error:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;foreach&nbsp;(</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getErrors</span><span style="color: #007700">()&nbsp;as&nbsp;</span><span style="color: #0000BB">$error</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"*&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$error&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+
+  <div class="example"><div class="info"><p><strong>Web search: Paginating results</strong></p></div>
+   
+
+   <div class="example-contents"><p>
+    In this example the &quot;paginating&quot; capabilities of
+    <strong class="classname">Services_Yahoo</strong> are shown.  Paginating means
+    that the search results are split up into chunks of e.g. 20, which
+    are displayed together with links to jump back and forth to other
+    result chunks.  Basically this mimicks the functionality from the
+    bottom of <a href="http://search.yahoo.com/search?ei=UTF-8&amp;fr=sfp&amp;p=steve+fossett" class="link external">official
+    Yahoo Search Page</a>.
+   </p></div>
+   <div class="example-contents"><p>
+    TBD
+   </p></div>
+  </div>
+
+  <blockquote class="note">
+   <p class="para">
+    In order to query the Image, News, Video or Local search, one only
+    needs to replace the argument "<span class="quote">web</span>" in the call of the
+    <strong class="function">factory()</strong> method with one of
+    "<span class="quote">image</span>", "<span class="quote">news</span>", "<span class="quote">video</span>", or
+    "<span class="quote">local</span>".
+   </p>
+  </blockquote>
+
+
+ </div>
+
+ <div class="refsection" id="package.webservices.services-yahoo.example.contentanalysis"><div class="info"><h1>Using the Yahoo! Content Analysis services</h1>
+</div>
+
+  
+
+  <p class="para">
+   The following examples will show you how to use the Content Analysis
+   Services provided by Yahoo!.
+  </p>
+
+  <div class="example"><div class="info"><p><strong>Term Extraction Service</strong></p></div>
+   
+
+   <div class="example-contents"><p>
+    The Term Extraction service provides a list of significant words or
+    phrases extracted from a larger content.
+   </p></div>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"Services/Yahoo/ContentAnalysis.php"</span><span style="color: #007700">;<br /><br />try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$search&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Services_Yahoo_ContentAnalysis</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">"termExtraction"</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$search</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setContext</span><span style="color: #007700">(</span><span style="color: #DD0000">"Italian&nbsp;sculptors&nbsp;and&nbsp;painters&nbsp;of&nbsp;the&nbsp;"<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"renaissance&nbsp;favored&nbsp;the&nbsp;Virgin&nbsp;Mary&nbsp;for&nbsp;inspiration."</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$search</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setQuery</span><span style="color: #007700">(</span><span style="color: #DD0000">"madonna"</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$results&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$search</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">submit</span><span style="color: #007700">();<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;foreach&nbsp;(</span><span style="color: #0000BB">$results&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$result</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Services_Yahoo_Exception&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Error:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;foreach&nbsp;(</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getErrors</span><span style="color: #007700">()&nbsp;as&nbsp;</span><span style="color: #0000BB">$error</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"*&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$error&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+
+   <div class="example-contents"><p>
+    It is possible to skip the call to <strong class="function">setQuery()</strong>.
+    The parameter set by this method is intended to help the engine with
+    the extraction process, but it is not stricly required.
+   </p></div>
+
+  </div>
+
+  <div class="example"><div class="info"><p><strong>Spelling Suggestion Service</strong></p></div>
+   
+
+   <div class="example-contents"><p>
+    The Spelling Suggestion service provides a suggested spelling
+    correction for a given term.
+   </p></div>
+   <div class="example-contents"><p>
+    The following code queries Yahoo for a spelling suggestion for the
+    term "<span class="quote">madnna</span>".  The service will return exactly one
+    result, but currently there is no way to avoid looping through the
+    <code class="varname">$results</code>.
+   </p></div>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"Services/Yahoo/ContentAnalysis.php"</span><span style="color: #007700">;<br /><br />try&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$search&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">Services_Yahoo_ContentAnalysis</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">"spellingSuggestion"</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$search</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setQuery</span><span style="color: #007700">(</span><span style="color: #DD0000">"madnna"</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$results&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$search</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">submit</span><span style="color: #007700">();<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;foreach&nbsp;(</span><span style="color: #0000BB">$results&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$result</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$result&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}&nbsp;catch&nbsp;(</span><span style="color: #0000BB">Services_Yahoo_Exception&nbsp;$e</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Error:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">()&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;foreach&nbsp;(</span><span style="color: #0000BB">$e</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getErrors</span><span style="color: #007700">()&nbsp;as&nbsp;</span><span style="color: #0000BB">$error</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"*&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$error&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+
+ </div>
+
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.webservices.services-yahoo.intro.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.webservices.services-yahoo.html">Services_Yahoo</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.webservices.services-yahoo.design.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Introduction</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Design</td>
+  </tr>
+ </table>
+</div>
+</body></html>

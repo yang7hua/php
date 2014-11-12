@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>DB_common::autoPrepare()</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.db.html" title="DB" />
+  <link rel="prev" href="package.database.db.db-common.autoexecute.html" title="DB_common::autoExecute()" />
+  <link rel="next" href="package.database.db.db-common.commit.html" title="DB_common::commit()" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">DB_common::autoPrepare()</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.db.db-common.autoexecute.html" title="DB_common::autoExecute()">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.db.db-common.commit.html" title="DB_common::commit()">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.db.db-common.autoprepare">
+ 
+  <h1 class="refname">DB_common::autoPrepare()</h1>
+  <div class="refnamediv">DB_common::autoPrepare() &ndash; 
+   Prepares an INSERT or UPDATE statement
+   based on variables you supply
+  </div>
+
+ 
+
+ <h2 class="refsynopsisdiv">Synopsis</h2>
+  <div class="funcsynopsis">
+   <p><code class="funcprototype">
+    resource <strong class="function">autoPrepare</strong> ( 
+    
+     string $table
+    
+     , 
+     array $table_fields
+    
+     , 
+     integer $mode
+     <span class="initializer"> = DB_AUTOQUERY_INSERT</span>
+    
+     , 
+     string $where
+     <span class="initializer"> = false</span>
+    
+   )</code></p>
+  </div>
+ 
+
+ <div class="refsection" id="package.database.db.db-common.autoprepare.desc">
+  <h1 class="title">Description</h1>
+  <p class="para">
+   Automatically builds an <strong class="command">INSERT</strong> or
+   <strong class="command">UPDATE</strong> SQL statement so it can
+   later be used by
+   <a href="package.database.db.db-common.execute.html" class="link">
+    <strong class="function">execute()</strong></a> or
+   <a href="package.database.db.db-common.executemultiple.html" class="link">
+    <strong class="function">executeMultiple()</strong></a>.
+  </p>
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.autoprepare.parameter">
+  <h1 class="title">Parameter</h1>
+  <p class="para">
+   </p><div class="variablelist">
+    <dl class="varlistentry">
+     <dt class="term">
+      <span class="type">string</span>
+      <em><code class="parameter">$table</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       name of the table
+      </p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      <span class="type">array</span>
+      <em><code class="parameter">$table_fields</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       ordered array containing the fields names
+      </p>
+      <p class="para">
+       Be aware that these fields are assigned <code class="literal">?</code>
+       placeholders, therefore the data you pass to them in the
+       <strong class="function">execute()</strong> will be automatically escaped
+       and quoted according to the current DBMS&#039;s requirements.
+      </p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      <span class="type">integer</span>
+      <em><code class="parameter">$mode</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       type of query to make (<strong class="constant">DB_AUTOQUERY_INSERT</strong>
+       or <strong class="constant">DB_AUTOQUERY_UPDATE</strong>)
+      </p>
+     </dd>
+    </dl>
+    <dl class="varlistentry">
+     <dt class="term">
+      <span class="type">string</span>
+      <em><code class="parameter">$where</code></em>
+     </dt>
+     <dd class="listitem">
+      <p class="para">
+       a string to be used in the <strong class="command">WHERE</strong> clause.
+       This is only used when <em><code class="parameter">$mode</code></em> is
+       <strong class="constant">DB_AUTOQUERY_UPDATE</strong>.
+       The string is put directly into the query, so you must
+       escape and quote literals according to the DBMS&#039;s standards.
+      </p>
+     </dd>
+    </dl>
+   </div>
+ 
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.autoprepare.return">
+  <h1 class="title">Return value</h1>
+  <p class="para">
+   <span class="type">resource</span> - resource handle for the query
+   or a <a href="package.database.db.db-error.html" class="link"><strong class="classname">DB_Error</strong></a> object on failure
+  </p>
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.autoprepare.throws">
+  <h1 class="title">Throws</h1>
+  <p class="para">
+  </p><table class="doctable table"><caption>Possible PEAR_Error values</caption>
+
+    
+     <thead>
+      <tr>
+       <th>Error code</th>
+       <th>Error message</th>
+       <th>Reason</th>
+       <th>Solution</th>
+      </tr>
+
+     </thead>
+
+     <tbody class="tbody">
+      <tr>
+       <td><strong class="constant">DB_ERROR_NEED_MORE_DATA</strong></td>
+       <td>
+        insufficient data supplied
+       </td>
+       <td>
+        The ordered array, which has to contain fields names, is empty.
+       </td>
+       <td>
+        Check and correct your fields names array.
+       </td>
+      </tr>
+
+      <tr>
+       <td><strong class="constant">DB_ERROR_SYNTAX</strong></td>
+       <td>
+        syntax error
+       </td>
+       <td>
+        You use an unknown mode.
+       </td>
+       <td>
+        Available modes are only
+        <strong class="constant">DB_AUTOQUERY_INSERT</strong> for
+        <strong class="command">INSERT</strong> queries or
+        <strong class="constant">DB_AUTOQUERY_UPDATE</strong> for
+        <strong class="command">UPDATE</strong> queries.
+       </td>
+      </tr>
+
+      <tr>
+       <td><strong class="constant">DB_ERROR_NODBSELECTED</strong></td>
+       <td>
+        no database selected
+       </td>
+       <td>
+        No database was chosen.
+       </td>
+       <td>
+        Check the <a href="package.database.db.intro-dsn.html" class="link">DSN</a> in <a href="package.database.db.db.connect.html" class="link">
+        <strong class="function">connect()</strong></a>.
+       </td>
+      </tr>
+
+      <tr>
+       <td>every other error code</td>
+       <td class="empty">&nbsp;</td>
+       <td>
+        Database specific error
+       </td>
+       <td>
+        Check the database related section of
+        <a href="http://www.php.net/manual/" class="link external">PHP-Manual</a>
+        to detect the reason for this error.
+       </td>
+      </tr>
+
+     </tbody>
+    
+   </table>
+
+  
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.autoprepare.note">
+  <h1 class="title">Note</h1>
+  <p class="simpara">This function can not be called
+statically.</p>
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.autoprepare.example">
+  <h1 class="title">Example</h1>
+  <div class="example"><div class="info"><p><strong>Using <strong class="function">autoPrepare()</strong> in insert mode</strong></p></div>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /><br /></span><span style="color: #0000BB">$table_name&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'user'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$table_fields&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'name'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'country'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$table_values&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'Zoe'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'France'</span><span style="color: #007700">);<br /><br /><br /><br /></span><span style="color: #0000BB">$sth&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">autoPrepare</span><span style="color: #007700">(</span><span style="color: #0000BB">$table_name</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$table_fields</span><span style="color: #007700">,<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">DB_AUTOQUERY_INSERT</span><span style="color: #007700">);<br /><br /><br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$sth</span><span style="color: #007700">))&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$sth</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />}<br /><br /><br /><br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">execute</span><span style="color: #007700">(</span><span style="color: #0000BB">$sth</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$table_values</span><span style="color: #007700">);<br /><br /><br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">))&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+
+  <div class="example"><div class="info"><p><strong>Using <strong class="function">autoPrepare()</strong> in update mode</strong></p></div>
+
+   <div class="phpcode">
+    <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;Once&nbsp;you&nbsp;have&nbsp;a&nbsp;valid&nbsp;DB&nbsp;object&nbsp;named&nbsp;$db...<br /><br /></span><span style="color: #0000BB">$table_name&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'user'</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$table_fields&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'name'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'country'</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$table_values&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'Bob'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'USA'</span><span style="color: #007700">);<br /><br /><br /><br /></span><span style="color: #0000BB">$sth&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">autoPrepare</span><span style="color: #007700">(</span><span style="color: #0000BB">$table_name</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$table_fields</span><span style="color: #007700">,<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">DB_AUTOQUERY_UPDATE</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"country&nbsp;=&nbsp;'Japan'"</span><span style="color: #007700">);<br /><br /><br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$sth</span><span style="color: #007700">))&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$sth</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />}<br /><br /><br /><br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">execute</span><span style="color: #007700">(</span><span style="color: #0000BB">$sth</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$table_values</span><span style="color: #007700">);<br /><br /><br /><br />if&nbsp;(</span><span style="color: #0000BB">PEAR</span><span style="color: #007700">::</span><span style="color: #0000BB">isError</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">))&nbsp;{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getMessage</span><span style="color: #007700">());<br /><br />}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+   </div>
+  </div>
+ </div>
+
+ <div class="refsection" id="package.database.db.db-common.autoprepare.see">
+  <h1 class="title">See</h1>
+  <p class="para">
+   <a href="package.database.db.intro-execute.html" class="link">
+    "<span class="quote">Intro - Prepare &amp; Execute</span>"</a>,
+   <a href="package.database.db.intro-auto.html" class="link">
+    "<span class="quote">Intro - autoPrepare &amp; autoExecute</span>"</a>,
+   <a href="package.database.db.db-common.prepare.html" class="link">
+    <strong class="function">prepare()</strong></a>,
+   <a href="package.database.db.db-common.execute.html" class="link">
+    <strong class="function">execute()</strong></a>,
+   <a href="package.database.db.db-common.executemultiple.html" class="link">
+    <strong class="function">executeMultiple()</strong></a>,
+   <a href="package.database.db.db-common.autoexecute.html" class="link">
+    <strong class="function">autoExecute()</strong></a>
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.db.db-common.autoexecute.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.db.html">DB</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.db.db-common.commit.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">DB_common::autoExecute()</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">DB_common::commit()</td>
+  </tr>
+ </table>
+</div>
+</body></html>

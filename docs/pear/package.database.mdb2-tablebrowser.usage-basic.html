@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Basic Usage</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.mdb2-tablebrowser.html" title="MDB2_TableBrowser" />
+  <link rel="prev" href="package.database.mdb2-tablebrowser.installation.html" title="Installation" />
+  <link rel="next" href="package.database.mdb2-tablebrowser.usage-fullexample.html" title="Advanced Usage" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Basic Usage</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.mdb2-tablebrowser.installation.html" title="Installation">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.mdb2-tablebrowser.usage-fullexample.html" title="Advanced Usage">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.mdb2-tablebrowser.usage-basic">
+  
+    <h1 class="refname">Basic Usage</h1>
+    <div class="refnamediv">Basic Usage &ndash; Example of how to use MDB2_TableBrowser</div>
+
+  
+
+  <div class="refsection" id="package.database.mdb2-tablebrowser.usage-basic.creation">
+    <div class="info"><h1>Creating a Table Object</h1>
+</div>
+    
+    <p class="para">
+      Steps to creating a table object out of your database table or view. This 
+      example connects to a mysql database animal_db and constructs a table 
+      object from the tbl_animals table. 
+    </p>
+    
+    <p class="para">
+      Create an MDB2 object:
+    </p>
+    <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">require_once&nbsp;</span><span style="color: #DD0000">"MDB2.php"</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$dsn&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'mysql://username:pass@localhost/animal_db'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$mdb2&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">MDB2</span><span style="color: #007700">::</span><span style="color: #0000BB">singleton</span><span style="color: #007700">(</span><span style="color: #0000BB">$dsn</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+
+    <p class="para">
+      Load the TableBrowser extention:
+    </p>
+    <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">loadModule</span><span style="color: #007700">(</span><span style="color: #DD0000">'TableBrowser'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+  
+      <p class="para">
+      Create the table object Create a table browser for the tbl_animals table, 
+      and specify id as the primary key:
+    </p>
+    <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$browser&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mdb2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">tableBrowserFactory</span><span style="color: #007700">(</span><span style="color: #DD0000">'tbl_animals'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'id'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+  </div>
+  
+  <div class="refsection" id="package.database.mdb2-tablebrowser.usage-basic.retreiving">
+    <div class="info"><h1>Retreiving Data</h1>
+</div>
+    
+    <p class="para">
+      A table object allows you several ways of retrieving data from the 
+      underlying table. The examples below continue from the animals_db 
+      database. 
+    </p>
+    
+    <p class="para">
+      Retrieving a single row is done via the <code class="methodname">getRows</code>
+      method. This call returns the row data as a hash array:
+    </p>
+    <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$browser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getRow</span><span style="color: #007700">(</span><span style="color: #0000BB">1</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+
+    <p class="para">
+     Retrieving multiple rows is done via the <code class="methodname">getRows</code>
+     method. This call returns an MDB2_Results object. From the animals db 
+     example...
+     Get data the 3 animals in the table sorted by name starting with the 
+     5th animal 
+    </p>
+    <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$browser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getRows</span><span style="color: #007700">(</span><span style="color: #DD0000">'name'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">3</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">5</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+  
+    <p class="para">
+     Retrieving the different values in a column has is done via the 
+     <code class="methodname">getColumnValues</code> method. In our example, we can
+     get the different kinds of animals in tbl_animals eg: mammal, reptile,... 
+    </p>
+    <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$browser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getColumnValues</span><span style="color: #007700">(</span><span style="color: #DD0000">'type'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+  </div>
+
+  <div class="refsection" id="package.database.mdb2-tablebrowser.usage-basic.inserting">
+    <div class="info"><h1>Inserting</h1>
+</div>
+    
+    <p class="para">
+      Inserting a single row is done via <code class="methodname">insertRow</code> 
+      method. It takes a single hash array as input.
+    </p>
+    <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$rowData&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'id'</span><span style="color: #007700">=&gt;</span><span style="color: #0000BB">13</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'name'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'duck'</span><span style="color: #007700">,</span><span style="color: #DD0000">'type'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'bird'</span><span style="color: #007700">,</span><span style="color: #DD0000">'lifespan'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">5</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$browser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">insertRow</span><span style="color: #007700">(</span><span style="color: #0000BB">$rowData</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+  
+    <p class="para">
+      Inserting multiple rows at once is done via 
+      <code class="methodname">insertRows</code> method.
+    </p>
+    <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$data&nbsp;</span><span style="color: #007700">=&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">1</span><span style="color: #007700">,</span><span style="color: #DD0000">'dog'</span><span style="color: #007700">,</span><span style="color: #DD0000">'mammal'</span><span style="color: #007700">,</span><span style="color: #0000BB">12</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">2</span><span style="color: #007700">,</span><span style="color: #DD0000">'cat'</span><span style="color: #007700">,</span><span style="color: #DD0000">'mammal'</span><span style="color: #007700">,</span><span style="color: #0000BB">30</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">3</span><span style="color: #007700">,</span><span style="color: #DD0000">'parrot'</span><span style="color: #007700">,</span><span style="color: #DD0000">'bird'</span><span style="color: #007700">,</span><span style="color: #0000BB">60</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">4</span><span style="color: #007700">,</span><span style="color: #DD0000">'shark'</span><span style="color: #007700">,</span><span style="color: #DD0000">'fish'</span><span style="color: #007700">,</span><span style="color: #0000BB">30</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">5</span><span style="color: #007700">,</span><span style="color: #DD0000">'dolphin'</span><span style="color: #007700">,</span><span style="color: #DD0000">'mammal'</span><span style="color: #007700">,</span><span style="color: #0000BB">50</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">6</span><span style="color: #007700">,</span><span style="color: #DD0000">'crocodile'</span><span style="color: #007700">,</span><span style="color: #DD0000">'reptile'</span><span style="color: #007700">,</span><span style="color: #0000BB">50</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">7</span><span style="color: #007700">,</span><span style="color: #DD0000">'snake'</span><span style="color: #007700">,</span><span style="color: #DD0000">'reptile'</span><span style="color: #007700">,</span><span style="color: #0000BB">20</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">8</span><span style="color: #007700">,</span><span style="color: #DD0000">'spider'</span><span style="color: #007700">,</span><span style="color: #DD0000">'arachnid'</span><span style="color: #007700">,</span><span style="color: #0000BB">1</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">9</span><span style="color: #007700">,</span><span style="color: #DD0000">'housefly'</span><span style="color: #007700">,</span><span style="color: #DD0000">'insect'</span><span style="color: #007700">,</span><span style="color: #0000BB">1</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">10</span><span style="color: #007700">,</span><span style="color: #DD0000">'ostrich'</span><span style="color: #007700">,</span><span style="color: #DD0000">'bird'</span><span style="color: #007700">,</span><span style="color: #0000BB">35</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">11</span><span style="color: #007700">,</span><span style="color: #DD0000">'bat'</span><span style="color: #007700">,</span><span style="color: #DD0000">'mammal'</span><span style="color: #007700">,</span><span style="color: #0000BB">6</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #0000BB">12</span><span style="color: #007700">,</span><span style="color: #DD0000">'human'</span><span style="color: #007700">,</span><span style="color: #DD0000">'mammal'</span><span style="color: #007700">,</span><span style="color: #0000BB">100</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);<br /></span><span style="color: #0000BB">$browser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">insertRows</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'id'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'name'</span><span style="color: #007700">,</span><span style="color: #DD0000">'type'</span><span style="color: #007700">,</span><span style="color: #DD0000">'lifespan'</span><span style="color: #007700">),&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+  </div>
+  
+  <div class="refsection" id="package.database.mdb2-tablebrowser.usage-basic.updating">
+    <div class="info"><h1>Updating</h1>
+</div>
+    
+    <p class="para">
+      Updating a single row is done via <code class="methodname">updateRow</code> 
+      method.
+    </p>
+    <div class="phpcode">
+      <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//Get&nbsp;the&nbsp;row&nbsp;data<br /></span><span style="color: #0000BB">$rowData&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$browser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getRow</span><span style="color: #007700">(</span><span style="color: #0000BB">3</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//Modify&nbsp;the&nbsp;data<br /></span><span style="color: #0000BB">$rowData</span><span style="color: #007700">[</span><span style="color: #DD0000">'lifespan'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #0000BB">65</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//Update&nbsp;the&nbsp;row<br /></span><span style="color: #0000BB">$browser</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">updateRow</span><span style="color: #007700">(</span><span style="color: #0000BB">3</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$rowData</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+    </div>
+    
+  </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.mdb2-tablebrowser.installation.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.mdb2-tablebrowser.html">MDB2_TableBrowser</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.mdb2-tablebrowser.usage-fullexample.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Installation</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Advanced Usage</td>
+  </tr>
+ </table>
+</div>
+</body></html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Repeat element</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.html.html-quickform2.elements.html" title="Form elements" />
+  <link rel="prev" href="package.html.html-quickform2.elements.custom.html" title="Custom Group-based elements" />
+  <link rel="next" href="package.html.html-quickform2.elements.message-provider.html" title="Message Providers" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Repeat element</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.html.html-quickform2.elements.custom.html" title="Custom Group-based elements">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.html.html-quickform2.elements.message-provider.html" title="Message Providers">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.html.html-quickform2.elements.repeat">
+ 
+  <h1 class="refname">Repeat element</h1>
+  <div class="refnamediv">Repeat element &ndash; Repeating a given Container several times</div>
+
+ 
+
+ <div class="refsection" id="package.html.html-quickform2.elements.repeat.overview">
+  <div class="info">
+   <h1>Overview</h1>
+
+  </div>
+  <blockquote class="note">
+   <p class="para">
+    Repeat requires <code class="filename">quickform.js</code> and
+    <code class="filename">quickform-repeat.js</code> files being <a href="package.html.html-quickform2.javascript.html#package.html.html-quickform2.javascript.libraries" class="link">included in the page</a> to
+    work.
+   </p>
+  </blockquote>
+
+  <p class="para">
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Container_Repeat.html" class="apidoclink">HTML_QuickForm2_Container_Repeat</a> is
+   an element that accepts a &#039;prototype&#039; <a href="package.html.html-quickform2.elements.container.html" class="link">Container</a> (a <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Container_Fieldset.html" class="apidoclink">Fieldset</a> or a <a href="package.html.html-quickform2.groups.html" class="link">Group</a>, but not another Repeat) and repeats
+   it several times in the form. Repeated items can be dynamically added / removed via Javascript,
+   server-side part automatically understands these changes. Server-side and client-side validation
+   can be easily leveraged: rules added to prototype Container and its children are repeated as
+   well.
+  </p>
+  <blockquote class="tip">
+   <p class="para">
+    <code class="filename">repeat.php</code> <a href="package.html.html-quickform2.examples.html" class="link">example file installed with the package</a>
+    shows how to use repeat elements with Fieldsets and Groups. 
+   </p>
+  </blockquote>
+
+ </div>
+ 
+
+ <div class="refsection" id="package.html.html-quickform2.elements.repeat.elements">
+  <div class="info">
+   <h1>Adding elements to Repeat</h1>
+
+  </div>
+  <p class="para">
+   <strong class="classname">HTML_QuickForm2_Container_Repeat</strong> has only one immediate child element: a
+   prototype Container, either set using <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Container_Repeat.html#methodsetPrototype" class="apidoclink">setPrototype()</a> method
+   or passed as <code class="literal">&#039;prototype&#039;</code> key of <code class="varname">$data</code> parameter to
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Container_Repeat.html#method__construct" class="apidoclink">Repeat's constructor</a>. 
+  </p>
+  <p class="para">
+   <strong class="function">appendChild()</strong>, <strong class="function">insertBefore()</strong>,
+   <strong class="function">removeChild()</strong> are available for Repeat element as usual, but these are proxies
+   for prototype&#039;s methods working with its children and will throw exceptions if prototype was not
+   yet set. An exception will also be thrown if you attempt to add another Repeat element to a
+   prototype. 
+  </p>
+  <div class="example">
+   <div class="info">
+    <p><strong>Adding elements to Repeat</strong></p>
+   </div>
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$fieldset&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Container_Fieldset</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$repeat&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Container_Repeat</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$repeat</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setPrototype</span><span style="color: #007700">(</span><span style="color: #0000BB">$fieldset</span><span style="color: #007700">);<br /><br />echo&nbsp;</span><span style="color: #DD0000">"repeat:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">count</span><span style="color: #007700">(</span><span style="color: #0000BB">$repeat</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">";&nbsp;fieldset:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">count</span><span style="color: #007700">(</span><span style="color: #0000BB">$fieldset</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$repeat</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addText</span><span style="color: #007700">(</span><span style="color: #DD0000">'title'</span><span style="color: #007700">);<br /><br />echo&nbsp;</span><span style="color: #DD0000">"repeat:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">count</span><span style="color: #007700">(</span><span style="color: #0000BB">$repeat</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">";&nbsp;fieldset:&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">count</span><span style="color: #007700">(</span><span style="color: #0000BB">$fieldset</span><span style="color: #007700">)&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   <div class="example-contents"><p>the above code outputs</p></div>
+   <pre class="screen"><br/>repeat:&nbsp;1;&nbsp;fieldset:&nbsp;0<br/>repeat:&nbsp;1;&nbsp;fieldset:&nbsp;1<br/>&nbsp;&nbsp;&nbsp;&nbsp;</pre>
+
+  </div>
+ </div>
+
+
+ <div class="refsection" id="package.html.html-quickform2.elements.repeat.names">
+  <div class="info">
+   <h1>Names of repeated elements</h1>
+
+  </div>
+  <p class="para">
+   As is the case with groups, repeat element will change names of its children, additionally
+   <code class="varname">id</code> attributes will be changed. Instead of prepending the repeat&#039;s name,
+   however, a special &quot;index template&quot; <code class="literal">&#039;[:idx:]&#039;</code> will be appended to
+   the name and <code class="literal">_:idx:</code> to the <code class="varname">id</code>.
+   <code class="literal">&#039;:idx:&#039;</code> string in these will later be replaced by an actual index of the
+   repeated item to produce unique names / <code class="varname">id</code>s. 
+  </p>
+  <div class="example">
+   <div class="info">
+    <p><strong>Default names for repeated elements</strong></p>
+   </div>
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2</span><span style="color: #007700">(</span><span style="color: #DD0000">'repeatFieldset'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addDataSource</span><span style="color: #007700">(new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_DataSource_Array</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'title'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'bar'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'key'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'baz'</span><span style="color: #007700">)<br />)));<br /><br /></span><span style="color: #0000BB">$fieldset&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Container_Fieldset</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$repeat&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRepeat</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">setPrototype</span><span style="color: #007700">(</span><span style="color: #0000BB">$fieldset</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">$repeat</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addText</span><span style="color: #007700">(</span><span style="color: #DD0000">'title'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'id'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'title'</span><span style="color: #007700">));<br /><br /></span><span style="color: #0000BB">$renderer&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$repeat</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">render</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Renderer</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">'array'</span><span style="color: #007700">)<br />);<br /><br /></span><span style="color: #0000BB">$array&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$renderer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">toArray</span><span style="color: #007700">();<br /><br />foreach&nbsp;(</span><span style="color: #0000BB">$array</span><span style="color: #007700">[</span><span style="color: #DD0000">'elements'</span><span style="color: #007700">]&nbsp;as&nbsp;</span><span style="color: #0000BB">$fsArray</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$fsArray</span><span style="color: #007700">[</span><span style="color: #DD0000">'attributes'</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"&nbsp;&nbsp;&nbsp;&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$fsArray</span><span style="color: #007700">[</span><span style="color: #DD0000">'elements'</span><span style="color: #007700">][</span><span style="color: #0000BB">0</span><span style="color: #007700">][</span><span style="color: #DD0000">'html'</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   <div class="example-contents"><p>outputs</p></div>
+   <pre class="screen"><br/>&nbsp;id=&quot;qfauto-0_:idx:&quot;&nbsp;class=&quot;repeatItem&nbsp;repeatPrototype&quot;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;input&nbsp;type=&quot;text&quot;&nbsp;id=&quot;title_:idx:&quot;&nbsp;name=&quot;title[:idx:]&quot;&nbsp;/&gt;<br/>&nbsp;id=&quot;qfauto-0_0&quot;&nbsp;class=&quot;repeatItem&quot;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;input&nbsp;type=&quot;text&quot;&nbsp;id=&quot;title_0&quot;&nbsp;name=&quot;title[0]&quot;&nbsp;value=&quot;foo&quot;&nbsp;/&gt;<br/>&nbsp;id=&quot;qfauto-0_1&quot;&nbsp;class=&quot;repeatItem&quot;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;input&nbsp;type=&quot;text&quot;&nbsp;id=&quot;title_1&quot;&nbsp;name=&quot;title[1]&quot;&nbsp;value=&quot;bar&quot;&nbsp;/&gt;<br/>&nbsp;id=&quot;qfauto-0_key&quot;&nbsp;class=&quot;repeatItem&quot;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&lt;input&nbsp;type=&quot;text&quot;&nbsp;id=&quot;title_key&quot;&nbsp;name=&quot;title[key]&quot;&nbsp;value=&quot;baz&quot;&nbsp;/&gt;<br/>&nbsp;&nbsp;&nbsp;</pre>
+
+   <div class="example-contents"><p>
+    There are a few things worth noting in this output:
+    </p><ul class="itemizedlist">
+     <li class="listitem"><span class="simpara">
+      Keys for repeated items are discovered automatically from data source using the values for the
+      <code class="literal">&#039;title&#039;</code> field. Sometimes it is better to explicitly set the field to use
+      for discovering indexes using <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Container_Repeat.html#methodsetIndexField" class="apidoclink">setIndexField()</a>.   
+     </span></li>
+     <li class="listitem"><span class="simpara">
+      Keys are not required to be numeric, they should however match the
+      <strong class="constant">HTML_QuickForm2_Container_Repeat::INDEX_REGEXP</strong> regular expression:
+      <code class="literal">&#039;/^[a-zA-Z0-9_]+$/&#039;</code>.
+     </span></li>
+     <li class="listitem"><span class="simpara">
+      The output contains an extra item which still has its index templates intact. It should be
+      hidden thanks to <code class="literal">repeatPrototype</code> CSS class and will be used by Javascript
+      code to add new visible repeated items.
+     </span></li>
+    </ul>
+   </p></div>
+  </div>
+  <p class="para">
+   If you are using a named group as a repeat prototype, you may want to use another name structure:
+   <code class="literal">group[index][element]</code> instead of <code class="literal">group[element][index]</code>. It
+   is possible to do so if you manually put <code class="literal">[:idx:]</code> into group&#039;s name, Repeat will
+   not mangle names further if this string is already present in them.
+  </p>
+  <div class="example">
+   <div class="info">
+    <p><strong>Custom names for repeated elements</strong></p>
+   </div>
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2</span><span style="color: #007700">(</span><span style="color: #DD0000">'repeatGroup'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addDataSource</span><span style="color: #007700">(new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_DataSource_Array</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'tags'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'title'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array(</span><span style="color: #DD0000">'title'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'bar'</span><span style="color: #007700">),<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'key'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'title'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'baz'</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;)<br />)));<br /><br /></span><span style="color: #0000BB">$group&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Container_Group</span><span style="color: #007700">(</span><span style="color: #DD0000">'tags[:idx:]'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$repeat&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRepeat</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">setPrototype</span><span style="color: #007700">(</span><span style="color: #0000BB">$group</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;custom&nbsp;id&nbsp;as&nbsp;well<br /></span><span style="color: #0000BB">$group</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addText</span><span style="color: #007700">(</span><span style="color: #DD0000">'title'</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #DD0000">'id'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'tags-:idx:-title'</span><span style="color: #007700">));<br /><br /></span><span style="color: #0000BB">$renderer&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$repeat</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">render</span><span style="color: #007700">(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Renderer</span><span style="color: #007700">::</span><span style="color: #0000BB">factory</span><span style="color: #007700">(</span><span style="color: #DD0000">'array'</span><span style="color: #007700">)<br />);<br /><br /></span><span style="color: #0000BB">$array&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$renderer</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">toArray</span><span style="color: #007700">();<br /><br />foreach&nbsp;(</span><span style="color: #0000BB">$array</span><span style="color: #007700">[</span><span style="color: #DD0000">'elements'</span><span style="color: #007700">]&nbsp;as&nbsp;</span><span style="color: #0000BB">$groupArray</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$groupArray</span><span style="color: #007700">[</span><span style="color: #DD0000">'elements'</span><span style="color: #007700">][</span><span style="color: #0000BB">0</span><span style="color: #007700">][</span><span style="color: #DD0000">'html'</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   <div class="example-contents"><p>outputs</p></div>
+   <pre class="screen"><br/>&lt;input&nbsp;type=&quot;text&quot;&nbsp;id=&quot;tags-:idx:-title&quot;&nbsp;name=&quot;tags[:idx:][title]&quot;&nbsp;/&gt;<br/>&lt;input&nbsp;type=&quot;text&quot;&nbsp;id=&quot;tags-0-title&quot;&nbsp;name=&quot;tags[0][title]&quot;&nbsp;value=&quot;foo&quot;&nbsp;/&gt;<br/>&lt;input&nbsp;type=&quot;text&quot;&nbsp;id=&quot;tags-1-title&quot;&nbsp;name=&quot;tags[1][title]&quot;&nbsp;value=&quot;bar&quot;&nbsp;/&gt;<br/>&lt;input&nbsp;type=&quot;text&quot;&nbsp;id=&quot;tags-key-title&quot;&nbsp;name=&quot;tags[key][title]&quot;&nbsp;value=&quot;baz&quot;&nbsp;/&gt;<br/>&nbsp;&nbsp;&nbsp;</pre>
+
+  </div>
+  <p class="para">
+   For radios and checkboxes it is also possible to put <code class="literal">:idx:</code> into
+   <code class="varname">value</code> attribute, this way their names will not be changed, essentially
+   allowing to use one set of radios or checkboxes for all repeated items.
+  </p>
+ </div>
+
+
+ <div class="refsection" id="package.html.html-quickform2.elements.repeat.indexes">
+  <div class="info">
+   <h1>Indexes of repeated items</h1>
+
+  </div>
+  <p class="para">
+   As was noted in the above example, indexes for repeated items can be automatically discovered
+   from <a href="package.html.html-quickform2.values-datasources.html#package.html.html-quickform2.values-datasources.datasources-overview" class="link">data
+   sources</a>. The field name to use for discovering indexes can be either set explicitly with
+   <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Container_Repeat.html#methodsetIndexField" class="apidoclink">setIndexField()</a> or
+   left for the Repeat to choose automatically using names of prototype&#039;s child elements. When
+   guessing, it will only consider elements that are expected to always have a submit value, so
+   elements like buttons, checkboxes and multiple selects will not be used.
+  </p>
+  <p class="para">
+   Indexes can be also set manually using <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Container_Repeat.html#methodsetIndexes" class="apidoclink">setIndexes()</a>, the
+   corresponding <a href="http://pear.php.net/package/HTML_QuickForm2/docs/latest/HTML_QuickForm2/HTML_QuickForm2_Container_Repeat.html#methodgetIndexes" class="apidoclink">getIndexes()</a> is also
+   available. Duplicate indexes and those not matching
+   <strong class="constant">HTML_QuickForm2_Container_Repeat::INDEX_REGEXP</strong> will be ignored by
+   <strong class="function">setIndexes()</strong>.
+  </p>
+  <div class="example">
+   <div class="info">
+    <p><strong>Working with indexes</strong></p>
+   </div>
+   <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$form&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2</span><span style="color: #007700">(</span><span style="color: #DD0000">'repeatIndexes'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addDataSource</span><span style="color: #007700">(new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_DataSource_Array</span><span style="color: #007700">(array(<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'title'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;array(</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'bar'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'key'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'baz'</span><span style="color: #007700">)<br />)));<br /><br /></span><span style="color: #0000BB">$fieldset&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">HTML_QuickForm2_Container_Fieldset</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$repeat&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$form</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">addRepeat</span><span style="color: #007700">()-&gt;</span><span style="color: #0000BB">setPrototype</span><span style="color: #007700">(</span><span style="color: #0000BB">$fieldset</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;no&nbsp;element&nbsp;to&nbsp;guess&nbsp;indexes&nbsp;present<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$repeat</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getIndexes</span><span style="color: #007700">());<br /><br /></span><span style="color: #FF8000">//&nbsp;explicitly&nbsp;set&nbsp;field&nbsp;to&nbsp;discover&nbsp;indexes<br /></span><span style="color: #0000BB">$repeat</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setIndexField</span><span style="color: #007700">(</span><span style="color: #DD0000">'title'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$repeat</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getIndexes</span><span style="color: #007700">());<br /><br /></span><span style="color: #FF8000">//&nbsp;explicit&nbsp;setIndexes()&nbsp;with&nbsp;a&nbsp;few&nbsp;errors<br /></span><span style="color: #0000BB">$repeat</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setIndexes</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'foo'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'bar'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'baz'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'qu\'ux'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'baz'</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$repeat</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">getIndexes</span><span style="color: #007700">());<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   <div class="example-contents"><p>outputs</p></div>
+   <pre class="screen"><br/>array(0)&nbsp;{<br/>}<br/>array(3)&nbsp;{<br/>&nbsp;&nbsp;[0]=&gt;<br/>&nbsp;&nbsp;int(0)<br/>&nbsp;&nbsp;[1]=&gt;<br/>&nbsp;&nbsp;int(1)<br/>&nbsp;&nbsp;[2]=&gt;<br/>&nbsp;&nbsp;string(3)&nbsp;&quot;key&quot;<br/>}<br/>array(3)&nbsp;{<br/>&nbsp;&nbsp;[0]=&gt;<br/>&nbsp;&nbsp;string(3)&nbsp;&quot;foo&quot;<br/>&nbsp;&nbsp;[1]=&gt;<br/>&nbsp;&nbsp;string(3)&nbsp;&quot;bar&quot;<br/>&nbsp;&nbsp;[2]=&gt;<br/>&nbsp;&nbsp;string(3)&nbsp;&quot;baz&quot;<br/>}<br/>&nbsp;&nbsp;&nbsp;</pre>
+
+  </div>
+  <blockquote class="tip">
+   <p class="para">
+    Setting indexes for repeat elements works quite similar to setting values for other elements, so
+    <a href="package.html.html-quickform2.values-datasources.html#package.html.html-quickform2.values-datasources.order" class="link">keeping correct
+     order</a> really helps.
+   </p>
+  </blockquote>
+
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.html.html-quickform2.elements.custom.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.html.html-quickform2.elements.html">Form elements</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.html.html-quickform2.elements.message-provider.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Custom Group-based elements</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Message Providers</td>
+  </tr>
+ </table>
+</div>
+</body></html>

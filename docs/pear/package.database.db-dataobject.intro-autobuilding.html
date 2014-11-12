@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Auto Building and Database Schema</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.db-dataobject.html" title="DB_DataObject" />
+  <link rel="prev" href="package.database.db-dataobject.intro-configuration.html" title="Configuration Options" />
+  <link rel="next" href="package.database.db-dataobject.db-dataobject.factory.html" title="DB_DataObject::factory()" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Auto Building and Database Schema</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.db-dataobject.intro-configuration.html" title="Configuration Options">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.db-dataobject.db-dataobject.factory.html" title="DB_DataObject::factory()">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.db-dataobject.intro-autobuilding">
+  
+    <h1 class="refname">Auto Building and Database Schema</h1>
+    <div class="refnamediv">Auto Building and Database Schema &ndash; 
+      creating the base Classes and Database schema
+    </div>
+
+  
+  <div class="refsection"><div class="info"><h1>What the Auto Builder (<strong class="command">createTables.php</strong>) does</h1>
+</div>
+    
+    <p class="para">
+        One of the essential features of an SQL building tool is to to have some understanding of the
+        database structure, So that Integers can be checked, and strings can be escaped. There a few ways
+        that Querying the database for the table structure could be accomplished
+
+      </p><ul class="itemizedlist">
+        <li class="listitem">
+          <span class="simpara">on every SQL query</span>
+        </li>
+        <li class="listitem">
+          <span class="simpara">At the initialization of every web page.</span>
+        </li>
+        <li class="listitem">
+          <span class="simpara">Once, while setting up the application, and store it in a file</span>
+        </li>
+      </ul>
+      <p><strong class="classname">DB_DataObject</strong> uses the last of these normally (see the section below on Alternatives), it utilizes the 
+      <a href="http://www.php.net/manual-lookup.php?pattern=parse-ini-file" class="link external">parse_ini_file</a>
+      function to read the file, so it should be
+      reasonably fast. However this does involve a stage of setting up
+      <strong class="classname">DB_DataObject</strong> prior to use.
+    </p>
+    <p class="para">
+     The other key concept of <strong class="classname">DB_DataObject</strong> is that you work with extended 
+     classes of <strong class="classname">DB_DataObject</strong>, which
+      do all the &#039;table&#039; related work. Setting up these classes for a large database can be time consuming, so
+      the <strong class="command">createTables.php</strong> file will automatically build the skeletons for all these class files.
+    </p>
+    <p class="para">
+     To start the auto builder simply go to the
+     <em><code class="parameter">pear/DB/DataObject/</code></em> directory, and type
+      <strong class="command">c:\php4\php.exe createTables.php myconfig.ini</strong> this will read your configuration file
+      and generate all the base classes, along with the data definition file.
+    </p>
+     <p class="para">
+     As of Version 1.5, you can use the option &quot;proxy = full&quot;, which will cause DataObjects
+     to create classes and schema on the fly, rather than using an ini file or prebuilt classes.
+    </p>
+  </div>
+  <div class="refsection"><div class="info"><h1>Default Class Definition</h1>
+</div>
+    
+    <p class="para">
+      The default generated class looks like this.
+      </p><div class="example"><div class="info"><p><strong>an generated extended class</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/*<br />*&nbsp;Table&nbsp;Definition&nbsp;for&nbsp;group<br />*/<br /><br /><br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">DataObjects_Grp&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">DB_DataObject&nbsp;</span><span style="color: #007700">{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">###START_AUTOCODE<br />&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;the&nbsp;code&nbsp;below&nbsp;is&nbsp;auto&nbsp;generated&nbsp;do&nbsp;not&nbsp;remove&nbsp;the&nbsp;above&nbsp;tag&nbsp;*/<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$__table</span><span style="color: #007700">=</span><span style="color: #DD0000">'group'</span><span style="color: #007700">;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;table&nbsp;name<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$id</span><span style="color: #007700">;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;int&nbsp;primary_key<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$name</span><span style="color: #007700">;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;string<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$grp_owner</span><span style="color: #007700">;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;int<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$official</span><span style="color: #007700">;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;string<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$street</span><span style="color: #007700">;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;string<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$postcode</span><span style="color: #007700">;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;string<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$city</span><span style="color: #007700">;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;string<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$homepage</span><span style="color: #007700">;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;string<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$email</span><span style="color: #007700">;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;string<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$extra</span><span style="color: #007700">;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;blob<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Static&nbsp;get&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">staticGet</span><span style="color: #007700">(</span><span style="color: #0000BB">$k</span><span style="color: #007700">,</span><span style="color: #0000BB">$v</span><span style="color: #007700">=</span><span style="color: #0000BB">NULL</span><span style="color: #007700">)&nbsp;{&nbsp;return&nbsp;</span><span style="color: #0000BB">DB_DataObject</span><span style="color: #007700">::</span><span style="color: #0000BB">staticGet</span><span style="color: #007700">(</span><span style="color: #DD0000">'DataObjects_Grp'</span><span style="color: #007700">,</span><span style="color: #0000BB">$k</span><span style="color: #007700">,</span><span style="color: #0000BB">$v</span><span style="color: #007700">);&nbsp;}<br /><br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">/*&nbsp;the&nbsp;code&nbsp;above&nbsp;is&nbsp;auto&nbsp;generated&nbsp;do&nbsp;not&nbsp;remove&nbsp;the&nbsp;tag&nbsp;below&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;###END_AUTOCODE<br /></span><span style="color: #007700">}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+      </div>
+    
+    <p class="para">
+
+        The class defines the table name, and comments some of table columns for your reference,
+        It also adds the <a href="package.database.db-dataobject.db-dataobject.staticget.html" class="link">
+         <strong class="function">staticGet()</strong></a> method, which can be used to quickly get single rows as Objects.
+        You should add your table related code after the
+        <strong class="constant">###END_AUTOCODE</strong>.
+    </p>
+    <p class="para">
+     Prior to version 1.6 a method __clone was created, since PHP5 changed to use $x = clone($y);, this method
+    has been removed. DataObjects now creates a dummy function clone (if necessary), to enable forward compatibility
+
+    </p>
+  </div>
+
+
+  <div class="refsection"><div class="info"><h1>Database Schema File</h1>
+</div>
+    
+    <p class="para">
+        The default generated database definition file looks like this, it is located in the directory set by the
+        &quot;schema_location&quot; configuration option, and is named the same as the database.
+        
+    </p><p class="para">
+        If you rename the database, you will either have to regenerate the file or copy it to match the same name.
+    </p><p class="para">
+        If you change the database schema (eg. add a column or change the type), you will have to regenerate the schema file,
+        using createTables.php, At present, this is not done automatically (although this may be added in the future..)
+    </p><p class="para">
+        You should not edit this file by hand (as any changes will be lost when regenerating it). You can override the 
+        keys of a table by using a configuration option &quot;sequence_{table} = key&quot;, or by defining the sequenceKey() method in your extended class.
+      
+        
+         
+        
+      </p><div class="example"><div class="info"><p><strong>Database configuration file</strong></p></div>
+        
+        <div class="inicode"><pre class="inicode">
+
+[group]
+id = 129
+name = 130 
+grp_owner = 129 
+official = 130 
+street = 130 
+postcode = 130
+city = 130 
+homepage = 130 
+email = 130 
+extra = 130 
+
+[group__keys]
+id = N</pre>
+
+        </div>
+      </div>
+    
+    <p class="para">
+
+        The blocks indicate either tables and the type of field with binary addition (1=integer,2=string,128=not null, so 129=integer and not null),
+        or a list of keys for each table.  You should not need to edit file.
+
+    </p>
+
+  </div>
+    
+  <div class="refsection"><div class="info"><h1>Alternatives to using a Schema File</h1>
+</div>
+    
+    <p class="para">
+        It is possible to use DataObjects without a schema file, this can be achieved in 2 ways
+        
+      </p><ul class="itemizedlist">
+        <li class="listitem">
+          <span class="simpara">by defining the table() and keys() methods in an extended class</span>
+        </li>
+        <li class="listitem">
+          <span class="simpara">by passing an array to table() and keys() when you have an instance of dataobjects</span>
+        </li>
+      </ul><p>
+      
+      The second of this is demonstrated on the <a href="package.database.db-dataobject.db-dataobject.keys.html" class="link">keys()</a>
+      and <a href="package.database.db-dataobject.db-dataobject.table.html" class="link">table()</a> page. 
+    </p>  
+    <p class="para">
+      Below is a hand coded class which  does not use a schema.ini file. 
+    </p>
+      
+    <p class="para">
+      It was designed to be a return value from a method, rather than an object variable, so that the output of 
+      print_r(), would not include extra information (and would be smaller when dumping a large result set.
+      
+    
+      </p><div class="example"><div class="info"><p><strong>A Hand Coded extended class</strong></p></div>
+        
+        <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/*<br />*&nbsp;Table&nbsp;Definition&nbsp;for&nbsp;group<br />*/<br /><br /><br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">DataObjects_Grp&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">DB_DataObject&nbsp;</span><span style="color: #007700">{<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;you&nbsp;can&nbsp;define&nbsp;these&nbsp;yourself<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$__table</span><span style="color: #007700">=</span><span style="color: #DD0000">'group'</span><span style="color: #007700">;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;table&nbsp;name<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$id</span><span style="color: #007700">;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;int&nbsp;primary_key<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$name</span><span style="color: #007700">;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;string<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$bday</span><span style="color: #007700">;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;string<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$last</span><span style="color: #007700">;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;datetime<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$active</span><span style="color: #007700">;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;tinyint(1)<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$desc</span><span style="color: #007700">;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;text<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">var&nbsp;</span><span style="color: #0000BB">$photo</span><span style="color: #007700">;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;blob<br />&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;these&nbsp;are&nbsp;usefull&nbsp;to&nbsp;be&nbsp;consistant&nbsp;with&nbsp;a&nbsp;autogenerated&nbsp;file.<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Static&nbsp;get&nbsp;*/<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">staticGet</span><span style="color: #007700">(</span><span style="color: #0000BB">$k</span><span style="color: #007700">,</span><span style="color: #0000BB">$v</span><span style="color: #007700">=</span><span style="color: #0000BB">NULL</span><span style="color: #007700">)&nbsp;{&nbsp;return&nbsp;</span><span style="color: #0000BB">DB_DataObject</span><span style="color: #007700">::</span><span style="color: #0000BB">staticGet</span><span style="color: #007700">(</span><span style="color: #DD0000">'DataObjects_Grp'</span><span style="color: #007700">,</span><span style="color: #0000BB">$k</span><span style="color: #007700">,</span><span style="color: #0000BB">$v</span><span style="color: #007700">);&nbsp;}<br /><br />&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;now&nbsp;define&nbsp;your&nbsp;table&nbsp;structure.<br />&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;key&nbsp;is&nbsp;column&nbsp;name,&nbsp;value&nbsp;is&nbsp;type<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">table</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'id'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">DB_DATAOBJECT_INT</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'name'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">DB_DATAOBJECT_STR</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'bday'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">DB_DATAOBJECT_STR&nbsp;</span><span style="color: #007700">+&nbsp;</span><span style="color: #0000BB">DB_DATAOBJECT_DATE</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'last'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">DB_DATAOBJECT_STR&nbsp;</span><span style="color: #007700">+&nbsp;</span><span style="color: #0000BB">DB_DATAOBJECT_DATE&nbsp;</span><span style="color: #007700">+&nbsp;</span><span style="color: #0000BB">DB_DATAOBJECT_TIME</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'active'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">DB_DATAOBJECT_INT&nbsp;</span><span style="color: #007700">+&nbsp;</span><span style="color: #0000BB">DB_DATAOBJECT_BOOL</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'desc'&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">DB_DATAOBJECT_STR&nbsp;</span><span style="color: #007700">+&nbsp;</span><span style="color: #0000BB">DB_DATAOBJECT_TXT</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'photo'&nbsp;&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">DB_DATAOBJECT_STR&nbsp;</span><span style="color: #007700">+&nbsp;</span><span style="color: #0000BB">DB_DATAOBJECT_BLOB</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;now&nbsp;define&nbsp;the&nbsp;keys.<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">keys</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;array(</span><span style="color: #DD0000">'id'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>
+        </div>
+      </div>
+    
+
+  </div>
+    
+    
+    
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.db-dataobject.intro-configuration.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.db-dataobject.html">DB_DataObject</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.db-dataobject.db-dataobject.factory.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Configuration Options</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">DB_DataObject::factory()</td>
+  </tr>
+ </table>
+</div>
+</body></html>

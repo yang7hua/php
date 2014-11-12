@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Pyrus Custom File Tasks: differences from PEAR</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="pyrus.differences.html" title="Differences from the PEAR Installer" />
+  <link rel="prev" href="pyrus.differences.customroles.html" title="Pyrus Custom File Roles: differences from PEAR" />
+  <link rel="next" href="pyrus.plugins.html" title="Creating plugins for Pyrus" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Pyrus Custom File Tasks: differences from PEAR</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="pyrus.differences.customroles.html" title="Pyrus Custom File Roles: differences from PEAR">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="pyrus.plugins.html" title="Creating plugins for Pyrus">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="pyrus.differences.customtasks">
+ <div class="info"><h1>Pyrus Custom File Tasks: differences from PEAR</h1>
+</div>
+
+ <div class="section" id="pyrus.differences.customtasks.overview">
+  <div class="info"><h2 class="title">Overview</h2></div>
+  <p class="para">
+   Custom file tasks (documented <a href="guide.migrating.customtasks.html" class="link">here</a>)
+   have changed substantially in Pyrus.  Fortunately, the XML format of tasks
+   used in package.xml remains the
+   same, and Pyrus&#039;s expectation of custom task implementation does not conflict
+   or overlap with PEAR&#039;s at all, so custom task packages can easily be designed
+   to work with both PEAR and Pyrus.
+  </p>
+  <p class="para">
+   The biggest difference between how a custom task is implemented in Pyrus has
+   to do with the new plugin system (documented <a href="pyrus.plugins.html" class="link">here</a>).
+   Before reading any further, it may be a good idea to familiarize yourself with
+   the way that plugins work in Pyrus by reading the documentation on plugins,
+   then return back to finish reading about custom tasks.
+  </p>
+  <p class="para">
+   In PEAR, custom tasks are detected simply by scanning the
+   <code class="literal">PEAR/Tasks</code> directory, and no differentiation is made between
+   tasks built into PEAR, and external custom tasks.
+  </p>
+  <p class="para">
+   Pyrus custom tasks are detected through the use a new XML metadata format.
+   The format is simple, and looks like this:
+  </p>
+  <p class="para">
+   </p><div class="xmlcode">
+    <pre class="xmlcode">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;task xmlns=&quot;http://pear2.php.net/dtd/customtask-2.0&quot; version=&quot;2.0&quot;&gt;
+ &lt;name&gt;mytask&lt;/name&gt;
+ &lt;classprefix&gt;vendor_PackageName&lt;/classprefix&gt;
+ &lt;autoloadpath/&gt;
+&lt;/task&gt;</pre>
+
+   </div>
+  
+  <p class="para">
+   The details of what &lt;classprefix&gt; and &lt;autoloadpath&gt; mean are
+   revealed in the full documentation of custom tasks
+   <a href="pyrus.plugins.task.html" class="link">here</a>.
+  </p>
+  <p class="para">
+   This XML metadata file is identified by Pyrus through the use of the file role
+   <code class="literal">customtask</code>, which is used in the custom task&#039;s package.xml.
+   Here is an example from the &lt;contents&gt; of a package.xml:
+  </p>
+  <p class="para">
+   </p><div class="xmlcode">
+    <pre class="xmlcode">
+...
+  &lt;contents&gt;
+   &lt;dir name=&quot;data&quot;&gt;
+    &lt;file name=&quot;mytask.xml&quot; role=&quot;customtask&quot;/&gt;
+    &lt;file name=&quot;someotherdata.csv&quot; role=&quot;data&quot;/&gt;
+   &lt;/dir&gt;
+  &lt;/contents&gt;
+...</pre>
+
+   </div>
+  
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="pyrus.differences.customroles.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="pyrus.differences.html">Differences from the PEAR Installer</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="pyrus.plugins.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Pyrus Custom File Roles: differences from PEAR</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">Creating plugins for Pyrus</td>
+  </tr>
+ </table>
+</div>
+</body></html>

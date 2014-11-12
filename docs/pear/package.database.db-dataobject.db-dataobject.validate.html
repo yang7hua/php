@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>-&gt;validate()</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.db-dataobject.html" title="DB_DataObject" />
+  <link rel="prev" href="package.database.db-dataobject.db-dataobject.toarray.html" title="-&gt;toArray()" />
+  <link rel="next" href="package.database.db-dataobject.db-dataobject.tablename.html" title="-&gt;tableName()" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">-&gt;validate()</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.db-dataobject.db-dataobject.toarray.html" title="-&gt;toArray()">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.db-dataobject.db-dataobject.tablename.html" title="-&gt;tableName()">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.db-dataobject.db-dataobject.validate">
+   
+    <h1 class="refname">-&gt;validate()</h1>
+    <div class="refnamediv">-&gt;validate() &ndash; check object data, and call objects validation methods.</div>
+
+   
+   <h2 class="refsynopsisdiv">Synopsis</h2>
+    <div class="funcsynopsis">
+     
+     <p><code class="funcprototype">
+      array <strong class="function">$DB_DataObject-&gt;validate</strong> ( 
+      
+      
+      
+                  
+     )</code></p>
+    </div>
+   
+   <div class="refsection" id="package.database.db-dataobject.db-dataobject.validate.desc">
+    <h1 class="title">Description</h1>
+    <p class="para">
+     Check all the objects variables to see if they are valid, by default this
+     means is a column an integer or string, if you define methods like
+     <strong class="function">validateEmail()</strong>, in your extended class then it 
+     will be called to validate the row called &#039;email&#039;. This may be useful if 
+     called prior to an update or insert.., to generate error messages.
+    </p>
+    <p class="para">
+     override this to set up your validation rules.
+    </p>
+   </div>   
+      
+         
+   <div class="refsection" id="package.database.db-dataobject.db-dataobject.validate.return">
+    <h1 class="title">Return value</h1>
+    <p class="para">
+     <em><code class="parameter">array</code></em> - of validation results or <strong class="constant">TRUE</strong>
+    </p>
+   </div>      
+            
+               
+                
+   <div class="refsection" id="package.database.db-dataobject.db-dataobject.validate.note">
+    <h1 class="title">Note</h1>  
+                 
+    <p class="simpara">This function can not be called
+statically.</p>
+    
+        
+                             
+  <p class="simpara">  the examples below utilize the PEAR validation package </p>
+   </div>    
+                   
+   <div class="refsection" id="package.database.db-dataobject.db-dataobject.validate.example">
+    <h1 class="title">Example</h1>
+    <div class="example"><div class="info"><p><strong> validate usage</strong></p></div>
+     
+      <div class="phpcode">
+       <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$person&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">DataObjects_Person</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">get</span><span style="color: #007700">(</span><span style="color: #0000BB">12</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setFrom</span><span style="color: #007700">(</span><span style="color: #0000BB">$_POST</span><span style="color: #007700">[</span><span style="color: #DD0000">'input'</span><span style="color: #007700">]);<br /></span><span style="color: #0000BB">$val&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">validate</span><span style="color: #007700">();<br />if&nbsp;(</span><span style="color: #0000BB">$val&nbsp;</span><span style="color: #007700">===&nbsp;</span><span style="color: #0000BB">TRUE</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">update</span><span style="color: #007700">();<br />}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;foreach&nbsp;(</span><span style="color: #0000BB">$val&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$k</span><span style="color: #007700">=&gt;</span><span style="color: #0000BB">$v</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$v&nbsp;</span><span style="color: #007700">==&nbsp;</span><span style="color: #0000BB">false</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"There&nbsp;was&nbsp;something&nbsp;wrong&nbsp;with&nbsp;(</span><span style="color: #0000BB">$k</span><span style="color: #DD0000">)\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"(</span><span style="color: #0000BB">$k</span><span style="color: #DD0000">)&nbsp;validated&nbsp;OK\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>    
+     </div>
+    </div>
+    <div class="example"><div class="info"><p><strong>validate methods</strong></p></div>
+     
+      <div class="phpcode">
+       <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/*&nbsp;inside&nbsp;class&nbsp;DataObject_Person&nbsp;*/<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">validateEmail</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">Validate</span><span style="color: #007700">::</span><span style="color: #0000BB">email</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">email</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br />}<br /><br />function&nbsp;</span><span style="color: #0000BB">validateHomepage</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">Validate</span><span style="color: #007700">::</span><span style="color: #0000BB">url</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">homepage</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br />}<br />function&nbsp;</span><span style="color: #0000BB">validateDate</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">Validate</span><span style="color: #007700">::</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">date</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"%d-%m-%Y"</span><span style="color: #007700">,&nbsp;array(</span><span style="color: #0000BB">01</span><span style="color: #007700">,</span><span style="color: #0000BB">01</span><span style="color: #007700">,</span><span style="color: #0000BB">1970</span><span style="color: #007700">),&nbsp;array(</span><span style="color: #0000BB">01</span><span style="color: #007700">,</span><span style="color: #0000BB">01</span><span style="color: #007700">,</span><span style="color: #0000BB">2030</span><span style="color: #007700">));<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>    
+     </div>
+    </div>    
+   </div>         
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.db-dataobject.db-dataobject.toarray.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.db-dataobject.html">DB_DataObject</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.db-dataobject.db-dataobject.tablename.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">-&gt;toArray()</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">-&gt;tableName()</td>
+  </tr>
+ </table>
+</div>
+</body></html>

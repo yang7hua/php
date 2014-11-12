@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>-&gt;selectAs()</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="package.database.db-dataobject.html" title="DB_DataObject" />
+  <link rel="prev" href="package.database.db-dataobject.db-dataobject.getlinks.html" title="-&gt;getLinks()" />
+  <link rel="next" href="package.database.db-dataobject.db-dataobject.joinadd.html" title="-&gt;joinAdd()" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">-&gt;selectAs()</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="package.database.db-dataobject.db-dataobject.getlinks.html" title="-&gt;getLinks()">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="package.database.db-dataobject.db-dataobject.joinadd.html" title="-&gt;joinAdd()">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="refentry" id="package.database.db-dataobject.db-dataobject.selectas">
+   
+    <h1 class="refname">-&gt;selectAs()</h1>
+    <div class="refnamediv">-&gt;selectAs() &ndash; Build the select component of a query (usually for joins)</div>
+
+   
+   <h2 class="refsynopsisdiv">Synopsis</h2>
+    <div class="funcsynopsis">
+     
+     <p><code class="funcprototype">
+      void <strong class="function">$DB_DataObject-&gt;selectAs</strong> ( 
+      
+      
+       object | array $columns_or_object
+       ,  string $format
+       ,  string $table_name
+      
+                  
+     )</code></p>
+    </div>
+   
+   <div class="refsection" id="package.database.db-dataobject.db-dataobject.selectas.desc">
+    <h1 class="title">Description</h1>
+    <p class="para">
+     Auto creates select items based on either the current objects column names, 
+     the supplied object, or an array.
+     
+    </p>
+     <p class="para">
+     This is primarily used in conjunciton with joinAdd, to enable the renaming of columns 
+     into a fixed format when they are likely to have naming conflicts (like both tables have
+     an &#039;id&#039; column).
+     </p>
+        <p class="para">
+     Sending no arguments to selectAs, will reset the current select (usually removing the default *),
+     and build a select list based on the current objects column names.
+     </p>
+     
+   </div>   
+   
+   <div class="refsection" id="package.database.db-dataobject.db-dataobject.selectas.parameter">
+    <h1 class="title">Parameter</h1>
+    <p class="para">
+     </p><ul class="itemizedlist">
+      
+      <li class="listitem">
+       <p class="para">
+        <em><code class="parameter">object | array $column_or_object</code></em> - a dataobject or array of column names 
+       </p>
+      </li>      
+       
+      <li class="listitem">
+       <p class="para">
+        <em><code class="parameter">string $format</code></em> - the format the columns will appear, using sprintf format,
+        the %s is replaced with the column name so car_%s would result in the SQL &#039;car.name as car_name&#039;
+        being generated.
+       </p>
+      </li>      
+             
+      <li class="listitem">
+       <p class="para">
+        <em><code class="parameter">string $tableName</code></em> - this is used either when use send an array as the first
+        argument, or when you are joining a table &#039;as&#039; another name, 
+       </p>
+      </li>      
+            
+     </ul>
+    
+   </div>   
+      
+            
+               
+                
+   <div class="refsection" id="package.database.db-dataobject.db-dataobject.selectas.note">
+    <h1 class="title">Note</h1>  
+                 
+    <p class="simpara">This function can not be called
+statically.</p>
+    
+                         
+                             
+  <p class="simpara"></p>
+   </div>    
+                   
+
+   <div class="refsection" id="package.database.db-dataobject.db-dataobject.selectas.example">
+    <h1 class="title">Example</h1>
+    <div class="example"><div class="info"><p><strong>Using <strong class="function">selectAs()</strong></strong></p></div>
+     
+      <div class="phpcode">
+       <code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br /></span><span style="color: #FF8000">//&nbsp;ok&nbsp;lets&nbsp;see&nbsp;what&nbsp;is&nbsp;going&nbsp;on..<br /></span><span style="color: #0000BB">DB_DataObject</span><span style="color: #007700">::</span><span style="color: #0000BB">debugLevel</span><span style="color: #007700">(</span><span style="color: #0000BB">1</span><span style="color: #007700">);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br /></span><span style="color: #0000BB">$person&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">DataObjects_Person</span><span style="color: #007700">;<br /><br /><br /></span><span style="color: #FF8000">//&nbsp;to&nbsp;generate&nbsp;"person.id&nbsp;as&nbsp;id&nbsp;,&nbsp;person.name&nbsp;as&nbsp;name&nbsp;......."<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">selectAs</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;to&nbsp;generate&nbsp;a&nbsp;restricted&nbsp;list..&nbsp;"person.age&nbsp;as&nbsp;age&nbsp;,&nbsp;person.name&nbsp;as&nbsp;name"<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">selectAs</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'age'</span><span style="color: #007700">,</span><span style="color: #DD0000">'name'</span><span style="color: #007700">));<br /><br /></span><span style="color: #FF8000">//&nbsp;using&nbsp;another&nbsp;object.&nbsp;<br /></span><span style="color: #0000BB">$car&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">DataObjects_Car</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;this&nbsp;is&nbsp;the&nbsp;first&nbsp;car&nbsp;(<br /></span><span style="color: #0000BB">$car</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">use&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'first'</span><span style="color: #007700">;<br /><br /><br /></span><span style="color: #FF8000">//&nbsp;using&nbsp;the&nbsp;joinadd&nbsp;add&nbsp;the&nbsp;car..<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">joinAdd</span><span style="color: #007700">(</span><span style="color: #0000BB">$car</span><span style="color: #007700">);&nbsp;<br /><br /></span><span style="color: #FF8000">//&nbsp;now&nbsp;add&nbsp;all&nbsp;the&nbsp;select&nbsp;columns&nbsp;for&nbsp;the&nbsp;car&nbsp;eg.&nbsp;"car.id&nbsp;as&nbsp;car_id,&nbsp;car.name&nbsp;as&nbsp;car_name&nbsp;...."<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">selectAs</span><span style="color: #007700">(</span><span style="color: #0000BB">$car</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'car_%s'</span><span style="color: #007700">);<br /><br /><br /></span><span style="color: #FF8000">//&nbsp;select&nbsp;only&nbsp;a&nbsp;few&nbsp;columns&nbsp;from&nbsp;the&nbsp;car&nbsp;table.<br />//&nbsp;note&nbsp;you&nbsp;have&nbsp;to&nbsp;use&nbsp;the&nbsp;table&nbsp;name&nbsp;at&nbsp;the&nbsp;end..<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">selectAs</span><span style="color: #007700">(array(</span><span style="color: #DD0000">'color'</span><span style="color: #007700">,</span><span style="color: #DD0000">'topspeed'</span><span style="color: #007700">),&nbsp;</span><span style="color: #DD0000">'car_%s'</span><span style="color: #007700">,</span><span style="color: #DD0000">'car'</span><span style="color: #007700">);<br /><br /><br /><br /><br /></span><span style="color: #FF8000">//&nbsp;now&nbsp;the&nbsp;user&nbsp;can&nbsp;have&nbsp;a&nbsp;second&nbsp;car....<br /></span><span style="color: #0000BB">$secondcar&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">DataObjects_Car</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$secondcar</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">use&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'second'</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;now&nbsp;since&nbsp;we&nbsp;alreay&nbsp;have&nbsp;one&nbsp;car,&nbsp;the&nbsp;sql&nbsp;statement&nbsp;would&nbsp;get&nbsp;messy&nbsp;<br />//&nbsp;so&nbsp;we&nbsp;are&nbsp;joining&nbsp;this&nbsp;as&nbsp;the&nbsp;second&nbsp;car&nbsp;"FROM&nbsp;person&nbsp;INNER&nbsp;JOIN&nbsp;car&nbsp;.....&nbsp;,&nbsp;car&nbsp;as&nbsp;secondcar&nbsp;WHERE&nbsp;.....<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">joinAdd</span><span style="color: #007700">(</span><span style="color: #0000BB">$secondcar</span><span style="color: #007700">,</span><span style="color: #DD0000">''</span><span style="color: #007700">,</span><span style="color: #DD0000">'secondcar'</span><span style="color: #007700">);&nbsp;<br /><br /></span><span style="color: #FF8000">//&nbsp;and&nbsp;we&nbsp;can&nbsp;now&nbsp;add&nbsp;all&nbsp;the&nbsp;columns<br />//&nbsp;"secondcar.id&nbsp;as&nbsp;secondcar_id,&nbsp;secondcar.name&nbsp;as&nbsp;secondcar_name&nbsp;........<br />//&nbsp;note&nbsp;that&nbsp;you&nbsp;must&nbsp;use&nbsp;the&nbsp;last&nbsp;field&nbsp;as&nbsp;the&nbsp;SECONDCAR.ID&nbsp;format&nbsp;uses&nbsp;the&nbsp;'AS'&nbsp;name,&nbsp;rather&nbsp;than&nbsp;the&nbsp;<br />//&nbsp;objects&nbsp;real&nbsp;table&nbsp;name&nbsp;'car'<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">selectAs</span><span style="color: #007700">(</span><span style="color: #0000BB">$secondcar</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'secondcar_%s'</span><span style="color: #007700">,</span><span style="color: #DD0000">'secondcar'</span><span style="color: #007700">);<br /><br />&nbsp;<br /><br /></span><span style="color: #FF8000">//&nbsp;ok&nbsp;fire&nbsp;of&nbsp;a&nbsp;query...<br /></span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">find</span><span style="color: #007700">();<br />while&nbsp;(</span><span style="color: #0000BB">$person</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;......<br />}<br /><br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code>    
+     </div>
+    </div>
+     
+   </div>         
+  </div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="package.database.db-dataobject.db-dataobject.getlinks.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="package.database.db-dataobject.html">DB_DataObject</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="package.database.db-dataobject.db-dataobject.joinadd.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">-&gt;getLinks()</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">-&gt;joinAdd()</td>
+  </tr>
+ </table>
+</div>
+</body></html>

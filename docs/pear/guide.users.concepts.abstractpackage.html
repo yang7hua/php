@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>Abstract Package Name (for install/uninstall command)</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <meta name="generator" content="PhD" />
+
+  <link rel="start" href="index.html" title="PEAR Manual" />
+  <link rel="up" href="guide.users.concepts.html" title="Basic concepts all PEAR users should understand" />
+  <link rel="prev" href="guide.users.concepts.maintainer.html" title="Maintainers and maintainer roles" />
+  <link rel="next" href="guide.users.concepts.channel.html" title="PEAR Channels" />
+ </head>
+ <body>
+<div class="navheader">
+ <table style="width: 100%;">
+  <tr><th colspan="3" style="text-align: center">Abstract Package Name (for install/uninstall command)</th></tr>
+  <tr>
+   <td style="width: 40%; text-align: left;"><a href="guide.users.concepts.maintainer.html" title="Maintainers and maintainer roles">Prev</a></td>
+   <td style="width: 20%;"></td>
+   <td style="width: 40%; text-align: right;"><a href="guide.users.concepts.channel.html" title="PEAR Channels">Next</a></td>
+  </tr>
+ </table>
+ <hr/>
+</div>
+<div id="body">
+<div class="section" id="guide.users.concepts.abstractpackage">
+ <div class="info"><h1>Abstract Package Name (for install/uninstall command)</h1>
+</div>
+
+ <p class="para">
+  There are several different ways of referring to a package that Pyrus and the
+  PEAR Installer understand.  Three ways are concrete, in that they refer to
+  deterministic entities such as a package.xml file on disk, or a <span class="acronym">URI</span>
+  (Uniform Resource Identifier) such as <code class="literal">http://pear.php.ne/get/PEAR-1.8.1.tgz</code>
+  that refers to a file on a remote server.
+ </p>
+ <p class="para">
+  </p><table class="doctable table">
+   <caption>Ways of specifying a package for installation</caption>
+   
+    <thead>
+     <tr>
+      <th>Package type</th>
+      <th>Local/Remote</th>
+      <th>Example</th>
+     </tr>
+
+    </thead>
+
+
+    <tbody class="tbody">
+     <tr>
+      <td><code class="literal">package.xml</code> file</td>
+      <td>Local</td>
+      <td><strong class="userinput"><code>php pyrus.phar install /path/to/package.xml</code></strong></td>
+     </tr>
+
+     <tr>
+      <td>Package release archive</td>
+      <td>Local</td>
+      <td><strong class="userinput"><code>php pyrus.phar install /path/to/PackageName-1.2.3.tgz</code></strong></td>
+     </tr>
+
+     <tr>
+      <td>Static url</td>
+      <td>Remote</td>
+      <td><strong class="userinput"><code>php pyrus.phar install http://example.com/PackageName-1.2.3.tgz</code></strong></td>
+     </tr>
+
+     <tr>
+      <td>Abstract package</td>
+      <td>Remote</td>
+      <td><strong class="userinput"><code>php pyrus.phar install PackageName</code></strong></td>
+     </tr>
+
+    </tbody>
+   
+  </table>
+
+ 
+ <p class="para">
+  The first three ways of specifying a package are concrete: the package name
+  always refers to one and only one package.  Abstract packages are more
+  flexible, and there are several ways of requesting a package.  Note that
+  if the channel is not explicitly requested (as it is in the last example),
+  Pyrus or the PEAR Installer prepends the default channel.  The default channel
+  is set by the <code class="literal">default_channel</code> configuration variable, and is
+  set to one of <code class="literal">pear.php.net</code> (pear command), <code class="literal">pecl.php.net</code>
+  (pecl command), or <code class="literal">pear2.php.net</code> (Pyrus) unless explicitly changed
+  by a call to the <a href="guide.users.commandline.config.html" class="link">config-set</a>
+  (pear/pecl command) or <a href="pyrus.commands.set.html" class="link">set</a> (pyrus)
+  command.  A request for
+  <code class="literal">PackageName</code> will be interpreted by the PEAR Installer or Pyrus
+  to be a request for package PackageName from the default channel, as if the user had
+  requested <code class="literal">pear.php.net/PackageName</code> (pear command),
+  <code class="literal">pecl.php.net/PackageName</code> (pecl command) or
+  <code class="literal">pear2.php.net/PackageName</code> (pyrus).
+  </p><table class="doctable table">
+   <caption>Ways of specifying an abstract package</caption>
+   
+    <thead>
+     <tr>
+      <th>Example</th>
+      <th>Description</th>
+     </tr>
+
+    </thead>
+
+
+    <tbody class="tbody">
+     <tr>
+      <td><code class="literal">PackageName-1.2.3</code></td>
+      <td>
+       This forces Pyrus to download version <code class="literal">1.2.3</code> of
+       package <code class="literal">PackageName</code>, but will will attempt to download
+       a release in one of the following file formats, in this order:
+       <ol type="1">
+        <li class="listitem"><span class="simpara">phar</span></li>
+        <li class="listitem"><span class="simpara">tgz (only if zlib extension is enabled)</span></li>
+        <li class="listitem"><span class="simpara">tar</span></li>
+        <li class="listitem"><span class="simpara">zip</span></li>
+       </ol>
+      </td>
+     </tr>
+
+     <tr>
+      <td><code class="literal">PackageName-alpha</code></td>
+      <td>
+       This causes Pyrus to download the latest version of
+       package <code class="literal">PackageName</code> that is <code class="literal">alpha</code>
+       stability or better (the hierarchy of stabilities is <code class="literal">devel</code>,
+       <code class="literal">alpha</code>, <code class="literal">beta</code>, <code class="literal">stable</code>).
+       After finding a matching version, it will attempt to download a release
+       in one of the following file formats, in this order:
+       <ol type="1">
+        <li class="listitem"><span class="simpara">phar</span></li>
+        <li class="listitem"><span class="simpara">tgz (only if zlib extension is enabled)</span></li>
+        <li class="listitem"><span class="simpara">tar</span></li>
+        <li class="listitem"><span class="simpara">zip</span></li>
+       </ol>
+      </td>
+     </tr>
+
+     <tr>
+      <td><code class="literal">PackageName</code></td>
+      <td>
+       This causes Pyrus to download the latest version of
+       package <code class="literal">PackageName</code> that is <code class="literal">preferred_state</code>
+       (configuration variable)
+       stability or better (the hierarchy of stabilities is <code class="literal">devel</code>,
+       <code class="literal">alpha</code>, <code class="literal">beta</code>, <code class="literal">stable</code>).
+       After finding a matching version, it will attempt to download a release
+       in one of the following file formats, in this order:
+       <ol type="1">
+        <li class="listitem"><span class="simpara">phar</span></li>
+        <li class="listitem"><span class="simpara">tgz (only if zlib extension is enabled)</span></li>
+        <li class="listitem"><span class="simpara">tar</span></li>
+        <li class="listitem"><span class="simpara">zip</span></li>
+       </ol>
+       The <code class="literal">preferred_state</code> configuration variable can be seen
+       with the <a href="pyrus.commands.configshow.html" class="link">config-show</a>
+       command.
+      </td>
+     </tr>
+
+     <tr>
+      <td><code class="literal">PackageName#groupname</code></td>
+      <td>
+       This causes Pyrus to download and install a release of Pyrus as specified
+       above, and it also causes Pyrus to download and install the contents
+       of the <code class="literal">groupname</code> dependency group (dependency groups
+       are documented <a href="guide.developers.package2.dependencies.html#guide.developers.package2.dependencies.groups" class="link">here</a>).
+       Note that <code class="literal">PackageName</code> in <code class="literal">PackageName#groupname</code>
+       can be any of the above examples, such as <code class="literal">PackageName-1.2.3#groupname</code>.
+      </td>
+     </tr>
+
+     <tr>
+      <td><code class="literal">channelname/PackageName</code></td>
+      <td>
+       This causes Pyrus to download and install a release of
+       <code class="literal">PackageName</code> from the channel <code class="literal">channelname</code>.
+       Another syntax that can be used is <code class="literal">channel://channelname/PackageName</code>
+       which is useful if there is a sub-directory of the current working
+       directory named <code class="literal">channelname</code> and a file or directory
+       within it named <code class="literal">PackageName</code>.  Note that
+       in the example above, <code class="literal">PackageName</code> can be any of the
+       previous syntaces such as <code class="literal">channelname/PackageName-1.2.3#groupname</code>.
+      </td>
+     </tr>
+
+    </tbody>
+   
+  </table>
+
+ 
+ <div class="section" id="guide.users.concepts.abstractpackages.uninstall">
+  <h2 class="title">Abstract Package for installed packages</h2>
+  <p class="para">
+   Note that the <code class="literal">uninstall</code>, <code class="literal">run-scripts</code>,
+   and other commands that operate on installed packages
+   only support a simple
+   package name as in <code class="literal">PackageName</code> or
+   <code class="literal">channelname/PackageName</code>.  Any fancy stuff like
+   <code class="literal">pear2.php.net/PackageName-1.2.3#group</code> is ignored.
+  </p>
+ </div>
+</div>
+</div>
+<div class="navfooter">
+ <hr />
+ <table style="width: 100%;">
+  <tr>
+   <td style="width: 40%; text-align: left;"><a accesskey="p" href="guide.users.concepts.maintainer.html">Prev</a></td>
+   <td style="width: 20%; text-align: center;"><a accesskey="h" href="guide.users.concepts.html">Basic concepts all PEAR users should understand</a></td>
+   <td style="width: 40%; text-align: right;"><a accesskey="n" href="guide.users.concepts.channel.html">Next</a></td>
+  </tr>
+  <tr>
+   <td style="text-align: left; vertical-align: top;">Maintainers and maintainer roles</td>
+   <td style="text-align: center;"><a accesskey="h" href="index.html">PEAR Manual</a></td>
+   <td style="text-align: right; vertical-align: top;">PEAR Channels</td>
+  </tr>
+ </table>
+</div>
+</body></html>
