@@ -1,5 +1,6 @@
 /**
 * 原始数据记录在loan_sketch表中
+* 此表记录只有风控部门才能添加
 */
 drop table if exists `sys_loan`;
 create table if not exists `sys_loan`(
@@ -11,7 +12,7 @@ create table if not exists `sys_loan`(
     `img` varchar(128) NOT NULL DEFAULT '' COMMENT '贷款图片',
     `type` tinyint(1) unsigned NOT NULL DEFAULT 0 COMMENT '贷款方式,1-车贷,2-信用贷, 由面审人员确定',
     `use_type` smallint(3) NOT NULL COMMENT '贷款用途',
-    `amount` int(10) NOT NULL COMMENT '贷款金额',
+    `amount` decimal(6,2) NOT NULL COMMENT '贷款金额 万为单位',
     `deadline` tinyint(2) unsigned NOT NULL COMMENT '贷款期限',
     `deadline_type` char(1) NOT NULL DEFAULT 'm' COMMENT '期限类型:m-月,y-年,d-天,a-时',
     `days` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '几天标',
@@ -19,9 +20,9 @@ create table if not exists `sys_loan`(
 	`repay_source` char(1) not null comment '还款来源', 
     `begintime` bigint(10) unsigned NOT NULL DEFAULT '0' COMMENT '还款起始时间',
     `endtime` bigint(10) unsigned NOT NULL DEFAULT '0' COMMENT '贷款结束时间',
-    `remain_amount` decimal(12,2) NOT NULL DEFAULT '0.00' COMMENT '剩余本金',
+    `remain_amount` decimal(6,2) NOT NULL DEFAULT '0.00' COMMENT '剩余本金',
     `return_num` tinyint(2) unsigned NOT NULL DEFAULT '0' COMMENT '已还期数',
-    `return_amount` decimal(12,2) NOT NULL DEFAULT '0.00' COMMENT '已经还总额',
+    `return_amount` decimal(6,2) NOT NULL DEFAULT '0.00' COMMENT '已经还总额',
     `status` tinyint(3) NOT NULL DEFAULT '41' COMMENT '状态: 1-草稿,2-无效,3-审核失败,11-待审核,12-待发布,21-招标中,31-已流标,32-满标待审,41-还款中,51-还款成功',
     `description` text NOT NULL COMMENT '贷款描述',
     `remark` varchar(255) NOT NULL DEFAULT '' COMMENT '贷款备注',

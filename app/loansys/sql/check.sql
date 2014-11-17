@@ -1,20 +1,27 @@
+--- 核查人员
+--- 包括上门核查、车评人员
+
 drop table if exists `sys_check`;
 create table if not exists `sys_check`(
 	`id` int not null auto_increment,
-	`aid` int unsigned not null comment '核查人员ID',
+	`oid` int unsigned not null comment '核查人员ID',
 	`uid` int unsigned not null comment '贷款客户ID',
-	/*因为客户情况随着时间会有所变化，次记录对应1条贷款*/
+	---因为客户情况随着时间会有所变化，次记录对应1条贷款
 	`lid` int unsigned not null comment '关联的贷款ID',
 
-	`license_compay_address` tinyint unsigned not null default 0 comment '公司地址是否与证件一致, 0-一致',
-	`income_company_address` tinyint unsigned not null default 0 comment '公司地址与收入证明是否一致',
+	`spouse_assure` tinyint unsigned not null default 1 comment '配偶是否愿意签担保函,1-是'
+
+	--- 上门核查
+	`license_compay_address` tinyint unsigned not null default 1 comment '公司地址是否与证件一致, 1-一致',
+	`income_company_address` tinyint unsigned not null default 1 comment '公司地址与收入证明是否一致',
 	`company_info` varchar(1000) not null default '' comment '公司经营状况',
-	`house_live_address` tinyint unsigned not null default 0 comment '房产地址是否与居住地址一致',
+	`house_live_address` tinyint unsigned not null default 1 comment '房产地址是否与居住地址一致',
 	`house_live_address_info` varchar(1000) not null default '' comment '房产和居住地址不一致的说明',
 	`live_often` tinyint unsigned not null default 0 comment '居住房屋是否有常住痕迹',
 
+	--- 车评 
 	`car_loan` tinyint unsigned not null default 0 comment '全款车，1-有贷款，0-全款', 
-	`car_otherhand` tinyint unsigned not null defaut 1 comment 'x手车, 1-一手, 2-二手, 3-三手车',
+	`car_otherhand` tinyint unsigned not null defaut 1 comment 'x手车, 1-一手, 2-二手, 3-三手车, 默认为一手车',
 	`car_secondhand_info` varchar(1000) not null default '' comment '二手车说明',
 	`car_brand` int unsigned not null defaut 0 comment '车品牌id',
 	`car_type` varchar(20) not null default '' comment '车型号',
@@ -30,7 +37,7 @@ create table if not exists `sys_check`(
 	`addtime` int not null comment '核查时间',
 
 	primary key(`id`),
-	key aid(`aid`),
+	key oid(`oid`),
 	key uid(`uid`),
 	key lid(`lid`)
 
