@@ -1,5 +1,6 @@
-drop table if exists `user`;
-create table if not exists `user`(
+--- 客户表
+drop table if exists `sys_user`;
+create table if not exists `sys_user`(
 	`uid` int auto_increment comment '用户ID',
 	`idcard` char(18) not null comment '身份证ID',
 	`realname` varchar(10) not null comment '真实姓名',
