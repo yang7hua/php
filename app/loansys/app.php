@@ -8,7 +8,7 @@ $actionName = $router->getActionName();
 $controller = ucwords($controllerName) . 'Controller';
 
 if(!class_exists($controller)) 
-	throw new Exception('Controller not exists!');
+	throw new Exception('Controller '.$controller.' not exists!');
 
 $reflectionController = new ReflectionClass($controller);
 

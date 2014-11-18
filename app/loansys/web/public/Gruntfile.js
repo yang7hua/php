@@ -13,6 +13,7 @@ module.exports = function(grunt){
 				},
 				files : [
 					{dest : 'css/site.css', src: ['less/site.less']},
+					{dest : 'css/adm.css', src: ['less/adm.less']},
 				]
 			}
 		},

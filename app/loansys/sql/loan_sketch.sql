@@ -7,8 +7,8 @@ drop table if exists `sys_loan_sketch`;
 create table if not exists `sys_loan_sketch`(
 	`id` int unsigned not null auto_increment,
 	`lid` int unsigned not null comment '贷款ID',
-    `uid` bigint(10) unsigned NOT NULL COMMENT '贷款人UID',
-    `oid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '操作人员ID',
+    `uid` int unsigned NOT NULL COMMENT '贷款人UID',
+    `oid` int unsigned NOT NULL DEFAULT '0' COMMENT '操作人员ID',
     `title` varchar(120) NOT NULL default '' COMMENT '贷款标题',
     `loan_type` tinyint(1) unsigned NOT NULL DEFAULT 0 COMMENT '贷款方式,1-车贷,2-信用贷, 由面审人员确定',
     `use_type` smallint(3) NOT NULL COMMENT '贷款用途',
@@ -17,10 +17,12 @@ create table if not exists `sys_loan_sketch`(
     `deadline_type` char(1) NOT NULL DEFAULT 'm' COMMENT '期限类型:m-月,y-年,d-天,a-时',
     `days` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '几天标',
     `repay_method` char(1) NOT NULL DEFAULT 'm' COMMENT '还款方式:m-按月分期,i-按月付息,到期还本,e-到期还本息',
-	`repay_source` char(1) not null comment '还款来源', 
+	`repay_source` char(1) not null default 0 comment '还款来源', 
     `description` text NOT NULL COMMENT '贷款描述',
-    `remark` varchar(255) NOT NULL DEFAULT '' COMMENT '贷款备注',
-	`otype` tinyint not null default 0 comment '操作类型,0-客户经理提交草稿,10-初次面审,30-核查人员完成后面审复审',
+
+	`spouse_assure` tinyint unsigned not null default 1 comment '配偶是否愿意签担保函,1-是',
+
+	`otype` tinyint unsigned not null default 0 comment '操作类型,0-客户经理提交草稿,10-初次面审,30-核查人员完成后面审复审',
 	`addtime` int not null comment '贷款修改时间',
 	PRIMARY key (`id`),
 	key lid(`lid`),

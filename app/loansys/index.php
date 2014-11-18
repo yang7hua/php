@@ -4,6 +4,20 @@ defined('APP_NAME') or defined('APP_NAME', 'loansys');
 define('CONF_PATH', ROOT_PATH . '/config');
 define('LIB_PATH', ROOT_PATH . '/lib');
 
+class App 
+{
+	public static function loadClass()
+	{
+	}
+
+	public static function loadRouter(\Phf\Mvc\Router $router)
+	{
+		$routers = require CONF_PATH . '/router.php';
+		foreach ($routers as $key=>$value)
+			$router->add($key, $value);
+	}
+}
+
 try{
 	$config = new Phf\Config\Adapter\Ini(CONF_PATH . '/web.php');
 	$config_app = new Phf\Config(include APP_PATH . '/config/config.php');
@@ -16,12 +30,12 @@ try{
 				APP_PATH . '/' . $config->application->controllersDir,
 				APP_PATH . '/' . $config->application->modelsDir,
 				APP_PATH . '/' . $config->application->libraryDir,
-				APP_PATH . '/common'
+				APP_PATH . '/lib'
 				)
 			)
 		->registerNamespaces(
 				array(
-					'Util'	=>	LIB_PATH . '/util'
+					'Util'	=>	LIB_PATH
 					)
 				)
 		->register();
@@ -41,7 +55,7 @@ try{
 
 	$di->set('view', function() use ($config){
 			$view = new Phf\Mvc\View();
-			$view->setViewsDir(WEB_PATH . '/tpl/' . $config->application->default->theme);
+			$view->setViewsDir(WEB_PATH . '/tpl/' . APP_NAME . '/' . $config->application->default->theme);
 			/*
 			$view->registerEngines(array(
 					'.html'	=>	'voltService'	
@@ -51,7 +65,7 @@ try{
 			});
 	$di->set('url', function(){
 			$url = new Phf\Mvc\Url();
-			$url->setBaseUri('/');
+			$url->setStaticBaseUri('/public/');
 			return $url;
 			});
 	$di->set('db', function() use ($config){
@@ -60,7 +74,6 @@ try{
 					'username'	=>	$config->database->username,
 					'password'	=>	$config->database->password,
 					'dbname'	=>	$config->database->dbname,
-					'charset'	=>	$config->database->charset
 					));	
 			});
 	$di->setShared('session', function(){
@@ -74,8 +87,8 @@ try{
 				'controller'=>	$config->application->default->controller,
 				'action'	=>	$config->application->default->action
 				));
+	App::loadRouter($router);
 	$router->handle();
-
 
 	include 'app.php';
 

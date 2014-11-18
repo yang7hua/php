@@ -1,4 +1,3 @@
---- 客户表
 drop table if exists `sys_user`;
 create table if not exists `sys_user`(
 	`uid` int auto_increment comment '用户ID',
@@ -10,13 +9,10 @@ create table if not exists `sys_user`(
     `email` varchar(64) DEFAULT NULL DEFAULT '' COMMENT '邮箱',
     `contact_name` varchar(30) NOT NULL DEFAULT '' COMMENT '紧急联系人',
     `contact_phone` varchar(20) NOT NULL default '' COMMENT '联系手机或电话',
-
-	--基本情况
-    `idcard_province` int(6) unsigned NOT NULL DEFAULT '0' COMMENT '户籍省份',
-    `idcard_city` int(6) unsigned NOT NULL DEFAULT '0' COMMENT '户籍城市',
-
+	-- 基本情况
+    `idcard_province` int unsigned NOT NULL DEFAULT 0 COMMENT '户籍省份',
+    `idcard_city` int unsigned NOT NULL DEFAULT 0 COMMENT '户籍城市',
 	`addtime` int not null comment '客户创建日期',
-
 	primary key(`uid`),
 	unique key(`idcard`)
 )engine=InnoDB default charset=utf8 comment='用户表';
