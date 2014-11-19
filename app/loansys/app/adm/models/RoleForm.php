@@ -1,27 +1,25 @@
 <?php
 
-class DepartmentForm extends ModelForm
+class RoleForm extends ModelForm
 {
 	public static function fields()
 	{
 		return [
-			/*
-			'did'	=>	null,
-			'pid'	=>	[
-				'label'	=>	'父级部门',
+			'rid'	=>	null,
+			'did'	=>	[
+				'label'	=>	'部门名称',
 				'type'	=>	'select',
 				'inputOptions'	=>	[
 					'class'	=>	'col-lg-3'	
 				],
-				'options'	=>	Department::all(true),
+				'options'	=>	Department::options(),
 				'default'	=>	0,
 				'validator'	=> [
 					'required'	=> true,
 				]	
 			],
-			 */
 			'name'	=>	[
-				'label'	=>	'部门名称',
+				'label'	=>	'角色名称',
 				'type'	=>	'text',
 				'inputOptions'	=>	[
 					'class'	=>	'col-lg-3'
@@ -38,6 +36,6 @@ class DepartmentForm extends ModelForm
 
 	public function add()
 	{
-		return Department::add($this->data);
+		return Role::add($this->data);
 	}
 }

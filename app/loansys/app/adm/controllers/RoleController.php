@@ -1,11 +1,11 @@
 <?php
 
-class DepartmentController extends Controller
+class RoleController extends Controller
 {
 	public function listAction()
 	{
-		$departments = Department::all();
-		$this->view->setVar('departments', $departments);
+		$roles = Role::all();
+		$this->view->setVar('roles', $roles);
 	}
 
 	public function addAction()
@@ -14,7 +14,7 @@ class DepartmentController extends Controller
 			$data = $this->request->getPost();
 			if (empty($data))
 				$this->error('参数错误');
-			$modelForm = new DepartmentForm();
+			$modelForm = new RoleForm();
 			if ($result = $modelForm->validate($data)) {
 				if ($modelForm->add())
 					$this->success('操作成功');

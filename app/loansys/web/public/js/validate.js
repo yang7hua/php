@@ -20,7 +20,11 @@ $(function(){
 
 	function ajaxSubmitCallback(res)
 	{
-		console.log(res);
+		return;
+		if (res['ret'] < 1)
+			alert(res['msg']);
+		else
+			location.reload();
 	}
 
 	$.validator.setDefaults({
@@ -34,6 +38,13 @@ $(function(){
 				error.appendTo(element.parent().find(".help-block"));
 			}
 	});
+
+	$.validator.addMethod('regex', function(value, element, param){
+		//var regex = new RegExp(param); 
+		var regex = new RegExp('^[\\w_]+$');
+		
+		return regex.test(value);
+	}, "用户名格式不正确");
 
 	//表单验证
 	$("form").each(function(){

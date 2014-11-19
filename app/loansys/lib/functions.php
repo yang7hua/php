@@ -47,3 +47,8 @@ function getCssPath($appname = '')
 {
 	return rtrim(PUBLIC_PATH . '/css/' . $appname, '/');
 }
+
+function password($password, $salt = 'loansys')
+{
+	return md5(md5($password . $salt));
+}

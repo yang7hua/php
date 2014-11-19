@@ -34,12 +34,16 @@ class Controller extends \Phf\Mvc\Controller
 		}else{
 			$return['msg'] = $data;
 		}
-		echo json_encode($return);
-		$this->view->disable();
+		exit(json_encode($return));
 	}
 
-	public function error($msg)
+	public function error($output)
 	{
-		$this->ajaxReturn($msg, false);
+		$this->ajaxReturn($output, false);
+	}
+
+	public function success($output)
+	{
+		$this->ajaxReturn($output);
 	}
 }

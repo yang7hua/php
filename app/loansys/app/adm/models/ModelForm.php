@@ -2,11 +2,23 @@
 
 class ModelForm
 {
+	protected $data = null;
+	
+	/**
+	 * 验证数据
+	 */
+	public function validate($data)
+	{
+		$fields = self::fields();
+		$this->data = $data;
+		return true;
+	}
+
 	private static $inputTemplate = <<<EOT
 		<div class='form-group'>
 			<label class='{labelClass} control-label'>{label}</label>
 			<div class='{inputClass}'>{input}<div class='help-block'></div></div>
-			<div class='col-lg-2 remark'>{remark}</div>
+			<div class='{remarkClass} remark'>{remark}</div>
 		</div>
 EOT;
 
@@ -19,12 +31,12 @@ EOT;
 		</div>
 EOT;
 
-	public function fields()
+	public static function fields()
 	{
 		return [];
 	}
 
-	public function beginForm(array $attrs = [])
+	public static function beginForm(array $attrs = [])
 	{
 		$html = '<form class="form-horizontal"';
 		isset($attrs['method']) or $attrs['method'] = 'post';
@@ -53,7 +65,7 @@ EOT;
 					$html .= self::selectInput($field, $options); 
 					break;
 				default:
-					$html .= self::textInput($field, $options); 
+					$html .= self::input($field, $options, $options['type']); 
 					break;
 			}
 		}
@@ -69,14 +81,15 @@ EOT;
 		}
 		$labelClass = isset($options['labelOptions']['class']) ? $options['labelOptions']['class'] : 'col-lg-2';
 		$inputClass = isset($options['inputOptions']['class']) ? $options['inputOptions']['class'] : 'col-lg-8';
-		$pattern = ['{input}', '{label}', '{labelClass}', '{inputClass}', '{remark}'];
-		$replace = [$input, $label, $labelClass, $inputClass, $options['remark']];
+		$remarkClass = isset($options['remarkOptions']['class']) ? $options['remarkOptions']['class'] : 'col-lg-2';
+		$pattern = ['{input}', '{label}', '{labelClass}', '{inputClass}', '{remark}', '{remarkClass}'];
+		$replace = [$input, $label, $labelClass, $inputClass, $options['remark'], $remarkClass];
 		return str_replace($pattern, $replace, $template);
 	}
 
-	public static function textInput($field, array $options = [])
+	public static function input($field, array $options = [], $type = 'text')
 	{
-		$attrs['type'] = 'text';
+		$attrs['type'] = $type;
 		$attrs['name'] = $field;
 		$attrs['class'] = self::getClass($options['validator']);
 
@@ -126,8 +139,9 @@ EOT;
 	private static function getAttrs(array $options = [])
 	{
 		$html = null;
-		foreach ($options as $key=>$attr)
-			$html .= " $key='$attr'";
+		foreach ($options as $key=>$attr) {
+			$html .= " $key=\"$attr\"";
+		}
 		return $html;
 	}
 

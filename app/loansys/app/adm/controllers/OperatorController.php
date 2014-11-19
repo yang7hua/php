@@ -1,11 +1,11 @@
 <?php
 
-class DepartmentController extends Controller
+class OperatorController extends Controller
 {
 	public function listAction()
 	{
-		$departments = Department::all();
-		$this->view->setVar('departments', $departments);
+		$operators = Operator::all();
+		$this->view->setVar('operators', $operators);
 	}
 
 	public function addAction()
@@ -14,7 +14,7 @@ class DepartmentController extends Controller
 			$data = $this->request->getPost();
 			if (empty($data))
 				$this->error('参数错误');
-			$modelForm = new DepartmentForm();
+			$modelForm = new OperatorForm();
 			if ($result = $modelForm->validate($data)) {
 				if ($modelForm->add())
 					$this->success('操作成功');
@@ -23,5 +23,12 @@ class DepartmentController extends Controller
 			}
 			$this->error($result);
 		}
+	}
+
+	public function existAction()
+	{
+		$username = $this->request->get('username');
+		echo Operator::exist($username) ? 'false' : 'true';
+		$this->view->disable();
 	}
 }
