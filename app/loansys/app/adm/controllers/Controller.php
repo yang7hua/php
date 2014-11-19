@@ -15,5 +15,31 @@ class Controller extends \Phf\Mvc\Controller
 		echo 'base Controller .';
 	}
 
+	public function isAjax()
+	{
+		if ($this->request->isAjax() || $this->request->get('format') === 'json')
+			return true;
+		return false;
+	}
 
+	public function ajaxReturn($data, $success = true)
+	{
+		$return = array();
+		$return['ret'] = $success ? 1 : 0;
+		if($success){
+			if(is_string($data))
+				$return['msg'] = $data;
+			else if(is_array($data))
+				$return['data'] = $data;
+		}else{
+			$return['msg'] = $data;
+		}
+		echo json_encode($return);
+		$this->view->disable();
+	}
+
+	public function error($msg)
+	{
+		$this->ajaxReturn($msg, false);
+	}
 }

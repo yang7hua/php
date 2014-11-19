@@ -9,9 +9,10 @@ class DepartmentForm extends ModelForm
 			'pid'	=>	[
 				'label'	=>	'父级部门',
 				'type'	=>	'select',
-				'options'	=>	[
-					['did'=>null, 'pid'=>0, 'name'=>'顶级']
+				'inputOptions'	=>	[
+					'class'	=>	'col-lg-3'	
 				],
+				'options'	=>	Department::all(),
 				'default'	=>	0,
 				'validator'	=> [
 					'required'	=> true,

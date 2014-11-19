@@ -2,7 +2,7 @@
 
 define('WEB_PATH', __DIR__);
 define('ROOT_PATH', realpath(WEB_PATH . '/../'));
-define('PUBLIC_PATH', WEB_PATH . '/public');
+define('PUBLIC_PATH', '/public');
 
 define('ADM_NAME', 'adm');
 

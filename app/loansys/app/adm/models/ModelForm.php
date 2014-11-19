@@ -27,7 +27,7 @@ EOT;
 	public function beginForm(array $attrs = [])
 	{
 		$html = '<form class="form-horizontal"';
-		isset($attrs['type']) or $attrs['type'] = 'post';
+		isset($attrs['method']) or $attrs['method'] = 'post';
 		if (!empty($attrs)) {
 			foreach ($attrs as $attr=>$value)
 				$html .=	"$attr='$value'";
@@ -50,6 +50,7 @@ EOT;
 				continue;
 			switch ($options['type']) {
 				case 'select':
+					$html .= self::selectInput($field, $options); 
 					break;
 				default:
 					$html .= self::textInput($field, $options); 
@@ -84,6 +85,31 @@ EOT;
 		$input .= '/>';
 
 		return self::renderField($options['label'], $input, 'text', $options);
+	}
+
+	public static function selectInput($field, array $options = [])
+	{
+		$attrs['name'] = $field;
+		$attrs['class'] = self::getClass($options['validator']);
+
+		$input = '<select';
+		$input .= self::getAttrs($attrs);
+		$input .= '/>';
+
+		$input .= self::getSelectOptions($options['options']);
+
+		$input .= '<select>';
+
+		return self::renderField($options['label'], $input, 'select', $options);
+	}
+
+	private static function getSelectOptions($options)
+	{
+		$str = null;
+		foreach ($options as $option) {
+			$str .= '<option value="'.$option['value'].'">' . $option['name'] . '</option>';
+		}
+		return $str;
 	}
 
 	public static function button($name, array $options = [], $type = 'submit')
@@ -121,4 +147,9 @@ EOT;
 		return $class;
 	}
 
+	public static function registerValidateJs()
+	{
+		$code = null;
+		\Func\registerJs($code);
+	}
 }
