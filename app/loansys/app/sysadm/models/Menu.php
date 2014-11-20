@@ -34,6 +34,27 @@ class Menu extends Model
 			'order'	=>	6,
 			'url'	=>	'/operator/list'
 		],
+		[
+			'id'	=>	10,
+			'pid'	=>	0,
+			'name'	=>	'权限管理',
+			'order'	=>	3,
+			'url'	=>	'/'
+		],
+		[
+			'id'	=>	21,
+			'pid'	=>	10,
+			'name'	=>	'权限管理',
+			'order'	=>	3,
+			'url'	=>	'/authority/list'
+		],
+		[
+			'id'	=>	23,
+			'pid'	=>	10,
+			'name'	=>	'权限分配',
+			'order'	=>	5,
+			'url'	=>	'/authority/allot'
+		],
 	];
 
 	public static function all()

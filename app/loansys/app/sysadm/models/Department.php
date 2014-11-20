@@ -48,4 +48,10 @@ class Department extends Model
 		$data['pid'] = 0;
 		return $model->create($data);
 	}
+
+	public static function getManagerDid()
+	{
+		return 2;
+	}
+
 }

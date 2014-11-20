@@ -2,6 +2,12 @@
 
 class Role extends Model
 {
+	public static function findById($rid)
+	{
+		$info = self::findFirst($rid)->toArray();
+		return self::format($info, true);
+	}
+
 	public static function all($withKey = false)
 	{
 		$list = self::find()->toArray();
@@ -15,13 +21,15 @@ class Role extends Model
 		return self::format($list);
 	}
 
-	public static function format(array $data = [])
+	public static function format(array $data = [], $single = false)
 	{
 		$departments = Department::all(true);
+		if ($single)
+			$data = [$data];
 		foreach ($data as &$row) {
 			$row['dname'] = $departments[$row['did']]['name'];
 		}
-		return $data;
+		return $single ? $data[0] : $data;
 	}
 
 	public static function add($data)
@@ -42,12 +50,20 @@ class Role extends Model
 		if ($list) {
 			foreach ($list as $row) {
 				array_push($options, [
-					'value'	=>	$row['did'],
+					'value'	=>	$row['rid'],
 					'name'	=>	$row['name']
 				]);
 			}
 		}
 		
 		return $options;	
+	}
+
+	public static function edit($rid, $data)
+	{
+		$info = Role::findFirst($rid);
+		foreach ($data as $field=>$value)
+			$info->{$field}	=	$value;
+		return $info->update();
 	}
 }

@@ -1,25 +1,28 @@
 <?php
 
-class RoleForm extends ModelForm
+class DepartmentForm extends ModelForm
 {
 	public static function fields()
 	{
 		return [
-			'rid'	=>	null,
-			'did'	=>	[
-				'label'	=>	'部门名称',
+			/*
+			'did'	=>	null,
+			'pid'	=>	[
+				'label'	=>	'父级部门',
 				'type'	=>	'select',
 				'inputOptions'	=>	[
 					'class'	=>	'col-lg-3'	
 				],
-				'options'	=>	Department::options(),
+				'options'	=>	Department::all(true),
 				'default'	=>	0,
 				'validator'	=> [
 					'required'	=> true,
 				]	
 			],
+			 */
+		'add'	=>	[
 			'name'	=>	[
-				'label'	=>	'角色名称',
+				'label'	=>	'部门名称',
 				'type'	=>	'text',
 				'inputOptions'	=>	[
 					'class'	=>	'col-lg-3'
@@ -31,11 +34,12 @@ class RoleForm extends ModelForm
 				],
 				'remark'	=>	'名称在2-10个字符之间'
 			]
+		]
 		];
 	}
 
 	public function add()
 	{
-		return Role::add($this->data);
+		return Department::add($this->data);
 	}
 }

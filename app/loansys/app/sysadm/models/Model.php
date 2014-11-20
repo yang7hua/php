@@ -24,6 +24,6 @@ class Model extends \Phf\Mvc\Model
 	 */
 	public static function baseUrl($url)
 	{
-		return '/adm/' . ltrim($url, '/');
+		return \Func\url($url);
 	}
 }

@@ -20,11 +20,22 @@ $(function(){
 
 	function ajaxSubmitCallback(res)
 	{
-		return;
-		if (res['ret'] < 1)
+		res = eval('(' + res + ')');
+		if (res['ret'] < 1) {
 			alert(res['msg']);
-		else
-			location.reload();
+			return;
+		}
+		var data = res['data'];
+		if (data['redirect']) {
+			if (data['redirect']['seconds']) {
+				setTimeout(function(){
+					location.href = data.redirect.url;
+				}, data.redirect.seconds * 1000);
+				return;
+			}
+			location.href = data.redirect.url;
+		}
+		//	location.reload();
 	}
 
 	$.validator.setDefaults({

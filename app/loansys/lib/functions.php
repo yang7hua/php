@@ -2,6 +2,16 @@
 
 namespace Func;
 
+function url($url, $host = false)
+{
+	$base = null;
+	if ($host)
+		$base .= 'http://' . $_SERVER['SERVER_NAME'];
+	if (APP_NAME == ADM_NAME)
+		return $base . '/' . APP_NAME . '/' . trim($url, '/');
+	return $base . '/' . trim($url, '/');
+}
+
 /**
  * 加载js文件到assert中
  * @fresh: true则直接返回

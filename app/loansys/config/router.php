@@ -2,7 +2,7 @@
 
 return [
 	'/'	=>	['controller'=>'site', 'action'=>'index'],
-	'/adm'	=>	['controller' => 'index', 'action' => 'index'],	
-	'/adm/:controller'	=>	['controller' => 1, 'action' => 'index'],	
-	'/adm/:controller/:action'	=>	['controller' => 1, 'action' => 2]	
+	'/sysadm[/]?'	=>	['controller' => 'index', 'action' => 'index'],	
+	'/sysadm/:controller/?'	=>	['controller' => 1, 'action' => 'index'],	
+	'/sysadm/:controller/:action/:params'	=>	['controller' => 1, 'action' => 2, 'params' => 3]	
 ];
