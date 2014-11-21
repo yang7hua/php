@@ -16,7 +16,7 @@ function url($url, $host = false)
  * 加载js文件到assert中
  * @fresh: true则直接返回
  */
-function loadJsFile($filename, $opts = [], $appname = 'adm', $fresh = false)
+function loadJsFile($filename, $opts = ['depends'=>'\Assert\app'], $appname = 'adm', $fresh = false)
 {
 	$str = null;
 

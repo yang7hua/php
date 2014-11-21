@@ -5,6 +5,7 @@ define('ROOT_PATH', realpath(WEB_PATH . '/../'));
 define('PUBLIC_PATH', '/public');
 
 define('ADM_NAME', 'sysadm');
+define('FRONT_NAME', 'loansys');
 
 $URI = explode('/', $_SERVER['REQUEST_URI']);
 

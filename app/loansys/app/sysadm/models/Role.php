@@ -36,6 +36,7 @@ class Role extends Model
 	{
 		$model = new self();
 		$data['pid'] = 0;
+		$data['auth'] = ' ';
 		return $model->create($data);
 	}
 

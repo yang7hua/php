@@ -2,6 +2,28 @@
 
 class OperatorController extends Controller
 {
+
+	public static function actions()
+	{
+		return [
+			'see'	=>	['list'],
+			'opera'	=>	['add', 'edit']
+		];
+	}
+
+	public static function authorities()
+	{
+		return [
+			'operator'	=>	[
+				'name'	=>	'账号管理',
+				'authorities'	=>	[
+					'see'	=>	'查看',
+					'opera'	=>	'操作',
+				]
+			]
+		];
+	}
+
 	public function listAction()
 	{
 		$operators = Operator::all();

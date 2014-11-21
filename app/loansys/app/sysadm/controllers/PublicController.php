@@ -26,6 +26,7 @@ class PublicController extends Controller
 					$this->session->set('oid', $info->oid);
 					$this->session->set('o_name', $info->name);
 					$this->session->set('o_rid', $info->rid);
+					$this->session->set('o_auth', Authority::getAuthByRid($info->rid));
 					$this->success([
 						'msg'=>'登录成功', 
 						'redirect'=>[

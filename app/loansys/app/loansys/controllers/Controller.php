@@ -1,18 +1,9 @@
 <?php
 
-class Controller extends \Phf\Mvc\Controller
+class Controller extends \Base\Controller
 {
-	protected $view = null;
-
-	public function initialize()
+	public function isLogin()
 	{
-		global $view;
-		$this->view = $view;
-		$this->view->setLayout('main');
-	}
-
-	public function emptyAction()
-	{
-		echo 'base Controller .';
+		return false;
 	}
 }

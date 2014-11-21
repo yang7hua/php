@@ -19,11 +19,72 @@ class App
 		}
 	}
 
+	/**
+	 * 获取所有控制器的权限配置
+	 */
+	public static function authorities()
+	{
+		static $authorities = [];
+
+		if (!empty($authorities))
+			return $authorities;
+		$paths = [
+			ADM_NAME	=>	self::getPathByApp(ADM_NAME) . '/controllers',
+			FRONT_NAME	=>	self::getPathByApp(FRONT_NAME) . '/Controllers'	
+		];
+
+		foreach ($paths as $app=>$path) {
+			$files[$app] = glob($path . '/*Controller.php');
+		}
+
+		if (!is_array($files) and empty($files))
+			return $authorities;
+
+		foreach ($files as $app=>$appfiles) {
+			$app_authorities = [];
+			foreach ($appfiles as $file) {
+				$classname = pathinfo($file)['filename'];
+				$newAuthorities = $classname::authorities();
+				if (!empty($newAuthorities))
+					$app_authorities = array_merge($app_authorities, $newAuthorities);
+			}
+			$authorities[$app] = $app_authorities;
+		}
+		return $authorities;
+
+		return $authorities;
+	}
+
+	public static function getPathByApp($appname = '')
+	{
+		return rtrim(ROOT_PATH . '/app/' . ($appname ? $appname . '/' : ''), '/');
+	}
+
+	public static function getTextByAppname($appname)
+	{
+		static $text = [
+			'loansys'	=>	'贷款系统',
+			'sysadm'	=>	'管理后台'
+		];
+		return array_key_exists($appname, $text) ? $text[$appname] : null;
+	}
+
 	public static function loadRouter(\Phf\Mvc\Router $router)
 	{
 		$routers = require CONF_PATH . '/router.php';
 		foreach ($routers as $key=>$value)
 			$router->add($key, $value);
+	}
+
+	public function filterMenus($menus)
+	{
+		global $di;
+		$session = $di->get('session');
+		foreach ($menus as $key=>$menu) {
+			if ($menu['pid'] != 0 and !Authority::actionExist($session->get('o_auth'), $menu['controller'], $menu['action']))
+				unset($menus[$key]);
+		}
+		return $menus;
 	}
 }
 
@@ -45,12 +106,15 @@ try{
 				APP_PATH . '/' . $config->application->controllersDir,
 				APP_PATH . '/' . $config->application->modelsDir,
 				APP_PATH . '/' . $config->application->libraryDir,
-				APP_PATH . '/lib'
+				APP_PATH . '/lib',
+				APP::getPathByApp(ADM_NAME) . '/controllers',
+				APP::getPathByApp(FRONT_NAME) . '/controllers'
 				)
 			)
 		->registerNamespaces(
 				array(
 					'Util'	=>	LIB_PATH,
+					'Base'	=>	LIB_PATH . '/base'
 					)
 				)
 		->register();

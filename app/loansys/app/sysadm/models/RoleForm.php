@@ -5,6 +5,7 @@ class RoleForm extends ModelForm
 	public static function fields()
 	{
 		return [
+		//添加角色
 		'add'	=>	[
 			'did'	=>	[
 				'label'	=>	'部门名称',
@@ -32,6 +33,8 @@ class RoleForm extends ModelForm
 				'remark'	=>	'名称在2-10个字符之间'
 			]
 		],
+
+		//编辑角色
 		'edit'	=>	[
 			'rid'	=>	[
 				'type'	=>	'hidden'
@@ -61,7 +64,18 @@ class RoleForm extends ModelForm
 				],
 				'remark'	=>	'名称在2-10个字符之间'
 			]
+		],
+
+		//角色授权
+		'auth'	=>	[
+			'rid'	=>	[
+				'type'	=>	'hidden'
+			],
+			'auth'	=>	[
+				'type'	=>	'checkbox',
+			]
 		]
+		
 		];
 	}
 
@@ -75,5 +89,10 @@ class RoleForm extends ModelForm
 		$rid = $this->data['rid'];
 		unset($this->data['rid']);
 		return Role::edit($rid, $this->data);
+	}
+
+	public function allot()
+	{
+		return $this->edit();
 	}
 }

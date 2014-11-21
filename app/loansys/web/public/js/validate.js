@@ -26,7 +26,7 @@ $(function(){
 			return;
 		}
 		var data = res['data'];
-		if (data['redirect']) {
+		if (data && data['redirect']) {
 			if (data['redirect']['seconds']) {
 				setTimeout(function(){
 					location.href = data.redirect.url;

@@ -11,65 +11,51 @@ class Menu extends Model
 			'pid'	=>	0,
 			'name'	=>	'组织管理',
 			'order'	=>	1,
-			'url'	=>	'/'
+			'url'	=>	'/',
 		],
 		[
 			'id'	=>	11,
 			'pid'	=>	1,
 			'name'	=>	'部门管理',
 			'order'	=>	1,
-			'url'	=>	'/department/list'
+			'url'	=>	'/department/list',
+			'controller'	=>	'department',
+			'action'	=>	'list'
 		],	
 		[
 			'id'	=>	12,
 			'pid'	=>	1,
 			'name'	=>	'角色管理',
 			'order'	=>	3,
-			'url'	=>	'/role/list'
+			'url'	=>	'/role/list',
+			'controller'	=>	'role',
+			'action'	=>	'list'
 		],
 		[
 			'id'	=>	13,
 			'pid'	=>	1,
-			'name'	=>	'成员管理',
+			'name'	=>	'账号管理',
 			'order'	=>	6,
-			'url'	=>	'/operator/list'
-		],
-		[
-			'id'	=>	10,
-			'pid'	=>	0,
-			'name'	=>	'权限管理',
-			'order'	=>	3,
-			'url'	=>	'/'
-		],
-		[
-			'id'	=>	21,
-			'pid'	=>	10,
-			'name'	=>	'权限管理',
-			'order'	=>	3,
-			'url'	=>	'/authority/list'
-		],
-		[
-			'id'	=>	23,
-			'pid'	=>	10,
-			'name'	=>	'权限分配',
-			'order'	=>	5,
-			'url'	=>	'/authority/allot'
+			'url'	=>	'/operator/list',
+			'controller'	=>	'operator',
+			'action'	=>	'list'
 		],
 	];
 
-	public static function all()
+	public static function all($format = true)
 	{
-		return self::tree(self::$menus);
+		if ($format)
+			return self::tree(self::$menus);
+		else
+			return self::$menus;
 	}
 
-	public static function format($menus)
+	public static function filter($menus)
 	{
-		foreach ($menus as &$menu) {
-			$menu['url'] = parent::baseUrl($menu['url']);
+		foreach ($menus as $key=>$menu) {
 		}
 		return $menus;
 	}
-
 
 	public static function tree($menus)
 	{

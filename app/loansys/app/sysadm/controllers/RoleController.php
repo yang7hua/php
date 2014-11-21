@@ -2,6 +2,28 @@
 
 class RoleController extends Controller
 {
+
+	public static function actions()
+	{
+		return [
+			'see'	=>	['list'],
+			'opera'	=>	['add', 'edit']
+		];
+	}
+
+	public static function authorities()
+	{
+		return [
+			'role'	=>	[
+				'name'	=>	'角色管理',
+				'authorities'	=>	[
+					'see'	=>	'查看',
+					'opera'	=>	'操作',
+				]
+			]
+		];
+	}
+
 	public function listAction()
 	{
 		$roles = Role::all();
