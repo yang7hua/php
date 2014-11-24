@@ -36,7 +36,7 @@ class OperatorController extends Controller
 			$data = $this->request->getPost();
 			if (empty($data))
 				$this->pageError('param');
-			$modelForm = new OperatorForm();
+			$modelForm = new OperatorForm('add');
 			if ($result = $modelForm->validate($data)) {
 				if ($modelForm->add())
 					$this->success('操作成功');

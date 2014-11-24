@@ -79,20 +79,20 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 	/**
 	 * 检查操作权限
 	 */
-	private function checkAuth()
+	protected function checkAuth($authkey='o_auth')
 	{
-		if (!$this->allowedAction())
+		if (!$this->allowedAction($authkey))
 			$this->pageError('permission');
 	}
 
 	/**
 	 * 检查登录
 	 */
-	public function allowedAction($actionName = '')
+	public function allowedAction($authkey='o_auth', $actionName = '')
 	{
 		$appname = APP_NAME;
 		$controllerName = $this->getControllerName();
-		$auth = $this->session->get('o_auth');
+		$auth = $this->session->get($authkey);
 
 		if (empty($actionName))
 			$actionName = $this->getActionName();
@@ -112,8 +112,6 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 				if (array_key_exists($action, $actions))	
 					$allowedActions = array_merge($allowedActions, $actions[$action]);
 			}	
-			//print_r($allowedActions);
-			//exit();
 			if (!in_array($actionName, $allowedActions))
 				$allowed = false;
 		}
@@ -124,9 +122,11 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 	/**
 	 * 单页面展示
 	 */
-	public function single($pagename)
+	public function single($pagename, $params = [])
 	{
 		$this->noMainLayout();
+		if (!empty($params))
+			$this->view->setVars($params);
 		$this->view->render('single', $pagename);
 		exit();
 	}
@@ -197,7 +197,7 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 	 */
 	public function _404($err)
 	{
-		$this->single('404');
+		$this->single('404', $err);
 	}
 
 	/**

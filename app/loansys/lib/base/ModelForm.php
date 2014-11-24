@@ -300,7 +300,7 @@ class Validator
 
 	public function getData($field)
 	{
-		return $this->data[$field];
+		return isset($this->data[$field]) ? $this->data[$field] : $this->getRule($field)['default'];
 	}
 
 	public function getRule($field)

@@ -113,8 +113,9 @@ try{
 			)
 		->registerNamespaces(
 				array(
-					'Util'	=>	LIB_PATH,
-					'Base'	=>	LIB_PATH . '/base'
+					'Util'	=>	LIB_PATH . '/util',
+					'Base'	=>	LIB_PATH . '/base',
+					'App'	=>	APP_PATH . '/lib',
 					)
 				)
 		->register();

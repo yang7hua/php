@@ -44,6 +44,17 @@ function getAssert($key)
 				],
 				'depends'	=>	'\Assert\app'
 			]
+		],
+
+		'address'	=>	[
+			'jsfiles'	=>	[
+				'basedir'	=>	null,
+				'files'	=>	[
+					//'data/bdist.js',
+					'data/tdist.js',
+					'cascaded.js'
+				]
+			]
 		]
 	];
 	return $assert[$key];
@@ -57,6 +68,11 @@ function app()
 function validate()
 {
 	return register(getAssert('validate'));
+}
+
+function address()
+{
+	return register(getAssert('address'));
 }
 
 function register($assert)

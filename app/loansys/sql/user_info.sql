@@ -11,21 +11,6 @@ CREATE TABLE IF NOT EXISTS `sys_userinfo` (
 	`lid` int unsigned not null COMMENT '对应每笔贷款的实时情况',
 	`oid` int unsigned not null comment '操作人员ID',
 
-	-- 基本情况
-    `province` int(6) unsigned NOT NULL DEFAULT '0' COMMENT '居住省份',
-    `city` int(6) unsigned NOT NULL DEFAULT '0' COMMENT '居住城市',
-    `address` varchar(150) NOT NULL DEFAULT '' COMMENT '详细居住地址',
-    `address_phone` varchar(20) NOT NULL DEFAULT '' COMMENT '居住地电话',
-	`info` varchar(1000) not null default '' COMMENT '基本情况说明',
-
-	-- 婚姻情况
-    `marriage` tinyint(1) NOT NULL DEFAULT '0' COMMENT '婚姻状况:0-未知,1-已婚,2-离异,3-未婚',
-    `have_child` tinyint(1) NOT NULL DEFAULT '0' COMMENT '有无子女:0-未知,1-有,2-无',
-	`child_info` varchar(100) not null default '' comment '子女情况说明',
-	`spouse_name` varchar(10) not null default '' comment '配偶姓名', 
-	`spouse_idcard` char(18) not null default '' COMMENT '配偶身份证',
-	`spouse_info` varchar(100) not null default '' COMMENT '配偶情况说明',
-
 	-- 固定资产
     `have_house` tinyint(1) NOT NULL DEFAULT '0' COMMENT '住房情况:0-未知,1-无,2-商品房,3-自建房',
     `house_loan` tinyint(1) NOT NULL DEFAULT '0' COMMENT '有无房贷:0-未知,1-有,2-无',
@@ -34,6 +19,8 @@ CREATE TABLE IF NOT EXISTS `sys_userinfo` (
     `car_year` smallint(4) NOT NULL DEFAULT '0' COMMENT '购车年份',
     `car_loan` tinyint(1) NOT NULL DEFAULT '0' COMMENT '有无车贷:0-未知,1-有,2-无',
 	`other_info` varchar(1000) not null default '' comment '其它资产说明',
+
+	`bigger` tinyint unsigned not null default 0 comment '是否放大',
 
 	-- 工作情况
     `company` varchar(90) NOT NULL COMMENT '单位名称或个人',

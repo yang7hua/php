@@ -3,12 +3,25 @@
 namespace Base;
 //use \Phf\Mvc\Model\Criteria as Criteria;
 
+use Phf\Db\RawValue;
+
 class Model extends \Phf\Mvc\Model
 {
 	protected static $db;
 	protected function initialize()
 	{
 		self::$db = $this->getDi()->get('db');
+	}
+
+	protected function rawFields()
+	{
+		return [];
+	}
+
+	public function beforeValidationOnCreate()
+	{
+		foreach ($this->rawFields() as $field)
+			$this->{$field} = new RawValue('default');
 	}
 
 	/**

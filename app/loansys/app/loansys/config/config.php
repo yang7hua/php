@@ -5,6 +5,7 @@ return array(
 		'username'	=>	'root',
 		'password'	=>	'mysql',
 		'dbname'	=>	'loansys',
-		'charset'	=>	'utf8'
+		'charset'	=>	'utf8',
+		'prefix'	=>	'sys_'
 	)
 );

@@ -31,6 +31,8 @@ class Authority extends Model
 			return false;
 		if (empty($appname))
 			$appname = APP_NAME;
+		if (!isset($auth[$appname]))
+			return false;
 		return array_key_exists($controller, $auth[$appname]);
 	}
 

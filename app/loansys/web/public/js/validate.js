@@ -46,16 +46,20 @@ $(function(){
 				return false;
 			},
 			errorPlacement : function(error, element) {
-				error.appendTo(element.parent().find(".help-block"));
+				error.appendTo(element.parents('.form-group').find(".help-block"));
 			}
 	});
 
 	$.validator.addMethod('regex', function(value, element, param){
 		//var regex = new RegExp(param); 
-		var regex = new RegExp('^[\\w_]+$');
+		var regex = new RegExp(param);
 		
 		return regex.test(value);
-	}, "用户名格式不正确");
+	}, "格式不正确");
+
+	$.validator.addMethod('ch', function(value, element, param){
+		return util.isCh(value); 
+	}, "必须为中文");
 
 	//表单验证
 	$("form").each(function(){
