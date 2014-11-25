@@ -269,11 +269,18 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 	public function getAuthByController()
 	{
 		$auth = $this->session->get('o_auth');
+
 		if ($auth[APP_NAME] and is_array($auth[APP_NAME]))
 			$auth = $auth[APP_NAME];
+		else
+			return [];
+
 		$controllerName = $this->getControllerName(); 
 		if (isset($auth[$controllerName]))
 			$auth = $auth[$controllerName];
+		else
+			return [];
+
 		return $auth;
 	}
 }
