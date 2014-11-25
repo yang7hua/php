@@ -37,12 +37,9 @@ class LoanController extends Controller
 		static $operators = ['face', 'visit', 'car'];
 		static $auth = null;
 		if (!$auth)
-			$auth = $this->session->get('o_auth');
-		if ($auth[APP_NAME] and is_array($auth[APP_NAME]))
-			$auth = $auth[APP_NAME];
-		$controllerName = get_class();
-		if (isset($auth[$controllerName]))
-			$auth = $auth[$controllerName];
+			$auth = $this->getAuthByController();
+		print_r($auth);
+		exit();
 	}
 
 	public static function authorities()

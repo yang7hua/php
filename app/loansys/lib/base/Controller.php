@@ -265,4 +265,15 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 	{
 		return APP_NAME == ADM_NAME ? $this->session->get('adm_id') : $this->session->get('oid');
 	}
+
+	public function getAuthByController()
+	{
+		$auth = $this->session->get('o_auth');
+		if ($auth[APP_NAME] and is_array($auth[APP_NAME]))
+			$auth = $auth[APP_NAME];
+		$controllerName = $this->getControllerName(); 
+		if (isset($auth[$controllerName]))
+			$auth = $auth[$controllerName];
+		return $auth;
+	}
 }
