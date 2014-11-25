@@ -20,9 +20,29 @@ class LoanController extends Controller
 				'detail'	=>	'详情',
 			],
 			//操作部分
-			'operator'	=>	[
+			'face'	=>	[
+				'face'	=>	'面审',
+			],
+			'visit'	=>	[
+				'visit'	=>	'上门审查',
+			],
+			'car'	=>	[
+				'car'	=>	'车评',
 			]
 		];
+	}
+
+	public function operators()
+	{
+		static $operators = ['face', 'visit', 'car'];
+		static $auth = null;
+		if (!$auth)
+			$auth = $this->session->get('o_auth');
+		if ($auth[APP_NAME] and is_array($auth[APP_NAME]))
+			$auth = $auth[APP_NAME];
+		$controllerName = get_class();
+		if (isset($auth[$controllerName]))
+			$auth = $auth[$controllerName];
 	}
 
 	public static function authorities()
@@ -33,7 +53,9 @@ class LoanController extends Controller
 				'authorities'	=>	[
 					'see'	=>	'贷款列表',
 					'apply'	=>	'贷款申请',
-					'operator'	=>	'操作'
+					'face'	=>	'面审',
+					'visit'	=>	'上门审查',
+					'car'	=>	'车评'
 				]
 			]
 		];
@@ -83,6 +105,7 @@ class LoanController extends Controller
 		$conditions['oid'] = $this->getOperatorId();
 		$list = (new User())->select($conditions);
 
+		$this->operators();
 		$this->view->setVars([
 				'list'	=>	$list
 			]);
