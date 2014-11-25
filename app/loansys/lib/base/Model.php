@@ -7,10 +7,9 @@ use Phf\Db\RawValue;
 
 class Model extends \Phf\Mvc\Model
 {
-	protected static $db;
-	protected function initialize()
+	public function getDb()
 	{
-		self::$db = $this->getDi()->get('db');
+		return $this->getDi()->get('db');
 	}
 
 	protected function rawFields()
@@ -23,6 +22,13 @@ class Model extends \Phf\Mvc\Model
 		foreach ($this->rawFields() as $field)
 			$this->{$field} = new RawValue('default');
 	}
+
+	public function beforeValidationOnUpdate()
+	{
+		foreach ($this->rawFields() as $field)
+			$this->{$field} = new RawValue('default');
+	}
+
 
 	/**
 	 * 添加表前缀
@@ -39,5 +45,21 @@ class Model extends \Phf\Mvc\Model
 	public static function baseUrl($url)
 	{
 		return \Func\url($url);
+	}
+
+	public static function getCriteria()
+	{
+		static $criteria = null;
+		if ($criteria)
+			return $criteria;
+		$criteria = new \Phf\Mvc\Model\Criteria();
+		return $criteria;
+	}
+
+	public function outputErrors($model)
+	{
+		foreach ($model->getMessages() as $row) {
+			echo $row->getMessage(),"<br/>";
+		}
 	}
 }

@@ -20,6 +20,59 @@ class App
 	}
 
 	/**
+	 * 根据角色获取能操作的actions
+	 * 用于放在页面顶部作为快捷链接
+	 */
+	public function getQuickLinks()
+	{
+		static $links = null;
+
+		if (!is_null($links))
+			return $links;
+
+		global $di;
+		$_authes = $di->get('session')->get('o_auth');
+		if (!is_array($_authes))
+			return $links;
+
+		$_authes = $_authes[APP_NAME];
+		$links = [];
+		//将允许的控制器和方法放入数组
+		$allowed_actions = [];
+		foreach ($_authes as $controller=>$actions) {
+			$_controller = ucfirst($controller) . 'Controller';	
+			//控制器的actions
+			$_actions = $_controller::actions();
+			if (!$_actions)
+				continue;
+			$allowed_controller_actions = [];
+			foreach ($actions as $action) {
+				$allowed_controller_actions = array_merge($allowed_controller_actions, $_actions[$action]);
+			}
+			$allowed_actions[$controller] = $allowed_controller_actions;
+		}
+		if (!empty($allowed_actions))
+		{
+			foreach ($allowed_actions as $controller=>$actions)
+			{
+				foreach ($actions as $action=>$text)
+				{
+					if (is_null($text))
+						continue;
+					if (is_array($text) and $text['link']) {
+						$links[] = [
+							'url'	=>	\Func\url("$controller/$action"), 
+							'text'	=>	$text['text']
+							];
+					}
+				}
+			}
+		}
+		//print_r($links);
+		return $links;	
+	}
+
+	/**
 	 * 获取所有控制器的权限配置
 	 */
 	public static function authorities()
@@ -63,8 +116,8 @@ class App
 	public static function getTextByAppname($appname)
 	{
 		static $text = [
-			'loansys'	=>	'贷款系统',
-			'sysadm'	=>	'管理后台'
+			FRONT_NAME	=>	'贷款系统',
+			ADM_NAME	=>	'管理后台'
 		];
 		return array_key_exists($appname, $text) ? $text[$appname] : null;
 	}

@@ -7,8 +7,7 @@
 DROP TABLE IF EXISTS `sys_userinfo`;
 CREATE TABLE IF NOT EXISTS `sys_userinfo` (
 	`id` int unsigned not NULL auto_increment,
-    `uid` int(10) unsigned NOT NULL COMMENT '用户ID',
-	`lid` int unsigned not null COMMENT '对应每笔贷款的实时情况',
+    `uid` int unsigned NOT NULL COMMENT '用户ID',
 	`oid` int unsigned not null comment '操作人员ID',
 
 	-- 固定资产

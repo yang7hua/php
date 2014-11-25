@@ -28,6 +28,7 @@ function getAssert($key)
 				'basedir'	=> null,
 				'files'	=>	[
 					'lib/jquery-1.11.1.min.js',
+					'lib/bootstrap.min.js',
 					'common.js'
 				]
 			]

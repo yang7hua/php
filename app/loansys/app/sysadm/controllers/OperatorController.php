@@ -6,8 +6,14 @@ class OperatorController extends Controller
 	public static function actions()
 	{
 		return [
-			'see'	=>	['list'],
-			'opera'	=>	['add', 'edit']
+			'see'	=>	[
+				'list'	=>	'账号列表'
+			],
+			'opera'	=>	[
+			'add'	=>	'添加账号', 
+			'edit'	=>	'修改账号', 
+			'exist'	=>	'唯一检测'
+			]
 		];
 	}
 

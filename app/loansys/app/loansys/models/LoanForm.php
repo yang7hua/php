@@ -6,49 +6,62 @@ class LoanForm extends ModelForm
 	{
 		return [
 			'apply'	=>	[
-				'uid'	=>	null,
+				'uid'	=>	[
+					'validator'	=>	[
+						'required'	=>	1
+					]
+				],
+				'loan_type'	=>	[
+					'default'	=>	1
+				],
+				'use_type'	=>	[
+					'validator'	=>	[
+						'required'	=>	1
+					]
+				],
+				'use_type_info'	=>	[
+					'default'	=>	'',
+					'validator'	=>	[
+						'required'	=>	1
+					]
+				],
 				'amount'	=>	[
 					'validator'	=>	[
-						'required'	=>	true,
-						'number'	=>	1,
+						'required'	=>	1
 					]
 				],
 				'deadline'	=>	[
 					'validator'	=>	[
-						'required'	=>	true,
-						'number'	=>	1,
+						'required'	=>	1
 					]
+				],
+				'deadline_type'	=>	[
+					'default'	=>	'm'
+				],
+				'days'	=>	[
+					'default'	=>  0	
 				],
 				'repay_method'	=>	[
+					'default'	=>  'o',
 					'validator'	=>	[
-						'required'	=>	true,
-						'number'	=>	1,
-					]
-				],
-				'use_type'	=>	[
-					'validator'	=>	[
-						'required'	=>	true,
-						'number'	=>	1,
-					]
-				],
-				'use_type_info'	=>	[
-					'validator'	=>	[
-						'required'	=>	true,
+						'required'	=>	1
 					]
 				],
 				'repay_source'	=>	[
-					'validator'	=>	[
-						'required'	=>	true,
-					]
+					'default'	=>  ''	
 				],
+				'description'	=>	[
+					'default'	=>  ''	
+				],
+				'status'	=>	[
+					'default'	=>	0
+				]
 			]
 		];
 	}
 
-	//申请贷款
 	public function apply()
 	{
-		return User::add($this->data, true);
+		return Loan::add($this->data, true);
 	}
-
 }

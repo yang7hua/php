@@ -62,3 +62,8 @@ function password($password, $salt = 'loansys')
 {
 	return md5(md5($password . $salt));
 }
+
+function uniqidByTime()
+{
+	return date('YmdHis') . mt_rand(1000,9999);
+}

@@ -5,8 +5,10 @@ class AuthorityController extends Controller
 	public static function actions()
 	{
 		return [
-				'allot'	=>	['allot']
-			];
+			'allot'	=>	[
+			'allot'	=>	'授权',
+			]
+		];
 	}
 
 	public static function authorities()

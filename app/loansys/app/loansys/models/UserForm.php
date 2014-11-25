@@ -6,6 +6,7 @@ class UserForm extends ModelForm
 	{
 		return [
 			'apply'	=>	[
+				'oid'	=>	[],
 				'realname'	=>	[
 					'validator'	=>	[
 						'required'	=>	true

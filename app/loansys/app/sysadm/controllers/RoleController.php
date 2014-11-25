@@ -6,8 +6,8 @@ class RoleController extends Controller
 	public static function actions()
 	{
 		return [
-			'see'	=>	['list'],
-			'opera'	=>	['add', 'edit']
+			'see'	=>	['list'=>'角色列表'],
+			'opera'	=>	['add'	=>	'添加角色', 'edit' => '修改角色']
 		];
 	}
 

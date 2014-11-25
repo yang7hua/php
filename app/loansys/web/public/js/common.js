@@ -85,4 +85,13 @@ $(function(){
 		util.moreheigh($(this));
 	})
 
+	$('.collapse').collapse();
+
+	$(".search").each(function(){
+		var form = $(this),
+			_btn = form.find(".search-btn");
+		_btn.on("click", function(){
+			form.submit();
+		})
+	});
 });

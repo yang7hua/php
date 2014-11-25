@@ -16,7 +16,7 @@ class PublicController extends Controller
 		if ($this->isAjax()) {
 			$data = $this->request->getPost();
 			if (empty($data))
-				$this->pageError('parao');
+				$this->pageError('param');
 			$modelForm = new OperatorForm('login');
 			if ($result = $modelForm->validate($data)) {
 				if ($info = $modelForm->login()) {

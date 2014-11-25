@@ -1,0 +1,62 @@
+<?php
+$heads['title'] = '贷款列表';
+?>
+
+<div class="loan-list">
+	<form class="search row" action="<?=\Func\url('/loan/list')?>" method="post">
+		<div class="col-lg-3">
+			<div class="input-group">
+				<input type="text" class="form-control" name="keyword" placeholder="请输入客户编号或者姓名">
+				<span class="input-group-addon cursor-pointer search-btn">
+					搜索
+				</span>
+			</div>
+		</div>
+	</form>
+	<br/>
+<?php
+if (!empty($list)):
+?>
+<table class="table table-striped">
+	<tr>
+		<th>客户编号</th>
+		<th>客户姓名</th>
+		<th>身份证号</th>
+		<th>联系方式</th>
+		<th>贷款金额 (万)</th>
+		<th>贷款期限</th>
+		<th>还款方式</th>
+		<th>贷款用途</th>
+		<th>贷款方式</th>
+		<th>贷款状态</th>
+		<th>创建时间</th>
+		<th>操作</th>
+	</tr>
+<?php
+	foreach ($list as $row):
+?>
+
+	<tr>
+		<td><?=$row['uid']?></td>
+		<td><?=$row['realname']?></td>
+		<td><?=$row['idcard']?></td>
+		<td><?=$row['mobile']?></td>
+		<td><?=$row['amount']?></td>
+		<td><?=$row['deadline'] . ($row['deadline'] == 'd' ? '天' : '个月')?></td>
+		<td><?=$row['repay_method_text']?></td>
+		<td><?=$row['use_type_text']?></td>
+		<td><?=$row['loan_type_text']?></td>
+		<td><?=$row['status_text']?></td>
+		<td><?=$row['addtime']?></td>
+		<td><a href="<?=\Func\url('/loan/detail/' . $row['uid'])?>">详情</a></td>
+	</tr>
+
+<?php
+	endforeach;
+?>
+</table>	
+<?php
+endif;
+?>
+
+</div>

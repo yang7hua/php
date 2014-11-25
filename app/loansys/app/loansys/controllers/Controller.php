@@ -19,4 +19,5 @@ class Controller extends \Base\Controller
 	{
 		return $this->session->has('oid');
 	}
+
 }

@@ -1,8 +1,11 @@
 <?php
 
-namespace App;
+/**
+ * 贷款相关配置
+ */
+namespace App\Config;
 
-class Config
+class Loan
 {
 	public static function deadlines()
 	{
@@ -15,6 +18,14 @@ class Config
 		return $deadlines;
 	}
 
+	public static function loanType()
+	{
+		return [
+			'1'	=>	'车贷',
+			'2'	=>	'信用贷'
+		];
+	}
+
 	public static function repayMethod()
 	{
 		return [
@@ -24,7 +35,7 @@ class Config
 		];
 	}
 
-	public static function loanUsetype()
+	public static function useType()
 	{
 		return [
             // 商业贷款
@@ -47,6 +58,20 @@ class Config
             '206'=>'教育培训',
             '207'=>'医疗支出',
             '208'=>'其它消费',
+		];
+	}
+
+	public static function status()
+	{
+		return [
+			'0'	=>	'草稿',
+			'10'	=>	'初次面审',
+			'20'	=>	'已核查',
+			'30'	=>	'面审完成',
+			'40'	=>	'风控审核',
+			'50'	=>	'还款中',
+			'60'	=>	'还款完成',
+			'99'	=>	'贷款失败',
 		];
 	}
 }

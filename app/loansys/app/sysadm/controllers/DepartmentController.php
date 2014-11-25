@@ -6,8 +6,8 @@ class DepartmentController extends Controller
 	public static function actions()
 	{	
 		return [
-			'list'	=>	['list'],
-			'opera'	=>	['add', 'edit', 'del']
+			'list'	=>	['list' => '部门列表'],
+			'opera'	=>	['add' => '添加部门', 'edit' => '修改部门', 'del' => '删除部门']
 		];
 	}	
 

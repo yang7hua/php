@@ -1,9 +1,9 @@
 <?php
 $heads['title'] = '贷款申请';
+$form = new ModelForm();
 ?>
-<div class="col-lg-1"></div>
-<div class="col-lg-10">
-<form class="form-horizontal" method="post" action="/loan/apply">
+<div class="loan-apply">
+<?=$form->beginForm(['action'=>\Func\url('/loan/apply')])?>
 	<h5>客户信息</h5>
 	<hr>
 	<div class="form-group">
@@ -69,7 +69,7 @@ $heads['title'] = '贷款申请';
 	<div class="form-group">
 		<label class="col-lg-2 control-label">配偶身份证号</label>
 		<div class="col-lg-3">
-			<input type="text" name="spouse_idcard" class="form-control"> 
+			<input type="text" name="spouse_idcard" class="form-control {regex:'^([\\dxX]{16,18})?$'}"> 
 		</div>
 		<div class="col-lg-3 help-block"></div>
 	</div>
@@ -130,7 +130,7 @@ $heads['title'] = '贷款申请';
 		<label class="col-lg-2 control-label">贷款期限</label>
 		<div class="col-lg-3">
 			<div class="input-group">
-				<?=\Util\Html::select('deadline', \App\Config::deadlines(), [], 6, false)?>
+				<?=\Util\Html::select('deadline', \App\Config\Loan::deadlines(), [], 6, false)?>
 				<span class="input-group-addon">月</span>
 			</div>
 		</div>
@@ -139,14 +139,14 @@ $heads['title'] = '贷款申请';
 	<div class="form-group">
 		<label class="col-lg-2 control-label">还款方式</label>
 		<div class="col-lg-8">
-			<div class="radio"><?=\Util\Html::radio('repay_method', \App\Config::repayMethod(), 'o')?></div>
+			<div class="radio"><?=\Util\Html::radio('repay_method', \App\Config\Loan::repayMethod(), 'o')?></div>
 		</div>
 		<div class="col-lg-2 help-block"></div>
 	</div>
 	<div class="form-group">
 		<label class="col-lg-2 control-label">贷款用途</label>
 		<div class="col-lg-3">
-			<?=\Util\Html::select('use_type', \App\Config::loanUsetype(), ['class'=>'{required:1}'])?>
+			<?=\Util\Html::select('use_type', \App\Config\Loan::useType(), ['class'=>'{required:1}'])?>
 		</div>
 		<div class="col-lg-2 help-block"></div>
 	</div>
@@ -170,7 +170,7 @@ $heads['title'] = '贷款申请';
 			<button type="submit" class="btn btn-primary">提交</button>
 		</div>
 	</div>
-</form>
+<?=$form->endForm()?>
 <?php \Func\loadJsFile('loan.js', ['depends'=>'\Assert\validate'], APP_NAME)?>
 <?php \Func\loadJsFile(null, ['depends'=>'\Assert\address'], APP_NAME)?>
 </div>

@@ -78,6 +78,8 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 
 	/**
 	 * 检查操作权限
+	 * sysadm: adm_auth
+	 * loansys: o_auth
 	 */
 	protected function checkAuth($authkey='o_auth')
 	{
@@ -112,7 +114,7 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 				if (array_key_exists($action, $actions))	
 					$allowedActions = array_merge($allowedActions, $actions[$action]);
 			}	
-			if (!in_array($actionName, $allowedActions))
+			if (!array_key_exists($actionName, $allowedActions))
 				$allowed = false;
 		}
 
@@ -257,5 +259,10 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 			'url'	=>	$url	
 		]);
 		$this->view->pick('single/success');
+	}
+
+	public function getOperatorId()
+	{
+		return APP_NAME == ADM_NAME ? $this->session->get('adm_id') : $this->session->get('oid');
 	}
 }
