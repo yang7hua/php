@@ -48,7 +48,7 @@ class DepartmentController extends Controller
 		$this->view->setVars([
 			'formparams'	=>	[
 			'event'	=>	'add',
-			'action'	=>	\Func\url('department/edit')
+			'action'	=>	\Func\url('department/add')
 			]
 		]);
 	}
