@@ -35,7 +35,7 @@ $(function(){
 			}
 			location.href = data.redirect.url;
 		}
-		//	location.reload();
+			//location.reload();
 	}
 
 	$.validator.setDefaults({

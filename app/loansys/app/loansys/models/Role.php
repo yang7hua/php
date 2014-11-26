@@ -12,9 +12,9 @@ class Role extends Model
 
 	public static function getNameById($id)
 	{
-		$info = self::findFirst(intval($id));
+		$info = self::findById($id);
 		if (!$info)
 			return null;
-		return $info->name;
+		return $info['name'];
 	}
 }
