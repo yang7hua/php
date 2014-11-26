@@ -9,4 +9,12 @@ class Role extends Model
 			return null;
 		return $info->toArray();
 	}
+
+	public static function getNameById($id)
+	{
+		$info = self::findFirst(intval($id));
+		if (!$info)
+			return null;
+		return $info->name;
+	}
 }

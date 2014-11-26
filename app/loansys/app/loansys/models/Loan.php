@@ -2,11 +2,6 @@
 
 class Loan extends Model
 {
-	protected function rawFields()
-	{
-		//return ['deadline_type', 'days', 'remark'];
-		return [];
-	}
 
 	public static function add($data, $lastInsId = false)
 	{

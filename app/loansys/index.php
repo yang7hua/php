@@ -31,7 +31,7 @@ class App
 			return $links;
 
 		global $di;
-		$_authes = $di->get('session')->get('o_auth');
+		$_authes = $di->get('session')->get('operator')['auth'];
 		if (!is_array($_authes))
 			return $links;
 

@@ -24,6 +24,7 @@ class PublicController extends Controller
 						'oid'	=>	$info->oid,
 						'username'	=>	$info->username,
 						'rid'	=>	$info->rid,
+						'rname'	=>	Role::getNameById($info->rid),
 						'bname'	=>	Branch::getNameById($info->bid),	
 						'auth'	=>	Operator::getAuthByRid($info->rid)
 						];

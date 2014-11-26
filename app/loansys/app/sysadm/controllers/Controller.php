@@ -10,7 +10,7 @@ class Controller extends \Base\Controller
 		return $this->session->get('adm') != null;
 	}
 
-	protected function checkAuth($authkey='adm')
+	public function checkAuth()
 	{
 	}
 
