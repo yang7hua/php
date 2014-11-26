@@ -2,9 +2,15 @@
 
 class Department extends Model
 {
+	public static function findById($id)
+	{
+		$info = self::findFirst($id)->toArray();
+		return $info;
+	}
+
 	public static function all($withKey = false)
 	{
-		$list = self::find()->toArray();
+		$list = self::find(self::baseCondition())->toArray();
 
 		if ($list and $withKey) {
 			$data = [];
@@ -49,9 +55,14 @@ class Department extends Model
 		return $model->create($data);
 	}
 
-	public static function getManagerDid()
+	public static function edit($id, $data)
 	{
-		return 2;
+		$info = Department::findFirst($id);
+		if (!$info)
+			return false;
+		foreach ($data as $field=>$value)
+			$info->{$field}	=	$value;
+		return $info->update();
 	}
 
 }

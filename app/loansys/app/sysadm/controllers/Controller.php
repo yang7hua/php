@@ -7,11 +7,19 @@ class Controller extends \Base\Controller
 	 */
 	public function isLogin()
 	{
-		return $this->session->get('adm_id') != null;
+		return $this->session->get('adm') != null;
 	}
 
-	protected function checkAuth($authkey='adm_auth')
+	protected function checkAuth($authkey='adm')
 	{
-		parent::checkAuth($authkey);
+	}
+
+	public function initialize()
+	{
+		parent::initialize();
+		$sess = $this->session->get('adm');
+		$this->view->setVars([
+				'_sess'	=>	$sess
+			]);
 	}
 }

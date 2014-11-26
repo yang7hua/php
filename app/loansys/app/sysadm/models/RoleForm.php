@@ -7,6 +7,18 @@ class RoleForm extends ModelForm
 		return [
 		//添加角色
 		'add'	=>	[
+			'bid'	=>	[
+				'label'	=>	'所属门店',
+				'type'	=>	'select',
+				'inputOptions'	=>	[
+					'class'	=>	'col-lg-3'	
+				],
+				'options'	=>	Branch::options(),
+				'default'	=>	0,
+				'validator'	=> [
+					'required'	=> true,
+				]	
+			],
 			'did'	=>	[
 				'label'	=>	'部门名称',
 				'type'	=>	'select',
@@ -31,13 +43,25 @@ class RoleForm extends ModelForm
 					'maxlength'	=>	10
 				],
 				'remark'	=>	'名称在2-10个字符之间'
-			]
+			],
 		],
 
 		//编辑角色
 		'edit'	=>	[
 			'rid'	=>	[
 				'type'	=>	'hidden'
+			],
+			'bid'	=>	[
+				'label'	=>	'所属门店',
+				'type'	=>	'select',
+				'inputOptions'	=>	[
+					'class'	=>	'col-lg-3'	
+				],
+				'options'	=>	Branch::options(),
+				'default'	=>	0,
+				'validator'	=> [
+					'required'	=> true,
+				]	
 			],
 			'did'	=>	[
 				'label'	=>	'部门名称',

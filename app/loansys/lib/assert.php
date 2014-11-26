@@ -54,7 +54,8 @@ function getAssert($key)
 					//'data/bdist.js',
 					'data/tdist.js',
 					'cascaded.js'
-				]
+				],
+				'depends'	=>	'\Assert\app'
 			]
 		]
 	];

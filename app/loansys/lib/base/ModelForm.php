@@ -196,7 +196,7 @@ EOT;
 		return $html;
 	}
 
-	private function getClass(array $options = [])
+	private function getClass($options = [])
 	{
 		$class = 'form-control ';
 		if (!empty($options)) {

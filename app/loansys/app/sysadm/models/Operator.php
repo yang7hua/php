@@ -10,10 +10,28 @@ class Operator extends Model
 		return self::format($info, true);
 	}
 
+	public static function findByUsername($username)
+	{
+		$where = "username='$username'";
+		$info = Operator::query()
+					->where($where)
+					->leftJoin('Role', 'Role.rid=Operator.rid')
+					->leftJoin('Department', 'D.did=Operator.did', 'D')
+					->leftJoin('Branch', 'B.bid=Operator.bid', 'B')
+					->columns('Operator.oid, Operator.username, Operator.password,
+						Role.rid, Role.name rname,
+						D.did, D.name dname,
+						B.bid, B.name bname')
+					->limit(1)
+					->execute();
+		if (!$info)
+			return null;
+		return $info->toArray()[0];
+	}
+
 	public static function all()
 	{
-		$list = self::find()->toArray();
-
+		$list = self::find(self::baseCondition())->toArray();
 		return self::format($list);
 	}
 
@@ -23,8 +41,6 @@ class Operator extends Model
 		if ($single)
 			$data = [$data];
 		foreach ($data as $key=>&$row) {
-			if (self::is_super($row['oid']))
-				unset($data[$key]);
 			$role = $roles[$row['rid']];
 			$row['rname'] = $role['name'];
 			$row['dname'] = $role['dname'];
@@ -38,7 +54,6 @@ class Operator extends Model
 		$model = new self();
 		unset($data['repassword']);
 		$data['status'] = 1;
-		$data['password'] = \Func\password($data['password']);
 		return $model->create($data);
 	}
 
@@ -66,10 +81,10 @@ class Operator extends Model
 
 	public static function login($data)
 	{
-		$rid = Department::getManagerDid();
-		$info = self::findFirst("rid=$rid and username='{$data['username']}'");
-		if (!$info || $info->password != $data['password'])
+		$info = self::findByUsername($data['username']);
+		if (!$info || $info['password'] != $data['password'])
 			return false;
+		unset($info['password']);
 		return $info;
 	}
 }

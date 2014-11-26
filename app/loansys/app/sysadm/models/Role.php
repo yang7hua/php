@@ -10,8 +10,7 @@ class Role extends Model
 
 	public static function all($withKey = false)
 	{
-		$list = self::find()->toArray();
-
+		$list = self::find(self::baseCondition())->toArray();
 		if ($list and $withKey) {
 			$data = [];
 			foreach ($list as $row)

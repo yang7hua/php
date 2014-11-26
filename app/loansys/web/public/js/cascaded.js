@@ -13,7 +13,10 @@ $(function(){
 
 	function loadCity(pid)
 	{
-		return province[pid].city;
+		var city = province[pid].city;
+		if (city)
+			city[0] = {name:'请选择'};
+		return city;
 	}
 
 	function selectHtml(fieldname, options, selected)
@@ -25,18 +28,19 @@ $(function(){
 		return str;
 	}
 
-	function provinceHtml(fieldname)
+	function provinceHtml(fieldname, selected)
 	{
-		return selectHtml(fieldname, province);
+		province[0] = {'name':'请选择'};
+		return selectHtml(fieldname, province, selected);
 	}
 
-	function cityHtml(fieldname, pid)
+	function cityHtml(fieldname, pid, selected)
 	{
 		var city = [];
 		city[0]	=	{name:"请选择"};
 		if (pid)
 			city = loadCity(pid);
-		return selectHtml(fieldname, city);
+		return selectHtml(fieldname, city, selected);
 	}
 
 	function optionsHtml(options, selected)
@@ -51,8 +55,11 @@ $(function(){
 
 	$("[cascaded-data=address]").each(function(){
 		var fields = $(this).attr("cascaded-fields").split("#");
-		var province_select = provinceHtml(fields[0]);	
-		var city_select = cityHtml(fields[1]);
+		var _province = $(this).attr("address-province") || 0,
+			_city = $(this).attr("address-city") || 0;
+
+		var province_select = provinceHtml(fields[0], _province);	
+		var city_select = cityHtml(fields[1], _province, _city);
 		$(this).html(province_select + city_select);
 	});	
 
@@ -61,5 +68,29 @@ $(function(){
 		$(this).siblings("select").html(optionsHtml(loadCity(pid)));
 	});
 
-	$("[name=province], [name=idcard_province]").change();
+	//$("[name=province], [name=idcard_province]").change();
+
+	$("[address-format=province]").each(function(){
+		var province_id = parseInt($(this).text()),
+			province_text = "";
+		if (province_id == 0)
+			province_text = "--";	
+		else
+			province_text = province[province_id].name;
+
+		$(this).text(province_text);
+	});
+	$("[address-format=city]").each(function(){
+		var city_id = parseInt($(this).text()),
+			city_text = "";
+		if (city_id == 0)
+			city_text = "--";	
+		else {
+			var province_id = $(this).attr("address-province");
+			var citys = loadCity(province_id);
+			city_text = citys[city_id].name;
+		}
+
+		$(this).text(city_text);
+	});
 });

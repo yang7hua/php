@@ -20,13 +20,10 @@ class PublicController extends Controller
 			$data = $this->request->getPost();
 			if (empty($data))
 				$this->pageError('param');
-			$modelForm = new OperatorForm('login');
+			$modelForm = new AdminiForm('login');
 			if ($result = $modelForm->validate($data)) {
 				if ($info = $modelForm->login()) {
-					$this->session->set('adm_id', $info->oid);
-					$this->session->set('adm_name', $info->username);
-					$this->session->set('adm_rid', $info->rid);
-					$this->session->set('adm_auth', Authority::getAuthByRid($info->rid));
+					$this->session->set('adm', $info);
 					$this->success([
 						'msg'=>'登录成功', 
 						'redirect'=>[
@@ -46,10 +43,7 @@ class PublicController extends Controller
 
 	public function logoutAction()
 	{
-		$this->session->remove('adm_id');
-		$this->session->remove('adm_name');
-		$this->session->remove('adm_rid');
-		$this->session->remove('adm_auth');
+		$this->session->remove('adm');
 		$this->pageSuccess('退出成功', \Func\url('/'), 1);
 	}
 

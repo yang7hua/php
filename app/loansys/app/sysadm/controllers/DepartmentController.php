@@ -45,5 +45,45 @@ class DepartmentController extends Controller
 			}
 			$this->error($result);
 		}
+		$this->view->setVars([
+			'formparams'	=>	[
+			'event'	=>	'add',
+			'action'	=>	\Func\url('department/edit')
+			]
+		]);
+	}
+
+	public function editAction()
+	{
+		if ($this->isAjax()) {
+			$data = $this->request->getPost();
+			if (empty($data))
+				$this->pageError('param');
+			$modelForm = new DepartmentForm('edit');
+			if ($result = $modelForm->validate($data)) {
+				if ($modelForm->edit())
+					$this->success('操作成功');
+				else
+					$this->error('操作失败');
+			}
+			$this->error($result);
+		}
+
+		$oid = $this->dispatcher->getParams()[0];
+		if (empty($oid))
+			$this->pageError('param');
+		$operator = Department::findById($oid);
+		if (!$operator)
+			$this->pageError('param');
+
+		$form = new DepartmentForm('edit', $operator);
+		$this->view->setVars([
+				'formparams'	=>	[
+					'event'	=>	'edit',
+					'action'	=>	\Func\url('/department/edit')	
+				],
+				'data'	=>	$operator
+			]);
+		$this->view->pick('department/add');
 	}
 }

@@ -78,12 +78,13 @@ class App
 	public static function authorities()
 	{
 		static $authorities = [];
+		static $superbid_controllers = ['branch'];
 
 		if (!empty($authorities))
 			return $authorities;
 		$paths = [
-			ADM_NAME	=>	self::getPathByApp(ADM_NAME) . '/controllers',
-			FRONT_NAME	=>	self::getPathByApp(FRONT_NAME) . '/Controllers'	
+			//ADM_NAME	=>	self::getPathByApp(ADM_NAME) . '/controllers',
+			FRONT_NAME	=>	self::getPathByApp(FRONT_NAME) . '/controllers'	
 		];
 
 		foreach ($paths as $app=>$path) {
@@ -98,13 +99,14 @@ class App
 			foreach ($appfiles as $file) {
 				$classname = pathinfo($file)['filename'];
 				$newAuthorities = $classname::authorities();
+				$basecname = strtolower(str_replace('Controller', '', $classname));
+				if (!self::isSuperBid() and in_array($basecname, $superbid_controllers))
+					continue;
 				if (!empty($newAuthorities))
 					$app_authorities = array_merge($app_authorities, $newAuthorities);
 			}
 			$authorities[$app] = $app_authorities;
 		}
-		return $authorities;
-
 		return $authorities;
 	}
 
@@ -139,6 +141,36 @@ class App
 		}
 		return $menus;
 	}
+
+	public function operatorAddress()
+	{
+		$operator = $_SESSION['operator'];
+		return [
+			'province'	=>	$operator['province'],
+			'city'	=>	$operator['city']
+			];
+	}
+
+	public static function session($key = '', $app = '')
+	{
+		$session = $app ? $_SESSION[$app] : $_SESSION;
+		if (!$session)
+			return null;
+		if ($key and array_key_exists($key, $session))
+			return $session[$key];
+		return $session;
+	}
+
+	/**
+	 * 判断是否是全国总店账号
+	 */
+	public static function isSuperBid($bid = '')
+	{
+		if (empty($bid))
+			$bid = self::session('bid', 'adm');
+		return $bid == 1;
+	}
+
 }
 
 //spl_autoload_register(['App', 'loadClass']);

@@ -1,49 +1,24 @@
 <?php
 
-class OperatorForm extends ModelForm
+class AdminiForm extends ModelForm
 {
 	public static function fields()
 	{
 		return [
 		'add'	=>	[
-			'oid'	=>	null,
 			'bid'	=>	[
 				'label'	=>	'所属分店',
 				'type'	=>	'select',
 				'inputOptions'	=>	[
 				],
-				'options'	=>	Branch::options(),
+				'options'	=>	Branch::options(['all'=>true]),
 				'default'	=>	null,
 				'validator'	=> [
 					'required'	=> true,
 				]	
 			],
-			'did'	=>	[
-				'label'	=>	'所属部门',
-				'type'	=>	'select',
-				'inputOptions'	=>	[
-					'class'	=>	'col-lg-3'	
-				],
-				'options'	=>	Department::options(),
-				'default'	=>	0,
-				'validator'	=> [
-					'required'	=> true,
-				]	
-			],
-			'rid'	=>	[
-				'label'	=>	'角色名称',
-				'type'	=>	'select',
-				'inputOptions'	=>	[
-					'class'	=>	'col-lg-3'	
-				],
-				'options'	=>	Role::options(),
-				'default'	=>	0,
-				'validator'	=> [
-					'required'	=> true,
-				]	
-			],
 			'username'	=>	[
-				'label'	=>	'用户名',
+				'label'	=>	'账号',
 				'type'	=>	'text',
 				'inputOptions'	=>	[
 					'class'	=>	'col-lg-3'
@@ -53,7 +28,7 @@ class OperatorForm extends ModelForm
 					'minlength'	=>	3,
 					'maxlength'	=>	10,
 					'regex'	=>	'^[\\\\w_]+$',
-					'remote'	=>	\Func\url('/operator/exist')
+					'remote'	=>	\Func\url('/admini/exist')
 				],
 				'remark'	=>	'用户名在3-10个字符之间, 字母数字或下划线组成',
 				'remarkOptions'	=>	[
@@ -82,11 +57,11 @@ class OperatorForm extends ModelForm
 					'required'	=>	true,
 					'equalTo'	=>	'[name=password]'
 				]
-			]
+			],
 		],
 		
 		'edit'	=>	[
-			'oid'	=>	[
+			'aid'	=>	[
 				'type'	=>	'hidden'
 			],
 			'username'	=>	[
@@ -99,30 +74,7 @@ class OperatorForm extends ModelForm
 				'type'	=>	'select',
 				'inputOptions'	=>	[
 				],
-				'options'	=>	Branch::options(),
-				'default'	=>	null,
-				'validator'	=> [
-					'required'	=> true,
-				]	
-			],
-			'did'	=>	[
-				'label'	=>	'所属部门',
-				'type'	=>	'select',
-				'inputOptions'	=>	[
-					'class'	=>	'col-lg-3'	
-				],
-				'options'	=>	Department::options(),
-				'default'	=>	0,
-				'validator'	=> [
-					'required'	=> true,
-				]	
-			],
-			'rid'	=>	[
-				'label'	=>	'角色名称',
-				'type'	=>	'select',
-				'inputOptions'	=>	[
-				],
-				'options'	=>	Role::options(),
+				'options'	=>	Branch::options(['all'=>true]),
 				'default'	=>	null,
 				'validator'	=> [
 					'required'	=> true,
@@ -148,7 +100,6 @@ class OperatorForm extends ModelForm
 				]
 			]
 		],
-
 		//用于登录
 		'login'	=>	[
 			'username'	=>	[
@@ -172,18 +123,18 @@ class OperatorForm extends ModelForm
 
 	public function add()
 	{
-		return Operator::add($this->data);
+		return Admini::add($this->data);
 	}
 
 	public function edit()
 	{
-		$oid = $this->data['oid'];
-		unset($this->data['oid']);
-		return Operator::edit($oid, $this->data);
+		$aid = $this->data['aid'];
+		unset($this->data['aid']);
+		return Admini::edit($aid, $this->data);
 	}
 
 	public function login()
 	{
-		return Operator::login($this->data);
+		return Admini::login($this->data);
 	}
 }

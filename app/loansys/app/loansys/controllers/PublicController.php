@@ -27,7 +27,7 @@ class PublicController extends Controller
 					$this->success([
 						'msg'=>'登录成功', 
 						'redirect'=>[
-							'url'=>\Func\url('/'),
+							'url'=>\Func\url('/loan/list'),
 							'seconds'	=>	0	
 						]
 					]);

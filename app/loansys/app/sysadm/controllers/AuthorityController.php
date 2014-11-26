@@ -6,7 +6,7 @@ class AuthorityController extends Controller
 	{
 		return [
 			'allot'	=>	[
-			'allot'	=>	'授权',
+				'allot'	=>	'授权',
 			]
 		];
 	}
