@@ -131,26 +131,6 @@ class App
 			$router->add($key, $value);
 	}
 
-	public function filterMenus($menus)
-	{
-		global $di;
-		$session = $di->get('session');
-		foreach ($menus as $key=>$menu) {
-			if ($menu['pid'] != 0 and !Authority::actionExist($session->get('o_auth'), $menu['controller'], $menu['action']))
-				unset($menus[$key]);
-		}
-		return $menus;
-	}
-
-	public function operatorAddress()
-	{
-		$operator = $_SESSION['operator'];
-		return [
-			'province'	=>	$operator['province'],
-			'city'	=>	$operator['city']
-			];
-	}
-
 	public static function session($key = '', $app = '')
 	{
 		$session = $app ? $_SESSION[$app] : $_SESSION;

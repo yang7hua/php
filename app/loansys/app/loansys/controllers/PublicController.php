@@ -20,10 +20,14 @@ class PublicController extends Controller
 			$modelForm = new OperatorForm('login');
 			if ($result = $modelForm->validate($data)) {
 				if ($info = $modelForm->login()) {
-					$this->session->set('oid', $info->oid);
-					$this->session->set('o_name', $info->username);
-					$this->session->set('o_rid', $info->rid);
-					$this->session->set('o_auth', Operator::getAuthByRid($info->rid));
+					$_sess = [
+						'oid'	=>	$info->oid,
+						'username'	=>	$info->username,
+						'rid'	=>	$info->rid,
+						'bname'	=>	Branch::getNameById($info->bid),	
+						'auth'	=>	Operator::getAuthByRid($info->rid)
+						];
+					$this->session->set('operator', $_sess);
 					$this->success([
 						'msg'=>'登录成功', 
 						'redirect'=>[
@@ -43,10 +47,7 @@ class PublicController extends Controller
 
 	public function logoutAction()
 	{
-		$this->session->remove('oid');
-		$this->session->remove('o_name');
-		$this->session->remove('o_rid');
-		$this->session->remove('o_auth');
+		$this->session->remove('operator');
 		$this->pageSuccess('退出成功', \Func\url('/'), 1);
 	}
 }
