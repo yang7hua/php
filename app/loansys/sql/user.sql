@@ -2,6 +2,7 @@ drop table if exists `sys_user`;
 create table if not exists `sys_user`(
 	`uid` int auto_increment comment '用户ID',
 	`oid` int unsigned not null COMMENT '操作者ID',	
+	`bid` int unsigned not null COMMENT '门店ID',	
 	-- `lid` int unsigned default 0 COMMENT '对应每笔贷款的实时情况',
 	`idcard` char(18) not null comment '身份证ID',
     `idcard_province` int unsigned NOT NULL DEFAULT 0 COMMENT '户籍省份',
@@ -30,5 +31,8 @@ create table if not exists `sys_user`(
 	`addtime` int not null comment '客户创建日期',
 
 	primary key(`uid`),
-	key idcard(`idcard`)
+	key bid(`bid`),
+	key oid(`oid`),
+	key idcard(`idcard`),
+	key realname(`realname`),
 )engine=InnoDB default charset=utf8 auto_increment=100000 comment='用户表';

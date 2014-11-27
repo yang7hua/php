@@ -1,0 +1,50 @@
+<?php
+switch ($action)
+{
+case 'face':
+	$title = '面审';
+	break;
+case 'visit':
+	$title = '实地外访';
+	break;
+default:
+	$title = '详情';
+	break;
+}
+$heads['title'] = $title;
+
+?>
+<div class="loan-detail">
+<?php
+//客户信息展示 
+$this->partial('loan/partial/baseinfo');
+
+if (isset($faceinfo))
+{
+	if (empty($faceinfo))
+	{
+		if ($operate['face'])
+			$this->partial('loan/partial/face');
+	}
+	else
+	{
+		$this->partial('loan/partial/faceinfo');
+	}
+}
+
+if (isset($checkinfo))
+{
+	if (empty($checkinfo))
+	{
+		if ($operate['visit'])
+			$this->partial('loan/partial/visit');
+	}
+	else
+	{
+		$this->partial('loan/partial/visitinfo');
+	}
+}
+
+\Func\loadJsFile(null, ['depends'=>'\Assert\address'], APP_NAME);
+?>
+</div>

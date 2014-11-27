@@ -81,6 +81,15 @@ EOT;
 				case 'select':
 					$html .= self::selectInput($field, $options); 
 					break;
+				case 'radio':
+					$html .= self::radioInput($field, $options); 
+					break;
+				case 'checkbox':
+					$html .= self::checkboxInput($field, $options); 
+					break;
+				case 'textarea':
+					$html .= self::textarea($field, $options); 
+					break;
 				case 'plain':
 					$html .= self::plain($field, $options); 
 					break;
@@ -126,6 +135,23 @@ EOT;
 		return self::renderField($options['label'], $input, 'text', $options);
 	}
 
+	public function textarea($field, $options = [])
+	{
+		$attrs['name'] = $field;
+		if (isset($options['validator']))
+			$attrs['class'] = self::getClass($options['validator']);
+		if (isset($this->data[$field]) and in_array($type, ['text']))
+			$attrs['value'] = $this->data[$field];
+
+		$input = '<textarea ';
+		$input .= self::getAttrs($attrs);
+		$input .= '/>';
+
+		$input .= '</textarea>';
+
+		return self::renderField($options['label'], $input, 'text', $options);
+	}
+
 	public function plain($field, $options = [])
 	{
 		$input = $options['default'];
@@ -142,6 +168,56 @@ EOT;
 			$str .= " value={$this->data[$field]} ";
 		$str .= '/>';
 		return $str;
+	}
+
+	public function radioInput($field, array $options = [])
+	{
+		$attrs['name'] = $field;
+		$attrs['class'] = self::getClass($options['validator']);
+
+		$input = '<div class="radio">';
+
+		$checked = $options['default'];
+		if (isset($this->data[$field]))
+			$checked = $this->data[$field];
+		foreach ($options['options'] as $row)
+		{
+			$checked_str = $row['value'] == $checked ? 'checked' : ''; 
+			$one = '<label>';
+			$one .= '<input type="radio" name="'.$field.'" '.$checked_str.' value="'.$row['value'].'">';
+			$one .= $row['text'];
+			$one .= '</label>&nbsp;&nbsp;&nbsp;&nbsp;';
+
+			$input .= $one;
+		}
+		$input .= '</div>';
+
+		return self::renderField($options['label'], $input, 'select', $options);
+	}
+	
+	public function checkboxInput($field, array $options = [])
+	{
+		$attrs['name'] = $field;
+		$attrs['class'] = self::getClass($options['validator']);
+
+		$input = '<div class="checkbox">';
+
+		$checked = $options['default'];
+		if (isset($this->data[$field]))
+			$checked = $this->data[$field];
+		foreach ($options['options'] as $row)
+		{
+			$checked_str = $row['value'] == $checked ? 'checked' : ''; 
+			$one = '<label>';
+			$one .= '<input type="checkbox" name="'.$field.'" '.$checked_str.' value="'.$row['value'].'">';
+			$one .= $row['text'];
+			$one .= '</label>&nbsp;&nbsp;&nbsp;&nbsp;';
+
+			$input .= $one;
+		}
+		$input .= '</div>';
+
+		return self::renderField($options['label'], $input, 'select', $options);
 	}
 
 	public function selectInput($field, array $options = [])

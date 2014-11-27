@@ -49,6 +49,14 @@ class Html
 		return '<textarea name="'.$field.'" '.$attrs_str.'>'.$value.'</textarea>';
 	}
 
+	public static function input($field, $attrs=[], $value=null)
+	{
+		$attrs['class'] = self::analyseClass($attrs);
+		$attrs_str = self::attrs($attrs);
+		$value = isset($value) ? $value : '';
+		return '<input name="'.$field.'" '.$attrs_str.' '.$value.'>';
+	}
+
 	public static function analyseClass($attrs=[], $formControl=true)
 	{
 		$class[] = $formControl ? 'form-control' : '';

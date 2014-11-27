@@ -67,3 +67,19 @@ function uniqidByTime()
 {
 	return date('YmdHis') . mt_rand(1000,9999);
 }
+
+function getArrayValue(array $array, $key, $value = false)
+{
+	if (empty($array) || empty($key))
+		return $array;
+	if ($value)
+	{
+		$array = array_flip($array);
+	}
+	return array_key_exists($key, $array) ? $array[$key] : null;
+}
+
+function getArrayKey(array $array, $value)
+{
+	return getArrayValue($array, $value, true);
+}

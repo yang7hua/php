@@ -65,7 +65,7 @@ class Loan
 	{
 		return [
 			'0'	=>	'草稿',
-			'10'	=>	'初次面审',
+			'10'	=>	'初审',
 			'20'	=>	'已核查',
 			'30'	=>	'面审完成',
 			'40'	=>	'风控审核',
@@ -73,5 +73,18 @@ class Loan
 			'60'	=>	'还款完成',
 			'99'	=>	'贷款失败',
 		];
+	}
+
+	public static function toOptions($data)
+	{
+		$options = [];
+		foreach ($data as $key=>$val)
+		{
+			$options[] = [
+				'value'	=>	$key,
+				'text'	=>	$val
+			];
+		}
+		return $options;
 	}
 }

@@ -1,6 +1,9 @@
 var util = {
-	moreheigh : function(box) {
-		box.addClass("more-heigh");
+	moreheigh : function(box, low) {
+		if (low)
+			box.removeClass("more-heigh");
+		else
+			box.addClass("more-heigh");
 	},
 	shake : function(o) {
 			o.focus();
@@ -83,6 +86,9 @@ $(function(){
 
 	$("textarea").on("focus", function(){
 		util.moreheigh($(this));
+	})
+	$("textarea").on("blur", function(){
+		util.moreheigh($(this), true);
 	})
 
 	$('.collapse').collapse();

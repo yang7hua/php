@@ -46,4 +46,13 @@ class Loan extends Model
 		return $data;
 	}
 
+	public static function updateStatus($uid, $status)
+	{
+		$info = Loan::findFirst("uid=$uid");
+		if (!$info)
+			return false;
+		$info->status = $status;
+		return $info->update();
+	}
+
 }

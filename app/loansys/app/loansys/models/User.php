@@ -36,14 +36,14 @@ class User extends Model
 			return true;
 	}
 
-	public static function select($conditions, $limit = 10)
+	public static function select($conditions, $limit = 10, $offset = 0)
 	{
 		$condition = self::buildConditions($conditions);
 
 		$query = User::query();
 		$result = $query->where($condition)
 				->join('Loan', 'Loan.uid = User.uid')
-				->limit($limit)
+				->limit($limit, $offset)
 				->columns(self::columns())
 				->orderBy('User.addtime desc')
 				->execute();
@@ -51,9 +51,11 @@ class User extends Model
 			return Loan::format($result->toArray());
 	}
 
-	public static function buildConditions($conditions)
+	public static function buildConditions($conditions = [])
 	{
 		$_conditions = [];
+		if (empty($conditions) || !is_array($conditions))
+			return '';
 		foreach ($conditions as $field=>$value)
 		{
 			if (is_string($value))
@@ -69,10 +71,59 @@ class User extends Model
 		return self::select(['oid'=>$oid], $limit);
 	}
 
-	public static function columns()
+	public static function columns($level = ['base'])
 	{
-		return 'User.uid, User.realname, User.idcard, User.addtime, User.mobile, 
+		$base = 'User.uid, User.bid, User.oid, User.realname, User.idcard, User.addtime, User.mobile, 
 						Loan.amount, Loan.deadline, Loan.use_type, Loan.repay_method, 
 						Loan.deadline_type, Loan.lid, Loan.loan_type, Loan.status';
+		$oinfo = 'O.username oname, B.name bname';
+		$morebase = 'User.idcard_province, User.idcard_city, User.province, User.city, User.address,
+					User.info, User.marriage, User.have_child, User.spouse_name, User.spouse_idcard,
+					User.spouse_info';
+
+		$columns = [];
+		foreach ($level as $row)
+		{
+			$columns[] = ${$row};
+		}
+
+		return implode(' ,', $columns);
+	}
+
+	public static function getCount($conditions)
+	{
+		$condition = self::buildConditions($conditions);
+
+		$query = User::query();
+		$result = $query->where($condition)
+				->join('Loan', 'Loan.uid = User.uid')
+				->columns(self::columns())
+				->orderBy('User.addtime desc')
+				->execute();
+		return $result->count();
+	}
+
+	public static function info($uid, $level = ['base'])
+	{
+		$conditions['uid'] = $uid;
+		$condition = self::buildConditions($conditions);
+
+		$query = User::query();
+		$result = $query->where($condition)
+				->leftJoin('Loan', 'Loan.uid = User.uid')
+				->leftJoin('Operator', 'User.oid=O.oid', 'O')
+				->leftJoin('Branch', 'User.bid=B.bid', 'B')
+				->limit(1)
+				->columns(self::columns($level))
+				->orderBy('User.addtime desc')
+				->execute();
+		if ($result)
+			return Loan::format($result->toArray())[0];
+		return null;
+	}
+
+	public static function detailInfo($uid)
+	{
+		return self::info($uid, ['base', 'oinfo', 'morebase']);
 	}
 }

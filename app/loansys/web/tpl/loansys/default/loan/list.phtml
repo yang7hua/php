@@ -50,10 +50,14 @@ if (!empty($list)):
 		<td><?=$row['addtime']?></td>
 		<td>
 <?php
-	if (is_array($operators) and !empty($operators)):
-		foreach ($operators as $operator):
+	if (is_array($operates) and !empty($operates)):
+		foreach ($operates as $operate):
+			if (in_array($operate['operate'], ['face']) and !\App\Func::needFace($row['status']))
+				continue;
+			if (in_array($operate['operate'], ['visit']) and !\App\Func::needVisit($row['status']))
+				continue;
 ?>
-			<a href="<?=$operator['url']?>/<?=$row['uid']?>"><?=$operator['text']?></a>
+			<a href="<?=$operate['url']?>/<?=$row['uid']?>"><?=$operate['text']?></a>
 <?php
 		endforeach;
 	endif;

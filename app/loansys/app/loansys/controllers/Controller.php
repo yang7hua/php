@@ -18,6 +18,9 @@ class Controller extends \Base\Controller
 		return $this->session->has('operator');
 	}
 
+	/**
+	 * 获取当前操作者相关session信息
+	 */
 	public static function operator($key = '')
 	{
 		$session = $_SESSION['operator'];
@@ -71,5 +74,84 @@ class Controller extends \Base\Controller
 		}
 
 		return $allowed;
+	}
+
+	/**
+	 * 获取当前操作者对当前控制器的权限
+	 */
+	public function getAuthByController()
+	{
+		$auth = $this->operator('auth');
+
+		if ($auth[APP_NAME] and is_array($auth[APP_NAME]))
+			$auth = $auth[APP_NAME];
+		else
+			return [];
+
+		$controllerName = $this->getControllerName(); 
+		if (isset($auth[$controllerName]))
+			$auth = $auth[$controllerName];
+		else
+			return [];
+
+		return $auth;
+	}
+
+	/**
+	 * 获取当前操作者id
+	 */
+	public function getOperatorId()
+	{
+		return $this->operator('oid');
+	}
+
+	/**
+	 * 获取当前操作者门店id
+	 */
+	public function getOperatorBid()
+	{
+		return $this->operator('bid');
+	}
+
+	/**
+	 * 通过制定权限值获取对应操作
+	 */
+	public function getActionsByAuth($auth)
+	{
+		$_actions = [];
+		$actions = $this->actions();
+		if (is_string($auth))
+			$_actions = array_key_exists($auth, $actions) ? $actions[$auth] : [];
+		if (is_array($auth))
+		{
+			foreach ($auth as $row)
+			{
+				if (array_key_exists($row, $actions))
+					$_actions = array_merge($_actions, $actions[$row]);
+			}
+		}
+		return $_actions;
+	}
+
+	/**
+	 * 判断是否具有当前控制器某操作的权限
+	 */
+	public function	authHasAction($actionName, $controllerName = '')
+	{
+		if (!$controllerName)
+			$controllerName = strtolower(str_replace('Controller', '', get_class()));
+		$auth = $this->getAuthByController($controllerName);
+		
+		$actions = $this->getActionsByAuth($auth);
+
+		return array_key_exists($actionName, $actions);
+	}
+
+	/**
+	 * 获取url参数
+	 */
+	public function urlParam($index = 0)
+	{
+		return $this->dispatcher->getParams()[$index];
 	}
 }

@@ -26,6 +26,7 @@ class PublicController extends Controller
 						'rid'	=>	$info->rid,
 						'rname'	=>	Role::getNameById($info->rid),
 						'bname'	=>	Branch::getNameById($info->bid),	
+						'bid'	=>	$info->bid,
 						'auth'	=>	Operator::getAuthByRid($info->rid)
 						];
 					$this->session->set('operator', $_sess);
@@ -48,6 +49,7 @@ class PublicController extends Controller
 
 	public function logoutAction()
 	{
+		//session_destroy();
 		$this->session->remove('operator');
 		$this->pageSuccess('退出成功', \Func\url('/'), 1);
 	}

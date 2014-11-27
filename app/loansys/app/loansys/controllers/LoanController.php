@@ -71,33 +71,25 @@ class LoanController extends Controller
 	public function operators()
 	{
 		static $operators = ['face', 'visit', 'car', 'detail'];
-		static $auth = null;
 		static $allow_operators = null;
+
 		if ($allow_operators and is_array($allow_operators))
 			return $allow_operators;
 
-		if (!$auth)
-			$auth = $this->getAuthByController();
+		$allow_actions = $this->getActionsByAuth($this->getAuthByController());
+		if (empty($allow_actions) || !is_array($allow_actions))
+			return [];
 
-		$actions =	self::actions(); 
-		$allow_actions = [];
-		foreach ($auth as $val)
-		{
-			if (array_key_exists($val, $actions))
-				$allow_actions = array_merge($allow_actions, $actions[$val]);
-		}
 		$allow_operators = [];
-		if (is_array($allow_actions))
+		foreach ($allow_actions as $key=>$val)
 		{
-			foreach ($allow_actions as $key=>$val)
+			if (in_array($key, $operators) and $val['operator'])
 			{
-				if (in_array($key, $operators) and $val['operator'])
-				{
-					array_push($allow_operators, [
-						'url'	=>	\Func\url('loan/' . $key),
-						'text'	=>	$val['text']
-					]);
-				}
+				array_push($allow_operators, [
+					'url'	=>	\Func\url('loan/' . $key),
+					'operate'	=>	$key,
+					'text'	=>	$val['text']
+				]);
 			}
 		}
 		return $allow_operators;
@@ -110,8 +102,9 @@ class LoanController extends Controller
 	{
 		if ($this->isAjax()) {
 			$data = $this->request->getPost();
-
 			$data['oid'] = $this->getOperatorId();
+			$data['bid'] = $this->getOperatorBid();
+
 			$User = new User();
 			$modelForm = new UserForm('apply');
 			if ($modelForm->validate($data)) 
@@ -148,33 +141,172 @@ class LoanController extends Controller
 	 */
 	public function listAction()
 	{
+		$conditions = [];
+
+		//关键字搜索
 		$post = $this->request->getPost();
 		if (isset($post['keyword']) and !empty($post['keyword']))
+		{
 			$keyword = $post['keyword'];
+			if (preg_match('/^\d+$/', $keyword))
+				$conditions['uid'] = intval($keyword);
+			if (\Util\Validator::isCh($keyword))
+				$conditions['realname'] = $keyword;
+		}
 
-		$conditions = [];
-		if (preg_match('/^\d+$/', $keyword))
-			$conditions['uid'] = intval($keyword);
-		if (\Util\Validator::isCh($keyword))
-			$conditions['realname'] = $keyword;
+		//面审、上门核查、车评
+		if ($this->authHasAction('face')
+			|| $this->authHasAction('visit')
+		)
+		{
+			$conditions['bid'] = $this->getOperatorBid();
+		}
+		//客户经理
+		else
+		{
+			$conditions['oid'] = $this->getOperatorId();
+		}
 
-		$conditions['oid'] = $this->getOperatorId();
-		$list = (new User())->select($conditions);
+		//分页
+		$id = $this->urlParam();
+		$limit = $this->limit($id);
 
-		$operators = $this->operators();
+		$User = new User();
+		$list = $User->select($conditions, $limit[0], $limit[1]);
+		$count = $User->getCount($conditions);
+
+		$operates = $this->operators();
 		$this->view->setVars([
 				'list'	=>	$list,
-				'operators'	=>	$operators
+				'operates'	=>	$operates
 			]);
 	}
 
 	/**
-	 * 贷款详情
+	 * 预览贷款详情
 	 */
 	public function detailAction()
 	{
-		$uid = $this->dispatcher->getParams()[0];
+		$uid = $this->urlParam();
 		if (!$uid)
 			$this->pageError('param');
+
+		$uid = $this->urlParam();
+		empty($uid) and $this->pageError('param');
+
+		$infos = $this->detail($uid, 'face');
+		if (empty($infos['detailInfo']))
+			$this->pageError('param');
+
+		$this->view->setVars($infos);
+		$this->view->pick('loan/detail');
+	}
+
+	/**
+	 * 初审操作
+	 */
+	public function faceAction()
+	{
+		if ($this->isAjax())
+		{
+			$data = $this->request->getPost();
+			if (empty($data['uid']))
+				$this->error('参数错误');
+
+			$data['oid'] = $this->getOperatorId();
+			$data['addtime'] = time();
+
+			$model = new UserInfoForm('face');
+			if ($model->validate($data))
+			{
+				if ($model->face())
+				{
+					//更新状态
+					Loan::updateStatus($data['uid'], \Func\getArrayKey(\App\Config\Loan::status(), '初审'));	
+					$this->success('操作成功');
+				}
+				else
+				{
+					$this->error('操作失败');
+				}
+			}
+			else
+			{
+				$this->error('验证失败');
+			}
+			exit();
+		}
+		$uid = $this->urlParam();
+		empty($uid) and $this->pageError('param');
+
+		$infos = $this->detail($uid, 'face');
+
+		$infos['uid'] = $uid;
+		$infos['action'] = 'face';
+		$infos['operate']['face'] = $this->authHasAction('face');
+		$this->view->setVars($infos);
+		$this->view->pick('loan/detail');
+	}
+
+	/**
+	 * 上门核查
+	 */
+	public function visitAction()
+	{
+		$uid = $this->urlParam();
+		empty($uid) and $this->pageError('param');
+
+		$infos = $this->detail($uid, 'visit');
+
+		$infos['uid'] = $uid;
+		$infos['action'] = 'visit';
+		$infos['operate']['visit'] = $this->authHasAction('visit');
+		$this->view->setVars($infos);
+		$this->view->pick('loan/detail');
+	}
+
+	/**
+	 * 根据等级获取贷款详细信息
+	 * @param $uid: 客户编号
+	 * @param $level: 信息等级, 
+	 *				base-基本信息,客户经理提交的信息
+	 *				face-初审信息
+	 *				check-核查信息
+	 *				reface-复审
+	 */
+	private function detail($uid, $level = 'base')
+	{
+		$detailInfo = User::detailInfo($uid);
+
+		if (empty($detailInfo))
+			$this->pageError('param');
+
+		$this->checkPermission($detailInfo);
+
+		$infos = [];
+		$infos['detailInfo'] = $detailInfo;
+
+		//初审信息
+		if (in_array($level, ['face', 'visit']))
+		{
+			$infos['faceinfo'] = UserInfo::info($uid);
+		}
+		//上门核查信息
+		if (in_array($level, ['visit']))
+		{
+			$infos['checkinfo'] = Check::baseinfo($uid);
+		}
+
+		return $infos;
+	}
+
+	/**
+	 * 检查当前登录者是否具有查看权限
+	 */
+	private function checkPermission($detail)
+	{
+		//是否同一个门店
+		if ($detail['bid'] != $this->getOperatorBid())
+			$this->pageError('permission');
 	}
 }

@@ -220,26 +220,19 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 		$this->view->pick('single/success');
 	}
 
-	public function getOperatorId()
+	/**
+	 * 分页
+	 */
+	public function page($count, $limit)
 	{
-		return APP_NAME == ADM_NAME ? $this->session->get('adm_id') : $this->session->get('oid');
+		$page = new \Util\Page($count, $limit);
+		return $page->getPage();
 	}
 
-	public function getAuthByController()
+	public function limit($p = 1, $pagesize = 10)
 	{
-		$auth = $this->session->get('o_auth');
-
-		if ($auth[APP_NAME] and is_array($auth[APP_NAME]))
-			$auth = $auth[APP_NAME];
-		else
-			return [];
-
-		$controllerName = $this->getControllerName(); 
-		if (isset($auth[$controllerName]))
-			$auth = $auth[$controllerName];
-		else
-			return [];
-
-		return $auth;
+		empty($p) and $p = 1;
+		$offset = ($p-1) * $pagesize;
+		return [$pagesize, $offset];
 	}
 }
