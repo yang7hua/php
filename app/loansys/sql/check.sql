@@ -9,7 +9,7 @@ create table if not exists `sys_check`(
 	-- 因为客户情况随着时间会有所变化，次记录对应1条贷款
 
 	-- 上门核查
-	`visit_address` varchar(1000) not null default '' comment '外访公司地址',
+	`visit_company_address` varchar(1000) not null default '' comment '外访公司地址',
 	`license_compay_address` tinyint unsigned not null default 1 comment '公司地址是否与证件一致, 1-一致',
 	`income_company_address` tinyint unsigned not null default 1 comment '公司地址与收入证明是否一致',
 	`company_status` tinyint unsigned default 0 comment '公司开业状况',
@@ -24,11 +24,12 @@ create table if not exists `sys_check`(
 	`job_income` varchar(100) default '' comment '收入',
 	`invest_amount` decimal(6,2) default 0.00 comment '投资金额',
 	`invest_rate` varchar(100) default '' comment '投资比率',
-	`job_company` varchar(100) default '' comment '公司名称',
+	`job_company` varchar(100) default '' comment '公司名',
 
+	`visit_address` varchar(1000) not null default '' comment '外访公司地址',
 	`house_live_address` tinyint unsigned default 1 comment '房产地址是否与居住地址一致',
 	`house_live_address_info` varchar(1000) default '' comment '房产和居住地址不一致的说明',
-	`live_often` tinyint unsigned default 0 comment '居住房屋是否有常住痕迹',
+	`house_live_often` tinyint unsigned default 0 comment '居住房屋是否有常住痕迹',
 
 	-- 车评 
 	`car_loan` tinyint unsigned not null default 0 comment '全款车，1-有贷款，0-全款', 
