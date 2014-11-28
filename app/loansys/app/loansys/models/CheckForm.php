@@ -8,125 +8,48 @@ class CheckForm extends ModelForm
 			'visit'	=>	[
 				'oid'	=>	null,
 				'addtime'	=>	null,
-				'uid'	=>	[
-					'type'	=>	'hidden'
-				],
-				'visit_address'	=>	[
-					'label'	=>	'外访公司地址',
-					'type'	=>	'input',
-					'default'	=>	'',
-					'inputOptions'	=>	[
-						'class'	=>	'col-lg-7'
-					],
+				'uid'	=>	null,
+				'visit_company_address'	=>	[
 					'validator'	=>	[
 						'required'	=>	true
 					]
 				],
 				'license_compay_address'	=>	[
-					'label'	=>	'',
-					'type'	=>	'radio',
-					'default'	=>	'0',
-					'options'	=>	[
-						['value'=>0, 'text'=>'license_compay_address']
-					],
 					'validator'	=>	[
 						'required'	=>	true,
 					]
 				],
-				'debt_prove'	=>	[
-					'label'	=>	'证明方式',
-					'type'	=>	'textarea',
-					'default'	=>	'',
-					'inputOptions'	=>	[
-						'class'	=>	'col-lg-7'
-					],
-					'validator'	=>	[
-						'required'	=>	true,
-					]
+				'license_company_address'	=>	[
+					'default'	=>	0
 				],
-				'debt_month_repay'	=>	[
-					'label'	=>	'每月还款金额',
-					'type'	=>	'textarea',
-					'default'	=>	'',
-					'inputOptions'	=>	[
-						'class'	=>	'col-lg-7'
-					],
-					'validator'	=>	[
-						'required'	=>	true,
-					]
+				'income_company_address'	=>	[
+					'default'	=>	0
 				],
-				'debt_info'	=>	[
-					'label'	=>	'预期情况说明',
-					'type'	=>	'textarea',
-					'default'	=>	'',
-					'inputOptions'	=>	[
-						'class'	=>	'col-lg-7'
-					],
-					'validator'	=>	[
-						'required'	=>	true,
-					]
-				],
-				'debt_car_info'	=>	[
-					'label'	=>	'按揭车还款情况',
-					'type'	=>	'textarea',
-					'default'	=>	'',
-					'inputOptions'	=>	[
-						'class'	=>	'col-lg-7'
-					],
-					'validator'	=>	[
-						'required'	=>	true,
-					]
-				],
-				'info_base'	=>	[
-					'label'	=>	'基本情况说明',
-					'type'	=>	'textarea',
-					'default'	=>	'',
-					'inputOptions'	=>	[
-						'class'	=>	'col-lg-7'
-					],
-					'validator'	=>	[
-						'required'	=>	true,
-					]
-				],
-				'info_income'	=>	[
-					'label'	=>	'收入情况说明',
-					'type'	=>	'textarea',
-					'default'	=>	'',
-					'inputOptions'	=>	[
-						'class'	=>	'col-lg-7'
-					],
-					'validator'	=>	[
-						'required'	=>	true,
-					]
-				],
-				'use_info'	=>	[
-					'label'	=>	'借款用途说明',
-					'type'	=>	'textarea',
-					'default'	=>	'',
-					'inputOptions'	=>	[
-						'class'	=>	'col-lg-7'
-					],
-					'validator'	=>	[
-						'required'	=>	true,
-					]
-				],
-				'repay_source'	=>	[
-					'label'	=>	'还款来源核实',
-					'type'	=>	'textarea',
-					'default'	=>	'',
-					'inputOptions'	=>	[
-						'class'	=>	'col-lg-7'
-					],
-					'validator'	=>	[
-						'required'	=>	true,
-					]
-				],
+				'company_status'	=>	[],
+				'company_area'	=>	[],
+				'company_decorate'	=>	[],
+				'company_industry'	=>	[],
+				'company_people_number'	=>	[],
+				'company_info'	=>	[],
+				'job_year'	=>	[],
+				'job_duty'	=>	[],
+				'job_income'	=>	[],
+				'invest_amount'	=>	[],
+				'invest_rate'	=>	[],
+				'job_company'	=>	[],
+				'visit_address'	=>	[],
+				'house_live_address'	=>	[],
+				'house_live_ofter'	=>	[],
+				'job_company'	=>	[],
 			]
 		];
 	}
 
-	public function face()
+	/**
+	 * 上门审核
+	 */
+	public function visit()
 	{
-		return (new UserInfo())->add($this->data);
+		return (new Check())->add($this->data);
 	}
 }

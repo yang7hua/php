@@ -253,6 +253,36 @@ class LoanController extends Controller
 	 */
 	public function visitAction()
 	{
+		if ($this->isAjax())
+		{
+			$data = $this->request->getPost();
+			if (empty($data['uid']))
+				$this->error('参数错误');
+
+			$data['oid'] = $this->getOperatorId();
+			$data['addtime'] = time();
+
+			$model = new CheckForm('visit');
+			if ($model->validate($data))
+			{
+				if ($model->visit())
+				{
+					//更新状态
+					Loan::updateStatus($data['uid'], \App\LoanStatus::getStatusVisit());
+					$this->success('操作成功');
+				}
+				else
+				{
+					$this->error('操作失败');
+				}
+			}
+			else
+			{
+				$this->error('验证失败');
+			}
+			exit();
+		}
+
 		$uid = $this->urlParam();
 		empty($uid) and $this->pageError('param');
 
@@ -294,7 +324,7 @@ class LoanController extends Controller
 		//上门核查信息
 		if (in_array($level, ['visit']))
 		{
-			$infos['checkinfo'] = Check::baseinfo($uid);
+			$infos['visitinfo'] = Check::baseinfo($uid);
 		}
 
 		return $infos;

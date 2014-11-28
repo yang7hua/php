@@ -100,4 +100,9 @@ $(function(){
 			form.submit();
 		})
 	});
+
+	//disabled
+	$(".disabled").find("input").each(function(){
+		$(this).attr("disabled", true);
+	});
 });

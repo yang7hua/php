@@ -11,4 +11,21 @@ class Check extends Model
 			return [];
 		return $info->toArray();
 	}
+
+	public function add($data)
+	{
+		$info = new Check();
+		foreach ($data as $field=>$value)
+		{
+			$info->$field = $value;
+		}
+		$result = $info->create();
+		if (!$result) 
+		{
+			$this->outputErrors($info);
+			return false;
+		}
+		return true;
+
+	}
 }
