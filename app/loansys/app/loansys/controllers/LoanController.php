@@ -157,6 +157,7 @@ class LoanController extends Controller
 		//面审、上门核查、车评
 		if ($this->authHasAction('face')
 			|| $this->authHasAction('visit')
+			|| $this->authHasAction('car')
 		)
 		{
 			$conditions['bid'] = $this->getOperatorBid();
