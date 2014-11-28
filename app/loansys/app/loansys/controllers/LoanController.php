@@ -33,7 +33,7 @@ class LoanController extends Controller
 			],
 			'visit'	=>	[
 				'visit'	=>	[
-					'text'	=>	'上门审查',
+					'text'	=>	'实地外访',
 					'operator'	=>	true
 				]
 			],
@@ -58,7 +58,7 @@ class LoanController extends Controller
 					'see'	=>	'贷款列表',
 					'apply'	=>	'贷款申请',
 					'face'	=>	'面审',
-					'visit'	=>	'上门审查',
+					'visit'	=>	'实地外访',
 					'car'	=>	'车评'
 				]
 			]
@@ -321,7 +321,7 @@ class LoanController extends Controller
 		{
 			$infos['faceinfo'] = UserInfo::info($uid);
 		}
-		//上门核查信息|车评信息
+		//上门核查信息、车评
 		if (in_array($level, ['visit', 'check']))
 		{
 			$infos['visitinfo'] = Check::baseinfo($uid);
