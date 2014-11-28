@@ -194,7 +194,7 @@ class LoanController extends Controller
 		$uid = $this->urlParam();
 		empty($uid) and $this->pageError('param');
 
-		$infos = $this->detail($uid, 'face');
+		$infos = $this->detail($uid, 'check');
 		if (empty($infos['detailInfo']))
 			$this->pageError('param');
 
@@ -317,12 +317,12 @@ class LoanController extends Controller
 		$infos['detailInfo'] = $detailInfo;
 
 		//初审信息
-		if (in_array($level, ['face', 'visit']))
+		if (in_array($level, ['face', 'visit', 'check']))
 		{
 			$infos['faceinfo'] = UserInfo::info($uid);
 		}
-		//上门核查信息
-		if (in_array($level, ['visit']))
+		//上门核查信息|车评信息
+		if (in_array($level, ['visit', 'check']))
 		{
 			$infos['visitinfo'] = Check::baseinfo($uid);
 		}

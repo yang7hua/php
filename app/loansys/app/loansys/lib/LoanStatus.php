@@ -25,6 +25,17 @@ class LoanStatus
 	}
 
 	/**
+	 * 是否需要车评
+	 */
+	static function needCarAssess($status)
+	{
+		$status_car = self::getStatusCarAssess();
+		$status_checked = self::getStatusChecked();
+		$status_face = self::getStatusFace();
+		return $status >= $status_face and $status < $status_checked and $status != $status_car;
+	}
+
+	/**
 	 * 已实地外访
 	 */
 	static function hasVisit($status)
@@ -61,6 +72,9 @@ class LoanStatus
 		return self::getStatus('车评');
 	}
 
+	/**
+	 * 核查完毕，包括 实地外访、车评
+	 */
 	static function getStatusChecked()
 	{
 		return self::getStatus('核查完毕');

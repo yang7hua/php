@@ -51,11 +51,22 @@ class Loan extends Model
 		$info = Loan::findFirst("uid=$uid");
 		if (!$info)
 			return false;
+
+		//面审
+		if ($status == \App\LoanStatus::getStatusFace())
+		{
+		}
 		//实地外访
-		if ($status == \App\LoanStatus::getStatusVisit() and \App\LoanStatus::hasCarAssess($info->status))
+		else if ($status == \App\LoanStatus::getStatusVisit() and \App\LoanStatus::hasCarAssess($info->status))
 		{
 			$status = \App\LoanStatus::getStatusChecked();
 		}
+		//车评
+		else if ($status == \App\LoanStatus::getStatusCarAssess() and \App\LoanStatus::hasVisit($info->status))
+		{
+			$status = \App\LoanStatus::getStatusChecked();
+		}
+
 		$info->status = $status;
 		return $info->update();
 	}
