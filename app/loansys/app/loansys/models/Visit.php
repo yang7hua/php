@@ -1,20 +1,20 @@
 <?php
 /**
- * 核查信息
+ * 实地外访 
  */
-class Check extends Model
+class Visit extends Model
 {
-	public static function baseinfo($uid)
+	public static function findByUid($uid)
 	{
 		$info = self::findFirst("uid=$uid");
 		if (!$info)
 			return [];
 		return $info->toArray();
 	}
-
+	
 	public function add($data)
 	{
-		$info = new Check();
+		$info = new Visit();
 		foreach ($data as $field=>$value)
 		{
 			$info->$field = $value;

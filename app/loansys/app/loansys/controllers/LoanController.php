@@ -263,7 +263,7 @@ class LoanController extends Controller
 			$data['oid'] = $this->getOperatorId();
 			$data['addtime'] = time();
 
-			$model = new CheckForm('visit');
+			$model = new VisitForm('visit');
 			if ($model->validate($data))
 			{
 				if ($model->visit())
@@ -297,6 +297,54 @@ class LoanController extends Controller
 	}
 
 	/**
+	 * 车评 
+	 */
+	public function carAction()
+	{
+		if ($this->isAjax())
+		{
+			$data = $this->request->getPost();
+			if (empty($data['uid']))
+				$this->error('参数错误');
+
+			$data['oid'] = $this->getOperatorId();
+			$data['addtime'] = time();
+
+			$model = new CheckForm('visit');
+			if ($model->validate($data))
+			{
+				if ($model->visit())
+				{
+					//更新状态
+					Loan::updateStatus($data['uid'], \App\LoanStatus::getStatusVisit());
+					$this->success('操作成功');
+				}
+				else
+				{
+					$this->error('操作失败');
+				}
+			}
+			else
+			{
+				$this->error('验证失败');
+			}
+			exit();
+		}
+
+		$uid = $this->urlParam();
+		empty($uid) and $this->pageError('param');
+
+		$infos = $this->detail($uid, 'car');
+
+		$infos['uid'] = $uid;
+		$infos['action'] = 'car';
+		$infos['operate']['car'] = $this->authHasAction('car');
+		$this->view->setVars($infos);
+		$this->view->pick('loan/detail');
+	}
+
+
+	/**
 	 * 根据等级获取贷款详细信息
 	 * @param $uid: 客户编号
 	 * @param $level: 信息等级, 
@@ -318,14 +366,19 @@ class LoanController extends Controller
 		$infos['detailInfo'] = $detailInfo;
 
 		//初审信息
-		if (in_array($level, ['face', 'visit', 'check']))
+		if (in_array($level, ['face', 'visit', 'check', 'car']))
 		{
 			$infos['faceinfo'] = UserInfo::info($uid);
 		}
 		//上门核查信息、车评
-		if (in_array($level, ['visit', 'check']))
+		if (in_array($level, ['visit', 'check', 'car']))
 		{
-			$infos['visitinfo'] = Check::baseinfo($uid);
+			$infos['visitinfo'] = Visit::findByUid($uid);
+		}
+		//车评
+		if (in_array($level, ['car', 'check']))
+		{
+			$infos['carinfo'] = Car::findByUid($uid);
 		}
 
 		return $infos;

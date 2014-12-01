@@ -1,6 +1,6 @@
 <?php
 
-class CheckForm extends ModelForm
+class VisitForm extends ModelForm
 {
 	public static function fields()
 	{
@@ -41,6 +41,22 @@ class CheckForm extends ModelForm
 				'house_live_address'	=>	[],
 				'house_live_ofter'	=>	[],
 				'job_company'	=>	[],
+			],
+			'car'	=>	[
+				'uid'	=>	null,
+				'car_loan'	=>	[], 
+				'car_otherhand'	=>	[], 
+				'car_secondhand_info'	=>	[], 
+				'car_brand'	=>	[], 
+				'car_type'	=>	[],
+				'car_price'	=>	[], 
+				'car_buytime'	=>	[], 
+				'car_appearance'	=>	[], 
+				'car_inappearance'	=>	[], 
+				'car_accident_info'	=>	[],
+				'car_fall_price'	=>	[], 
+				'car_assess_price'	=>	[], 
+				'car_sys_assess_price'	=>	[]		 
 			]
 		];
 	}
@@ -50,6 +66,6 @@ class CheckForm extends ModelForm
 	 */
 	public function visit()
 	{
-		return (new Check())->add($this->data);
+		return (new Visit())->add($this->data);
 	}
 }

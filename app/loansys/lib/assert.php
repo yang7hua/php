@@ -46,13 +46,24 @@ function getAssert($key)
 				'depends'	=>	'\Assert\app'
 			]
 		],
-
+		//省份城市
 		'address'	=>	[
 			'jsfiles'	=>	[
 				'basedir'	=>	null,
 				'files'	=>	[
 					//'data/bdist.js',
 					'data/tdist.js',
+					'cascaded.js'
+				],
+				'depends'	=>	'\Assert\app'
+			]
+		],
+		//车系
+		'cars'	=>	[
+			'jsfiles'	=>	[
+				'basedir'	=>	null,
+				'files'	=>	[
+					'data/cars.js',
 					'cascaded.js'
 				],
 				'depends'	=>	'\Assert\app'
@@ -75,6 +86,11 @@ function validate()
 function address()
 {
 	return register(getAssert('address'));
+}
+
+function cars()
+{
+	return register(getAssert('cars'));
 }
 
 function register($assert)

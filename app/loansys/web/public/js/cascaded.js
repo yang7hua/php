@@ -93,4 +93,107 @@ $(function(){
 
 		$(this).text(city_text);
 	});
+
+	var car_brand = {};
+	$.each(cars, function(k, v){
+		var ca = v.name.split(" ");
+		var c = ca[0].toUpperCase();
+		if (car_brand[c]) {
+			car_brand[c].push(v);
+		} else {
+			car_brand[c] = [v];
+		}
+	});
+	//车系
+	function carBrandSelect()
+	{
+		var str = '<ul>';
+		$.each(car_brand, function(k, v){
+			str += "<li>";
+			str += "<div class='car-brand-alpha pull-left'>"+k+"</div>";
+			str += "<div class='car-brand-name pull-left'>";
+			$.each(v, function(a, b){
+				var name = b.name.split(" ")[1];
+				str += "<span car-brand-alpha="+k+">"+name+"</span>";	
+			});
+			str += "</div>";
+			str += "<div class='clear'></div>";
+			str += "</li>";
+		});
+		str += "</ul>";
+		return str;
+	}
+
+	function carTypeSelect(options)
+	{
+		var str = '';
+		if (options)
+		{
+			$.each(options, function(a, b){
+				str += "<li>"+b.showName+"</li>";
+			});
+		}
+		return str;
+	}
+
+	function changeCarType(key)
+	{
+		$.each(cars, function(a, b){
+			if (b.name == key) {
+				var car_type = car_box.find(".car_type");
+				car_type.find("ul").html(carTypeSelect(b.child));
+				car_type.addClass("opened");
+				return false;
+			}
+		});
+	}
+
+	function carBrandHtml(fieldname)
+	{
+		var str = "<div class='car_brand'>";
+		str += "<input name='"+fieldname+"' class='form-control' placeholder='品牌'/>";
+		str += carBrandSelect();
+		str += "</div>";
+		return str;
+	}
+
+	function carTypeHtml(fieldname)
+	{
+		var str = "<div class='car_type'>";
+		str += "<input name='"+fieldname+"' class='form-control' placeholder='型号'/>";
+		str += "<ul>";
+		str += carTypeSelect();
+		str += "</ul>";
+		str += "</div>";
+		return str;
+	}
+			
+	var car_box = $("[cascaded-data=car]");
+	car_box.each(function(){
+		var fields = $(this).attr("cascaded-fields").split("#");
+		var car_brand_html = carBrandHtml(fields[0]);			
+		var car_type_html = carTypeHtml(fields[1]);
+		var help_block_html = "<div class='col-lg-2 help-block'></div>";
+		$(this).html(car_brand_html + car_type_html + help_block_html);
+	});
+	car_box.delegate("[name=car_brand]", "click", function(){
+		var p = $(this).siblings("ul").parent();
+		p.toggleClass("opened");
+		if (p.hasClass("opened"))
+			car_box.find(".car_type").removeClass("opened");
+	})
+	car_box.find("[name=car_type]").on("click", function(){
+		$(this).closest(".car_type").toggleClass("opened");
+	});
+	car_box.find(".car_brand").delegate("ul li span", "click", function(){
+		var alpha = $(this).attr("car-brand-alpha"),
+			text = $(this).text();
+		car_box.find("[name=car_brand]").val(text);
+		$(this).closest(".car_brand").removeClass("opened");
+		changeCarType(alpha + " " + text);
+	})
+	car_box.find(".car_type").delegate("ul li", "click", function(){
+		car_box.find("[name=car_type]").val($(this).text());
+		$(this).closest(".car_type").removeClass("opened");
+	})
 });
