@@ -7,6 +7,7 @@ class CarForm extends ModelForm
 		return [
 			'assess'	=>	[
 				'uid'	=>	null,
+				'oid'	=>	null,
 				'car_loan'	=>	[], 
 				'car_otherhand'	=>	[], 
 				'car_secondhand_info'	=>	[], 
@@ -19,7 +20,7 @@ class CarForm extends ModelForm
 				'car_accident_info'	=>	[],
 				'car_fall_price'	=>	[], 
 				'car_assess_price'	=>	[], 
-				'car_sys_assess_price'	=>	[]		 
+				'car_sys_assess_price'	=>	[]
 			]
 		];
 	}

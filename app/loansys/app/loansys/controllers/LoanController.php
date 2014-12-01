@@ -308,15 +308,16 @@ class LoanController extends Controller
 				$this->error('参数错误');
 
 			$data['oid'] = $this->getOperatorId();
-			$data['addtime'] = time();
+			if ($data['car_buytime'])
+				$data['car_buytime'] = strtotime($data['car_buytime']);
 
-			$model = new CheckForm('visit');
+			$model = new CarForm('assess');
 			if ($model->validate($data))
 			{
-				if ($model->visit())
+				if ($model->assess())
 				{
 					//更新状态
-					Loan::updateStatus($data['uid'], \App\LoanStatus::getStatusVisit());
+					Loan::updateStatus($data['uid'], \App\LoanStatus::getStatusCarAssess());
 					$this->success('操作成功');
 				}
 				else

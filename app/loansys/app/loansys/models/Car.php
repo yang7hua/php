@@ -26,6 +26,7 @@ class Car extends Model
 		{
 			$info->$field = $value;
 		}
+		$info->addtime = time();
 		$result = $info->create();
 		if (!$result) 
 		{
