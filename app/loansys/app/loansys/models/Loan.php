@@ -3,22 +3,6 @@
 class Loan extends Model
 {
 
-	public static function add($data, $lastInsId = false)
-	{
-		$Loan = new Loan();
-		$data['addtime'] = time();
-		foreach ($data as $field=>$value)
-		{
-			$Loan->{$field} = $value;
-		}
-		if ($Loan->create())
-		{
-			return $lastInsId ? $Loan->lid : true;
-		}
-		$this->outputErrors($Loan);
-		return false;
-	}
-
 	public static function format($data)
 	{
 		static $repay_method = null;
@@ -44,31 +28,6 @@ class Loan extends Model
 			$row['status_text'] = $status[$row['status']];
 		}
 		return $data;
-	}
-
-	public static function updateStatus($uid, $status)
-	{
-		$info = Loan::findFirst("uid=$uid");
-		if (!$info)
-			return false;
-
-		//面审
-		if ($status == \App\LoanStatus::getStatusFace())
-		{
-		}
-		//实地外访
-		else if ($status == \App\LoanStatus::getStatusVisit() and \App\LoanStatus::hasCarAssess($info->status))
-		{
-			$status = \App\LoanStatus::getStatusChecked();
-		}
-		//车评
-		else if ($status == \App\LoanStatus::getStatusCarAssess() and \App\LoanStatus::hasVisit($info->status))
-		{
-			$status = \App\LoanStatus::getStatusChecked();
-		}
-
-		$info->status = $status;
-		return $info->update();
 	}
 
 }

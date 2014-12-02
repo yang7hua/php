@@ -20,7 +20,8 @@ class CarForm extends ModelForm
 				'car_accident_info'	=>	[],
 				'car_fall_price'	=>	[], 
 				'car_assess_price'	=>	[], 
-				'car_sys_assess_price'	=>	[]
+				'car_sys_assess_price'	=>	[],
+				'car_remark'	=>	[]
 			]
 		];
 	}

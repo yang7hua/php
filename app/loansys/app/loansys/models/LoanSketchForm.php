@@ -1,6 +1,6 @@
 <?php
 
-class LoanForm extends ModelForm
+class LoanSketchForm extends ModelForm
 {
 	public static function fields()
 	{
@@ -62,6 +62,6 @@ class LoanForm extends ModelForm
 
 	public function apply()
 	{
-		return Loan::add($this->data, true);
+		return LoanSketch::add($this->data, true);
 	}
 }

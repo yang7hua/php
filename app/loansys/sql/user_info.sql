@@ -20,13 +20,25 @@ CREATE TABLE IF NOT EXISTS `sys_userinfo` (
 	`debt_info` varchar(1000) not NULL default '' comment '负债总额(万为单位), 每月还款, 证明方式, 逾期情况, 按揭车还款情况',
 	`debt_car_info` varchar(1000) not null default '' COMMENT '按揭车还款情况',
 
-	--基本情况说明
-	`info_base`	varchar(5000) not null DEFAULT '' COMMENT '基本情况说明',
-	`info_income` varchar(5000) not NULL DEFAULT '' COMMENT '收入情况说明',
+	-- 基本情况说明
+	`info_base`	varchar(2000) not null DEFAULT '' COMMENT '基本情况说明',
+	`info_income` varchar(1000) not NULL DEFAULT '' COMMENT '收入情况说明',
 	`use_info`	varchar(1000) not null DEFAULT '' COMMENT '借款用途说明',
 	`repay_source` varchar(1000) not null DEFAULT '' COMMENT '还款来源核实',
 
-	`addtime` int unsigned not NULL COMMENT '核实时间',
+	-- 复审
+	`amount` decimal(6,2) default 0.00 comment '批准金额',
+    `deadline` tinyint unsigned default 0 COMMENT '批准贷款期限',
+	`apr` float(6,2) default 0.00 comment '批准年利率', 
+	`repay_method` char(1) default 'o' comment '批准还款方式',
+	`reason` varchar(1000)  default '' comment '同意或者拒绝放款的理由',
+	`risk` varchar(1000) default '' comment '可能存在风险说明',
+	`notice` varchar(1000) default '' comment '贷后注意事项',
+	`remark` varchar(1000) default '' comment '评审人员标注的其它事项',
+	`guarantee` varchar(1000) default '' comment '担保人情况',
+
+	`addtime` int unsigned COMMENT '核实时间',
+	`uptime` int unsigned COMMENT '更新时间',
 
     PRIMARY KEY (`id`),
 	key uid(`uid`),

@@ -29,6 +29,10 @@ class LoanController extends Controller
 				'face'	=>	[
 					'text'	=>	'面审',
 					'operator'	=>	true
+				],
+				'reface'	=>	[
+					'text'	=>	'面审意见',
+					'operator'	=>	true
 				]
 			],
 			'visit'	=>	[
@@ -65,12 +69,55 @@ class LoanController extends Controller
 		];
 	}
 
+	public function initialize()
+	{
+		parent::initialize();
+		$action = $this->getActionName();
+		if ($this->isAjax() and in_array($action, ['face', 'visit', 'car', 'reface']))
+		{
+			$uid = $this->request->getPost('uid');
+			if (!$uid)
+				$this->error('参数错误');
+	//		if (!$this->checkLoanStatus($uid, $action))
+	//			$this->error('操作失败');
+		}
+	}
+
+	/**
+	 * 检查当前贷款项目是否需要对应操作
+	 */
+	public function checkLoanStatus($uid, $action)
+	{
+		$loansketch = User::sketchInfo($uid);
+		if (!$loansketch)
+			return false;
+		$status = $loansketch['status'];
+		switch($action)
+		{
+			case 'face':
+				return \App\LoanStatus::needFace($status);
+				break;
+			case 'visit':
+				return \App\LoanStatus::needVisit($status);
+				break;
+			case 'car':
+				return \App\LoanStatus::needCarAssess($status);
+				break;
+			case 'reface':
+				return \App\LoanStatus::needReface($status);
+				break;
+			default:
+				return false;
+				break;
+		}
+	}
+
 	/**
 	 * 获取当前角色对于每笔贷款的操作权限
 	 */
 	public function operators()
 	{
-		static $operators = ['face', 'visit', 'car', 'detail'];
+		static $operators = ['face', 'reface', 'visit', 'car', 'detail'];
 		static $allow_operators = null;
 
 		if ($allow_operators and is_array($allow_operators))
@@ -114,7 +161,7 @@ class LoanController extends Controller
 				if ($uid = $modelForm->apply()) 
 				{
 					$data['uid'] = $uid;
-					$modelForm = new LoanForm('apply');
+					$modelForm = new LoanSketchForm('apply');
 					if ($modelForm->validate($data) and $modelForm->apply()) {
 						$db->commit();
 						$this->success('操作成功');
@@ -173,8 +220,8 @@ class LoanController extends Controller
 		$limit = $this->limit($id);
 
 		$User = new User();
-		$list = $User->select($conditions, $limit[0], $limit[1]);
-		$count = $User->getCount($conditions);
+		$list = $User->sketches($conditions, $limit[0], $limit[1]);
+		$count = $User->getSketchCount($conditions);
 
 		$operates = $this->operators();
 		$this->view->setVars([
@@ -195,7 +242,7 @@ class LoanController extends Controller
 		$uid = $this->urlParam();
 		empty($uid) and $this->pageError('param');
 
-		$infos = $this->detail($uid, 'check');
+		$infos = $this->detail($uid, 'reface');
 		if (empty($infos['detailInfo']))
 			$this->pageError('param');
 
@@ -217,13 +264,13 @@ class LoanController extends Controller
 			$data['oid'] = $this->getOperatorId();
 			$data['addtime'] = time();
 
-			$model = new UserInfoForm('face');
+			$model = new FaceForm('face');
 			if ($model->validate($data))
 			{
 				if ($model->face())
 				{
 					//更新状态
-					Loan::updateStatus($data['uid'], \Func\getArrayKey(\App\Config\Loan::status(), '初审'));	
+					LoanSketch::updateStatus($data['uid'], \Func\getArrayKey(\App\Config\Loan::status(), '初审'));	
 					$this->success('操作成功');
 				}
 				else
@@ -269,7 +316,7 @@ class LoanController extends Controller
 				if ($model->visit())
 				{
 					//更新状态
-					Loan::updateStatus($data['uid'], \App\LoanStatus::getStatusVisit());
+					LoanSketch::updateStatus($data['uid'], \App\LoanStatus::getStatusVisit());
 					$this->success('操作成功');
 				}
 				else
@@ -317,7 +364,7 @@ class LoanController extends Controller
 				if ($model->assess())
 				{
 					//更新状态
-					Loan::updateStatus($data['uid'], \App\LoanStatus::getStatusCarAssess());
+					LoanSketch::updateStatus($data['uid'], \App\LoanStatus::getStatusCarAssess());
 					$this->success('操作成功');
 				}
 				else
@@ -340,6 +387,47 @@ class LoanController extends Controller
 		$infos['uid'] = $uid;
 		$infos['action'] = 'car';
 		$infos['operate']['car'] = $this->authHasAction('car');
+		$this->view->setVars($infos);
+		$this->view->pick('loan/detail');
+	}
+
+	//复审
+	public function refaceAction()
+	{
+		if ($this->isAjax())
+		{
+			$data = $this->request->getPost();
+			if (empty($data['uid']))
+				$this->error('参数错误');
+
+			$model = new FaceForm('reface');
+			if ($model->validate($data))
+			{
+				if ($model->reface())
+				{
+					//更新状态
+					LoanSketch::updateStatus($data['uid'], \App\LoanStatus::getStatusReface());
+					$this->success('操作成功');
+				}
+				else
+				{
+					$this->error('操作失败');
+				}
+			}
+			else
+			{
+				$this->error('验证失败');
+			}
+			exit();
+		}
+		$uid = $this->urlParam();
+		empty($uid) and $this->pageError('param');
+
+		$infos = $this->detail($uid, 'reface');
+
+		$infos['uid'] = $uid;
+		$infos['action'] = 'reface';
+		$infos['operate']['reface'] = $this->authHasAction('reface');
 		$this->view->setVars($infos);
 		$this->view->pick('loan/detail');
 	}
@@ -367,19 +455,23 @@ class LoanController extends Controller
 		$infos['detailInfo'] = $detailInfo;
 
 		//初审信息
-		if (in_array($level, ['face', 'visit', 'check', 'car']))
+		if (in_array($level, ['face', 'visit', 'check', 'car', 'reface']))
 		{
-			$infos['faceinfo'] = UserInfo::info($uid);
+			$infos['faceinfo'] = Face::findByUid($uid);
 		}
 		//上门核查信息、车评
-		if (in_array($level, ['visit', 'check', 'car']))
+		if (in_array($level, ['visit', 'check', 'car', 'reface']))
 		{
 			$infos['visitinfo'] = Visit::findByUid($uid);
 		}
 		//车评
-		if (in_array($level, ['car', 'check']))
+		if (in_array($level, ['car', 'check', 'reface']))
 		{
 			$infos['carinfo'] = Car::findByUid($uid);
+		}
+		if (in_array($level, ['reface']))
+		{
+			$infos['refaceinfo'] = Face::refaceInfo($infos['faceinfo']);
 		}
 
 		return $infos;

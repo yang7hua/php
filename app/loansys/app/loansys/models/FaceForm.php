@@ -1,6 +1,6 @@
 <?php
 
-class UserInfoForm extends ModelForm
+class FaceForm extends ModelForm
 {
 	public static function fields()
 	{
@@ -124,12 +124,32 @@ class UserInfoForm extends ModelForm
 						'required'	=>	true,
 					]
 				],
+			],
+			'reface'	=>	[
+				'uid'	=>	null,
+				'amount'	=>	null,
+				'deadline'	=>	null,
+				'apr'	=>	null,
+				'repay_method'	=>	null,
+				'reason'	=>	null,
+				'risk'	=>	null,
+				'notice'	=>	null,
+				'remark'	=>	null,
+				'guarantee'	=>	null,
+				'uptime'	=>	null
 			]
 		];
 	}
 
 	public function face()
 	{
-		return (new UserInfo())->add($this->data);
+		return (new Face())->add($this->data);
+	}
+
+	public function reface()
+	{
+		$uid = $this->data['uid'];
+		unset($this->data['uid']);
+		return (new Face())->reface($uid, $this->data);
 	}
 }

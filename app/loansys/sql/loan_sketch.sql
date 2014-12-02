@@ -1,5 +1,5 @@
-drop table if exists `sys_loan`;
-create table if not exists `sys_loan`(
+drop table if exists `sys_loan_sketch`;
+create table if not exists `sys_loan_sketch`(
 	`lid` int unsigned not null auto_increment,
     `uid` int unsigned NOT NULL COMMENT '贷款人UID',
 
@@ -14,21 +14,10 @@ create table if not exists `sys_loan`(
 	`repay_source` varchar(1000) not null default 0 comment '还款来源', 
     `description` varchar(5000) default '' COMMENT '贷款描述',
 
-    `begintime` int unsigned DEFAULT 0 COMMENT '还款起始时间',
-    `endtime` int unsigned DEFAULT 0 COMMENT '还款结束时间',
-    `return_num` tinyint(2) unsigned DEFAULT 0 COMMENT '已还期数',
-    `remain_amount` decimal(6,2) DEFAULT 0.00 COMMENT '剩余本金',
-    `return_amount` decimal(6,2) DEFAULT 0.00 COMMENT '已经还总额',
-
-	`reason` varchar(1000)  default '' comment '同意或者拒绝放款的理由',
-	`risk` varchar(1000) default '' comment '可能存在风险说明',
-	`notice` varchar(1000) default '' comment '贷后注意事项',
-	`remark` varchar(1000) default '' comment '评审人员标注的其它事项',
-
     `status` tinyint unsigned DEFAULT 0 COMMENT '状态: 0-客户经理提交草稿,10-初次面审,30-核查人员完成后面审复审, 1-面审审核成功, 11-审核失败, 21-风控审核成功, 50-还款中, 60-还款完成',
 	`addtime` int not null comment '贷款修改时间',
 	PRIMARY key (`lid`),
 	key uid(`uid`),
 	key loan_type(`loan_type`),
 	key status(`status`)
-)engine=InnoDB default charset=utf8 auto_increment=100001 comment='贷款表';
+)engine=InnoDB default charset=utf8 auto_increment=100001 comment='贷款初稿表,由客户经理添加';

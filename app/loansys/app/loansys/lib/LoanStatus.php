@@ -36,6 +36,15 @@ class LoanStatus
 	}
 
 	/**
+	 * 是否需要复审
+	 */
+	static function needReface($status)
+	{
+		$status_checked = self::getStatusChecked();
+		return $status == $status_checked;
+	}
+
+	/**
 	 * 已实地外访
 	 */
 	static function hasVisit($status)
@@ -78,5 +87,10 @@ class LoanStatus
 	static function getStatusChecked()
 	{
 		return self::getStatus('核查完毕');
+	}
+
+	static function getStatusReface()
+	{
+		return self::getStatus('复审');
 	}
 }

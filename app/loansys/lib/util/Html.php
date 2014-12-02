@@ -53,7 +53,7 @@ class Html
 	{
 		$attrs['class'] = self::analyseClass($attrs);
 		$attrs_str = self::attrs($attrs);
-		$value = isset($value) ? $value : '';
+		$value = isset($value) ? 'value='.$value : '';
 		return '<input name="'.$field.'" '.$attrs_str.' '.$value.'>';
 	}
 
@@ -69,7 +69,9 @@ class Html
 	{
 		$attrs_str = null;
 		foreach ($attrs as $attr=>$value)
-			$attrs_str .= " $attr='$value' ";
+		{
+			$attrs_str .= " $attr=\"$value\" ";
+		}
 		return $attrs_str;
 	}
 }

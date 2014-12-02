@@ -7,6 +7,12 @@ case 'face':
 case 'visit':
 	$title = '实地外访';
 	break;
+case 'car':
+	$title = '车评';
+	break;
+case 'reface':
+	$title = '复审';
+	break;
 default:
 	$title = '详情';
 	break;
@@ -53,6 +59,19 @@ if (isset($carinfo))
 	if (empty($carinfo) and $operate['car'] and \App\LoanStatus::needCarAssess($detailInfo['status']))
 	{
 		$this->partial('loan/partial/carassess');
+	}
+}
+
+//复审
+if (isset($refaceinfo))
+{
+	if (empty($refaceinfo) and $operate['reface'] and \App\LoanStatus::needReface($detailInfo['status']))
+	{
+		$this->partial('loan/partial/reface');
+	}
+	else if (!empty($refaceinfo))
+	{
+		$this->partial('loan/partial/refaceinfo');
 	}
 }
 

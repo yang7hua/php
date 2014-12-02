@@ -6,10 +6,11 @@ $(function(){
 		if (!_class)
 			return;
 		var sepStart = _class.indexOf('{'),
-			sepEnd = _class.indexOf('}');
+			sepEnd = _class.lastIndexOf('}');
 		if (sepStart == -1 || sepEnd == -1)
 			return;
 		var validator_str = _class.substr(sepStart, sepEnd);
+		//console.log(validator_str);
 		return validator_str;
 	}
 

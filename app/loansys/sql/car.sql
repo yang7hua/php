@@ -9,7 +9,7 @@ create table if not exists `sys_car_assess`(
 	`car_otherhand` tinyint unsigned  default 1 comment 'x手车, 1-一手, 2-二手, 3-三手车, 默认为一手车',
 	`car_secondhand_info` varchar(1000) default '' comment '二手车说明',
 	`car_brand` varchar(30) default '' comment '车品牌',
-	`car_type` varchar(0) default '' comment '车型号',
+	`car_type` varchar(30) default '' comment '车型号',
 	`car_price` float(6,2) default 0.00 comment '价格，万为单位',
 	`car_buytime` int default 0 comment '购买时间',
 	`car_appearance` tinyint default 0 comment '外观, 0-无',
@@ -18,6 +18,7 @@ create table if not exists `sys_car_assess`(
 	`car_fall_price` float(8,2) default 0.00 comment '每月掉价幅度',
 	`car_assess_price` float(8,2) default 0.00 comment '评估价格',
 	`car_sys_assess_price` float(6,2) default 0.00 comment '系统评估价格',
+	`car_remark` varchar(1000) not null default '' comment '其它说明',
 	
 	`addtime` int not null comment '评估时间',
 

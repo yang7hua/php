@@ -3,7 +3,6 @@
 class User extends Model
 {
 
-
 	protected function rawFields()
 	{
 		//return ['lid', 'contact_info', 'child_info', 'spouse_name', 'spouse_idcard', 'spouse_info', 'gender', 'birthdate'];
@@ -36,13 +35,14 @@ class User extends Model
 			return true;
 	}
 
-	public static function select($conditions, $limit = 10, $offset = 0)
+	//初稿
+	public static function sketches($conditions, $limit = 10, $offset = 0)
 	{
 		$condition = self::buildConditions($conditions);
 
 		$query = User::query();
 		$result = $query->where($condition)
-				->join('Loan', 'Loan.uid = User.uid')
+				->join('LoanSketch', 'L.uid = User.uid', 'L')
 				->limit($limit, $offset)
 				->columns(self::columns())
 				->orderBy('User.addtime desc')
@@ -74,8 +74,8 @@ class User extends Model
 	public static function columns($level = ['base'])
 	{
 		$base = 'User.uid, User.bid, User.oid, User.realname, User.idcard, User.addtime, User.mobile, 
-						Loan.amount, Loan.deadline, Loan.use_type, Loan.repay_method, 
-						Loan.deadline_type, Loan.lid, Loan.loan_type, Loan.status';
+						L.amount, L.deadline, L.use_type, L.repay_method, 
+						L.deadline_type, L.lid, L.loan_type, L.status';
 		$oinfo = 'O.username oname, B.name bname';
 		$morebase = 'User.idcard_province, User.idcard_city, User.province, User.city, User.address,
 					User.info, User.marriage, User.have_child, User.spouse_name, User.spouse_idcard,
@@ -90,27 +90,32 @@ class User extends Model
 		return implode(' ,', $columns);
 	}
 
-	public static function getCount($conditions)
+	public static function getCount($conditions, $model = 'Loan')
 	{
 		$condition = self::buildConditions($conditions);
 
 		$query = User::query();
 		$result = $query->where($condition)
-				->join('Loan', 'Loan.uid = User.uid')
+				->join($model, 'L.uid = User.uid', 'L')
 				->columns(self::columns())
 				->orderBy('User.addtime desc')
 				->execute();
 		return $result->count();
 	}
 
-	public static function info($uid, $level = ['base'])
+	public static function getSketchCount($conditions)
+	{
+		return self::getCount($conditions, 'LoanSketch');
+	}
+
+	public static function sketchInfo($uid, $level = ['base'])
 	{
 		$conditions['uid'] = $uid;
 		$condition = self::buildConditions($conditions);
 
 		$query = User::query();
 		$result = $query->where($condition)
-				->leftJoin('Loan', 'Loan.uid = User.uid')
+				->leftJoin('LoanSketch', 'L.uid = User.uid', 'L')
 				->leftJoin('Operator', 'User.oid=O.oid', 'O')
 				->leftJoin('Branch', 'User.bid=B.bid', 'B')
 				->limit(1)
@@ -124,6 +129,6 @@ class User extends Model
 
 	public static function detailInfo($uid)
 	{
-		return self::info($uid, ['base', 'oinfo', 'morebase']);
+		return self::sketchInfo($uid, ['base', 'oinfo', 'morebase']);
 	}
 }
