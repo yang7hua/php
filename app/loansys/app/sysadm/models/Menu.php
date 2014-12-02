@@ -80,7 +80,7 @@ class Menu extends Model
 				'action'	=>	'list'
 			],	
 		];
-		if (self::isSuperBid()) {
+		if (self::isNationWideBid()) {
 			$menus = array_merge($su, $menus);
 		}
 		/*

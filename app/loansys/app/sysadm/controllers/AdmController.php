@@ -10,12 +10,8 @@ class AdmController extends Controller
 	public function initialize()
 	{
 		parent::initialize();
-		if (!self::isSuperBid())
+		if (!self::isNationWideBid())
 			$this->pageError('permission');
 	}
 
-	public static function isSuperBid()
-	{
-		return \App::session('bid', 'adm') == 1;
-	}
 }

@@ -7,7 +7,7 @@ class Controller extends \Base\Controller
 	 */
 	public function isLogin()
 	{
-		return $this->session->get('adm') != null;
+		return $this->getOperator();
 	}
 
 	public function checkAuth()
@@ -22,4 +22,38 @@ class Controller extends \Base\Controller
 				'_sess'	=>	$sess
 			]);
 	}
+
+	//是否是全国中心操作员
+	public function isNationWideBid()
+	{
+		$bid = $this->getOperatorBid();
+		return \App::isNationWideBid($bid);
+	}
+
+	public function getOperatorId()
+	{
+		return $this->getOperator()['aid'];
+	}
+
+	public function getOperatorBid()
+	{
+		return $this->getOperator()['bid'];
+	}
+
+	public function getOperator()
+	{
+		return $this->session->get('adm');
+	}
+
+	/**
+	 * 获取所有可配置的权限
+	 */
+	public function allAuthorities()
+	{
+		$list = Authority::all();
+		$isNationWideBid = $this->isNationWideBid();
+		$list = \App\Authority::getAuthoriesByBid($list, $isNationWideBid);
+		return $list;
+	}
+
 }

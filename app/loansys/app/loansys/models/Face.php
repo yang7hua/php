@@ -20,6 +20,7 @@ class Face extends Model
 		return $info->toArray();
 	}
 
+	//复审信息
 	public static function refaceInfo($data)
 	{
 		$fields = [

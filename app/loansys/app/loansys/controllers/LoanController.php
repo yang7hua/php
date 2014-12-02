@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 贷款相关操作
+ * 贷款相关操作, 面审、实地外访、车评、复审
  */
 class LoanController extends Controller
 {
@@ -78,8 +78,8 @@ class LoanController extends Controller
 			$uid = $this->request->getPost('uid');
 			if (!$uid)
 				$this->error('参数错误');
-	//		if (!$this->checkLoanStatus($uid, $action))
-	//			$this->error('操作失败');
+			if (!$this->checkLoanStatus($uid, $action))
+				$this->error('操作失败');
 		}
 	}
 
@@ -191,7 +191,7 @@ class LoanController extends Controller
 		$conditions = [];
 
 		//关键字搜索
-		$post = $this->request->getPost();
+		$post = $this->request->get();
 		if (isset($post['keyword']) and !empty($post['keyword']))
 		{
 			$keyword = $post['keyword'];

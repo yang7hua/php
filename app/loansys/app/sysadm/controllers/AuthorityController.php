@@ -2,35 +2,6 @@
 
 class AuthorityController extends Controller
 {
-	public static function actions()
-	{
-		return [
-			'allot'	=>	[
-				'allot'	=>	'授权',
-			]
-		];
-	}
-
-	public static function authorities()
-	{
-		return [
-			'authority'	=>	[
-				'name'	=>	'权限管理',
-				'authorities'	=>	[
-					'allot'	=>	'权限分配'
-				]
-			]
-		];
-	}
-	
-	public function listAction()
-	{
-		$list = Authority::all();
-	}
-
-	public function addAction()
-	{
-	}
 
 	/**
 	 * 将json字符串auth转换成数组
@@ -105,7 +76,7 @@ class AuthorityController extends Controller
 		$this->view->setVars([
 			'info'	=>	$info,
 			'form'	=>	$modelForm,
-			'authorities'	=>	Authority::all(),
+			'authorities'	=>	self::allAuthorities(),
 			'formparams'	=>	[
 				'action'	=>	\Func\url('/authority/allot/role/'),
 				'type'	=>	$type,

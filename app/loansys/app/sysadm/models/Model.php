@@ -3,9 +3,9 @@
 class Model extends \Base\Model
 {
 
-	public static function isSuperBid($bid = '')
+	public static function isNationWideBid($bid = '')
 	{
-		return \App::isSuperBid($bid);
+		return \App::isNationWideBid($bid);
 	}
 
 	public static function baseCondition()

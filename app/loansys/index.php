@@ -10,6 +10,7 @@ class App
 		'functions.php',
 		'assert.php'
 	];
+
 	public static function loadBase()
 	{
 		foreach (self::$basefiles as $file) {
@@ -20,96 +21,8 @@ class App
 	}
 
 	/**
-	 * 根据角色获取能操作的actions
-	 * 用于放在页面顶部作为快捷链接
+	 * 通过app名称获取路径
 	 */
-	public function getQuickLinks()
-	{
-		static $links = null;
-
-		if (!is_null($links))
-			return $links;
-
-		global $di;
-		$_authes = $di->get('session')->get('operator')['auth'];
-		if (!is_array($_authes))
-			return $links;
-
-		$_authes = $_authes[APP_NAME];
-		$links = [];
-		//将允许的控制器和方法放入数组
-		$allowed_actions = [];
-		foreach ($_authes as $controller=>$actions) {
-			$_controller = ucfirst($controller) . 'Controller';	
-			//控制器的actions
-			$_actions = $_controller::actions();
-			if (!$_actions)
-				continue;
-			$allowed_controller_actions = [];
-			foreach ($actions as $action) {
-				$allowed_controller_actions = array_merge($allowed_controller_actions, $_actions[$action]);
-			}
-			$allowed_actions[$controller] = $allowed_controller_actions;
-		}
-		if (!empty($allowed_actions))
-		{
-			foreach ($allowed_actions as $controller=>$actions)
-			{
-				foreach ($actions as $action=>$text)
-				{
-					if (is_null($text))
-						continue;
-					if (is_array($text) and $text['link']) {
-						$links[] = [
-							'url'	=>	\Func\url("$controller/$action"), 
-							'text'	=>	$text['text']
-							];
-					}
-				}
-			}
-		}
-		//print_r($links);
-		return $links;	
-	}
-
-	/**
-	 * 获取所有控制器的权限配置
-	 */
-	public static function authorities()
-	{
-		static $authorities = [];
-		static $superbid_controllers = ['branch'];
-
-		if (!empty($authorities))
-			return $authorities;
-		$paths = [
-			//ADM_NAME	=>	self::getPathByApp(ADM_NAME) . '/controllers',
-			FRONT_NAME	=>	self::getPathByApp(FRONT_NAME) . '/controllers'	
-		];
-
-		foreach ($paths as $app=>$path) {
-			$files[$app] = glob($path . '/*Controller.php');
-		}
-
-		if (!is_array($files) and empty($files))
-			return $authorities;
-
-		foreach ($files as $app=>$appfiles) {
-			$app_authorities = [];
-			foreach ($appfiles as $file) {
-				$classname = pathinfo($file)['filename'];
-				$newAuthorities = $classname::authorities();
-				$basecname = strtolower(str_replace('Controller', '', $classname));
-				if (!self::isSuperBid() and in_array($basecname, $superbid_controllers))
-					continue;
-				if (!empty($newAuthorities))
-					$app_authorities = array_merge($app_authorities, $newAuthorities);
-			}
-			$authorities[$app] = $app_authorities;
-		}
-		return $authorities;
-	}
-
 	public static function getPathByApp($appname = '')
 	{
 		return rtrim(ROOT_PATH . '/app/' . ($appname ? $appname . '/' : ''), '/');
@@ -144,7 +57,7 @@ class App
 	/**
 	 * 判断是否是全国总店账号
 	 */
-	public static function isSuperBid($bid = '')
+	public static function isNationWideBid($bid = '')
 	{
 		if (empty($bid))
 			$bid = self::session('bid', 'adm');
@@ -181,6 +94,7 @@ try{
 					'Util'	=>	LIB_PATH . '/util',
 					'Base'	=>	LIB_PATH . '/base',
 					'App'	=>	APP_PATH . '/lib',
+					'Apps'	=>	LIB_PATH	
 					)
 				)
 		->register();

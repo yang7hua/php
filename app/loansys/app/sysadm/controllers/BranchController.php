@@ -16,7 +16,7 @@ class BranchController extends AdmController
 		return [
 			'branch'	=>	[
 				'name'	=>	'门店管理',
-				'superbid'	=>	true,
+				'nationwide'	=>	true,
 				'authorities'	=>	[
 					'list'	=>	'查看',
 					'opera'	=>	'操作'
@@ -25,12 +25,18 @@ class BranchController extends AdmController
 		];
 	}
 
+	/**
+	 * 门店列表
+	 */
 	public function listAction()
 	{
 		$branches = Branch::all(['all'=>true]);
 		$this->view->setVar('branches', $branches);
 	}
 
+	/**
+	 * 编辑门店信息
+	 */
 	public function editAction()
 	{
 		if ($this->isAjax()) 
@@ -66,6 +72,9 @@ class BranchController extends AdmController
 		$this->view->pick('branch/add');
 	}
 
+	/**
+	 * 添加门店
+	 */
 	public function addAction()
 	{
 		if ($this->isAjax()) {
