@@ -1,6 +1,5 @@
 <?php
 
-defined('APP_NAME') or defined('APP_NAME', 'loansys');
 define('CONF_PATH', ROOT_PATH . '/config');
 define('LIB_PATH', ROOT_PATH . '/lib');
 
@@ -65,10 +64,6 @@ class App
 	}
 
 }
-
-//spl_autoload_register(['App', 'loadClass']);
-
-//include LIB_PATH . '/common.php';
 
 try{
 	$config = new Phf\Config\Adapter\Ini(CONF_PATH . '/web.php');

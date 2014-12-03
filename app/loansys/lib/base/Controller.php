@@ -223,9 +223,9 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 	/**
 	 * 分页
 	 */
-	public function page($count, $limit)
+	public function page($count, $limit, $p)
 	{
-		$page = new \Util\Page($count, $limit);
+		$page = new \Util\Page($count, $limit, $p);
 		return $page->getPage();
 	}
 

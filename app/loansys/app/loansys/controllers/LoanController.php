@@ -216,17 +216,19 @@ class LoanController extends Controller
 		}
 
 		//分页
-		$id = $this->urlParam();
-		$limit = $this->limit($id);
+		$p = $this->urlParam();
+		$limit = $this->limit($p);
 
 		$User = new User();
 		$list = $User->sketches($conditions, $limit[0], $limit[1]);
 		$count = $User->getSketchCount($conditions);
+		$page = $this->page($count, $limit[0], $p);
 
 		$operates = $this->operators();
 		$this->view->setVars([
 				'list'	=>	$list,
-				'operates'	=>	$operates
+				'operates'	=>	$operates,
+				'page'	=>	$page
 			]);
 	}
 

@@ -50,7 +50,7 @@ class Controller extends \Base\Controller
 	 */
 	public function allAuthorities()
 	{
-		$list = Authority::all();
+		$list = \App\Authority::authorities();
 		$isNationWideBid = $this->isNationWideBid();
 		$list = \App\Authority::getAuthoriesByBid($list, $isNationWideBid);
 		return $list;
