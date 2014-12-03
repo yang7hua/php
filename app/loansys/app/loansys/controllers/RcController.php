@@ -19,8 +19,17 @@ class RcController extends Controller
 	public static function actions()
 	{
 		return [
+			//审批
 			'operate'	=>	[
+				'index'	=>	['text'	=>	'案件列表',	'link'	=>	true ]
 			]
 		];
+	}
+
+	/**
+	 * 案件列表
+	 */
+	public function indexAction()
+	{
 	}
 }

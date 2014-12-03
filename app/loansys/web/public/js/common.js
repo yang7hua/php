@@ -12,6 +12,13 @@ var util = {
 				o.removeClass('input-empty');
 			}, 500);
 	},
+	reloadCaptcha : function(obj) {
+		var src = "/public/captcha?v=" + Math.random();	
+		if (typeof obj == 'object')
+			obj.attr("src", src);
+		else
+			$(".captcha").attr("src", src);
+	},
 	bindEnter : function(o, callback) {
 		o.keydown(function(e){
 			if (e.keyCode == 13) {
@@ -104,5 +111,9 @@ $(function(){
 	//disabled
 	$(".disabled").find("input").each(function(){
 		$(this).attr("disabled", true);
+	});
+
+	$(".captcha").on("click", function(){
+		util.reloadCaptcha($(this));
 	});
 });

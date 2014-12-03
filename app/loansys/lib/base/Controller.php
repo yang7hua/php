@@ -235,4 +235,9 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 		$offset = ($p-1) * $pagesize;
 		return [$pagesize, $offset];
 	}
+
+	public function captcha($width = 85, $height = 35, $color = '', $type = 'tpng')
+	{
+		\Util\Captcha::make($width, $height, $color, $type);
+	}
 }

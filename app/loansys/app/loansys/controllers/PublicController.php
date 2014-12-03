@@ -41,6 +41,9 @@ class PublicController extends Controller
 					$this->error('账号或密码错误');
 				}
 			}
+			$error = $modelForm->getErrors();
+			if ($error)
+				$this->error($error);
 			$this->error('参数错误');
 		}
 
@@ -52,5 +55,14 @@ class PublicController extends Controller
 		//session_destroy();
 		$this->session->remove('operator');
 		$this->pageSuccess('退出成功', \Func\url('/'), 1);
+	}
+
+	public function captchaAction()
+	{
+		$params = $this->request->get();
+		$width = isset($params['w']) ? $params['w'] : 85;
+		$height = isset($params['h']) ? $params['h'] : 35;
+		$color = isset($params['color']) ? $params['color'] : 'orange';
+		$this->captcha($width, $height, $color);
 	}
 }

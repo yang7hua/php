@@ -20,7 +20,14 @@ class OperatorForm extends ModelForm
 				'validator'	=>	[
 					'required'	=>	true
 				]
-			]
+			],
+			'captcha'	=>	[
+				'label'	=>	'验证码',
+				'type'	=>	'captcha',
+				'validator'	=>	[
+					'required'	=>	true
+				]
+			]		
 		]
 
 		];

@@ -5,168 +5,149 @@ class OperatorForm extends ModelForm
 	public static function fields()
 	{
 		return [
-		'add'	=>	[
-			'oid'	=>	null,
-			'bid'	=>	[
-				'label'	=>	'所属分店',
-				'type'	=>	'select',
-				'inputOptions'	=>	[
+			'add'	=>	[
+				'oid'	=>	null,
+				'bid'	=>	[
+					'label'	=>	'所属分店',
+					'type'	=>	'select',
+					'inputOptions'	=>	[
+					],
+					'options'	=>	Branch::options(),
+					'default'	=>	null,
+					'validator'	=> [
+						'required'	=> true,
+					]	
 				],
-				'options'	=>	Branch::options(),
-				'default'	=>	null,
-				'validator'	=> [
-					'required'	=> true,
-				]	
-			],
-			'did'	=>	[
-				'label'	=>	'所属部门',
-				'type'	=>	'select',
-				'inputOptions'	=>	[
-					'class'	=>	'col-lg-3'	
+				'did'	=>	[
+					'label'	=>	'所属部门',
+					'type'	=>	'select',
+					'inputOptions'	=>	[
+						'class'	=>	'col-lg-3'	
+					],
+					'options'	=>	Department::options(),
+					'default'	=>	0,
+					'validator'	=> [
+						'required'	=> true,
+					]	
 				],
-				'options'	=>	Department::options(),
-				'default'	=>	0,
-				'validator'	=> [
-					'required'	=> true,
-				]	
-			],
-			'rid'	=>	[
-				'label'	=>	'角色名称',
-				'type'	=>	'select',
-				'inputOptions'	=>	[
-					'class'	=>	'col-lg-3'	
+				'rid'	=>	[
+					'label'	=>	'角色名称',
+					'type'	=>	'select',
+					'inputOptions'	=>	[
+						'class'	=>	'col-lg-3'	
+					],
+					'options'	=>	Role::options(),
+					'default'	=>	0,
+					'validator'	=> [
+						'required'	=> true,
+					]	
 				],
-				'options'	=>	Role::options(),
-				'default'	=>	0,
-				'validator'	=> [
-					'required'	=> true,
-				]	
-			],
-			'username'	=>	[
-				'label'	=>	'用户名',
-				'type'	=>	'text',
-				'inputOptions'	=>	[
-					'class'	=>	'col-lg-3'
-				],	
-				'validator'	=>	[
-					'required'	=>	true,
-					'minlength'	=>	3,
-					'maxlength'	=>	10,
-					'regex'	=>	'^[\\\\w_]+$',
-					'remote'	=>	\Func\url('/operator/exist')
+				'username'	=>	[
+					'label'	=>	'用户名',
+					'type'	=>	'text',
+					'inputOptions'	=>	[
+						'class'	=>	'col-lg-3'
+					],	
+					'validator'	=>	[
+						'required'	=>	true,
+						'minlength'	=>	3,
+						'maxlength'	=>	10,
+						'regex'	=>	'^[\\\\w_]+$',
+						'remote'	=>	\Func\url('/operator/exist')
+					],
+					'remark'	=>	'用户名在3-10个字符之间, 字母数字或下划线组成',
+					'remarkOptions'	=>	[
+						'class'	=>	'col-lg-4'
+					]
 				],
-				'remark'	=>	'用户名在3-10个字符之间, 字母数字或下划线组成',
-				'remarkOptions'	=>	[
-					'class'	=>	'col-lg-4'
+				'password'	=>	[
+					'label'	=>	'密码',
+					'type'	=>	'password',
+					'inputOptions'	=>	[
+						'class'	=>	'col-lg-3'
+					],
+					'validator'	=>	[
+						'required'	=>	true,
+						'minlength'	=>	6,
+						'maxlength'	=>	12
+					]
+				],
+				'repassword'	=>	[
+					'label'	=>	'确认密码',
+					'type'	=>	'password',
+					'inputOptions'	=>	[
+						'class'	=>	'col-lg-3'
+					],
+					'validator'	=>	[
+						'required'	=>	true,
+						'equalTo'	=>	'[name=password]'
+					]
 				]
 			],
-			'password'	=>	[
-				'label'	=>	'密码',
-				'type'	=>	'password',
-				'inputOptions'	=>	[
-					'class'	=>	'col-lg-3'
+			
+			'edit'	=>	[
+				'oid'	=>	[
+					'type'	=>	'hidden'
 				],
-				'validator'	=>	[
-					'required'	=>	true,
-					'minlength'	=>	6,
-					'maxlength'	=>	12
-				]
-			],
-			'repassword'	=>	[
-				'label'	=>	'确认密码',
-				'type'	=>	'password',
-				'inputOptions'	=>	[
-					'class'	=>	'col-lg-3'
+				'username'	=>	[
+					'label'	=>	'用户名',
+					'type'	=>	'plain',
+					'default'	=>	null
 				],
-				'validator'	=>	[
-					'required'	=>	true,
-					'equalTo'	=>	'[name=password]'
-				]
-			]
-		],
-		
-		'edit'	=>	[
-			'oid'	=>	[
-				'type'	=>	'hidden'
-			],
-			'username'	=>	[
-				'label'	=>	'用户名',
-				'type'	=>	'plain',
-				'default'	=>	null
-			],
-			'bid'	=>	[
-				'label'	=>	'所属分店',
-				'type'	=>	'select',
-				'inputOptions'	=>	[
+				'bid'	=>	[
+					'label'	=>	'所属分店',
+					'type'	=>	'select',
+					'inputOptions'	=>	[
+					],
+					'options'	=>	Branch::options(),
+					'default'	=>	null,
+					'validator'	=> [
+						'required'	=> true,
+					]	
 				],
-				'options'	=>	Branch::options(),
-				'default'	=>	null,
-				'validator'	=> [
-					'required'	=> true,
-				]	
-			],
-			'did'	=>	[
-				'label'	=>	'所属部门',
-				'type'	=>	'select',
-				'inputOptions'	=>	[
-					'class'	=>	'col-lg-3'	
+				'did'	=>	[
+					'label'	=>	'所属部门',
+					'type'	=>	'select',
+					'inputOptions'	=>	[
+						'class'	=>	'col-lg-3'	
+					],
+					'options'	=>	Department::options(),
+					'default'	=>	0,
+					'validator'	=> [
+						'required'	=> true,
+					]	
 				],
-				'options'	=>	Department::options(),
-				'default'	=>	0,
-				'validator'	=> [
-					'required'	=> true,
-				]	
-			],
-			'rid'	=>	[
-				'label'	=>	'角色名称',
-				'type'	=>	'select',
-				'inputOptions'	=>	[
+				'rid'	=>	[
+					'label'	=>	'角色名称',
+					'type'	=>	'select',
+					'inputOptions'	=>	[
+					],
+					'options'	=>	Role::options(),
+					'default'	=>	null,
+					'validator'	=> [
+						'required'	=> true,
+					]	
 				],
-				'options'	=>	Role::options(),
-				'default'	=>	null,
-				'validator'	=> [
-					'required'	=> true,
-				]	
-			],
-			'password'	=>	[
-				'label'	=>	'密码',
-				'type'	=>	'password',
-				'inputOptions'	=>	[
+				'password'	=>	[
+					'label'	=>	'密码',
+					'type'	=>	'password',
+					'inputOptions'	=>	[
+					],
+					'validator'	=>	[
+						'minlength'	=>	6,
+						'maxlength'	=>	12
+					]
 				],
-				'validator'	=>	[
-					'minlength'	=>	6,
-					'maxlength'	=>	12
-				]
-			],
-			'repassword'	=>	[
-				'label'	=>	'确认密码',
-				'type'	=>	'password',
-				'inputOptions'	=>	[
-				],
-				'validator'	=>	[
-					'equalTo'	=>	'[name=password]'
-				]
-			]
-		],
-
-		//用于登录
-		'login'	=>	[
-			'username'	=>	[
-				'label'	=>	'用户名',
-				'type'	=>	'text',
-				'validator'	=>	[
-					'required'	=>	true
-				]
-			],
-			'password'	=>	[
-				'label'	=>	'密码',
-				'type'	=>	'password',
-				'validator'	=>	[
-					'required'	=>	true
+				'repassword'	=>	[
+					'label'	=>	'确认密码',
+					'type'	=>	'password',
+					'inputOptions'	=>	[
+					],
+					'validator'	=>	[
+						'equalTo'	=>	'[name=password]'
+					]
 				]
 			]
-		]
-
 		];
 	}
 

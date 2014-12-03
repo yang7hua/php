@@ -83,3 +83,23 @@ function getArrayKey(array $array, $value)
 {
 	return getArrayValue($array, $value, true);
 }
+
+function verifyCaptcha($value)
+{
+	$sess_verify = \App::session('verify');
+	$sess_verify_time = \App::session('verify_time');
+	if (empty($sess_verify) || empty($sess_verify_time))
+	{
+		return [0, '已失效'];
+	}
+	if (time() > $sess_verify_time + 60)
+	{
+		return [0, '已过期'];
+	}
+	if (md5(strtolower($value)) != $sess_verify)
+	{
+		return [0, '错误'];
+	}
+
+	return true;
+}

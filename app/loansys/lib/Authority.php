@@ -142,6 +142,7 @@ class Authority
 					if (is_null($text))
 						continue;
 					if (is_array($text) and $text['link']) {
+						$action == 'index' and $action = '';
 						$links[] = [
 							'url'	=>	\Func\url("$controller/$action"), 
 							'text'	=>	$text['text']

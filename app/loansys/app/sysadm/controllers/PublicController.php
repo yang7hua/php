@@ -34,7 +34,10 @@ class PublicController extends Controller
 				} else
 					$this->error('账号或密码错误');
 			}
-			$this->error($result);
+			$error = $modelForm->getErrors();
+			if ($error)
+				$this->error($error);
+			$this->error('参数错误');
 		}
 
 		$this->view->setLayout('plain');

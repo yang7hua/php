@@ -24,6 +24,7 @@ $(function(){
 		res = eval('(' + res + ')');
 		if (res['ret'] < 1) {
 			alert(res['msg']);
+			util.reloadCaptcha();
 			return;
 		}
 		var data = res['data'];
@@ -36,7 +37,7 @@ $(function(){
 			}
 			location.href = data.redirect.url;
 		}
-			//location.reload();
+		location.reload();
 	}
 
 	$.validator.setDefaults({

@@ -6,11 +6,13 @@ class ModelForm
 {
 	protected $data = null;
 	private $ruleType = null;
+	private $errors = [];
 	
 	public function __construct($ruleType = 'add', $data = [])
 	{
 		$this->ruleType = $ruleType;
 		$this->data = $data;
+		$this->errors = [];
 	}
 
 	/**
@@ -20,10 +22,19 @@ class ModelForm
 	{
 		$fields = self::getFields();
 
-		$this->data = (new Validator($fields, $data))->validate();
+		$validator = new Validator($fields, $data);
+		$this->data = $validator->validate();
 		if (!$this->data)
+		{
+			$this->errors = $validator->getErrors();
 			return false;
+		}
 		return true;
+	}
+
+	public function getErrors()
+	{
+		return $this->errors;
 	}
 
 	private static $inputTemplate = <<<EOT
@@ -40,6 +51,14 @@ EOT;
 			<div class='col-lg-6'>
 				<button type='{type}' {attrs} class='{class}'>{name}</button>
 			</div>
+		</div>
+EOT;
+
+	private static $captchaInputTemplate = <<<EOT
+		<div class='form-group'>
+			<label class='{labelClass} control-label'>{label}</label>
+			<div class='{inputClass}'>{input}{captcha}<div class='help-block'></div></div>
+			<div class='{remarkClass} remark'>{remark}</div>
 		</div>
 EOT;
 
@@ -96,6 +115,9 @@ EOT;
 				case 'hidden':
 					$html .= self::hiddenInput($field, $options);
 					break;
+				case 'captcha':
+					$html .= self::captchaInput($field, $options);
+					break;
 				default:
 					$html .= self::input($field, $options, $options['type']); 
 					break;
@@ -107,6 +129,9 @@ EOT;
 	public function renderField($label, $input, $type = 'input', $options = [])
 	{
 		switch ($type) {
+			case 'captcha':
+				$template = self::$captchaInputTemplate;
+				break;
 			default:
 				$template = self::$inputTemplate;
 				break;
@@ -114,8 +139,9 @@ EOT;
 		$labelClass = isset($options['labelOptions']['class']) ? $options['labelOptions']['class'] : 'col-lg-2';
 		$inputClass = isset($options['inputOptions']['class']) ? $options['inputOptions']['class'] : 'col-lg-3';
 		$remarkClass = isset($options['remarkOptions']['class']) ? $options['remarkOptions']['class'] : 'col-lg-2';
-		$pattern = ['{input}', '{label}', '{labelClass}', '{inputClass}', '{remark}', '{remarkClass}'];
-		$replace = [$input, $label, $labelClass, $inputClass, $options['remark'], $remarkClass];
+		$pattern = ['{input}', '{label}', '{labelClass}', '{inputClass}', '{remark}', '{remarkClass}', '{captcha}'];
+		$captcha = '<img src="/public/captcha" class="captcha">';
+		$replace = [$input, $label, $labelClass, $inputClass, $options['remark'], $remarkClass, $captcha];
 		return str_replace($pattern, $replace, $template);
 	}
 
@@ -133,6 +159,22 @@ EOT;
 		$input .= '/>';
 
 		return self::renderField($options['label'], $input, 'text', $options);
+	}
+
+	public function captchaInput($field, array $options = [])
+	{
+		$attrs['type'] = 'input';
+		$attrs['name'] = $field;
+		if (isset($options['validator']))
+			$attrs['class'] = self::getClass($options['validator']);
+		if (isset($this->data[$field]) and in_array($type, ['text']))
+			$attrs['value'] = $this->data[$field];
+
+		$input = '<input ';
+		$input .= self::getAttrs($attrs);
+		$input .= '/>';
+
+		return self::renderField($options['label'], $input, 'captcha', $options);
 	}
 
 	public function textarea($field, $options = [])
@@ -312,6 +354,7 @@ class Validator
 	{
 		$this->rules = $rules;
 		$this->data = $data;
+		$this->errors = [];
 	}
 
 	public function validate()
@@ -324,6 +367,9 @@ class Validator
 					break;
 				case 'repassword':
 					self::confirm($key, 'password');
+					break;	
+				case 'captcha':
+					self::verifyCaptcha($key);
 					break;	
 				default:
 					self::vali($key);
@@ -374,6 +420,15 @@ class Validator
 			$this->logError($field, 'confirm');
 	}
 
+	public function verifyCaptcha($field) 
+	{
+		$vefiry = (\Func\verifyCaptcha($this->getData($field)));
+		if (is_array($vefiry) and !$vefiry[0])
+		{
+			$this->logError($field, $vefiry[1]);
+		}
+	}
+
 	public function getData($field)
 	{
 		return isset($this->data[$field]) ? $this->data[$field] : $this->getRule($field)['default'];
@@ -404,12 +459,22 @@ class Validator
 			case 'confirm':
 				$msg = '不一致';
 				break;
+			case 'overdue':
+				$msg = '已过期';
+			default:
+				$msg = $type;
+				break;
 		}
-		array_push($this->errors, "{$this->data[$field]['label']}$msg");
+		array_push($this->errors, "{$this->getRule($field)['label']}$msg");
 	}
 
 	private function hasError()
 	{
 		return !empty($this->errors);
+	}
+
+	public function getErrors()
+	{
+		return $this->errors;
 	}
 }
