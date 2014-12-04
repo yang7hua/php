@@ -43,58 +43,20 @@ class Controller extends \Base\Controller
 	}
 
 	/**
-	 * 检查登录
+	 * 检查权限
 	 */
 	public function allowedAction($actionName = '')
 	{
-		$appname = APP_NAME;
+		$actionName = $this->getActionName();
 		$controllerName = $this->getControllerName();
-		$auth = self::operator('auth');
-
-		if (empty($actionName))
-			$actionName = $this->getActionName();
 
 		if (in_array($controllerName, ['public']))
 			return true;
 
-		$allowed = true;
+		if (in_array($controllerName, ['site']) and in_array($actionName, ['index']))
+			return true;
 
-		if (empty($auth) || !isset($auth[$appname]) || !array_key_exists($controllerName, $auth[$appname]))
-			$allowed = false;	
-		else {
-			$authActions = $auth[$appname][$controllerName];
-			$allowedActions = [];
-			$actions = $this->actions();
-			foreach ($authActions as $action) {
-				if (array_key_exists($action, $actions))	
-					$allowedActions = array_merge($allowedActions, $actions[$action]);
-			}	
-			if (!array_key_exists($actionName, $allowedActions))
-				$allowed = false;
-		}
-
-		return $allowed;
-	}
-
-	/**
-	 * 获取当前操作者对当前控制器的权限
-	 */
-	public function getAuthByController()
-	{
-		$auth = $this->operator('auth');
-
-		if ($auth[APP_NAME] and is_array($auth[APP_NAME]))
-			$auth = $auth[APP_NAME];
-		else
-			return [];
-
-		$controllerName = $this->getControllerName(); 
-		if (isset($auth[$controllerName]))
-			$auth = $auth[$controllerName];
-		else
-			return [];
-
-		return $auth;
+		return $this->authHasAction($actionName, $controllerName);
 	}
 
 	/**
@@ -114,7 +76,39 @@ class Controller extends \Base\Controller
 	}
 
 	/**
-	 * 通过制定权限值获取对应操作
+	 * 获取当前操作者对某控制器的权限
+	 */
+	public function getAuthByController($controllerName = '')
+	{
+		$auth = $this->operator('auth');
+
+		if ($auth[APP_NAME] and is_array($auth[APP_NAME]))
+			$auth = $auth[APP_NAME];
+		else
+			return [];
+
+		if (empty($controllerName))
+			$controllerName = $this->getControllerName(); 
+		if (isset($auth[$controllerName]))
+			$auth = $auth[$controllerName];
+		else
+			return [];
+
+		return $auth;
+	}
+
+	/**
+	 * 获取控制器下的操作
+	 */
+	public function getActionsByControllerName($controllerName)
+	{
+		$controller = ucfirst($controllerName).'Controller';
+		return $controller::actions();
+	}
+
+
+	/**
+	 * 通过指定权限值获取对应操作
 	 */
 	public function getActionsByAuth($auth)
 	{
@@ -138,11 +132,17 @@ class Controller extends \Base\Controller
 	 */
 	public function	authHasAction($actionName, $controllerName = '')
 	{
-		if (!$controllerName)
-			$controllerName = strtolower(str_replace('Controller', '', get_class()));
+		if (empty($controllerName))
+			$controllerName = strtolower(str_replace('Controller', '', get_class($this)));
 		$auth = $this->getAuthByController($controllerName);
 		
-		$actions = $this->getActionsByAuth($auth);
+		$controllerActions = $this->getActionsByControllerName($controllerName);
+
+		$actions = [];
+		foreach ($auth as $val)
+		{
+			$actions = array_merge($actions, $controllerActions[$val]);
+		}	
 
 		return array_key_exists($actionName, $actions);
 	}

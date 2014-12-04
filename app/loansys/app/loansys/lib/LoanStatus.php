@@ -93,4 +93,10 @@ class LoanStatus
 	{
 		return self::getStatus('复审');
 	}
+
+	//推送到全国风控中心的案子
+	static function getStatusRc()
+	{
+		return self::getStatusReface();
+	}
 }

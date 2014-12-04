@@ -229,7 +229,7 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 		return $page->getPage();
 	}
 
-	public function limit($p = 1, $pagesize = 10)
+	public function limit($p = 1, $pagesize = 1)
 	{
 		empty($p) and $p = 1;
 		$offset = ($p-1) * $pagesize;

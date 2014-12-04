@@ -25,6 +25,7 @@ class LoanSketch extends Model
 		return false;
 	}
 
+	//更新初稿案件的状态
 	public static function updateStatus($uid, $status)
 	{
 		$info = LoanSketch::findFirst("uid=$uid");
@@ -48,6 +49,41 @@ class LoanSketch extends Model
 
 		$info->status = $status;
 		return $info->update();
+	}
+
+	private static function formatConditions($condition)
+	{
+		return str_replace(['{User}', '{LoanSketch}', '{Branch}'], ['U', 'LoanSketch', 'B'], $condition);
+	}
+
+	//获取推送到全国风控中心的案件
+	public static function rclist($condition = '', $limit = [10, 0])
+	{
+		$baseCondition = 'LoanSketch.status='.\App\LoanStatus::getStatusRc();
+		$condition = empty($condition) ? $baseCondition : $baseCondition . ' and ' . $condition;
+
+		$columns = [
+			'U.bid, B.name bname, LoanSketch.uid, LoanSketch.loan_type, LoanSketch.use_type,
+			LoanSketch.amount, LoanSketch.deadline, LoanSketch.deadline_type, LoanSketch.days,
+			LoanSketch.repay_method, LoanSketch.repay_source, LoanSketch.addtime'
+		];
+		$condition = self::formatConditions($condition);
+		$query = self::query()
+					->leftJoin('User', 'U.uid=LoanSketch.uid', 'U')
+					->leftJoin('Branch', 'B.bid=U.bid', 'B')
+					->where($condition)
+					->orderBy('LoanSketch.addtime desc')
+					->columns($columns);
+
+		$count = $query->execute()->count();
+		$list = $query->limit($limit[0], $limit[1])
+						->execute();
+		$list = $list ? $list->toArray() : [];
+
+		return [
+			'list'	=>	Loan::format($list),
+			'count'	=>	$count
+		];
 	}
 
 }

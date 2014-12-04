@@ -13,7 +13,6 @@ class User extends Model
 	{
 		$user = new User();
 		$data['addtime'] = time();
-		//$data['lid'] = \Func\uniqidByTime();
 		foreach ($data as $key=>$val) {
 			$user->{$key}	=	$val;
 		}
@@ -131,4 +130,5 @@ class User extends Model
 	{
 		return self::sketchInfo($uid, ['base', 'oinfo', 'morebase']);
 	}
+
 }
