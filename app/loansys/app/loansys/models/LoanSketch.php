@@ -46,6 +46,10 @@ class LoanSketch extends Model
 		{
 			$status = \App\LoanStatus::getStatusChecked();
 		}
+		//全国风控中心处理
+		else if (in_array($status, [\App\LoanStatus::getStatusRcAgree(), \App\LoanStatus::getStatusRcRefuse()]))
+		{
+		}
 
 		$info->status = $status;
 		return $info->update();
@@ -84,6 +88,15 @@ class LoanSketch extends Model
 			'list'	=>	Loan::format($list),
 			'count'	=>	$count
 		];
+	}
+
+	public static function findByUid($uid)
+	{
+		$uid = intval($uid);
+		$info = LoanSketch::findFirst("uid=$uid");
+		if (!$info)
+			return false;
+		return Loan::format([$info->toArray()])[0];
 	}
 
 }

@@ -60,6 +60,14 @@ class LoanStatus
 		return $status == self::getStatusCarAssess();
 	}
 
+	/**
+	 * 是否是一个案件
+	 */
+	static function isCase($status)
+	{
+		return $status == self::getStatusRc();
+	}
+
 	static function getStatus($text)
 	{
 		$status = \App\Config\Loan::status();
@@ -99,4 +107,17 @@ class LoanStatus
 	{
 		return self::getStatusReface();
 	}
+
+	//全国风控中心已处理
+	static function getStatusRcAgree()
+	{
+		return self::getStatus('审核通过');
+	}
+
+	//全国风控中心已处理-拒绝
+	static function getStatusRcRefuse()
+	{
+		return self::getStatus('拒绝');
+	}
+
 }
