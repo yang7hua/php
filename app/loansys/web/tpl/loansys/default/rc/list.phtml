@@ -16,6 +16,7 @@ $heads['title'] = '案件列表';
 				<span class="input-group-addon btn-search">搜索</span>
 			</div>
 		</div>
+		<div class="col-lg-1"><div class="row"><a class="btn btn-link" href="/rc/list">清除</a></div></div>
 	</form>
 	<br/>
 <?php
@@ -24,11 +25,15 @@ if (!empty($list)):
 <table class="table table-striped">
 	<tr>
 		<th>客户编号</th>
+		<th>所属门店</th>
+		<th>贷款方式</th>
 		<th>贷款金额 (万)</th>
 		<th>贷款期限</th>
 		<th>还款方式</th>
 		<th>贷款用途</th>
-		<th>所属门店</th>
+<?php if ($deal):?>
+		<th>状态</th>
+<?php endif;?>
 		<th>操作</th>
 	</tr>
 <?php
@@ -37,13 +42,21 @@ if (!empty($list)):
 
 	<tr>
 		<td><?=$row['uid']?></td>
+		<td><?=$row['bname']?></td>
+		<td><?=$row['loan_type_text']?></td>
 		<td><?=$row['amount']?></td>
 		<td><?=$row['deadline'] . ($row['deadline'] == 'd' ? '天' : '个月')?></td>
 		<td><?=$row['repay_method_text']?></td>
 		<td><?=$row['use_type_text']?></td>
-		<td><?=$row['bname']?></td>
+<?php if ($deal):?>
+		<td><?=$row['status_text']?></td>
+<?php endif;?>
 		<td>
+<?php if ($deal):?>
 			<a href="/rc/detail/<?=$row['uid']?>">详情</a>
+<?php else:?>
+			<a href="/rc/case/<?=$row['uid']?>">详情</a>
+<?php endif;?>
 		</td>
 	</tr>
 

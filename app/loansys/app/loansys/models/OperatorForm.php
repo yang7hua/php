@@ -10,6 +10,7 @@ class OperatorForm extends ModelForm
 			'username'	=>	[
 				'label'	=>	'用户名',
 				'type'	=>	'text',
+				'inputOptions'	=>	['class'=>'col-lg-8'],
 				'validator'	=>	[
 					'required'	=>	true
 				]
@@ -17,6 +18,7 @@ class OperatorForm extends ModelForm
 			'password'	=>	[
 				'label'	=>	'密码',
 				'type'	=>	'password',
+				'inputOptions'	=>	['class'=>'col-lg-8'],
 				'validator'	=>	[
 					'required'	=>	true
 				]
@@ -24,6 +26,7 @@ class OperatorForm extends ModelForm
 			'captcha'	=>	[
 				'label'	=>	'验证码',
 				'type'	=>	'captcha',
+				'inputOptions'	=>	['class'=>'col-lg-8'],
 				'validator'	=>	[
 					'required'	=>	true
 				]

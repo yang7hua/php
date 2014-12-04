@@ -203,7 +203,7 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 				$params['msg'] = '页面不存在';
 				break;
 		}
-		$this->_404($params);
+		$this->single('error', $params);
 	}
 
 	/**

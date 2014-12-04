@@ -74,6 +74,13 @@ class LoanStatus
 		return \Func\getArrayKey($status, $text);
 	}
 
+	static function getStatusText($_status)
+	{
+		static  $status = null;
+		!$status and ($status = \App\Config\Loan::status());
+		return \Func\getArrayValue($status, $_status);
+	}
+
 	static function getStatusFace()
 	{
 		return self::getStatus('初审');

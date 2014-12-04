@@ -49,8 +49,6 @@ class Loan extends Model
 		{
 			if (in_array($field, $fields))
 				$loan->$field = $value;
-			else
-				unset($data[$field]);
 		}
 		if ($loan->create())
 			return true;
@@ -61,7 +59,7 @@ class Loan extends Model
 
 	private static function columns($type = ['base'])
 	{
-		$base = 'Loan.lid, Loan.uid, Loan.oid, Loan.amount, Loan.deadline, Loan.deadline_type,
+		$base = 'Loan.lid, Loan.uid, Loan.oid, Loan.amount, Loan.deadline, Loan.deadline_type, Loan.loan_type,
 			Loan.use_type, Loan.use_type_info, Loan.repay_method, Loan.repay_source, Loan.days, Loan.apr, Loan.description,
 			Loan.addtime, Loan.status, Loan.reason, Loan.remark';
 
@@ -81,6 +79,14 @@ class Loan extends Model
 	private static function formatConditions($condition)
 	{
 		return str_replace(['{User}', '{LoanSketch}', '{Branch}'], ['U', 'LoanSketch', 'B'], $condition);
+	}
+
+	public static function findByUid($uid)
+	{
+		$info = Loan::findFirst('uid='.intval($uid));
+		if (!$info)
+			return false;
+		return self::format([$info->toArray()])[0];
 	}
 
 	public static function all($condition = '', $limit = [10, 0])
