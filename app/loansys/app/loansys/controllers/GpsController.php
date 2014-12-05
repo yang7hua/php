@@ -33,6 +33,11 @@ class GpsController extends Controller
 	private function searchConditions()
 	{
 		$conditions = [];
+		if (!$this->isNationWideBid())
+		{
+			$bid = $this->getOperatorBid();
+			$conditions[] = '{User}.bid='.$bid;
+		}
 
 		$post = $this->request->get();
 		if (isset($post['keyword']) and !empty($post['keyword']))
@@ -48,8 +53,9 @@ class GpsController extends Controller
 
 		if (isset($post['deal']) and in_array($post['deal'], [1, -1]))
 		{
+			$conditions[] = '{Loan}.gps' . ($post['deal'] == 1 ? '=1' : '!=1');
 		}
-		$conditions[] = '{Loan}.bank!=\'\'';
+		$conditions[] = '{Loan}.contract=1';
 
 		return $conditions;
 	}
@@ -82,7 +88,7 @@ class GpsController extends Controller
 			$lid = $data['lid'];
 			!$lid and $this->error('参数错误');
 
-			$model = new LoanForm('contractSign');
+			$model = new LoanForm('gps');
 			if ($result = $model->validate($data))
 			{
 				if ($model->sign())

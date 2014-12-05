@@ -23,7 +23,8 @@ class Loan extends Model
 			$row['addtime'] = date('Y/m/d', $row['addtime']);
 			$row['status_text'] = $status[$row['status']];
 			$row['amount'] = str_replace('.00', '', $row['amount']);
-			$row['contract_text']	=	$row['contract'] ? '已签' : '';
+			$row['contract_text']	=	$row['contract'] ? '已签' : ' - ';
+			$row['gps_text']	=	$row['gps'] ? '已安装' : ' - ';
 		}
 		return $data;
 	}

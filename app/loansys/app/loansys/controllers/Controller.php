@@ -75,17 +75,24 @@ class Controller extends \Base\Controller
 		return $this->operator('bid');
 	}
 
+	public function isNationWideBid($bid)
+	{
+		return \App::isNationWideBid($this->getOperatorBid()); 
+	}
+
 	/**
 	 * 获取当前操作者对某控制器的权限
 	 */
 	public function getAuthByController($controllerName = '')
 	{
-		$auth = $this->operator('auth');
+		static $auth = null;
 
-		if ($auth[APP_NAME] and is_array($auth[APP_NAME]))
-			$auth = $auth[APP_NAME];
-		else
-			return [];
+		if (!$auth)
+		{
+			$auth = $this->operator('auth');
+			if ($auth[APP_NAME] and is_array($auth[APP_NAME]))
+				$auth = $auth[APP_NAME];
+		}
 
 		if (empty($controllerName))
 			$controllerName = $this->getControllerName(); 

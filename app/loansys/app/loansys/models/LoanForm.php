@@ -40,6 +40,10 @@ class LoanForm extends ModelForm
 						'equalTo'	=>	'[name=bank_card]'
 					]
 				]
+			],
+			'gps'	=>	[
+				'lid'	=>	null,
+				'gps'	=>	['required'	=>	true]
 			]
 		];
 	}

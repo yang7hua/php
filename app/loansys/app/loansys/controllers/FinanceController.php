@@ -1,19 +1,15 @@
 <?php
 
-/**
- * 督导
- */
-
-class SupervisorController extends Controller
+class FinanceController extends Controller
 {
-	public static function authorities()
+
+	public static function authorities()	
 	{
 		return [
-			'supervisor'	=>	[
-				'name'	=>	'督导',
-				//'nationwide'	=>	true,
+			'finance'	=>	[
+				'name'	=>	'财务',
 				'authorities'	=>	[
-					'contract'	=>	'合同签署'
+					'operate'	=>	'操作'
 				]
 			]
 		];
@@ -22,9 +18,9 @@ class SupervisorController extends Controller
 	public static function actions()
 	{
 		return [
-			'contract'	=>	[
+			'operate'	=>	[
 				'list'	=>	['text'	=>	'客户列表', 'link'	=>	true],
-				'sign'	=>	['text'	=>	'合同签署'],
+				'detail'	=>	['text'	=>	'详情']
 			]
 		];
 	}
@@ -33,6 +29,7 @@ class SupervisorController extends Controller
 	private function searchConditions()
 	{
 		$conditions = [];
+
 		if (!$this->isNationWideBid())
 		{
 			$bid = $this->getOperatorBid();
@@ -53,8 +50,8 @@ class SupervisorController extends Controller
 
 		if (isset($post['deal']) and in_array($post['deal'], [1, -1]))
 		{
-			$conditions[] = '{Loan}.bank' . ($post['deal'] == 1 ? '!=' : '=') . '\'\'';
 		}
+		$conditions[] = '{Loan}.contract=1 and {Loan}.gps=1';
 
 		return $conditions;
 	}
@@ -79,7 +76,7 @@ class SupervisorController extends Controller
 		]);
 	}
 
-	public function signAction()
+	public function detailAction()
 	{
 		if ($this->isAjax())
 		{
@@ -87,10 +84,10 @@ class SupervisorController extends Controller
 			$lid = $data['lid'];
 			!$lid and $this->error('参数错误');
 
-			$model = new LoanForm('contractSign');
+			$model = new LoanForm('remit');
 			if ($result = $model->validate($data))
 			{
-				if ($model->sign())
+				if ($model->remit())
 					$this->success('操作成功');
 				else
 					$this->error('操作失败');

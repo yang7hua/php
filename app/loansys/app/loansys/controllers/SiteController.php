@@ -23,6 +23,8 @@ class SiteController extends Controller
 			$u = 'supervisor/list';
 		else if ($this->authHasAction('list', 'gps'))
 			$u = 'gps/list';
+		else if ($this->authHasAction('list', 'finance'))
+			$u = 'finance/list';
 
 		isset($u) and $this->redirect(\Func\url($u, true));
 	}
