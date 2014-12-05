@@ -23,6 +23,7 @@ class Loan extends Model
 			$row['addtime'] = date('Y/m/d', $row['addtime']);
 			$row['status_text'] = $status[$row['status']];
 			$row['amount'] = str_replace('.00', '', $row['amount']);
+			$row['contract_text']	=	$row['contract'] ? '已签' : '';
 		}
 		return $data;
 	}
@@ -68,6 +69,8 @@ class Loan extends Model
 
 		$branch = 'B.name bname';
 
+		$user = 'U.realname, U.idcard, U.mobile';
+
 		$columns = '';
 		foreach ($type as $v)
 		{
@@ -78,7 +81,7 @@ class Loan extends Model
 
 	private static function formatConditions($condition)
 	{
-		return str_replace(['{User}', '{LoanSketch}', '{Branch}'], ['U', 'LoanSketch', 'B'], $condition);
+		return str_replace(['{User}', '{LoanSketch}', '{Loan}', '{Branch}'], ['U', 'LoanSketch', 'Loan', 'B'], $condition);
 	}
 
 	public static function findByUid($uid)
@@ -89,18 +92,27 @@ class Loan extends Model
 		return self::format([$info->toArray()])[0];
 	}
 
-	public static function all($condition = '', $limit = [10, 0])
+	public static function findByLid($lid)
+	{
+		$info = Loan::findFirst($lid);
+		if (!$info)
+			return false;
+		return self::format([$info->toArray()])[0];
+	}
+
+	public static function all($condition = '', $limit = [10, 0], $columns = ['base', 'branch'])
 	{
 		$condition = self::formatConditions($condition);
 
 		$query = self::query()
 					->leftJoin('User', 'U.uid=Loan.uid', 'U')
 					->leftJoin('Branch', 'B.bid=U.bid', 'B')
-					->columns(self::columns(['base', 'branch']))
+					->columns(self::columns($columns))
 					->where($condition);
 
 		$count = $query->execute()->count();
 		$list = $query->limit($limit[0], $limit[1])
+						->orderBy('Loan.addtime desc')
 						->execute();
 		$list = $list ? $list->toArray() : [];
 
@@ -108,6 +120,24 @@ class Loan extends Model
 			'list'	=>	Loan::format($list),
 			'count'	=>	$count
 		];
+	}
+
+	/**
+	 * 合同签署
+	 */
+	public static function sign($lid, $data)
+	{
+		$loan = self::findFirst($lid);
+		if (!$loan)
+			return false;
+		foreach ($data as $field=>$value)
+		{
+			$loan->$field = $value;
+		}
+		if ($loan->update())
+			return true;
+		$this->outputErrors($loan);
+		return false;
 	}
 
 }

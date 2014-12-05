@@ -1,5 +1,7 @@
 <?php
-//全国风控中心
+/**
+ * 全国风控中心相关操作
+ */
 
 class RcController extends Controller
 {

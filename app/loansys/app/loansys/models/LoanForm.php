@@ -28,6 +28,18 @@ class LoanForm extends ModelForm
 				'reason'	=>	null,
 				'remark'	=>	null,
 				'status'	=>	null,
+			],
+			//合同签署
+			'contractSign'	=>	[
+				'lid'	=>	null,
+				'contract'	=>	['default'	=>	1],
+				'bank'	=>	['required'	=>	true],
+				'bank_card'	=>	['required'	=>	true],
+				'bank_card_confirm'	=>	[
+					'validator'	=>	[
+						'equalTo'	=>	'[name=bank_card]'
+					]
+				]
 			]
 		];
 	}
@@ -37,5 +49,14 @@ class LoanForm extends ModelForm
 		$uid = $this->data['uid'];
 		unset($this->data['uid']);
 		return Loan::deal($uid, $this->data);
+	}
+
+	public function sign()
+	{
+		unset($this->data['bank_card_confirm']);
+		$lid = $this->data['lid'];
+		unset($this->data['lid']);
+
+		return Loan::sign($lid, $this->data);
 	}
 }
