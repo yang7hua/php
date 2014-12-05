@@ -75,7 +75,7 @@ class Controller extends \Base\Controller
 		return $this->operator('bid');
 	}
 
-	public function isNationWideBid($bid)
+	public function isNationWideBid()
 	{
 		return \App::isNationWideBid($this->getOperatorBid()); 
 	}

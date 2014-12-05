@@ -50,6 +50,7 @@ class FinanceController extends Controller
 
 		if (isset($post['deal']) and in_array($post['deal'], [1, -1]))
 		{
+			$conditions[] = '{Loan}.remit_certify' . ($post['deal'] == 1 ? '!=' : '=') . '\'\'';
 		}
 		$conditions[] = '{Loan}.contract=1 and {Loan}.gps=1';
 
