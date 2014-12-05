@@ -65,4 +65,34 @@ class PublicController extends Controller
 		$color = isset($params['color']) ? $params['color'] : 'orange';
 		$this->captcha($width, $height, $color);
 	}
+
+	public function uploadAction()
+	{
+		switch ($this->request->get('filename'))
+		{
+			case 'file_remit_certify':
+				$dir = 'certify';
+				break;
+			default:
+				$dir = '';
+				break;
+		}
+		$fileinfo = $this->upload($dir);
+		if (!$fileinfo)
+			$this->error('上传失败');
+		if (count($fileinfo))
+		{
+			$fileinfo = $fileinfo[0];
+			if ($fileinfo['success'])
+			{
+				unset($fileinfo['success']);
+				$this->success($fileinfo);
+			}
+			else
+			{
+				$this->error($fileinfo['errmsg']);
+			}
+		}
+		exit();
+	}
 }

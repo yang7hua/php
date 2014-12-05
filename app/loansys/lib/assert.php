@@ -68,6 +68,16 @@ function getAssert($key)
 				],
 				'depends'	=>	'\Assert\app'
 			]
+		],
+		'ajaxfileupload'	=>	[
+			'jsfiles'	=>	[
+				'basedir'	=>	null,
+				'files'	=>	[
+					'lib/ajaxFileUpload.js',
+					'ajaxFileUploadForm.js'
+				],
+				'depends'	=>	'\Assert\app'
+			]
 		]
 	];
 	return $assert[$key];
@@ -91,6 +101,11 @@ function address()
 function cars()
 {
 	return register(getAssert('cars'));
+}
+
+function ajaxFileUpload()
+{
+	return register(getAssert('ajaxfileupload'));
 }
 
 function register($assert)

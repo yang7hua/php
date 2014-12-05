@@ -240,4 +240,47 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 	{
 		\Util\Captcha::make($width, $height, $color, $type);
 	}
+
+	public function upload($dir = '', $maxSize = '')
+	{
+		$baseDir = 'upload/';
+
+		if (empty($maxSize) || !is_integer($maxSize))
+			$maxSize = 1024*1024*1; //1M
+
+		$files = [];
+		if ($this->request->hasFiles())
+		{
+			foreach ($this->request->getUploadedFiles() as $file)
+			{
+				$fileinfo = [];
+
+				$filesize = $file->getSize();
+
+				$dir = $dir ? ($baseDir . trim($dir, '/')) : $baseDir;
+				if (!is_dir($dir))
+					mkdir($dir);
+				$filename = trim($dir, '/') . '/' . $file->getName();
+
+				if ($filesize > $maxSize)
+				{
+					$fileinfo['errmsg'] = '尺寸过大';
+					$fileinfo['success'] = 0;
+				}
+				else
+				{
+					$file->moveTo($filename);
+					$fileinfo['success'] = 1;
+				}
+
+				$fileinfo['filename'] = $filename;
+				$fileinfo['filesize'] = number_format($filesize / 1024, 2) . 'kb';
+
+				$files[] = $fileinfo;
+			}
+
+			return $files;
+		}
+		return null;
+	}
 }

@@ -44,6 +44,11 @@ class LoanForm extends ModelForm
 			'gps'	=>	[
 				'lid'	=>	null,
 				'gps'	=>	['required'	=>	true]
+			],
+			//上传汇款凭证
+			'remit'	=>	[
+				'lid'	=>	null,
+				'remit_certify'	=>	['required'	=>	true]
 			]
 		];
 	}
