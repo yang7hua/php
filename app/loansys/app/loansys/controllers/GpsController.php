@@ -80,6 +80,9 @@ class GpsController extends Controller
 		]);
 	}
 
+	/**
+	 * GPS安装
+	 */
 	public function gpsAction()
 	{
 		if ($this->isAjax())

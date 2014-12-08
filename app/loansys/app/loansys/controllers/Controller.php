@@ -152,11 +152,4 @@ class Controller extends \Base\Controller
 		return array_key_exists($actionName, $actions);
 	}
 
-	/**
-	 * 获取url参数
-	 */
-	public function urlParam($index = 0)
-	{
-		return $this->dispatcher->getParams()[$index];
-	}
 }

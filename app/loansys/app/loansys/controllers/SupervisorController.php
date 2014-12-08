@@ -79,6 +79,9 @@ class SupervisorController extends Controller
 		]);
 	}
 
+	/**
+	 * 合同签署
+	 */
 	public function signAction()
 	{
 		if ($this->isAjax())
@@ -86,6 +89,11 @@ class SupervisorController extends Controller
 			$data = $this->request->getPost();
 			$uid = $data['uid'];
 			!$uid and $this->error('参数错误');
+
+			$data['begintime'] = time();//还款开始时间
+			$data['status']	= \App\LoanStatus::getStatusRepay();
+			$data['return_num'] = 0;
+			$data['return_amount'] = 0;
 
 			$model = new LoanForm('contractSign');
 			if ($result = $model->validate($data))

@@ -25,6 +25,8 @@ class Loan extends Model
 			$row['amount'] = str_replace('.00', '', $row['amount']);
 			$row['contract_text']	=	$row['contract'] ? '已签' : ' - ';
 			$row['gps_text']	=	$row['gps'] ? '已安装' : ' - ';
+			if ($row['begintime'])
+				$row['begintime'] = date('Y-m-d', $row['begintime']);
 		}
 		return $data;
 	}
@@ -65,7 +67,7 @@ class Loan extends Model
 			Loan.use_type, Loan.use_type_info, Loan.repay_method, Loan.repay_source, Loan.days, Loan.apr, Loan.description,
 			Loan.addtime, Loan.status, Loan.reason, Loan.remark';
 
-		$return = 'Loan.begintime, Loan.endtime, Loan.return_num, Loan.return_amount, Loan.remain_amount';
+		$repay = 'Loan.begintime, Loan.endtime, Loan.return_num, Loan.return_amount, Loan.remain_amount';
 		$other = 'Loan.bank, Loan.bank_card, Loan.contract, Loan.gps, Loan.remit_certify';
 
 		$branch = 'B.name bname';

@@ -127,4 +127,10 @@ class LoanStatus
 		return self::getStatus('拒绝');
 	}
 
+	//还款中
+	static function getStatusRepay()
+	{
+		return self::getStatus('还款中');
+	}
+
 }

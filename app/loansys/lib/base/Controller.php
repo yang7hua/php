@@ -283,4 +283,12 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 		}
 		return null;
 	}
+
+	/**
+	 * 获取url参数
+	 */
+	public function urlParam($index = 0)
+	{
+		return $this->dispatcher->getParams()[$index];
+	}
 }

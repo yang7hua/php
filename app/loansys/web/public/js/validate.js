@@ -63,6 +63,11 @@ $(function(){
 		return util.isCh(value); 
 	}, "必须为中文");
 
+	$.validator.addMethod('date', function(value, element, param){
+		var regex = new RegExp('^(20[\\d]{2}-[\\d]{1,2}-[\\d]{1,2})?$'); 
+		return regex.test(value);
+	}, "格式不正确");
+
 	//表单验证
 	$("form").each(function(){
 		var form = $(this),

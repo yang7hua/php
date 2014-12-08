@@ -103,3 +103,21 @@ function verifyCaptcha($value)
 
 	return true;
 }
+
+/**
+ * 生成待还款期数数组
+ */
+function remainDeadlines($deadline, $returnNum)
+{
+	$remainNum = $deadline-$returnNum;
+	if (!$remainNum)
+		return [];
+
+	$remainDeadlines = [];
+	for ($i=1; $i<=$remainNum; $i++)
+	{
+		$no = $returnNum + $i;
+		$remainDeadlines[$no] = $no;
+	}
+	return $remainDeadlines;	
+}

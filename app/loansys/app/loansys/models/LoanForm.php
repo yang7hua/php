@@ -39,7 +39,13 @@ class LoanForm extends ModelForm
 					'validator'	=>	[
 						'equalTo'	=>	'[name=bank_card]'
 					]
-				]
+				],
+				'begintime'	=>	null,
+				'status'	=>	null,
+				'return_num'	=>	[
+					'default'	=>	0
+				],
+				'return_amount'	=>	['default'	=>	0]
 			],
 			'gps'	=>	[
 				'uid'	=>	null,
