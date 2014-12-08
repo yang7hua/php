@@ -9,7 +9,7 @@ class FinanceController extends Controller
 			'finance'	=>	[
 				'name'	=>	'财务',
 				'authorities'	=>	[
-					'operate'	=>	'操作'
+					'operate'	=>	'汇款凭证等操作'
 				]
 			]
 		];
@@ -20,7 +20,8 @@ class FinanceController extends Controller
 		return [
 			'operate'	=>	[
 				'list'	=>	['text'	=>	'客户列表', 'link'	=>	true],
-				'detail'	=>	['text'	=>	'详情']
+				'detail'	=>	['text'	=>	'详情'],
+				'remit'	=>	['text'	=>	'汇款凭证']
 			]
 		];
 	}
@@ -79,26 +80,6 @@ class FinanceController extends Controller
 
 	public function detailAction()
 	{
-		if ($this->isAjax())
-		{
-			$data = $this->request->getPost();
-			$lid = $data['lid'];
-			!$lid and $this->error('参数错误');
-
-			$model = new LoanForm('remit');
-			if ($result = $model->validate($data))
-			{
-				if ($model->remit())
-					$this->success('操作成功');
-				else
-					$this->error('操作失败');
-			}
-			else
-			{
-				$this->error('验证失败');
-			}
-			exit();
-		}
 		$uid = $this->urlParam();
 		empty($uid) and $this->pageError('param');
 
@@ -109,5 +90,34 @@ class FinanceController extends Controller
 			'loan'	=>	$loan,
 			'user'	=>	$user,
 		]);
+	}
+
+	public function remitAction()
+	{
+		if ($this->isAjax())
+		{
+			$data = $this->request->getPost();
+			$uid = $data['uid'];
+			!$uid and $this->error('参数错误');
+
+			$model = new LoanForm('remit');
+			if ($result = $model->validate($data))
+			{
+				if ($model->remit())
+				{
+					Log::add($uid, $this->getOperatorId(), \App\Config\Log::loanOperate('remit_certify'));
+					$this->success('操作成功');
+				}
+				else
+				{
+					$this->error('操作失败');
+				}
+			}
+			else
+			{
+				$this->error('验证失败');
+			}
+			exit();
+		}
 	}
 }

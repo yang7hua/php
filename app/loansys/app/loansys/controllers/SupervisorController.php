@@ -84,16 +84,21 @@ class SupervisorController extends Controller
 		if ($this->isAjax())
 		{
 			$data = $this->request->getPost();
-			$lid = $data['lid'];
-			!$lid and $this->error('参数错误');
+			$uid = $data['uid'];
+			!$uid and $this->error('参数错误');
 
 			$model = new LoanForm('contractSign');
 			if ($result = $model->validate($data))
 			{
 				if ($model->sign())
+				{
+					Log::add($data['uid'], $this->getOperatorId(), \App\Config\Log::loanOperate('sign'));
 					$this->success('操作成功');
+				}
 				else
+				{
 					$this->error('操作失败');
+				}
 			}
 			else
 			{

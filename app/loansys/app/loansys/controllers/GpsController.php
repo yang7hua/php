@@ -85,16 +85,22 @@ class GpsController extends Controller
 		if ($this->isAjax())
 		{
 			$data = $this->request->getPost();
-			$lid = $data['lid'];
-			!$lid and $this->error('参数错误');
+			$uid = $data['uid'];
+			!$uid and $this->error('参数错误');
+			$data['gps'] = 1;
 
 			$model = new LoanForm('gps');
 			if ($result = $model->validate($data))
 			{
 				if ($model->sign())
+				{
+					Log::add($uid, $this->getOperatorId(), \App\Config\Log::loanOperate('gps'));
 					$this->success('操作成功');
+				}
 				else
+				{
 					$this->error('操作失败');
+				}
 			}
 			else
 			{

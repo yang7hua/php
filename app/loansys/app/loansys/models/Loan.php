@@ -124,11 +124,12 @@ class Loan extends Model
 	}
 
 	/**
-	 * 合同签署
+	 * 按LID更新数据
+	 * 合同签署、汇款凭证等
 	 */
-	public static function sign($lid, $data)
+	public static function updateByUid($uid, $data)
 	{
-		$loan = self::findFirst($lid);
+		$loan = self::findFirst("uid=$uid");
 		if (!$loan)
 			return false;
 		foreach ($data as $field=>$value)

@@ -164,6 +164,7 @@ class LoanController extends Controller
 					$modelForm = new LoanSketchForm('apply');
 					if ($modelForm->validate($data) and $modelForm->apply()) {
 						$db->commit();
+						Log::add($uid, $data['oid'], \App\Config\Log::loanOperate('apply'));
 						$this->success('操作成功');
 					} else {
 						$db->rollback();
@@ -273,6 +274,7 @@ class LoanController extends Controller
 				{
 					//更新状态
 					LoanSketch::updateStatus($data['uid'], \Func\getArrayKey(\App\Config\Loan::status(), '初审'));	
+					Log::add($data['uid'], $data['oid'], \App\Config\Log::loanOperate('face'));
 					$this->success('操作成功');
 				}
 				else
@@ -319,6 +321,7 @@ class LoanController extends Controller
 				{
 					//更新状态
 					LoanSketch::updateStatus($data['uid'], \App\LoanStatus::getStatusVisit());
+					Log::add($data['uid'], $data['oid'], \App\Config\Log::loanOperate('visit'));
 					$this->success('操作成功');
 				}
 				else
@@ -367,6 +370,7 @@ class LoanController extends Controller
 				{
 					//更新状态
 					LoanSketch::updateStatus($data['uid'], \App\LoanStatus::getStatusCarAssess());
+					Log::add($data['uid'], $data['oid'], \App\Config\Log::loanOperate('car'));
 					$this->success('操作成功');
 				}
 				else
@@ -409,6 +413,7 @@ class LoanController extends Controller
 				{
 					//更新状态
 					LoanSketch::updateStatus($data['uid'], \App\LoanStatus::getStatusReface());
+					Log::add($data['uid'], $this->getOperatorId(), \App\Config\Log::loanOperate('reface'));
 					$this->success('操作成功');
 				}
 				else

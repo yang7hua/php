@@ -31,7 +31,7 @@ class LoanForm extends ModelForm
 			],
 			//合同签署
 			'contractSign'	=>	[
-				'lid'	=>	null,
+				'uid'	=>	null,
 				'contract'	=>	['default'	=>	1],
 				'bank'	=>	['required'	=>	true],
 				'bank_card'	=>	['required'	=>	true],
@@ -42,17 +42,18 @@ class LoanForm extends ModelForm
 				]
 			],
 			'gps'	=>	[
-				'lid'	=>	null,
+				'uid'	=>	null,
 				'gps'	=>	['required'	=>	true]
 			],
 			//上传汇款凭证
 			'remit'	=>	[
-				'lid'	=>	null,
+				'uid'	=>	null,
 				'remit_certify'	=>	['required'	=>	true]
 			]
 		];
 	}
 
+	//全国风控中心处理意见
 	public function deal()
 	{
 		$uid = $this->data['uid'];
@@ -60,12 +61,20 @@ class LoanForm extends ModelForm
 		return Loan::deal($uid, $this->data);
 	}
 
+	//签署合同、银行卡号
 	public function sign()
 	{
 		unset($this->data['bank_card_confirm']);
-		$lid = $this->data['lid'];
-		unset($this->data['lid']);
+		$uid = $this->data['uid'];
+		unset($this->data['uid']);
 
-		return Loan::sign($lid, $this->data);
+		return Loan::updateByUid($uid, $this->data);
+	}
+
+	//汇款凭证
+	public function remit()
+	{
+		$uid = $this->data['uid'];
+		return Loan::updateByUid($uid, $this->data);
 	}
 }

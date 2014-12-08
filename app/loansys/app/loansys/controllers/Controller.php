@@ -97,11 +97,9 @@ class Controller extends \Base\Controller
 		if (empty($controllerName))
 			$controllerName = $this->getControllerName(); 
 		if (isset($auth[$controllerName]))
-			$auth = $auth[$controllerName];
+			return $auth[$controllerName];
 		else
 			return [];
-
-		return $auth;
 	}
 
 	/**

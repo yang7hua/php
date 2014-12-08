@@ -102,7 +102,7 @@ class RcController extends Controller
 		empty($uid) and $this->pageError('param');
 
 		$infos = $this->loanSketch($uid);
-		!$infos and $this->pageError('param');
+		!$infos and $this->redirect(\Func\url('rc/list', true));
 
 		$this->view->setVars($infos);
 	}
@@ -178,10 +178,12 @@ class RcController extends Controller
 				if ($model->deal())
 				{
 					LoanSketch::updateStatus($data['uid'], $data['status']);
+					Log::add($data['uid'], $data['oid'], \App\Config\Log::loanOperate('rc'));
 					$this->success('操作成功');
 				}
 				else
 				{
+					Log::add($data['uid'], $data['oid'], \App\Config\Log::loanOperate('rc_refuse'));
 					$this->error('操作失败');
 				}
 			}
