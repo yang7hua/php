@@ -24,7 +24,8 @@ class AfterloanController extends Controller
 				'list'	=>	['text'	=>	'贷款列表', 'link'	=>	true],
 				'overdue'	=>	['text'	=>	'逾期列表', 'link'	=>	true],
 				'detail'	=>	['text'	=>	'详情'],
-				'addrepay'	=>	['text'	=>	'添加还款记录']
+				'addrepay'	=>	['text'	=>	'添加还款记录'],
+				'repay'	=>	['text'	=>	'还款']
 			]
 		];
 	}
@@ -106,5 +107,61 @@ class AfterloanController extends Controller
 	 */
 	public function addrepayAction()
 	{
+		$data = $this->request->getPost();
+		empty($data['uid']) and $this->error('参数错误');
+
+		if (!Loan::isValidNo($data['uid'], $data['no']))
+			$this->error('参数错误');
+
+		$data['oid'] = $this->getOperatorId();
+		!empty($data['date']) and $data['date'] = strtotime($data['date']);
+		$data['addtime'] = time();
+		$data['status'] == 0 and $data['date'] = 0;
+
+		$model = new RepayForm('add');
+		if ($result = $model->validate($data))
+		{
+			if ($model->add())
+			{
+				if ($data['status'] == 1)
+					Loan::updateRepay($data['uid'], $data['amount'], $data['no']);
+				$this->success('操作成功');
+			}
+			else
+				$this->error('操作失败');
+		}
+		else
+		{
+			$this->error('验证失败');
+		}
+		exit();
 	}
+
+	public function repayAction()
+	{
+		$data = $this->request->getPost();
+
+		(empty($data['uid']) || empty($data['id']) || empty($data['date']) || empty($data['amount'])) and $this->error('参数错误');
+		$data['status'] = 1;
+		$data['date'] = strtotime($data['date']);
+
+		$model = new RepayForm('repay');
+		if ($result = $model->validate($data))
+		{
+			if ($model->repay())
+			{
+				Loan::updateRepay($data['uid'], $data['amount'], $data['no']);
+				$this->success('操作成功');
+			}
+			else
+			{
+				$this->error('操作失败');
+			}
+		}
+		else
+		{
+			$this->error('验证失败');
+		}
+	}
+
 }

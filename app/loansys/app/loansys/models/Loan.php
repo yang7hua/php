@@ -144,4 +144,42 @@ class Loan extends Model
 		return false;
 	}
 
+	public static function incByUid($uid, $field, $point = 1)
+	{
+		$loan = self::findFirst("uid=$uid");
+		if (!$loan)
+			return false;
+		$loan->$field = $loan->$field + $point;
+		if ($loan->update())
+			return true;
+		return false;
+	}
+
+	/**
+	 * 判断还款期数是否有效
+	 */
+	public static function isValidNo($uid, $no)
+	{
+		$loan = self::findFirst("uid=$uid");
+		if (!$loan)
+			return false;
+		return ($no > $loan->return_num) and ($no <= $loan->deadline);
+	}
+
+	/**
+	 * 更新还款数据
+	 * @param $amount: 还款金额, 单位 元
+	 * @param $no: 第几期
+	 */
+	public static function updateRepay($uid, $amount, $no)
+	{
+		$loan = self::findFirst("uid=$uid");
+		if (!$loan)
+			return false;
+		$loan->return_amount = $loan->return_amount + $amount;
+		$loan->remain_amount = $loan->amount * 10000 - $loan->return_amount;
+		$loan->return_num = $loan->return_num + 1;
+		return $loan->update();
+	}
+
 }
