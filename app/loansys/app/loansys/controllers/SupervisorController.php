@@ -90,10 +90,11 @@ class SupervisorController extends Controller
 			$uid = $data['uid'];
 			!$uid and $this->error('参数错误');
 
-			$data['begintime'] = time();//还款开始时间
+			$data['begintime'] = strtotime(date('Y-m-d 23:59:59', time()));//还款开始时间,签署合同当天23:59:59秒计时
 			$data['status']	= \App\LoanStatus::getStatusRepay();
 			$data['return_num'] = 0;
 			$data['return_amount'] = 0;
+			$data['last_repay_time'] = $data['begintime'];
 
 			$model = new LoanForm('contractSign');
 			if ($result = $model->validate($data))

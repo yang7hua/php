@@ -21,6 +21,7 @@ create table if not exists `sys_loan`(
     `return_num` tinyint(2) unsigned DEFAULT 0 COMMENT '已还期数',
     `remain_amount` decimal(10,2) DEFAULT 0.00 COMMENT '剩余本金',
     `return_amount` decimal(10,2) DEFAULT 0.00 COMMENT '已经还总额',
+	`last_repay_time` int default 0 comment '最近一次还款时间',
 
 	`reason` varchar(1000)  default '' comment '同意或者拒绝的理由',
 	`remark` varchar(1000) default '' comment '补充说明',
@@ -32,7 +33,6 @@ create table if not exists `sys_loan`(
 	`remit_certify` varchar(200) default '' comment '汇款凭证',
 
     `status` tinyint unsigned DEFAULT 0 COMMENT '状态',
-	ok
 	`addtime` int not null comment '贷款添加时间',
 
 	PRIMARY key (`lid`),

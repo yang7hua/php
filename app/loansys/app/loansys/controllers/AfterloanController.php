@@ -78,9 +78,40 @@ class AfterloanController extends Controller
 
 	/**
 	 * 逾期列表
+	 * 超过一个月未还款
 	 */
 	public function overdueAction()
 	{
+		$p = $this->urlParam();
+		$limit = $this->limit($p);
+
+		$dawn = strtotime(date('Y-m-d'));
+		if (!$this->isNationWideBid())
+		{
+			$bid = $this->getOperatorBid();
+			$conditions[] = '{User}.bid='.$bid;
+		}
+		$conditions[] = '{Loan}.status='.\App\LoanStatus::getStatusRepay();
+		$conditions[] = '{Loan}.return_num < {Loan}.deadline';
+
+		$dawn = strtotime(date('Y-m-d 00:00:00', strtotime('-1 month')));
+		$conditions[] = '{Loan}.last_repay_time < ' . $dawn;
+
+		$condition = implode($conditions, ' and ');
+		$list = Loan::all($condition, $limit, ['base', 'branch', 'user', 'repay']);
+
+		foreach ($list['list'] as &$row)
+		{
+			$row['overdue_days'] = ceil(($dawn - $row['last_repay_time'])/(3600*24));
+		}
+
+		$page = $this->page($list['count'], $limit[0], $p);
+
+		$this->view->setVars([
+			'list'	=>	$list['list'],
+			'page'	=>	$page	
+		]);
+
 	}
 
 	/**
@@ -124,7 +155,7 @@ class AfterloanController extends Controller
 			if ($model->add())
 			{
 				if ($data['status'] == 1)
-					Loan::updateRepay($data['uid'], $data['amount'], $data['no']);
+					Loan::updateRepay($data['uid'], $data['amount'], $data['no'], $data['date']);
 				$this->success('操作成功');
 			}
 			else
@@ -137,6 +168,9 @@ class AfterloanController extends Controller
 		exit();
 	}
 
+	/**
+	 * 逾期还款操作
+	 */
 	public function repayAction()
 	{
 		$data = $this->request->getPost();
@@ -150,7 +184,7 @@ class AfterloanController extends Controller
 		{
 			if ($model->repay())
 			{
-				Loan::updateRepay($data['uid'], $data['amount'], $data['no']);
+				Loan::updateRepay($data['uid'], $data['amount'], $data['no'], $data['date']);
 				$this->success('操作成功');
 			}
 			else
