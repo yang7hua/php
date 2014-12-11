@@ -1,7 +1,5 @@
 <?php
 
-set_include_path(get_include_path() . PATH_SEPARATOR . APP_PATH);
-
 $controllerName = $router->getControllerName();
 $actionName = $router->getActionName();
 
@@ -27,6 +25,11 @@ $dispatcher->dispatch();
 $view->render($controllerName, $actionName); 
 $view->finish();
 
+//ajax返回
+if (\Func\isAjax())
+{
+	exit(\Func\ajaxReturn($view->getParamsToView()));
+}
 $response = $di['response'];
 $response->setContent($view->getContent());
 $response->sendHeaders();

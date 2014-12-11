@@ -121,3 +121,24 @@ function remainDeadlines($deadline, $returnNum)
 	}
 	return $remainDeadlines;	
 }
+
+function isAjax()
+{
+	global $di;
+	return $di->get('request')->isAjax() || $_REQUEST['format'] == 'json';
+}
+
+function ajaxReturn($data, $success = true)
+{
+	$return = array();
+	$return['ret'] = $success ? 1 : 0;
+	if($success){
+		if(is_string($data))
+			$return['msg'] = $data;
+		else if(is_array($data))
+			$return['data'] = $data;
+	}else{
+		$return['msg'] = $data;
+	}
+	exit(json_encode($return));
+}

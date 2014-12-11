@@ -12,6 +12,7 @@ class Repay extends Model
 			else
 				$row['date_text'] = '--';
 			$row['status_text'] = $row['status'] == 1 ? '正常还款' : '已逾期';
+			$row['amount'] = str_replace('.00', '', $row['amount']);
 		}
 		return $data;
 	}

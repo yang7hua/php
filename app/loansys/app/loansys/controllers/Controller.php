@@ -6,7 +6,7 @@ class Controller extends \Base\Controller
 	public function initialize()
 	{
 		parent::initialize();
-		if ($this->isLogin()) {
+		if ($this->isLogin() and !$this->isAjax()) {
 			$this->view->setVars([
 					'_operator'	=>	self::operator()
 				]);

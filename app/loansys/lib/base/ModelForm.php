@@ -431,7 +431,8 @@ class Validator
 
 	public function getData($field)
 	{
-		return isset($this->data[$field]) ? $this->data[$field] : $this->getRule($field)['default'];
+		$data = isset($this->data[$field]) ? $this->data[$field] : $this->getRule($field)['default'];
+		return htmlspecialchars(strip_tags($data), ENT_QUOTES);
 	}
 
 	public function getRule($field)

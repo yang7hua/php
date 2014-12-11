@@ -225,10 +225,15 @@ class LoanController extends Controller
 		$count = $User->getSketchCount($conditions);
 		$page = $this->page($count, $limit[0], $p);
 
-		$operates = $this->operators();
+		if (!$this->isAjax())
+		{
+			$operates = $this->operators();
+			$this->view->setVars([
+				'operates'	=>	$operates,
+			]);
+		}
 		$this->view->setVars([
 				'list'	=>	$list,
-				'operates'	=>	$operates,
 				'page'	=>	$page
 			]);
 	}

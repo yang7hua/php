@@ -76,9 +76,8 @@ try{
 	$loader->registerDirs(
 			array(
 				LIB_PATH,
-				APP_PATH . '/' . $config->application->controllersDir,
-				APP_PATH . '/' . $config->application->modelsDir,
-				APP_PATH . '/' . $config->application->libraryDir,
+				APP_PATH . '/controllers',
+				APP_PATH . '/models',
 				APP_PATH . '/lib',
 				APP::getPathByApp(ADM_NAME) . '/controllers',
 				APP::getPathByApp(FRONT_NAME) . '/controllers'
@@ -94,30 +93,11 @@ try{
 				)
 		->register();
 
-	//print_r($loader->getNamespaces());
-	//echo file_exists(LIB_PATH . '/Common.php');
-	//echo class_exists('Util\Common') ? 1 : 0;
 	$di = new Phf\DI\FactoryDefault();
 	
-	/*
-	$di->set('voltService', function($view, $di) use ($config){
-				$volt = new \Phf\Mvc\View\Engine\Volt($view, $di);
-				$volt->setOptions(array(
-							//'compiledPath'	=>	rtrim(ROOT_PATH. $config->engine->compiledPath, '/') . '/',
-							'compiledExtension'	=>	$config->engine->compiledExtension
-						));
-				return $volt;
-			});
-	 */
-
 	$di->set('view', function() use ($config){
-			$view = new Phf\Mvc\View();
+			$view = new \Base\View();
 			$view->setViewsDir(WEB_PATH . '/tpl/' . APP_NAME . '/' . $config->application->default->theme);
-			/*
-			$view->registerEngines(array(
-					'.html'	=>	'voltService'	
-					));
-			 */
 			return $view; 
 			});
 	$di->set('url', function(){
@@ -141,10 +121,6 @@ try{
 			});
 
 	$router = new Phf\Mvc\Router();
-	$router->setDefaults(array(
-				'controller'=>	$config->application->default->controller,
-				'action'	=>	$config->application->default->action
-				));
 	App::loadRouter($router);
 	$router->handle();
 

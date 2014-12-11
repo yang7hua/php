@@ -39,10 +39,13 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 		$this->checkAllowed();
 		$this->checkAuth();
 
-		$this->view->setVar('_params', [
+		if (!$this->isAjax())
+		{
+			$this->view->setVar('_params', [
 				'controller'	=>	$this->getControllerName(),
 				'action'	=>	$this->getActionName()
 			]);
+		}
 	}
 
 	/**
@@ -117,24 +120,12 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 
 	public function isAjax()
 	{
-		if ($this->request->isAjax() || $this->request->get('format') === 'json')
-			return true;
-		return false;
+		return \Func\isAjax();
 	}
 
 	public function ajaxReturn($data, $success = true)
 	{
-		$return = array();
-		$return['ret'] = $success ? 1 : 0;
-		if($success){
-			if(is_string($data))
-				$return['msg'] = $data;
-			else if(is_array($data))
-				$return['data'] = $data;
-		}else{
-			$return['msg'] = $data;
-		}
-		exit(json_encode($return));
+		\Func\ajaxReturn($data, $success);
 	}
 
 	/**
@@ -203,6 +194,8 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 				$params['msg'] = '页面不存在';
 				break;
 		}
+		if ($this->isAjax())
+			$this->error($params['msg']);
 		$this->single('error', $params);
 	}
 
@@ -229,9 +222,13 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 		return $page->getPage();
 	}
 
-	public function limit($p = 1, $pagesize = 2)
+	public function limit($p = 1, $pagesize = '')
 	{
 		empty($p) and $p = 1;
+		if (empty($pagesize))
+		{
+			$pagesize = $this->getConfig('pagination', 'limit');
+		}
 		$offset = ($p-1) * $pagesize;
 		return [$pagesize, $offset];
 	}
@@ -290,5 +287,11 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 	public function urlParam($index = 0)
 	{
 		return $this->dispatcher->getParams()[$index];
+	}
+
+	public function getConfig($type, $param)
+	{
+		global $config;
+		return $config->$type->$param;
 	}
 }
