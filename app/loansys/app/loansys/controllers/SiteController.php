@@ -26,7 +26,7 @@ class SiteController extends Controller
 		else if ($this->authHasAction('list', 'finance'))
 			$u = 'finance/list';
 		else if ($this->authHasAction('list', 'afterloan'))
-			$u = 'afterloan/list';
+			$u = 'afterloan/overdue';
 
 		isset($u) and $this->redirect(\Func\url($u, true));
 	}

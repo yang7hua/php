@@ -67,7 +67,8 @@ class Loan extends Model
 			Loan.use_type, Loan.use_type_info, Loan.repay_method, Loan.repay_source, Loan.days, Loan.apr, Loan.description,
 			Loan.addtime, Loan.status, Loan.reason, Loan.remark';
 
-		$repay = 'Loan.begintime, Loan.endtime, Loan.return_num, Loan.return_amount, Loan.remain_amount, Loan.last_repay_time';
+		$repay = 'Loan.begintime, Loan.endtime, Loan.return_num, Loan.return_amount, Loan.remain_amount, Loan.last_repay_time,
+			Loan.next_repay_time';
 		$other = 'Loan.bank, Loan.bank_card, Loan.contract, Loan.gps, Loan.remit_certify';
 
 		$branch = 'B.name bname';
@@ -181,6 +182,17 @@ class Loan extends Model
 		$loan->return_num = $loan->return_num + 1;
 		//最后一次还款时间
 		$loan->last_repay_time = $date;
+		//下一次应还款时间
+		if ($no < $loan->deadline)
+		{
+			$no++;
+			$next_repay_time = strtotime("+$no month", $loan->begintime);
+		}
+		else
+		{
+			$next_repay_time = 0;
+		}
+		$loan->next_repay_time = $next_repay_time;
 		return $loan->update();
 	}
 

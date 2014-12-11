@@ -22,6 +22,7 @@ create table if not exists `sys_loan`(
     `remain_amount` decimal(10,2) DEFAULT 0.00 COMMENT '剩余本金',
     `return_amount` decimal(10,2) DEFAULT 0.00 COMMENT '已经还总额',
 	`last_repay_time` int default 0 comment '最近一次还款时间',
+	`next_repay_time` int default 0 comment '下一次还款时间',
 
 	`reason` varchar(1000)  default '' comment '同意或者拒绝的理由',
 	`remark` varchar(1000) default '' comment '补充说明',

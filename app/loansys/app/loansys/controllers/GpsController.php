@@ -49,7 +49,7 @@ class GpsController extends Controller
 				$conditions[] = '{User}.realname = \'' . $keyword . '\'';
 		}
 
-		$conditions[] = '{Loan}.status='.\App\LoanStatus::getStatusRcAgree();
+		$conditions[] = '{Loan}.status='.\App\LoanStatus::getStatusRepay();
 
 		if (isset($post['deal']) and in_array($post['deal'], [1, -1]))
 		{

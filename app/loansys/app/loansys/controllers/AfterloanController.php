@@ -85,24 +85,19 @@ class AfterloanController extends Controller
 		$p = $this->urlParam();
 		$limit = $this->limit($p);
 
-		$dawn = strtotime(date('Y-m-d'));
-		if (!$this->isNationWideBid())
-		{
-			$bid = $this->getOperatorBid();
-			$conditions[] = '{User}.bid='.$bid;
-		}
-		$conditions[] = '{Loan}.status='.\App\LoanStatus::getStatusRepay();
+		$conditions = $this->searchConditions();
 		$conditions[] = '{Loan}.return_num < {Loan}.deadline';
 
-		$dawn = strtotime(date('Y-m-d 00:00:00', strtotime('-1 month')));
-		$conditions[] = '{Loan}.last_repay_time < ' . $dawn;
+		//$dawn = strtotime(date('Y-m-d 00:00:00', strtotime('-1 month')));
+		$now = strtotime(date('Y-m-d 00:00:00'));
+		$conditions[] = '{Loan}.next_repay_time < ' . $now;
 
 		$condition = implode($conditions, ' and ');
 		$list = Loan::all($condition, $limit, ['base', 'branch', 'user', 'repay']);
 
 		foreach ($list['list'] as &$row)
 		{
-			$row['overdue_days'] = ceil(($dawn - $row['last_repay_time'])/(3600*24));
+			$row['overdue_days'] = ceil(($now - $row['next_repay_time'])/(3600*24));
 		}
 
 		$page = $this->page($list['count'], $limit[0], $p);

@@ -41,11 +41,16 @@ class LoanForm extends ModelForm
 					]
 				],
 				'begintime'	=>	null,
+				'endtime'	=>	null,
 				'status'	=>	null,
+				'gps'	=>	['default'	=>	0],
+				'remit_certify'	=>	['default'	=>	0],
 				'return_num'	=>	[
 					'default'	=>	0
 				],
-				'return_amount'	=>	['default'	=>	0]
+				'return_amount'	=>	['default'	=>	0],
+				'last_repay_time'	=>	[],
+				'next_repay_time'	=>	[],
 			],
 			'gps'	=>	[
 				'uid'	=>	null,

@@ -49,11 +49,17 @@ class SupervisorController extends Controller
 				$conditions[] = '{User}.realname = \'' . $keyword . '\'';
 		}
 
-		$conditions[] = '{Loan}.status='.\App\LoanStatus::getStatusRcAgree();
-
 		if (isset($post['deal']) and in_array($post['deal'], [1, -1]))
 		{
-			$conditions[] = '{Loan}.bank' . ($post['deal'] == 1 ? '!=' : '=') . '\'\'';
+			if ($post['deal'] == 1)
+			{
+				$conditions[] = '{Loan}.bank!=\'\'';
+				$conditions[] = '{Loan}.status='.\App\LoanStatus::getStatusRepay();
+			}
+			else
+			{
+				$conditions[] = '{Loan}.status='.\App\LoanStatus::getStatusRcAgree();
+			}
 		}
 
 		return $conditions;
@@ -95,6 +101,9 @@ class SupervisorController extends Controller
 			$data['return_num'] = 0;
 			$data['return_amount'] = 0;
 			$data['last_repay_time'] = $data['begintime'];
+			$data['next_repay_time'] = strtotime('+1 month', $data['begintime']);
+			$data['gps'] = 0;
+			$data['remit_certify'] = 0;
 
 			$model = new LoanForm('contractSign');
 			if ($result = $model->validate($data))

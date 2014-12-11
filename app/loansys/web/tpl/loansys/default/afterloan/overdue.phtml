@@ -1,16 +1,16 @@
 <?php
-$heads['title'] = '贷款列表';
+$heads['title'] = '逾期列表';
 ?>
 
 <div class="loan-list">
-	<form class="search row" action="<?=\Func\url('/afterloan/list')?>" method="get">
+	<form class="search row" action="<?=\Func\url('/afterloan/overdue')?>" method="get">
 		<div class="col-lg-3">
 			<div class="input-group">
 				<?=\Util\Html::input('keyword', ['placeholder'=>'请输入客户编号或姓名'], $_REQUEST['keyword'])?>
 				<span class="input-group-addon btn-search">搜索</span>
 			</div>
 		</div>
-		<div class="col-lg-1"><div class="row"><a class="btn btn-link" href="/afterloan/list">清除</a></div></div>
+		<div class="col-lg-1"><div class="row"><a class="btn btn-link" href="/afterloan/overdue">清除</a></div></div>
 	</form>
 	<br/>
 <?php
@@ -27,6 +27,7 @@ if (!empty($list)):
 		<th>贷款期数</th>
 		<th>已还期数</th>
 		<th>上一次还款日</th>
+		<th>下一次还款日</th>
 		<th>逾期天数</th>
 		<th>操作</th>
 	</tr>
@@ -47,10 +48,19 @@ if (!empty($list)):
 <?php 
 if ($row['return_num']):
 	echo date('Y-m-d', $row['last_repay_time']);
+else:
+	echo '--';
 endif;
 ?>
 		</td>
-		<td><?=$row['overdue_days']?></td>
+		<td>
+<?php
+if ($row['next_repay_time']):
+	echo date('Y-m-d', $row['next_repay_time']);
+endif;
+?>
+		</td>
+		<td><?=$row['overdue_days']?>天</td>
 		<td>
 			<a href="/afterloan/detail/<?=$row['uid']?>">详情</a>
 		</td>
