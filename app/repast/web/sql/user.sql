@@ -13,5 +13,5 @@ create table if not exists `sys_user`(
 	`point` int unsigned not null default 0,
 	`vip` tinyint unsigned not null default 0,
 	`addtime` int not null,
-	primary key(`uid`),
+	primary key(`uid`)
 )engine=InnoDB default charset=utf8 comment='用户表';
