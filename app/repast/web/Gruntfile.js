@@ -13,12 +13,13 @@ module.exports = function(grunt){
 				},
 				files : [
 					{dest : 'css/site.css', src: ['less/site.less']},
+					{dest : 'css/sysadm.css', src: ['less/sysadm.less']},
 				]
 			}
 		},
 		watch : {
 			css : {
-				files : ['less/*.less', 'less/themes/*.less'],
+				files : ['less/*.less'],
 				tasks : ['less']
 			}
 		}

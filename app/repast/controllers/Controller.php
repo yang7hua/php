@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 基类
+ */
 namespace app\controllers;
 
 abstract class Controller extends \yii\web\Controller
@@ -7,18 +9,13 @@ abstract class Controller extends \yii\web\Controller
 
 	protected $view = null;
 
-	protected $params = [
-		'title' => '',
-		'keywords'	=>	['订餐系统'],
-		'description'	=>	'订餐系统'
-	];
+	protected $params = null;
 
 	public function init()
 	{
 		!$this->view and $this->view = $this->getView();
 
-		$this->view->params = $this->params;
-		$this->view->title = 'abc';
+		!empty($this->params) and $this->view->params = $this->params;
 	}
 
     public function actions()
@@ -27,10 +24,20 @@ abstract class Controller extends \yii\web\Controller
             'error' => [
                 'class' => 'yii\web\ErrorAction',
             ],
+			//验证码
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
+				'width'	=>	100,
+				'minLength'	=>	4,
+				'maxLength'	=>	5,
+				'transparent'	=>	true
             ],
         ];
     }
+
+	public function noLayout()
+	{
+		$this->layout = false;
+	}
 
 }

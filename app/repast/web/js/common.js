@@ -29,13 +29,6 @@ util = {
     },
 
 	loadTheme : function(theme) {
-		/*
-		if ($("#themecss").size() < 1)
-			$("body").append("<link rel='stylesheet' id='themecss' type='text/css'>");
-		var themecss = $("#themecss"),
-			href = "/css/themes/"+theme+".css";
-		themecss.attr("href", href);
-		*/
 		$("body").removeClass().addClass("site "+theme);
 	},
 	shake : function(o) {
@@ -59,24 +52,17 @@ util = {
 	hasCh : function(string) {
 		return string.match(/[\u4e00-\u9fa5]+/);
 	},
-	moreheigh : function(box) {
-		box.addClass("more-heigh");
+	moreheigh : function(box, low) {
+		if (low)
+			box.removeClass("more-heigh");
+		else
+			box.addClass("more-heigh");
 	}
 };
 });
 
 
 $(function(){
-
-	$("img").lazyload({
-		effect : "fadeIn" 
-	});
-
-	$(".flyout").flyout({
-		outSpeed : 300,
-		inSpeed : 200,
-		closeTip : "点击关闭" 
-	});	
 
 	var searchInput = $("[type=search]");
 	util.bindEnter(searchInput, function(){
@@ -116,14 +102,11 @@ $(function(){
 			open = !open;
 		})
 	}
-	/*
-	var defaultTheme = util.getCookie('themeColor');
-	if (defaultTheme)
-		util.loadTheme(defaultTheme);
-	*/
 	$("textarea").on("focus", function(){
 		util.moreheigh($(this));
 	})
-
+	$("textarea").on("blur", function(){
+		util.moreheigh($(this), true);
+	})
 
 });
