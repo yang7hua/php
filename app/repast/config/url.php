@@ -5,7 +5,13 @@ return [
 	'showScriptName'	=>	false,
 	'rules'	=>	[
 		'/user/<controller:[a-z]+>'	=>	'/user/<controller>',
-		'/user/<controller:[a-z]+>/<action:[a-z]+>(/[\d]+)?'	=>	'/user/<controller>/<action>',
-		'/<controller:[a-z]+>/<action:[a-z]+>'	=>	'/site/<controller>/<action>',
+		'/user/<controller:[a-z]+>/<action:[a-z]+>/([\d]+)?'	=>	'/user/<controller>/<action>',
+
+		'/sysadm/?'	=>	'/sysadm/index',
+		'/sysadm/<controller:[a-z]+>'	=>	'/sysadm/<controller>',
+		'/sysadm/<controller:[a-z]+>/<action:[a-z]+>/<id:[\d]+>'	=>	'/sysadm/<controller>/<action>',
+
+		'/<controller:[a-z]+>/<action:[a-z]+>/?'	=>	'/site/<controller>/<action>',
+		'/<controller:[a-z]+>/<action:[a-z]+>/<id:[\d]+>'	=>	'/site/<controller>/<action>',
 	]
 ];
