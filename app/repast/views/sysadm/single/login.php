@@ -13,7 +13,7 @@ use yii\captcha\Captcha;
 		'options'	=>	['class'=>'form-horizontal'],
 		'fieldConfig'	=>	[
 			'labelOptions'	=>	['class'=>'col-lg-2 control-label'],
-			'template'  =>  "{label}<div class='col-lg-7'>{input}\n{error}</div>"
+			'template'  =>  "{label}<div class='col-lg-8'>{input}\n{error}</div>"
 		]
 	]); ?>
 	<?= $form->field($model, 'username') ?>
@@ -24,6 +24,12 @@ use yii\captcha\Captcha;
 		],
 		'template'	=>	"<div class='row'><div class='col-lg-4'>{image}</div><div class='col-lg-8'>{input}</div></div>"
 	])?>
+    <div class="form-group">
+		<div class="col-lg-2"></div>
+        <div class="col-lg-7">
+		<?= Html::submitButton('登&nbsp;&nbsp;录', ['class'=>'btn btn-primary', 'name'=>'login-button'])?>
+		</div>
+	</div>
 	<?php ActiveForm::end(); ?>
 	</div>
 </div>

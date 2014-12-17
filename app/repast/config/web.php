@@ -24,25 +24,17 @@ $config = [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
-		'config'	=>	[
-			'class'	=>	'app\models\config'
-		],
         'user' => [
             'identityClass' => 'app\models\user\User',
             'enableAutoLogin' => true,
         ],
 		'site'	=>	'app\models\Site',
-		'blog'	=>	'app\models\Blog',
-		'userblog'	=>	'app\models\user\Blog',
 		'util'	=>	'app\vendor\util\util',
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
-            // send all mails to a file by default. You have to set
-            // 'useFileTransport' to false and configure a transport
-            // for the mailer to send real emails.
             'useFileTransport' => true,
         ],
         'log' => [
