@@ -8,6 +8,9 @@ class PublicController extends Controller
 {
 	public function actionLogin()
 	{
+		if ($this->hasLogin())
+			$this->goHome();
+
 		$model = new AdminiForm(['scenario'=>'login']);
 
 		if ($model->load(\Yii::$app->request->post()) and ($admini = $model->login()))
@@ -17,6 +20,16 @@ class PublicController extends Controller
 		}
 
 		return $this->single('login', ['model'=>$model]);
+	}
+
+	public function actionLogout()
+	{
+		$this->logout();
+		$this->redirect('/public/login');
+	}
+
+	public function actionIndex()
+	{
 	}
 
 }

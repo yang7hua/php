@@ -15,6 +15,8 @@ abstract class Controller extends \yii\web\Controller
 
 	protected $homePage = '/';
 
+	private $appName = null;
+
 	private $controllerName = null;
 
 	private $actionName = null;
@@ -38,13 +40,31 @@ abstract class Controller extends \yii\web\Controller
 
 	public function checkAuth()
 	{
-		
+
 	}
 
 	public function analyse()
 	{
-		$controller = $this->id;
-		var_dump($this->module);
+		$request_uri = $_SERVER['REQUEST_URI'];
+
+		$base = null;
+		if (($pos = strpos($request_uri, '?')) !== false)
+			$base = substr($request_uri, 1, $pos-1);
+		else
+			$base = substr($request_uri, 1);
+		$base = trim($base, '/');
+		$items = explode('/', $base);
+		if (in_array($items[0], ['sysadm', 'user']))
+		{
+		}	
+		else
+		{
+			array_unshift($items, 'site');
+		}
+		count($items) == 1 and $items[1] = 'index';
+		count($items) == 2 and $items[2] = 'index';
+
+		list($this->appName, $this->controllerName, $this->actionName) = $items;
 	}
 
     public function actions()
@@ -74,4 +94,25 @@ abstract class Controller extends \yii\web\Controller
 	{
 		return \Yii::$app->params[$key];
 	}
+
+	public function moduleName()
+	{
+		return $this->moduleName;
+	}
+
+	public function controllerName()
+	{
+		return $this->controllerName;
+	}
+
+	public function appName()
+	{
+		return $this->appName;
+	}
+
+	public function goHome()
+	{
+		parent::redirect($this->homePage);
+	}
+
 }

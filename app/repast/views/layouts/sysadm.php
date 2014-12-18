@@ -24,8 +24,8 @@ SysadmAsset::register($this);
 	echo $this->render('/sysadm/widgets/topbar');
 ?>
     <div class="row wrap">
-        <div class="col-lg-2"><?= $this->render('/sysadm/widgets/sidebar')?></div>
-        <div class="col-lg-10"><?= $content ?></div>
+        <div class="col-lg-2 wrap-layout"><?= $this->render('/sysadm/widgets/sidebar')?></div>
+        <div class="col-lg-10 wrap-layout"><?= $content ?></div>
     </div>
 <?php $this->endBody(); ?>
 </body>

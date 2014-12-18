@@ -30,6 +30,22 @@ class Controller extends \app\controllers\Controller
 		parent::init();
 	}
 
+	public function checkAuth()
+	{
+		parent::checkAuth();
+
+		if ($this->hasLogin())
+			return true;
+		if (array_key_exists($this->controllerName(), $this->publicActions))
+		{
+			if ($this->publicActions[$this->controllerName()] == '*')
+				return true;
+			if (in_array($this->actionName(), $this->publicActions[$this->controllerName()]))
+				return true;
+		}
+		$this->redirect('public/login');
+	}
+
 	public function single($page, $params = [])
 	{
 		$this->layout = 'sysadm/single';
@@ -43,15 +59,41 @@ class Controller extends \app\controllers\Controller
 		$this->session->set('admini', $admini);
 	}
 
+	public function hasLogin()
+	{
+		$admini = $this->admini();
+		if (!$admini)
+			return false;
+
+		if ($admini['expire'] < time())
+		{
+			$this->logout();
+			return false;
+		}
+
+		return true;
+	}
+
 	public function logout()
 	{
 		$this->session->remove('admini');
+	}
+
+	public function admini()
+	{
+		return $this->session->get('admini');
 	}
 
 	public function param($key, $default = '')
 	{
 		$params = parent::param('sysadm');
 		return array_key_exists($key, $params) ? $params[$key] : $default;
+	}
+
+	public function redirect($url, $statusCode = 200)
+	{
+		$url = '/' . $this->appName() . '/' . trim($url, '/');
+		return parent::redirect($url, $statusCode);
 	}
 
 }

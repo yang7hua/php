@@ -1,7 +1,7 @@
 drop table if exists `sys_menu`;
 create table if not exists `sys_menu`(
 	`mid` int auto_increment,
-	`pid` int unsigned not null default 0,
+	`cid` int unsigned not null comment '分类ID',
 	`title` varchar(50) not null comment '名称',
 	`price` decimal(6,2) not null,
 	`img` varchar(100) not null,
