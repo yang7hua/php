@@ -28,8 +28,11 @@ $config = [
             'identityClass' => 'app\models\user\User',
             'enableAutoLogin' => true,
         ],
+
 		'site'	=>	'app\models\Site',
 		'util'	=>	'app\vendor\util\util',
+		'func'	=>	'app\vendor\util\func',
+
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],

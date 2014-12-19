@@ -28,6 +28,8 @@ class Controller extends \app\controllers\Controller
 	public function init()
 	{
 		parent::init();
+		if (!$this->isAjax())
+			$this->view->params['_admini']= $this->admini();
 	}
 
 	public function checkAuth()
@@ -56,6 +58,7 @@ class Controller extends \app\controllers\Controller
 	{
 		$admini = $admini->toArray();
 		$admini['expire'] = time() + $this->param('expire');
+		unset($admini['password']);
 		$this->session->set('admini', $admini);
 	}
 

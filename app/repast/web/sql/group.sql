@@ -7,6 +7,6 @@ create table if not exists `sys_group`(
 	`description` varchar(5000) not null default '' comment '描述',
 	`addtime` int unsigned not null,
 	`status` tinyint unsigned not null default 1 comment '状态,1-上架, 0-下架',
-	primary key(`id`),
+	primary key(`gid`),
 	key status(`status`)
 )engine=InnoDB default charset=utf8 comment='组合套餐';

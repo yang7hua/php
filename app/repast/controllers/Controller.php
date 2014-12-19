@@ -115,4 +115,35 @@ abstract class Controller extends \yii\web\Controller
 		parent::redirect($this->homePage);
 	}
 
+	public function isAjax()
+	{
+		if (\Yii::$app->request->get('format') == 'json')
+			return true;
+		return \Yii::$app->request->isAjax;
+	}
+
+	public function _return($data = '', $success=true, $jump = false)
+	{
+		$page = $success ? 'success' : 'error';
+
+		if ($data and !$this->isAjax())
+			return $this->session->set('msg', $data);
+
+		if (empty($data) || $jump)
+			$this->redirect('single/' . $page);
+
+		$return = [];
+		if (is_string($data))
+			$return['msg']	=	$data;
+		else if (is_array($data))
+			$return['data']	=	$data;
+
+		$return['ret'] = $success ? 1 : 0;
+		return json_encode($return);
+	}
+
+	public function success($data = '操作成功', $jump = false)
+	{
+		$this->_return($data, true, $jump);	
+	}
 }

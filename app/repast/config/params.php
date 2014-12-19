@@ -3,6 +3,6 @@
 return [
     'adminEmail' => 'admin@example.com',
 	'sysadm'	=>	[
-		'expire'	=>	600
+		'expire'	=>	60 * 30
 	]
 ];
