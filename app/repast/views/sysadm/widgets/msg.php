@@ -1,5 +1,5 @@
 <?php
-if ($msg = \Yii::$app->session->get('msg')):
+if ($msg = \Yii::$app->session->get('msg') and \Yii::$app->session->get('msg_expire') > time()):
 	$type = 'success';
 	if (is_array($msg)):
 		if (isset($msg['success'])):

@@ -9,6 +9,7 @@ class MenuController extends Controller
 {
 	public function actionList()
 	{
+		$list = Menu::all();
 		return $this->render('list', [
 			'list'	=>	$list,
 			'page'	=>	$page
@@ -21,6 +22,7 @@ class MenuController extends Controller
 
 		if ($model->load(\Yii::$app->request->post()) and $model->add())
 		{
+			$this->success();
 			return $this->redirect('menu/list');
 		}
 

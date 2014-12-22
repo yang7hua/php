@@ -2,6 +2,8 @@
 
 namespace app\models\sysadm;
 
+use app\models\sysadm\MenuForm;
+
 class Menu extends \app\models\Model
 {
 	public static function status()
@@ -24,6 +26,7 @@ class Menu extends \app\models\Model
 		];
 	}
 
+	//分类
 	public static function categories()
 	{
 		$categories = Category::find(['status'	=>	Category::STATUS_NORMAL])
@@ -42,10 +45,66 @@ class Menu extends \app\models\Model
 		return $options;
 	}
 
+	//活动
 	public static function activities()
 	{
-		$options = [''	=>	'无'];
+		$options = ['0'	=>	'无'];
 		return $options;
 	}
 
+	//新品
+	public static function newOptions()
+	{
+		return [
+			1	=>	'是',
+			0	=>	'否'
+		];
+	}
+
+	//供应时间
+	public static function provideOptions()
+	{
+		return [
+			0	=>	'全天',
+			1	=>	'上午',	
+			10	=>	'下午'
+		];
+	}
+
+	public static function all()
+	{
+		$list = Menu::find()
+				->from('sys_menu b')
+				->leftJoin('sys_category c', 'c.cid=b.cid')
+				->select('c.name, b.*')
+				->asArray()
+				->all();
+		return self::format($list);
+	}
+
+	public static function format($list)
+	{
+		foreach ($list as &$row)
+		{
+			$row['status_text'] = self::status()[$row['status']];
+		}
+		return $list;
+	}
+
+	public static function add(MenuForm $form)
+	{
+		$menu = new self();
+		$menu->cid = $form->cid;
+		$menu->aid = $form->aid;
+		$menu->title = $form->title;
+		$menu->price = $form->price;
+		$menu->favorable_price = $form->favorable_price;
+		$menu->img = '';
+		$menu->new = $form->new;
+		$menu->provide_time	= $form->provide_time;
+		$menu->peppery = $form->peppery;
+		$menu->status = $form->status;
+		$menu->addtime = time();
+		return $menu->insert();
+	}
 }

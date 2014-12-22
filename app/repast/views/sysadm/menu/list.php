@@ -8,6 +8,7 @@ if ($list):
 	<tr>
 		<th>ID</th>
 		<th>名称</th>
+		<th>分类</th>
 		<th>状态</th>
 		<th>操作</th>
 	</tr>
@@ -16,6 +17,7 @@ foreach ($list as $row):
 ?>
 	<tr>
 	<td><?=$row['cid']?></td>
+	<td><?=$row['title']?></td>
 	<td><?=$row['name']?></td>
 	<td><?=$row['status_text']?></td>
 	<td>

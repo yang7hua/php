@@ -13,6 +13,7 @@ class MenuForm extends \app\models\ModelForm
 	public $favorable_price;
 	public $img;
 	public $new;
+	public $provide_time;
 	public $peppery;
 	public $description;
 	public $status;
@@ -20,8 +21,9 @@ class MenuForm extends \app\models\ModelForm
 	public function rules()
 	{
 		return [
-			[['cid', 'title', 'price', 'img', 'peppery', 'status'], 'required'],
-			['price', 'validatePrice']
+			[['cid', 'title', 'price', 'peppery', 'status', 'new', 'provide_time'], 'required'],
+			['price', 'validatePrice'],
+			['favorable_price', 'validatePrice']
 		];
 	}
 
@@ -43,6 +45,7 @@ class MenuForm extends \app\models\ModelForm
 			'favorable_price'	=>	'优惠价格',
 			'img'	=>	'图片',
 			'new'	=>	'新品',
+			'provide_time'	=>	'供应时间',
 			'peppery'	=>	'辣度',
 			'description'	=>	'描述',
 			'status'	=>	'状态'

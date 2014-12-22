@@ -126,8 +126,11 @@ abstract class Controller extends \yii\web\Controller
 	{
 		$page = $success ? 'success' : 'error';
 
-		if ($data and !$this->isAjax())
-			return $this->session->set('msg', $data);
+		if ($data and !$this->isAjax() and !$jump)
+		{
+			$this->session->set('msg', $data);
+			$this->session->set('msg_expire', time()+30);
+		}
 
 		if (empty($data) || $jump)
 			$this->redirect('single/' . $page);
@@ -146,4 +149,10 @@ abstract class Controller extends \yii\web\Controller
 	{
 		$this->_return($data, true, $jump);	
 	}
+
+	public function error($data = '操作失败', $jump = false)
+	{
+		$this->_return($data, false, $jump);
+	}
+
 }
