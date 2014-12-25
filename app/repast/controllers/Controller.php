@@ -105,6 +105,11 @@ abstract class Controller extends \yii\web\Controller
 		return $this->controllerName;
 	}
 
+	public function actionName()
+	{
+		return $this->actionName;
+	}
+
 	public function appName()
 	{
 		return $this->appName;

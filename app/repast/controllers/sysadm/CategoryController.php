@@ -35,7 +35,7 @@ class CategoryController extends Controller
 		}
 
 		$category = Category::findOne($id);
-		!$category and $this->error('param error');
+		!$category and $this->error('参数错误');
 
 		$model->name	= $category->name;
 		$model->status	= $category->status;

@@ -87,6 +87,7 @@ class Menu extends \app\models\Model
 		foreach ($list as &$row)
 		{
 			$row['status_text'] = self::status()[$row['status']];
+			$row['provide_time_text'] = self::provideOptions()[$row['provide_time']];
 		}
 		return $list;
 	}
@@ -94,6 +95,7 @@ class Menu extends \app\models\Model
 	public static function add(MenuForm $form)
 	{
 		$menu = new self();
+
 		$menu->cid = $form->cid;
 		$menu->aid = $form->aid;
 		$menu->title = $form->title;
@@ -105,6 +107,25 @@ class Menu extends \app\models\Model
 		$menu->peppery = $form->peppery;
 		$menu->status = $form->status;
 		$menu->addtime = time();
+
 		return $menu->insert();
+	}
+
+	public static function edit($id, MenuForm $form)
+	{
+		$menu = Menu::findOne($id);
+		if (!$menu)
+			return false;
+		$menu->cid = $form->cid;
+		$menu->aid = $form->aid;
+		$menu->title = $form->title;
+		$menu->price = $form->price;
+		$menu->favorable_price = $form->favorable_price;
+		$menu->new = $form->new;
+		$menu->provide_time	= $form->provide_time;
+		$menu->peppery = $form->peppery;
+		$menu->status = $form->status;
+
+		return $menu->save();
 	}
 }

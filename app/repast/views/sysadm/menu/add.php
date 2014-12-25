@@ -20,7 +20,7 @@ echo $form->field($model, 'price');
 echo $form->field($model, 'favorable_price');
 echo $form->field($model, 'new', ['template'	=>	'{label}<div class="col-lg-3 radio">{input}</div><div class="col-lg-2">{error}</div>'])->radioList(Menu::newOptions());
 echo $form->field($model, 'provide_time', ['template'	=>	'{label}<div class="col-lg-3 radio">{input}</div><div class="col-lg-2">{error}</div>'])->radioList(Menu::provideOptions());
-echo $form->field($model, 'peppery', ['template'	=>	'{label}<div class="col-lg-3 radio">{input}</div><div class="col-lg-2">{error}</div>'])->radioList(Menu::peppery());
+echo $form->field($model, 'peppery', ['template'	=>	'{label}<div class="col-lg-4 radio">{input}</div><div class="col-lg-2">{error}</div>'])->radioList(Menu::peppery());
 echo $form->field($model, 'status', ['template'	=>	'{label}<div class="col-lg-3 radio">{input}</div><div class="col-lg-2">{error}</div>'])->radioList(Menu::status());
 ?>
 		<div class="form-group">

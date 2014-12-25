@@ -57,10 +57,18 @@ util = {
 			box.removeClass("more-heigh");
 		else
 			box.addClass("more-heigh");
+	},
+	msgtips	:	{
+		o : $(".message"),
+		show : function() {
+			this.o.addClass("message-show");	
+		},
+		hide : function() {
+			this.o.removeClass("message-show");
+		}
 	}
 };
 });
-
 
 $(function(){
 

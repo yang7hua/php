@@ -26,11 +26,11 @@ SysadmAsset::register($this);
     <div class="wrap">
         <div class="col-lg-2 wrap-layout"><div class="row sidebar"><?= $this->render('/sysadm/widgets/sidebar')?></div></div>
 		<div class="col-lg-10 wrap-layout">
-			<?=$this->render('/sysadm/widgets/msg')?>
 			<div class="row content"><?= $content ?></div>
 		</div>
     </div>
 <?php $this->endBody(); ?>
+<?=$this->render('/sysadm/widgets/msg');?>
 </body>
 </html>
 <?php $this->endPage() ?>

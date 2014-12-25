@@ -1,11 +1,5 @@
-<h5 class="heading">菜单列表</h5>
+<h5 class="heading">套餐列表</h5>
 <hr>
-<div id="group-add" class="bg-info hide" mids="">
-	<span id="group-wrapper"></span>
-	<a class="btn btn-link" action="add-group">组合</a>
-	<a href="#" action="remove-group">移除</a>
-</div>
-<a class="btn btn-link" href="<?=\Yii::$app->func->admUrl('/menu/add')?>">添加新菜单</a>
 <?php
 if ($list):
 ?>
@@ -24,7 +18,7 @@ if ($list):
 <?php 
 foreach ($list as $row):
 ?>
-	<tr mid="<?=$row['mid']?>">
+	<tr>
 	<td><?=$row['mid']?></td>
 	<td><?=$row['title']?></td>
 	<td><?=$row['name']?></td>
@@ -35,8 +29,7 @@ foreach ($list as $row):
 	<td><?=$row['status_text']?></td>
 	<td>
 		<a href="<?=\Yii::$app->func->admUrl('/menu/edit/'.$row['mid'])?>">编辑</a>&nbsp;
-		<a href="<?=\Yii::$app->func->admUrl('/menu/img/'.$row['mid'])?>">图片</a>&nbsp;
-		<a href="#" mid="<?=$row['mid']?>" group="true">组合</a>
+		<a href="<?=\Yii::$app->func->admUrl('/menu/img/'.$row['mid'])?>">图片</a>
 	</td>
 	</tr>
 <?php
@@ -47,6 +40,3 @@ endforeach;
 else:
 
 endif;
-
-$this->registerJsFile('/js/sysadm/menu.js', ['depends'	=>	['\app\assets\AppAsset']]);
-?>

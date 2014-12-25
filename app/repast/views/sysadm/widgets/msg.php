@@ -12,8 +12,14 @@ if ($msg = \Yii::$app->session->get('msg') and \Yii::$app->session->get('msg_exp
 		endif;
 	endif;
 	if ($msg):
+		\Yii::$app->session->set('msg_expire', time());
 ?>
-	<div class="row msg msg-<?=$type?>"><?=$msg?></div>
+<div class="message message-success"><?=$msg?></div>
 <?php
+$js = '
+setTimeout("util.msgtips.show()", 100);
+setTimeout("util.msgtips.hide()", 3000);
+';
+$this->registerJs($js);
 	endif;
 endif;

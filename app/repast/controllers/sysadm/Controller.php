@@ -30,6 +30,8 @@ class Controller extends \app\controllers\Controller
 		parent::init();
 		if (!$this->isAjax())
 			$this->view->params['_admini']= $this->admini();
+		$this->view->params['controller']	=	$this->controllerName();
+		$this->view->params['action']	=	$this->actionName();
 	}
 
 	public function checkAuth()
@@ -74,6 +76,9 @@ class Controller extends \app\controllers\Controller
 			return false;
 		}
 
+		//更新会话时间
+		$admini['expire'] = time() + $this->param('expire');
+		$this->session->set('admini', $admini);
 		return true;
 	}
 

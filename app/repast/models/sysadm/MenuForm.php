@@ -69,4 +69,12 @@ class MenuForm extends \app\models\ModelForm
 		}
 		return false;
 	}
+
+	public function edit($id)
+	{
+		if ($this->validate())
+		{
+			return Menu::edit($id, $this);
+		}
+	}
 }
