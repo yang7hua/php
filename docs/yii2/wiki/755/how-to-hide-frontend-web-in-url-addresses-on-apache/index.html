@@ -1,0 +1,603 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    	<meta charset="UTF-8" />
+		<meta name="keywords" content="yii framework, wiki, How-tos, yii2, url, rewrite, config, security" />
+	<meta name="description" content="There is an issue on Yii2 to redirecting / urls to /frontend/web.
+In other words we need a way to hidden /frontend/web from addresses. 
+We will do this without changing Apache configuration and creating virtual host or setting document root (It&#039;s good for share hostings that we have not access to apache.conf)" />
+    <link rel="shortcut icon" type="image/x-icon" href="http://static.yiiframework.com/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="http://static.yiiframework.com/css/site-20130404102234.css" />
+
+	<link title="Lives News for Yii Framework" rel="alternate" type="application/rss+xml" href="http://www.yiiframework.com/rss.xml/" />
+	<title>How to hide /frontend/web in url addresses on apache | Wiki | Yii PHP Framework</title>
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii API Search" href="/search-api.xml" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii Site Search" href="/search-site.xml" />
+</head>
+
+<body class="mac">
+<div class="layout-main">
+
+	<div class="layout-main-shortcuts">
+		<div class="container_12">
+            <a style="color:darkred;" href="https://github.com/yiisoft/yii2">Github</a> &middot;
+            <a style="color:darkgreen;" href="https://twitter.com/yiiframework">Twitter</a> &middot;
+            <a style="color:darkblue;" href="https://www.facebook.com/groups/yiitalk/">Facebook</a> &middot;
+            <a href="/doc/guide/">Guide</a> &middot;
+            <a href="/doc/api/">Class Reference</a> &middot;
+            <a href="/doc-2.0/guide-index.html">Guide 2.0</a> &middot;
+            <a href="/doc-2.0/index.html">API 2.0</a> &middot;
+            <a href="/wiki/">Wiki</a> &middot;
+            <a href="/extensions/">Extensions</a> &middot;
+            <a href="/forum/">Forum</a> &middot;
+			<a href="/chat/">Live Chat</a> &middot;
+                            <a href="/login/">Login</a>            		</div>
+	</div>
+
+	<div class="layout-main-bg">
+		<div class="layout-main-header">
+			<div class="container_12">
+				<div class="grid_4">
+					<a class="logo" href="/"><img alt="Yii Logo" src="http://static.yiiframework.com/css/img/logo.png" title="Yii Framework" width="284" height="64" /></a>				</div>
+				<div class="grid_8 omega">
+					<div class="nav">
+						<ul class="menu" id="yw0">
+<li class="about"><a class="main" href="/about/">About</a>
+<ul>
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li class="last"><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="downloads"><a class="main" href="/download/">Downloads</a>
+<ul>
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li class="last"><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="documentation active"><a class="main" href="/doc/">Documentation</a>
+<ul>
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li class="active"><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li class="last"><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="development"><a class="main" href="https://github.com/yiisoft/yii/commits/master">Development</a>
+<ul>
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li class="last"><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="community last"><a class="main" href="/community/">Community</a>
+<ul>
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li class="last"><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+</ul>						<div class="search">
+							<form method="get" action="/search/">
+								<div class="keyword">
+	                                <input name="q" value="" />
+									<a href="#" title="search" class="global-search">search</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+
+		<div class="container_12">
+						<div class="grid_12">
+												<div class="layout-main-submenu">
+					<ul>
+						<li class="main">Documentation</li>
+												<li><a href="/tour/">Take the Tour</a></li>
+												<li><a href="/tutorials/">Tutorials</a></li>
+												<li><a href="/doc/api/">Class Reference</a></li>
+												<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+												<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+												<li class="active"><a href="/wiki/">Wiki</a></li>
+												<li><a href="/screencasts/">Screencasts</a></li>
+												<li><a href="/resources/">Resources</a></li>
+											</ul>
+				</div>
+				
+				
+				
+								<div class="grid_9 alpha">
+									<div class="layout-main-body">
+						<div class="wiki-view">
+        <h1>Yii 2.0: How to hide /frontend/web in url addresses on apache <a href="https://twitter.com/yiiframework" class="twitter-follow-button" data-link-color="#0069D6" data-show-count="true">Follow @yiiframework</a></h1>
+
+	<div class="g-voter-reporter">
+		<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Wiki&amp;id=755"><span>report it</span></a>		<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Wiki&amp;id=755&amp;vote=1"><span>9</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Wiki&amp;id=755&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>	</div>
+	<div class="g-starring">
+		<span class="widget-follower"><a class="g-login" title="Click to follow" href="/site/star/?type=Wiki&amp;id=755&amp;v=1"><img alt="Click to follow" src="/images/star_off.gif" title="" width="15" height="15" /></a><span>11 followers</span></span>	</div>
+	<div class="clear"></div>
+
+    <div class="content g-markdown"><div class="google-ad" style="float:right;margin:0 0 1em 1em;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "3624755012";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+
+    
+        <p>There is an issue on Yii2 to redirecting / urls to /frontend/web.<br />
+In other words we need a way to hidden <b>/frontend/web</b> from addresses. <br />
+We will do this without changing Apache configuration and creating virtual host or setting document root (It's good for share hostings that we have not access to apache.conf)</p>
+
+<p>Let's do it:</p>
+
+<p>1- Create .htaccess file on the root directory with this content</p>
+
+<pre>Options -Indexes
+
+&lt;IfModule mod_rewrite.c&gt; 
+  RewriteEngine on
+
+  RewriteCond %{REQUEST_URI} !^public
+  RewriteRule ^(.*)$ frontend/web/$1 [L] 
+&lt;/IfModule&gt;
+
+# Deny accessing below extensions
+&lt;Files ~ "(.json|.lock|.git)"&gt;
+Order allow,deny
+Deny from all
+&lt;/Files&gt;
+
+# Deny accessing dot files
+RewriteRule (^\.|/\.) - [F]
+</pre>
+
+<p>2- Create .htaccess file in frontend/web with the below contents</p>
+
+<pre>RewriteEngine on
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d 
+
+RewriteRule . index.php
+</pre>
+
+<p>3- Now, we should play a little with frontend config of framework <br />
+You must open the <b>frontend/config/main.php</b> file and set $baseUrl for \yii\web\Request and \yii\web\urlManager. <br />
+$baseUrl is the url your application point to. if you host your application in the root directory of www you may set the $baseUrl to '/' <br /><br /></p>
+
+<p>For another example if you are developing a blog system and your application hosted in www/blog you must set the baseUrl to '/blog' <br /></p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-inlinetags">&lt;?php</span>
+<span class="hl-var">$params</span><span class="hl-code"> = </span><span class="hl-identifier">array_merge</span><span class="hl-brackets">(</span>
+    <span class="hl-reserved">require</span><span class="hl-brackets">(</span><span class="hl-identifier">__DIR__</span><span class="hl-code"> . </span><span class="hl-quotes">'</span><span class="hl-string">/../../common/config/params.php</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-reserved">require</span><span class="hl-brackets">(</span><span class="hl-identifier">__DIR__</span><span class="hl-code"> . </span><span class="hl-quotes">'</span><span class="hl-string">/../../common/config/params-local.php</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-reserved">require</span><span class="hl-brackets">(</span><span class="hl-identifier">__DIR__</span><span class="hl-code"> . </span><span class="hl-quotes">'</span><span class="hl-string">/params.php</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-reserved">require</span><span class="hl-brackets">(</span><span class="hl-identifier">__DIR__</span><span class="hl-code"> . </span><span class="hl-quotes">'</span><span class="hl-string">/params-local.php</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">)</span><span class="hl-code">;
+ 
+ 
+</span><span class="hl-reserved">return</span> <span class="hl-brackets">[</span>
+    <span class="hl-quotes">'</span><span class="hl-string">id</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">app-frontend</span><span class="hl-quotes">'</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">basePath</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-identifier">dirname</span><span class="hl-brackets">(</span><span class="hl-identifier">__DIR__</span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">bootstrap</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">log</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">controllerNamespace</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">frontend\controllers</span><span class="hl-quotes">'</span><span class="hl-code">,
+ 
+    </span><span class="hl-quotes">'</span><span class="hl-string">components</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-brackets">[</span>
+ 
+        <span class="hl-quotes">'</span><span class="hl-string">request</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-brackets">[</span>
+            <span class="hl-quotes">'</span><span class="hl-string">baseUrl</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">/</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-brackets">]</span><span class="hl-code">,
+ 
+        </span><span class="hl-quotes">'</span><span class="hl-string">user</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-brackets">[</span>
+            <span class="hl-quotes">'</span><span class="hl-string">identityClass</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">common\models\User</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">enableAutoLogin</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-reserved">true</span><span class="hl-code">,
+        </span><span class="hl-brackets">]</span><span class="hl-code">,
+ 
+        </span><span class="hl-quotes">'</span><span class="hl-string">log</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-brackets">[</span>
+            <span class="hl-quotes">'</span><span class="hl-string">traceLevel</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-identifier">YII_DEBUG</span><span class="hl-code"> ? </span><span class="hl-number">3</span><span class="hl-code"> : </span><span class="hl-number">0</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">targets</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-brackets">[</span>
+                <span class="hl-brackets">[</span>
+                    <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">yii\log\FileTarget</span><span class="hl-quotes">'</span><span class="hl-code">,
+                    </span><span class="hl-quotes">'</span><span class="hl-string">levels</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">error</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">warning</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-code">,
+                </span><span class="hl-brackets">]</span><span class="hl-code">,
+            </span><span class="hl-brackets">]</span><span class="hl-code">,
+        </span><span class="hl-brackets">]</span><span class="hl-code">,
+ 
+        </span><span class="hl-quotes">'</span><span class="hl-string">errorHandler</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-brackets">[</span>
+            <span class="hl-quotes">'</span><span class="hl-string">errorAction</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">site/error</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-brackets">]</span><span class="hl-code">,
+ 
+        </span><span class="hl-quotes">'</span><span class="hl-string">urlManager</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-brackets">[</span>
+            <span class="hl-quotes">'</span><span class="hl-string">baseUrl</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">/</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">enablePrettyUrl</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-reserved">true</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">showScriptName</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-reserved">false</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">rules</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-brackets">[</span><span class="hl-brackets">]</span>
+        <span class="hl-brackets">]</span>
+    <span class="hl-brackets">]</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">params</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-var">$params</span><span class="hl-code">,
+</span><span class="hl-brackets">]</span><span class="hl-code">;</span></pre></div></div>
+
+<h2 id="hh0">Soft Way <a class="anchor" href="#hh0">¶</a></h2>
+
+<p>If you not sure where your application will host, you must do it in pragmatically way. for this purpose we change the config file as below</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-inlinetags">&lt;?php</span>
+<span class="hl-var">$params</span><span class="hl-code"> = </span><span class="hl-identifier">array_merge</span><span class="hl-brackets">(</span>
+    <span class="hl-reserved">require</span><span class="hl-brackets">(</span><span class="hl-identifier">__DIR__</span><span class="hl-code"> . </span><span class="hl-quotes">'</span><span class="hl-string">/../../common/config/params.php</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-reserved">require</span><span class="hl-brackets">(</span><span class="hl-identifier">__DIR__</span><span class="hl-code"> . </span><span class="hl-quotes">'</span><span class="hl-string">/../../common/config/params-local.php</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-reserved">require</span><span class="hl-brackets">(</span><span class="hl-identifier">__DIR__</span><span class="hl-code"> . </span><span class="hl-quotes">'</span><span class="hl-string">/params.php</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-reserved">require</span><span class="hl-brackets">(</span><span class="hl-identifier">__DIR__</span><span class="hl-code"> . </span><span class="hl-quotes">'</span><span class="hl-string">/params-local.php</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">)</span><span class="hl-code">;
+ 
+</span><span class="hl-identifier">use</span><span class="hl-code"> \</span><span class="hl-identifier">yii</span><span class="hl-code">\</span><span class="hl-identifier">web</span><span class="hl-code">\</span><span class="hl-identifier">Request</span><span class="hl-code">;
+</span><span class="hl-var">$baseUrl</span><span class="hl-code"> = </span><span class="hl-identifier">str_replace</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">/frontend/web</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-brackets">(</span><span class="hl-reserved">new</span> <span class="hl-identifier">Request</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">getBaseUrl</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+</span><span class="hl-reserved">return</span> <span class="hl-brackets">[</span>
+    <span class="hl-quotes">'</span><span class="hl-string">id</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">app-frontend</span><span class="hl-quotes">'</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">basePath</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-identifier">dirname</span><span class="hl-brackets">(</span><span class="hl-identifier">__DIR__</span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">bootstrap</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">log</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">controllerNamespace</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">frontend\controllers</span><span class="hl-quotes">'</span><span class="hl-code">,
+ 
+    </span><span class="hl-quotes">'</span><span class="hl-string">components</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-brackets">[</span>
+ 
+        <span class="hl-quotes">'</span><span class="hl-string">request</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-brackets">[</span>
+            <span class="hl-quotes">'</span><span class="hl-string">baseUrl</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-var">$baseUrl</span><span class="hl-code">,
+        </span><span class="hl-brackets">]</span><span class="hl-code">,
+ 
+        </span><span class="hl-quotes">'</span><span class="hl-string">user</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-brackets">[</span>
+            <span class="hl-quotes">'</span><span class="hl-string">identityClass</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">common\models\User</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">enableAutoLogin</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-reserved">true</span><span class="hl-code">,
+        </span><span class="hl-brackets">]</span><span class="hl-code">,
+ 
+        </span><span class="hl-quotes">'</span><span class="hl-string">log</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-brackets">[</span>
+            <span class="hl-quotes">'</span><span class="hl-string">traceLevel</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-identifier">YII_DEBUG</span><span class="hl-code"> ? </span><span class="hl-number">3</span><span class="hl-code"> : </span><span class="hl-number">0</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">targets</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-brackets">[</span>
+                <span class="hl-brackets">[</span>
+                    <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">yii\log\FileTarget</span><span class="hl-quotes">'</span><span class="hl-code">,
+                    </span><span class="hl-quotes">'</span><span class="hl-string">levels</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">error</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">warning</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-code">,
+                </span><span class="hl-brackets">]</span><span class="hl-code">,
+            </span><span class="hl-brackets">]</span><span class="hl-code">,
+        </span><span class="hl-brackets">]</span><span class="hl-code">,
+ 
+        </span><span class="hl-quotes">'</span><span class="hl-string">errorHandler</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-brackets">[</span>
+            <span class="hl-quotes">'</span><span class="hl-string">errorAction</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">site/error</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-brackets">]</span><span class="hl-code">,
+ 
+        </span><span class="hl-quotes">'</span><span class="hl-string">urlManager</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-brackets">[</span>
+            <span class="hl-quotes">'</span><span class="hl-string">baseUrl</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-var">$baseUrl</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">enablePrettyUrl</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-reserved">true</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">showScriptName</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-reserved">false</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">rules</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-brackets">[</span><span class="hl-brackets">]</span>
+        <span class="hl-brackets">]</span>
+    <span class="hl-brackets">]</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">params</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-var">$params</span><span class="hl-code">,
+</span><span class="hl-brackets">]</span><span class="hl-code">;</span></pre></div></div>
+
+<p>As you see above we use <b>\yii\web\Request</b> to find $baseUrl of application. but because the returned $baseUrl contains /frontend/web we remove it</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-identifier">use</span><span class="hl-code"> \</span><span class="hl-identifier">yii</span><span class="hl-code">\</span><span class="hl-identifier">web</span><span class="hl-code">\</span><span class="hl-identifier">Request</span><span class="hl-code">;
+</span><span class="hl-var">$baseUrl</span><span class="hl-code"> = </span><span class="hl-identifier">str_replace</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">/frontend/web</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-brackets">(</span><span class="hl-reserved">new</span> <span class="hl-identifier">Request</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">getBaseUrl</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>enjoy !</p>
+    </div>
+
+    <div class="google-ad" style="margin:10px 0 10px 200px;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "6460822043";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div><div class="widget-comment-list" id="comments">
+	<div class="comments">
+		<h3>Total 9 comments</h3>
+				<div class="comment alt-0">
+			<a class="cid" id="c18782" title="permalink to this comment" href="#c18782">#18782</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=18782"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=18782&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=18782&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/235654/">Chrles</a> at 2015/01/06 06:07am</div>
+			<div class="title">Images folder at root</div>
+			<div class="content"><p>This works great. Thanks for this article. 
+But images won't display if the "Images" folder is located at webroot in order to be shared by both Frontend and Backend.</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c18442" title="permalink to this comment" href="#c18442">#18442</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=18442"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=18442&amp;vote=1"><span>1</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=18442&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/234175/">jtag05</a> at 2014/10/29 04:13pm</div>
+			<div class="title">Re: vendor, common, etc folders</div>
+			<div class="content"><p>I'm pretty sure that the following prevents all requests that aren't directed at the public directory to be routed to /frontend/web/</p>
+
+<pre>RewriteCond %{REQUEST_URI} !^public
+RewriteRule ^(.*)$ frontend/web/$1 [L] 
+</pre>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c18437" title="permalink to this comment" href="#c18437">#18437</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=18437"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=18437&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=18437&amp;vote=0"><span>2</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/7563/">taskas</a> at 2014/10/29 06:09am</div>
+			<div class="title">vendor, common, etc folders</div>
+			<div class="content"><p>As I understand, with this method you should also keep in mind, that vendor/, common/ and other folders are at root level, that means it would be possible to open let's say http://your.domain/vendor/bin/yii file. Probably should put a lot of restrictions in .htaccess file.
+EDIT: I'm sorry, i was wrong. jtag05 is right.</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c18332" title="permalink to this comment" href="#c18332">#18332</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=18332"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=18332&amp;vote=1"><span>1</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=18332&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link bronze" href="/user/227903/">Rohit Suthar</a> at 2014/10/17 07:45am</div>
+			<div class="title">Thanks for sharing</div>
+			<div class="content"><p>It's a nice article.... thanks for the sharing this :)..</p>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c18314" title="permalink to this comment" href="#c18314">#18314</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=18314"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=18314&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=18314&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/5673/">raminious</a> at 2014/10/14 09:12am</div>
+			<div class="title">Reply To: And for backend?</div>
+			<div class="content"><p>hiding /backend/web/index.php is same as the frontend.
+but you could play with root .htaccess file and add new rules and condition to .htaccess file
+Anymore I think redirecting /backend/web is less important than /frontend and not include this section in my article.</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c18305" title="permalink to this comment" href="#c18305">#18305</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=18305"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=18305&amp;vote=1"><span>1</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=18305&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/5673/">raminious</a> at 2014/10/14 09:08am</div>
+			<div class="title">Reply To: Create VirtualHost</div>
+			<div class="content"><p>If you have access to Apahce configurations, it's better to use Virtual Host instead my solution. but if you are working on shared hostings, or assume that the end user of your application host your application on shared hostings, its better for you to use the demonstrated solution.</p>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c18302" title="permalink to this comment" href="#c18302">#18302</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=18302"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=18302&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=18302&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/108025/">fahadakram</a> at 2014/10/14 02:17am</div>
+			<div class="title">Create VirtualHost</div>
+			<div class="content"><p>is it not better to create its virtual host , instead of all this code ?</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c18298" title="permalink to this comment" href="#c18298">#18298</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=18298"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=18298&amp;vote=1"><span>1</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=18298&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/233553/">mimo</a> at 2014/10/13 09:42am</div>
+			<div class="title">Thank you</div>
+			<div class="content"><p>I was really looking exactly for this. Best solution (in my case) I've seen so far. 
+Thank you :)</p>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c18264" title="permalink to this comment" href="#c18264">#18264</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=18264"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=18264&amp;vote=1"><span>3</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=18264&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/77066/">Mojtaba Rahbari</a> at 2014/10/08 06:59am</div>
+			<div class="title">And for backend?</div>
+			<div class="content"><p>I'm going to hide frontend/www and change backend/www to something else, eg. http://domain.com/admin<br />
+Your solution is fine to hide frontend/www.<br />
+Just let me know what did you do for backend?<br /></p>
+</div>
+					</div>
+			</div>
+	<div id="comment-add">
+		<h3 id="add-comment">Leave a comment</h3>
+
+			<p>Please <a class="g-login" rel="/wiki/755/how-to-hide-frontend-web-in-url-addresses-on-apache/#add-comment" href="#">login</a> to leave your comment.</p>
+		</div>
+</div>
+</div>
+					</div>
+								</div>
+				
+								<div class="grid_3 omega">
+					<div class="layout-main-right">
+						<div class="wiki-portlets">
+	<a href="/wiki/create/" class="btn btn-success btn-large action">Write new article</a>
+<div class="widget-search-box">
+    <form method="get" action="/search/">
+        <strong>Search Wiki</strong>
+		<input type="text" name="q" class="keyword g-text" />
+        <input type="hidden" name="type" value="wiki" />
+        <input type="hidden" name="lang" value="" />
+        <input type="submit" value="Find" class="btn btn-info" />
+	</form>
+</div><ul class="widget-action-links actions g-list-none"><li><strong>View current article</strong></li><li><a href="/wiki/update/?id=755">Update this article</a></li><li><a href="/wiki/history/?id=755">View history</a></li><li class="inactive">View revision</li></ul><ul class="info g-list-none">
+    <li><b>Written by</b>: <a class="g-user-rank-link" href="/user/5673/">raminious</a></li>
+        <li><b>Updated by</b>: <a class="g-user-rank-link" href="/user/75132/">yiim</a></li>
+        <li><b>Category</b>: <a href="/wiki/?category=2">How-tos</a></li>
+    <li><b>Yii Version</b>: <b>2.0</b></li>
+    <li><b>Votes</b>: <span class="g-vote plus" title="9 votes up">+9</span></li>
+    <li><b>Viewed</b>: 28,090 times</li>
+    <li><b>Created on</b>: Sep 30, 2014</li>
+    <li><b>Last updated</b>: Jan 8, 2015</li>
+        <li><b>Tags</b>: <a href="/wiki/?tag=yii2">yii2</a>, <a href="/wiki/?tag=url">url</a>, <a href="/wiki/?tag=rewrite">rewrite</a>, <a href="/wiki/?tag=config">config</a>, <a href="/wiki/?tag=security">security</a></li>
+    </ul>
+<div class="widget-related-contents">
+<strong>Related Articles</strong><ul><li><a class="" href="/wiki/778/moving-the-vendor-directory-for-multiple-projects/">Moving the vendor directory for multiple projects</a></li>
+<li><a class="" href="/wiki/766/easy-way-to-redirect-http-localhost-yii2-basic-to-http-localhost-yii2-basic-web-index-php/">Easy way to redirect http:\\localhost\yii2-basic to http:\\localhost\yii2-basic\web\index.php</a></li>
+<li><a class="" href="/wiki/698/model-validation-for-field-ranges-using-yii2-field-range-extension/">Model validation for field ranges using yii2-field-range extension</a></li>
+<li><a class="" href="/wiki/531/using-editors-of-yiibooster-fix-issues-configuration/">using editors of yiibooster - fix issues - configuration</a></li>
+<li><a class="" href="/wiki/339/show-captcha-after-n-unsuccessfull-attempts/">Show captcha after &lt;N&gt; unsuccessfull attempts</a></li>
+</ul>
+</div>
+	<div class="google-ad" style="margin:100px 0 0 10px;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "9245442339";
+google_ad_width = 160;
+google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+</div>					</div>
+				</div>
+								<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+					</div>
+	</div>
+
+	<div class="layout-main-footer">
+		<div class="container_12">
+			<div class="grid_6">
+				<ul class="menu">
+				<li class="main">About
+<ul class="sub">
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="main">Downloads
+<ul class="sub">
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="main">Documentation
+<ul class="sub">
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="main">Development
+<ul class="sub">
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="main">Community
+<ul class="sub">
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+				</ul>
+			</div>
+			<div class="grid_1">&nbsp;</div>
+			<div class="grid_5">
+				<h3>Yii Supporters</h3>
+				<ul class="g-list-none supporters">
+
+				</ul>
+			</div>
+
+			<div class="clear"></div>
+			<div class="grid_12 copyright">
+				<ul class="social">
+					<li class="twitter"><a href="https://twitter.com/yiiframework" target="_blank" rel="nofollow" title="follow us on twitter">Twitter</a></li>
+					<li class="facebook"><a href="https://www.facebook.com/groups/yiitalk/" target="_blank" rel="nofollow" title="join yii group at facebook">Facebook</a></li>
+					<li class="linkedin"><a href="http://www.linkedin.com/groups?gid=1483367" target="_blank" rel="nofollow" title="join yii group at linkedin">LinkedIn</a></li>
+					<li class="feeds"><a title="RSS feeds" href="/rss.xml/">RSS Feeds</a></li>
+				</ul>
+				<div class="clear"></div>
+				<a href="/tos/">Terms of Service</a> |
+				<a href="/license/">License</a> |
+				<a href="/contact/">Contact Us</a><br/>
+				Copyright &copy; 2015 by <a href="http://www.yiisoft.com">Yii Software LLC</a>.
+				All Rights Reserved.
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+    <script type="text/javascript" src="/js/site-20121004195728.js"></script>
+
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['site._setAccount', 'UA-5843896-1']);
+_gaq.push(['site._trackPageview']);
+
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+<script type="text/javascript">
+function trackClick(link, action, category) {
+	action=action || link.href;
+	category=category || 'Outbound Links';
+	try {
+		_gaq.push(['site._trackEvent', category, action]);
+		setTimeout('document.location = "' + link.href + '"', 250);
+	}catch(err){}
+	return false;
+}
+</script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+<script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+</body>
+</html>

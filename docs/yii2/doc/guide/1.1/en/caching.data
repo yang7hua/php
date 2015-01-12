@@ -1,0 +1,665 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    	<meta charset="UTF-8" />
+		<meta name="keywords" content="yii framework, tutorial, guide, version 1.1" />
+	<meta name="description" content="Data caching is about storing some PHP variable in cache and retrieving it
+later from cache." />
+    <link rel="shortcut icon" type="image/x-icon" href="http://static.yiiframework.com/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="http://static.yiiframework.com/css/site-20130404102234.css" />
+
+	<link title="Lives News for Yii Framework" rel="alternate" type="application/rss+xml" href="http://www.yiiframework.com/rss.xml/" />
+	<title>Caching: Data Caching | The Definitive Guide to Yii | Yii PHP Framework</title>
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii API Search" href="/search-api.xml" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii Site Search" href="/search-site.xml" />
+</head>
+
+<body class="mac">
+<div class="layout-main">
+
+	<div class="layout-main-shortcuts">
+		<div class="container_12">
+            <a style="color:darkred;" href="https://github.com/yiisoft/yii2">Github</a> &middot;
+            <a style="color:darkgreen;" href="https://twitter.com/yiiframework">Twitter</a> &middot;
+            <a style="color:darkblue;" href="https://www.facebook.com/groups/yiitalk/">Facebook</a> &middot;
+            <a href="/doc/guide/">Guide</a> &middot;
+            <a href="/doc/api/">Class Reference</a> &middot;
+            <a href="/doc-2.0/guide-index.html">Guide 2.0</a> &middot;
+            <a href="/doc-2.0/index.html">API 2.0</a> &middot;
+            <a href="/wiki/">Wiki</a> &middot;
+            <a href="/extensions/">Extensions</a> &middot;
+            <a href="/forum/">Forum</a> &middot;
+			<a href="/chat/">Live Chat</a> &middot;
+                            <a href="/login/">Login</a>            		</div>
+	</div>
+
+	<div class="layout-main-bg">
+		<div class="layout-main-header">
+			<div class="container_12">
+				<div class="grid_4">
+					<a class="logo" href="/"><img alt="Yii Logo" src="http://static.yiiframework.com/css/img/logo.png" title="Yii Framework" width="284" height="64" /></a>				</div>
+				<div class="grid_8 omega">
+					<div class="nav">
+						<ul class="menu" id="yw0">
+<li class="about"><a class="main" href="/about/">About</a>
+<ul>
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li class="last"><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="downloads"><a class="main" href="/download/">Downloads</a>
+<ul>
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li class="last"><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="documentation active"><a class="main" href="/doc/">Documentation</a>
+<ul>
+<li><a href="/tour/">Take the Tour</a></li>
+<li class="active"><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li class="last"><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="development"><a class="main" href="https://github.com/yiisoft/yii/commits/master">Development</a>
+<ul>
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li class="last"><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="community last"><a class="main" href="/community/">Community</a>
+<ul>
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li class="last"><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+</ul>						<div class="search">
+							<form method="get" action="/search/">
+								<div class="keyword">
+	                                <input name="q" value="" />
+									<a href="#" title="search" class="global-search">search</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+
+		<div class="container_12">
+						<div class="grid_12">
+												<div class="layout-main-submenu">
+					<ul>
+						<li class="main">Documentation</li>
+												<li><a href="/tour/">Take the Tour</a></li>
+												<li class="active"><a href="/tutorials/">Tutorials</a></li>
+												<li><a href="/doc/api/">Class Reference</a></li>
+												<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+												<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+												<li><a href="/wiki/">Wiki</a></li>
+												<li><a href="/screencasts/">Screencasts</a></li>
+												<li><a href="/resources/">Resources</a></li>
+											</ul>
+				</div>
+				
+				
+				
+									<div class="layout-main-body">
+						<div class="tutorial-view">
+    <div class="grid_3 alpha">
+        <div class="nav-toc">
+    		<div class="title">The Definitive Guide to Yii</div>
+    		<div class="langver">
+	            <strong>Language &amp; version</strong>
+	    		<div class="languages g-dropdown">
+	    		<span>English<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.1/de/caching.data">Deutsch</a></li>
+<li><a href="/doc/guide/1.1/es/caching.data">Español</a></li>
+<li><a href="/doc/guide/1.1/fr/caching.data">Français</a></li>
+<li><a href="/doc/guide/1.1/he/caching.data">עִבְרִית</a></li>
+<li><a href="/doc/guide/1.1/id/caching.data">Bahasa Indonesia</a></li>
+<li><a href="/doc/guide/1.1/it/caching.data">Italiano</a></li>
+<li><a href="/doc/guide/1.1/ja/caching.data">日本語</a></li>
+<li><a href="/doc/guide/1.1/pl/caching.data">Polski</a></li>
+<li><a href="/doc/guide/1.1/pt/caching.data">Português</a></li>
+<li><a href="/doc/guide/1.1/pt_br/caching.data">Português brasileiro</a></li>
+<li><a href="/doc/guide/1.1/ro/caching.data">România</a></li>
+<li><a href="/doc/guide/1.1/ru/caching.data">Русский</a></li>
+<li><a href="/doc/guide/1.1/sv/caching.data">Svenska</a></li>
+<li><a href="/doc/guide/1.1/uk/caching.data">украї́нська</a></li>
+<li><a href="/doc/guide/1.1/zh_cn/caching.data">简体中文</a></li>
+</ul>
+	    		</div>
+				<div class="versions g-dropdown">
+	    		<span>1.1<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.0/en/caching.data">1.0</a></li>
+</ul>
+				</div>
+				<div class="clear"></div>
+			</div>
+            <div class="widget-search-box">
+    <form method="get" action="/search/">
+        <strong>Search in this tutorial</strong>
+		<input type="text" name="q" class="keyword g-text" />
+        <input type="hidden" name="type" value="guide" />
+        <input type="hidden" name="lang" value="en" />
+        <input type="submit" value="Find" class="btn btn-info" />
+	</form>
+</div>
+			<ul class="toc">
+						    <li class="chapter"><strong>Getting Started</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/index">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/changes">New Features</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/upgrade">Upgrading from 1.0 to 1.1</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.what-is-yii">What is Yii</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.installation">Installation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.apache-nginx-config">Apache and Nginx configurations</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app">Creating First Yii Application</a>			            </li>
+			        			    						    <li class="chapter"><strong>Fundamentals</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.mvc">Model-View-Controller (MVC)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.entry">Entry Script</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.application">Application</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.controller">Controller</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.model">Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.view">View</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.component">Component</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.module">Module</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.namespace">Path Alias and Namespace</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.convention">Conventions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.workflow">Development Workflow</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.best-practices">Best MVC Practices</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Forms</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.model">Creating Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.action">Creating Action</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.view">Creating Form</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.table">Collecting Tabular Input</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.builder">Using Form Builder</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Databases</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.dao">Database Access Objects</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.query-builder">Query Builder</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.ar">Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.arr">Relational Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.migration">Database Migration</a>			            </li>
+			        			    						    <li class="chapter"><strong>Caching</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.overview">Overview</a>			            </li>
+			        			    			        			            <li class="active">
+			                &raquo; Data Caching &laquo;
+			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.fragment">Fragment Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.page">Page Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.dynamic">Dynamic Content</a>			            </li>
+			        			    						    <li class="chapter"><strong>Extending Yii</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.use">Using Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.create">Creating Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.integration">Using 3rd-Party Libraries</a>			            </li>
+			        			    						    <li class="chapter"><strong>Testing</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.fixture">Defining Fixtures</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.unit">Unit Testing</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.functional">Functional Testing</a>			            </li>
+			        			    						    <li class="chapter"><strong>Special Topics</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.gii">Automatic Code Generation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.url">URL Management</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.auth">Authentication and Authorization</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.theming">Theming and Skin</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.logging">Logging</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.error">Error Handling</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.webservice">Web Service</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.i18n">Internationalization (I18N)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.prado">Alternative Template Syntax</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.console">Console Applications</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.security">Security</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.performance">Performance Tuning</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app-yiic">Code Generation using Command Line Tools (deprecated)</a>			            </li>
+			        			    						</ul>
+        </div>
+    </div>
+    <div class="grid_9 omega">
+    	<div class="g-markdown"><h1 id="data-caching">Data Caching</h1>
+<div class="google-ad" style="float:right;margin:0 0 1em 1em;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "2830391674";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+<div class="toc"><ol><li><a href="#cache-dependency">Cache Dependency</a></li>
+<li><a href="#query-caching">Query Caching</a></li></ol></div>
+
+
+<p>Data caching is about storing some PHP variable in cache and retrieving it
+later from cache. For this purpose, the cache component base class <a href="/doc/api/1.1/CCache">CCache</a>
+provides two methods that are used most of the time: <a href="/doc/api/1.1/CCache#set">set()</a>
+and <a href="/doc/api/1.1/CCache#get">get()</a>.</p>
+
+<p>To store a variable <code>$value</code> in cache, we choose a unique ID and call
+<a href="/doc/api/1.1/CCache#set">set()</a> to store it:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">cache</span><span class="hl-code">-&gt;</span><span class="hl-identifier">set</span><span class="hl-brackets">(</span><span class="hl-var">$id</span><span class="hl-code">, </span><span class="hl-var">$value</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>The cached data will remain in the cache forever unless it is removed
+because of some caching policy (e.g. caching space is full and the oldest
+data are removed). To change this behavior, we can also supply an
+expiration parameter when calling <a href="/doc/api/1.1/CCache#set">set()</a> so that the data will
+be removed from the cache after, at most, that period of time:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> keep the value in cache for at most 30 seconds</span>
+<span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">cache</span><span class="hl-code">-&gt;</span><span class="hl-identifier">set</span><span class="hl-brackets">(</span><span class="hl-var">$id</span><span class="hl-code">, </span><span class="hl-var">$value</span><span class="hl-code">, </span><span class="hl-number">30</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>Later when we need to access this variable (in either the same or a
+different Web request), we call <a href="/doc/api/1.1/CCache#get">get()</a> with the ID to retrieve
+it from cache. If the returned value is false, it means the value is not
+available in cache and we have to regenerate it.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$value</span><span class="hl-code">=</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">cache</span><span class="hl-code">-&gt;</span><span class="hl-identifier">get</span><span class="hl-brackets">(</span><span class="hl-var">$id</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-var">$value</span><span class="hl-code">===</span><span class="hl-reserved">false</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-comment">//</span><span class="hl-comment"> regenerate $value because it is not found in cache</span>
+    <span class="hl-comment">//</span><span class="hl-comment"> and save it in cache for later use:</span>
+    <span class="hl-comment">//</span><span class="hl-comment"> Yii::app()-&gt;cache-&gt;set($id,$value);</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>When choosing the ID for a variable to be cached, make sure the ID is
+unique among all other variables that may be cached in the application. It
+is NOT required that the ID is unique across applications because the cache
+component is intelligent enough to differentiate IDs for different
+applications.</p>
+
+<p>Some cache storages, such as MemCache, APC, support retrieving
+multiple cached values in a batch mode, which may reduce the overhead involved
+in retrieving cached data. A method named
+<a href="/doc/api/1.1/CCache#mget">mget()</a> is provided to achieve this feature. In case the underlying
+cache storage does not support this feature, <a href="/doc/api/1.1/CCache#mget">mget()</a> will still
+simulate it.</p>
+
+<p>To remove a cached value from cache, call <a href="/doc/api/1.1/CCache#delete">delete()</a>; and
+to remove everything from cache, call <a href="/doc/api/1.1/CCache#flush">flush()</a>. Be very
+careful when calling <a href="/doc/api/1.1/CCache#flush">flush()</a> because it also removes cached
+data that are from other applications.</p>
+
+<blockquote class="tip">
+<p><strong>Tip:</strong> Because <a href="/doc/api/1.1/CCache">CCache</a> implements <code>ArrayAccess</code>, a cache component can be
+  used liked an array. The followings are some examples:</p>
+  
+  <div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$cache</span><span class="hl-code">=</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">cache</span><span class="hl-code">;
+</span><span class="hl-var">$cache</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">var1</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-code">=</span><span class="hl-var">$value1</span><span class="hl-code">;  </span><span class="hl-comment">//</span><span class="hl-comment"> equivalent to: $cache-&gt;set('var1',$value1);</span>
+<span class="hl-var">$value2</span><span class="hl-code">=</span><span class="hl-var">$cache</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">var2</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-code">;  </span><span class="hl-comment">//</span><span class="hl-comment"> equivalent to: $value2=$cache-&gt;get('var2');</span></pre></div></div>
+</blockquote>
+
+<h2 id="cache-dependency">1. Cache Dependency <a class="anchor" href="#cache-dependency">¶</a></h2>
+
+<p>Besides expiration setting, cached data may also be invalidated according
+to some dependency changes. For example, if we are caching the content of
+some file and the file is changed, we should invalidate the cached copy and
+read the latest content from the file instead of the cache.</p>
+
+<p>We represent a dependency as an instance of <a href="/doc/api/1.1/CCacheDependency">CCacheDependency</a> or its
+child class. We pass the dependency instance along with the data to be
+cached when calling <a href="/doc/api/1.1/CCache#set">set()</a>.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> the value will expire in 30 seconds</span>
+<span class="hl-comment">//</span><span class="hl-comment"> it may also be invalidated earlier if the dependent file is changed</span>
+<span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">cache</span><span class="hl-code">-&gt;</span><span class="hl-identifier">set</span><span class="hl-brackets">(</span><span class="hl-var">$id</span><span class="hl-code">, </span><span class="hl-var">$value</span><span class="hl-code">, </span><span class="hl-number">30</span><span class="hl-code">, </span><span class="hl-reserved">new</span> <span class="hl-identifier">CFileCacheDependency</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">FileName</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>Now if we retrieve <code>$value</code> from cache by calling <a href="/doc/api/1.1/CCache#get">get()</a>, the
+dependency will be evaluated and if it is changed, we will get a false
+value, indicating the data needs to be regenerated.</p>
+
+<p>Below is a summary of the available cache dependencies:</p>
+
+<ul>
+<li><p><a href="/doc/api/1.1/CFileCacheDependency">CFileCacheDependency</a>: the dependency is changed if the file's last
+modification time is changed.</p></li>
+<li><p><a href="/doc/api/1.1/CDirectoryCacheDependency">CDirectoryCacheDependency</a>: the dependency is changed if any of the
+files under the directory and its subdirectories is changed.</p></li>
+<li><p><a href="/doc/api/1.1/CDbCacheDependency">CDbCacheDependency</a>: the dependency is changed if the query result
+of the specified SQL statement is changed.</p></li>
+<li><p><a href="/doc/api/1.1/CGlobalStateCacheDependency">CGlobalStateCacheDependency</a>: the dependency is changed if the value
+of the specified global state is changed. A global state is a variable that
+is persistent across multiple requests and multiple sessions in an
+application. It is defined via <a href="/doc/api/1.1/CApplication#setGlobalState">CApplication::setGlobalState()</a>.</p></li>
+<li><p><a href="/doc/api/1.1/CChainedCacheDependency">CChainedCacheDependency</a>: the dependency is changed if any of the
+dependencies on the chain is changed.</p></li>
+<li><p><a href="/doc/api/1.1/CExpressionDependency">CExpressionDependency</a>: the dependency is changed if the result of
+the specified PHP expression is changed.</p></li>
+</ul>
+
+<h2 id="query-caching">2. Query Caching <a class="anchor" href="#query-caching">¶</a></h2>
+
+<p>Since version 1.1.7, Yii has added support for query caching.
+Built on top of data caching, query caching stores the result of a DB query
+in cache and may thus save the DB query execution time if the same query is requested
+in future, as the result can be directly served from the cache.</p>
+
+<blockquote class="info">
+<p><strong>Info:</strong> Some DBMS (e.g. <a href="http://dev.mysql.com/doc/refman/5.1/en/query-cache.html">MySQL</a>)
+  also support query caching on the DB server side. Compared with the server-side
+  query caching, the same feature we support here offers more flexibility and
+  may be potentially more efficient.</p>
+</blockquote>
+
+<h3 id="enabling-query-caching">Enabling Query Caching</h3>
+
+<p>To enable query caching, make sure <a href="/doc/api/1.1/CDbConnection#queryCacheID">CDbConnection::queryCacheID</a> refers to the ID of a valid
+cache application component (it defaults to <code>cache</code>).</p>
+
+<h3 id="using-query-caching-with-dao">Using Query Caching with DAO</h3>
+
+<p>To use query caching, we call the <a href="/doc/api/1.1/CDbConnection#cache">CDbConnection::cache()</a> method when we perform DB queries.
+The following is an example:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$sql</span><span class="hl-code"> = </span><span class="hl-quotes">'</span><span class="hl-string">SELECT * FROM tbl_post LIMIT 20</span><span class="hl-quotes">'</span><span class="hl-code">;
+</span><span class="hl-var">$dependency</span><span class="hl-code"> = </span><span class="hl-reserved">new</span> <span class="hl-identifier">CDbCacheDependency</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">SELECT MAX(update_time) FROM tbl_post</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$rows</span><span class="hl-code"> = </span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">db</span><span class="hl-code">-&gt;</span><span class="hl-identifier">cache</span><span class="hl-brackets">(</span><span class="hl-number">1000</span><span class="hl-code">, </span><span class="hl-var">$dependency</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createCommand</span><span class="hl-brackets">(</span><span class="hl-var">$sql</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">queryAll</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>When running the above statements, Yii will first check if the cache contains a valid
+result for the SQL statement to be executed. This is done by checking the following three conditions:</p>
+
+<ul>
+<li>if the cache contains an entry indexed by the SQL statement.</li>
+<li>if the entry is not expired (less than 1000 seconds since it was first saved in the cache).</li>
+<li>if the dependency has not changed (the maximum <code>update_time</code> value is the same as when
+the query result was saved in the cache).</li>
+</ul>
+
+<p>If all of the above conditions are satisfied, the cached result will be returned directly from the cache.
+Otherwise, the SQL statement will be sent to the DB server for execution, and the corresponding
+result will be saved in the cache and returned.</p>
+
+<h3 id="using-query-caching-with-activerecord">Using Query Caching with ActiveRecord</h3>
+
+<p>Query caching can also be used with <a href="/doc/guide/1.1/en/database.ar">Active Record</a>.
+To do so, we call a similar <a href="/doc/api/1.1/CActiveRecord#cache">CActiveRecord::cache()</a> method like the following:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$dependency</span><span class="hl-code"> = </span><span class="hl-reserved">new</span> <span class="hl-identifier">CDbCacheDependency</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">SELECT MAX(update_time) FROM tbl_post</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$posts</span><span class="hl-code"> = </span><span class="hl-identifier">Post</span><span class="hl-code">::</span><span class="hl-identifier">model</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">cache</span><span class="hl-brackets">(</span><span class="hl-number">1000</span><span class="hl-code">, </span><span class="hl-var">$dependency</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">findAll</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> relational AR query</span>
+<span class="hl-var">$posts</span><span class="hl-code"> = </span><span class="hl-identifier">Post</span><span class="hl-code">::</span><span class="hl-identifier">model</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">cache</span><span class="hl-brackets">(</span><span class="hl-number">1000</span><span class="hl-code">, </span><span class="hl-var">$dependency</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">with</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">author</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">findAll</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>The <code>cache()</code> method here is essentially a shortcut to <a href="/doc/api/1.1/CDbConnection#cache">CDbConnection::cache()</a>.
+Internally, when executing the SQL statement generated by ActiveRecord, Yii will
+attempt to use query caching as we described in the last subsection.</p>
+
+<h3 id="caching-multiple-queries">Caching Multiple Queries</h3>
+
+<p>By default, each time we call the <code>cache()</code> method (of either <a href="/doc/api/1.1/CDbConnection">CDbConnection</a> or <a href="/doc/api/1.1/CActiveRecord">CActiveRecord</a>),
+it will mark the next SQL query to be cached. Any other SQL queries will NOT be cached
+unless we call <code>cache()</code> again. For example,</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$sql</span><span class="hl-code"> = </span><span class="hl-quotes">'</span><span class="hl-string">SELECT * FROM tbl_post LIMIT 20</span><span class="hl-quotes">'</span><span class="hl-code">;
+</span><span class="hl-var">$dependency</span><span class="hl-code"> = </span><span class="hl-reserved">new</span> <span class="hl-identifier">CDbCacheDependency</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">SELECT MAX(update_time) FROM tbl_post</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+</span><span class="hl-var">$rows</span><span class="hl-code"> = </span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">db</span><span class="hl-code">-&gt;</span><span class="hl-identifier">cache</span><span class="hl-brackets">(</span><span class="hl-number">1000</span><span class="hl-code">, </span><span class="hl-var">$dependency</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createCommand</span><span class="hl-brackets">(</span><span class="hl-var">$sql</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">queryAll</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> query caching will NOT be used</span>
+<span class="hl-var">$rows</span><span class="hl-code"> = </span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">db</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createCommand</span><span class="hl-brackets">(</span><span class="hl-var">$sql</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">queryAll</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>By supplying an extra <code>$queryCount</code> parameter to the <code>cache()</code> method, we can enforce
+multiple queries to use query caching. In the following example, when we call <code>cache()</code>,
+we specify that query caching should be used for the next 2 queries:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> ...</span>
+<span class="hl-var">$rows</span><span class="hl-code"> = </span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">db</span><span class="hl-code">-&gt;</span><span class="hl-identifier">cache</span><span class="hl-brackets">(</span><span class="hl-number">1000</span><span class="hl-code">, </span><span class="hl-var">$dependency</span><span class="hl-code">, </span><span class="hl-number">2</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createCommand</span><span class="hl-brackets">(</span><span class="hl-var">$sql</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">queryAll</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> query caching WILL be used</span>
+<span class="hl-var">$rows</span><span class="hl-code"> = </span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">db</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createCommand</span><span class="hl-brackets">(</span><span class="hl-var">$sql</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">queryAll</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>As we know, when performing a relational AR query, it is possible several SQL queries will
+be executed (by checking the <a href="/doc/guide/1.1/en/topics.logging">log messages</a>).
+For example, if the relationship between <code>Post</code> and <code>Comment</code> is <code>HAS_MANY</code>,
+then the following code will actually execute two DB queries:</p>
+
+<ul>
+<li>it first selects the posts limited by 20;</li>
+<li>it then selects the comments for the previously selected posts.</li>
+</ul>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$posts</span><span class="hl-code"> = </span><span class="hl-identifier">Post</span><span class="hl-code">::</span><span class="hl-identifier">model</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">with</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">comments</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">findAll</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+    <span class="hl-quotes">'</span><span class="hl-string">limit</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-number">20</span><span class="hl-code">,
+</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>If we use query caching as follows, only the first DB query will be cached:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$posts</span><span class="hl-code"> = </span><span class="hl-identifier">Post</span><span class="hl-code">::</span><span class="hl-identifier">model</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">cache</span><span class="hl-brackets">(</span><span class="hl-number">1000</span><span class="hl-code">, </span><span class="hl-var">$dependency</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">with</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">comments</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">findAll</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+    <span class="hl-quotes">'</span><span class="hl-string">limit</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-number">20</span><span class="hl-code">,
+</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>In order to cache both DB queries, we need supply the extra parameter indicating how
+many DB queries we want to cache next:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$posts</span><span class="hl-code"> = </span><span class="hl-identifier">Post</span><span class="hl-code">::</span><span class="hl-identifier">model</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">cache</span><span class="hl-brackets">(</span><span class="hl-number">1000</span><span class="hl-code">, </span><span class="hl-var">$dependency</span><span class="hl-code">, </span><span class="hl-number">2</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">with</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">comments</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">findAll</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+    <span class="hl-quotes">'</span><span class="hl-string">limit</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-number">20</span><span class="hl-code">,
+</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<h3 id="limitations">Limitations</h3>
+
+<p>Query caching does not work with query results that contain resource handles. For example,
+when using the <code>BLOB</code> column type in some DBMS, the query result will return a resource
+handle for the column data.</p>
+
+<p>Some caching storage has size limitation. For example, memcache limits the maximum size
+of each entry to be 1MB. Therefore, if the size of a query result exceeds this limit,
+the caching will fail.</p>
+
+<div class="revision"><div class="google-ad" style="margin:-60px 0 5px 200px;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "7116172008";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>$Id$</div>
+</div>
+                <div class="prev-next-nav">
+                            <div class="prev-topic"><a href="/doc/guide/1.1/en/caching.overview">Overview</a></div>
+                                        <div class="next-topic"><a href="/doc/guide/1.1/en/caching.fragment">Fragment Caching</a></div>
+                    </div>
+        
+		        <div class="widget-comment-list" id="comments">
+	<div id="comment-add">
+		<h3 id="add-comment">Be the first person to leave a comment</h3>
+
+			<p>Please <a class="g-login" rel="/doc/guide/1.1/en/caching.data#add-comment" href="#">login</a> to leave your comment.</p>
+		</div>
+</div>
+           </div>
+</div>
+					</div>
+				
+								<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+					</div>
+	</div>
+
+	<div class="layout-main-footer">
+		<div class="container_12">
+			<div class="grid_6">
+				<ul class="menu">
+				<li class="main">About
+<ul class="sub">
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="main">Downloads
+<ul class="sub">
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="main">Documentation
+<ul class="sub">
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="main">Development
+<ul class="sub">
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="main">Community
+<ul class="sub">
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+				</ul>
+			</div>
+			<div class="grid_1">&nbsp;</div>
+			<div class="grid_5">
+				<h3>Yii Supporters</h3>
+				<ul class="g-list-none supporters">
+
+				</ul>
+			</div>
+
+			<div class="clear"></div>
+			<div class="grid_12 copyright">
+				<ul class="social">
+					<li class="twitter"><a href="https://twitter.com/yiiframework" target="_blank" rel="nofollow" title="follow us on twitter">Twitter</a></li>
+					<li class="facebook"><a href="https://www.facebook.com/groups/yiitalk/" target="_blank" rel="nofollow" title="join yii group at facebook">Facebook</a></li>
+					<li class="linkedin"><a href="http://www.linkedin.com/groups?gid=1483367" target="_blank" rel="nofollow" title="join yii group at linkedin">LinkedIn</a></li>
+					<li class="feeds"><a title="RSS feeds" href="/rss.xml/">RSS Feeds</a></li>
+				</ul>
+				<div class="clear"></div>
+				<a href="/tos/">Terms of Service</a> |
+				<a href="/license/">License</a> |
+				<a href="/contact/">Contact Us</a><br/>
+				Copyright &copy; 2015 by <a href="http://www.yiisoft.com">Yii Software LLC</a>.
+				All Rights Reserved.
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+    <script type="text/javascript" src="/js/site-20121004195728.js"></script>
+
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['site._setAccount', 'UA-5843896-1']);
+_gaq.push(['site._trackPageview']);
+
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+<script type="text/javascript">
+function trackClick(link, action, category) {
+	action=action || link.href;
+	category=category || 'Outbound Links';
+	try {
+		_gaq.push(['site._trackEvent', category, action]);
+		setTimeout('document.location = "' + link.href + '"', 250);
+	}catch(err){}
+	return false;
+}
+</script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+</body>
+</html>

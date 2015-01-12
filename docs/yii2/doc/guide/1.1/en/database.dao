@@ -1,0 +1,908 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    	<meta charset="UTF-8" />
+		<meta name="keywords" content="yii framework, tutorial, guide, version 1.1" />
+	<meta name="description" content="Data Access Objects (DAO) provides a generic API to access data stored in
+different database management systems (DBMS)." />
+    <link rel="shortcut icon" type="image/x-icon" href="http://static.yiiframework.com/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="http://static.yiiframework.com/css/site-20130404102234.css" />
+
+	<link title="Lives News for Yii Framework" rel="alternate" type="application/rss+xml" href="http://www.yiiframework.com/rss.xml/" />
+	<title>Working with Databases: Database Access Objects | The Definitive Guide to Yii | Yii PHP Framework</title>
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii API Search" href="/search-api.xml" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii Site Search" href="/search-site.xml" />
+</head>
+
+<body class="mac">
+<div class="layout-main">
+
+	<div class="layout-main-shortcuts">
+		<div class="container_12">
+            <a style="color:darkred;" href="https://github.com/yiisoft/yii2">Github</a> &middot;
+            <a style="color:darkgreen;" href="https://twitter.com/yiiframework">Twitter</a> &middot;
+            <a style="color:darkblue;" href="https://www.facebook.com/groups/yiitalk/">Facebook</a> &middot;
+            <a href="/doc/guide/">Guide</a> &middot;
+            <a href="/doc/api/">Class Reference</a> &middot;
+            <a href="/doc-2.0/guide-index.html">Guide 2.0</a> &middot;
+            <a href="/doc-2.0/index.html">API 2.0</a> &middot;
+            <a href="/wiki/">Wiki</a> &middot;
+            <a href="/extensions/">Extensions</a> &middot;
+            <a href="/forum/">Forum</a> &middot;
+			<a href="/chat/">Live Chat</a> &middot;
+                            <a href="/login/">Login</a>            		</div>
+	</div>
+
+	<div class="layout-main-bg">
+		<div class="layout-main-header">
+			<div class="container_12">
+				<div class="grid_4">
+					<a class="logo" href="/"><img alt="Yii Logo" src="http://static.yiiframework.com/css/img/logo.png" title="Yii Framework" width="284" height="64" /></a>				</div>
+				<div class="grid_8 omega">
+					<div class="nav">
+						<ul class="menu" id="yw0">
+<li class="about"><a class="main" href="/about/">About</a>
+<ul>
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li class="last"><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="downloads"><a class="main" href="/download/">Downloads</a>
+<ul>
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li class="last"><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="documentation active"><a class="main" href="/doc/">Documentation</a>
+<ul>
+<li><a href="/tour/">Take the Tour</a></li>
+<li class="active"><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li class="last"><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="development"><a class="main" href="https://github.com/yiisoft/yii/commits/master">Development</a>
+<ul>
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li class="last"><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="community last"><a class="main" href="/community/">Community</a>
+<ul>
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li class="last"><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+</ul>						<div class="search">
+							<form method="get" action="/search/">
+								<div class="keyword">
+	                                <input name="q" value="" />
+									<a href="#" title="search" class="global-search">search</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+
+		<div class="container_12">
+						<div class="grid_12">
+												<div class="layout-main-submenu">
+					<ul>
+						<li class="main">Documentation</li>
+												<li><a href="/tour/">Take the Tour</a></li>
+												<li class="active"><a href="/tutorials/">Tutorials</a></li>
+												<li><a href="/doc/api/">Class Reference</a></li>
+												<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+												<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+												<li><a href="/wiki/">Wiki</a></li>
+												<li><a href="/screencasts/">Screencasts</a></li>
+												<li><a href="/resources/">Resources</a></li>
+											</ul>
+				</div>
+				
+				
+				
+									<div class="layout-main-body">
+						<div class="tutorial-view">
+    <div class="grid_3 alpha">
+        <div class="nav-toc">
+    		<div class="title">The Definitive Guide to Yii</div>
+    		<div class="langver">
+	            <strong>Language &amp; version</strong>
+	    		<div class="languages g-dropdown">
+	    		<span>English<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.1/de/database.dao">Deutsch</a></li>
+<li><a href="/doc/guide/1.1/es/database.dao">Español</a></li>
+<li><a href="/doc/guide/1.1/fr/database.dao">Français</a></li>
+<li><a href="/doc/guide/1.1/he/database.dao">עִבְרִית</a></li>
+<li><a href="/doc/guide/1.1/id/database.dao">Bahasa Indonesia</a></li>
+<li><a href="/doc/guide/1.1/it/database.dao">Italiano</a></li>
+<li><a href="/doc/guide/1.1/ja/database.dao">日本語</a></li>
+<li><a href="/doc/guide/1.1/pl/database.dao">Polski</a></li>
+<li><a href="/doc/guide/1.1/pt/database.dao">Português</a></li>
+<li><a href="/doc/guide/1.1/pt_br/database.dao">Português brasileiro</a></li>
+<li><a href="/doc/guide/1.1/ro/database.dao">România</a></li>
+<li><a href="/doc/guide/1.1/ru/database.dao">Русский</a></li>
+<li><a href="/doc/guide/1.1/sv/database.dao">Svenska</a></li>
+<li><a href="/doc/guide/1.1/uk/database.dao">украї́нська</a></li>
+<li><a href="/doc/guide/1.1/zh_cn/database.dao">简体中文</a></li>
+</ul>
+	    		</div>
+				<div class="versions g-dropdown">
+	    		<span>1.1<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.0/en/database.dao">1.0</a></li>
+</ul>
+				</div>
+				<div class="clear"></div>
+			</div>
+            <div class="widget-search-box">
+    <form method="get" action="/search/">
+        <strong>Search in this tutorial</strong>
+		<input type="text" name="q" class="keyword g-text" />
+        <input type="hidden" name="type" value="guide" />
+        <input type="hidden" name="lang" value="en" />
+        <input type="submit" value="Find" class="btn btn-info" />
+	</form>
+</div>
+			<ul class="toc">
+						    <li class="chapter"><strong>Getting Started</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/index">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/changes">New Features</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/upgrade">Upgrading from 1.0 to 1.1</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.what-is-yii">What is Yii</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.installation">Installation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.apache-nginx-config">Apache and Nginx configurations</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app">Creating First Yii Application</a>			            </li>
+			        			    						    <li class="chapter"><strong>Fundamentals</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.mvc">Model-View-Controller (MVC)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.entry">Entry Script</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.application">Application</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.controller">Controller</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.model">Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.view">View</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.component">Component</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.module">Module</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.namespace">Path Alias and Namespace</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.convention">Conventions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.workflow">Development Workflow</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.best-practices">Best MVC Practices</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Forms</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.model">Creating Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.action">Creating Action</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.view">Creating Form</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.table">Collecting Tabular Input</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.builder">Using Form Builder</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Databases</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.overview">Overview</a>			            </li>
+			        			    			        			            <li class="active">
+			                &raquo; Database Access Objects &laquo;
+			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.query-builder">Query Builder</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.ar">Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.arr">Relational Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.migration">Database Migration</a>			            </li>
+			        			    						    <li class="chapter"><strong>Caching</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.data">Data Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.fragment">Fragment Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.page">Page Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.dynamic">Dynamic Content</a>			            </li>
+			        			    						    <li class="chapter"><strong>Extending Yii</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.use">Using Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.create">Creating Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.integration">Using 3rd-Party Libraries</a>			            </li>
+			        			    						    <li class="chapter"><strong>Testing</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.fixture">Defining Fixtures</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.unit">Unit Testing</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.functional">Functional Testing</a>			            </li>
+			        			    						    <li class="chapter"><strong>Special Topics</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.gii">Automatic Code Generation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.url">URL Management</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.auth">Authentication and Authorization</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.theming">Theming and Skin</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.logging">Logging</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.error">Error Handling</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.webservice">Web Service</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.i18n">Internationalization (I18N)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.prado">Alternative Template Syntax</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.console">Console Applications</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.security">Security</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.performance">Performance Tuning</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app-yiic">Code Generation using Command Line Tools (deprecated)</a>			            </li>
+			        			    						</ul>
+        </div>
+    </div>
+    <div class="grid_9 omega">
+    	<div class="g-markdown"><h1 id="sec-1">Data Access Objects (DAO)</h1>
+<div class="google-ad" style="float:right;margin:0 0 1em 1em;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "2830391674";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+<div class="toc"><ol><li><a href="#establishing-database-connection">Establishing Database Connection</a></li>
+<li><a href="#using-odbc-connection">Using ODBC Connection</a></li>
+<li><a href="#executing-sql-statements">Executing SQL Statements</a></li>
+<li><a href="#fetching-query-results">Fetching Query Results</a></li>
+<li><a href="#using-transactions">Using Transactions</a></li>
+<li><a href="#binding-parameters">Binding Parameters</a></li>
+<li><a href="#binding-columns">Binding Columns</a></li>
+<li><a href="#using-table-prefix">Using Table Prefix</a></li></ol></div>
+
+
+<p>Data Access Objects (DAO) provides a generic API to access data stored in
+different database management systems (DBMS). As a result, the underlying
+DBMS can be changed to a different one without requiring change of the code
+which uses DAO to access the data.</p>
+
+<p>Yii DAO is built on top of <a href="http://php.net/manual/en/book.pdo.php">PHP Data Objects
+(PDO)</a> which is an extension
+providing unified data access to many popular DBMS, such as MySQL,
+PostgreSQL. Therefore, to use Yii DAO, the PDO extension and the specific
+PDO database driver (e.g. <code>PDO_MYSQL</code>) have to be installed.</p>
+
+<p>Yii DAO mainly consists of the following four classes:</p>
+
+<ul>
+<li><a href="/doc/api/1.1/CDbConnection">CDbConnection</a>: represents a connection to a database.</li>
+<li><a href="/doc/api/1.1/CDbCommand">CDbCommand</a>: represents an SQL statement to execute against a database.</li>
+<li><a href="/doc/api/1.1/CDbDataReader">CDbDataReader</a>: represents a forward-only stream of rows from a query result set.</li>
+<li><a href="/doc/api/1.1/CDbTransaction">CDbTransaction</a>: represents a DB transaction.</li>
+</ul>
+
+<p>In the following, we introduce the usage of Yii DAO in different
+scenarios.</p>
+
+<h2 id="establishing-database-connection">1. Establishing Database Connection <a class="anchor" href="#establishing-database-connection">¶</a></h2>
+
+<p>To establish a database connection, create a <a href="/doc/api/1.1/CDbConnection">CDbConnection</a> instance and
+activate it. A data source name (DSN) is needed to specify the information
+required to connect to the database. A username and password may also be
+needed to establish the connection. An exception will be raised in case an
+error occurs during establishing the connection (e.g. bad DSN or invalid
+username/password).</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$connection</span><span class="hl-code">=</span><span class="hl-reserved">new</span> <span class="hl-identifier">CDbConnection</span><span class="hl-brackets">(</span><span class="hl-var">$dsn</span><span class="hl-code">,</span><span class="hl-var">$username</span><span class="hl-code">,</span><span class="hl-var">$password</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> establish connection. You may try...catch possible exceptions</span>
+<span class="hl-var">$connection</span><span class="hl-code">-&gt;</span><span class="hl-identifier">active</span><span class="hl-code">=</span><span class="hl-reserved">true</span><span class="hl-code">;
+......
+</span><span class="hl-var">$connection</span><span class="hl-code">-&gt;</span><span class="hl-identifier">active</span><span class="hl-code">=</span><span class="hl-reserved">false</span><span class="hl-code">;  </span><span class="hl-comment">//</span><span class="hl-comment"> close connection</span></pre></div></div>
+
+<p>The format of DSN depends on the PDO database driver in use. In general, a
+DSN consists of the PDO driver name, followed by a colon, followed by the
+driver-specific connection syntax. See <a href="http://www.php.net/manual/en/pdo.construct.php">PDO
+documentation</a> for complete
+information. Below is a list of commonly used DSN formats:</p>
+
+<ul>
+<li>SQLite: <code>sqlite:/path/to/dbfile</code></li>
+<li>MySQL/MariaDB: <code>mysql:host=localhost;dbname=testdb</code></li>
+<li>PostgreSQL: <code>pgsql:host=localhost;port=5432;dbname=testdb</code></li>
+<li>SQL Server: <code>mssql:host=localhost;dbname=testdb</code></li>
+<li>Oracle: <code>oci:dbname=//localhost:1521/testdb</code></li>
+</ul>
+
+<p>Because <a href="/doc/api/1.1/CDbConnection">CDbConnection</a> extends from <a href="/doc/api/1.1/CApplicationComponent">CApplicationComponent</a>, we can also
+use it as an <a href="/doc/guide/1.1/en/basics.application#application-component">application
+component</a>. To do so, configure
+in a <code>db</code> (or other name) application component in the <a href="/doc/guide/1.1/en/basics.application#application-configuration">application
+configuration</a> as follows,</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-code">
+    ......
+    </span><span class="hl-quotes">'</span><span class="hl-string">components</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-code">
+        ......
+        </span><span class="hl-quotes">'</span><span class="hl-string">db</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">CDbConnection</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">connectionString</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">mysql:host=localhost;dbname=testdb</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">username</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">root</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">password</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">password</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">emulatePrepare</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">true</span><span class="hl-code">,  </span><span class="hl-comment">//</span><span class="hl-comment"> needed by some MySQL installations</span>
+        <span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-brackets">)</span><span class="hl-code">,
+</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>We can then access the DB connection via <code>Yii::app()-&gt;db</code> which is already
+activated automatically, unless we explictly configure
+<a href="/doc/api/1.1/CDbConnection#autoConnect">CDbConnection::autoConnect</a> to be false. Using this approach, the single
+DB connection can be shared in multiple places in our code.</p>
+
+<h2 id="using-odbc-connection">2. Using ODBC Connection <a class="anchor" href="#using-odbc-connection">¶</a></h2>
+
+<p>There is a peculiarity when you want to work with the database through the ODBC layer.
+When using ODBC, its connection string (DSN) doesn't indicate uniquely what database
+type is being used (MySQL, MS SQL Server, etc.). Thus it's not able to automatically
+detect needed DBMS specific classes (<code>CMysqlSchema</code>, <code>CMssqlSchema</code> and so forth).</p>
+
+<p>That's why you have to use <code>$driverName</code> property of the <code>CDbConnection</code> class
+to disambiguate that:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-code">
+    ......
+    </span><span class="hl-quotes">'</span><span class="hl-string">components</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-code">
+        ......
+        </span><span class="hl-quotes">'</span><span class="hl-string">db</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">CDbConnection</span><span class="hl-quotes">'</span>
+            <span class="hl-quotes">'</span><span class="hl-string">driverName</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">mysql</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">connectionString</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">odbc:Driver={MySQL};Server=127.0.0.1;Database=test</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">username</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">password</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-brackets">)</span><span class="hl-code">,
+</span><span class="hl-brackets">)</span></pre></div></div>
+
+<blockquote class="note">
+<p><strong>Note:</strong> The configuration above is only relevant since the 1.1.15 version of the framework.
+  If you're using the older versions of the framework you have to extend the database connection
+  class and handle that case yourself.</p>
+</blockquote>
+
+<h2 id="executing-sql-statements">3. Executing SQL Statements <a class="anchor" href="#executing-sql-statements">¶</a></h2>
+
+<p>Once a database connection is established, SQL statements can be executed
+using <a href="/doc/api/1.1/CDbCommand">CDbCommand</a>. One creates a <a href="/doc/api/1.1/CDbCommand">CDbCommand</a> instance by calling
+<a href="/doc/api/1.1/CDbConnection#createCommand">CDbConnection::createCommand()</a> with the specified SQL statement:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$connection</span><span class="hl-code">=</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">db</span><span class="hl-code">;   </span><span class="hl-comment">//</span><span class="hl-comment"> assuming you have configured a &quot;db&quot; connection</span>
+<span class="hl-comment">//</span><span class="hl-comment"> If not, you may explicitly create a connection:</span>
+<span class="hl-comment">//</span><span class="hl-comment"> $connection=new CDbConnection($dsn,$username,$password);</span>
+<span class="hl-var">$command</span><span class="hl-code">=</span><span class="hl-var">$connection</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createCommand</span><span class="hl-brackets">(</span><span class="hl-var">$sql</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> if needed, the SQL statement may be updated as follows:</span>
+<span class="hl-comment">//</span><span class="hl-comment"> $command-&gt;text=$newSQL;</span></pre></div></div>
+
+<p>A SQL statement is executed via <a href="/doc/api/1.1/CDbCommand">CDbCommand</a> in one of the following two
+ways:</p>
+
+<ul>
+<li><p><a href="/doc/api/1.1/CDbCommand#execute">execute()</a>: performs a non-query SQL statement,
+such as <code>INSERT</code>, <code>UPDATE</code> and <code>DELETE</code>. If successful, it returns the
+number of rows that are affected by the execution.</p></li>
+<li><p><a href="/doc/api/1.1/CDbCommand#query">query()</a>: performs an SQL statement that returns
+rows of data, such as <code>SELECT</code>. If successful, it returns a <a href="/doc/api/1.1/CDbDataReader">CDbDataReader</a>
+instance from which one can traverse the resulting rows of data. For
+convenience, a set of <code>queryXXX()</code> methods are also implemented which
+directly return the query results.</p></li>
+</ul>
+
+<p>An exception will be raised if an error occurs during the execution of SQL
+statements.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$rowCount</span><span class="hl-code">=</span><span class="hl-var">$command</span><span class="hl-code">-&gt;</span><span class="hl-identifier">execute</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;   </span><span class="hl-comment">//</span><span class="hl-comment"> execute the non-query SQL</span>
+<span class="hl-var">$dataReader</span><span class="hl-code">=</span><span class="hl-var">$command</span><span class="hl-code">-&gt;</span><span class="hl-identifier">query</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;   </span><span class="hl-comment">//</span><span class="hl-comment"> execute a query SQL</span>
+<span class="hl-var">$rows</span><span class="hl-code">=</span><span class="hl-var">$command</span><span class="hl-code">-&gt;</span><span class="hl-identifier">queryAll</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;      </span><span class="hl-comment">//</span><span class="hl-comment"> query and return all rows of result</span>
+<span class="hl-var">$row</span><span class="hl-code">=</span><span class="hl-var">$command</span><span class="hl-code">-&gt;</span><span class="hl-identifier">queryRow</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;       </span><span class="hl-comment">//</span><span class="hl-comment"> query and return the first row of result</span>
+<span class="hl-var">$column</span><span class="hl-code">=</span><span class="hl-var">$command</span><span class="hl-code">-&gt;</span><span class="hl-identifier">queryColumn</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-comment">//</span><span class="hl-comment"> query and return the first column of result</span>
+<span class="hl-var">$value</span><span class="hl-code">=</span><span class="hl-var">$command</span><span class="hl-code">-&gt;</span><span class="hl-identifier">queryScalar</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;  </span><span class="hl-comment">//</span><span class="hl-comment"> query and return the first field in the first row</span></pre></div></div>
+
+<h2 id="fetching-query-results">4. Fetching Query Results <a class="anchor" href="#fetching-query-results">¶</a></h2>
+
+<p>After <a href="/doc/api/1.1/CDbCommand#query">CDbCommand::query()</a> generates the <a href="/doc/api/1.1/CDbDataReader">CDbDataReader</a> instance, one
+can retrieve rows of resulting data by calling <a href="/doc/api/1.1/CDbDataReader#read">CDbDataReader::read()</a>
+repeatedly. One can also use <a href="/doc/api/1.1/CDbDataReader">CDbDataReader</a> in PHP's <code>foreach</code> language
+construct to retrieve row by row.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$dataReader</span><span class="hl-code">=</span><span class="hl-var">$command</span><span class="hl-code">-&gt;</span><span class="hl-identifier">query</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> calling read() repeatedly until it returns false</span>
+<span class="hl-reserved">while</span><span class="hl-brackets">(</span><span class="hl-brackets">(</span><span class="hl-var">$row</span><span class="hl-code">=</span><span class="hl-var">$dataReader</span><span class="hl-code">-&gt;</span><span class="hl-identifier">read</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">!==</span><span class="hl-reserved">false</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span><span class="hl-code"> ... </span><span class="hl-brackets">}</span>
+<span class="hl-comment">//</span><span class="hl-comment"> using foreach to traverse through every row of data</span>
+<span class="hl-reserved">foreach</span><span class="hl-brackets">(</span><span class="hl-var">$dataReader</span> <span class="hl-reserved">as</span> <span class="hl-var">$row</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span><span class="hl-code"> ... </span><span class="hl-brackets">}</span>
+<span class="hl-comment">//</span><span class="hl-comment"> retrieving all rows at once in a single array</span>
+<span class="hl-var">$rows</span><span class="hl-code">=</span><span class="hl-var">$dataReader</span><span class="hl-code">-&gt;</span><span class="hl-identifier">readAll</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<blockquote class="note">
+<p><strong>Note:</strong> Unlike <a href="/doc/api/1.1/CDbCommand#query">query()</a>, all <code>queryXXX()</code> methods
+  return data directly. For example, <a href="/doc/api/1.1/CDbCommand#queryRow">queryRow()</a>
+  returns an array representing the first row of the querying result.</p>
+</blockquote>
+
+<h2 id="using-transactions">5. Using Transactions <a class="anchor" href="#using-transactions">¶</a></h2>
+
+<p>When an application executes a few queries, each reading and/or writing
+information in the database, it is important to be sure that the database
+is not left with only some of the queries carried out. A transaction,
+represented as a <a href="/doc/api/1.1/CDbTransaction">CDbTransaction</a> instance in Yii, may be initiated in this
+case:</p>
+
+<ul>
+<li>Begin the transaction.</li>
+<li>Execute queries one by one. Any updates to the database are not visible to the outside world.</li>
+<li>Commit the transaction. Updates become visible if the transaction is successful.</li>
+<li>If one of the queries fails, the entire transaction is rolled back.</li>
+</ul>
+
+<p>The above workflow can be implemented using the following code:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$transaction</span><span class="hl-code">=</span><span class="hl-var">$connection</span><span class="hl-code">-&gt;</span><span class="hl-identifier">beginTransaction</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-reserved">try</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-var">$connection</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createCommand</span><span class="hl-brackets">(</span><span class="hl-var">$sql1</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">execute</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-var">$connection</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createCommand</span><span class="hl-brackets">(</span><span class="hl-var">$sql2</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">execute</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-comment">//</span><span class="hl-comment">.... other SQL executions</span>
+    <span class="hl-var">$transaction</span><span class="hl-code">-&gt;</span><span class="hl-identifier">commit</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span>
+<span class="hl-reserved">catch</span><span class="hl-brackets">(</span><span class="hl-identifier">Exception</span> <span class="hl-var">$e</span><span class="hl-brackets">)</span> <span class="hl-comment">//</span><span class="hl-comment"> an exception is raised if a query fails</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-var">$transaction</span><span class="hl-code">-&gt;</span><span class="hl-identifier">rollback</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></pre></div></div>
+
+<h2 id="binding-parameters">6. Binding Parameters <a class="anchor" href="#binding-parameters">¶</a></h2>
+
+<p>To avoid <a href="http://en.wikipedia.org/wiki/SQL_injection">SQL injection
+attacks</a> and to improve
+performance of executing repeatedly used SQL statements, one can "prepare"
+an SQL statement with optional parameter placeholders that are to be
+replaced with the actual parameters during the parameter binding process.</p>
+
+<p>The parameter placeholders can be either named (represented as unique
+tokens) or unnamed (represented as question marks). Call
+<a href="/doc/api/1.1/CDbCommand#bindParam">CDbCommand::bindParam()</a> or <a href="/doc/api/1.1/CDbCommand#bindValue">CDbCommand::bindValue()</a> to replace these
+placeholders with the actual parameters. The parameters do not need to be
+quoted: the underlying database driver does it for you. Parameter binding
+must be done before the SQL statement is executed.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> an SQL with two placeholders &quot;:username&quot; and &quot;:email&quot;</span>
+<span class="hl-var">$sql</span><span class="hl-code">=</span><span class="hl-quotes">&quot;</span><span class="hl-string">INSERT INTO tbl_user (username, email) VALUES(:username,:email)</span><span class="hl-quotes">&quot;</span><span class="hl-code">;
+</span><span class="hl-var">$command</span><span class="hl-code">=</span><span class="hl-var">$connection</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createCommand</span><span class="hl-brackets">(</span><span class="hl-var">$sql</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> replace the placeholder &quot;:username&quot; with the actual username value</span>
+<span class="hl-var">$command</span><span class="hl-code">-&gt;</span><span class="hl-identifier">bindParam</span><span class="hl-brackets">(</span><span class="hl-quotes">&quot;</span><span class="hl-string">:username</span><span class="hl-quotes">&quot;</span><span class="hl-code">,</span><span class="hl-var">$username</span><span class="hl-code">,</span><span class="hl-identifier">PDO</span><span class="hl-code">::</span><span class="hl-identifier">PARAM_STR</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> replace the placeholder &quot;:email&quot; with the actual email value</span>
+<span class="hl-var">$command</span><span class="hl-code">-&gt;</span><span class="hl-identifier">bindParam</span><span class="hl-brackets">(</span><span class="hl-quotes">&quot;</span><span class="hl-string">:email</span><span class="hl-quotes">&quot;</span><span class="hl-code">,</span><span class="hl-var">$email</span><span class="hl-code">,</span><span class="hl-identifier">PDO</span><span class="hl-code">::</span><span class="hl-identifier">PARAM_STR</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$command</span><span class="hl-code">-&gt;</span><span class="hl-identifier">execute</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> insert another row with a new set of parameters</span>
+<span class="hl-var">$command</span><span class="hl-code">-&gt;</span><span class="hl-identifier">bindParam</span><span class="hl-brackets">(</span><span class="hl-quotes">&quot;</span><span class="hl-string">:username</span><span class="hl-quotes">&quot;</span><span class="hl-code">,</span><span class="hl-var">$username2</span><span class="hl-code">,</span><span class="hl-identifier">PDO</span><span class="hl-code">::</span><span class="hl-identifier">PARAM_STR</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$command</span><span class="hl-code">-&gt;</span><span class="hl-identifier">bindParam</span><span class="hl-brackets">(</span><span class="hl-quotes">&quot;</span><span class="hl-string">:email</span><span class="hl-quotes">&quot;</span><span class="hl-code">,</span><span class="hl-var">$email2</span><span class="hl-code">,</span><span class="hl-identifier">PDO</span><span class="hl-code">::</span><span class="hl-identifier">PARAM_STR</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$command</span><span class="hl-code">-&gt;</span><span class="hl-identifier">execute</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>The methods <a href="/doc/api/1.1/CDbCommand#bindParam">bindParam()</a> and
+<a href="/doc/api/1.1/CDbCommand#bindValue">bindValue()</a> are very similar. The only difference
+is that the former binds a parameter with a PHP variable reference while
+the latter with a value. For parameters that represent large blocks of data
+memory, the former is preferred for performance consideration.</p>
+
+<p>For more details about binding parameters, see the <a href="http://www.php.net/manual/en/pdostatement.bindparam.php">relevant PHP
+documentation</a>.</p>
+
+<h2 id="binding-columns">7. Binding Columns <a class="anchor" href="#binding-columns">¶</a></h2>
+
+<p>When fetching query results, one can also bind columns with PHP variables
+so that they are automatically populated with the latest data each time a
+row is fetched.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$sql</span><span class="hl-code">=</span><span class="hl-quotes">&quot;</span><span class="hl-string">SELECT username, email FROM tbl_user</span><span class="hl-quotes">&quot;</span><span class="hl-code">;
+</span><span class="hl-var">$dataReader</span><span class="hl-code">=</span><span class="hl-var">$connection</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createCommand</span><span class="hl-brackets">(</span><span class="hl-var">$sql</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">query</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> bind the 1st column (username) with the $username variable</span>
+<span class="hl-var">$dataReader</span><span class="hl-code">-&gt;</span><span class="hl-identifier">bindColumn</span><span class="hl-brackets">(</span><span class="hl-number">1</span><span class="hl-code">,</span><span class="hl-var">$username</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> bind the 2nd column (email) with the $email variable</span>
+<span class="hl-var">$dataReader</span><span class="hl-code">-&gt;</span><span class="hl-identifier">bindColumn</span><span class="hl-brackets">(</span><span class="hl-number">2</span><span class="hl-code">,</span><span class="hl-var">$email</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-reserved">while</span><span class="hl-brackets">(</span><span class="hl-var">$dataReader</span><span class="hl-code">-&gt;</span><span class="hl-identifier">read</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">!==</span><span class="hl-reserved">false</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-comment">//</span><span class="hl-comment"> $username and $email contain the username and email in the current row</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<h2 id="using-table-prefix">8. Using Table Prefix <a class="anchor" href="#using-table-prefix">¶</a></h2>
+
+<p>Yii provides integrated support for using
+table prefix. Table prefix means a string that is prepended to the names of
+the tables in the currently connected database. It is mostly used in a shared
+hosting environment where multiple applications share a single database and use
+different table prefixes to differentiate from each other. For example, one
+application could use <code>tbl_</code> as prefix while the other <code>yii_</code>.</p>
+
+<p>To use table prefix, configure the <a href="/doc/api/1.1/CDbConnection#tablePrefix">CDbConnection::tablePrefix</a> property to be
+the desired table prefix. Then, in SQL statements use <code>{{TableName}}</code> to refer
+to table names, where <code>TableName</code> means the table name without prefix. For example,
+if the database contains a table named <code>tbl_user</code> where <code>tbl_</code> is configured as the
+table prefix, then we can use the following code to query about users:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$sql</span><span class="hl-code">=</span><span class="hl-quotes">'</span><span class="hl-string">SELECT * FROM {{user}}</span><span class="hl-quotes">'</span><span class="hl-code">;
+</span><span class="hl-var">$users</span><span class="hl-code">=</span><span class="hl-var">$connection</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createCommand</span><span class="hl-brackets">(</span><span class="hl-var">$sql</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">queryAll</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<div class="revision"><div class="google-ad" style="margin:-60px 0 5px 200px;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "7116172008";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>$Id$</div>
+</div>
+                <div class="prev-next-nav">
+                            <div class="prev-topic"><a href="/doc/guide/1.1/en/database.overview">Overview</a></div>
+                                        <div class="next-topic"><a href="/doc/guide/1.1/en/database.query-builder">Query Builder</a></div>
+                    </div>
+        
+		        <div class="widget-comment-list" id="comments">
+	<div class="comments">
+		<h3>Total 9 comments</h3>
+				<div class="comment alt-0">
+			<a class="cid" id="c12093" title="permalink to this comment" href="#c12093">#12093</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=12093"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=12093&amp;vote=1"><span>1</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=12093&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/76253/">fabian.h</a> at 2013/02/27 06:03am</div>
+			<div class="title">Now it works</div>
+			<div class="content"><p>My solution was to download the <em>PDP sqlsrv drivers</em> AND the <em>Microsoft SQL Server Native Client</em> from this Microsoft page: 
+<a href="http://msdn.microsoft.com/en-us/library/cc296170.aspx" title="">Microsoft Drivers for PHP for SQL Server</a></p>
+
+<p>Then I've put the appropriate driver (see SQLSRV_Readme.htm) into the directory <em>...\PHP\ext_ and activated them by inserting the following lines into _php.ini</em>:</p>
+
+<pre>extension=php_sqlsrv_53_ts_vc9.dll
+extension=php_pdo_sqlsrv_53_ts_vc9.dll
+</pre>
+
+<p>(change the dll names as needed!)</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-quotes">'</span><span class="hl-string">db</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">connectionString</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">sqlsrv:server=MY_SERVERNAME;Database=MY_DATABASENAME;</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">username</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">MY_USERNAME</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">password</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">MY_PASSWORD</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">,</span></pre></div></div>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c8196" title="permalink to this comment" href="#c8196">#8196</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=8196"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=8196&amp;vote=1"><span>9</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=8196&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/28747/">MadAnd</a> at 2012/05/16 11:03am</div>
+			<div class="title">Accessing row columns in object manner</div>
+			<div class="content"><p>If for some reason you want to access fetched rows in object manner, all you need is to just set fetch mode to <strong>PDO::FETCH_OBJ</strong>:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$dbC</span><span class="hl-code"> = </span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">db</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createCommand</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$dbC</span><span class="hl-code">-&gt;</span><span class="hl-identifier">setFetchMode</span><span class="hl-brackets">(</span><span class="hl-identifier">PDO</span><span class="hl-code">::</span><span class="hl-identifier">FETCH_OBJ</span><span class="hl-brackets">)</span><span class="hl-code">;</span><span class="hl-comment">//</span><span class="hl-comment">fetch each row as Object</span>
+ 
+<span class="hl-var">$dbC</span><span class="hl-code">-&gt;</span><span class="hl-identifier">select</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">from</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">table</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+</span><span class="hl-reserved">foreach</span> <span class="hl-brackets">(</span><span class="hl-var">$dbC</span><span class="hl-code">-&gt;</span><span class="hl-identifier">queryAll</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span> <span class="hl-reserved">as</span> <span class="hl-var">$row</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+    <span class="hl-comment">//</span><span class="hl-comment">now we can access row columns as object properties:</span>
+    <span class="hl-reserved">echo</span> <span class="hl-var">$row</span><span class="hl-code">-&gt;</span><span class="hl-identifier">column1</span><span class="hl-code">;</span><span class="hl-comment">//</span><span class="hl-comment">instead of $row['column1']</span>
+<span class="hl-brackets">}</span></pre></div></div>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c7714" title="permalink to this comment" href="#c7714">#7714</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=7714"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=7714&amp;vote=1"><span>1</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=7714&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/49186/">yiimike</a> at 2012/04/11 08:15am</div>
+			<div class="title">Issue - Bind an array of values when using a very common Select  IN() condition</div>
+			<div class="content"><p>Note that there is no Php PDO::PARAM_ARRAY so the SELECT * FROM .. WHERE .. IN (1,2,3) binding needs a workaround.  Just mentioning it so the next person doesnt waste time,  since its not as simple as it should be.</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c2729" title="permalink to this comment" href="#c2729">#2729</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=2729"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=2729&amp;vote=1"><span>11</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=2729&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/5432/">Nayjest</a> at 2011/02/02 06:25am</div>
+			<div class="title">Little advice</div>
+			<div class="content"><p>Even if you dont use table prefixes, add 'tablePrefix' =&gt;'' to your db configuration for avoiding errors when you user 3rd-party extensions where table names specified as  '{{TableName}}'.</p>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c132" title="permalink to this comment" href="#c132">#132</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=132"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=132&amp;vote=1"><span>15</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=132&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/1034/">atrandafir</a> at 2010/08/31 09:43am</div>
+			<div class="title">PDO bindParam not working for LIKE condition</div>
+			<div class="content"><p>If you use PDO bindParam to do a search with a LIKE condition you cannot put the percentages and quotes to the param placeholder '%:keyword%'.</p>
+
+<p>This is WRONG:
+"SELECT * FROM <code>users</code> WHERE <code>firstname</code> LIKE '%:keyword%'";</p>
+
+<p>The CORRECT solution is to leave clean the placeholder like this:
+"SELECT * FROM <code>users</code> WHERE <code>firstname</code> LIKE :keyword";</p>
+
+<p>And then add the percentages to the php variable where you store the keyword:
+$keyword = "%".$keyword."%";</p>
+
+<p>And finally the quotes will be automatically added by PDO when executing the query so you don't have to worry about them.</p>
+
+<p>So the full example would be:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-inlinetags">&lt;?php</span>
+<span class="hl-comment">//</span><span class="hl-comment"> Get the keyword from query string</span>
+<span class="hl-var">$keyword</span><span class="hl-code"> = </span><span class="hl-var">$_GET</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">keyword</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> Prepare the command</span>
+<span class="hl-var">$sth</span><span class="hl-code"> = </span><span class="hl-var">$dbh</span><span class="hl-code">-&gt;</span><span class="hl-identifier">prepare</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">SELECT * FROM `users` WHERE `firstname` LIKE :keyword</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> Put the percentage sing on the keyword</span>
+<span class="hl-var">$keyword</span><span class="hl-code"> = </span><span class="hl-quotes">"</span><span class="hl-string">%</span><span class="hl-quotes">"</span><span class="hl-code">.</span><span class="hl-var">$keyword</span><span class="hl-code">.</span><span class="hl-quotes">"</span><span class="hl-string">%</span><span class="hl-quotes">"</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> Bind the parameter</span>
+<span class="hl-var">$sth</span><span class="hl-code">-&gt;</span><span class="hl-identifier">bindParam</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">:keyword</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$keyword</span><span class="hl-code">, </span><span class="hl-identifier">PDO</span><span class="hl-code">::</span><span class="hl-identifier">PARAM_STR</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-inlinetags">?&gt;</span></pre></div></div>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c1000" title="permalink to this comment" href="#c1000">#1000</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=1000"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=1000&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=1000&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/3486/">as_lh</a> at 2010/01/12 10:27am</div>
+			<div class="title">MySQL Problems solved by adding Port</div>
+			<div class="content"><p>As descibed on php.net (*1) you can add your MySQL Port Number to the connection string. 
+That may solve a lot of problems.</p>
+
+<p>*1: http://www.php.net/manual/en/ref.pdo-mysql.connection.php</p>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c1514" title="permalink to this comment" href="#c1514">#1514</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=1514"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=1514&amp;vote=1"><span>5</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=1514&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/1105/">antobinish</a> at 2009/07/08 01:47am</div>
+			<div class="title">MS SQL server connection problem and fix</div>
+			<div class="content"><p>I was having problem connecting in to the MS SQL server from Yii framework in Linux environment, My connection string was</p>
+
+<p>'connectionString'=&gt;'mssql:host=sqlServer;dbname=dbName'</p>
+
+<p>and i was getting the following error</p>
+
+<p>"CDbConnection failed to open the DB connection: could not find driver"</p>
+
+<p>Later i found that connection string for MS Sql Server in Linux Environment should be like this,</p>
+
+<p>'connectionString'=&gt;'dblib:host=sqlServer;dbname=dbName'</p>
+
+<p>thats is, its should be "dblib" instead of "mssql"</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c1588" title="permalink to this comment" href="#c1588">#1588</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=1588"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=1588&amp;vote=1"><span>6</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=1588&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/1599/">macada07</a> at 2009/06/12 02:16pm</div>
+			<div class="title">mysql charset problem</div>
+			<div class="content"><p>if you have problems displaying mysql-related characters, add</p>
+
+<p>'charset' =&gt; 'utf8'</p>
+
+<p>to db configuration array. this solves pretty much everything with mysql character sets..</p>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c1602" title="permalink to this comment" href="#c1602">#1602</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=1602"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=1602&amp;vote=1"><span>2</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=1602&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/1168/">alf</a> at 2009/06/08 10:22am</div>
+			<div class="title">MYSQL problem and fix</div>
+			<div class="content"><p>I got an error when trying to connect to MYSQL:</p>
+
+<p><code>
+exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[HY000]: General error: 2030
+</code></p>
+
+<p>This was fixed by adding this:</p>
+
+<p><code>
+'emulatePrepare'=&gt;true
+</code></p>
+
+<p>to the 'db' attribute in the application configuration.</p>
+</div>
+					</div>
+			</div>
+	<div id="comment-add">
+		<h3 id="add-comment">Leave a comment</h3>
+
+			<p>Please <a class="g-login" rel="/doc/guide/1.1/en/database.dao#add-comment" href="#">login</a> to leave your comment.</p>
+		</div>
+</div>
+           </div>
+</div>
+					</div>
+				
+								<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+					</div>
+	</div>
+
+	<div class="layout-main-footer">
+		<div class="container_12">
+			<div class="grid_6">
+				<ul class="menu">
+				<li class="main">About
+<ul class="sub">
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="main">Downloads
+<ul class="sub">
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="main">Documentation
+<ul class="sub">
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="main">Development
+<ul class="sub">
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="main">Community
+<ul class="sub">
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+				</ul>
+			</div>
+			<div class="grid_1">&nbsp;</div>
+			<div class="grid_5">
+				<h3>Yii Supporters</h3>
+				<ul class="g-list-none supporters">
+
+				</ul>
+			</div>
+
+			<div class="clear"></div>
+			<div class="grid_12 copyright">
+				<ul class="social">
+					<li class="twitter"><a href="https://twitter.com/yiiframework" target="_blank" rel="nofollow" title="follow us on twitter">Twitter</a></li>
+					<li class="facebook"><a href="https://www.facebook.com/groups/yiitalk/" target="_blank" rel="nofollow" title="join yii group at facebook">Facebook</a></li>
+					<li class="linkedin"><a href="http://www.linkedin.com/groups?gid=1483367" target="_blank" rel="nofollow" title="join yii group at linkedin">LinkedIn</a></li>
+					<li class="feeds"><a title="RSS feeds" href="/rss.xml/">RSS Feeds</a></li>
+				</ul>
+				<div class="clear"></div>
+				<a href="/tos/">Terms of Service</a> |
+				<a href="/license/">License</a> |
+				<a href="/contact/">Contact Us</a><br/>
+				Copyright &copy; 2015 by <a href="http://www.yiisoft.com">Yii Software LLC</a>.
+				All Rights Reserved.
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+    <script type="text/javascript" src="/js/site-20121004195728.js"></script>
+
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['site._setAccount', 'UA-5843896-1']);
+_gaq.push(['site._trackPageview']);
+
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+<script type="text/javascript">
+function trackClick(link, action, category) {
+	action=action || link.href;
+	category=category || 'Outbound Links';
+	try {
+		_gaq.push(['site._trackEvent', category, action]);
+		setTimeout('document.location = "' + link.href + '"', 250);
+	}catch(err){}
+	return false;
+}
+</script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+</body>
+</html>

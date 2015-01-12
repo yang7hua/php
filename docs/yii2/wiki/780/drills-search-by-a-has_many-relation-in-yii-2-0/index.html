@@ -1,0 +1,721 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    	<meta charset="UTF-8" />
+		<meta name="keywords" content="yii framework, wiki, Tutorials, ActiveRecord, has_many, yii2, search" />
+	<meta name="description" content="This article tries to describe the practical techniques of searching by a HAS_MANY relation using ActiveRecord of Yii 2.0." />
+    <link rel="shortcut icon" type="image/x-icon" href="http://static.yiiframework.com/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="http://static.yiiframework.com/css/site-20130404102234.css" />
+
+	<link title="Lives News for Yii Framework" rel="alternate" type="application/rss+xml" href="http://www.yiiframework.com/rss.xml/" />
+	<title>Drills : Search by a HAS_MANY relation in Yii 2.0 | Wiki | Yii PHP Framework</title>
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii API Search" href="/search-api.xml" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii Site Search" href="/search-site.xml" />
+</head>
+
+<body class="mac">
+<div class="layout-main">
+
+	<div class="layout-main-shortcuts">
+		<div class="container_12">
+            <a style="color:darkred;" href="https://github.com/yiisoft/yii2">Github</a> &middot;
+            <a style="color:darkgreen;" href="https://twitter.com/yiiframework">Twitter</a> &middot;
+            <a style="color:darkblue;" href="https://www.facebook.com/groups/yiitalk/">Facebook</a> &middot;
+            <a href="/doc/guide/">Guide</a> &middot;
+            <a href="/doc/api/">Class Reference</a> &middot;
+            <a href="/doc-2.0/guide-index.html">Guide 2.0</a> &middot;
+            <a href="/doc-2.0/index.html">API 2.0</a> &middot;
+            <a href="/wiki/">Wiki</a> &middot;
+            <a href="/extensions/">Extensions</a> &middot;
+            <a href="/forum/">Forum</a> &middot;
+			<a href="/chat/">Live Chat</a> &middot;
+                            <a href="/login/">Login</a>            		</div>
+	</div>
+
+	<div class="layout-main-bg">
+		<div class="layout-main-header">
+			<div class="container_12">
+				<div class="grid_4">
+					<a class="logo" href="/"><img alt="Yii Logo" src="http://static.yiiframework.com/css/img/logo.png" title="Yii Framework" width="284" height="64" /></a>				</div>
+				<div class="grid_8 omega">
+					<div class="nav">
+						<ul class="menu" id="yw0">
+<li class="about"><a class="main" href="/about/">About</a>
+<ul>
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li class="last"><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="downloads"><a class="main" href="/download/">Downloads</a>
+<ul>
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li class="last"><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="documentation active"><a class="main" href="/doc/">Documentation</a>
+<ul>
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li class="active"><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li class="last"><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="development"><a class="main" href="https://github.com/yiisoft/yii/commits/master">Development</a>
+<ul>
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li class="last"><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="community last"><a class="main" href="/community/">Community</a>
+<ul>
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li class="last"><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+</ul>						<div class="search">
+							<form method="get" action="/search/">
+								<div class="keyword">
+	                                <input name="q" value="" />
+									<a href="#" title="search" class="global-search">search</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+
+		<div class="container_12">
+						<div class="grid_12">
+												<div class="layout-main-submenu">
+					<ul>
+						<li class="main">Documentation</li>
+												<li><a href="/tour/">Take the Tour</a></li>
+												<li><a href="/tutorials/">Tutorials</a></li>
+												<li><a href="/doc/api/">Class Reference</a></li>
+												<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+												<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+												<li class="active"><a href="/wiki/">Wiki</a></li>
+												<li><a href="/screencasts/">Screencasts</a></li>
+												<li><a href="/resources/">Resources</a></li>
+											</ul>
+				</div>
+				
+				
+				
+								<div class="grid_9 alpha">
+									<div class="layout-main-body">
+						<div class="wiki-view">
+        <h1>Yii 2.0: Drills : Search by a HAS_MANY relation in Yii 2.0 <a href="https://twitter.com/yiiframework" class="twitter-follow-button" data-link-color="#0069D6" data-show-count="true">Follow @yiiframework</a></h1>
+
+	<div class="g-voter-reporter">
+		<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Wiki&amp;id=780"><span>report it</span></a>		<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Wiki&amp;id=780&amp;vote=1"><span>5</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Wiki&amp;id=780&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>	</div>
+	<div class="g-starring">
+		<span class="widget-follower"><a class="g-login" title="Click to follow" href="/site/star/?type=Wiki&amp;id=780&amp;v=1"><img alt="Click to follow" src="/images/star_off.gif" title="" width="15" height="15" /></a><span>6 followers</span></span>	</div>
+	<div class="clear"></div>
+
+    <div class="content g-markdown"><div class="google-ad" style="float:right;margin:0 0 1em 1em;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "3624755012";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+
+    
+        <div class="toc"><div class="ref level-2"><a href="#hh0">Relation</a></div>
+<div class="ref level-2"><a href="#hh1">Example of HAS_MANY</a></div>
+<div class="ref level-2"><a href="#hh2">Task #1</a></div>
+<div class="ref level-2"><a href="#hh3">Task #2</a></div>
+<div class="ref level-2"><a href="#hh4">Task #2-B</a></div>
+<div class="ref level-2"><a href="#hh5">Task #3</a></div>
+<div class="ref level-2"><a href="#hh6">Task #4</a></div>
+<div class="ref level-2"><a href="#hh7">Task #4-B</a></div>
+<div class="ref level-2"><a href="#hh8">Task #5</a></div>
+<div class="ref level-3"><a href="#hh9">Trial</a></div>
+<div class="ref level-3"><a href="#hh10">Solution #1</a></div>
+<div class="ref level-3"><a href="#hh11">Solution #2</a></div>
+<div class="ref level-2"><a href="#hh12">Task #6</a></div>
+<div class="ref level-3"><a href="#hh13">Example of a Solution</a></div>
+<div class="ref level-2"><a href="#hh14">Summary</a></div>
+<div class="ref level-3"><a href="#hh15">Reference</a></div></div>
+<p>This article tries to describe the practical techniques of searching by a HAS_MANY relation using ActiveRecord of Yii 2.0.</p>
+
+<p>In <strong>Yii 1.1</strong>, we sometimes got lost trying to search by a HAS_MANY relation. The wiki article <a href="http://www.yiiframework.com/wiki/428/drills-search-by-a-has_many-relation-in-yii-1-1/">Drills : Search by a HAS_MANY relation in Yii 1.1</a> was an effort to offer some practical techniques of searching by a HAS_MANY relation in Yii 1.1.</p>
+
+<p>Now, we have <strong>Yii 2</strong>. Let's examine what we can do with the new ActiveRecord of Yii 2 when we have to solve the same tasks of searching by a HAS_MANY relation.</p>
+
+<h2 id="hh0">Relation <a class="anchor" href="#hh0">¶</a></h2>
+
+<p>Two entities are sometimes connected with a relation of <strong>1:N</strong>. Or we may say that 1:N is the only possible relation between 2 entities as long as we are in the RDB world. <strong>1:1</strong> relation is just a particular kind of 1:N where N is always assumed to be 1 at the maximum. And <strong>N:N</strong> relation can be considered as a combination of two 1:N relations.</p>
+
+<p>Yii supports this 1:N relation in ActiveRecord as <strong>HAS_ONE</strong> and <strong>HAS_MANY</strong> relations. 1:N relation seen from the side of N is HAS_ONE, and from the side of 1 it is HAS_MANY.</p>
+
+<p>Now, let's construct an example of 1:N relation.</p>
+
+<h2 id="hh1">Example of HAS_MANY <a class="anchor" href="#hh1">¶</a></h2>
+
+<p>Think about blog posts and their authors. It's a relation of "An Author has many Posts" and "A Post has an Author" at the same time. This pair of relations is represented with the following code:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-inlinetags">&lt;?php</span>
+<span class="hl-comment">/*</span><span class="hl-comment">*
+ * Author model
+ *</span><span class="hl-inlinedoc"> @property </span><span class="hl-comment">integer $id
+ *</span><span class="hl-inlinedoc"> @property </span><span class="hl-comment">string $name the author's name
+...
+ </span><span class="hl-comment">*/</span>
+<span class="hl-reserved">class</span> <span class="hl-identifier">Author</span> <span class="hl-reserved">extends</span><span class="hl-code"> \</span><span class="hl-identifier">yii</span><span class="hl-code">\</span><span class="hl-identifier">db</span><span class="hl-code">\</span><span class="hl-identifier">ActiveRecord</span>
+<span class="hl-brackets">{</span><span class="hl-code">
+    ...
+    </span><span class="hl-comment">/*</span><span class="hl-comment">*
+     *</span><span class="hl-inlinedoc"> @return </span><span class="hl-comment">\yii\db\ActiveQuery
+     </span><span class="hl-comment">*/</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">getPosts</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-reserved">return</span> <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">hasMany</span><span class="hl-brackets">(</span><span class="hl-identifier">Post</span><span class="hl-code">::</span><span class="hl-identifier">className</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">, </span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">author_id</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">id</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span><span class="hl-code">
+    ...</span></pre></div></div>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-inlinetags">&lt;?php</span>
+<span class="hl-comment">/*</span><span class="hl-comment">*
+ * Post model
+ *</span><span class="hl-inlinedoc"> @property </span><span class="hl-comment">integer $id
+ *</span><span class="hl-inlinedoc"> @property </span><span class="hl-comment">integer $author_id FK to the author's id
+ *</span><span class="hl-inlinedoc"> @property </span><span class="hl-comment">string $title the title of the post
+...
+ </span><span class="hl-comment">*/</span>
+<span class="hl-reserved">class</span> <span class="hl-identifier">Post</span> <span class="hl-reserved">extends</span><span class="hl-code"> \</span><span class="hl-identifier">yii</span><span class="hl-code">\</span><span class="hl-identifier">db</span><span class="hl-code">\</span><span class="hl-identifier">ActiveRecord</span>
+<span class="hl-brackets">{</span><span class="hl-code">
+    ...
+    </span><span class="hl-comment">/*</span><span class="hl-comment">*
+     *</span><span class="hl-inlinedoc"> @return </span><span class="hl-comment">\yii\db\ActiveQuery
+     </span><span class="hl-comment">*/</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">getAuthor</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-reserved">return</span> <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">hasOne</span><span class="hl-brackets">(</span><span class="hl-identifier">Author</span><span class="hl-code">::</span><span class="hl-identifier">className</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">, </span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">id</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">author_id</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span><span class="hl-code">
+    ...</span></pre></div></div>
+
+<p>Note that a relation in Yii 2 is a getter method returning <code>ActiveQuery</code>.</p>
+
+<p>We are going to solve the possible use cases of searching with this example.</p>
+
+<h2 id="hh2">Task #1 <a class="anchor" href="#hh2">¶</a></h2>
+
+<p><strong>Show all posts that has a word in post title</strong></p>
+
+<p>I want to start with an easy one. Let's retrieve all the posts that has a certain word in their title.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-inlinetags">&lt;?php</span>
+<span class="hl-comment">//</span><span class="hl-comment"> get all the posts that has a keyword in their title</span>
+<span class="hl-var">$posts</span><span class="hl-code"> = </span><span class="hl-identifier">Post</span><span class="hl-code">::</span><span class="hl-identifier">find</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">like</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">title</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$searchword</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">all</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> show the results</span>
+<span class="hl-reserved">foreach</span><span class="hl-brackets">(</span><span class="hl-var">$posts</span> <span class="hl-reserved">as</span> <span class="hl-var">$post</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+    <span class="hl-reserved">echo</span> <span class="hl-quotes">"</span><span class="hl-string">Title = </span><span class="hl-var">{$post-&gt;title}</span><span class="hl-special">\n</span><span class="hl-quotes">"</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></pre></div></div>
+
+<p>Ah, it was too easy. And no relation is involved in this task.</p>
+
+<p>OK, let's move on to the next.</p>
+
+<h2 id="hh3">Task #2 <a class="anchor" href="#hh3">¶</a></h2>
+
+<p><strong>Show all posts that has a certain word in post title, with their authors</strong></p>
+
+<p>Now we have to retrieve the authors' name, too.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-inlinetags">&lt;?php</span>
+<span class="hl-comment">//</span><span class="hl-comment"> get all the posts that has a keyword in their title, with their authors</span>
+<span class="hl-var">$posts</span><span class="hl-code"> = </span><span class="hl-identifier">Post</span><span class="hl-code">::</span><span class="hl-identifier">find</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">like</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">title</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$searchword</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">with</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">author</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">all</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> show the results</span>
+<span class="hl-reserved">foreach</span><span class="hl-brackets">(</span><span class="hl-var">$posts</span> <span class="hl-reserved">as</span> <span class="hl-var">$post</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+    <span class="hl-reserved">echo</span> <span class="hl-quotes">"</span><span class="hl-string">Title = </span><span class="hl-var">{$post-&gt;title}</span><span class="hl-special">\n</span><span class="hl-quotes">"</span><span class="hl-code">;
+    </span><span class="hl-reserved">echo</span> <span class="hl-quotes">"</span><span class="hl-string">Author = </span><span class="hl-var">{$post-&gt;author-&gt;name}</span><span class="hl-special">\n</span><span class="hl-quotes">"</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></pre></div></div>
+
+<p>Well, you may say "You didn't have to do it. Just adding a line to echo <code>$post-&gt;author-&gt;name</code> to the code of the 1st task would have been enough."</p>
+
+<p>Yes, you are right. Post model has the <code>author</code> relation, so all you have to do to retrieve its Author is just accessing <strong>$post-&gt;author</strong>. How convenient is it! It's so-called <strong>lazy loading</strong> approach.</p>
+
+<p>But the lazy loading approach has a drawback in this case, because you have to execute one query for retrieving an array of Posts, and every one query per each Post for retrieving its author. It will end up in 1+N queries to be executed.</p>
+
+<p>Here we are retrieveing Posts and their Authors at the same time by using <strong>yii\db\ActiveQuery::with()</strong>. It enables you to do the job with only 2 queries. Just after the 1st query has retrieved the main models, the 2nd one will get all of the related models at once.  This is so-called <strong>eager loading</strong> approach.</p>
+
+<p>The eager loading is preferrable in this particular case, because it's more effective. But, you have to note, it is not always so.</p>
+
+<h2 id="hh4">Task #2-B <a class="anchor" href="#hh4">¶</a></h2>
+
+<p><strong>Show all posts with their authors that has a certain word in the author's name</strong></p>
+
+<p>This is a variation of the task #2. You have to search by an attribute in the related model, not in the main model.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-inlinetags">&lt;?php</span>
+<span class="hl-comment">//</span><span class="hl-comment"> get all the posts that has a keyword in their author's name, with their authors</span>
+<span class="hl-var">$posts</span><span class="hl-code"> = </span><span class="hl-identifier">Post</span><span class="hl-code">::</span><span class="hl-identifier">find</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">joinWith</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">author</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">like</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">author.name</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$searchword</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">all</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> show the results</span>
+<span class="hl-reserved">foreach</span><span class="hl-brackets">(</span><span class="hl-var">$posts</span> <span class="hl-reserved">as</span> <span class="hl-var">$post</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+    <span class="hl-reserved">echo</span> <span class="hl-quotes">"</span><span class="hl-string">Title = </span><span class="hl-var">{$post-&gt;title}</span><span class="hl-special">\n</span><span class="hl-quotes">"</span><span class="hl-code">;
+    </span><span class="hl-reserved">echo</span> <span class="hl-quotes">"</span><span class="hl-string">Author = </span><span class="hl-var">{$post-&gt;author-&gt;name}</span><span class="hl-special">\n</span><span class="hl-quotes">"</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></pre></div></div>
+
+<p>We <strong>join</strong> the <code>author</code> table using <strong>yii\db\ActiveQuery::joinWith()</strong>, because we have to search the main model by an attribute of the related model. Note that we may need to disambiguate the column name with the table name for the parameter of <code>where</code>.</p>
+
+<p>The more important thing to note is that the joining tables using <code>joinWith</code> will not reduce the number of queries in the eager loading scenario. Yii will still use 2 queries, one for the main model and the other for the related model. <strong>Yii 2 will always use the separated queries for the main model and the related models.</strong></p>
+
+<p>So, you would not be able to make the code more efficient by modifying <code>with</code> to <code>joinWith</code> in the answer for the task #1.</p>
+
+<p><strong>We join the related table using <code>joinWith</code> not because we expect good performance, but because we have to access a column in the related table in order to filter the rows in the main table.</strong></p>
+
+<p>And <code>joinWith</code> will cause ActiveRecord to choose the eager loading approach by default, but you may suppress the loading of the related models by specifying the optional parameter <code>$eagerLoading</code> as <code>false</code>.</p>
+
+<p>Huh? Who said "It's just a <strong>HAS_ONE</strong> relation. Yeah, it's simple. I know."?</p>
+
+<p>Yes, you are right, definitely. Let's move on to the next task where we will deal with <strong>HAS_MANY</strong>.</p>
+
+<h2 id="hh5">Task #3 <a class="anchor" href="#hh5">¶</a></h2>
+
+<p><strong>Show all authors who have a post that has a certain word in its title</strong></p>
+
+<p>Now we will retrieve the authors, not the posts.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-inlinetags">&lt;?php</span>
+<span class="hl-comment">//</span><span class="hl-comment"> get all the authors who have a post that has a certain word in its title</span>
+<span class="hl-var">$authors</span><span class="hl-code"> = </span><span class="hl-identifier">Author</span><span class="hl-code">::</span><span class="hl-identifier">find</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">joinWith</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">posts</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">false</span><span class="hl-brackets">)</span>  <span class="hl-comment">//</span><span class="hl-comment"> will not get the related models</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">like</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">post.title</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$searchword</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">all</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> show the results</span>
+<span class="hl-reserved">foreach</span><span class="hl-brackets">(</span><span class="hl-var">$authors</span> <span class="hl-reserved">as</span> <span class="hl-var">$author</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+    <span class="hl-reserved">echo</span> <span class="hl-quotes">"</span><span class="hl-string">Author = </span><span class="hl-var">{$author-&gt;name}</span><span class="hl-special">\n</span><span class="hl-quotes">"</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></pre></div></div>
+
+<p>We join the <code>posts</code> relation using <code>joinWith</code> because we need <code>post.title</code> in the searching, while we set <code>$leagerLoading</code> to false because we don't need the posts to be retrieved.</p>
+
+<h2 id="hh6">Task #4 <a class="anchor" href="#hh6">¶</a></h2>
+
+<p><strong>Show all authors who have a post that has a certain word in its title, with all of their posts</strong></p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-inlinetags">&lt;?php</span>
+<span class="hl-comment">//</span><span class="hl-comment"> get all the authors who have a post that has a certain word in its title, with all of their posts</span>
+<span class="hl-var">$authors</span><span class="hl-code"> = </span><span class="hl-identifier">Author</span><span class="hl-code">::</span><span class="hl-identifier">find</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">joinWith</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">posts</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span>  <span class="hl-comment">//</span><span class="hl-comment"> will eagerly load the related models</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">like</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">post.title</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$searchword</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">all</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> show the results</span>
+<span class="hl-reserved">foreach</span><span class="hl-brackets">(</span><span class="hl-var">$authors</span> <span class="hl-reserved">as</span> <span class="hl-var">$author</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+    <span class="hl-reserved">echo</span> <span class="hl-quotes">"</span><span class="hl-string">Author = </span><span class="hl-var">{$author-&gt;name}</span><span class="hl-special">\n</span><span class="hl-quotes">"</span><span class="hl-code">;
+    </span><span class="hl-reserved">foreach</span><span class="hl-brackets">(</span><span class="hl-var">$author</span><span class="hl-code">-&gt;</span><span class="hl-identifier">posts</span> <span class="hl-reserved">as</span> <span class="hl-var">$post</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+        <span class="hl-reserved">echo</span> <span class="hl-quotes">"</span><span class="hl-string">Title = </span><span class="hl-var">{$post-&gt;title}</span><span class="hl-special">\n</span><span class="hl-quotes">"</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>Don't forget that <strong>the query for the main model and those for the related models are separated</strong>. We add a condition using <code>post.title</code> in <code>where</code> part in order to filter the main models, but it doesn't affect the loading of the related models. The related models are loaded without any condition.</p>
+
+<p>Well, then, what about the next task? It's a variation of the above.</p>
+
+<h2 id="hh7">Task #4-B <a class="anchor" href="#hh7">¶</a></h2>
+
+<p><strong>Show all authors who have a post that has a certain word in its title, with all of their relevant posts</strong></p>
+
+<p>In fact, this is a little more confusing than the above.</p>
+
+<p>One solution is this:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-inlinetags">&lt;?php</span>
+<span class="hl-comment">//</span><span class="hl-comment"> get all the authors who have a post that has a certain word in its title</span>
+<span class="hl-var">$authors</span><span class="hl-code"> = </span><span class="hl-identifier">Author</span><span class="hl-code">::</span><span class="hl-identifier">find</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">joinWith</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">posts</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">false</span><span class="hl-brackets">)</span> <span class="hl-comment">//</span><span class="hl-comment"> won't get posts</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">like</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">post.title</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$searchword</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">all</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> show the results</span>
+<span class="hl-reserved">foreach</span><span class="hl-brackets">(</span><span class="hl-var">$authors</span> <span class="hl-reserved">as</span> <span class="hl-var">$author</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+    <span class="hl-reserved">echo</span> <span class="hl-quotes">"</span><span class="hl-string">Author = </span><span class="hl-var">{$author-&gt;name}</span><span class="hl-special">\n</span><span class="hl-quotes">"</span><span class="hl-code">;
+    </span><span class="hl-comment">//</span><span class="hl-comment"> get all the posts that have a certain word in its title</span>
+    <span class="hl-var">$posts</span><span class="hl-code"> = </span><span class="hl-var">$author</span><span class="hl-code">-&gt;</span><span class="hl-identifier">getPosts</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">like</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">post.title</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$searchword</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">all</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-reserved">foreach</span><span class="hl-brackets">(</span><span class="hl-var">$posts</span> <span class="hl-reserved">as</span> <span class="hl-var">$post</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+        <span class="hl-reserved">echo</span> <span class="hl-quotes">"</span><span class="hl-string">Title = </span><span class="hl-var">{$post-&gt;title}</span><span class="hl-special">\n</span><span class="hl-quotes">"</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>We join the <code>posts</code> relation using <code>joinWith</code> because we need <code>post.title</code> in the searching, while we set <code>$leagerLoading</code> to false because we don't want to load the posts at that point. And then we perform the lazy loading of the related posts with an on-the-fly condition for each author afterwards.</p>
+
+<p>You could specify an on-the-fly condition to the relation when you eagerly load the related models:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-inlinetags">&lt;?php</span>
+<span class="hl-comment">//</span><span class="hl-comment"> get all the authors who have a post that has a certain word in its title</span>
+<span class="hl-var">$authors</span><span class="hl-code"> = </span><span class="hl-identifier">Author</span><span class="hl-code">::</span><span class="hl-identifier">find</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">joinWith</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">posts</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">false</span><span class="hl-brackets">)</span>  <span class="hl-comment">//</span><span class="hl-comment"> this is for the main models</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">like</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">post.title</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$searchword</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">with</span><span class="hl-brackets">(</span><span class="hl-brackets">[</span>    <span class="hl-comment">//</span><span class="hl-comment"> this is for the related models</span>
+        <span class="hl-quotes">'</span><span class="hl-string">posts</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-reserved">function</span><span class="hl-brackets">(</span><span class="hl-var">$query</span><span class="hl-brackets">)</span> <span class="hl-identifier">use</span> <span class="hl-brackets">(</span><span class="hl-var">$searchword</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+            <span class="hl-var">$query</span><span class="hl-code">-&gt;</span><span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">like</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">post.title</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$searchword</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span><span class="hl-code">,
+    </span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">all</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> show the results</span>
+<span class="hl-reserved">foreach</span><span class="hl-brackets">(</span><span class="hl-var">$authors</span> <span class="hl-reserved">as</span> <span class="hl-var">$author</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+    <span class="hl-reserved">echo</span> <span class="hl-quotes">"</span><span class="hl-string">Author = </span><span class="hl-var">{$author-&gt;name}</span><span class="hl-special">\n</span><span class="hl-quotes">"</span><span class="hl-code">;
+    </span><span class="hl-reserved">foreach</span><span class="hl-brackets">(</span><span class="hl-var">$posts</span> <span class="hl-reserved">as</span> <span class="hl-var">$post</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+        <span class="hl-reserved">echo</span> <span class="hl-quotes">"</span><span class="hl-string">Title = </span><span class="hl-var">{$post-&gt;title}</span><span class="hl-special">\n</span><span class="hl-quotes">"</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>Because we are applying the same condition to the relation for searching the main models and that for retrieving related models, we may use a single relation with that condition for both.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-inlinetags">&lt;?php</span>
+<span class="hl-comment">//</span><span class="hl-comment"> get all the authors who have a post that has a certain word in its title</span>
+<span class="hl-var">$authors</span><span class="hl-code"> = </span><span class="hl-identifier">Author</span><span class="hl-code">::</span><span class="hl-identifier">find</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">joinWith</span><span class="hl-brackets">(</span><span class="hl-brackets">[</span>
+        <span class="hl-quotes">'</span><span class="hl-string">posts</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-reserved">function</span><span class="hl-brackets">(</span><span class="hl-var">$query</span><span class="hl-brackets">)</span> <span class="hl-identifier">use</span> <span class="hl-brackets">(</span><span class="hl-var">$searchword</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+            <span class="hl-var">$query</span><span class="hl-code">-&gt;</span><span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">like</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">post.title</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$searchword</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span><span class="hl-code">,
+    </span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">all</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> show the results</span>
+<span class="hl-reserved">foreach</span><span class="hl-brackets">(</span><span class="hl-var">$authors</span> <span class="hl-reserved">as</span> <span class="hl-var">$author</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+    <span class="hl-reserved">echo</span> <span class="hl-quotes">"</span><span class="hl-string">Author = </span><span class="hl-var">{$author-&gt;name}</span><span class="hl-special">\n</span><span class="hl-quotes">"</span><span class="hl-code">;
+    </span><span class="hl-reserved">foreach</span><span class="hl-brackets">(</span><span class="hl-var">$posts</span> <span class="hl-reserved">as</span> <span class="hl-var">$post</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+        <span class="hl-reserved">echo</span> <span class="hl-quotes">"</span><span class="hl-string">Title = </span><span class="hl-var">{$post-&gt;title}</span><span class="hl-special">\n</span><span class="hl-quotes">"</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>In this way, you can use a customized relation for both the searching of the main models and the loading of the related models.</p>
+
+<p>Let's move on to the next. It's a bit tough, though.</p>
+
+<h2 id="hh8">Task #5 <a class="anchor" href="#hh8">¶</a></h2>
+
+<p><strong>Show top 5 authors in the order of the name who has at least one post that has a certain word in post title, with his/her all posts</strong></p>
+
+<p>OK, so we need to add "LIMIT" and "ORDER". Going to try with this one.</p>
+
+<h3 id="hh9">Trial <a class="anchor" href="#hh9">¶</a></h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-inlinetags">&lt;?php</span>
+<span class="hl-var">$authors</span><span class="hl-code"> = </span><span class="hl-identifier">Author</span><span class="hl-code">::</span><span class="hl-identifier">find</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">joinWith</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">posts</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">like</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">post.title</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$searchword</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">orderBy</span><span class="hl-brackets">(</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">author.name</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-identifier">SORT_ASC</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">limit</span><span class="hl-brackets">(</span><span class="hl-number">5</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">all</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> show the results</span>
+<span class="hl-reserved">foreach</span><span class="hl-brackets">(</span><span class="hl-var">$authors</span> <span class="hl-reserved">as</span> <span class="hl-var">$author</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+    <span class="hl-reserved">echo</span> <span class="hl-quotes">"</span><span class="hl-string">Author = </span><span class="hl-var">{$author-&gt;name}</span><span class="hl-special">\n</span><span class="hl-quotes">"</span><span class="hl-code">;
+    </span><span class="hl-reserved">foreach</span><span class="hl-brackets">(</span><span class="hl-var">$author</span><span class="hl-code">-&gt;</span><span class="hl-identifier">posts</span> <span class="hl-reserved">as</span> <span class="hl-var">$post</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+        <span class="hl-reserved">echo</span> <span class="hl-quotes">"</span><span class="hl-string">Title = </span><span class="hl-var">{$post-&gt;title}</span><span class="hl-special">\n</span><span class="hl-quotes">"</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>You will notice that there is something strange in the output results. For example, the results may look like the following:</p>
+
+<pre>[search word = foo]
+Author = Andy
+    Post = Don't use foo
+    Post = Use yoo for foo
+    Post = Don't use bar
+    Post = Use yar for bar
+Author = Ben
+    Post = foo is great
+    Post = I love foo
+    Post = I also love bar
+Author = Charlie
+    Post = What's foo?
+    Post = What's bar?
+[end]
+</pre>
+
+<p>We could get only 3 authors, instead of 5 that is what we wanted.</p>
+
+<p>Why did it happen? It was because the SQL used to retrieve the main models had been something like the following:</p>
+
+<pre>SELECT * from author
+  LEFT JOIN post on author.id = post.author_id
+  WHERE post.title LIKE '%foo%'
+  ORDER BY author.name
+  LIMIT 5
+</pre>
+
+<p>Notice that <code>LIMIT 5</code> is applied to the number of the rows of an virtual table that is the result of joining <code>author</code> table with <code>post</code> table. The resulted rows may have less unique authors than the limit, because an author may <strong>have many</strong> posts.</p>
+
+<p>In Yii 1.1, we could use <strong>GROUP BY</strong> trick, though it was MySQL specific. It can also be used in Yii 2:</p>
+
+<h3 id="hh10">Solution #1 <a class="anchor" href="#hh10">¶</a></h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-inlinetags">&lt;?php</span>
+<span class="hl-var">$authors</span><span class="hl-code"> = </span><span class="hl-identifier">Author</span><span class="hl-code">::</span><span class="hl-identifier">find</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">joinWith</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">posts</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">like</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">post.title</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$searchword</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">groupBy</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">author.id</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">orderBy</span><span class="hl-brackets">(</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">author.name</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-identifier">SORT_ASC</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">limit</span><span class="hl-brackets">(</span><span class="hl-number">5</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">all</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>In this way we could remove the redundant rows by grouping the results by author's ID.</p>
+
+<p>You may say "Why don't you use <strong>DISTINCT</strong>? It might be cleaner and more compatible than a dirty trick." Seems fairly reasonable. Let's give it a try:</p>
+
+<h3 id="hh11">Solution #2 <a class="anchor" href="#hh11">¶</a></h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-inlinetags">&lt;?php</span>
+<span class="hl-var">$authors</span><span class="hl-code"> = </span><span class="hl-identifier">Author</span><span class="hl-code">::</span><span class="hl-identifier">find</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">distinct</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">joinWith</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">posts</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">like</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">post.title</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$searchword</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">orderBy</span><span class="hl-brackets">(</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">author.name</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-identifier">SORT_ASC</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">limit</span><span class="hl-brackets">(</span><span class="hl-number">5</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">all</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>Huh, done!</p>
+
+<p>We are going to the last task, feeling a bit confused by the unexpected easiness.</p>
+
+<h2 id="hh12">Task #6 <a class="anchor" href="#hh12">¶</a></h2>
+
+<p><strong>Show top 5 authors in the order of name who has at least one post that has a certain word in post title, with his/her relevant posts</strong></p>
+
+<p>Now it's a simple task. You just have to apply the same filter both for the searching of the main models and the loading the related models.</p>
+
+<h3 id="hh13">Example of a Solution <a class="anchor" href="#hh13">¶</a></h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-inlinetags">&lt;?php</span>
+<span class="hl-var">$authors</span><span class="hl-code"> = </span><span class="hl-identifier">Author</span><span class="hl-code">::</span><span class="hl-identifier">find</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">distinct</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">joinWith</span><span class="hl-brackets">(</span><span class="hl-brackets">[</span>
+        <span class="hl-quotes">'</span><span class="hl-string">posts</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-reserved">function</span><span class="hl-brackets">(</span><span class="hl-var">$query</span><span class="hl-brackets">)</span> <span class="hl-identifier">use</span> <span class="hl-brackets">(</span><span class="hl-var">$searchword</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+            <span class="hl-var">$query</span><span class="hl-code">-&gt;</span><span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">like</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">post.title</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$searchword</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span><span class="hl-code">,
+    </span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">orderBy</span><span class="hl-brackets">(</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">author.name</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-identifier">SORT_ASC</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">limit</span><span class="hl-brackets">(</span><span class="hl-number">5</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">all</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>Thus we finish the drills in an anticlimactic end.</p>
+
+<h2 id="hh14">Summary <a class="anchor" href="#hh14">¶</a></h2>
+
+<p>Fantastic, isn't it?</p>
+
+<h3 id="hh15">Reference <a class="anchor" href="#hh15">¶</a></h3>
+
+<p>Please refer to the database sections of the guide.</p>
+
+<ul><li><a href="http://www.yiiframework.com/doc-2.0/guide-index.html">The Definitive Guide to Yii 2.0</a>
+
+<ul><li><a href="http://www.yiiframework.com/doc-2.0/guide-db-query-builder.html">Query Builder and Query</a></li>
+<li><a href="http://www.yiiframework.com/doc-2.0/guide-db-active-record.html">Active Record</a></li>
+</ul></li>
+</ul>    </div>
+
+    <div class="google-ad" style="margin:10px 0 10px 200px;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "6460822043";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div><div class="widget-comment-list" id="comments">
+	<div id="comment-add">
+		<h3 id="add-comment">Be the first person to leave a comment</h3>
+
+			<p>Please <a class="g-login" rel="/wiki/780/drills-search-by-a-has_many-relation-in-yii-2-0/#add-comment" href="#">login</a> to leave your comment.</p>
+		</div>
+</div>
+</div>
+					</div>
+								</div>
+				
+								<div class="grid_3 omega">
+					<div class="layout-main-right">
+						<div class="wiki-portlets">
+	<a href="/wiki/create/" class="btn btn-success btn-large action">Write new article</a>
+<div class="widget-search-box">
+    <form method="get" action="/search/">
+        <strong>Search Wiki</strong>
+		<input type="text" name="q" class="keyword g-text" />
+        <input type="hidden" name="type" value="wiki" />
+        <input type="hidden" name="lang" value="" />
+        <input type="submit" value="Find" class="btn btn-info" />
+	</form>
+</div><ul class="widget-action-links actions g-list-none"><li><strong>View current article</strong></li><li><a href="/wiki/update/?id=780">Update this article</a></li><li><a href="/wiki/history/?id=780">View history</a></li><li class="inactive">View revision</li></ul><ul class="info g-list-none">
+    <li><b>Written by</b>: <a class="g-user-rank-link silver" href="/user/13986/">softark</a></li>
+        <li><b>Category</b>: <a href="/wiki/?category=3">Tutorials</a></li>
+    <li><b>Yii Version</b>: <b>2.0</b></li>
+    <li><b>Votes</b>: <span class="g-vote plus" title="5 votes up">+5</span></li>
+    <li><b>Viewed</b>: 2,235 times</li>
+    <li><b>Created on</b>: Dec 11, 2014</li>
+    <li><b>Last updated</b>: Dec 13, 2014</li>
+        <li><b>Tags</b>: <a href="/wiki/?tag=ActiveRecord">ActiveRecord</a>, <a href="/wiki/?tag=has_many">has_many</a>, <a href="/wiki/?tag=yii2">yii2</a>, <a href="/wiki/?tag=search">search</a></li>
+    </ul>
+<div class="widget-related-contents">
+<strong>Related Articles</strong><ul><li><a class="" href="/wiki/778/moving-the-vendor-directory-for-multiple-projects/">Moving the vendor directory for multiple projects</a></li>
+<li><a class="" href="/wiki/695/yii2-and-pdf-files-with-mpdf/">Yii2 and Pdf files with Mpdf</a></li>
+<li><a class="" href="/wiki/698/model-validation-for-field-ranges-using-yii2-field-range-extension/">Model validation for field ranges using yii2-field-range extension</a></li>
+<li><a class="" href="/wiki/678/displaying-uploaded-file-from-db-for-update-with-fileinput-widget/">Displaying uploaded file from DB for update with FileInput widget</a></li>
+<li><a class="" href="/wiki/690/render-a-form-in-a-modal-popup-using-ajax/">Render a form in a Modal Popup using ajax</a></li>
+</ul>
+</div>
+	<div class="google-ad" style="margin:100px 0 0 10px;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "9245442339";
+google_ad_width = 160;
+google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+</div>					</div>
+				</div>
+								<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+					</div>
+	</div>
+
+	<div class="layout-main-footer">
+		<div class="container_12">
+			<div class="grid_6">
+				<ul class="menu">
+				<li class="main">About
+<ul class="sub">
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="main">Downloads
+<ul class="sub">
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="main">Documentation
+<ul class="sub">
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="main">Development
+<ul class="sub">
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="main">Community
+<ul class="sub">
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+				</ul>
+			</div>
+			<div class="grid_1">&nbsp;</div>
+			<div class="grid_5">
+				<h3>Yii Supporters</h3>
+				<ul class="g-list-none supporters">
+
+				</ul>
+			</div>
+
+			<div class="clear"></div>
+			<div class="grid_12 copyright">
+				<ul class="social">
+					<li class="twitter"><a href="https://twitter.com/yiiframework" target="_blank" rel="nofollow" title="follow us on twitter">Twitter</a></li>
+					<li class="facebook"><a href="https://www.facebook.com/groups/yiitalk/" target="_blank" rel="nofollow" title="join yii group at facebook">Facebook</a></li>
+					<li class="linkedin"><a href="http://www.linkedin.com/groups?gid=1483367" target="_blank" rel="nofollow" title="join yii group at linkedin">LinkedIn</a></li>
+					<li class="feeds"><a title="RSS feeds" href="/rss.xml/">RSS Feeds</a></li>
+				</ul>
+				<div class="clear"></div>
+				<a href="/tos/">Terms of Service</a> |
+				<a href="/license/">License</a> |
+				<a href="/contact/">Contact Us</a><br/>
+				Copyright &copy; 2015 by <a href="http://www.yiisoft.com">Yii Software LLC</a>.
+				All Rights Reserved.
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+    <script type="text/javascript" src="/js/site-20121004195728.js"></script>
+
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['site._setAccount', 'UA-5843896-1']);
+_gaq.push(['site._trackPageview']);
+
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+<script type="text/javascript">
+function trackClick(link, action, category) {
+	action=action || link.href;
+	category=category || 'Outbound Links';
+	try {
+		_gaq.push(['site._trackEvent', category, action]);
+		setTimeout('document.location = "' + link.href + '"', 250);
+	}catch(err){}
+	return false;
+}
+</script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+<script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+</body>
+</html>

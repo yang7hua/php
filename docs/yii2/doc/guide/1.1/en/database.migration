@@ -1,0 +1,1050 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    	<meta charset="UTF-8" />
+		<meta name="keywords" content="yii framework, tutorial, guide, version 1.1" />
+	<meta name="description" content="Note: The database migration feature has been available since version 1.1.6." />
+    <link rel="shortcut icon" type="image/x-icon" href="http://static.yiiframework.com/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="http://static.yiiframework.com/css/site-20130404102234.css" />
+
+	<link title="Lives News for Yii Framework" rel="alternate" type="application/rss+xml" href="http://www.yiiframework.com/rss.xml/" />
+	<title>Working with Databases: Database Migration | The Definitive Guide to Yii | Yii PHP Framework</title>
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii API Search" href="/search-api.xml" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii Site Search" href="/search-site.xml" />
+</head>
+
+<body class="mac">
+<div class="layout-main">
+
+	<div class="layout-main-shortcuts">
+		<div class="container_12">
+            <a style="color:darkred;" href="https://github.com/yiisoft/yii2">Github</a> &middot;
+            <a style="color:darkgreen;" href="https://twitter.com/yiiframework">Twitter</a> &middot;
+            <a style="color:darkblue;" href="https://www.facebook.com/groups/yiitalk/">Facebook</a> &middot;
+            <a href="/doc/guide/">Guide</a> &middot;
+            <a href="/doc/api/">Class Reference</a> &middot;
+            <a href="/doc-2.0/guide-index.html">Guide 2.0</a> &middot;
+            <a href="/doc-2.0/index.html">API 2.0</a> &middot;
+            <a href="/wiki/">Wiki</a> &middot;
+            <a href="/extensions/">Extensions</a> &middot;
+            <a href="/forum/">Forum</a> &middot;
+			<a href="/chat/">Live Chat</a> &middot;
+                            <a href="/login/">Login</a>            		</div>
+	</div>
+
+	<div class="layout-main-bg">
+		<div class="layout-main-header">
+			<div class="container_12">
+				<div class="grid_4">
+					<a class="logo" href="/"><img alt="Yii Logo" src="http://static.yiiframework.com/css/img/logo.png" title="Yii Framework" width="284" height="64" /></a>				</div>
+				<div class="grid_8 omega">
+					<div class="nav">
+						<ul class="menu" id="yw0">
+<li class="about"><a class="main" href="/about/">About</a>
+<ul>
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li class="last"><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="downloads"><a class="main" href="/download/">Downloads</a>
+<ul>
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li class="last"><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="documentation active"><a class="main" href="/doc/">Documentation</a>
+<ul>
+<li><a href="/tour/">Take the Tour</a></li>
+<li class="active"><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li class="last"><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="development"><a class="main" href="https://github.com/yiisoft/yii/commits/master">Development</a>
+<ul>
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li class="last"><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="community last"><a class="main" href="/community/">Community</a>
+<ul>
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li class="last"><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+</ul>						<div class="search">
+							<form method="get" action="/search/">
+								<div class="keyword">
+	                                <input name="q" value="" />
+									<a href="#" title="search" class="global-search">search</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+
+		<div class="container_12">
+						<div class="grid_12">
+												<div class="layout-main-submenu">
+					<ul>
+						<li class="main">Documentation</li>
+												<li><a href="/tour/">Take the Tour</a></li>
+												<li class="active"><a href="/tutorials/">Tutorials</a></li>
+												<li><a href="/doc/api/">Class Reference</a></li>
+												<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+												<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+												<li><a href="/wiki/">Wiki</a></li>
+												<li><a href="/screencasts/">Screencasts</a></li>
+												<li><a href="/resources/">Resources</a></li>
+											</ul>
+				</div>
+				
+				
+				
+									<div class="layout-main-body">
+						<div class="tutorial-view">
+    <div class="grid_3 alpha">
+        <div class="nav-toc">
+    		<div class="title">The Definitive Guide to Yii</div>
+    		<div class="langver">
+	            <strong>Language &amp; version</strong>
+	    		<div class="languages g-dropdown">
+	    		<span>English<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.1/de/database.migration">Deutsch</a></li>
+<li><a href="/doc/guide/1.1/es/database.migration">Español</a></li>
+<li><a href="/doc/guide/1.1/fr/database.migration">Français</a></li>
+<li><a href="/doc/guide/1.1/he/database.migration">עִבְרִית</a></li>
+<li><a href="/doc/guide/1.1/id/database.migration">Bahasa Indonesia</a></li>
+<li><a href="/doc/guide/1.1/it/database.migration">Italiano</a></li>
+<li><a href="/doc/guide/1.1/ja/database.migration">日本語</a></li>
+<li><a href="/doc/guide/1.1/pl/database.migration">Polski</a></li>
+<li><a href="/doc/guide/1.1/pt/database.migration">Português</a></li>
+<li><a href="/doc/guide/1.1/pt_br/database.migration">Português brasileiro</a></li>
+<li><a href="/doc/guide/1.1/ro/database.migration">România</a></li>
+<li><a href="/doc/guide/1.1/ru/database.migration">Русский</a></li>
+<li><a href="/doc/guide/1.1/sv/database.migration">Svenska</a></li>
+<li><a href="/doc/guide/1.1/uk/database.migration">украї́нська</a></li>
+<li><a href="/doc/guide/1.1/zh_cn/database.migration">简体中文</a></li>
+</ul>
+	    		</div>
+				<div class="versions g-dropdown">
+	    		<span>1.1<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.0/en/database.migration">1.0</a></li>
+</ul>
+				</div>
+				<div class="clear"></div>
+			</div>
+            <div class="widget-search-box">
+    <form method="get" action="/search/">
+        <strong>Search in this tutorial</strong>
+		<input type="text" name="q" class="keyword g-text" />
+        <input type="hidden" name="type" value="guide" />
+        <input type="hidden" name="lang" value="en" />
+        <input type="submit" value="Find" class="btn btn-info" />
+	</form>
+</div>
+			<ul class="toc">
+						    <li class="chapter"><strong>Getting Started</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/index">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/changes">New Features</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/upgrade">Upgrading from 1.0 to 1.1</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.what-is-yii">What is Yii</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.installation">Installation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.apache-nginx-config">Apache and Nginx configurations</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app">Creating First Yii Application</a>			            </li>
+			        			    						    <li class="chapter"><strong>Fundamentals</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.mvc">Model-View-Controller (MVC)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.entry">Entry Script</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.application">Application</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.controller">Controller</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.model">Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.view">View</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.component">Component</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.module">Module</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.namespace">Path Alias and Namespace</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.convention">Conventions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.workflow">Development Workflow</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.best-practices">Best MVC Practices</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Forms</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.model">Creating Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.action">Creating Action</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.view">Creating Form</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.table">Collecting Tabular Input</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.builder">Using Form Builder</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Databases</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.dao">Database Access Objects</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.query-builder">Query Builder</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.ar">Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.arr">Relational Active Record</a>			            </li>
+			        			    			        			            <li class="active">
+			                &raquo; Database Migration &laquo;
+			            </li>
+			        			    						    <li class="chapter"><strong>Caching</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.data">Data Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.fragment">Fragment Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.page">Page Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.dynamic">Dynamic Content</a>			            </li>
+			        			    						    <li class="chapter"><strong>Extending Yii</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.use">Using Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.create">Creating Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.integration">Using 3rd-Party Libraries</a>			            </li>
+			        			    						    <li class="chapter"><strong>Testing</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.fixture">Defining Fixtures</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.unit">Unit Testing</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.functional">Functional Testing</a>			            </li>
+			        			    						    <li class="chapter"><strong>Special Topics</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.gii">Automatic Code Generation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.url">URL Management</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.auth">Authentication and Authorization</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.theming">Theming and Skin</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.logging">Logging</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.error">Error Handling</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.webservice">Web Service</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.i18n">Internationalization (I18N)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.prado">Alternative Template Syntax</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.console">Console Applications</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.security">Security</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.performance">Performance Tuning</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app-yiic">Code Generation using Command Line Tools (deprecated)</a>			            </li>
+			        			    						</ul>
+        </div>
+    </div>
+    <div class="grid_9 omega">
+    	<div class="g-markdown"><h1 id="database-migration">Database Migration</h1>
+<div class="google-ad" style="float:right;margin:0 0 1em 1em;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "2830391674";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+<div class="toc"><ol><li><a href="#creating-migrations">Creating Migrations</a></li>
+<li><a href="#transactional-migrations">Transactional Migrations</a></li>
+<li><a href="#applying-migrations">Applying Migrations</a></li>
+<li><a href="#reverting-migrations">Reverting Migrations</a></li>
+<li><a href="#redoing-migrations">Redoing Migrations</a></li>
+<li><a href="#showing-migration-information">Showing Migration Information</a></li>
+<li><a href="#modifying-migration-history">Modifying Migration History</a></li>
+<li><a href="#customizing-migration-command">Customizing Migration Command</a></li></ol></div>
+
+
+<blockquote class="note">
+<p><strong>Note:</strong> The database migration feature has been available since version 1.1.6.</p>
+</blockquote>
+
+<p>Like source code, the structure of a database is evolving as we develop and maintain a database-driven application. For example, during development, we may want to add a new table; or after the application is put into production, we may realize the need of adding an index on a column. It is important to keep track of these structural database changes (called <strong>migration</strong>) like we do with our source code. If the source code and the database are out of sync, it is very likely the whole system may break. For this reason, Yii provides a database migration tool that can keep track of database migration history, apply new migrations, or revert existing ones.</p>
+
+<p>The following steps show how we can use database migration during development:</p>
+
+<ol>
+<li>Tim creates a new migration (e.g. create a new table)</li>
+<li>Tim commits the new migration into source control system (e.g. SVN, GIT)</li>
+<li>Doug updates from source control system and receives the new migration</li>
+<li>Doug applies the migration to his local development database</li>
+</ol>
+
+<p>Yii supports database migration via the <code>yiic migrate</code> command line tool. This tool supports creating new migrations, applying/reverting/redoing migrations, and showing migration history and new migrations.</p>
+
+<p>In the following, we will describe how to use this tool.</p>
+
+<blockquote class="note">
+<p><strong>Note:</strong> It's better to use application-specific yiic (e.g. <code>cd path/to/protected</code>)
+  when working with <code>migrate</code> command instead of one from <code>framework</code> directory.
+  Make sure you have <code>protected\migrations</code> directory and it is writable. Also check if
+  you've configured database connection in your <code>protected/config/console.php</code>.</p>
+</blockquote>
+
+<h2 id="creating-migrations">1. Creating Migrations <a class="anchor" href="#creating-migrations">¶</a></h2>
+
+<p>To create a new migration (e.g. create a news table), we run the following command:</p>
+
+<pre>yiic migrate create &lt;name&gt;
+</pre>
+
+<p>The required <code>name</code> parameter specifies a very brief description of the migration (e.g. <code>create_news_table</code>). As we will show in the following, the <code>name</code> parameter is used as part of a PHP class name. Therefore, it should only contain letters, digits and/or underscore characters.</p>
+
+<pre>yiic migrate create create_news_table
+</pre>
+
+<p>The above command will create under the <code>protected/migrations</code> directory a new file named <code>m101129_185401_create_news_table.php</code> which contains the following initial code:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">m101129_185401_create_news_table</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CDbMigration</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">up</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+    <span class="hl-brackets">}</span>
+ 
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">down</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-reserved">echo</span> <span class="hl-quotes">&quot;</span><span class="hl-string">m101129_185401_create_news_table does not support migration down.</span><span class="hl-special">\n</span><span class="hl-quotes">&quot;</span><span class="hl-code">;
+        </span><span class="hl-reserved">return</span> <span class="hl-reserved">false</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+ 
+    <span class="hl-comment">/*</span><span class="hl-comment">
+    // implement safeUp/safeDown instead if transaction is needed
+    public function safeUp()
+    {
+    }
+ 
+    public function safeDown()
+    {
+    }
+    </span><span class="hl-comment">*/</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>Notice that the class name is the same as the file name which is of the pattern <code>m&lt;timestamp&gt;_&lt;name&gt;</code>, where <code>&lt;timestamp&gt;</code> refers to the UTC timestamp (in the format of <code>yymmdd_hhmmss</code>) when the migration is created, and <code>&lt;name&gt;</code> is taken from the command's <code>name</code> parameter.</p>
+
+<p>The <code>up()</code> method should contain the code implementing the actual database migration, while the <code>down()</code> method may contain the code reverting what is done in <code>up()</code>.</p>
+
+<p>Sometimes, it is impossible to implement <code>down()</code>. For example, if we delete table rows in <code>up()</code>, we will not be able to recover them in <code>down()</code>. In this case, the migration is called irreversible, meaning we cannot roll back to a previous state of the database. In the above generated code, the <code>down()</code> method returns <code>false</code> to indicate that the migration cannot be reverted.</p>
+
+<blockquote class="info">
+<p><strong>Info:</strong> Starting from version 1.1.7, if the <code>up()</code> or <code>down()</code> method returns
+  <code>false</code>, all the following migrations will be canceled. Previously in version
+  1.1.6, one has to throw exceptions to cancel the following migrations.</p>
+</blockquote>
+
+<p>As an example, let's show the migration about creating a news table.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">m101129_185401_create_news_table</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CDbMigration</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">up</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createTable</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_news</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">id</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">pk</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">title</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">string NOT NULL</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">content</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">text</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+ 
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">down</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">dropTable</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_news</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>The base class <a href="/doc/api/1.1/CDbMigration">CDbMigration</a> provides a set of methods for manipulating data and schema of a database. For example, <a href="/doc/api/1.1/CDbMigration#createTable">CDbMigration::createTable</a> will create a database table, while <a href="/doc/api/1.1/CDbMigration#insert">CDbMigration::insert</a> will insert a row of data. These methods all use the database connection returned by <a href="/doc/api/1.1/CDbMigration#getDbConnection">CDbMigration::getDbConnection()</a>, which by default returns <code>Yii::app()-&gt;db</code>.</p>
+
+<blockquote class="info">
+<p><strong>Info:</strong> You may notice that the database methods provided by <a href="/doc/api/1.1/CDbMigration">CDbMigration</a> are very similar to those in <a href="/doc/api/1.1/CDbCommand">CDbCommand</a>. Indeed they are nearly the same except that <a href="/doc/api/1.1/CDbMigration">CDbMigration</a> methods will measure the time used by their methods and print some messages about the method parameters.</p>
+</blockquote>
+
+<h2 id="transactional-migrations">2. Transactional Migrations <a class="anchor" href="#transactional-migrations">¶</a></h2>
+
+<blockquote class="info">
+<p><strong>Info:</strong> The feature of transactional migrations has been supported since version 1.1.7.</p>
+</blockquote>
+
+<p>While performing complex DB migrations, we usually want to make sure that each migration succeed or fail as a whole so that the database maintains the consistency and integrity. In order to achieve this goal, we can exploit DB transactions.</p>
+
+<p>We could explicitly start a DB transaction and enclose the rest of the DB-related code within the transaction, like the following:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">m101129_185401_create_news_table</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CDbMigration</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">up</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-var">$transaction</span><span class="hl-code">=</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">getDbConnection</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">beginTransaction</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-reserved">try</span>
+        <span class="hl-brackets">{</span>
+            <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createTable</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_news</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+                <span class="hl-quotes">'</span><span class="hl-string">id</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">pk</span><span class="hl-quotes">'</span><span class="hl-code">,
+                </span><span class="hl-quotes">'</span><span class="hl-string">title</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">string NOT NULL</span><span class="hl-quotes">'</span><span class="hl-code">,
+                </span><span class="hl-quotes">'</span><span class="hl-string">content</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">text</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;
+            </span><span class="hl-var">$transaction</span><span class="hl-code">-&gt;</span><span class="hl-identifier">commit</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span>
+        <span class="hl-reserved">catch</span><span class="hl-brackets">(</span><span class="hl-identifier">Exception</span> <span class="hl-var">$e</span><span class="hl-brackets">)</span>
+        <span class="hl-brackets">{</span>
+            <span class="hl-reserved">echo</span> <span class="hl-quotes">&quot;</span><span class="hl-string">Exception: </span><span class="hl-quotes">&quot;</span><span class="hl-code">.</span><span class="hl-var">$e</span><span class="hl-code">-&gt;</span><span class="hl-identifier">getMessage</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">.</span><span class="hl-quotes">&quot;</span><span class="hl-special">\n</span><span class="hl-quotes">&quot;</span><span class="hl-code">;
+            </span><span class="hl-var">$transaction</span><span class="hl-code">-&gt;</span><span class="hl-identifier">rollback</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+            </span><span class="hl-reserved">return</span> <span class="hl-reserved">false</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span>
+    <span class="hl-brackets">}</span>
+ 
+    <span class="hl-comment">//</span><span class="hl-comment"> ...similar code for down()</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>However, an easier way to get transaction support is to implement the <code>safeUp()</code> method instead of <code>up()</code>, and <code>safeDown()</code> instead of <code>down()</code>. For example,</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">m101129_185401_create_news_table</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CDbMigration</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">safeUp</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createTable</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_news</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">id</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">pk</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">title</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">string NOT NULL</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">content</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">text</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+ 
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">safeDown</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">dropTable</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_news</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>When Yii performs the migration, it will start a DB transaction and then call <code>safeUp()</code> or <code>safeDown()</code>. If any DB error occurs in <code>safeUp()</code> or <code>safeDown()</code>, the transaction will be rolled back, thus ensuring the database remain in a good shape.</p>
+
+<blockquote class="note">
+<p><strong>Note:</strong> Not all DBMS support transactions. And some DB queries cannot be put
+  into a transaction. In this case, you will have to implement <code>up()</code> and
+  <code>down()</code>, instead. And for MySQL and MariaDB, some SQL statements may cause implicit commit
+  (see documentation of <a href="http://dev.mysql.com/doc/refman/5.1/en/implicit-commit.html">MySQL</a> and
+  <a href="https://mariadb.com/kb/en/sql-statements-that-cause-an-implicit-commit/">MariaDB</a> for details).</p>
+</blockquote>
+
+<h2 id="applying-migrations">3. Applying Migrations <a class="anchor" href="#applying-migrations">¶</a></h2>
+
+<p>To apply all available new migrations (i.e., make the local database up-to-date), run the following command:</p>
+
+<pre>yiic migrate
+</pre>
+
+<p>The command will show the list of all new migrations. If you confirm to apply the migrations, it will run the <code>up()</code> method in every new migration class, one after another, in the order of the timestamp value in the class name.</p>
+
+<p>After applying a migration, the migration tool will keep a record in a database table named <code>tbl_migration</code>. This allows the tool to identify which migrations have been applied and which are not. If the <code>tbl_migration</code> table does not exist, the tool will automatically create it in the database specified by the <code>db</code> application component.</p>
+
+<p>Sometimes, we may only want to apply one or a few new migrations. We can use the following command:</p>
+
+<pre>yiic migrate up 3
+</pre>
+
+<p>This command will apply the 3 new migrations. Changing the value 3 will allow us to change the number of migrations to be applied.</p>
+
+<p>We can also migrate the database to a specific version with the following command:</p>
+
+<pre>yiic migrate to 101129_185401
+</pre>
+
+<p>That is, we use the timestamp part of a migration name to specify the version that we want to migrate the database to. If there are multiple migrations between the last applied migration and the specified migration, all these migrations will be applied. If the specified migration has been applied before, then all migrations applied after it will be reverted (to be described in the next section).</p>
+
+<h2 id="reverting-migrations">4. Reverting Migrations <a class="anchor" href="#reverting-migrations">¶</a></h2>
+
+<p>To revert the last one or several applied migrations, we can use the following command:</p>
+
+<pre>yiic migrate down [step]
+</pre>
+
+<p>where the optional <code>step</code> parameter specifies how many migrations to be reverted back. It defaults to 1, meaning reverting back the last applied migration.</p>
+
+<p>As we described before, not all migrations can be reverted. Trying to revert such migrations will throw an exception and stop the whole reverting process.</p>
+
+<h2 id="redoing-migrations">5. Redoing Migrations <a class="anchor" href="#redoing-migrations">¶</a></h2>
+
+<p>Redoing migrations means first reverting and then applying the specified migrations. This can be done with the following command:</p>
+
+<pre>yiic migrate redo [step]
+</pre>
+
+<p>where the optional <code>step</code> parameter specifies how many migrations to be redone. It defaults to 1, meaning redoing the last migration.</p>
+
+<h2 id="showing-migration-information">6. Showing Migration Information <a class="anchor" href="#showing-migration-information">¶</a></h2>
+
+<p>Besides applying and reverting migrations, the migration tool can also display the migration history and the new migrations to be applied.</p>
+
+<pre>yiic migrate history [limit]
+yiic migrate new [limit]
+</pre>
+
+<p>where the optional parameter <code>limit</code> specifies the number of migrations to be displayed. If <code>limit</code> is not specified, all available migrations will be displayed.</p>
+
+<p>The first command shows the migrations that have been applied, while the second command shows the migrations that have not been applied.</p>
+
+<h2 id="modifying-migration-history">7. Modifying Migration History <a class="anchor" href="#modifying-migration-history">¶</a></h2>
+
+<p>Sometimes, we may want to modify the migration history to a specific migration version without actually applying or reverting the relevant migrations. This often happens when developing a new migration. We can use the following command to achieve this goal.</p>
+
+<pre>yiic migrate mark 101129_185401
+</pre>
+
+<p>This command is very similar to <code>yiic migrate to</code> command, except that it only modifies the migration history table to the specified version without applying or reverting the migrations.</p>
+
+<h2 id="customizing-migration-command">8. Customizing Migration Command <a class="anchor" href="#customizing-migration-command">¶</a></h2>
+
+<p>There are several ways to customize the migration command.</p>
+
+<h3 id="use-command-line-options">Use Command Line Options</h3>
+
+<p>The migration command comes with four options that can be specified in command line:</p>
+
+<ul>
+<li><p><code>interactive</code>: boolean, specifies whether to perform migrations in an interactive mode. Defaults to true, meaning the user will be prompted when performing a specific migration. You may set this to false should the migrations be done in a background process.</p></li>
+<li><p><code>migrationPath</code>: string, specifies the directory storing all migration class files. This must be specified in terms of a path alias, and the corresponding directory must exist. If not specified, it will use the <code>migrations</code> sub-directory under the application base path.</p></li>
+<li><p><code>migrationTable</code>: string, specifies the name of the database table for storing migration history information. It defaults to <code>tbl_migration</code>. The table structure is <code>version varchar(255) primary key, apply_time integer</code>.</p></li>
+<li><p><code>connectionID</code>: string, specifies the ID of the database application component. Defaults to 'db'.</p></li>
+<li><p><code>templateFile</code>: string, specifies the path of the file to be served as the code template for generating the migration classes. This must be specified in terms of a path alias (e.g. <code>application.migrations.template</code>). If not set, an internal template will be used. Inside the template, the token <code>{ClassName}</code> will be replaced with the actual migration class name.</p></li>
+</ul>
+
+<p>To specify these options, execute the migrate command using the following format</p>
+
+<pre>yiic migrate up --option1=value1 --option2=value2 ...
+</pre>
+
+<p>For example, if we want to migrate for a <code>forum</code> module whose migration files are located within the module's <code>migrations</code> directory, we can use the following command:</p>
+
+<pre>yiic migrate up --migrationPath=ext.forum.migrations
+</pre>
+
+<p>Note that in case you're setting boolean options such as <code>interactive</code> using command line you should pass either <code>1</code>
+or <code>0</code> like the following:</p>
+
+<pre>yiic migrate --interactive=0
+</pre>
+
+<h3 id="configure-command-globally">Configure Command Globally</h3>
+
+<p>While command line options allow us to configure the migration command on-the-fly, sometimes we may want to configure the command once for all. For example, we may want to use a different table to store the migration history, or we may want to use a customized migration template. We can do so by modifying the console application's configuration file like the following,</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">return</span> <span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-code">
+    ......
+    </span><span class="hl-quotes">'</span><span class="hl-string">commandMap</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+        <span class="hl-quotes">'</span><span class="hl-string">migrate</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">system.cli.commands.MigrateCommand</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">migrationPath</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">application.migrations</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">migrationTable</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">tbl_migration</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">connectionID</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">db</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">templateFile</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">application.migrations.template</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">,
+        ......
+    </span><span class="hl-brackets">)</span><span class="hl-code">,
+    ......
+</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>Now if we run the <code>migrate</code> command, the above configurations will take effect without requiring us to enter the command line options every time.</p>
+
+<div class="revision"><div class="google-ad" style="margin:-60px 0 5px 200px;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "7116172008";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>$Id$</div>
+</div>
+                <div class="prev-next-nav">
+                            <div class="prev-topic"><a href="/doc/guide/1.1/en/database.arr">Relational Active Record</a></div>
+                                        <div class="next-topic"><a href="/doc/guide/1.1/en/caching.overview">Overview</a></div>
+                    </div>
+        
+		        <div class="widget-comment-list" id="comments">
+	<div class="comments">
+		<h3>Total 13 comments</h3>
+				<div class="comment alt-0">
+			<a class="cid" id="c18760" title="permalink to this comment" href="#c18760">#18760</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=18760"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=18760&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=18760&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/66970/">arielon</a> at 2014/12/30 10:29pm</div>
+			<div class="title">Migration with checks</div>
+			<div class="content"><p>To check if a column exists before migrating, this could be useful:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">_addColumn</span><span class="hl-brackets">(</span><span class="hl-var">$table</span><span class="hl-code">, </span><span class="hl-var">$column</span><span class="hl-code">, </span><span class="hl-var">$type</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+ 
+      <span class="hl-comment">//</span><span class="hl-comment"> Fetch the table schema</span>
+      <span class="hl-var">$table_to_check</span><span class="hl-code"> = </span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">db</span><span class="hl-code">-&gt;</span><span class="hl-identifier">schema</span><span class="hl-code">-&gt;</span><span class="hl-identifier">getTable</span><span class="hl-brackets">(</span><span class="hl-var">$table</span><span class="hl-brackets">)</span><span class="hl-code">;
+      </span><span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-code"> ! </span><span class="hl-reserved">isset</span><span class="hl-brackets">(</span> <span class="hl-var">$table_to_check</span><span class="hl-code">-&gt;</span><span class="hl-identifier">columns</span><span class="hl-brackets">[</span><span class="hl-var">$column</span><span class="hl-brackets">]</span> <span class="hl-brackets">)</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+        <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">addColumn</span><span class="hl-brackets">(</span><span class="hl-var">$table</span><span class="hl-code">, </span><span class="hl-var">$column</span><span class="hl-code">, </span><span class="hl-var">$type</span><span class="hl-brackets">)</span><span class="hl-code">;
+      </span><span class="hl-brackets">}</span>
+ 
+    <span class="hl-brackets">}</span></pre></div></div>
+
+<p>Similarly with a table:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">_createTable</span><span class="hl-brackets">(</span><span class="hl-var">$table</span><span class="hl-code">, </span><span class="hl-var">$columns</span><span class="hl-code">, </span><span class="hl-var">$options</span><span class="hl-code"> = </span><span class="hl-reserved">NULL</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+      <span class="hl-comment">//</span><span class="hl-comment"> Fetch the table schema</span>
+      <span class="hl-var">$table_to_check</span><span class="hl-code"> = </span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">db</span><span class="hl-code">-&gt;</span><span class="hl-identifier">schema</span><span class="hl-code">-&gt;</span><span class="hl-identifier">getTable</span><span class="hl-brackets">(</span><span class="hl-var">$table</span><span class="hl-brackets">)</span><span class="hl-code">;
+      </span><span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-code"> ! </span><span class="hl-identifier">is_object</span><span class="hl-brackets">(</span><span class="hl-var">$table_to_check</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+        <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createTable</span><span class="hl-brackets">(</span><span class="hl-var">$table</span><span class="hl-code">, </span><span class="hl-var">$columns</span><span class="hl-code">, </span><span class="hl-var">$options</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-reserved">return</span> <span class="hl-reserved">TRUE</span><span class="hl-code">;
+      </span><span class="hl-brackets">}</span>
+      <span class="hl-reserved">return</span> <span class="hl-reserved">FALSE</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span></pre></div></div>
+
+<p>Your call would look similar to</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">_addColumn</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">table_name</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">column_name</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">varchar(255)</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>and</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">_createTable</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">table_name</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+          <span class="hl-quotes">'</span><span class="hl-string">id</span><span class="hl-quotes">'</span><span class="hl-code">   =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">pk</span><span class="hl-quotes">'</span><span class="hl-code">,
+          </span><span class="hl-quotes">'</span><span class="hl-string">field_name_1</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">string NOT NULL</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>respectively, instead.</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c16574" title="permalink to this comment" href="#c16574">#16574</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=16574"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=16574&amp;vote=1"><span>2</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=16574&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/85470/">realtebo</a> at 2014/03/07 03:21am</div>
+			<div class="title">How to use alternative CDbConnection</div>
+			<div class="content"><p>Referring to <a href="http://www.yiiframework.com/doc/guide/1.1/en/database.migration#c14039" title="comment 14039">comment 14039</a></p>
+
+<p>It's very easy to change db connection.
+you can use command line option to change it</p>
+
+<p>or even simpler do this:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">dbConnection</span><span class="hl-code"> = </span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">other_db</span><span class="hl-code">;</span></pre></div></div>
+
+<p>Be aware to use it for both <code>up</code> and <code>down</code>
+where <code>other_db</code> must bedefined in <code>config/console.php</code></p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-quotes">'</span><span class="hl-string">components</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-code"> 
+    ....
+    </span><span class="hl-quotes">"</span><span class="hl-string">other_db</span><span class="hl-quotes">"</span><span class="hl-code"> =&gt; </span><span class="hl-reserved">array</span> <span class="hl-brackets">(</span>
+        <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">"</span><span class="hl-string">CDbConnection</span><span class="hl-quotes">"</span><span class="hl-code">,
+        </span><span class="hl-quotes">'</span><span class="hl-string">connectionString</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">mysql:host=localhost;dbname=other_db_name</span><span class="hl-quotes">'</span>
+        <span class="hl-quotes">'</span><span class="hl-string">username</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">the_username</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-quotes">'</span><span class="hl-string">password</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">the_password</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-quotes">'</span><span class="hl-string">charset</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">utf8</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-quotes">'</span><span class="hl-string">tablePrefix</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">tab_</span><span class="hl-quotes">'</span><span class="hl-code">,
+    </span><span class="hl-brackets">)</span><span class="hl-code">, 
+    ....
+</span><span class="hl-brackets">)</span><span class="hl-code">, </span><span class="hl-comment">//</span><span class="hl-comment"> end of components</span></pre></div></div>
+
+<p>There is also another trick: you can specify in every CActiveRecord derivated model this function:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">/*</span><span class="hl-comment">*
+*</span><span class="hl-inlinedoc"> @return </span><span class="hl-comment">CDbConnection the database connection used for this class
+</span><span class="hl-comment">*/</span>
+<span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">getDbConnection</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">return</span> <span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">other_db</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></pre></div></div>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c14579" title="permalink to this comment" href="#c14579">#14579</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=14579"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=14579&amp;vote=1"><span>5</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=14579&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/124644/">whatif</a> at 2013/08/24 06:21am</div>
+			<div class="title">Important things to note</div>
+			<div class="content"><ol><li><p>One thing to note is that while running <strong>yiic migrate</strong> command, you need to be in the <strong>application/protected</strong> folder.</p></li>
+<li><p>The other thing to remember is that you need to edit the <strong>db configurations</strong> in the <strong>protected/main/console.php</strong> file otherwise you are going to bump into the following error exception 'CDbException' with message 'CDbConnection failed to open the DB connection: could not find driver' in /path/to/your/yii/lib/framework/db/CDbConnection.php:287</p></li>
+<li><p>You need to check if the <strong>Yii framework path</strong> is correct in <strong>application/protected/yiic.php</strong>.
+In my case, it was $yiic=dirname(<strong>FILE</strong>).'/../../framework-1.1.14/yiic.php';</p></li>
+</ol></div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c14039" title="permalink to this comment" href="#c14039">#14039</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=14039"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=14039&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=14039&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/80466/">InsaneWookie</a> at 2013/07/12 09:20pm</div>
+			<div class="title">Don&#039;t use models in migrations</div>
+			<div class="content"><p><strong>Important note:</strong> 
+Do not use Active Record models in a migration as they always connect to the default database. It is also possible the models will get out of sync with the migrations. 
+Instead use the provided database functions to perform modifications.</p>
+
+<p>See: <a href="http://www.yiiframework.com/forum/index.php/topic/45084-using-active-records-in-migrations/page__view__findpost__p__213380" title="Using active records in migrations">Using active records in migrations</a></p>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c12188" title="permalink to this comment" href="#c12188">#12188</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=12188"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=12188&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=12188&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/13003/">Jmper</a> at 2013/03/05 12:53am</div>
+			<div class="title">Transactions CAN have DDL if you use proper DB server</div>
+			<div class="content"><p>@Evgen:</p>
+
+<p>I understand you think MySQL = SQL. Many people do so. But it's not true.</p>
+
+<p>In fact, MySQL was not designed to support transactions at all at the beginning. Transactions have been supported since version 4 so no wonder MySQL is quite limited in it.</p>
+
+<p>Other DBMS, designed to be transactional from the scratch, fully support transactions, including DDL statements.</p>
+
+<p>For example, I'm using Postgres and have no problems in transactional migrations containing extensive DDL. Transactions are really handy here - if anything goes wrong, you don't have to worry about your db becoming inconsistent.</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c6486" title="permalink to this comment" href="#c6486">#6486</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=6486"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=6486&amp;vote=1"><span>3</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=6486&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/5650/">Evgen</a> at 2012/01/13 03:38am</div>
+			<div class="title">Transactions and DDL</div>
+			<div class="content"><p>Example with transaction is not correct.
+DDL constructions (create, alter tables) can not be rolled back
+http://dev.mysql.com/doc/refman/5.0/en/cannot-roll-back.html
+and when a DDL statement is issued MySQL will commit the pending transaction.</p>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c4737" title="permalink to this comment" href="#c4737">#4737</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=4737"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=4737&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=4737&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/212/">aztech</a> at 2011/08/10 05:08am</div>
+			<div class="title">Changing column to be primary key</div>
+			<div class="content"><p>To create primary key, when table is already existing and don't have already PK defined, call following statemet:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">alterColumn</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">{{table_name}}</span><span class="hl-quotes">'</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">column_name</span><span class="hl-quotes">'</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">type PRIMARY KEY</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>where "type" is a column type, e.g. string, int, etc.</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c4724" title="permalink to this comment" href="#c4724">#4724</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=4724"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=4724&amp;vote=1"><span>3</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=4724&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/5951/">CeBe</a> at 2011/08/08 12:52pm</div>
+			<div class="title">most execute commands are available on the migration object itself</div>
+			<div class="content"><p>@<a href="http://www.yiiframework.com/doc/guide/1.1/en/database.migration#c3870">thyseus</a>:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">up</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+    <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">execute</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">alter table example add column email varchar(255);</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></pre></div></div>
+
+<p>is a much nicer way ;-) Your approach is neccessary for select commands or more complicated things that are not wrapped in <a href="http://www.yiiframework.com/doc/api/1.1/CDbMigration">CDbMigration</a>.</p>
+
+<p>And you should use <code>$this-&gt;getDbConnection</code> instead of <code>Yii::app()-&gt;db</code> since the migration connectionId to use is configurable in MigrateCommand and hence can be different from <code>db</code>.</p>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c3879" title="permalink to this comment" href="#c3879">#3879</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=3879"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=3879&amp;vote=1"><span>20</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=3879&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/597/">MadSkillsTisdale</a> at 2011/05/17 12:03pm</div>
+			<div class="title">Generic Column Types</div>
+			<div class="content"><p>Here are the generic column types you can use to keep migrations DB independent, and what they mean (as of Yii 1.1.7)</p>
+
+<ul><li>pk: an auto-incremental primary key type, will be converted into "int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY"</li>
+<li>string: string type, will be converted into "varchar(255)"</li>
+<li>text: a long string type, will be converted into "text"</li>
+<li>integer: integer type, will be converted into "int(11)"</li>
+<li>boolean: boolean type, will be converted into "tinyint(1)"</li>
+<li>float: float number type, will be converted into "float"</li>
+<li>decimal: decimal number type, will be converted into "decimal"</li>
+<li>datetime: datetime type, will be converted into "datetime"</li>
+<li>timestamp: timestamp type, will be converted into "timestamp"</li>
+<li>time: time type, will be converted into "time"</li>
+<li>date: date type, will be converted into "date"</li>
+<li>binary: binary data type, will be converted into "blob"</li>
+</ul><p>The implementation uses CDbSchema-&gt;getColumnType(), and you can find more information here:</p>
+
+<p>http://www.yiiframework.com/doc/api/1.1/CDbSchema#getColumnType-detail</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c3870" title="permalink to this comment" href="#c3870">#3870</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=3870"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=3870&amp;vote=1"><span>1</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=3870&amp;vote=0"><span>1</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link silver" href="/user/1134/">thyseus</a> at 2011/05/16 07:54am</div>
+			<div class="title">Using plain SQL in migrations</div>
+			<div class="content"><p>To use plan SQL in migrations, you can do something like this:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">up</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+    <span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">db</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createCommand</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">alter table example add column email varchar(255);</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">execute</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></pre></div></div>
+
+<p>please note that, if using plain SQL queries, the migration will (most probably) only work on the same DBMS system. It is better to use the
+methos of CDbCommand to stay dbms-independent.</p>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c2789" title="permalink to this comment" href="#c2789">#2789</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=2789"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=2789&amp;vote=1"><span>4</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=2789&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/4032/">Dana</a> at 2011/02/10 12:18pm</div>
+			<div class="title">Interactive Mode</div>
+			<div class="content"><p>It should be noted that for the interactive option to properly recognize a false setting, it requires int 0, not 'false'</p>
+
+<p>so --interactive=0
+rather than --interactive=false</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c2589" title="permalink to this comment" href="#c2589">#2589</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=2589"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=2589&amp;vote=1"><span>14</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=2589&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/10235/">Kevin Guto</a> at 2011/01/20 04:10am</div>
+			<div class="title">Few things to note</div>
+			<div class="content"><ol><li>One thing to note is that while running <strong>yiic migrate create</strong> command, you need to be in the <strong>application/protected</strong> folder.</li>
+<li>The other thing to remember is for yiic migrate, <strong>yicc migrate up **or **yiic migrate down</strong> to work then you need to edit the db configurations in the <strong>protected/main/console.php</strong> file otherwise you are going to bump into the following error 
+<strong>exception 'CDbException' with message 'CDbConnection failed to open the DB connection: could not find driver' in /path/to/your/yii/lib/framework/db/CDbConnection.php:287</strong></li>
+</ol></div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c2550" title="permalink to this comment" href="#c2550">#2550</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=2550"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=2550&amp;vote=1"><span>26</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=2550&amp;vote=0"><span>1</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/210/">Leric</a> at 2011/01/17 03:19am</div>
+			<div class="title">Great feature</div>
+			<div class="content"><p>We don't need to envy rails any more, now we can put db schema under version control, but for old project, that already have a big schema picture, writing the migration script can be pretty boring.
+I wrote a command that can take care of most repeatable jobs:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">DumpSchemaCommand</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CConsoleCommand</span>
+<span class="hl-brackets">{</span>
+ 
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">run</span><span class="hl-brackets">(</span><span class="hl-var">$args</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+        <span class="hl-var">$schema</span><span class="hl-code"> = </span><span class="hl-var">$args</span><span class="hl-brackets">[</span><span class="hl-number">0</span><span class="hl-brackets">]</span><span class="hl-code">;
+        </span><span class="hl-var">$tables</span><span class="hl-code"> = </span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">db</span><span class="hl-code">-&gt;</span><span class="hl-identifier">schema</span><span class="hl-code">-&gt;</span><span class="hl-identifier">getTables</span><span class="hl-brackets">(</span><span class="hl-var">$schema</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-var">$result</span><span class="hl-code"> = </span><span class="hl-quotes">'</span><span class="hl-quotes">'</span><span class="hl-code">;
+        </span><span class="hl-reserved">foreach</span> <span class="hl-brackets">(</span><span class="hl-var">$tables</span> <span class="hl-reserved">as</span> <span class="hl-var">$def</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+            <span class="hl-var">$result</span><span class="hl-code"> .= </span><span class="hl-quotes">'</span><span class="hl-string">$this-&gt;createTable("</span><span class="hl-quotes">'</span><span class="hl-code"> . </span><span class="hl-var">$def</span><span class="hl-code">-&gt;</span><span class="hl-identifier">name</span><span class="hl-code"> . </span><span class="hl-quotes">'</span><span class="hl-string">", array(</span><span class="hl-quotes">'</span><span class="hl-code"> . </span><span class="hl-quotes">"</span><span class="hl-special">\n</span><span class="hl-quotes">"</span><span class="hl-code">;
+            </span><span class="hl-reserved">foreach</span> <span class="hl-brackets">(</span><span class="hl-var">$def</span><span class="hl-code">-&gt;</span><span class="hl-identifier">columns</span> <span class="hl-reserved">as</span> <span class="hl-var">$col</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+                <span class="hl-var">$result</span><span class="hl-code"> .= </span><span class="hl-quotes">'</span><span class="hl-string">    "</span><span class="hl-quotes">'</span><span class="hl-code"> . </span><span class="hl-var">$col</span><span class="hl-code">-&gt;</span><span class="hl-identifier">name</span><span class="hl-code"> . </span><span class="hl-quotes">'</span><span class="hl-string">"=&gt;"</span><span class="hl-quotes">'</span><span class="hl-code"> . </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">getColType</span><span class="hl-brackets">(</span><span class="hl-var">$col</span><span class="hl-brackets">)</span><span class="hl-code"> . </span><span class="hl-quotes">'</span><span class="hl-string">",</span><span class="hl-quotes">'</span><span class="hl-code"> . </span><span class="hl-quotes">"</span><span class="hl-special">\n</span><span class="hl-quotes">"</span><span class="hl-code">;
+            </span><span class="hl-brackets">}</span>
+            <span class="hl-var">$result</span><span class="hl-code"> .= </span><span class="hl-quotes">'</span><span class="hl-string">), "");</span><span class="hl-quotes">'</span><span class="hl-code"> . </span><span class="hl-quotes">"</span><span class="hl-special">\n</span><span class="hl-special">\n</span><span class="hl-quotes">"</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span>
+        <span class="hl-reserved">echo</span> <span class="hl-var">$result</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+ 
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">getColType</span><span class="hl-brackets">(</span><span class="hl-var">$col</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+        <span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-var">$col</span><span class="hl-code">-&gt;</span><span class="hl-identifier">isPrimaryKey</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+            <span class="hl-reserved">return</span> <span class="hl-quotes">"</span><span class="hl-string">pk</span><span class="hl-quotes">"</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span>
+        <span class="hl-var">$result</span><span class="hl-code"> = </span><span class="hl-var">$col</span><span class="hl-code">-&gt;</span><span class="hl-identifier">dbType</span><span class="hl-code">;
+        </span><span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-code">!</span><span class="hl-var">$col</span><span class="hl-code">-&gt;</span><span class="hl-identifier">allowNull</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+            <span class="hl-var">$result</span><span class="hl-code"> .= </span><span class="hl-quotes">'</span><span class="hl-string"> NOT NULL</span><span class="hl-quotes">'</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span>
+        <span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-var">$col</span><span class="hl-code">-&gt;</span><span class="hl-identifier">defaultValue</span><span class="hl-code"> != </span><span class="hl-reserved">null</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+            <span class="hl-var">$result</span><span class="hl-code"> .= </span><span class="hl-quotes">"</span><span class="hl-string"> DEFAULT '</span><span class="hl-var">{$col-&gt;defaultValue}</span><span class="hl-string">'</span><span class="hl-quotes">"</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span>
+        <span class="hl-reserved">return</span> <span class="hl-var">$result</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>Remember it's just a 10 minutes scrawl, not to do everything, you still need to add index defination, table options, constraints by hand.</p>
+</div>
+					</div>
+			</div>
+	<div id="comment-add">
+		<h3 id="add-comment">Leave a comment</h3>
+
+			<p>Please <a class="g-login" rel="/doc/guide/1.1/en/database.migration#add-comment" href="#">login</a> to leave your comment.</p>
+		</div>
+</div>
+           </div>
+</div>
+					</div>
+				
+								<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+					</div>
+	</div>
+
+	<div class="layout-main-footer">
+		<div class="container_12">
+			<div class="grid_6">
+				<ul class="menu">
+				<li class="main">About
+<ul class="sub">
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="main">Downloads
+<ul class="sub">
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="main">Documentation
+<ul class="sub">
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="main">Development
+<ul class="sub">
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="main">Community
+<ul class="sub">
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+				</ul>
+			</div>
+			<div class="grid_1">&nbsp;</div>
+			<div class="grid_5">
+				<h3>Yii Supporters</h3>
+				<ul class="g-list-none supporters">
+
+				</ul>
+			</div>
+
+			<div class="clear"></div>
+			<div class="grid_12 copyright">
+				<ul class="social">
+					<li class="twitter"><a href="https://twitter.com/yiiframework" target="_blank" rel="nofollow" title="follow us on twitter">Twitter</a></li>
+					<li class="facebook"><a href="https://www.facebook.com/groups/yiitalk/" target="_blank" rel="nofollow" title="join yii group at facebook">Facebook</a></li>
+					<li class="linkedin"><a href="http://www.linkedin.com/groups?gid=1483367" target="_blank" rel="nofollow" title="join yii group at linkedin">LinkedIn</a></li>
+					<li class="feeds"><a title="RSS feeds" href="/rss.xml/">RSS Feeds</a></li>
+				</ul>
+				<div class="clear"></div>
+				<a href="/tos/">Terms of Service</a> |
+				<a href="/license/">License</a> |
+				<a href="/contact/">Contact Us</a><br/>
+				Copyright &copy; 2015 by <a href="http://www.yiisoft.com">Yii Software LLC</a>.
+				All Rights Reserved.
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+    <script type="text/javascript" src="/js/site-20121004195728.js"></script>
+
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['site._setAccount', 'UA-5843896-1']);
+_gaq.push(['site._trackPageview']);
+
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+<script type="text/javascript">
+function trackClick(link, action, category) {
+	action=action || link.href;
+	category=category || 'Outbound Links';
+	try {
+		_gaq.push(['site._trackEvent', category, action]);
+		setTimeout('document.location = "' + link.href + '"', 250);
+	}catch(err){}
+	return false;
+}
+</script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+</body>
+</html>

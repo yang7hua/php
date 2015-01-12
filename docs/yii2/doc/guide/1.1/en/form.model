@@ -1,0 +1,811 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    	<meta charset="UTF-8" />
+		<meta name="keywords" content="yii framework, tutorial, guide, version 1.1" />
+	<meta name="description" content="Before writing the HTML code needed by a form, we should decide what kind
+of data we are expecting from end users and what rules these data should
+comply with." />
+    <link rel="shortcut icon" type="image/x-icon" href="http://static.yiiframework.com/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="http://static.yiiframework.com/css/site-20130404102234.css" />
+
+	<link title="Lives News for Yii Framework" rel="alternate" type="application/rss+xml" href="http://www.yiiframework.com/rss.xml/" />
+	<title>Working with Forms: Creating Model | The Definitive Guide to Yii | Yii PHP Framework</title>
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii API Search" href="/search-api.xml" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii Site Search" href="/search-site.xml" />
+</head>
+
+<body class="mac">
+<div class="layout-main">
+
+	<div class="layout-main-shortcuts">
+		<div class="container_12">
+            <a style="color:darkred;" href="https://github.com/yiisoft/yii2">Github</a> &middot;
+            <a style="color:darkgreen;" href="https://twitter.com/yiiframework">Twitter</a> &middot;
+            <a style="color:darkblue;" href="https://www.facebook.com/groups/yiitalk/">Facebook</a> &middot;
+            <a href="/doc/guide/">Guide</a> &middot;
+            <a href="/doc/api/">Class Reference</a> &middot;
+            <a href="/doc-2.0/guide-index.html">Guide 2.0</a> &middot;
+            <a href="/doc-2.0/index.html">API 2.0</a> &middot;
+            <a href="/wiki/">Wiki</a> &middot;
+            <a href="/extensions/">Extensions</a> &middot;
+            <a href="/forum/">Forum</a> &middot;
+			<a href="/chat/">Live Chat</a> &middot;
+                            <a href="/login/">Login</a>            		</div>
+	</div>
+
+	<div class="layout-main-bg">
+		<div class="layout-main-header">
+			<div class="container_12">
+				<div class="grid_4">
+					<a class="logo" href="/"><img alt="Yii Logo" src="http://static.yiiframework.com/css/img/logo.png" title="Yii Framework" width="284" height="64" /></a>				</div>
+				<div class="grid_8 omega">
+					<div class="nav">
+						<ul class="menu" id="yw0">
+<li class="about"><a class="main" href="/about/">About</a>
+<ul>
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li class="last"><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="downloads"><a class="main" href="/download/">Downloads</a>
+<ul>
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li class="last"><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="documentation active"><a class="main" href="/doc/">Documentation</a>
+<ul>
+<li><a href="/tour/">Take the Tour</a></li>
+<li class="active"><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li class="last"><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="development"><a class="main" href="https://github.com/yiisoft/yii/commits/master">Development</a>
+<ul>
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li class="last"><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="community last"><a class="main" href="/community/">Community</a>
+<ul>
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li class="last"><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+</ul>						<div class="search">
+							<form method="get" action="/search/">
+								<div class="keyword">
+	                                <input name="q" value="" />
+									<a href="#" title="search" class="global-search">search</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+
+		<div class="container_12">
+						<div class="grid_12">
+												<div class="layout-main-submenu">
+					<ul>
+						<li class="main">Documentation</li>
+												<li><a href="/tour/">Take the Tour</a></li>
+												<li class="active"><a href="/tutorials/">Tutorials</a></li>
+												<li><a href="/doc/api/">Class Reference</a></li>
+												<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+												<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+												<li><a href="/wiki/">Wiki</a></li>
+												<li><a href="/screencasts/">Screencasts</a></li>
+												<li><a href="/resources/">Resources</a></li>
+											</ul>
+				</div>
+				
+				
+				
+									<div class="layout-main-body">
+						<div class="tutorial-view">
+    <div class="grid_3 alpha">
+        <div class="nav-toc">
+    		<div class="title">The Definitive Guide to Yii</div>
+    		<div class="langver">
+	            <strong>Language &amp; version</strong>
+	    		<div class="languages g-dropdown">
+	    		<span>English<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.1/de/form.model">Deutsch</a></li>
+<li><a href="/doc/guide/1.1/es/form.model">Español</a></li>
+<li><a href="/doc/guide/1.1/fr/form.model">Français</a></li>
+<li><a href="/doc/guide/1.1/he/form.model">עִבְרִית</a></li>
+<li><a href="/doc/guide/1.1/id/form.model">Bahasa Indonesia</a></li>
+<li><a href="/doc/guide/1.1/it/form.model">Italiano</a></li>
+<li><a href="/doc/guide/1.1/ja/form.model">日本語</a></li>
+<li><a href="/doc/guide/1.1/pl/form.model">Polski</a></li>
+<li><a href="/doc/guide/1.1/pt/form.model">Português</a></li>
+<li><a href="/doc/guide/1.1/pt_br/form.model">Português brasileiro</a></li>
+<li><a href="/doc/guide/1.1/ro/form.model">România</a></li>
+<li><a href="/doc/guide/1.1/ru/form.model">Русский</a></li>
+<li><a href="/doc/guide/1.1/sv/form.model">Svenska</a></li>
+<li><a href="/doc/guide/1.1/uk/form.model">украї́нська</a></li>
+<li><a href="/doc/guide/1.1/zh_cn/form.model">简体中文</a></li>
+</ul>
+	    		</div>
+				<div class="versions g-dropdown">
+	    		<span>1.1<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.0/en/form.model">1.0</a></li>
+</ul>
+				</div>
+				<div class="clear"></div>
+			</div>
+            <div class="widget-search-box">
+    <form method="get" action="/search/">
+        <strong>Search in this tutorial</strong>
+		<input type="text" name="q" class="keyword g-text" />
+        <input type="hidden" name="type" value="guide" />
+        <input type="hidden" name="lang" value="en" />
+        <input type="submit" value="Find" class="btn btn-info" />
+	</form>
+</div>
+			<ul class="toc">
+						    <li class="chapter"><strong>Getting Started</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/index">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/changes">New Features</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/upgrade">Upgrading from 1.0 to 1.1</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.what-is-yii">What is Yii</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.installation">Installation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.apache-nginx-config">Apache and Nginx configurations</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app">Creating First Yii Application</a>			            </li>
+			        			    						    <li class="chapter"><strong>Fundamentals</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.mvc">Model-View-Controller (MVC)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.entry">Entry Script</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.application">Application</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.controller">Controller</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.model">Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.view">View</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.component">Component</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.module">Module</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.namespace">Path Alias and Namespace</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.convention">Conventions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.workflow">Development Workflow</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.best-practices">Best MVC Practices</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Forms</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.overview">Overview</a>			            </li>
+			        			    			        			            <li class="active">
+			                &raquo; Creating Model &laquo;
+			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.action">Creating Action</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.view">Creating Form</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.table">Collecting Tabular Input</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.builder">Using Form Builder</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Databases</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.dao">Database Access Objects</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.query-builder">Query Builder</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.ar">Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.arr">Relational Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.migration">Database Migration</a>			            </li>
+			        			    						    <li class="chapter"><strong>Caching</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.data">Data Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.fragment">Fragment Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.page">Page Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.dynamic">Dynamic Content</a>			            </li>
+			        			    						    <li class="chapter"><strong>Extending Yii</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.use">Using Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.create">Creating Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.integration">Using 3rd-Party Libraries</a>			            </li>
+			        			    						    <li class="chapter"><strong>Testing</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.fixture">Defining Fixtures</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.unit">Unit Testing</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.functional">Functional Testing</a>			            </li>
+			        			    						    <li class="chapter"><strong>Special Topics</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.gii">Automatic Code Generation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.url">URL Management</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.auth">Authentication and Authorization</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.theming">Theming and Skin</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.logging">Logging</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.error">Error Handling</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.webservice">Web Service</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.i18n">Internationalization (I18N)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.prado">Alternative Template Syntax</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.console">Console Applications</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.security">Security</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.performance">Performance Tuning</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app-yiic">Code Generation using Command Line Tools (deprecated)</a>			            </li>
+			        			    						</ul>
+        </div>
+    </div>
+    <div class="grid_9 omega">
+    	<div class="g-markdown"><h1 id="creating-model">Creating Model</h1>
+<div class="google-ad" style="float:right;margin:0 0 1em 1em;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "2830391674";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+<div class="toc"><ol><li><a href="#defining-model-class">Defining Model Class</a></li>
+<li><a href="#declaring-validation-rules">Declaring Validation Rules</a></li>
+<li><a href="#securing-attribute-assignments">Securing Attribute Assignments</a></li>
+<li><a href="#triggering-validation">Triggering Validation</a></li>
+<li><a href="#retrieving-validation-errors">Retrieving Validation Errors</a></li>
+<li><a href="#attribute-labels">Attribute Labels</a></li></ol></div>
+
+
+<p>Before writing the HTML code needed by a form, we should decide what kind
+of data we are expecting from end users and what rules these data should
+comply with. A model class can be used to record these information. A
+model, as defined in the <a href="/doc/guide/1.1/en/basics.model">Model</a> subsection, is
+the central place for keeping user inputs and validating them.</p>
+
+<p>Depending on how we make use of the user input, we can create two types of
+model. If the user input is collected, used and then discarded, we would
+create a <a href="/doc/guide/1.1/en/basics.model">form model</a>; if the user input is
+collected and saved into database, we would use an <a href="/doc/guide/1.1/en/database.ar">active
+record</a> instead. Both types of model share the same
+base class <a href="/doc/api/1.1/CModel">CModel</a> which defines the common interface needed by form.</p>
+
+<blockquote class="note">
+<p><strong>Note:</strong> We are mainly using form models in the examples of this section.
+  However, the same can also be applied to <a href="/doc/guide/1.1/en/database.ar">active
+  record</a> models.</p>
+</blockquote>
+
+<h2 id="defining-model-class">1. Defining Model Class <a class="anchor" href="#defining-model-class">¶</a></h2>
+
+<p>Below we create a <code>LoginForm</code> model class used to collect user input on a
+login page. Because the login information is only used to authenticate the
+user and does not need to be saved, we create <code>LoginForm</code> as a form model.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">LoginForm</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CFormModel</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">public</span> <span class="hl-var">$username</span><span class="hl-code">;
+    </span><span class="hl-reserved">public</span> <span class="hl-var">$password</span><span class="hl-code">;
+    </span><span class="hl-reserved">public</span> <span class="hl-var">$rememberMe</span><span class="hl-code">=</span><span class="hl-reserved">false</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></pre></div></div>
+
+<p>Three attributes are declared in <code>LoginForm</code>: <code>$username</code>, <code>$password</code> and
+<code>$rememberMe</code>. They are used to keep the user-entered username and
+password, and the option whether the user wants to remember his login.
+Because <code>$rememberMe</code> has a default value <code>false</code>, the corresponding option
+when initially displayed in the login form will be unchecked.</p>
+
+<blockquote class="info">
+<p><strong>Info:</strong> Instead of calling these member variables properties, we use the
+  name <em>attributes</em> to differentiate them from normal properties. An
+  attribute is a property that is mainly used to store data coming from user
+  input or database.</p>
+</blockquote>
+
+<h2 id="declaring-validation-rules">2. Declaring Validation Rules <a class="anchor" href="#declaring-validation-rules">¶</a></h2>
+
+<p>Once a user submits his inputs and the model gets populated, we need to
+make sure the inputs are valid before using them. This is done by
+performing validation of the inputs against a set of rules. We specify the
+validation rules in the <code>rules()</code> method which should return an array of
+rule configurations.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">LoginForm</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CFormModel</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">public</span> <span class="hl-var">$username</span><span class="hl-code">;
+    </span><span class="hl-reserved">public</span> <span class="hl-var">$password</span><span class="hl-code">;
+    </span><span class="hl-reserved">public</span> <span class="hl-var">$rememberMe</span><span class="hl-code">=</span><span class="hl-reserved">false</span><span class="hl-code">;
+ 
+    </span><span class="hl-reserved">private</span> <span class="hl-var">$_identity</span><span class="hl-code">;
+ 
+    </span><span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">rules</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-reserved">return</span> <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">username, password</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">required</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+            </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">rememberMe</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">boolean</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+            </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">password</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">authenticate</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+ 
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">authenticate</span><span class="hl-brackets">(</span><span class="hl-var">$attribute</span><span class="hl-code">,</span><span class="hl-var">$params</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">_identity</span><span class="hl-code">=</span><span class="hl-reserved">new</span> <span class="hl-identifier">UserIdentity</span><span class="hl-brackets">(</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">username</span><span class="hl-code">,</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">password</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-code">!</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">_identity</span><span class="hl-code">-&gt;</span><span class="hl-identifier">authenticate</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+            <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">addError</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">password</span><span class="hl-quotes">'</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">Incorrect username or password.</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>The above code specifies that <code>username</code> and <code>password</code> are both required,
+<code>password</code> should be authenticated, and <code>rememberMe</code> should be a boolean.</p>
+
+<p>Each rule returned by <code>rules()</code> must be of the following format:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">AttributeList</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">Validator</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">on</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">ScenarioList</span><span class="hl-quotes">'</span><span class="hl-code">, ...</span><span class="hl-identifier">additional</span> <span class="hl-identifier">options</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>where <code>AttributeList</code> is a string of comma-separated attribute names which
+need to be validated according to the rule; <code>Validator</code> specifies what kind of
+validation should be performed; the <code>on</code> parameter is optional which specifies
+a list of scenarios where the rule should be applied; and additional options
+are name-value pairs which are used to initialize the corresponding validator <a href="/doc/guide/1.1/en/basics.component">component's
+property values</a>.</p>
+
+<p>Since version 1.1.11 it is possible to blacklist scenarios. If you don't
+want to perform validation for some rule when particular scenarios are active
+you could specify <code>except</code> parameter containing their names. Syntax is the same
+as for <code>on</code> parameter.</p>
+
+<p>List of scenarios (<code>on</code> and <code>except</code> parameters) could be specified in two
+different forms which means the same:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> arbitrary array with scenario names</span>
+<span class="hl-quotes">'</span><span class="hl-string">on</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">update</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">create</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+</span><span class="hl-comment">//</span><span class="hl-comment"> string with scenario names separated with commas (spaces are ignored)</span>
+<span class="hl-quotes">'</span><span class="hl-string">except</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">ignore, this, scenarios, at-all</span><span class="hl-quotes">'</span><span class="hl-code">,</span></pre></div></div>
+
+<p>There are three ways to specify <code>Validator</code> in a validation rule. First,
+<code>Validator</code> can be the name of a method in the model class, like
+<code>authenticate</code> in the above example. The validator method must be of the
+following signature:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">/*</span><span class="hl-comment">*
+ *</span><span class="hl-inlinedoc"> @param </span><span class="hl-comment">string $attribute the name of the attribute to be validated
+ *</span><span class="hl-inlinedoc"> @param </span><span class="hl-comment">array $params options specified in the validation rule
+ </span><span class="hl-comment">*/</span>
+<span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">ValidatorName</span><span class="hl-brackets">(</span><span class="hl-var">$attribute</span><span class="hl-code">,</span><span class="hl-var">$params</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span><span class="hl-code"> ... </span><span class="hl-brackets">}</span></pre></div></div>
+
+<p>Second, <code>Validator</code> can be the name of a validator class. When the rule is
+applied, an instance of the validator class will be created to perform the
+actual validation. The additional options in the rule are used to
+initialize the instance's attribute values. A validator class must extend
+from <a href="/doc/api/1.1/CValidator">CValidator</a>.</p>
+
+<p>Third, <code>Validator</code> can be a predefined alias to a validator class. In the
+above example, the name <code>required</code> is the alias to <a href="/doc/api/1.1/CRequiredValidator">CRequiredValidator</a>
+which ensures the attribute value being validated is not empty. Below is
+the complete list of predefined validator aliases:</p>
+
+<ul>
+<li><p><code>boolean</code>: alias of <a href="/doc/api/1.1/CBooleanValidator">CBooleanValidator</a>, ensuring the attribute has
+a value that is either <a href="/doc/api/1.1/CBooleanValidator#trueValue">CBooleanValidator::trueValue</a> or
+<a href="/doc/api/1.1/CBooleanValidator#falseValue">CBooleanValidator::falseValue</a>.</p></li>
+<li><p><code>captcha</code>: alias of <a href="/doc/api/1.1/CCaptchaValidator">CCaptchaValidator</a>, ensuring the attribute is
+equal to the verification code displayed in a
+<a href="http://en.wikipedia.org/wiki/Captcha">CAPTCHA</a>.</p></li>
+<li><p><code>compare</code>: alias of <a href="/doc/api/1.1/CCompareValidator">CCompareValidator</a>, ensuring the attribute is
+equal to another attribute or constant.</p></li>
+<li><p><code>email</code>: alias of <a href="/doc/api/1.1/CEmailValidator">CEmailValidator</a>, ensuring the attribute is a
+valid email address.</p></li>
+<li><p><code>date</code>: alias of <a href="/doc/api/1.1/CDateValidator">CDateValidator</a>, ensuring the attribute represents
+a valid date, time, or datetime value.</p></li>
+<li><p><code>default</code>: alias of <a href="/doc/api/1.1/CDefaultValueValidator">CDefaultValueValidator</a>, assigning a default value
+to the specified attributes.</p></li>
+<li><p><code>exist</code>: alias of <a href="/doc/api/1.1/CExistValidator">CExistValidator</a>, ensuring the attribute value
+can be found in the specified table column.</p></li>
+<li><p><code>file</code>: alias of <a href="/doc/api/1.1/CFileValidator">CFileValidator</a>, ensuring the attribute contains
+the name of an uploaded file.</p></li>
+<li><p><code>filter</code>: alias of <a href="/doc/api/1.1/CFilterValidator">CFilterValidator</a>, transforming the attribute
+with a filter.</p></li>
+<li><p><code>in</code>: alias of <a href="/doc/api/1.1/CRangeValidator">CRangeValidator</a>, ensuring the data is among a
+pre-specified list of values.</p></li>
+<li><p><code>length</code>: alias of <a href="/doc/api/1.1/CStringValidator">CStringValidator</a>, ensuring the length of the
+data is within certain range.</p></li>
+<li><p><code>match</code>: alias of <a href="/doc/api/1.1/CRegularExpressionValidator">CRegularExpressionValidator</a>, ensuring the data
+matches a regular expression.</p></li>
+<li><p><code>numerical</code>: alias of <a href="/doc/api/1.1/CNumberValidator">CNumberValidator</a>, ensuring the data is a
+valid number.</p></li>
+<li><p><code>required</code>: alias of <a href="/doc/api/1.1/CRequiredValidator">CRequiredValidator</a>, ensuring the attribute is
+not empty.</p></li>
+<li><p><code>type</code>: alias of <a href="/doc/api/1.1/CTypeValidator">CTypeValidator</a>, ensuring the attribute is of
+specific data type.</p></li>
+<li><p><code>unique</code>: alias of <a href="/doc/api/1.1/CUniqueValidator">CUniqueValidator</a>, ensuring the data is unique in
+a database table column.</p></li>
+<li><p><code>url</code>: alias of <a href="/doc/api/1.1/CUrlValidator">CUrlValidator</a>, ensuring the data is a valid URL.</p></li>
+</ul>
+
+<p>Below we list some examples of using the predefined validators:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> username is required</span>
+<span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">username</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">required</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+</span><span class="hl-comment">//</span><span class="hl-comment"> username must be between 3 and 12 characters</span>
+<span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">username</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">length</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">min</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-number">3</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">max</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-number">12</span><span class="hl-brackets">)</span><span class="hl-code">,
+</span><span class="hl-comment">//</span><span class="hl-comment"> when in register scenario, password must match password2</span>
+<span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">password</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">compare</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">compareAttribute</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">password2</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">on</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">register</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+</span><span class="hl-comment">//</span><span class="hl-comment"> when in login scenario, password must be authenticated</span>
+<span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">password</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">authenticate</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">on</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">login</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,</span></pre></div></div>
+
+<h2 id="securing-attribute-assignments">3. Securing Attribute Assignments <a class="anchor" href="#securing-attribute-assignments">¶</a></h2>
+
+<p>After a model instance is created, we often need to populate its
+attributes with the data submitted by end-users. This can be done
+conveniently using the following massive assignment:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$model</span><span class="hl-code">=</span><span class="hl-reserved">new</span> <span class="hl-identifier">LoginForm</span><span class="hl-code">;
+</span><span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-reserved">isset</span><span class="hl-brackets">(</span><span class="hl-var">$_POST</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">LoginForm</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+    <span class="hl-var">$model</span><span class="hl-code">-&gt;</span><span class="hl-identifier">attributes</span><span class="hl-code">=</span><span class="hl-var">$_POST</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">LoginForm</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-code">;</span></pre></div></div>
+
+<p>The last statement is called <em>massive assignment</em> which assigns every entry
+in <code>$_POST['LoginForm']</code> to the corresponding model attribute.
+It is equivalent to the following assignments:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">foreach</span><span class="hl-brackets">(</span><span class="hl-var">$_POST</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">LoginForm</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span> <span class="hl-reserved">as</span> <span class="hl-var">$name</span><span class="hl-code">=&gt;</span><span class="hl-var">$value</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-var">$name</span> <span class="hl-identifier">is</span> <span class="hl-identifier">a</span> <span class="hl-identifier">safe</span> <span class="hl-identifier">attribute</span><span class="hl-brackets">)</span>
+        <span class="hl-var">$model</span><span class="hl-code">-&gt;</span><span class="hl-var">$name</span><span class="hl-code">=</span><span class="hl-var">$value</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></pre></div></div>
+
+<p>It is crucial to determine which attributes are safe. For example, if we
+expose the primary key of a table to be safe, then an attacker could
+get a chance to modify the primary key of the given record and thus tamper
+the data he is not authorized to.</p>
+
+<h3 id="declaring-safe-attributes">Declaring Safe Attributes</h3>
+
+<p>An attribute is considered safe if it appears in a validation
+rule that is applicable in the given scenario. For example,</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">username, password</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">required</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">on</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">login, register</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">email</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">required</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">on</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">register</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,</span></pre></div></div>
+
+<p>In the above, the <code>username</code> and <code>password</code> attributes are required in <code>login</code>
+scenario, while the <code>username</code>, <code>password</code> and <code>email</code> attributes are required
+in <code>register</code> scenario. As a result, if we perform a massive assign when in
+<code>login</code> scenario, only <code>username</code> and <code>password</code> will be massively assigned
+since they are the only attributes appearing in the validation rules for <code>login</code>.
+On the other hand, if the scenario is <code>register</code>, the three attributes can
+all be massively assigned.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> in login scenario</span>
+<span class="hl-var">$model</span><span class="hl-code">=</span><span class="hl-reserved">new</span> <span class="hl-identifier">User</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">login</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-reserved">isset</span><span class="hl-brackets">(</span><span class="hl-var">$_POST</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">User</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+    <span class="hl-var">$model</span><span class="hl-code">-&gt;</span><span class="hl-identifier">attributes</span><span class="hl-code">=</span><span class="hl-var">$_POST</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">User</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-code">;
+ 
+</span><span class="hl-comment">//</span><span class="hl-comment"> in register scenario</span>
+<span class="hl-var">$model</span><span class="hl-code">=</span><span class="hl-reserved">new</span> <span class="hl-identifier">User</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">register</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-reserved">isset</span><span class="hl-brackets">(</span><span class="hl-var">$_POST</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">User</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+    <span class="hl-var">$model</span><span class="hl-code">-&gt;</span><span class="hl-identifier">attributes</span><span class="hl-code">=</span><span class="hl-var">$_POST</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">User</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-code">;</span></pre></div></div>
+
+<p>So why do we use such a policy to determine if an attribute is safe or not?
+The rationale behind is that if an attribute already has one or several validation rules
+to check its validity, what else should we worry about it?</p>
+
+<p>It is important to remember that validation rules are used to check user input data
+rather than the data that we generate in the code (e.g. timestamp, auto-generated primary key).
+Therefore, DO NOT add validation rules for those attributes which do not expect inputs
+from end-users.</p>
+
+<p>Sometimes, we want to declare an attribute to be safe, even though we do not really have
+any specific rule for it. An example is an article's content attribute which can take any
+user input. We can use the special <code>safe</code> rule to achieve this goal:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">content</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">safe</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>For completeness, there is also an <code>unsafe</code> rule which is used to explicitly declare an
+attribute to be unsafe:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">permission</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">unsafe</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <code>unsafe</code> rule is rarely used, and it is an exception to our previous definition of safe
+attributes.</p>
+
+<p>For data entries that are not safe, we need to assign them to the corresponding
+attributes using individual assign statements, like the following:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$model</span><span class="hl-code">-&gt;</span><span class="hl-identifier">permission</span><span class="hl-code">=</span><span class="hl-quotes">'</span><span class="hl-string">admin</span><span class="hl-quotes">'</span><span class="hl-code">;
+</span><span class="hl-var">$model</span><span class="hl-code">-&gt;</span><span class="hl-identifier">id</span><span class="hl-code">=</span><span class="hl-number">1</span><span class="hl-code">;</span></pre></div></div>
+
+<h2 id="triggering-validation">4. Triggering Validation <a class="anchor" href="#triggering-validation">¶</a></h2>
+
+<p>Once a model is populated with user-submitted data, we can call <a href="/doc/api/1.1/CModel#validate">CModel::validate()</a>
+to trigger the data validation process. The method returns a value
+indicating whether the validation is successful or not. For <a href="/doc/api/1.1/CActiveRecord">CActiveRecord</a> models,
+validation may also be automatically triggered when we call its <a href="/doc/api/1.1/CActiveRecord#save">CActiveRecord::save()</a>
+method.</p>
+
+<p>We can set a scenario with the <a href="/doc/api/1.1/CModel#scenario">scenario</a> property and
+therewith indicate which set of validation rules should be applied.</p>
+
+<p>Validation is performed in a scenario basis. The <a href="/doc/api/1.1/CModel#scenario">scenario</a>
+property specifies which scenario the model is being used in and which set
+of validation rules should be used. For example, in the <code>login</code> scenario, we only want to
+validate the <code>username</code> and <code>password</code> inputs of a user model; while in the <code>register</code>
+scenario, we need to validate more inputs, such as <code>email</code>, <code>address</code>, etc.
+The following example shows how to perform validation in the <code>register</code> scenario:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> creates a User model in register scenario. It is equivalent to:</span>
+<span class="hl-comment">//</span><span class="hl-comment"> $model=new User;</span>
+<span class="hl-comment">//</span><span class="hl-comment"> $model-&gt;scenario='register';</span>
+<span class="hl-var">$model</span><span class="hl-code">=</span><span class="hl-reserved">new</span> <span class="hl-identifier">User</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">register</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+</span><span class="hl-comment">//</span><span class="hl-comment"> populates the input values into the model</span>
+<span class="hl-var">$model</span><span class="hl-code">-&gt;</span><span class="hl-identifier">attributes</span><span class="hl-code">=</span><span class="hl-var">$_POST</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">User</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-code">;
+ 
+</span><span class="hl-comment">//</span><span class="hl-comment"> performs the validation</span>
+<span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-var">$model</span><span class="hl-code">-&gt;</span><span class="hl-identifier">validate</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>   <span class="hl-comment">//</span><span class="hl-comment"> if the inputs are valid</span><span class="hl-code">
+    ...
+</span><span class="hl-reserved">else</span><span class="hl-code">
+    ...</span></pre></div></div>
+
+<p>The applicable scenarios that a rule is associated can be specified via
+the <code>on</code> option in the rule. If the <code>on</code> option is not set, it means the
+rule will be used for all scenarios. For example,</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">rules</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">return</span> <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+        <span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">username, password</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">required</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+        </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">password_repeat</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">required</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">on</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">register</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+        </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">password</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">compare</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">on</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">register</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></pre></div></div>
+
+<p>The first rule will be applied in all scenarios, while the
+next two rules will only be applied in the <code>register</code> scenario.</p>
+
+<h2 id="retrieving-validation-errors">5. Retrieving Validation Errors <a class="anchor" href="#retrieving-validation-errors">¶</a></h2>
+
+<p>Once validation is done, any possible errors will be stored in the model
+object. We can retrieve the error messages by calling <a href="/doc/api/1.1/CModel#getErrors">CModel::getErrors()</a>
+and <a href="/doc/api/1.1/CModel#getError">CModel::getError()</a>. The difference between the two methods is that
+the first method will return <em>all</em> errors for the specified model attribute
+while the second method will only return the <em>first</em> error.</p>
+
+<h2 id="attribute-labels">6. Attribute Labels <a class="anchor" href="#attribute-labels">¶</a></h2>
+
+<p>When designing a form, we often need to display a label for each input
+field. The label tells a user what kind of information he is expected to
+enter into the field. Although we can hardcode a label in a view, it would
+offer more flexibility and convenience if we specify it in the
+corresponding model.</p>
+
+<p>By default, <a href="/doc/api/1.1/CModel">CModel</a> will simply return the name of an attribute as its
+label. This can be customized by overriding the
+<a href="/doc/api/1.1/CModel#attributeLabels">attributeLabels()</a> method. As we will see in the
+following subsections, specifying labels in the model allows us to create a
+form more quickly and powerful.</p>
+
+<div class="revision"><div class="google-ad" style="margin:-60px 0 5px 200px;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "7116172008";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>$Id$</div>
+</div>
+                <div class="prev-next-nav">
+                            <div class="prev-topic"><a href="/doc/guide/1.1/en/form.overview">Overview</a></div>
+                                        <div class="next-topic"><a href="/doc/guide/1.1/en/form.action">Creating Action</a></div>
+                    </div>
+        
+		        <div class="widget-comment-list" id="comments">
+	<div class="comments">
+		<h3>Total 2 comments</h3>
+				<div class="comment alt-0">
+			<a class="cid" id="c3007" title="permalink to this comment" href="#c3007">#3007</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=3007"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=3007&amp;vote=1"><span>6</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=3007&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/3121/">François Gannaz</a> at 2011/03/07 02:46pm</div>
+			<div class="title">Writing a validator method</div>
+			<div class="content"><p>A validator method has no return value.
+If the data does not validate, the validator must use <code>$this-&gt;addError()</code> or <code>$this-&gt;addErrors()</code> to set error messages on the attribute(s) tested.
+The prototype is <code>CModel::addError(string $attribute, string $error)</code>.</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c1347" title="permalink to this comment" href="#c1347">#1347</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=1347"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=1347&amp;vote=1"><span>1</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=1347&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/2242/">webscriptz.be</a> at 2009/09/02 02:57pm</div>
+			<div class="title">AR instead</div>
+			<div class="content"><p>it doesn't seem a bad idea to make a note of :" if the user input is collected and saved into database, we would use an active record instead." I needed to read the paragraph 3 times before i saw it (shame)</p>
+</div>
+					</div>
+			</div>
+	<div id="comment-add">
+		<h3 id="add-comment">Leave a comment</h3>
+
+			<p>Please <a class="g-login" rel="/doc/guide/1.1/en/form.model#add-comment" href="#">login</a> to leave your comment.</p>
+		</div>
+</div>
+           </div>
+</div>
+					</div>
+				
+								<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+					</div>
+	</div>
+
+	<div class="layout-main-footer">
+		<div class="container_12">
+			<div class="grid_6">
+				<ul class="menu">
+				<li class="main">About
+<ul class="sub">
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="main">Downloads
+<ul class="sub">
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="main">Documentation
+<ul class="sub">
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="main">Development
+<ul class="sub">
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="main">Community
+<ul class="sub">
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+				</ul>
+			</div>
+			<div class="grid_1">&nbsp;</div>
+			<div class="grid_5">
+				<h3>Yii Supporters</h3>
+				<ul class="g-list-none supporters">
+
+				</ul>
+			</div>
+
+			<div class="clear"></div>
+			<div class="grid_12 copyright">
+				<ul class="social">
+					<li class="twitter"><a href="https://twitter.com/yiiframework" target="_blank" rel="nofollow" title="follow us on twitter">Twitter</a></li>
+					<li class="facebook"><a href="https://www.facebook.com/groups/yiitalk/" target="_blank" rel="nofollow" title="join yii group at facebook">Facebook</a></li>
+					<li class="linkedin"><a href="http://www.linkedin.com/groups?gid=1483367" target="_blank" rel="nofollow" title="join yii group at linkedin">LinkedIn</a></li>
+					<li class="feeds"><a title="RSS feeds" href="/rss.xml/">RSS Feeds</a></li>
+				</ul>
+				<div class="clear"></div>
+				<a href="/tos/">Terms of Service</a> |
+				<a href="/license/">License</a> |
+				<a href="/contact/">Contact Us</a><br/>
+				Copyright &copy; 2015 by <a href="http://www.yiisoft.com">Yii Software LLC</a>.
+				All Rights Reserved.
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+    <script type="text/javascript" src="/js/site-20121004195728.js"></script>
+
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['site._setAccount', 'UA-5843896-1']);
+_gaq.push(['site._trackPageview']);
+
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+<script type="text/javascript">
+function trackClick(link, action, category) {
+	action=action || link.href;
+	category=category || 'Outbound Links';
+	try {
+		_gaq.push(['site._trackEvent', category, action]);
+		setTimeout('document.location = "' + link.href + '"', 250);
+	}catch(err){}
+	return false;
+}
+</script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+</body>
+</html>

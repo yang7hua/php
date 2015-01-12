@@ -1,0 +1,635 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    	<meta charset="UTF-8" />
+		<meta name="keywords" content="yii framework, tutorial, guide, version 1.1" />
+	<meta name="description" content="Fragment caching refers to caching a fragment of a page." />
+    <link rel="shortcut icon" type="image/x-icon" href="http://static.yiiframework.com/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="http://static.yiiframework.com/css/site-20130404102234.css" />
+
+	<link title="Lives News for Yii Framework" rel="alternate" type="application/rss+xml" href="http://www.yiiframework.com/rss.xml/" />
+	<title>Caching: Fragment Caching | The Definitive Guide to Yii | Yii PHP Framework</title>
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii API Search" href="/search-api.xml" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii Site Search" href="/search-site.xml" />
+</head>
+
+<body class="mac">
+<div class="layout-main">
+
+	<div class="layout-main-shortcuts">
+		<div class="container_12">
+            <a style="color:darkred;" href="https://github.com/yiisoft/yii2">Github</a> &middot;
+            <a style="color:darkgreen;" href="https://twitter.com/yiiframework">Twitter</a> &middot;
+            <a style="color:darkblue;" href="https://www.facebook.com/groups/yiitalk/">Facebook</a> &middot;
+            <a href="/doc/guide/">Guide</a> &middot;
+            <a href="/doc/api/">Class Reference</a> &middot;
+            <a href="/doc-2.0/guide-index.html">Guide 2.0</a> &middot;
+            <a href="/doc-2.0/index.html">API 2.0</a> &middot;
+            <a href="/wiki/">Wiki</a> &middot;
+            <a href="/extensions/">Extensions</a> &middot;
+            <a href="/forum/">Forum</a> &middot;
+			<a href="/chat/">Live Chat</a> &middot;
+                            <a href="/login/">Login</a>            		</div>
+	</div>
+
+	<div class="layout-main-bg">
+		<div class="layout-main-header">
+			<div class="container_12">
+				<div class="grid_4">
+					<a class="logo" href="/"><img alt="Yii Logo" src="http://static.yiiframework.com/css/img/logo.png" title="Yii Framework" width="284" height="64" /></a>				</div>
+				<div class="grid_8 omega">
+					<div class="nav">
+						<ul class="menu" id="yw0">
+<li class="about"><a class="main" href="/about/">About</a>
+<ul>
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li class="last"><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="downloads"><a class="main" href="/download/">Downloads</a>
+<ul>
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li class="last"><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="documentation active"><a class="main" href="/doc/">Documentation</a>
+<ul>
+<li><a href="/tour/">Take the Tour</a></li>
+<li class="active"><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li class="last"><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="development"><a class="main" href="https://github.com/yiisoft/yii/commits/master">Development</a>
+<ul>
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li class="last"><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="community last"><a class="main" href="/community/">Community</a>
+<ul>
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li class="last"><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+</ul>						<div class="search">
+							<form method="get" action="/search/">
+								<div class="keyword">
+	                                <input name="q" value="" />
+									<a href="#" title="search" class="global-search">search</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+
+		<div class="container_12">
+						<div class="grid_12">
+												<div class="layout-main-submenu">
+					<ul>
+						<li class="main">Documentation</li>
+												<li><a href="/tour/">Take the Tour</a></li>
+												<li class="active"><a href="/tutorials/">Tutorials</a></li>
+												<li><a href="/doc/api/">Class Reference</a></li>
+												<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+												<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+												<li><a href="/wiki/">Wiki</a></li>
+												<li><a href="/screencasts/">Screencasts</a></li>
+												<li><a href="/resources/">Resources</a></li>
+											</ul>
+				</div>
+				
+				
+				
+									<div class="layout-main-body">
+						<div class="tutorial-view">
+    <div class="grid_3 alpha">
+        <div class="nav-toc">
+    		<div class="title">The Definitive Guide to Yii</div>
+    		<div class="langver">
+	            <strong>Language &amp; version</strong>
+	    		<div class="languages g-dropdown">
+	    		<span>English<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.1/de/caching.fragment">Deutsch</a></li>
+<li><a href="/doc/guide/1.1/es/caching.fragment">Español</a></li>
+<li><a href="/doc/guide/1.1/fr/caching.fragment">Français</a></li>
+<li><a href="/doc/guide/1.1/he/caching.fragment">עִבְרִית</a></li>
+<li><a href="/doc/guide/1.1/id/caching.fragment">Bahasa Indonesia</a></li>
+<li><a href="/doc/guide/1.1/it/caching.fragment">Italiano</a></li>
+<li><a href="/doc/guide/1.1/ja/caching.fragment">日本語</a></li>
+<li><a href="/doc/guide/1.1/pl/caching.fragment">Polski</a></li>
+<li><a href="/doc/guide/1.1/pt/caching.fragment">Português</a></li>
+<li><a href="/doc/guide/1.1/pt_br/caching.fragment">Português brasileiro</a></li>
+<li><a href="/doc/guide/1.1/ro/caching.fragment">România</a></li>
+<li><a href="/doc/guide/1.1/ru/caching.fragment">Русский</a></li>
+<li><a href="/doc/guide/1.1/sv/caching.fragment">Svenska</a></li>
+<li><a href="/doc/guide/1.1/uk/caching.fragment">украї́нська</a></li>
+<li><a href="/doc/guide/1.1/zh_cn/caching.fragment">简体中文</a></li>
+</ul>
+	    		</div>
+				<div class="versions g-dropdown">
+	    		<span>1.1<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.0/en/caching.fragment">1.0</a></li>
+</ul>
+				</div>
+				<div class="clear"></div>
+			</div>
+            <div class="widget-search-box">
+    <form method="get" action="/search/">
+        <strong>Search in this tutorial</strong>
+		<input type="text" name="q" class="keyword g-text" />
+        <input type="hidden" name="type" value="guide" />
+        <input type="hidden" name="lang" value="en" />
+        <input type="submit" value="Find" class="btn btn-info" />
+	</form>
+</div>
+			<ul class="toc">
+						    <li class="chapter"><strong>Getting Started</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/index">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/changes">New Features</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/upgrade">Upgrading from 1.0 to 1.1</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.what-is-yii">What is Yii</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.installation">Installation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.apache-nginx-config">Apache and Nginx configurations</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app">Creating First Yii Application</a>			            </li>
+			        			    						    <li class="chapter"><strong>Fundamentals</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.mvc">Model-View-Controller (MVC)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.entry">Entry Script</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.application">Application</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.controller">Controller</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.model">Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.view">View</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.component">Component</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.module">Module</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.namespace">Path Alias and Namespace</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.convention">Conventions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.workflow">Development Workflow</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.best-practices">Best MVC Practices</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Forms</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.model">Creating Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.action">Creating Action</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.view">Creating Form</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.table">Collecting Tabular Input</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.builder">Using Form Builder</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Databases</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.dao">Database Access Objects</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.query-builder">Query Builder</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.ar">Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.arr">Relational Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.migration">Database Migration</a>			            </li>
+			        			    						    <li class="chapter"><strong>Caching</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.data">Data Caching</a>			            </li>
+			        			    			        			            <li class="active">
+			                &raquo; Fragment Caching &laquo;
+			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.page">Page Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.dynamic">Dynamic Content</a>			            </li>
+			        			    						    <li class="chapter"><strong>Extending Yii</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.use">Using Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.create">Creating Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.integration">Using 3rd-Party Libraries</a>			            </li>
+			        			    						    <li class="chapter"><strong>Testing</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.fixture">Defining Fixtures</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.unit">Unit Testing</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.functional">Functional Testing</a>			            </li>
+			        			    						    <li class="chapter"><strong>Special Topics</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.gii">Automatic Code Generation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.url">URL Management</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.auth">Authentication and Authorization</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.theming">Theming and Skin</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.logging">Logging</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.error">Error Handling</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.webservice">Web Service</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.i18n">Internationalization (I18N)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.prado">Alternative Template Syntax</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.console">Console Applications</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.security">Security</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.performance">Performance Tuning</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app-yiic">Code Generation using Command Line Tools (deprecated)</a>			            </li>
+			        			    						</ul>
+        </div>
+    </div>
+    <div class="grid_9 omega">
+    	<div class="g-markdown"><h1 id="fragment-caching">Fragment Caching</h1>
+<div class="google-ad" style="float:right;margin:0 0 1em 1em;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "2830391674";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+<div class="toc"><ol><li><a href="#caching-options">Caching Options</a></li>
+<li><a href="#nested-caching">Nested Caching</a></li></ol></div>
+
+
+<p>Fragment caching refers to caching a fragment of a page. For example, if a
+page displays a summary of yearly sale in a table, we can store this table
+in cache to eliminate the time needed to generate it for each request.</p>
+
+<p>To use fragment caching, we call
+<a href="/doc/api/1.1/CBaseController#beginCache">CController::beginCache()</a> and
+<a href="/doc/api/1.1/CBaseController#endCache">CController::endCache()</a> in a controller's
+view script. The two methods mark the beginning and the end of the page
+content that should be cached, respectively. Like <a href="/doc/guide/1.1/en/caching.data">data
+caching</a>, we need an ID to identify the fragment
+being cached.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-code">...</span><span class="hl-identifier">other</span> <span class="hl-identifier">HTML</span> <span class="hl-identifier">content</span><span class="hl-code">...
+&lt;?</span><span class="hl-identifier">php</span> <span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">beginCache</span><span class="hl-brackets">(</span><span class="hl-var">$id</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span> <span class="hl-inlinetags">?&gt;</span><span class="hl-default">
+...content to be cached...
+</span><span class="hl-inlinetags">&lt;?php</span> <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">endCache</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-brackets">}</span> <span class="hl-inlinetags">?&gt;</span><span class="hl-code">
+...</span><span class="hl-identifier">other</span> <span class="hl-identifier">HTML</span> <span class="hl-identifier">content</span><span class="hl-code">...</span></pre></div></div>
+
+<p>In the above, if <a href="/doc/api/1.1/CBaseController#beginCache">beginCache()</a> returns
+false, the cached content will be automatically inserted at the place;
+otherwise, the content inside the <code>if</code>-statement will be executed and be
+cached when <a href="/doc/api/1.1/CBaseController#endCache">endCache()</a> is invoked.</p>
+
+<h2 id="caching-options">1. Caching Options <a class="anchor" href="#caching-options">¶</a></h2>
+
+<p>When calling <a href="/doc/api/1.1/CBaseController#beginCache">beginCache()</a>, we can supply
+an array as the second parameter consisting of caching options to customize
+the fragment caching. As a matter of fact, the
+<a href="/doc/api/1.1/CBaseController#beginCache">beginCache()</a> and
+<a href="/doc/api/1.1/CBaseController#endCache">endCache()</a> methods are a convenient wrapper
+of the <a href="/doc/api/1.1/COutputCache">COutputCache</a> widget. Therefore, the caching options can be initial
+values for any properties of <a href="/doc/api/1.1/COutputCache">COutputCache</a>.</p>
+
+<h3 id="duration">Duration</h3>
+
+<p>Perhaps the most commonly option is <a href="/doc/api/1.1/COutputCache#duration">duration</a>
+which specifies how long the content can remain valid in cache. It is
+similar to the expiration parameter of <a href="/doc/api/1.1/CCache#set">CCache::set()</a>. The following code
+caches the content fragment for at most one hour:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-code">...</span><span class="hl-identifier">other</span> <span class="hl-identifier">HTML</span> <span class="hl-identifier">content</span><span class="hl-code">...
+&lt;?</span><span class="hl-identifier">php</span> <span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">beginCache</span><span class="hl-brackets">(</span><span class="hl-var">$id</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">duration</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-number">3600</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span> <span class="hl-inlinetags">?&gt;</span><span class="hl-default">
+...content to be cached...
+</span><span class="hl-inlinetags">&lt;?php</span> <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">endCache</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-brackets">}</span> <span class="hl-inlinetags">?&gt;</span><span class="hl-code">
+...</span><span class="hl-identifier">other</span> <span class="hl-identifier">HTML</span> <span class="hl-identifier">content</span><span class="hl-code">...</span></pre></div></div>
+
+<p>If we do not set the duration, it would default to 60, meaning the cached
+content will be invalidated after 60 seconds.</p>
+
+<p>Starting from version 1.1.8, if the duration is set 0, any existing cached
+content will be removed from the cache. If the duration is a negative value,
+the cache will be disabled, but existing cached content will remain in the cache.
+Prior to version 1.1.8, if the duration is 0 or negative, the cache will be disabled.</p>
+
+<h3 id="dependency">Dependency</h3>
+
+<p>Like <a href="/doc/guide/1.1/en/caching.data">data caching</a>, content fragment being
+cached can also have dependencies. For example, the content of a post being
+displayed depends on whether or not the post is modified.</p>
+
+<p>To specify a dependency, we set the <a href="/doc/api/1.1/COutputCache#dependency">dependency</a>
+option, which can be either an object implementing <a href="/doc/api/1.1/ICacheDependency">ICacheDependency</a> or a
+configuration array that can be used to generate the dependency object. The
+following code specifies the fragment content depends on the change of
+<code>lastModified</code> column value:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-code">...</span><span class="hl-identifier">other</span> <span class="hl-identifier">HTML</span> <span class="hl-identifier">content</span><span class="hl-code">...
+&lt;?</span><span class="hl-identifier">php</span> <span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">beginCache</span><span class="hl-brackets">(</span><span class="hl-var">$id</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">dependency</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+        <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">system.caching.dependencies.CDbCacheDependency</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-quotes">'</span><span class="hl-string">sql</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">SELECT MAX(lastModified) FROM Post</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span> <span class="hl-inlinetags">?&gt;</span><span class="hl-default">
+...content to be cached...
+</span><span class="hl-inlinetags">&lt;?php</span> <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">endCache</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-brackets">}</span> <span class="hl-inlinetags">?&gt;</span><span class="hl-code">
+...</span><span class="hl-identifier">other</span> <span class="hl-identifier">HTML</span> <span class="hl-identifier">content</span><span class="hl-code">...</span></pre></div></div>
+
+<h3 id="variation">Variation</h3>
+
+<p>Content being cached may be variated according to some parameters. For
+example, the personal profile may look differently to different users. To
+cache the profile content, we would like the cached copy to be variated
+according to user IDs. This essentially means that we should use different
+IDs when calling <a href="/doc/api/1.1/CBaseController#beginCache">beginCache()</a>.</p>
+
+<p>Instead of asking developers to variate the IDs according to some scheme,
+<a href="/doc/api/1.1/COutputCache">COutputCache</a> is built-in with such a feature. Below is a summary.</p>
+
+<ul>
+<li><p><a href="/doc/api/1.1/COutputCache#varyByRoute">varyByRoute</a>: by setting this option
+to true, the cached content will be variated according to
+<a href="/doc/guide/1.1/en/basics.controller#route">route</a>. Therefore, each combination
+of the requested controller and action will have a separate cached content.</p></li>
+<li><p><a href="/doc/api/1.1/COutputCache#varyBySession">varyBySession</a>: by setting this option
+to true, we can make the cached content to be variated according to session
+IDs. Therefore, each user session may see different content and they are
+all served from cache.</p></li>
+<li><p><a href="/doc/api/1.1/COutputCache#varyByParam">varyByParam</a>: by setting this option to an
+array of names, we can make the cached content to be variated according to
+the values of the specified GET parameters. For example, if a page displays
+the content of a post according to the <code>id</code> GET parameter, we can specify
+<a href="/doc/api/1.1/COutputCache#varyByParam">varyByParam</a> to be <code>array('id')</code> so that we can
+cache the content for each post. Without such variation, we would only be
+able to cache a single post.</p></li>
+<li><p><a href="/doc/api/1.1/COutputCache#varyByExpression">varyByExpression</a>: by setting this option
+to a PHP expression, we can make the cached content to be variated according
+to the result of this PHP expression.</p></li>
+</ul>
+
+<h3 id="request-types">Request Types</h3>
+
+<p>Sometimes we want the fragment caching to be enabled only for certain
+types of request. For example, for a page displaying a form, we only want
+to cache the form when it is initially requested (via GET request). Any
+subsequent display (via POST request) of the form should not be cached
+because the form may contain user input. To do so, we can specify the
+<a href="/doc/api/1.1/COutputCache#requestTypes">requestTypes</a> option:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-code">...</span><span class="hl-identifier">other</span> <span class="hl-identifier">HTML</span> <span class="hl-identifier">content</span><span class="hl-code">...
+&lt;?</span><span class="hl-identifier">php</span> <span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">beginCache</span><span class="hl-brackets">(</span><span class="hl-var">$id</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">requestTypes</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">GET</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span> <span class="hl-inlinetags">?&gt;</span><span class="hl-default">
+...content to be cached...
+</span><span class="hl-inlinetags">&lt;?php</span> <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">endCache</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-brackets">}</span> <span class="hl-inlinetags">?&gt;</span><span class="hl-code">
+...</span><span class="hl-identifier">other</span> <span class="hl-identifier">HTML</span> <span class="hl-identifier">content</span><span class="hl-code">...</span></pre></div></div>
+
+<h2 id="nested-caching">2. Nested Caching <a class="anchor" href="#nested-caching">¶</a></h2>
+
+<p>Fragment caching can be nested. That is, a cached fragment is enclosed
+within a bigger fragment that is also cached. For example, the comments are
+cached in an inner fragment cache, and they are cached together with the
+post content in an outer fragment cache.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-code">...</span><span class="hl-identifier">other</span> <span class="hl-identifier">HTML</span> <span class="hl-identifier">content</span><span class="hl-code">...
+&lt;?</span><span class="hl-identifier">php</span> <span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">beginCache</span><span class="hl-brackets">(</span><span class="hl-var">$id1</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span> <span class="hl-inlinetags">?&gt;</span><span class="hl-default">
+...outer content to be cached...
+    </span><span class="hl-inlinetags">&lt;?php</span> <span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">beginCache</span><span class="hl-brackets">(</span><span class="hl-var">$id2</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span> <span class="hl-inlinetags">?&gt;</span><span class="hl-default">
+    ...inner content to be cached...
+    </span><span class="hl-inlinetags">&lt;?php</span> <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">endCache</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-brackets">}</span> <span class="hl-inlinetags">?&gt;</span><span class="hl-default">
+...outer content to be cached...
+</span><span class="hl-inlinetags">&lt;?php</span> <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">endCache</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-brackets">}</span> <span class="hl-inlinetags">?&gt;</span><span class="hl-code">
+...</span><span class="hl-identifier">other</span> <span class="hl-identifier">HTML</span> <span class="hl-identifier">content</span><span class="hl-code">...</span></pre></div></div>
+
+<p>Different caching options can be set to the nested caches. For example,
+the inner cache and the outer cache in the above example can be set with
+different duration values. Even when the data cached in the outer cache is
+invalidated, the inner cache may still provide the valid inner fragment.
+However, it is not true vice versa. If the outer cache is evaluated to be valid,
+it will continue to provide the same cached copy even after the content in the
+inner cache has been invalidated.
+You must be careful in setting the durations or the dependencies of the nested caches,
+otherwise the outdated inner fragments may be kept in the outer fragment.</p>
+
+<div class="revision"><div class="google-ad" style="margin:-60px 0 5px 200px;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "7116172008";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>$Id$</div>
+</div>
+                <div class="prev-next-nav">
+                            <div class="prev-topic"><a href="/doc/guide/1.1/en/caching.data">Data Caching</a></div>
+                                        <div class="next-topic"><a href="/doc/guide/1.1/en/caching.page">Page Caching</a></div>
+                    </div>
+        
+		        <div class="widget-comment-list" id="comments">
+	<div class="comments">
+		<h3>Total 1 comment</h3>
+				<div class="comment alt-0">
+			<a class="cid" id="c5654" title="permalink to this comment" href="#c5654">#5654</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=5654"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=5654&amp;vote=1"><span>1</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=5654&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/39239/">alinmircea</a> at 2011/10/28 06:11pm</div>
+			<div class="title">Caching parent and child</div>
+			<div class="content"><p>The statement about caching parent and child can be a bit hard to understand. I know I read the phrase 4 times..</p>
+
+<p>To sum it up. If your child cache expires, make sure your parent cache expires as well.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-identifier">parent</span><span class="hl-code">.</span><span class="hl-identifier">isCached</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">{</span>
+<span class="hl-identifier">getCache</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-comment">//</span><span class="hl-comment">your child cache is in this cache. it does not get reloaded even if it expires</span>
+<span class="hl-brackets">}</span>
+<span class="hl-identifier">on</span> <span class="hl-identifier">the</span> <span class="hl-identifier">other</span> <span class="hl-identifier">hand</span>
+<span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-code">!</span><span class="hl-identifier">parent</span><span class="hl-code">.</span><span class="hl-identifier">isCached</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-identifier">createCache</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span> <span class="hl-comment">//</span><span class="hl-comment">will pass through the content </span>
+    <span class="hl-comment">//</span><span class="hl-comment">-&gt; find the child cache and </span>
+    <span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-identifier">child</span><span class="hl-code">.</span><span class="hl-identifier">isCached</span><span class="hl-brackets">)</span>
+        <span class="hl-identifier">getCache</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-reserved">else</span>
+        <span class="hl-identifier">createCache</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>so if your parent expires, your child may still be cached in which case only the parent is reloaded.</p>
+
+<p>if your child expires, make sure your parent expires if you want the child reloaded. or it will reload the child from the parent cache even if the child has expired.</p>
+</div>
+					</div>
+			</div>
+	<div id="comment-add">
+		<h3 id="add-comment">Leave a comment</h3>
+
+			<p>Please <a class="g-login" rel="/doc/guide/1.1/en/caching.fragment#add-comment" href="#">login</a> to leave your comment.</p>
+		</div>
+</div>
+           </div>
+</div>
+					</div>
+				
+								<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+					</div>
+	</div>
+
+	<div class="layout-main-footer">
+		<div class="container_12">
+			<div class="grid_6">
+				<ul class="menu">
+				<li class="main">About
+<ul class="sub">
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="main">Downloads
+<ul class="sub">
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="main">Documentation
+<ul class="sub">
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="main">Development
+<ul class="sub">
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="main">Community
+<ul class="sub">
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+				</ul>
+			</div>
+			<div class="grid_1">&nbsp;</div>
+			<div class="grid_5">
+				<h3>Yii Supporters</h3>
+				<ul class="g-list-none supporters">
+
+				</ul>
+			</div>
+
+			<div class="clear"></div>
+			<div class="grid_12 copyright">
+				<ul class="social">
+					<li class="twitter"><a href="https://twitter.com/yiiframework" target="_blank" rel="nofollow" title="follow us on twitter">Twitter</a></li>
+					<li class="facebook"><a href="https://www.facebook.com/groups/yiitalk/" target="_blank" rel="nofollow" title="join yii group at facebook">Facebook</a></li>
+					<li class="linkedin"><a href="http://www.linkedin.com/groups?gid=1483367" target="_blank" rel="nofollow" title="join yii group at linkedin">LinkedIn</a></li>
+					<li class="feeds"><a title="RSS feeds" href="/rss.xml/">RSS Feeds</a></li>
+				</ul>
+				<div class="clear"></div>
+				<a href="/tos/">Terms of Service</a> |
+				<a href="/license/">License</a> |
+				<a href="/contact/">Contact Us</a><br/>
+				Copyright &copy; 2015 by <a href="http://www.yiisoft.com">Yii Software LLC</a>.
+				All Rights Reserved.
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+    <script type="text/javascript" src="/js/site-20121004195728.js"></script>
+
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['site._setAccount', 'UA-5843896-1']);
+_gaq.push(['site._trackPageview']);
+
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+<script type="text/javascript">
+function trackClick(link, action, category) {
+	action=action || link.href;
+	category=category || 'Outbound Links';
+	try {
+		_gaq.push(['site._trackEvent', category, action]);
+		setTimeout('document.location = "' + link.href + '"', 250);
+	}catch(err){}
+	return false;
+}
+</script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+</body>
+</html>

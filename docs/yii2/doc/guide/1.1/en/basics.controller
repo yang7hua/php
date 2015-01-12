@@ -1,0 +1,858 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    	<meta charset="UTF-8" />
+		<meta name="keywords" content="yii framework, tutorial, guide, version 1.1" />
+	<meta name="description" content="A controller is an instance of CController or of a class that extends CController. 
+It is created by the application object when the user requests it." />
+    <link rel="shortcut icon" type="image/x-icon" href="http://static.yiiframework.com/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="http://static.yiiframework.com/css/site-20130404102234.css" />
+
+	<link title="Lives News for Yii Framework" rel="alternate" type="application/rss+xml" href="http://www.yiiframework.com/rss.xml/" />
+	<title>Fundamentals: Controller | The Definitive Guide to Yii | Yii PHP Framework</title>
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii API Search" href="/search-api.xml" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii Site Search" href="/search-site.xml" />
+</head>
+
+<body class="mac">
+<div class="layout-main">
+
+	<div class="layout-main-shortcuts">
+		<div class="container_12">
+            <a style="color:darkred;" href="https://github.com/yiisoft/yii2">Github</a> &middot;
+            <a style="color:darkgreen;" href="https://twitter.com/yiiframework">Twitter</a> &middot;
+            <a style="color:darkblue;" href="https://www.facebook.com/groups/yiitalk/">Facebook</a> &middot;
+            <a href="/doc/guide/">Guide</a> &middot;
+            <a href="/doc/api/">Class Reference</a> &middot;
+            <a href="/doc-2.0/guide-index.html">Guide 2.0</a> &middot;
+            <a href="/doc-2.0/index.html">API 2.0</a> &middot;
+            <a href="/wiki/">Wiki</a> &middot;
+            <a href="/extensions/">Extensions</a> &middot;
+            <a href="/forum/">Forum</a> &middot;
+			<a href="/chat/">Live Chat</a> &middot;
+                            <a href="/login/">Login</a>            		</div>
+	</div>
+
+	<div class="layout-main-bg">
+		<div class="layout-main-header">
+			<div class="container_12">
+				<div class="grid_4">
+					<a class="logo" href="/"><img alt="Yii Logo" src="http://static.yiiframework.com/css/img/logo.png" title="Yii Framework" width="284" height="64" /></a>				</div>
+				<div class="grid_8 omega">
+					<div class="nav">
+						<ul class="menu" id="yw0">
+<li class="about"><a class="main" href="/about/">About</a>
+<ul>
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li class="last"><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="downloads"><a class="main" href="/download/">Downloads</a>
+<ul>
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li class="last"><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="documentation active"><a class="main" href="/doc/">Documentation</a>
+<ul>
+<li><a href="/tour/">Take the Tour</a></li>
+<li class="active"><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li class="last"><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="development"><a class="main" href="https://github.com/yiisoft/yii/commits/master">Development</a>
+<ul>
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li class="last"><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="community last"><a class="main" href="/community/">Community</a>
+<ul>
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li class="last"><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+</ul>						<div class="search">
+							<form method="get" action="/search/">
+								<div class="keyword">
+	                                <input name="q" value="" />
+									<a href="#" title="search" class="global-search">search</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+
+		<div class="container_12">
+						<div class="grid_12">
+												<div class="layout-main-submenu">
+					<ul>
+						<li class="main">Documentation</li>
+												<li><a href="/tour/">Take the Tour</a></li>
+												<li class="active"><a href="/tutorials/">Tutorials</a></li>
+												<li><a href="/doc/api/">Class Reference</a></li>
+												<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+												<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+												<li><a href="/wiki/">Wiki</a></li>
+												<li><a href="/screencasts/">Screencasts</a></li>
+												<li><a href="/resources/">Resources</a></li>
+											</ul>
+				</div>
+				
+				
+				
+									<div class="layout-main-body">
+						<div class="tutorial-view">
+    <div class="grid_3 alpha">
+        <div class="nav-toc">
+    		<div class="title">The Definitive Guide to Yii</div>
+    		<div class="langver">
+	            <strong>Language &amp; version</strong>
+	    		<div class="languages g-dropdown">
+	    		<span>English<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.1/de/basics.controller">Deutsch</a></li>
+<li><a href="/doc/guide/1.1/es/basics.controller">Español</a></li>
+<li><a href="/doc/guide/1.1/fr/basics.controller">Français</a></li>
+<li><a href="/doc/guide/1.1/he/basics.controller">עִבְרִית</a></li>
+<li><a href="/doc/guide/1.1/id/basics.controller">Bahasa Indonesia</a></li>
+<li><a href="/doc/guide/1.1/it/basics.controller">Italiano</a></li>
+<li><a href="/doc/guide/1.1/ja/basics.controller">日本語</a></li>
+<li><a href="/doc/guide/1.1/pl/basics.controller">Polski</a></li>
+<li><a href="/doc/guide/1.1/pt/basics.controller">Português</a></li>
+<li><a href="/doc/guide/1.1/pt_br/basics.controller">Português brasileiro</a></li>
+<li><a href="/doc/guide/1.1/ro/basics.controller">România</a></li>
+<li><a href="/doc/guide/1.1/ru/basics.controller">Русский</a></li>
+<li><a href="/doc/guide/1.1/sv/basics.controller">Svenska</a></li>
+<li><a href="/doc/guide/1.1/uk/basics.controller">украї́нська</a></li>
+<li><a href="/doc/guide/1.1/zh_cn/basics.controller">简体中文</a></li>
+</ul>
+	    		</div>
+				<div class="versions g-dropdown">
+	    		<span>1.1<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.0/en/basics.controller">1.0</a></li>
+</ul>
+				</div>
+				<div class="clear"></div>
+			</div>
+            <div class="widget-search-box">
+    <form method="get" action="/search/">
+        <strong>Search in this tutorial</strong>
+		<input type="text" name="q" class="keyword g-text" />
+        <input type="hidden" name="type" value="guide" />
+        <input type="hidden" name="lang" value="en" />
+        <input type="submit" value="Find" class="btn btn-info" />
+	</form>
+</div>
+			<ul class="toc">
+						    <li class="chapter"><strong>Getting Started</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/index">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/changes">New Features</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/upgrade">Upgrading from 1.0 to 1.1</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.what-is-yii">What is Yii</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.installation">Installation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.apache-nginx-config">Apache and Nginx configurations</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app">Creating First Yii Application</a>			            </li>
+			        			    						    <li class="chapter"><strong>Fundamentals</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.mvc">Model-View-Controller (MVC)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.entry">Entry Script</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.application">Application</a>			            </li>
+			        			    			        			            <li class="active">
+			                &raquo; Controller &laquo;
+			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.model">Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.view">View</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.component">Component</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.module">Module</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.namespace">Path Alias and Namespace</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.convention">Conventions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.workflow">Development Workflow</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.best-practices">Best MVC Practices</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Forms</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.model">Creating Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.action">Creating Action</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.view">Creating Form</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.table">Collecting Tabular Input</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.builder">Using Form Builder</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Databases</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.dao">Database Access Objects</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.query-builder">Query Builder</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.ar">Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.arr">Relational Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.migration">Database Migration</a>			            </li>
+			        			    						    <li class="chapter"><strong>Caching</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.data">Data Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.fragment">Fragment Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.page">Page Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.dynamic">Dynamic Content</a>			            </li>
+			        			    						    <li class="chapter"><strong>Extending Yii</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.use">Using Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.create">Creating Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.integration">Using 3rd-Party Libraries</a>			            </li>
+			        			    						    <li class="chapter"><strong>Testing</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.fixture">Defining Fixtures</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.unit">Unit Testing</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.functional">Functional Testing</a>			            </li>
+			        			    						    <li class="chapter"><strong>Special Topics</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.gii">Automatic Code Generation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.url">URL Management</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.auth">Authentication and Authorization</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.theming">Theming and Skin</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.logging">Logging</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.error">Error Handling</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.webservice">Web Service</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.i18n">Internationalization (I18N)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.prado">Alternative Template Syntax</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.console">Console Applications</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.security">Security</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.performance">Performance Tuning</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app-yiic">Code Generation using Command Line Tools (deprecated)</a>			            </li>
+			        			    						</ul>
+        </div>
+    </div>
+    <div class="grid_9 omega">
+    	<div class="g-markdown"><h1 id="controller">Controller</h1>
+<div class="google-ad" style="float:right;margin:0 0 1em 1em;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "2830391674";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+<div class="toc"><ol><li><a href="#route">Route</a></li>
+<li><a href="#controller-instantiation">Controller Instantiation</a></li>
+<li><a href="#action">Action</a></li>
+<li><a href="#filter">Filter</a></li></ol></div>
+
+
+<p>A <code>controller</code> is an instance of <a href="/doc/api/1.1/CController">CController</a> or of a class that extends <a href="/doc/api/1.1/CController">CController</a>. 
+It is created by the application object when the user requests it. When a controller
+runs, it performs the requested action, which usually brings in the needed
+models and renders an appropriate view. An <code>action</code>, in its simplest form, is
+just a controller class method whose name starts with <code>action</code>.</p>
+
+<p>A controller has a default action. When the user request does not specify
+which action to execute, the default action will be executed. By default,
+the default action is named as <code>index</code>. It can be changed by setting the 
+public instance variable, <a href="/doc/api/1.1/CController#defaultAction">CController::defaultAction</a>.</p>
+
+<p>The following code defines a <code>site</code> controller, an <code>index</code> action (the default
+action), and a <code>contact</code> action:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">SiteController</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CController</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">actionIndex</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-comment">//</span><span class="hl-comment"> ...</span>
+    <span class="hl-brackets">}</span>
+ 
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">actionContact</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-comment">//</span><span class="hl-comment"> ...</span>
+    <span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<h2 id="route">1. Route <a class="anchor" href="#route">¶</a></h2>
+
+<p>Controllers and actions are identified by IDs. A Controller ID is in the
+format <code>path/to/xyz</code>, which corresponds to the controller class file
+<code>protected/controllers/path/to/XyzController.php</code>, where the token <code>xyz</code>
+should be replaced by actual names; e.g. <code>post</code> corresponds to
+<code>protected/controllers/PostController.php</code>. Action ID is the action method
+name without the <code>action</code> prefix. For example, if a controller class
+contains a method named <code>actionEdit</code>, the ID of the corresponding action
+would be <code>edit</code>.</p>
+
+<p>Users request a particular controller and action in terms of route. A
+route is formed by concatenating a controller ID and an action ID, separated
+by a slash. For example, the route <code>post/edit</code> refers to <code>PostController</code>
+and its <code>edit</code> action. By default, the URL <code>http://hostname/index.php?r=post/edit</code> 
+would request the post controller and the edit action.</p>
+
+<blockquote class="note">
+<p><strong>Note:</strong> By default, routes are case-sensitive. It is
+  possible to make routes case-insensitive by setting <a href="/doc/api/1.1/CUrlManager#caseSensitive">CUrlManager::caseSensitive</a>
+  to false in the application configuration. When in case-insensitive mode,
+  make sure you follow the convention that directories containing controller
+  class files are in lowercase, and both <a href="/doc/api/1.1/CWebApplication#controllerMap">controller map</a>
+  and <a href="/doc/api/1.1/CController#actions">action map</a> have lowercase keys.</p>
+</blockquote>
+
+<p>An application can contain <a href="/doc/guide/1.1/en/basics.module">modules</a>. The route for
+a controller action inside a module is in the format <code>moduleID/controllerID/actionID</code>.
+For more details, see the <a href="/doc/guide/1.1/en/basics.module">section about modules</a>.</p>
+
+<h2 id="controller-instantiation">2. Controller Instantiation <a class="anchor" href="#controller-instantiation">¶</a></h2>
+
+<p>A controller instance is created when <a href="/doc/api/1.1/CWebApplication">CWebApplication</a> handles an
+incoming request. Given the ID of the controller, the application will use
+the following rules to determine what the controller class is and where the
+class file is located.</p>
+
+<ul>
+<li><p>If <a href="/doc/api/1.1/CWebApplication#catchAllRequest">CWebApplication::catchAllRequest</a> is specified, a controller
+will be created based on this property, and the user-specified controller ID
+will be ignored. This is mainly used to put the application in
+maintenance mode and display a static notice page.</p></li>
+<li><p>If the ID is found in <a href="/doc/api/1.1/CWebApplication#controllerMap">CWebApplication::controllerMap</a>, the
+corresponding controller configuration will be used to create the
+controller instance.</p></li>
+<li><p>If the ID is in the format <code>'path/to/xyz'</code>, the controller class
+name is assumed to be <code>XyzController</code> and the corresponding class file is
+<code>protected/controllers/path/to/XyzController.php</code>. For example, a controller
+ID <code>admin/user</code> would be mapped to the controller class <code>UserController</code>
+and the class file <code>protected/controllers/admin/UserController.php</code>.
+If the class file does not exist, a 404 <a href="/doc/api/1.1/CHttpException">CHttpException</a> will be raised.</p></li>
+</ul>
+
+<p>When <a href="/doc/guide/1.1/en/basics.module">modules</a> are used, the above process is
+slightly different. In particular, the application will check whether or not 
+the ID refers to a controller inside a module, and if so, the module instance 
+will be created first, followed by the controller instance.</p>
+
+<h2 id="action">3. Action <a class="anchor" href="#action">¶</a></h2>
+
+<p>As previously noted, an action can be defined as a method whose name starts
+with the word <code>action</code>. A more advanced technique is to define an action class
+and ask the controller to instantiate it when requested. This allows
+actions to be reused and thus introduces more reusability.</p>
+
+<p>To define a new action class, do the following:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">UpdateAction</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CAction</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">run</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-comment">//</span><span class="hl-comment"> place the action logic here</span>
+    <span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>To make the controller aware of this action, we override the
+<a href="/doc/api/1.1/CController#actions">actions()</a> method of our controller class:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">PostController</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CController</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">actions</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-reserved">return</span> <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">edit</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">application.controllers.post.UpdateAction</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>In the above, we use the path alias
+<code>application.controllers.post.UpdateAction</code> to specify that the action
+class file is <code>protected/controllers/post/UpdateAction.php</code>.</p>
+
+<p>By writing class-based actions, we can organize an application in a modular
+fashion. For example, the following directory structure may be used to
+organize the code for controllers:</p>
+
+<pre>protected/
+    controllers/
+        PostController.php
+        UserController.php
+        post/
+            CreateAction.php
+            ReadAction.php
+            UpdateAction.php
+        user/
+            CreateAction.php
+            ListAction.php
+            ProfileAction.php
+            UpdateAction.php
+</pre>
+
+<h3 id="action-parameter-binding">Action Parameter Binding</h3>
+
+<p>Since version 1.1.4, Yii has added support for automatic action parameter binding.
+That is, a controller action method can define named parameters whose value will
+be automatically populated from <code>$_GET</code> by Yii.</p>
+
+<p>To illustrate how this works, let's assume we need to write a <code>create</code> action for 
+<code>PostController</code>.  The action requires two parameters:</p>
+
+<ul>
+<li><code>category</code>: an integer indicating the category ID under which the new post will
+be created;</li>
+<li><code>language</code>: a string indicating the language code that the new post will be in.</li>
+</ul>
+
+<p>We may end up with the following boring code for the purpose of retrieving the needed
+parameter values from <code>$_GET</code>:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">PostController</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CController</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">actionCreate</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-reserved">isset</span><span class="hl-brackets">(</span><span class="hl-var">$_GET</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">category</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+            <span class="hl-var">$category</span><span class="hl-code">=</span><span class="hl-brackets">(</span><span class="hl-identifier">int</span><span class="hl-brackets">)</span><span class="hl-var">$_GET</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">category</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-code">;
+        </span><span class="hl-reserved">else</span>
+            <span class="hl-reserved">throw</span> <span class="hl-reserved">new</span> <span class="hl-identifier">CHttpException</span><span class="hl-brackets">(</span><span class="hl-number">404</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">invalid request</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+        </span><span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-reserved">isset</span><span class="hl-brackets">(</span><span class="hl-var">$_GET</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">language</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+            <span class="hl-var">$language</span><span class="hl-code">=</span><span class="hl-var">$_GET</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">language</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-code">;
+        </span><span class="hl-reserved">else</span>
+            <span class="hl-var">$language</span><span class="hl-code">=</span><span class="hl-quotes">'</span><span class="hl-string">en</span><span class="hl-quotes">'</span><span class="hl-code">;
+ 
+        </span><span class="hl-comment">//</span><span class="hl-comment"> ... fun code starts here ...</span>
+    <span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>Now using the action parameter feature, we can achieve our task more pleasantly:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">PostController</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CController</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">actionCreate</span><span class="hl-brackets">(</span><span class="hl-var">$category</span><span class="hl-code">, </span><span class="hl-var">$language</span><span class="hl-code">=</span><span class="hl-quotes">'</span><span class="hl-string">en</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-var">$category</span><span class="hl-code">=</span><span class="hl-brackets">(</span><span class="hl-identifier">int</span><span class="hl-brackets">)</span><span class="hl-var">$category</span><span class="hl-code">;
+ 
+        </span><span class="hl-comment">//</span><span class="hl-comment"> ... fun code starts here ...</span>
+    <span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>Notice that we add two parameters to the action method <code>actionCreate</code>.
+The name of these parameters must be exactly the same as the ones we expect
+from <code>$_GET</code>. The <code>$language</code> parameter takes a default value <code>en</code> in case
+the request does not include such a parameter.  Because <code>$category</code>
+does not have a default value, if the request does not include a <code>category</code> 
+parameter, a <a href="/doc/api/1.1/CHttpException">CHttpException</a> (error code 400) will be thrown automatically.</p>
+
+<p>Starting from version 1.1.5, Yii also supports array type detection for action parameters.
+This is done by PHP type hinting using syntax like the following:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">PostController</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CController</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">actionCreate</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span> <span class="hl-var">$categories</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-comment">//</span><span class="hl-comment"> Yii will make sure that $categories is an array</span>
+    <span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>That is, we add the keyword <code>array</code> in front of <code>$categories</code> in the method parameter
+declaration. By doing so, if <code>$_GET['categories']</code> is a simple string, it will be
+converted into an array consisting of that string.</p>
+
+<blockquote class="note">
+<p><strong>Note:</strong> If a parameter is declared without the <code>array</code> type hint, it means the parameter
+  must be a scalar (i.e., not an array). In this case, passing in an array parameter via
+  <code>$_GET</code> would cause an HTTP exception.</p>
+</blockquote>
+
+<p>Starting from version 1.1.7, automatic parameter binding also works for
+class-based actions. When the <code>run()</code> method of an action class is defined
+with some parameters, they will be populated with the corresponding named
+request parameter values. For example,</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">UpdateAction</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CAction</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">run</span><span class="hl-brackets">(</span><span class="hl-var">$id</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-comment">//</span><span class="hl-comment"> $id will be populated with $_GET['id']</span>
+    <span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<h2 id="filter">4. Filter <a class="anchor" href="#filter">¶</a></h2>
+
+<p>Filter is a piece of code that is configured to be executed before and/or
+after a controller action executes. For example, an access control filter
+may be executed to ensure that the user is authenticated before executing
+the requested action; a performance filter may be used to measure the time
+spent executing the action.</p>
+
+<p>An action can have multiple filters. The filters are executed in the order
+that they appear in the filter list. A filter can prevent the execution of
+the action and the rest of the unexecuted filters.</p>
+
+<p>A filter can be defined as a controller class method. The method name must
+begin with <code>filter</code>. For example, a method named <code>filterAccessControl</code> 
+defines a filter named <code>accessControl</code>. The filter method must have the 
+right signature:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">filterAccessControl</span><span class="hl-brackets">(</span><span class="hl-var">$filterChain</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-comment">//</span><span class="hl-comment"> call $filterChain-&gt;run() to continue filter and action execution</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>where <code>$filterChain</code> is an instance of <a href="/doc/api/1.1/CFilterChain">CFilterChain</a> which represents the
+filter list associated with the requested action. Inside a filter method,
+we can call <code>$filterChain-&gt;run()</code> to continue filter and action execution.</p>
+
+<p>A filter can also be an instance of <a href="/doc/api/1.1/CFilter">CFilter</a> or its child class. The
+following code defines a new filter class:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">PerformanceFilter</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CFilter</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">protected</span> <span class="hl-reserved">function</span> <span class="hl-identifier">preFilter</span><span class="hl-brackets">(</span><span class="hl-var">$filterChain</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-comment">//</span><span class="hl-comment"> logic being applied before the action is executed</span>
+        <span class="hl-reserved">return</span> <span class="hl-reserved">true</span><span class="hl-code">; </span><span class="hl-comment">//</span><span class="hl-comment"> false if the action should not be executed</span>
+    <span class="hl-brackets">}</span>
+ 
+    <span class="hl-reserved">protected</span> <span class="hl-reserved">function</span> <span class="hl-identifier">postFilter</span><span class="hl-brackets">(</span><span class="hl-var">$filterChain</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-comment">//</span><span class="hl-comment"> logic being applied after the action is executed</span>
+    <span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>To apply filters to actions, we need to override the
+<code>CController::filters()</code> method. The method should return an array of
+filter configurations. For example,</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">PostController</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CController</span>
+<span class="hl-brackets">{</span><span class="hl-code">
+    ......
+    </span><span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">filters</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-reserved">return</span> <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">postOnly + edit, create</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+                <span class="hl-quotes">'</span><span class="hl-string">application.filters.PerformanceFilter - edit, create</span><span class="hl-quotes">'</span><span class="hl-code">,
+                </span><span class="hl-quotes">'</span><span class="hl-string">unit</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">second</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-brackets">)</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>The above code specifies two filters: <code>postOnly</code> and <code>PerformanceFilter</code>.
+The <code>postOnly</code> filter is method-based (the corresponding filter method is
+defined in <a href="/doc/api/1.1/CController">CController</a> already); while the <code>PerformanceFilter</code> filter is
+object-based. The path alias <code>application.filters.PerformanceFilter</code>
+specifies that the filter class file is
+<code>protected/filters/PerformanceFilter</code>. We use an array to configure
+<code>PerformanceFilter</code> so that it may be used to initialize the property
+values of the filter object. Here the <code>unit</code> property of
+<code>PerformanceFilter</code> will be initialized as <code>'second'</code>.</p>
+
+<p>Using the plus and the minus operators, we can specify which actions the
+filter should and should not be applied to. In the above, the <code>postOnly</code>
+filter will be applied to the <code>edit</code> and <code>create</code> actions, while
+<code>PerformanceFilter</code> filter will be applied to all actions EXCEPT <code>edit</code> and
+<code>create</code>. If neither plus nor minus appears in the filter configuration,
+the filter will be applied to all actions.</p>
+
+<div class="revision"><div class="google-ad" style="margin:-60px 0 5px 200px;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "7116172008";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>$Id$</div>
+</div>
+                <div class="prev-next-nav">
+                            <div class="prev-topic"><a href="/doc/guide/1.1/en/basics.application">Application</a></div>
+                                        <div class="next-topic"><a href="/doc/guide/1.1/en/basics.model">Model</a></div>
+                    </div>
+        
+		        <div class="widget-comment-list" id="comments">
+	<div class="comments">
+		<h3>Total 4 comments</h3>
+				<div class="comment alt-0">
+			<a class="cid" id="c17406" title="permalink to this comment" href="#c17406">#17406</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=17406"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=17406&amp;vote=1"><span>2</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=17406&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/225436/">Ruslan Bes</a> at 2014/06/05 11:53am</div>
+			<div class="title">Action precedence</div>
+			<div class="content"><p>Note that Yii will <strong>prefer</strong> the method-based action if possible.
+Example:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">DefaultController</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CController</span>
+<span class="hl-brackets">{</span>
+ 
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">actionSave</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-reserved">echo</span> <span class="hl-quotes">"</span><span class="hl-string">Method-based save</span><span class="hl-quotes">"</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">actions</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-reserved">return</span> <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">save</span><span class="hl-quotes">'</span><span class="hl-code">    =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">mymodule.actions.SaveAction</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>When the action "save" is requested the mymodule.actions.SaveAction will be ignored and the result would be:</p>
+
+<pre>"Method-based save"
+</pre>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c4788" title="permalink to this comment" href="#c4788">#4788</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=4788"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=4788&amp;vote=1"><span>13</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=4788&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/34604/">marcanuy</a> at 2011/08/16 04:47pm</div>
+			<div class="title">Optional Action Parameter</div>
+			<div class="content"><p>If an optional Action Parameter Binding is needed, then It has to be defined with a null value or server will return error code 400 (Bad request);
+e.g. if category is optional:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">PostController</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CController</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">actionCreate</span><span class="hl-brackets">(</span><span class="hl-var">$category</span><span class="hl-code">=</span><span class="hl-reserved">null</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-var">$category</span><span class="hl-code">=</span><span class="hl-brackets">(</span><span class="hl-identifier">int</span><span class="hl-brackets">)</span><span class="hl-var">$category</span><span class="hl-code">;
+        </span><span class="hl-comment">//</span><span class="hl-comment"> ... </span>
+    <span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c2126" title="permalink to this comment" href="#c2126">#2126</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=2126"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=2126&amp;vote=1"><span>22</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=2126&amp;vote=0"><span>1</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/7587/">Marco W.</a> at 2010/11/15 08:52am</div>
+			<div class="title">filter class method - pre or post.</div>
+			<div class="content"><p>a forum <a href="http://www.yiiframework.com/forum/index.php?/topic/1033-method-based-filter-cant-be-post-action/page__view__findpost__p__6055" title="post">post </a> by qiang explains it:</p>
+
+<p>For method-based filters, the following is how you would be pre- and post-filtering:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">filterAccessControl</span><span class="hl-brackets">(</span><span class="hl-var">$filterChain</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">{</span><span class="hl-code">
+    ...</span><span class="hl-identifier">pre</span><span class="hl-code">-</span><span class="hl-identifier">filtering</span> <span class="hl-identifier">code</span><span class="hl-code">...
+ 
+    </span><span class="hl-var">$filterChain</span><span class="hl-code">-&gt;</span><span class="hl-identifier">run</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+    ...</span><span class="hl-identifier">post</span><span class="hl-code">-</span><span class="hl-identifier">filtering</span> <span class="hl-identifier">code</span><span class="hl-code">...
+</span><span class="hl-brackets">}</span></pre></div></div>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c891" title="permalink to this comment" href="#c891">#891</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=891"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=891&amp;vote=1"><span>10</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=891&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/3937/">Foie_grAS</a> at 2010/02/10 07:09am</div>
+			<div class="title">Filters objects</div>
+			<div class="content"><p>For declaration filter as class you need to define path as array necessarily, even there is no initialization of the property values of the filter object:
+</p><pre>
+public function filters()
+{
+   return array(
+      array('application.filters.PerformanceFilter - edit, create'),
+   );
+}
+</pre>
+</div>
+					</div>
+			</div>
+	<div id="comment-add">
+		<h3 id="add-comment">Leave a comment</h3>
+
+			<p>Please <a class="g-login" rel="/doc/guide/1.1/en/basics.controller#add-comment" href="#">login</a> to leave your comment.</p>
+		</div>
+</div>
+           </div>
+</div>
+					</div>
+				
+								<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+					</div>
+	</div>
+
+	<div class="layout-main-footer">
+		<div class="container_12">
+			<div class="grid_6">
+				<ul class="menu">
+				<li class="main">About
+<ul class="sub">
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="main">Downloads
+<ul class="sub">
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="main">Documentation
+<ul class="sub">
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="main">Development
+<ul class="sub">
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="main">Community
+<ul class="sub">
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+				</ul>
+			</div>
+			<div class="grid_1">&nbsp;</div>
+			<div class="grid_5">
+				<h3>Yii Supporters</h3>
+				<ul class="g-list-none supporters">
+
+				</ul>
+			</div>
+
+			<div class="clear"></div>
+			<div class="grid_12 copyright">
+				<ul class="social">
+					<li class="twitter"><a href="https://twitter.com/yiiframework" target="_blank" rel="nofollow" title="follow us on twitter">Twitter</a></li>
+					<li class="facebook"><a href="https://www.facebook.com/groups/yiitalk/" target="_blank" rel="nofollow" title="join yii group at facebook">Facebook</a></li>
+					<li class="linkedin"><a href="http://www.linkedin.com/groups?gid=1483367" target="_blank" rel="nofollow" title="join yii group at linkedin">LinkedIn</a></li>
+					<li class="feeds"><a title="RSS feeds" href="/rss.xml/">RSS Feeds</a></li>
+				</ul>
+				<div class="clear"></div>
+				<a href="/tos/">Terms of Service</a> |
+				<a href="/license/">License</a> |
+				<a href="/contact/">Contact Us</a><br/>
+				Copyright &copy; 2015 by <a href="http://www.yiisoft.com">Yii Software LLC</a>.
+				All Rights Reserved.
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+    <script type="text/javascript" src="/js/site-20121004195728.js"></script>
+
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['site._setAccount', 'UA-5843896-1']);
+_gaq.push(['site._trackPageview']);
+
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+<script type="text/javascript">
+function trackClick(link, action, category) {
+	action=action || link.href;
+	category=category || 'Outbound Links';
+	try {
+		_gaq.push(['site._trackEvent', category, action]);
+		setTimeout('document.location = "' + link.href + '"', 250);
+	}catch(err){}
+	return false;
+}
+</script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+</body>
+</html>

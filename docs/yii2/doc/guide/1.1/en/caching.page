@@ -1,0 +1,563 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    	<meta charset="UTF-8" />
+		<meta name="keywords" content="yii framework, tutorial, guide, version 1.1" />
+	<meta name="description" content="Page caching refers to caching the content of a whole page. Page caching
+can occur at different places." />
+    <link rel="shortcut icon" type="image/x-icon" href="http://static.yiiframework.com/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="http://static.yiiframework.com/css/site-20130404102234.css" />
+
+	<link title="Lives News for Yii Framework" rel="alternate" type="application/rss+xml" href="http://www.yiiframework.com/rss.xml/" />
+	<title>Caching: Page Caching | The Definitive Guide to Yii | Yii PHP Framework</title>
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii API Search" href="/search-api.xml" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii Site Search" href="/search-site.xml" />
+</head>
+
+<body class="mac">
+<div class="layout-main">
+
+	<div class="layout-main-shortcuts">
+		<div class="container_12">
+            <a style="color:darkred;" href="https://github.com/yiisoft/yii2">Github</a> &middot;
+            <a style="color:darkgreen;" href="https://twitter.com/yiiframework">Twitter</a> &middot;
+            <a style="color:darkblue;" href="https://www.facebook.com/groups/yiitalk/">Facebook</a> &middot;
+            <a href="/doc/guide/">Guide</a> &middot;
+            <a href="/doc/api/">Class Reference</a> &middot;
+            <a href="/doc-2.0/guide-index.html">Guide 2.0</a> &middot;
+            <a href="/doc-2.0/index.html">API 2.0</a> &middot;
+            <a href="/wiki/">Wiki</a> &middot;
+            <a href="/extensions/">Extensions</a> &middot;
+            <a href="/forum/">Forum</a> &middot;
+			<a href="/chat/">Live Chat</a> &middot;
+                            <a href="/login/">Login</a>            		</div>
+	</div>
+
+	<div class="layout-main-bg">
+		<div class="layout-main-header">
+			<div class="container_12">
+				<div class="grid_4">
+					<a class="logo" href="/"><img alt="Yii Logo" src="http://static.yiiframework.com/css/img/logo.png" title="Yii Framework" width="284" height="64" /></a>				</div>
+				<div class="grid_8 omega">
+					<div class="nav">
+						<ul class="menu" id="yw0">
+<li class="about"><a class="main" href="/about/">About</a>
+<ul>
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li class="last"><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="downloads"><a class="main" href="/download/">Downloads</a>
+<ul>
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li class="last"><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="documentation active"><a class="main" href="/doc/">Documentation</a>
+<ul>
+<li><a href="/tour/">Take the Tour</a></li>
+<li class="active"><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li class="last"><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="development"><a class="main" href="https://github.com/yiisoft/yii/commits/master">Development</a>
+<ul>
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li class="last"><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="community last"><a class="main" href="/community/">Community</a>
+<ul>
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li class="last"><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+</ul>						<div class="search">
+							<form method="get" action="/search/">
+								<div class="keyword">
+	                                <input name="q" value="" />
+									<a href="#" title="search" class="global-search">search</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+
+		<div class="container_12">
+						<div class="grid_12">
+												<div class="layout-main-submenu">
+					<ul>
+						<li class="main">Documentation</li>
+												<li><a href="/tour/">Take the Tour</a></li>
+												<li class="active"><a href="/tutorials/">Tutorials</a></li>
+												<li><a href="/doc/api/">Class Reference</a></li>
+												<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+												<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+												<li><a href="/wiki/">Wiki</a></li>
+												<li><a href="/screencasts/">Screencasts</a></li>
+												<li><a href="/resources/">Resources</a></li>
+											</ul>
+				</div>
+				
+				
+				
+									<div class="layout-main-body">
+						<div class="tutorial-view">
+    <div class="grid_3 alpha">
+        <div class="nav-toc">
+    		<div class="title">The Definitive Guide to Yii</div>
+    		<div class="langver">
+	            <strong>Language &amp; version</strong>
+	    		<div class="languages g-dropdown">
+	    		<span>English<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.1/de/caching.page">Deutsch</a></li>
+<li><a href="/doc/guide/1.1/es/caching.page">Español</a></li>
+<li><a href="/doc/guide/1.1/fr/caching.page">Français</a></li>
+<li><a href="/doc/guide/1.1/he/caching.page">עִבְרִית</a></li>
+<li><a href="/doc/guide/1.1/id/caching.page">Bahasa Indonesia</a></li>
+<li><a href="/doc/guide/1.1/it/caching.page">Italiano</a></li>
+<li><a href="/doc/guide/1.1/ja/caching.page">日本語</a></li>
+<li><a href="/doc/guide/1.1/pl/caching.page">Polski</a></li>
+<li><a href="/doc/guide/1.1/pt/caching.page">Português</a></li>
+<li><a href="/doc/guide/1.1/pt_br/caching.page">Português brasileiro</a></li>
+<li><a href="/doc/guide/1.1/ro/caching.page">România</a></li>
+<li><a href="/doc/guide/1.1/ru/caching.page">Русский</a></li>
+<li><a href="/doc/guide/1.1/sv/caching.page">Svenska</a></li>
+<li><a href="/doc/guide/1.1/uk/caching.page">украї́нська</a></li>
+<li><a href="/doc/guide/1.1/zh_cn/caching.page">简体中文</a></li>
+</ul>
+	    		</div>
+				<div class="versions g-dropdown">
+	    		<span>1.1<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.0/en/caching.page">1.0</a></li>
+</ul>
+				</div>
+				<div class="clear"></div>
+			</div>
+            <div class="widget-search-box">
+    <form method="get" action="/search/">
+        <strong>Search in this tutorial</strong>
+		<input type="text" name="q" class="keyword g-text" />
+        <input type="hidden" name="type" value="guide" />
+        <input type="hidden" name="lang" value="en" />
+        <input type="submit" value="Find" class="btn btn-info" />
+	</form>
+</div>
+			<ul class="toc">
+						    <li class="chapter"><strong>Getting Started</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/index">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/changes">New Features</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/upgrade">Upgrading from 1.0 to 1.1</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.what-is-yii">What is Yii</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.installation">Installation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.apache-nginx-config">Apache and Nginx configurations</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app">Creating First Yii Application</a>			            </li>
+			        			    						    <li class="chapter"><strong>Fundamentals</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.mvc">Model-View-Controller (MVC)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.entry">Entry Script</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.application">Application</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.controller">Controller</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.model">Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.view">View</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.component">Component</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.module">Module</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.namespace">Path Alias and Namespace</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.convention">Conventions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.workflow">Development Workflow</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.best-practices">Best MVC Practices</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Forms</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.model">Creating Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.action">Creating Action</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.view">Creating Form</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.table">Collecting Tabular Input</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.builder">Using Form Builder</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Databases</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.dao">Database Access Objects</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.query-builder">Query Builder</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.ar">Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.arr">Relational Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.migration">Database Migration</a>			            </li>
+			        			    						    <li class="chapter"><strong>Caching</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.data">Data Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.fragment">Fragment Caching</a>			            </li>
+			        			    			        			            <li class="active">
+			                &raquo; Page Caching &laquo;
+			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.dynamic">Dynamic Content</a>			            </li>
+			        			    						    <li class="chapter"><strong>Extending Yii</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.use">Using Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.create">Creating Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.integration">Using 3rd-Party Libraries</a>			            </li>
+			        			    						    <li class="chapter"><strong>Testing</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.fixture">Defining Fixtures</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.unit">Unit Testing</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.functional">Functional Testing</a>			            </li>
+			        			    						    <li class="chapter"><strong>Special Topics</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.gii">Automatic Code Generation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.url">URL Management</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.auth">Authentication and Authorization</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.theming">Theming and Skin</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.logging">Logging</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.error">Error Handling</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.webservice">Web Service</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.i18n">Internationalization (I18N)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.prado">Alternative Template Syntax</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.console">Console Applications</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.security">Security</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.performance">Performance Tuning</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app-yiic">Code Generation using Command Line Tools (deprecated)</a>			            </li>
+			        			    						</ul>
+        </div>
+    </div>
+    <div class="grid_9 omega">
+    	<div class="g-markdown"><h1 id="page-caching">Page Caching</h1>
+<div class="google-ad" style="float:right;margin:0 0 1em 1em;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "2830391674";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+<div class="toc"><ol><li><a href="#output-caching">Output Caching</a></li>
+<li><a href="#http-caching">HTTP Caching</a></li></ol></div>
+
+
+<p>Page caching refers to caching the content of a whole page. Page caching
+can occur at different places. For example, by choosing an appropriate page
+header, the client browser may cache the page being viewed for a limited
+time. The Web application itself can also store the page content in cache.</p>
+
+<h2 id="output-caching">1. Output Caching <a class="anchor" href="#output-caching">¶</a></h2>
+
+<p>Page caching can be considered as a special case of <a href="/doc/guide/1.1/en/caching.fragment">fragment
+caching</a>. Because the content of a page is
+often generated by applying a layout to a view, it will not work if we
+simply call <a href="/doc/api/1.1/CBaseController#beginCache">beginCache()</a> and
+<a href="/doc/api/1.1/CBaseController#endCache">endCache()</a> in the layout. The reason is because
+the layout is applied within the <a href="/doc/api/1.1/CController#render">CController::render()</a> method AFTER the
+content view is evaluated.</p>
+
+<p>To cache a whole page, we should skip the execution of the action
+generating the page content. We can use <a href="/doc/api/1.1/COutputCache">COutputCache</a> as an action
+<a href="/doc/guide/1.1/en/basics.controller#filter">filter</a> to accomplish this task. The
+following code shows how we configure the cache filter:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">filters</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">return</span> <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+        <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">COutputCache</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">duration</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-number">100</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">varyByParam</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">id</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></pre></div></div>
+
+<p>The above filter configuration would make the filter to be applied to all
+actions in the controller. We may limit it to one or a few actions only by
+using the plus operator. More details can be found in
+<a href="/doc/guide/1.1/en/basics.controller#filter">filter</a>.</p>
+
+<blockquote class="tip">
+<p><strong>Tip:</strong> We can use <a href="/doc/api/1.1/COutputCache">COutputCache</a> as a filter because it extends from
+  <a href="/doc/api/1.1/CFilterWidget">CFilterWidget</a>, which means it is both a widget and a filter. In fact, the
+  way a widget works is very similar to a filter: a widget (filter) begins
+  before any enclosed content (action) is evaluated, and the widget (filter)
+  ends after the enclosed content (action) is evaluated.</p>
+</blockquote>
+
+<h2 id="http-caching">2. HTTP Caching <a class="anchor" href="#http-caching">¶</a></h2>
+
+<p>In addition to simply caching the output of an action, Yii introduced 
+<a href="/doc/api/1.1/CHttpCacheFilter">CHttpCacheFilter</a> in version 1.1.11. This filter aids in setting the 
+aforementioned headers to notify a client that a page's content has not been 
+changed since the last request, so the server will not have to re-transmit the
+content. <a href="/doc/api/1.1/CHttpCacheFilter">CHttpCacheFilter</a> can be set up similar to <a href="/doc/api/1.1/COutputCache">COutputCache</a>:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">filters</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">return</span> <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+        <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">CHttpCacheFilter + index</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">lastModified</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">db</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createCommand</span><span class="hl-brackets">(</span><span class="hl-quotes">&quot;</span><span class="hl-string">SELECT MAX(`update_time`) FROM {{post}}</span><span class="hl-quotes">&quot;</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">queryScalar</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></pre></div></div>
+
+<p>The above code will set the <code>Last-Modified</code> header to the last date at which a 
+post was updated. You can also use <a href="/doc/api/1.1/CHttpCacheFilter#lastModifiedExpression">CHttpCacheFilter::lastModifiedExpression</a> to set 
+the <code>Last-Modified</code> header using a php expression.</p>
+
+<blockquote class="tip">
+<p><strong>Tip:</strong> Both, <a href="/doc/api/1.1/CHttpCacheFilter#lastModifiedExpression">CHttpCacheFilter::lastModifiedExpression</a> and 
+  <a href="/doc/api/1.1/CHttpCacheFilter#lastModified">CHttpCacheFilter::lastModified</a> can take either an integer representing an 
+  epochal Unix timestamp or an arbitrary string representing a human-readable
+  date. As long as later one can be parsed by
+  <a href="http://php.net/manual/function.strtotime.php">strtotime()</a>, no further
+  conversion is necessary.</p>
+</blockquote>
+
+<p>The "Entity Tag" (or <code>ETag</code> for short) header can be set in a similar fashion 
+through <a href="/doc/api/1.1/CHttpCacheFilter#etagSeed">CHttpCacheFilter::etagSeed</a> and <a href="/doc/api/1.1/CHttpCacheFilter#etagSeedExpression">CHttpCacheFilter::etagSeedExpression</a> 
+, respectively. Both will be serialized (so you can use either a single value
+or an entire array) and are used to generate a quoted, base64-encoded SHA1
+hash serving as content for the <code>ETag</code> header. This differs from the way the
+<a href="http://httpd.apache.org">Apache Webserver</a> and others are generating their
+ETags. However, this method is perfectly in line with the RFC and turned out to
+be more feasible for use in a framework.</p>
+
+<blockquote class="note">
+<p><strong>Note:</strong> In order to comply with
+  <a href="http://tools.ietf.org/html/rfc2616#section-13.3.4">RFC 2616, section 13.3.4</a>,
+  <a href="/doc/api/1.1/CHttpCacheFilter">CHttpCacheFilter</a> will send out <code>ETag</code> <em>and</em> <code>Last-Modified</code> headers if they
+  can both be generated. Consequently, both will be used for cache validation if
+  sent by the client.</p>
+</blockquote>
+
+<p>Since entity tags are hashes, they allow more complex and/or more precise
+caching strategies than <code>Last-Modified</code> headers. For instance, an ETag can be
+invalidated if the site has switched to another theme.</p>
+
+<blockquote class="tip">
+<p><strong>Tip:</strong> Expensive expressions for <a href="/doc/api/1.1/CHttpCacheFilter#etagSeedExpression">CHttpCacheFilter::etagSeedExpression</a> may
+  defeat the purpose of <a href="/doc/api/1.1/CHttpCacheFilter">CHttpCacheFilter</a> and introduce unnecessary overhead,
+  since they need to be re-evaluated on every request. Try to find a simple
+  expression that invalidates the cache if the page <em>content</em> has been modified.</p>
+</blockquote>
+
+<h3 id="seo-implications">SEO Implications</h3>
+
+<p>Search engine bots tend to respect cache headers. Since some crawlers have a
+limit on how many pages per domain they process within a certain time span,
+introducing caching headers may help indexing your site as they reduce the
+number of pages that need to be processed.</p>
+
+<div class="revision"><div class="google-ad" style="margin:-60px 0 5px 200px;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "7116172008";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>$Id$</div>
+</div>
+                <div class="prev-next-nav">
+                            <div class="prev-topic"><a href="/doc/guide/1.1/en/caching.fragment">Fragment Caching</a></div>
+                                        <div class="next-topic"><a href="/doc/guide/1.1/en/caching.dynamic">Dynamic Content</a></div>
+                    </div>
+        
+		        <div class="widget-comment-list" id="comments">
+	<div id="comment-add">
+		<h3 id="add-comment">Be the first person to leave a comment</h3>
+
+			<p>Please <a class="g-login" rel="/doc/guide/1.1/en/caching.page#add-comment" href="#">login</a> to leave your comment.</p>
+		</div>
+</div>
+           </div>
+</div>
+					</div>
+				
+								<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+					</div>
+	</div>
+
+	<div class="layout-main-footer">
+		<div class="container_12">
+			<div class="grid_6">
+				<ul class="menu">
+				<li class="main">About
+<ul class="sub">
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="main">Downloads
+<ul class="sub">
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="main">Documentation
+<ul class="sub">
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="main">Development
+<ul class="sub">
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="main">Community
+<ul class="sub">
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+				</ul>
+			</div>
+			<div class="grid_1">&nbsp;</div>
+			<div class="grid_5">
+				<h3>Yii Supporters</h3>
+				<ul class="g-list-none supporters">
+
+				</ul>
+			</div>
+
+			<div class="clear"></div>
+			<div class="grid_12 copyright">
+				<ul class="social">
+					<li class="twitter"><a href="https://twitter.com/yiiframework" target="_blank" rel="nofollow" title="follow us on twitter">Twitter</a></li>
+					<li class="facebook"><a href="https://www.facebook.com/groups/yiitalk/" target="_blank" rel="nofollow" title="join yii group at facebook">Facebook</a></li>
+					<li class="linkedin"><a href="http://www.linkedin.com/groups?gid=1483367" target="_blank" rel="nofollow" title="join yii group at linkedin">LinkedIn</a></li>
+					<li class="feeds"><a title="RSS feeds" href="/rss.xml/">RSS Feeds</a></li>
+				</ul>
+				<div class="clear"></div>
+				<a href="/tos/">Terms of Service</a> |
+				<a href="/license/">License</a> |
+				<a href="/contact/">Contact Us</a><br/>
+				Copyright &copy; 2015 by <a href="http://www.yiisoft.com">Yii Software LLC</a>.
+				All Rights Reserved.
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+    <script type="text/javascript" src="/js/site-20121004195728.js"></script>
+
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['site._setAccount', 'UA-5843896-1']);
+_gaq.push(['site._trackPageview']);
+
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+<script type="text/javascript">
+function trackClick(link, action, category) {
+	action=action || link.href;
+	category=category || 'Outbound Links';
+	try {
+		_gaq.push(['site._trackEvent', category, action]);
+		setTimeout('document.location = "' + link.href + '"', 250);
+	}catch(err){}
+	return false;
+}
+</script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+</body>
+</html>

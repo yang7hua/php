@@ -1,0 +1,622 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    	<meta charset="UTF-8" />
+		<meta name="keywords" content="yii framework, tutorial, guide, version 1.1" />
+	<meta name="description" content="Because the Yii testing framework is built on top of PHPUnit, it is recommended that you go through the PHPUnit documentation first to get the basic understanding on how to write a unit test." />
+    <link rel="shortcut icon" type="image/x-icon" href="http://static.yiiframework.com/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="http://static.yiiframework.com/css/site-20130404102234.css" />
+
+	<link title="Lives News for Yii Framework" rel="alternate" type="application/rss+xml" href="http://www.yiiframework.com/rss.xml/" />
+	<title>Testing: Unit Testing | The Definitive Guide to Yii | Yii PHP Framework</title>
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii API Search" href="/search-api.xml" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii Site Search" href="/search-site.xml" />
+</head>
+
+<body class="mac">
+<div class="layout-main">
+
+	<div class="layout-main-shortcuts">
+		<div class="container_12">
+            <a style="color:darkred;" href="https://github.com/yiisoft/yii2">Github</a> &middot;
+            <a style="color:darkgreen;" href="https://twitter.com/yiiframework">Twitter</a> &middot;
+            <a style="color:darkblue;" href="https://www.facebook.com/groups/yiitalk/">Facebook</a> &middot;
+            <a href="/doc/guide/">Guide</a> &middot;
+            <a href="/doc/api/">Class Reference</a> &middot;
+            <a href="/doc-2.0/guide-index.html">Guide 2.0</a> &middot;
+            <a href="/doc-2.0/index.html">API 2.0</a> &middot;
+            <a href="/wiki/">Wiki</a> &middot;
+            <a href="/extensions/">Extensions</a> &middot;
+            <a href="/forum/">Forum</a> &middot;
+			<a href="/chat/">Live Chat</a> &middot;
+                            <a href="/login/">Login</a>            		</div>
+	</div>
+
+	<div class="layout-main-bg">
+		<div class="layout-main-header">
+			<div class="container_12">
+				<div class="grid_4">
+					<a class="logo" href="/"><img alt="Yii Logo" src="http://static.yiiframework.com/css/img/logo.png" title="Yii Framework" width="284" height="64" /></a>				</div>
+				<div class="grid_8 omega">
+					<div class="nav">
+						<ul class="menu" id="yw0">
+<li class="about"><a class="main" href="/about/">About</a>
+<ul>
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li class="last"><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="downloads"><a class="main" href="/download/">Downloads</a>
+<ul>
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li class="last"><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="documentation active"><a class="main" href="/doc/">Documentation</a>
+<ul>
+<li><a href="/tour/">Take the Tour</a></li>
+<li class="active"><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li class="last"><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="development"><a class="main" href="https://github.com/yiisoft/yii/commits/master">Development</a>
+<ul>
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li class="last"><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="community last"><a class="main" href="/community/">Community</a>
+<ul>
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li class="last"><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+</ul>						<div class="search">
+							<form method="get" action="/search/">
+								<div class="keyword">
+	                                <input name="q" value="" />
+									<a href="#" title="search" class="global-search">search</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+
+		<div class="container_12">
+						<div class="grid_12">
+												<div class="layout-main-submenu">
+					<ul>
+						<li class="main">Documentation</li>
+												<li><a href="/tour/">Take the Tour</a></li>
+												<li class="active"><a href="/tutorials/">Tutorials</a></li>
+												<li><a href="/doc/api/">Class Reference</a></li>
+												<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+												<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+												<li><a href="/wiki/">Wiki</a></li>
+												<li><a href="/screencasts/">Screencasts</a></li>
+												<li><a href="/resources/">Resources</a></li>
+											</ul>
+				</div>
+				
+				
+				
+									<div class="layout-main-body">
+						<div class="tutorial-view">
+    <div class="grid_3 alpha">
+        <div class="nav-toc">
+    		<div class="title">The Definitive Guide to Yii</div>
+    		<div class="langver">
+	            <strong>Language &amp; version</strong>
+	    		<div class="languages g-dropdown">
+	    		<span>English<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.1/de/test.unit">Deutsch</a></li>
+<li><a href="/doc/guide/1.1/es/test.unit">Español</a></li>
+<li><a href="/doc/guide/1.1/fr/test.unit">Français</a></li>
+<li><a href="/doc/guide/1.1/he/test.unit">עִבְרִית</a></li>
+<li><a href="/doc/guide/1.1/id/test.unit">Bahasa Indonesia</a></li>
+<li><a href="/doc/guide/1.1/it/test.unit">Italiano</a></li>
+<li><a href="/doc/guide/1.1/ja/test.unit">日本語</a></li>
+<li><a href="/doc/guide/1.1/pl/test.unit">Polski</a></li>
+<li><a href="/doc/guide/1.1/pt/test.unit">Português</a></li>
+<li><a href="/doc/guide/1.1/pt_br/test.unit">Português brasileiro</a></li>
+<li><a href="/doc/guide/1.1/ro/test.unit">România</a></li>
+<li><a href="/doc/guide/1.1/ru/test.unit">Русский</a></li>
+<li><a href="/doc/guide/1.1/sv/test.unit">Svenska</a></li>
+<li><a href="/doc/guide/1.1/uk/test.unit">украї́нська</a></li>
+<li><a href="/doc/guide/1.1/zh_cn/test.unit">简体中文</a></li>
+</ul>
+	    		</div>
+				<div class="versions g-dropdown">
+	    		<span>1.1<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.0/en/test.unit">1.0</a></li>
+</ul>
+				</div>
+				<div class="clear"></div>
+			</div>
+            <div class="widget-search-box">
+    <form method="get" action="/search/">
+        <strong>Search in this tutorial</strong>
+		<input type="text" name="q" class="keyword g-text" />
+        <input type="hidden" name="type" value="guide" />
+        <input type="hidden" name="lang" value="en" />
+        <input type="submit" value="Find" class="btn btn-info" />
+	</form>
+</div>
+			<ul class="toc">
+						    <li class="chapter"><strong>Getting Started</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/index">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/changes">New Features</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/upgrade">Upgrading from 1.0 to 1.1</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.what-is-yii">What is Yii</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.installation">Installation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.apache-nginx-config">Apache and Nginx configurations</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app">Creating First Yii Application</a>			            </li>
+			        			    						    <li class="chapter"><strong>Fundamentals</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.mvc">Model-View-Controller (MVC)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.entry">Entry Script</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.application">Application</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.controller">Controller</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.model">Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.view">View</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.component">Component</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.module">Module</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.namespace">Path Alias and Namespace</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.convention">Conventions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.workflow">Development Workflow</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.best-practices">Best MVC Practices</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Forms</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.model">Creating Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.action">Creating Action</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.view">Creating Form</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.table">Collecting Tabular Input</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.builder">Using Form Builder</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Databases</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.dao">Database Access Objects</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.query-builder">Query Builder</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.ar">Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.arr">Relational Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.migration">Database Migration</a>			            </li>
+			        			    						    <li class="chapter"><strong>Caching</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.data">Data Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.fragment">Fragment Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.page">Page Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.dynamic">Dynamic Content</a>			            </li>
+			        			    						    <li class="chapter"><strong>Extending Yii</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.use">Using Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.create">Creating Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.integration">Using 3rd-Party Libraries</a>			            </li>
+			        			    						    <li class="chapter"><strong>Testing</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.fixture">Defining Fixtures</a>			            </li>
+			        			    			        			            <li class="active">
+			                &raquo; Unit Testing &laquo;
+			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.functional">Functional Testing</a>			            </li>
+			        			    						    <li class="chapter"><strong>Special Topics</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.gii">Automatic Code Generation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.url">URL Management</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.auth">Authentication and Authorization</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.theming">Theming and Skin</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.logging">Logging</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.error">Error Handling</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.webservice">Web Service</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.i18n">Internationalization (I18N)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.prado">Alternative Template Syntax</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.console">Console Applications</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.security">Security</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.performance">Performance Tuning</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app-yiic">Code Generation using Command Line Tools (deprecated)</a>			            </li>
+			        			    						</ul>
+        </div>
+    </div>
+    <div class="grid_9 omega">
+    	<div class="g-markdown"><h1 id="unit-testing">Unit Testing</h1>
+<div class="google-ad" style="float:right;margin:0 0 1em 1em;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "2830391674";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+
+<p>Because the Yii testing framework is built on top of <a href="http://www.phpunit.de/">PHPUnit</a>, it is recommended that you go through the <a href="http://www.phpunit.de/manual/current/en/index.html">PHPUnit documentation</a> first to get the basic understanding on how to write a unit test. We summarize in the following the basic principles of writing a unit test in Yii:</p>
+
+<ul>
+<li><p>A unit test is written in terms of a class <code>XyzTest</code> which extends from <a href="/doc/api/1.1/CTestCase">CTestCase</a> or <a href="/doc/api/1.1/CDbTestCase">CDbTestCase</a>, where <code>Xyz</code> stands for the class being tested. For example, to test the <code>Post</code> class, we would name the corresponding unit test as <code>PostTest</code> by convention. The base class <a href="/doc/api/1.1/CTestCase">CTestCase</a> is meant for generic unit tests, while <a href="/doc/api/1.1/CDbTestCase">CDbTestCase</a> is suitable for testing <a href="/doc/guide/1.1/en/database.ar">active record</a> model classes. Because <code>PHPUnit_Framework_TestCase</code> is the ancestor class for both classes, we can use all methods inherited from this class.</p></li>
+<li><p>The unit test class is saved in a PHP file named as <code>XyzTest.php</code>. By convention, the unit test file may be stored under the directory <code>protected/tests/unit</code>.</p></li>
+<li><p>The test class mainly contains a set of test methods named as <code>testAbc</code>, where <code>Abc</code> is often the name of the class method to be tested.</p></li>
+<li><p>A test method usually contains a sequence of assertion statements (e.g. <code>assertTrue</code>, <code>assertEquals</code>) which serve as checkpoints on validating the behavior of the target class.</p></li>
+</ul>
+
+<p>In the following, we mainly describe how to write unit tests for <a href="/doc/guide/1.1/en/database.ar">active record</a> model classes. We will extend our test classes from <a href="/doc/api/1.1/CDbTestCase">CDbTestCase</a> because it provides the database fixture support that we introduced in the previous section.</p>
+
+<p>Assume we want to test the <code>Comment</code> model class in the <a href="http://www.yiiframework.com/demos/blog/">blog demo</a>. We start by creating a class named <code>CommentTest</code> and saving it as <code>protected/tests/unit/CommentTest.php</code>:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">CommentTest</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CDbTestCase</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">public</span> <span class="hl-var">$fixtures</span><span class="hl-code">=</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+        <span class="hl-quotes">'</span><span class="hl-string">posts</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">Post</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-quotes">'</span><span class="hl-string">comments</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">Comment</span><span class="hl-quotes">'</span><span class="hl-code">,
+    </span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+    ......
+</span><span class="hl-brackets">}</span></pre></div></div>
+
+<p>In this class, we specify the <code>fixtures</code> member variable to be an array that specifies which fixtures will be used by this test. The array represents a  mapping from fixture names to model class names or fixture table names (e.g. from fixture name <code>posts</code> to model class <code>Post</code>). Note that when mapping to fixture table names, we should prefix the table name with a colon (e.g. <code>:Post</code>) to differentiate it from model class name. And when using model class names, the corresponding tables will be considered as fixture tables. As we described earlier, fixture tables will be reset to some known state each time when a test method is executed.</p>
+
+<p>Fixture names allow us to access the fixture data in test methods in a convenient way. The following code shows its typical usage:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> return all rows in the 'Comment' fixture table</span>
+<span class="hl-var">$comments</span><span class="hl-code"> = </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">comments</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> return the row whose alias is 'sample1' in the `Post` fixture table</span>
+<span class="hl-var">$post</span><span class="hl-code"> = </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">posts</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">sample1</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> return the AR instance representing the 'sample1' fixture data row</span>
+<span class="hl-var">$post</span><span class="hl-code"> = </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">posts</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">sample1</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<blockquote class="note">
+<p><strong>Note:</strong> If a fixture is declared using its table name (e.g. <code>'posts'=&gt;':Post'</code>), then the third usage in the above is not valid because we have no information about which model class the table is associated with.</p>
+</blockquote>
+
+<p>Next, we write the <code>testApprove</code> method to test the <code>approve</code> method in the <code>Comment</code> model class. The code is very straightforward: we first insert a comment that is pending status; we then verify this comment is in pending status by retrieving it from database; and finally we call the <code>approve</code> method and verify the status is changed as expected.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">testApprove</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-comment">//</span><span class="hl-comment"> insert a comment in pending status</span>
+    <span class="hl-var">$comment</span><span class="hl-code">=</span><span class="hl-reserved">new</span> <span class="hl-identifier">Comment</span><span class="hl-code">;
+    </span><span class="hl-var">$comment</span><span class="hl-code">-&gt;</span><span class="hl-identifier">setAttributes</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+        <span class="hl-quotes">'</span><span class="hl-string">content</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">comment 1</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-quotes">'</span><span class="hl-string">status</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-identifier">Comment</span><span class="hl-code">::</span><span class="hl-identifier">STATUS_PENDING</span><span class="hl-code">,
+        </span><span class="hl-quotes">'</span><span class="hl-string">createTime</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-identifier">time</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">,
+        </span><span class="hl-quotes">'</span><span class="hl-string">author</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">me</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-quotes">'</span><span class="hl-string">email</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">me@example.com</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-quotes">'</span><span class="hl-string">postId</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">posts</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">sample1</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">id</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-code">,
+    </span><span class="hl-brackets">)</span><span class="hl-code">,</span><span class="hl-reserved">false</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">assertTrue</span><span class="hl-brackets">(</span><span class="hl-var">$comment</span><span class="hl-code">-&gt;</span><span class="hl-identifier">save</span><span class="hl-brackets">(</span><span class="hl-reserved">false</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+    </span><span class="hl-comment">//</span><span class="hl-comment"> verify the comment is in pending status</span>
+    <span class="hl-var">$comment</span><span class="hl-code">=</span><span class="hl-identifier">Comment</span><span class="hl-code">::</span><span class="hl-identifier">model</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">findByPk</span><span class="hl-brackets">(</span><span class="hl-var">$comment</span><span class="hl-code">-&gt;</span><span class="hl-identifier">id</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">assertTrue</span><span class="hl-brackets">(</span><span class="hl-var">$comment</span> <span class="hl-identifier">instanceof</span> <span class="hl-identifier">Comment</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">assertEquals</span><span class="hl-brackets">(</span><span class="hl-identifier">Comment</span><span class="hl-code">::</span><span class="hl-identifier">STATUS_PENDING</span><span class="hl-code">,</span><span class="hl-var">$comment</span><span class="hl-code">-&gt;</span><span class="hl-identifier">status</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+    </span><span class="hl-comment">//</span><span class="hl-comment"> call approve() and verify the comment is in approved status</span>
+    <span class="hl-var">$comment</span><span class="hl-code">-&gt;</span><span class="hl-identifier">approve</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">assertEquals</span><span class="hl-brackets">(</span><span class="hl-identifier">Comment</span><span class="hl-code">::</span><span class="hl-identifier">STATUS_APPROVED</span><span class="hl-code">,</span><span class="hl-var">$comment</span><span class="hl-code">-&gt;</span><span class="hl-identifier">status</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-var">$comment</span><span class="hl-code">=</span><span class="hl-identifier">Comment</span><span class="hl-code">::</span><span class="hl-identifier">model</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">findByPk</span><span class="hl-brackets">(</span><span class="hl-var">$comment</span><span class="hl-code">-&gt;</span><span class="hl-identifier">id</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">assertEquals</span><span class="hl-brackets">(</span><span class="hl-identifier">Comment</span><span class="hl-code">::</span><span class="hl-identifier">STATUS_APPROVED</span><span class="hl-code">,</span><span class="hl-var">$comment</span><span class="hl-code">-&gt;</span><span class="hl-identifier">status</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></pre></div></div>
+
+<div class="revision"><div class="google-ad" style="margin:-60px 0 5px 200px;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "7116172008";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>$Id$</div>
+</div>
+                <div class="prev-next-nav">
+                            <div class="prev-topic"><a href="/doc/guide/1.1/en/test.fixture">Defining Fixtures</a></div>
+                                        <div class="next-topic"><a href="/doc/guide/1.1/en/test.functional">Functional Testing</a></div>
+                    </div>
+        
+		        <div class="widget-comment-list" id="comments">
+	<div class="comments">
+		<h3>Total 5 comments</h3>
+				<div class="comment alt-0">
+			<a class="cid" id="c16356" title="permalink to this comment" href="#c16356">#16356</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=16356"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=16356&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=16356&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/220702/">Neoc83</a> at 2014/02/14 03:40am</div>
+			<div class="title">Table prefixes and referring to the fixture data</div>
+			<div class="content"><p>When using a fixture with a table prefix like:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">protected</span> <span class="hl-var">$fixtures</span><span class="hl-code"> = </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+    <span class="hl-quotes">'</span><span class="hl-string">{{post}}</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">Post</span><span class="hl-quotes">'</span><span class="hl-code">,
+</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>and you want to refer to the fixture data in the test cases I found that it's not possible to use the following code:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">post</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">sample1</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>To make it work I wrote a class DbTestCase that extends CDbTestCase and overrides the PHP magic methods __get and __call. Please find the result and how to use it here:
+<a href="http://www.yiiframework.com/forum/index.php/topic/14507-tdd-fixtures-with-115/page__pid__238679#entry238679" title="Related forum post">Related forum post</a></p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c13093" title="permalink to this comment" href="#c13093">#13093</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=13093"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=13093&amp;vote=1"><span>1</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=13093&amp;vote=0"><span>1</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/130554/">Albert St Clair</a> at 2013/05/03 08:58pm</div>
+			<div class="title">function testApprove</div>
+			<div class="content"><pre>$comment-&gt;setAttributes(array(
+    'content'=&gt;'comment 1',
+    'status'=&gt;Comment::STATUS_PENDING,
+    'create_time'=&gt;time(),
+    'author'=&gt;'me',
+    'email'=&gt;'me@example.com',
+    'post_id'=&gt;$this-&gt;posts['sample1']['id'],
+),false);</pre>
+
+<p>the create_time and post_id keys should not be camelCased.</p>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c11797" title="permalink to this comment" href="#c11797">#11797</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=11797"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=11797&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=11797&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/77432/">Andres Felipe Diaz</a> at 2013/02/04 12:28pm</div>
+			<div class="title">Name of the fixtures file</div>
+			<div class="content"><p>Make sure that the file name of the fixture is the table name including the prefix (i.e: tbl_posts.php).</p>
+
+<p>Else, you will get an error saying that the property is not part of the Test Case Class when executing the following code:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">posts</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">sample1</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>Also, take on account that when defining the fixture property in the Test Case class, do it without the prefix.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">public</span> <span class="hl-var">$fixtures</span><span class="hl-code">=</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+        <span class="hl-quotes">'</span><span class="hl-string">posts</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">Post</span><span class="hl-quotes">'</span><span class="hl-code">,
+    </span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c7960" title="permalink to this comment" href="#c7960">#7960</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=7960"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=7960&amp;vote=1"><span>4</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=7960&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/3121/">François Gannaz</a> at 2012/04/29 08:19am</div>
+			<div class="title">CWebApplication in unit tests</div>
+			<div class="content"><p>When you launch unit tests, the Yii application wil still be an instance of CWebApplication, but its initial attributes are very different. For instance, if you try to test a method that uses <code>Yii::app()-&gt;controller</code>, then PHPUnit will crash.</p>
+
+<p>I needed to test a method that returned HTML links. So I had to complete by myself the application so that link generation would be possible. I added to my test class:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">setUp</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-comment">//</span><span class="hl-comment"> initialize a controller (which defaults to null in tests)</span>
+    <span class="hl-var">$c</span><span class="hl-code"> = </span><span class="hl-reserved">new</span> <span class="hl-identifier">CController</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">phpunit</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-var">$c</span><span class="hl-code">-&gt;</span><span class="hl-identifier">setAction</span><span class="hl-brackets">(</span><span class="hl-reserved">new</span> <span class="hl-identifier">CInlineAction</span><span class="hl-brackets">(</span><span class="hl-var">$c</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">urltest</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">setController</span><span class="hl-brackets">(</span><span class="hl-var">$c</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></pre></div></div>
+
+<p>Then I could test code that contained <code>Yii::app()-&gt;getController()-&gt;createUrl('', array('id' =&gt; $id));</code>.</p>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c5789" title="permalink to this comment" href="#c5789">#5789</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=5789"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=5789&amp;vote=1"><span>9</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=5789&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link silver" href="/user/1883/">Asgaroth</a> at 2011/11/13 07:39pm</div>
+			<div class="title">Call parent implementation</div>
+			<div class="content"><p>If for some reason you need to override the "setup" method in you test class, say to initialize (or simulate) session data like Yii::app()-&gt;user-&gt;id.</p>
+
+<p>Dont forget to call the parent implementation, or you'll get some weeeeird errors about missing properties/methods in your class:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">setUp</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span>
+        <span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">user</span><span class="hl-code">-&gt;</span><span class="hl-identifier">id</span><span class="hl-code"> = </span><span class="hl-number">1</span><span class="hl-code">;
+        </span><span class="hl-identifier">parent</span><span class="hl-code">::</span><span class="hl-identifier">setUp</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+ </span><span class="hl-brackets">}</span></pre></div></div>
+</div>
+					</div>
+			</div>
+	<div id="comment-add">
+		<h3 id="add-comment">Leave a comment</h3>
+
+			<p>Please <a class="g-login" rel="/doc/guide/1.1/en/test.unit#add-comment" href="#">login</a> to leave your comment.</p>
+		</div>
+</div>
+           </div>
+</div>
+					</div>
+				
+								<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+					</div>
+	</div>
+
+	<div class="layout-main-footer">
+		<div class="container_12">
+			<div class="grid_6">
+				<ul class="menu">
+				<li class="main">About
+<ul class="sub">
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="main">Downloads
+<ul class="sub">
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="main">Documentation
+<ul class="sub">
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="main">Development
+<ul class="sub">
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="main">Community
+<ul class="sub">
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+				</ul>
+			</div>
+			<div class="grid_1">&nbsp;</div>
+			<div class="grid_5">
+				<h3>Yii Supporters</h3>
+				<ul class="g-list-none supporters">
+
+				</ul>
+			</div>
+
+			<div class="clear"></div>
+			<div class="grid_12 copyright">
+				<ul class="social">
+					<li class="twitter"><a href="https://twitter.com/yiiframework" target="_blank" rel="nofollow" title="follow us on twitter">Twitter</a></li>
+					<li class="facebook"><a href="https://www.facebook.com/groups/yiitalk/" target="_blank" rel="nofollow" title="join yii group at facebook">Facebook</a></li>
+					<li class="linkedin"><a href="http://www.linkedin.com/groups?gid=1483367" target="_blank" rel="nofollow" title="join yii group at linkedin">LinkedIn</a></li>
+					<li class="feeds"><a title="RSS feeds" href="/rss.xml/">RSS Feeds</a></li>
+				</ul>
+				<div class="clear"></div>
+				<a href="/tos/">Terms of Service</a> |
+				<a href="/license/">License</a> |
+				<a href="/contact/">Contact Us</a><br/>
+				Copyright &copy; 2015 by <a href="http://www.yiisoft.com">Yii Software LLC</a>.
+				All Rights Reserved.
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+    <script type="text/javascript" src="/js/site-20121004195728.js"></script>
+
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['site._setAccount', 'UA-5843896-1']);
+_gaq.push(['site._trackPageview']);
+
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+<script type="text/javascript">
+function trackClick(link, action, category) {
+	action=action || link.href;
+	category=category || 'Outbound Links';
+	try {
+		_gaq.push(['site._trackEvent', category, action]);
+		setTimeout('document.location = "' + link.href + '"', 250);
+	}catch(err){}
+	return false;
+}
+</script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+</body>
+</html>

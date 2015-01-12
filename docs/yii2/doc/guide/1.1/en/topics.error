@@ -1,0 +1,604 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    	<meta charset="UTF-8" />
+		<meta name="keywords" content="yii framework, tutorial, guide, version 1.1" />
+	<meta name="description" content="Yii provides a complete error handling framework based on the PHP 5
+exception mechanism." />
+    <link rel="shortcut icon" type="image/x-icon" href="http://static.yiiframework.com/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="http://static.yiiframework.com/css/site-20130404102234.css" />
+
+	<link title="Lives News for Yii Framework" rel="alternate" type="application/rss+xml" href="http://www.yiiframework.com/rss.xml/" />
+	<title>Special Topics: Error Handling | The Definitive Guide to Yii | Yii PHP Framework</title>
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii API Search" href="/search-api.xml" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii Site Search" href="/search-site.xml" />
+</head>
+
+<body class="mac">
+<div class="layout-main">
+
+	<div class="layout-main-shortcuts">
+		<div class="container_12">
+            <a style="color:darkred;" href="https://github.com/yiisoft/yii2">Github</a> &middot;
+            <a style="color:darkgreen;" href="https://twitter.com/yiiframework">Twitter</a> &middot;
+            <a style="color:darkblue;" href="https://www.facebook.com/groups/yiitalk/">Facebook</a> &middot;
+            <a href="/doc/guide/">Guide</a> &middot;
+            <a href="/doc/api/">Class Reference</a> &middot;
+            <a href="/doc-2.0/guide-index.html">Guide 2.0</a> &middot;
+            <a href="/doc-2.0/index.html">API 2.0</a> &middot;
+            <a href="/wiki/">Wiki</a> &middot;
+            <a href="/extensions/">Extensions</a> &middot;
+            <a href="/forum/">Forum</a> &middot;
+			<a href="/chat/">Live Chat</a> &middot;
+                            <a href="/login/">Login</a>            		</div>
+	</div>
+
+	<div class="layout-main-bg">
+		<div class="layout-main-header">
+			<div class="container_12">
+				<div class="grid_4">
+					<a class="logo" href="/"><img alt="Yii Logo" src="http://static.yiiframework.com/css/img/logo.png" title="Yii Framework" width="284" height="64" /></a>				</div>
+				<div class="grid_8 omega">
+					<div class="nav">
+						<ul class="menu" id="yw0">
+<li class="about"><a class="main" href="/about/">About</a>
+<ul>
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li class="last"><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="downloads"><a class="main" href="/download/">Downloads</a>
+<ul>
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li class="last"><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="documentation active"><a class="main" href="/doc/">Documentation</a>
+<ul>
+<li><a href="/tour/">Take the Tour</a></li>
+<li class="active"><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li class="last"><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="development"><a class="main" href="https://github.com/yiisoft/yii/commits/master">Development</a>
+<ul>
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li class="last"><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="community last"><a class="main" href="/community/">Community</a>
+<ul>
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li class="last"><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+</ul>						<div class="search">
+							<form method="get" action="/search/">
+								<div class="keyword">
+	                                <input name="q" value="" />
+									<a href="#" title="search" class="global-search">search</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+
+		<div class="container_12">
+						<div class="grid_12">
+												<div class="layout-main-submenu">
+					<ul>
+						<li class="main">Documentation</li>
+												<li><a href="/tour/">Take the Tour</a></li>
+												<li class="active"><a href="/tutorials/">Tutorials</a></li>
+												<li><a href="/doc/api/">Class Reference</a></li>
+												<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+												<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+												<li><a href="/wiki/">Wiki</a></li>
+												<li><a href="/screencasts/">Screencasts</a></li>
+												<li><a href="/resources/">Resources</a></li>
+											</ul>
+				</div>
+				
+				
+				
+									<div class="layout-main-body">
+						<div class="tutorial-view">
+    <div class="grid_3 alpha">
+        <div class="nav-toc">
+    		<div class="title">The Definitive Guide to Yii</div>
+    		<div class="langver">
+	            <strong>Language &amp; version</strong>
+	    		<div class="languages g-dropdown">
+	    		<span>English<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.1/de/topics.error">Deutsch</a></li>
+<li><a href="/doc/guide/1.1/es/topics.error">Español</a></li>
+<li><a href="/doc/guide/1.1/fr/topics.error">Français</a></li>
+<li><a href="/doc/guide/1.1/he/topics.error">עִבְרִית</a></li>
+<li><a href="/doc/guide/1.1/id/topics.error">Bahasa Indonesia</a></li>
+<li><a href="/doc/guide/1.1/it/topics.error">Italiano</a></li>
+<li><a href="/doc/guide/1.1/ja/topics.error">日本語</a></li>
+<li><a href="/doc/guide/1.1/pl/topics.error">Polski</a></li>
+<li><a href="/doc/guide/1.1/pt/topics.error">Português</a></li>
+<li><a href="/doc/guide/1.1/pt_br/topics.error">Português brasileiro</a></li>
+<li><a href="/doc/guide/1.1/ro/topics.error">România</a></li>
+<li><a href="/doc/guide/1.1/ru/topics.error">Русский</a></li>
+<li><a href="/doc/guide/1.1/sv/topics.error">Svenska</a></li>
+<li><a href="/doc/guide/1.1/uk/topics.error">украї́нська</a></li>
+<li><a href="/doc/guide/1.1/zh_cn/topics.error">简体中文</a></li>
+</ul>
+	    		</div>
+				<div class="versions g-dropdown">
+	    		<span>1.1<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.0/en/topics.error">1.0</a></li>
+</ul>
+				</div>
+				<div class="clear"></div>
+			</div>
+            <div class="widget-search-box">
+    <form method="get" action="/search/">
+        <strong>Search in this tutorial</strong>
+		<input type="text" name="q" class="keyword g-text" />
+        <input type="hidden" name="type" value="guide" />
+        <input type="hidden" name="lang" value="en" />
+        <input type="submit" value="Find" class="btn btn-info" />
+	</form>
+</div>
+			<ul class="toc">
+						    <li class="chapter"><strong>Getting Started</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/index">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/changes">New Features</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/upgrade">Upgrading from 1.0 to 1.1</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.what-is-yii">What is Yii</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.installation">Installation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.apache-nginx-config">Apache and Nginx configurations</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app">Creating First Yii Application</a>			            </li>
+			        			    						    <li class="chapter"><strong>Fundamentals</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.mvc">Model-View-Controller (MVC)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.entry">Entry Script</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.application">Application</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.controller">Controller</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.model">Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.view">View</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.component">Component</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.module">Module</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.namespace">Path Alias and Namespace</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.convention">Conventions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.workflow">Development Workflow</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.best-practices">Best MVC Practices</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Forms</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.model">Creating Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.action">Creating Action</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.view">Creating Form</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.table">Collecting Tabular Input</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.builder">Using Form Builder</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Databases</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.dao">Database Access Objects</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.query-builder">Query Builder</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.ar">Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.arr">Relational Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.migration">Database Migration</a>			            </li>
+			        			    						    <li class="chapter"><strong>Caching</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.data">Data Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.fragment">Fragment Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.page">Page Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.dynamic">Dynamic Content</a>			            </li>
+			        			    						    <li class="chapter"><strong>Extending Yii</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.use">Using Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.create">Creating Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.integration">Using 3rd-Party Libraries</a>			            </li>
+			        			    						    <li class="chapter"><strong>Testing</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.fixture">Defining Fixtures</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.unit">Unit Testing</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.functional">Functional Testing</a>			            </li>
+			        			    						    <li class="chapter"><strong>Special Topics</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.gii">Automatic Code Generation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.url">URL Management</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.auth">Authentication and Authorization</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.theming">Theming and Skin</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.logging">Logging</a>			            </li>
+			        			    			        			            <li class="active">
+			                &raquo; Error Handling &laquo;
+			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.webservice">Web Service</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.i18n">Internationalization (I18N)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.prado">Alternative Template Syntax</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.console">Console Applications</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.security">Security</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.performance">Performance Tuning</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app-yiic">Code Generation using Command Line Tools (deprecated)</a>			            </li>
+			        			    						</ul>
+        </div>
+    </div>
+    <div class="grid_9 omega">
+    	<div class="g-markdown"><h1 id="error-handling">Error Handling</h1>
+<div class="google-ad" style="float:right;margin:0 0 1em 1em;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "2830391674";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+<div class="toc"><ol><li><a href="#raising-exceptions">Raising Exceptions</a></li>
+<li><a href="#displaying-errors">Displaying Errors</a></li>
+<li><a href="#handling-errors-using-an-action">Handling Errors Using an Action</a></li>
+<li><a href="#message-logging">Message Logging</a></li></ol></div>
+
+
+<p>Yii provides a complete error handling framework based on the PHP 5
+exception mechanism. When the application is created to handle an incoming
+user request, it registers its <a href="/doc/api/1.1/CApplication#handleError">handleError</a>
+method to handle PHP warnings and notices; and it registers its
+<a href="/doc/api/1.1/CApplication#handleException">handleException</a> method to handle uncaught
+PHP exceptions. Consequently, if a PHP warning/notice or an uncaught
+exception occurs during the application execution, one of the error
+handlers will take over the control and start the necessary error handling
+procedure.</p>
+
+<blockquote class="tip">
+<p><strong>Tip:</strong> The registration of error handlers is done in the application's
+  constructor by calling PHP functions
+  <a href="http://www.php.net/manual/en/function.set-exception-handler.php">set_exception_handler</a>
+  and <a href="http://www.php.net/manual/en/function.set-error-handler.php">set_error_handler</a>.
+  If you do not want Yii to handle the errors and exceptions, you may define
+  constant <code>YII_ENABLE_ERROR_HANDLER</code> and <code>YII_ENABLE_EXCEPTION_HANDLER</code> to
+  be false in the <a href="/doc/guide/1.1/en/basics.entry">entry script</a>.</p>
+</blockquote>
+
+<p>By default, <a href="/doc/api/1.1/CApplication#handleError">handleError</a> (or
+<a href="/doc/api/1.1/CApplication#handleException">handleException</a>) will raise an
+<a href="/doc/api/1.1/CApplication#onError">onError</a> event (or
+<a href="/doc/api/1.1/CApplication#onException">onException</a> event). If the error (or exception)
+is not handled by any event handler, it will call for help from the
+<a href="/doc/api/1.1/CErrorHandler">errorHandler</a> application component.</p>
+
+<h2 id="raising-exceptions">1. Raising Exceptions <a class="anchor" href="#raising-exceptions">¶</a></h2>
+
+<p>Raising exceptions in Yii is not different from raising a normal PHP
+exception. One uses the following syntax to raise an exception when needed:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">throw</span> <span class="hl-reserved">new</span> <span class="hl-identifier">ExceptionClass</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">ExceptionMessage</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>Yii defines three exception classes: <a href="/doc/api/1.1/CException">CException</a>, <a href="/doc/api/1.1/CDbException">CDbException</a> and
+<a href="/doc/api/1.1/CHttpException">CHttpException</a>. <a href="/doc/api/1.1/CException">CException</a> is a generic exception class. <a href="/doc/api/1.1/CDbException">CDbException</a>
+represents an exception that is caused by some DB-related operations.
+<a href="/doc/api/1.1/CHttpException">CHttpException</a> represents an exception that should be displayed to end users
+and carries a <a href="/doc/api/1.1/CHttpException#statusCode">statusCode</a> property representing an HTTP
+status code. The class of an exception determines how it should be
+displayed, as we will explain next.</p>
+
+<blockquote class="tip">
+<p><strong>Tip:</strong> Raising a <a href="/doc/api/1.1/CHttpException">CHttpException</a> exception is a simple way of reporting
+  errors caused by user misoperation. For example, if the user provides an
+  invalid post ID in the URL, we can simply do the following to show a 404
+  error (page not found):</p>
+</blockquote>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> if post ID is invalid</span>
+<span class="hl-reserved">throw</span> <span class="hl-reserved">new</span> <span class="hl-identifier">CHttpException</span><span class="hl-brackets">(</span><span class="hl-number">404</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">The specified post cannot be found.</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<h2 id="displaying-errors">2. Displaying Errors <a class="anchor" href="#displaying-errors">¶</a></h2>
+
+<p>When an error is forwarded to the <a href="/doc/api/1.1/CErrorHandler">CErrorHandler</a> application component,
+it chooses an appropriate view to display the error. If the error is meant
+to be displayed to end users, such as a <a href="/doc/api/1.1/CHttpException">CHttpException</a>, it will use a
+view named <code>errorXXX</code>, where <code>XXX</code> stands for the HTTP status code (e.g.
+400, 404, 500). If the error is an internal one and should only be
+displayed to developers, it will use a view named <code>exception</code>. In the
+latter case, complete call stack as well as the error line information will
+be displayed.</p>
+
+<blockquote class="info">
+<p><strong>Info:</strong> When the application runs in <a href="/doc/guide/1.1/en/basics.entry#debug-mode">production
+  mode</a>, all errors including those internal
+  ones will be displayed using view <code>errorXXX</code>. This is because the call
+  stack of an error may contain sensitive information. In this case,
+  developers should rely on the error logs to determine what is the real
+  cause of an error.</p>
+</blockquote>
+
+<p><a href="/doc/api/1.1/CErrorHandler">CErrorHandler</a> searches for the view file corresponding to a view in the
+following order:</p>
+
+<ol>
+<li><p><code>WebRoot/themes/ThemeName/views/system</code>: this is the <code>system</code> view
+directory under the currently active theme.</p></li>
+<li><p><code>WebRoot/protected/views/system</code>: this is the default <code>system</code> view
+directory for an application.</p></li>
+<li><p><code>yii/framework/views</code>: this is the standard system view directory
+provided by the Yii framework.</p></li>
+</ol>
+
+<p>Therefore, if we want to customize the error display, we can simply create
+error view files under the system view directory of our application or
+theme. Each view file is a normal PHP script consisting of mainly HTML
+code. For more details, please refer to the default view files under the
+framework's <code>view</code> directory.</p>
+
+<h2 id="handling-errors-using-an-action">3. Handling Errors Using an Action <a class="anchor" href="#handling-errors-using-an-action">¶</a></h2>
+
+<p>Yii allows using a <a href="/doc/guide/1.1/en/basics.controller#action">controller action</a>
+to handle the error display work. To do so, we should configure the error handler
+in the application configuration as follows:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">return</span> <span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-code">
+    ......
+    </span><span class="hl-quotes">'</span><span class="hl-string">components</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+        <span class="hl-quotes">'</span><span class="hl-string">errorHandler</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">errorAction</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">site/error</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-brackets">)</span><span class="hl-code">,
+</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>In the above, we configure the <a href="/doc/api/1.1/CErrorHandler#errorAction">CErrorHandler::errorAction</a> property to be the route
+<code>site/error</code> which refers to the <code>error</code> action in <code>SiteController</code>. We may use a different
+route if needed.</p>
+
+<p>We can write the <code>error</code> action like the following:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">actionError</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-var">$error</span><span class="hl-code">=</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">errorHandler</span><span class="hl-code">-&gt;</span><span class="hl-identifier">error</span><span class="hl-brackets">)</span>
+        <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">render</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">error</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$error</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></pre></div></div>
+
+<p>In the action, we first retrieve the detailed error information from <a href="/doc/api/1.1/CErrorHandler#error">CErrorHandler::error</a>.
+If it is not empty, we render the <code>error</code> view together with the error information.
+The error information returned from <a href="/doc/api/1.1/CErrorHandler#error">CErrorHandler::error</a> is an array with the following fields:</p>
+
+<ul>
+<li><code>code</code>: the HTTP status code (e.g. 403, 500);</li>
+<li><code>type</code>: the error type (e.g. <a href="/doc/api/1.1/CHttpException">CHttpException</a>, <code>PHP Error</code>);</li>
+<li><code>message</code>: the error message;</li>
+<li><code>file</code>: the name of the PHP script file where the error occurs;</li>
+<li><code>line</code>: the line number of the code where the error occurs;</li>
+<li><code>trace</code>: the call stack of the error;</li>
+<li><code>source</code>: the context source code where the error occurs.</li>
+</ul>
+
+<blockquote class="tip">
+<p><strong>Tip:</strong> The reason we check if <a href="/doc/api/1.1/CErrorHandler#error">CErrorHandler::error</a> is empty or not is because
+  the <code>error</code> action may be directly requested by an end user, in which case there is no error.
+  Since we are passing the <code>$error</code> array to the view, it will be automatically expanded
+  to individual variables. As a result, in the view we can access directly the variables such as
+  <code>$code</code>, <code>$type</code>.</p>
+</blockquote>
+
+<h2 id="message-logging">4. Message Logging <a class="anchor" href="#message-logging">¶</a></h2>
+
+<p>A message of level <code>error</code> will always be logged when an error occurs. If
+the error is caused by a PHP warning or notice, the message will be logged
+with category <code>php</code>; if the error is caused by an uncaught exception, the
+category would be <code>exception.ExceptionClassName</code> (for <a href="/doc/api/1.1/CHttpException">CHttpException</a> its
+<a href="/doc/api/1.1/CHttpException#statusCode">statusCode</a> will also be appended to the
+category). One can thus exploit the <a href="/doc/guide/1.1/en/topics.logging">logging</a>
+feature to monitor errors happened during application execution.</p>
+
+<div class="revision"><div class="google-ad" style="margin:-60px 0 5px 200px;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "7116172008";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>$Id$</div>
+</div>
+                <div class="prev-next-nav">
+                            <div class="prev-topic"><a href="/doc/guide/1.1/en/topics.logging">Logging</a></div>
+                                        <div class="next-topic"><a href="/doc/guide/1.1/en/topics.webservice">Web Service</a></div>
+                    </div>
+        
+		        <div class="widget-comment-list" id="comments">
+	<div id="comment-add">
+		<h3 id="add-comment">Be the first person to leave a comment</h3>
+
+			<p>Please <a class="g-login" rel="/doc/guide/1.1/en/topics.error#add-comment" href="#">login</a> to leave your comment.</p>
+		</div>
+</div>
+           </div>
+</div>
+					</div>
+				
+								<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+					</div>
+	</div>
+
+	<div class="layout-main-footer">
+		<div class="container_12">
+			<div class="grid_6">
+				<ul class="menu">
+				<li class="main">About
+<ul class="sub">
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="main">Downloads
+<ul class="sub">
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="main">Documentation
+<ul class="sub">
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="main">Development
+<ul class="sub">
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="main">Community
+<ul class="sub">
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+				</ul>
+			</div>
+			<div class="grid_1">&nbsp;</div>
+			<div class="grid_5">
+				<h3>Yii Supporters</h3>
+				<ul class="g-list-none supporters">
+
+				</ul>
+			</div>
+
+			<div class="clear"></div>
+			<div class="grid_12 copyright">
+				<ul class="social">
+					<li class="twitter"><a href="https://twitter.com/yiiframework" target="_blank" rel="nofollow" title="follow us on twitter">Twitter</a></li>
+					<li class="facebook"><a href="https://www.facebook.com/groups/yiitalk/" target="_blank" rel="nofollow" title="join yii group at facebook">Facebook</a></li>
+					<li class="linkedin"><a href="http://www.linkedin.com/groups?gid=1483367" target="_blank" rel="nofollow" title="join yii group at linkedin">LinkedIn</a></li>
+					<li class="feeds"><a title="RSS feeds" href="/rss.xml/">RSS Feeds</a></li>
+				</ul>
+				<div class="clear"></div>
+				<a href="/tos/">Terms of Service</a> |
+				<a href="/license/">License</a> |
+				<a href="/contact/">Contact Us</a><br/>
+				Copyright &copy; 2015 by <a href="http://www.yiisoft.com">Yii Software LLC</a>.
+				All Rights Reserved.
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+    <script type="text/javascript" src="/js/site-20121004195728.js"></script>
+
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['site._setAccount', 'UA-5843896-1']);
+_gaq.push(['site._trackPageview']);
+
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+<script type="text/javascript">
+function trackClick(link, action, category) {
+	action=action || link.href;
+	category=category || 'Outbound Links';
+	try {
+		_gaq.push(['site._trackEvent', category, action]);
+		setTimeout('document.location = "' + link.href + '"', 250);
+	}catch(err){}
+	return false;
+}
+</script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+</body>
+</html>

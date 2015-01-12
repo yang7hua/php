@@ -1,0 +1,716 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    	<meta charset="UTF-8" />
+		<meta name="keywords" content="yii framework, wiki, How-tos, UserIdentity, usertype, CUserIdentity, mutiple login, muti-login, LoginForm" />
+	<meta name="description" content="In this wiki I will show how could wo pass the third parameter to UserIdentity on login authenticate. So we can do separate login authentcation from two or more different models from single login form." />
+    <link rel="shortcut icon" type="image/x-icon" href="http://static.yiiframework.com/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="http://static.yiiframework.com/css/site-20130404102234.css" />
+
+	<link title="Lives News for Yii Framework" rel="alternate" type="application/rss+xml" href="http://www.yiiframework.com/rss.xml/" />
+	<title>How to pass the third parameter to UserIdentity on login authentication | Wiki | Yii PHP Framework</title>
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii API Search" href="/search-api.xml" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii Site Search" href="/search-site.xml" />
+</head>
+
+<body class="mac">
+<div class="layout-main">
+
+	<div class="layout-main-shortcuts">
+		<div class="container_12">
+            <a style="color:darkred;" href="https://github.com/yiisoft/yii2">Github</a> &middot;
+            <a style="color:darkgreen;" href="https://twitter.com/yiiframework">Twitter</a> &middot;
+            <a style="color:darkblue;" href="https://www.facebook.com/groups/yiitalk/">Facebook</a> &middot;
+            <a href="/doc/guide/">Guide</a> &middot;
+            <a href="/doc/api/">Class Reference</a> &middot;
+            <a href="/doc-2.0/guide-index.html">Guide 2.0</a> &middot;
+            <a href="/doc-2.0/index.html">API 2.0</a> &middot;
+            <a href="/wiki/">Wiki</a> &middot;
+            <a href="/extensions/">Extensions</a> &middot;
+            <a href="/forum/">Forum</a> &middot;
+			<a href="/chat/">Live Chat</a> &middot;
+                            <a href="/login/">Login</a>            		</div>
+	</div>
+
+	<div class="layout-main-bg">
+		<div class="layout-main-header">
+			<div class="container_12">
+				<div class="grid_4">
+					<a class="logo" href="/"><img alt="Yii Logo" src="http://static.yiiframework.com/css/img/logo.png" title="Yii Framework" width="284" height="64" /></a>				</div>
+				<div class="grid_8 omega">
+					<div class="nav">
+						<ul class="menu" id="yw0">
+<li class="about"><a class="main" href="/about/">About</a>
+<ul>
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li class="last"><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="downloads"><a class="main" href="/download/">Downloads</a>
+<ul>
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li class="last"><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="documentation active"><a class="main" href="/doc/">Documentation</a>
+<ul>
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li class="active"><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li class="last"><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="development"><a class="main" href="https://github.com/yiisoft/yii/commits/master">Development</a>
+<ul>
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li class="last"><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="community last"><a class="main" href="/community/">Community</a>
+<ul>
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li class="last"><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+</ul>						<div class="search">
+							<form method="get" action="/search/">
+								<div class="keyword">
+	                                <input name="q" value="" />
+									<a href="#" title="search" class="global-search">search</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+
+		<div class="container_12">
+						<div class="grid_12">
+												<div class="layout-main-submenu">
+					<ul>
+						<li class="main">Documentation</li>
+												<li><a href="/tour/">Take the Tour</a></li>
+												<li><a href="/tutorials/">Tutorials</a></li>
+												<li><a href="/doc/api/">Class Reference</a></li>
+												<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+												<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+												<li class="active"><a href="/wiki/">Wiki</a></li>
+												<li><a href="/screencasts/">Screencasts</a></li>
+												<li><a href="/resources/">Resources</a></li>
+											</ul>
+				</div>
+				
+				
+				
+								<div class="grid_9 alpha">
+									<div class="layout-main-body">
+						<div class="wiki-view">
+        <h1>Yii 1.1: How to pass the third parameter to UserIdentity on login authentication <a href="https://twitter.com/yiiframework" class="twitter-follow-button" data-link-color="#0069D6" data-show-count="true">Follow @yiiframework</a></h1>
+
+	<div class="g-voter-reporter">
+		<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Wiki&amp;id=779"><span>report it</span></a>		<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Wiki&amp;id=779&amp;vote=1"><span>1</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Wiki&amp;id=779&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>	</div>
+	<div class="g-starring">
+		<span class="widget-follower"><a class="g-login" title="Click to follow" href="/site/star/?type=Wiki&amp;id=779&amp;v=1"><img alt="Click to follow" src="/images/star_off.gif" title="" width="15" height="15" /></a><span>5 followers</span></span>	</div>
+	<div class="clear"></div>
+
+    <div class="content g-markdown"><div class="google-ad" style="float:right;margin:0 0 1em 1em;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "3624755012";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+
+    
+        <p>In this wiki I will show how could wo pass the third parameter to UserIdentity on login authenticate. So we can do separate login authentcation from two or more different models from single login form.</p>
+
+<p><strong>In LoginForm Model -</strong></p>
+
+<p>Added a new variable like - usertype. also we will pass it's to UserIdentity same as username &amp; password.</p>
+
+<p>eg.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">_identity</span><span class="hl-code"> = </span><span class="hl-reserved">new</span> <span class="hl-identifier">UserIdentity</span><span class="hl-brackets">(</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">username</span><span class="hl-code">, </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">password</span><span class="hl-code">, </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">usertype</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">LoginForm</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CFormModel</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">public</span> <span class="hl-var">$username</span><span class="hl-code">;
+    </span><span class="hl-reserved">public</span> <span class="hl-var">$password</span><span class="hl-code">;
+    </span><span class="hl-reserved">public</span> <span class="hl-var">$usertype</span><span class="hl-code">;
+    </span><span class="hl-reserved">public</span> <span class="hl-var">$rememberMe</span><span class="hl-code">;
+ 
+    </span><span class="hl-reserved">private</span> <span class="hl-var">$_identity</span><span class="hl-code">;
+ 
+ 
+    </span><span class="hl-comment">/*</span><span class="hl-comment">*
+     * Declares the validation rules.
+     * The rules state that username and password are required,
+     * and password needs to be authenticated.
+     </span><span class="hl-comment">*/</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">rules</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-reserved">return</span> <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-comment">//</span><span class="hl-comment"> username and password are required</span>
+            <span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">username, password, usertype</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">required</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+            </span><span class="hl-comment">//</span><span class="hl-comment"> rememberMe needs to be a boolean</span>
+            <span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">rememberMe</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">boolean</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+            </span><span class="hl-comment">//</span><span class="hl-comment"> password needs to be authenticated</span>
+            <span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">password</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">authenticate</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+ 
+    <span class="hl-comment">/*</span><span class="hl-comment">*
+     * Declares attribute labels.
+     </span><span class="hl-comment">*/</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">attributeLabels</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-reserved">return</span> <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">rememberMe</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">Remember me next time</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">usertype</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">User Type</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+ 
+    <span class="hl-comment">/*</span><span class="hl-comment">*
+     * Authenticates the password.
+     * This is the 'authenticate' validator as declared in rules().
+     </span><span class="hl-comment">*/</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">authenticate</span><span class="hl-brackets">(</span><span class="hl-var">$attribute</span><span class="hl-code">, </span><span class="hl-var">$params</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-code">!</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">hasErrors</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+        <span class="hl-brackets">{</span>
+            <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">_identity</span><span class="hl-code"> = </span><span class="hl-reserved">new</span> <span class="hl-identifier">UserIdentity</span><span class="hl-brackets">(</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">username</span><span class="hl-code">, </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">password</span><span class="hl-code">, </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">usertype</span><span class="hl-brackets">)</span><span class="hl-code">;
+            </span><span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-code">!</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">_identity</span><span class="hl-code">-&gt;</span><span class="hl-identifier">authenticate</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+                <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">addError</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">password</span><span class="hl-quotes">'</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">Incorrect username or password.</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span>
+    <span class="hl-brackets">}</span>
+ 
+    <span class="hl-comment">/*</span><span class="hl-comment">*
+     * Logs in the user using the given username and password in the model.
+     *</span><span class="hl-inlinedoc"> @return </span><span class="hl-comment">boolean whether login is successful
+     </span><span class="hl-comment">*/</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">login</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">_identity</span><span class="hl-code">===</span><span class="hl-reserved">null</span><span class="hl-brackets">)</span>
+        <span class="hl-brackets">{</span>
+            <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">_identity</span><span class="hl-code"> = </span><span class="hl-reserved">new</span> <span class="hl-identifier">UserIdentity</span><span class="hl-brackets">(</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">username</span><span class="hl-code">, </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">password</span><span class="hl-code">, </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">usertype</span><span class="hl-brackets">)</span><span class="hl-code">;
+            </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">_identity</span><span class="hl-code">-&gt;</span><span class="hl-identifier">authenticate</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span>
+        <span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">_identity</span><span class="hl-code">-&gt;</span><span class="hl-identifier">errorCode</span><span class="hl-code">===</span><span class="hl-identifier">UserIdentity</span><span class="hl-code">::</span><span class="hl-identifier">ERROR_NONE</span><span class="hl-brackets">)</span>
+        <span class="hl-brackets">{</span>
+            <span class="hl-var">$duration</span><span class="hl-code">=</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">rememberMe</span><span class="hl-code"> ? </span><span class="hl-number">3600</span><span class="hl-code">*</span><span class="hl-number">24</span><span class="hl-code">*</span><span class="hl-number">30</span><span class="hl-code"> : </span><span class="hl-number">0</span><span class="hl-code">; </span><span class="hl-comment">//</span><span class="hl-comment"> 30 days</span>
+            <span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">user</span><span class="hl-code">-&gt;</span><span class="hl-identifier">login</span><span class="hl-brackets">(</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">_identity</span><span class="hl-code">,</span><span class="hl-var">$duration</span><span class="hl-brackets">)</span><span class="hl-code">;
+            </span><span class="hl-reserved">return</span> <span class="hl-reserved">true</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span>
+        <span class="hl-reserved">else</span>
+            <span class="hl-reserved">return</span> <span class="hl-reserved">false</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p><strong>In Login View -</strong></p>
+
+<p>Here i'm using two different user type authentication - <strong>User &amp; Agency</strong></p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-inlinetags">&lt;?php</span> <span class="hl-var">$form</span><span class="hl-code"> = </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">beginWidget</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">CActiveForm</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+                    <span class="hl-quotes">'</span><span class="hl-string">id</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">login-form</span><span class="hl-quotes">'</span><span class="hl-code">,
+                    </span><span class="hl-quotes">'</span><span class="hl-string">enableClientValidation</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">true</span><span class="hl-code">,
+                    </span><span class="hl-quotes">'</span><span class="hl-string">clientOptions</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+                        <span class="hl-quotes">'</span><span class="hl-string">validateOnSubmit</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">true</span><span class="hl-code">,
+                    </span><span class="hl-brackets">)</span><span class="hl-code">,
+     </span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-inlinetags">?&gt;</span><span class="hl-code">
+ 
+&lt;?</span><span class="hl-identifier">php</span> <span class="hl-reserved">echo</span> <span class="hl-var">$form</span><span class="hl-code">-&gt;</span><span class="hl-identifier">labelEx</span><span class="hl-brackets">(</span><span class="hl-var">$model</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">username</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-inlinetags">?&gt;</span><span class="hl-code">
+&lt;?</span><span class="hl-identifier">php</span> <span class="hl-reserved">echo</span> <span class="hl-var">$form</span><span class="hl-code">-&gt;</span><span class="hl-identifier">textField</span><span class="hl-brackets">(</span><span class="hl-var">$model</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">username</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">form-control</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">placeholder</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">Username</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-inlinetags">?&gt;</span><span class="hl-code">
+&lt;?</span><span class="hl-identifier">php</span> <span class="hl-reserved">echo</span> <span class="hl-var">$form</span><span class="hl-code">-&gt;</span><span class="hl-identifier">error</span><span class="hl-brackets">(</span><span class="hl-var">$model</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">username</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-inlinetags">?&gt;</span><span class="hl-code">
+ 
+&lt;?</span><span class="hl-identifier">php</span> <span class="hl-reserved">echo</span> <span class="hl-var">$form</span><span class="hl-code">-&gt;</span><span class="hl-identifier">labelEx</span><span class="hl-brackets">(</span><span class="hl-var">$model</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">password</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-inlinetags">?&gt;</span><span class="hl-code">
+&lt;?</span><span class="hl-identifier">php</span> <span class="hl-reserved">echo</span> <span class="hl-var">$form</span><span class="hl-code">-&gt;</span><span class="hl-identifier">passwordField</span><span class="hl-brackets">(</span><span class="hl-var">$model</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">password</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">form-control</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">placeholder</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">Password</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-inlinetags">?&gt;</span><span class="hl-code">
+&lt;?</span><span class="hl-identifier">php</span> <span class="hl-reserved">echo</span> <span class="hl-var">$form</span><span class="hl-code">-&gt;</span><span class="hl-identifier">error</span><span class="hl-brackets">(</span><span class="hl-var">$model</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">password</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-inlinetags">?&gt;</span><span class="hl-code">
+ 
+ 
+&lt;?</span><span class="hl-identifier">php</span> <span class="hl-reserved">echo</span> <span class="hl-var">$form</span><span class="hl-code">-&gt;</span><span class="hl-identifier">labelEx</span><span class="hl-brackets">(</span><span class="hl-var">$model</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">usertype</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-inlinetags">?&gt;</span><span class="hl-code">
+&lt;?</span><span class="hl-identifier">php</span> <span class="hl-reserved">echo</span> <span class="hl-var">$form</span><span class="hl-code">-&gt;</span><span class="hl-identifier">dropDownList</span><span class="hl-brackets">(</span><span class="hl-var">$model</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">usertype</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">U</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">User</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">A</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">Agency</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+              </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">empty</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">-- Select User Type --</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">form-control</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-inlinetags">?&gt;</span><span class="hl-code">
+&lt;?</span><span class="hl-identifier">php</span> <span class="hl-reserved">echo</span> <span class="hl-var">$form</span><span class="hl-code">-&gt;</span><span class="hl-identifier">error</span><span class="hl-brackets">(</span><span class="hl-var">$model</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">usertype</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-inlinetags">?&gt;</span><span class="hl-code">
+ 
+&lt;?</span><span class="hl-identifier">php</span> <span class="hl-reserved">echo</span> <span class="hl-identifier">CHtml</span><span class="hl-code">::</span><span class="hl-identifier">submitButton</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">Login</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">btn-login</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-inlinetags">?&gt;</span><span class="hl-code">
+ 
+&lt;?</span><span class="hl-identifier">php</span> <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">endWidget</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-inlinetags">?&gt;</span></pre></div></div>
+
+<p><strong>In Controller</strong> (actionLogin method) -</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">actionLogin</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span>
+ 
+    <span class="hl-var">$model</span><span class="hl-code"> = </span><span class="hl-reserved">new</span> <span class="hl-identifier">LoginForm</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+    </span><span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-reserved">isset</span><span class="hl-brackets">(</span><span class="hl-var">$_POST</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">ajax</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-code"> &amp;&amp; </span><span class="hl-var">$_POST</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">ajax</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-code"> === </span><span class="hl-quotes">'</span><span class="hl-string">login-form</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span>
+            <span class="hl-reserved">echo</span> <span class="hl-identifier">CActiveForm</span><span class="hl-code">::</span><span class="hl-identifier">validate</span><span class="hl-brackets">(</span><span class="hl-var">$model</span><span class="hl-brackets">)</span><span class="hl-code">;
+            </span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">end</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span>
+ 
+    <span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-reserved">isset</span><span class="hl-brackets">(</span><span class="hl-var">$_POST</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">LoginForm</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span>
+ 
+        <span class="hl-var">$model</span><span class="hl-code">-&gt;</span><span class="hl-identifier">attributes</span><span class="hl-code"> = </span><span class="hl-var">$_POST</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">LoginForm</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-code">;
+        </span><span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-var">$model</span><span class="hl-code">-&gt;</span><span class="hl-identifier">validate</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">username</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">password</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">usertype</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code"> &amp;&amp; </span><span class="hl-var">$model</span><span class="hl-code">-&gt;</span><span class="hl-identifier">login</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+                <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">redirect</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">site/index</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;
+      </span><span class="hl-brackets">}</span> 
+    <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">render</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">login</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">model</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-var">$model</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span></pre></div></div>
+
+<p><strong>In UserIdentity</strong></p>
+
+<p>Need to update UserIdentity.php (In Component directory). Here we will getting third parameter 'usertype' as per we define &amp; pass in LoginForm model.</p>
+
+<p>We will update the CUserIdentity construct method to getting third parameter 'usertype' values. 
+<a href="http://www.yiiframework.com/doc/api/1.1/CUserIdentity#__construct-detail" title="CUserIdentity construct details">http://www.yiiframework.com/doc/api/1.1/CUserIdentity#__construct-detail</a></p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">UserIdentity</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CUserIdentity</span> <span class="hl-brackets">{</span>
+    <span class="hl-comment">/*</span><span class="hl-comment">*
+     *</span><span class="hl-inlinedoc"> @var </span><span class="hl-comment">integer id of logged user
+     </span><span class="hl-comment">*/</span>
+    <span class="hl-reserved">private</span> <span class="hl-var">$_id</span><span class="hl-code">;
+    </span><span class="hl-reserved">private</span> <span class="hl-var">$_first_name</span><span class="hl-code">;
+    </span><span class="hl-reserved">public</span> <span class="hl-var">$usertype</span><span class="hl-code">;
+ 
+ 
+    </span><span class="hl-comment">//</span><span class="hl-comment">Must need to add</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">__construct</span><span class="hl-brackets">(</span><span class="hl-var">$username</span><span class="hl-code">, </span><span class="hl-var">$password</span><span class="hl-code">, </span><span class="hl-var">$usertype</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">username</span><span class="hl-code"> = </span><span class="hl-var">$username</span><span class="hl-code">;
+        </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">password</span><span class="hl-code"> = </span><span class="hl-var">$password</span><span class="hl-code">;
+        </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">usertype</span><span class="hl-code"> = </span><span class="hl-var">$usertype</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+ 
+ 
+    <span class="hl-comment">/*</span><span class="hl-comment">*
+     * Authenticates username and password
+     *</span><span class="hl-inlinedoc"> @return </span><span class="hl-comment">boolean CUserIdentity::ERROR_NONE if successful authentication
+     </span><span class="hl-comment">*/</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">authenticate</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+ 
+        <span class="hl-var">$attribute</span><span class="hl-code"> = </span><span class="hl-identifier">strpos</span><span class="hl-brackets">(</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">username</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">@</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code"> ? </span><span class="hl-quotes">'</span><span class="hl-string">email</span><span class="hl-quotes">'</span><span class="hl-code"> : </span><span class="hl-quotes">'</span><span class="hl-string">username</span><span class="hl-quotes">'</span><span class="hl-code">;
+ 
+        </span><span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">usertype</span><span class="hl-code"> == </span><span class="hl-quotes">'</span><span class="hl-string">A</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span>   <span class="hl-comment">//</span><span class="hl-comment">User type 'A' indicate to Agents</span>
+ 
+           <span class="hl-var">$login</span><span class="hl-code"> = </span><span class="hl-identifier">Agent</span><span class="hl-code">::</span><span class="hl-identifier">model</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">find</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">condition</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-var">$attribute</span><span class="hl-code"> . </span><span class="hl-quotes">'</span><span class="hl-string">=:loginname</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">params</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt;
+                </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">:loginname</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">username</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span>
+ 
+        <span class="hl-reserved">else</span> <span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">usertype</span><span class="hl-code"> == </span><span class="hl-quotes">'</span><span class="hl-string">U</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span>   <span class="hl-comment">//</span><span class="hl-comment">User type 'U' indicate to Normal Users</span>
+ 
+            <span class="hl-var">$login</span><span class="hl-code"> = </span><span class="hl-identifier">User</span><span class="hl-code">::</span><span class="hl-identifier">model</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">find</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">condition</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-var">$attribute</span><span class="hl-code"> . </span><span class="hl-quotes">'</span><span class="hl-string">=:loginname</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">params</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt;
+                </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">:loginname</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">username</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span>
+ 
+ 
+        <span class="hl-comment">//</span><span class="hl-comment">Login Authentication &amp; Validation</span>
+        <span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-var">$login</span><span class="hl-code"> === </span><span class="hl-reserved">null</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+ 
+                <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">errorCode</span><span class="hl-code"> = </span><span class="hl-identifier">self</span><span class="hl-code">::</span><span class="hl-identifier">ERROR_USERNAME_INVALID</span><span class="hl-code">;
+            </span><span class="hl-brackets">}</span> 
+ 
+        <span class="hl-reserved">else</span> <span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-var">$login</span><span class="hl-code">-&gt;</span><span class="hl-identifier">password</span><span class="hl-code">!= </span><span class="hl-identifier">md5</span><span class="hl-brackets">(</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">password</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+ 
+                <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">errorCode</span><span class="hl-code"> = </span><span class="hl-identifier">self</span><span class="hl-code">::</span><span class="hl-identifier">ERROR_PASSWORD_INVALID</span><span class="hl-code">;
+            </span><span class="hl-brackets">}</span>
+ 
+         <span class="hl-reserved">else</span> <span class="hl-brackets">{</span>
+            <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">_id</span><span class="hl-code"> = </span><span class="hl-var">$login</span><span class="hl-code">-&gt;</span><span class="hl-identifier">id</span><span class="hl-code">;
+            </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">username</span><span class="hl-code"> = </span><span class="hl-var">$login</span><span class="hl-code">-&gt;</span><span class="hl-identifier">email</span><span class="hl-code">;
+            </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">_first_name</span><span class="hl-code"> = </span><span class="hl-var">$login</span><span class="hl-code">-&gt;</span><span class="hl-identifier">first_name</span><span class="hl-code">;
+ 
+            </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">setState</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">firstName</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$login</span><span class="hl-code">-&gt;</span><span class="hl-identifier">first_name</span><span class="hl-brackets">)</span><span class="hl-code">;
+            </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">setState</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">userType</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">usertype</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-comment">//</span><span class="hl-comment">Store user type for sepration</span>
+ 
+            <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">errorCode</span><span class="hl-code"> = </span><span class="hl-identifier">self</span><span class="hl-code">::</span><span class="hl-identifier">ERROR_NONE</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span>
+        <span class="hl-reserved">return</span><span class="hl-code"> !</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">errorCode</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+ 
+ 
+    <span class="hl-comment">/*</span><span class="hl-comment">*
+     *
+     *</span><span class="hl-inlinedoc"> @return </span><span class="hl-comment">integer id of the logged user, null if not set
+     </span><span class="hl-comment">*/</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">getId</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+        <span class="hl-reserved">return</span> <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">_id</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+ 
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">getFirstName</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+        <span class="hl-reserved">return</span> <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">_first_name</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+ 
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>Multi user login facility from single login from. Try this, working great in yii 1.1</p>
+    </div>
+
+    <div class="google-ad" style="margin:10px 0 10px 200px;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "6460822043";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div><div class="widget-comment-list" id="comments">
+	<div class="comments">
+		<h3>Total 6 comments</h3>
+				<div class="comment alt-0">
+			<a class="cid" id="c18670" title="permalink to this comment" href="#c18670">#18670</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=18670"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=18670&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=18670&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/68321/">davidoff</a> at 2014/12/09 12:33pm</div>
+			<div class="title">RE #18664</div>
+			<div class="content"><p>I hot your point
+But use a single model for auth with a role model is still more flexible, in this way u could imagine also that an user can have different roles and apply different rules depending on roles.</p>
+
+<p>Lets imagine that an user can have only a role. The info u have in usertype is exactly the role of the user. 
+If u want keep ur structure u should define the roles table anyway and made the usertype be simply an external key, so when u need a new role (usertype) u just have to had it to the table without change the code. 
+It is always better to add a row in a table then write new pieces of code.</p>
+
+<p>You could also think to use a view for auth .... made a join between users and roles so u can use a single activerecord.</p>
+
+<p>But honestly i still think that ur solution is a complex way to made not flexible a simply rbac auth.</p>
+
+<p>I see u let choose the user wich ore he can have at login time, but i think it is useless. Think about the unix login... each user can have different groups and some ACL depends on the group.</p>
+
+<p>If the users have as example different tables for profiles (it is a DB project error, but can come from legacy code) it is better to have  a lookup table and check after the auth which profile u have to load. Or maybe u could imagine to write an SQL procedure that create a new Table for profiles loading inside the values of the other tables with the fields translation u want use and using NULL for fields that a table dont have.</p>
+
+<p>(Sorry for my poor english)</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c18664" title="permalink to this comment" href="#c18664">#18664</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=18664"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=18664&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=18664&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link bronze" href="/user/227903/">Rohit Suthar</a> at 2014/12/09 03:35am</div>
+			<div class="title">RE #18645</div>
+			<div class="content"><p>@davidoff Yupp your correct but i got many place programmers need authentication from two different models. But we can authentication using single model for two or more different type users. we will user <strong>usertype</strong> to separate them.</p>
+
+<p><strong>Updated UserIdentity -</strong></p>
+
+<p>Login Authentication using single model.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">UserIdentity</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CUserIdentity</span> <span class="hl-brackets">{</span>
+    <span class="hl-comment">/*</span><span class="hl-comment">*
+     *</span><span class="hl-inlinedoc"> @var </span><span class="hl-comment">integer id of logged user
+     </span><span class="hl-comment">*/</span>
+    <span class="hl-reserved">private</span> <span class="hl-var">$_id</span><span class="hl-code">;
+    </span><span class="hl-reserved">private</span> <span class="hl-var">$_first_name</span><span class="hl-code">;
+    </span><span class="hl-reserved">public</span> <span class="hl-var">$usertype</span><span class="hl-code">;
+ 
+ 
+    </span><span class="hl-comment">//</span><span class="hl-comment">Must need to add</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">__construct</span><span class="hl-brackets">(</span><span class="hl-var">$username</span><span class="hl-code">, </span><span class="hl-var">$password</span><span class="hl-code">, </span><span class="hl-var">$usertype</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">username</span><span class="hl-code"> = </span><span class="hl-var">$username</span><span class="hl-code">;
+        </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">password</span><span class="hl-code"> = </span><span class="hl-var">$password</span><span class="hl-code">;
+        </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">usertype</span><span class="hl-code"> = </span><span class="hl-var">$usertype</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+ 
+ 
+    <span class="hl-comment">/*</span><span class="hl-comment">*
+     * Authenticates username and password
+     *</span><span class="hl-inlinedoc"> @return </span><span class="hl-comment">boolean CUserIdentity::ERROR_NONE if successful authentication
+     </span><span class="hl-comment">*/</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">authenticate</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+ 
+        <span class="hl-var">$user</span><span class="hl-code"> = </span><span class="hl-identifier">Login</span><span class="hl-code">::</span><span class="hl-identifier">model</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">findbyAttributes</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">username</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">username</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">usertype</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">usertype</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+        </span><span class="hl-comment">//</span><span class="hl-comment">Login Authentication &amp; Validation</span>
+        <span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-var">$user</span><span class="hl-code"> === </span><span class="hl-reserved">null</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+ 
+                <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">errorCode</span><span class="hl-code"> = </span><span class="hl-identifier">self</span><span class="hl-code">::</span><span class="hl-identifier">ERROR_USERNAME_INVALID</span><span class="hl-code">;
+            </span><span class="hl-brackets">}</span> 
+ 
+        <span class="hl-reserved">else</span> <span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-var">$user</span><span class="hl-code">-&gt;</span><span class="hl-identifier">password</span><span class="hl-code">!= </span><span class="hl-identifier">md5</span><span class="hl-brackets">(</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">password</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+ 
+                <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">errorCode</span><span class="hl-code"> = </span><span class="hl-identifier">self</span><span class="hl-code">::</span><span class="hl-identifier">ERROR_PASSWORD_INVALID</span><span class="hl-code">;
+            </span><span class="hl-brackets">}</span>
+ 
+         <span class="hl-reserved">else</span> <span class="hl-brackets">{</span>
+            <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">_id</span><span class="hl-code"> = </span><span class="hl-var">$user</span><span class="hl-code">-&gt;</span><span class="hl-identifier">id</span><span class="hl-code">;
+            </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">username</span><span class="hl-code"> = </span><span class="hl-var">$user</span><span class="hl-code">-&gt;</span><span class="hl-identifier">email</span><span class="hl-code">;
+            </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">_first_name</span><span class="hl-code"> = </span><span class="hl-var">$user</span><span class="hl-code">-&gt;</span><span class="hl-identifier">first_name</span><span class="hl-code">;
+ 
+            </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">setState</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">firstName</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$user</span><span class="hl-code">-&gt;</span><span class="hl-identifier">first_name</span><span class="hl-brackets">)</span><span class="hl-code">;
+            </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">setState</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">userType</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">usertype</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-comment">//</span><span class="hl-comment">Store user type for sepration</span>
+ 
+            <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">errorCode</span><span class="hl-code"> = </span><span class="hl-identifier">self</span><span class="hl-code">::</span><span class="hl-identifier">ERROR_NONE</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span>
+        <span class="hl-reserved">return</span><span class="hl-code"> !</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">errorCode</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+ 
+ 
+    <span class="hl-comment">/*</span><span class="hl-comment">*
+     *
+     *</span><span class="hl-inlinedoc"> @return </span><span class="hl-comment">integer id of the logged user, null if not set
+     </span><span class="hl-comment">*/</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">getId</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+        <span class="hl-reserved">return</span> <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">_id</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+ 
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">getFirstName</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+        <span class="hl-reserved">return</span> <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">_first_name</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+ 
+<span class="hl-brackets">}</span></pre></div></div>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c18645" title="permalink to this comment" href="#c18645">#18645</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=18645"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=18645&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=18645&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/68321/">davidoff</a> at 2014/12/05 09:08am</div>
+			<div class="title">Why?</div>
+			<div class="content"><p>I think that use two models for autenticate is a big mistake. You just need a table for the users and a table for the roles it is much easier and correct.
+If u look in the extensions repository u will find many different implementations.</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c18636" title="permalink to this comment" href="#c18636">#18636</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=18636"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=18636&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=18636&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/13003/">Jmper</a> at 2014/12/04 03:19am</div>
+			<div class="title">Sure</div>
+			<div class="content"><p>Absolutely, I didn't mean to say it's wrong. I just wanted to point out some limitations.</p>
+
+<p>Some remedy to duplicate ids could be not using integer autoincrement for primary key, but a text identifier that is meant to be unique (e.g. for normal users starting with 'U' and for agencies with 'A'). But the foreign key constraint problem still exists.</p>
+
+<p>If you don't need foreign keys or don't store user ids in other tables, your solution is pretty much OK. All depends on specific application.</p>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c18635" title="permalink to this comment" href="#c18635">#18635</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=18635"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=18635&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=18635&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link bronze" href="/user/227903/">Rohit Suthar</a> at 2014/12/04 02:33am</div>
+			<div class="title">RE #18634</div>
+			<div class="content"><p>I got your point but here you also store the <strong>userType</strong> for the sepration between USER &amp; AGENCY.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">setState</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">userType</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">usertype</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-comment">//</span><span class="hl-comment">Store user type for sepration</span></pre></div></div>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c18634" title="permalink to this comment" href="#c18634">#18634</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=18634"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=18634&amp;vote=1"><span>1</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=18634&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/13003/">Jmper</a> at 2014/12/04 02:29am</div>
+			<div class="title">Duplicate ids</div>
+			<div class="content"><p>The code above pulls user data (including ids) from either User or Agency tables. If you are using integers, especially auto increments for ids, they will be duplicated (e.g. different users with id=2 will exist in both User and Agency) and this needs to be handled throughout the whole application. For example you can't just take Yii::app()-&gt;user-&gt;id, you always need to compare it with user type and act accordingly.</p>
+
+<p>Having two different tables for users is also troublesome if you have references to user ids in other tables - you can't use constraints and do joins on tables if the foreign key may reference more than one table.</p>
+
+<p>I would use single BaseUser table containing common fields (id, first name and last name etc.) and add RegularUser and AgencyUser tables with 1:1 relations for regular users and agencies respectively with any extra information that differs. Then define User and Agency views as joins of BaseUser and RegularUser/AgencyUser and base my models on them. Or if you don't like views, use normal Yii relations.</p>
+</div>
+					</div>
+			</div>
+	<div id="comment-add">
+		<h3 id="add-comment">Leave a comment</h3>
+
+			<p>Please <a class="g-login" rel="/wiki/779/how-to-pass-the-third-parameter-to-useridentity-on-login-authentication/#add-comment" href="#">login</a> to leave your comment.</p>
+		</div>
+</div>
+</div>
+					</div>
+								</div>
+				
+								<div class="grid_3 omega">
+					<div class="layout-main-right">
+						<div class="wiki-portlets">
+	<a href="/wiki/create/" class="btn btn-success btn-large action">Write new article</a>
+<div class="widget-search-box">
+    <form method="get" action="/search/">
+        <strong>Search Wiki</strong>
+		<input type="text" name="q" class="keyword g-text" />
+        <input type="hidden" name="type" value="wiki" />
+        <input type="hidden" name="lang" value="" />
+        <input type="submit" value="Find" class="btn btn-info" />
+	</form>
+</div><ul class="widget-action-links actions g-list-none"><li><strong>View current article</strong></li><li><a href="/wiki/update/?id=779">Update this article</a></li><li><a href="/wiki/history/?id=779">View history</a></li><li class="inactive">View revision</li></ul><ul class="info g-list-none">
+    <li><b>Written by</b>: <a class="g-user-rank-link bronze" href="/user/227903/">Rohit Suthar</a></li>
+        <li><b>Category</b>: <a href="/wiki/?category=2">How-tos</a></li>
+    <li><b>Yii Version</b>: <b>1.1</b></li>
+    <li><b>Votes</b>: <span class="g-vote plus" title="1 votes up">+1</span></li>
+    <li><b>Viewed</b>: 4,159 times</li>
+    <li><b>Created on</b>: Dec 4, 2014</li>
+    <li><b>Last updated</b>: Dec 9, 2014</li>
+        <li><b>Tags</b>: <a href="/wiki/?tag=UserIdentity">UserIdentity</a>, <a href="/wiki/?tag=usertype">usertype</a>, <a href="/wiki/?tag=CUserIdentity">CUserIdentity</a>, <a href="/wiki/?tag=mutiple+login">mutiple login</a>, <a href="/wiki/?tag=muti-login">muti-login</a>, <a href="/wiki/?tag=LoginForm">LoginForm</a></li>
+    </ul>
+<div class="widget-related-contents">
+<strong>Related Articles</strong><ul><li><a class="" href="/wiki/647/login-form-with-email-or-whatever/">Login Form With email or Whatever</a></li>
+<li><a class="" href="/wiki/356/how-to-create-front-and-admin-side-login-form/">How to create front and admin side login form </a></li>
+<li><a class="" href="/wiki/742/how-to-get-store-last-login-datetime-in-database/">How to get &amp; store Last Login DateTime in database?</a></li>
+<li><a class="" href="/wiki/506/checking-for-expired-sessions-logins-on-the-client-side/">Checking for &quot;expired&quot; sessions/logins on the client side</a></li>
+<li><a class="" href="/wiki/720/how-to-prevent-login-from-two-places/">How to prevent Login from two places?</a></li>
+</ul>
+</div>
+	<div class="google-ad" style="margin:100px 0 0 10px;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "9245442339";
+google_ad_width = 160;
+google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+</div>					</div>
+				</div>
+								<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+					</div>
+	</div>
+
+	<div class="layout-main-footer">
+		<div class="container_12">
+			<div class="grid_6">
+				<ul class="menu">
+				<li class="main">About
+<ul class="sub">
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="main">Downloads
+<ul class="sub">
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="main">Documentation
+<ul class="sub">
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="main">Development
+<ul class="sub">
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="main">Community
+<ul class="sub">
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+				</ul>
+			</div>
+			<div class="grid_1">&nbsp;</div>
+			<div class="grid_5">
+				<h3>Yii Supporters</h3>
+				<ul class="g-list-none supporters">
+
+				</ul>
+			</div>
+
+			<div class="clear"></div>
+			<div class="grid_12 copyright">
+				<ul class="social">
+					<li class="twitter"><a href="https://twitter.com/yiiframework" target="_blank" rel="nofollow" title="follow us on twitter">Twitter</a></li>
+					<li class="facebook"><a href="https://www.facebook.com/groups/yiitalk/" target="_blank" rel="nofollow" title="join yii group at facebook">Facebook</a></li>
+					<li class="linkedin"><a href="http://www.linkedin.com/groups?gid=1483367" target="_blank" rel="nofollow" title="join yii group at linkedin">LinkedIn</a></li>
+					<li class="feeds"><a title="RSS feeds" href="/rss.xml/">RSS Feeds</a></li>
+				</ul>
+				<div class="clear"></div>
+				<a href="/tos/">Terms of Service</a> |
+				<a href="/license/">License</a> |
+				<a href="/contact/">Contact Us</a><br/>
+				Copyright &copy; 2015 by <a href="http://www.yiisoft.com">Yii Software LLC</a>.
+				All Rights Reserved.
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+    <script type="text/javascript" src="/js/site-20121004195728.js"></script>
+
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['site._setAccount', 'UA-5843896-1']);
+_gaq.push(['site._trackPageview']);
+
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+<script type="text/javascript">
+function trackClick(link, action, category) {
+	action=action || link.href;
+	category=category || 'Outbound Links';
+	try {
+		_gaq.push(['site._trackEvent', category, action]);
+		setTimeout('document.location = "' + link.href + '"', 250);
+	}catch(err){}
+	return false;
+}
+</script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+<script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+</body>
+</html>

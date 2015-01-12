@@ -1,0 +1,1044 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    	<meta charset="UTF-8" />
+		<meta name="keywords" content="yii framework, tutorial, guide, version 1.1" />
+	<meta name="description" content="The Yii Query Builder provides an object-oriented way of writing SQL statements. It allows developers to use class methods and properties to specify individual parts of a SQL statement." />
+    <link rel="shortcut icon" type="image/x-icon" href="http://static.yiiframework.com/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="http://static.yiiframework.com/css/site-20130404102234.css" />
+
+	<link title="Lives News for Yii Framework" rel="alternate" type="application/rss+xml" href="http://www.yiiframework.com/rss.xml/" />
+	<title>Working with Databases: Query Builder | The Definitive Guide to Yii | Yii PHP Framework</title>
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii API Search" href="/search-api.xml" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii Site Search" href="/search-site.xml" />
+</head>
+
+<body class="mac">
+<div class="layout-main">
+
+	<div class="layout-main-shortcuts">
+		<div class="container_12">
+            <a style="color:darkred;" href="https://github.com/yiisoft/yii2">Github</a> &middot;
+            <a style="color:darkgreen;" href="https://twitter.com/yiiframework">Twitter</a> &middot;
+            <a style="color:darkblue;" href="https://www.facebook.com/groups/yiitalk/">Facebook</a> &middot;
+            <a href="/doc/guide/">Guide</a> &middot;
+            <a href="/doc/api/">Class Reference</a> &middot;
+            <a href="/doc-2.0/guide-index.html">Guide 2.0</a> &middot;
+            <a href="/doc-2.0/index.html">API 2.0</a> &middot;
+            <a href="/wiki/">Wiki</a> &middot;
+            <a href="/extensions/">Extensions</a> &middot;
+            <a href="/forum/">Forum</a> &middot;
+			<a href="/chat/">Live Chat</a> &middot;
+                            <a href="/login/">Login</a>            		</div>
+	</div>
+
+	<div class="layout-main-bg">
+		<div class="layout-main-header">
+			<div class="container_12">
+				<div class="grid_4">
+					<a class="logo" href="/"><img alt="Yii Logo" src="http://static.yiiframework.com/css/img/logo.png" title="Yii Framework" width="284" height="64" /></a>				</div>
+				<div class="grid_8 omega">
+					<div class="nav">
+						<ul class="menu" id="yw0">
+<li class="about"><a class="main" href="/about/">About</a>
+<ul>
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li class="last"><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="downloads"><a class="main" href="/download/">Downloads</a>
+<ul>
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li class="last"><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="documentation active"><a class="main" href="/doc/">Documentation</a>
+<ul>
+<li><a href="/tour/">Take the Tour</a></li>
+<li class="active"><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li class="last"><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="development"><a class="main" href="https://github.com/yiisoft/yii/commits/master">Development</a>
+<ul>
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li class="last"><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="community last"><a class="main" href="/community/">Community</a>
+<ul>
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li class="last"><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+</ul>						<div class="search">
+							<form method="get" action="/search/">
+								<div class="keyword">
+	                                <input name="q" value="" />
+									<a href="#" title="search" class="global-search">search</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+
+		<div class="container_12">
+						<div class="grid_12">
+												<div class="layout-main-submenu">
+					<ul>
+						<li class="main">Documentation</li>
+												<li><a href="/tour/">Take the Tour</a></li>
+												<li class="active"><a href="/tutorials/">Tutorials</a></li>
+												<li><a href="/doc/api/">Class Reference</a></li>
+												<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+												<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+												<li><a href="/wiki/">Wiki</a></li>
+												<li><a href="/screencasts/">Screencasts</a></li>
+												<li><a href="/resources/">Resources</a></li>
+											</ul>
+				</div>
+				
+				
+				
+									<div class="layout-main-body">
+						<div class="tutorial-view">
+    <div class="grid_3 alpha">
+        <div class="nav-toc">
+    		<div class="title">The Definitive Guide to Yii</div>
+    		<div class="langver">
+	            <strong>Language &amp; version</strong>
+	    		<div class="languages g-dropdown">
+	    		<span>English<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.1/de/database.query-builder">Deutsch</a></li>
+<li><a href="/doc/guide/1.1/es/database.query-builder">Español</a></li>
+<li><a href="/doc/guide/1.1/fr/database.query-builder">Français</a></li>
+<li><a href="/doc/guide/1.1/he/database.query-builder">עִבְרִית</a></li>
+<li><a href="/doc/guide/1.1/id/database.query-builder">Bahasa Indonesia</a></li>
+<li><a href="/doc/guide/1.1/it/database.query-builder">Italiano</a></li>
+<li><a href="/doc/guide/1.1/ja/database.query-builder">日本語</a></li>
+<li><a href="/doc/guide/1.1/pl/database.query-builder">Polski</a></li>
+<li><a href="/doc/guide/1.1/pt/database.query-builder">Português</a></li>
+<li><a href="/doc/guide/1.1/pt_br/database.query-builder">Português brasileiro</a></li>
+<li><a href="/doc/guide/1.1/ro/database.query-builder">România</a></li>
+<li><a href="/doc/guide/1.1/ru/database.query-builder">Русский</a></li>
+<li><a href="/doc/guide/1.1/sv/database.query-builder">Svenska</a></li>
+<li><a href="/doc/guide/1.1/uk/database.query-builder">украї́нська</a></li>
+<li><a href="/doc/guide/1.1/zh_cn/database.query-builder">简体中文</a></li>
+</ul>
+	    		</div>
+				<div class="versions g-dropdown">
+	    		<span>1.1<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.0/en/database.query-builder">1.0</a></li>
+</ul>
+				</div>
+				<div class="clear"></div>
+			</div>
+            <div class="widget-search-box">
+    <form method="get" action="/search/">
+        <strong>Search in this tutorial</strong>
+		<input type="text" name="q" class="keyword g-text" />
+        <input type="hidden" name="type" value="guide" />
+        <input type="hidden" name="lang" value="en" />
+        <input type="submit" value="Find" class="btn btn-info" />
+	</form>
+</div>
+			<ul class="toc">
+						    <li class="chapter"><strong>Getting Started</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/index">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/changes">New Features</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/upgrade">Upgrading from 1.0 to 1.1</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.what-is-yii">What is Yii</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.installation">Installation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.apache-nginx-config">Apache and Nginx configurations</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app">Creating First Yii Application</a>			            </li>
+			        			    						    <li class="chapter"><strong>Fundamentals</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.mvc">Model-View-Controller (MVC)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.entry">Entry Script</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.application">Application</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.controller">Controller</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.model">Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.view">View</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.component">Component</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.module">Module</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.namespace">Path Alias and Namespace</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.convention">Conventions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.workflow">Development Workflow</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.best-practices">Best MVC Practices</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Forms</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.model">Creating Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.action">Creating Action</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.view">Creating Form</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.table">Collecting Tabular Input</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.builder">Using Form Builder</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Databases</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.dao">Database Access Objects</a>			            </li>
+			        			    			        			            <li class="active">
+			                &raquo; Query Builder &laquo;
+			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.ar">Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.arr">Relational Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.migration">Database Migration</a>			            </li>
+			        			    						    <li class="chapter"><strong>Caching</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.data">Data Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.fragment">Fragment Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.page">Page Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.dynamic">Dynamic Content</a>			            </li>
+			        			    						    <li class="chapter"><strong>Extending Yii</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.use">Using Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.create">Creating Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.integration">Using 3rd-Party Libraries</a>			            </li>
+			        			    						    <li class="chapter"><strong>Testing</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.fixture">Defining Fixtures</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.unit">Unit Testing</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.functional">Functional Testing</a>			            </li>
+			        			    						    <li class="chapter"><strong>Special Topics</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.gii">Automatic Code Generation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.url">URL Management</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.auth">Authentication and Authorization</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.theming">Theming and Skin</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.logging">Logging</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.error">Error Handling</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.webservice">Web Service</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.i18n">Internationalization (I18N)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.prado">Alternative Template Syntax</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.console">Console Applications</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.security">Security</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.performance">Performance Tuning</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app-yiic">Code Generation using Command Line Tools (deprecated)</a>			            </li>
+			        			    						</ul>
+        </div>
+    </div>
+    <div class="grid_9 omega">
+    	<div class="g-markdown"><h1 id="query-builder">Query Builder</h1>
+<div class="google-ad" style="float:right;margin:0 0 1em 1em;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "2830391674";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+<div class="toc"><ol><li><a href="#preparing-query-builder">Preparing Query Builder</a></li>
+<li><a href="#building-data-retrieval-queries">Building Data Retrieval Queries</a></li>
+<li><a href="#building-data-manipulation-queries">Building Data Manipulation Queries</a></li>
+<li><a href="#building-schema-manipulation-queries">Building Schema Manipulation Queries</a></li></ol></div>
+
+
+<p>The Yii Query Builder provides an object-oriented way of writing SQL statements. It allows developers to use class methods and properties to specify individual parts of a SQL statement. It then assembles different parts into a valid SQL statement that can be further executed by calling the DAO methods as described in <a href="/doc/guide/1.1/en/database.dao">Data Access Objects</a>. The following shows a typical usage of the Query Builder to build a SELECT SQL statement:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$user</span><span class="hl-code"> = </span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">db</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createCommand</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">select</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">id, username, profile</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">from</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_user u</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">join</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_profile p</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">u.id=p.user_id</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">id=:id</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">:id</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-var">$id</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">queryRow</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>The Query Builder is best used when you need to assemble a SQL statement procedurally, or based on some conditional logic in your application. The main benefits of using the Query Builder include:</p>
+
+<ul>
+<li><p>It allows building complex SQL statements programmatically.</p></li>
+<li><p>It automatically quotes table names and column names to prevent conflict with SQL reserved words and special characters.</p></li>
+<li><p>It also quotes parameter values and uses parameter binding when possible, which helps reduce risk of SQL injection attacks.</p></li>
+<li><p>It offers certain degree of DB abstraction, which simplifies migration to different DB platforms.</p></li>
+</ul>
+
+<p>It is not mandatory to use the Query Builder. In fact, if your queries are simple, it is easier and faster to directly write SQL statements.</p>
+
+<blockquote class="note">
+<p><strong>Note:</strong> Query builder cannot be used to modify an existing query specified as a
+  SQL statement. For example, the following code will not work:</p>
+  
+  <div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$command</span><span class="hl-code"> = </span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">db</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createCommand</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">SELECT * FROM tbl_user</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> the following line will NOT append WHERE clause to the above SQL</span>
+<span class="hl-var">$command</span><span class="hl-code">-&gt;</span><span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">id=:id</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">:id</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-var">$id</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+  
+  <p>In other words, do not mix the usage of plain SQL and query builder.</p>
+</blockquote>
+
+<h2 id="preparing-query-builder">1. Preparing Query Builder <a class="anchor" href="#preparing-query-builder">¶</a></h2>
+
+<p>The Yii Query Builder is provided in terms of <a href="/doc/api/1.1/CDbCommand">CDbCommand</a>, the main DB query class described in <a href="/doc/guide/1.1/en/database.dao">Data Access Objects</a>.</p>
+
+<p>To start using the Query Builder, we create a new instance of <a href="/doc/api/1.1/CDbCommand">CDbCommand</a> as follows,</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$command</span><span class="hl-code"> = </span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">db</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createCommand</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>That is, we use <code>Yii::app()-&gt;db</code> to get the DB connection, and then call <a href="/doc/api/1.1/CDbConnection#createCommand">CDbConnection::createCommand()</a> to create the needed command instance.</p>
+
+<p>Note that instead of passing a whole SQL statement to the <code>createCommand()</code> call as we do in <a href="/doc/guide/1.1/en/database.dao">Data Access Objects</a>, we leave it empty. This is because we will build individual parts of the SQL statement using the Query Builder methods explained in the following.</p>
+
+<h2 id="building-data-retrieval-queries">2. Building Data Retrieval Queries <a class="anchor" href="#building-data-retrieval-queries">¶</a></h2>
+
+<p>Data retrieval queries refer to SELECT SQL statements. The query builder provides a set of methods to build individual parts of a SELECT statement. Because all these methods return the <a href="/doc/api/1.1/CDbCommand">CDbCommand</a> instance, we can call them using method chaining, as shown in the example at the beginning of this section.</p>
+
+<ul>
+<li><a href="/doc/api/1.1/CDbCommand#select()">select()</a>: specifies the SELECT part of the query</li>
+<li><a href="/doc/api/1.1/CDbCommand#selectDistinct">selectDistinct()</a>: specifies the SELECT part of the query and turns on the DISTINCT flag</li>
+<li><a href="/doc/api/1.1/CDbCommand#from()">from()</a>: specifies the FROM part of the query</li>
+<li><a href="/doc/api/1.1/CDbCommand#where()">where()</a>: specifies the WHERE part of the query</li>
+<li><a href="/doc/api/1.1/CDbCommand#andWhere()">andWhere()</a>: appends condition to the WHERE part of the query with <code>AND</code> operator</li>
+<li><a href="/doc/api/1.1/CDbCommand#orWhere()">orWhere()</a>: appends condition to the WHERE part of the query with <code>OR</code> operator</li>
+<li><a href="/doc/api/1.1/CDbCommand#join()">join()</a>: appends an inner join query fragment</li>
+<li><a href="/doc/api/1.1/CDbCommand#leftJoin">leftJoin()</a>: appends a left outer join query fragment</li>
+<li><a href="/doc/api/1.1/CDbCommand#rightJoin">rightJoin()</a>: appends a right outer join query fragment</li>
+<li><a href="/doc/api/1.1/CDbCommand#crossJoin">crossJoin()</a>: appends a cross join query fragment</li>
+<li><a href="/doc/api/1.1/CDbCommand#naturalJoin">naturalJoin()</a>: appends a natural join query fragment</li>
+<li><a href="/doc/api/1.1/CDbCommand#group()">group()</a>: specifies the GROUP BY part of the query</li>
+<li><a href="/doc/api/1.1/CDbCommand#having()">having()</a>: specifies the HAVING part of the query</li>
+<li><a href="/doc/api/1.1/CDbCommand#order()">order()</a>: specifies the ORDER BY part of the query</li>
+<li><a href="/doc/api/1.1/CDbCommand#limit()">limit()</a>: specifies the LIMIT part of the query</li>
+<li><a href="/doc/api/1.1/CDbCommand#offset()">offset()</a>: specifies the OFFSET part of the query</li>
+<li><a href="/doc/api/1.1/CDbCommand#union()">union()</a>: appends a UNION query fragment</li>
+</ul>
+
+<p>In the following, we explain how to use these query builder methods. For simplicity, we assume the underlying database is MySQL. Note that if you are using other DBMS, the table/column/value quoting shown in the examples may be different.</p>
+
+<h3 id="sec-1">select()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">select</span><span class="hl-brackets">(</span><span class="hl-var">$columns</span><span class="hl-code">=</span><span class="hl-quotes">'</span><span class="hl-string">*</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#select()">select()</a> method specifies the <code>SELECT</code> part of a query. The <code>$columns</code> parameter specifies the columns to be selected, which can be either a string representing comma-separated columns, or an array of column names. Column names can contain table prefixes and/or column aliases. The method will automatically quote the column names unless a column contains some parenthesis (which means the column is given as a DB expression).</p>
+
+<p>Below are some examples:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> SELECT *</span>
+<span class="hl-identifier">select</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+<span class="hl-comment">//</span><span class="hl-comment"> SELECT `id`, `username`</span>
+<span class="hl-identifier">select</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">id, username</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span>
+<span class="hl-comment">//</span><span class="hl-comment"> SELECT `tbl_user`.`id`, `username` AS `name`</span>
+<span class="hl-identifier">select</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_user.id, username as name</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span>
+<span class="hl-comment">//</span><span class="hl-comment"> SELECT `id`, `username`</span>
+<span class="hl-identifier">select</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">id</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">username</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+<span class="hl-comment">//</span><span class="hl-comment"> SELECT `id`, count(*) as num</span>
+<span class="hl-identifier">select</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">id</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">count(*) as num</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span></pre></div></div>
+
+<h3 id="sec-2">selectDistinct()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">selectDistinct</span><span class="hl-brackets">(</span><span class="hl-var">$columns</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#selectDistinct">selectDistinct()</a> method is similar as <a href="/doc/api/1.1/CDbCommand#select()">select()</a> except that it turns on the <code>DISTINCT</code> flag. For example, <code>selectDistinct('id, username')</code> will generate the following SQL:</p>
+
+<pre>SELECT DISTINCT `id`, `username`
+</pre>
+
+<h3 id="sec-3">from()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">from</span><span class="hl-brackets">(</span><span class="hl-var">$tables</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#from()">from()</a> method specifies the <code>FROM</code> part of a query. The <code>$tables</code> parameter specifies which tables to be selected from. This can be either a string representing comma-separated table names, or an array of table names. Table names can contain schema prefixes (e.g. <code>public.tbl_user</code>) and/or table aliases (e.g. <code>tbl_user u</code>). The method will automatically quote the table names unless it contains some parenthesis (which means the table is given as a sub-query or DB expression).</p>
+
+<p>Below are some examples:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> FROM `tbl_user`</span>
+<span class="hl-identifier">from</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_user</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span>
+<span class="hl-comment">//</span><span class="hl-comment"> FROM `tbl_user` `u`, `public`.`tbl_profile` `p`</span>
+<span class="hl-identifier">from</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_user u, public.tbl_profile p</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span>
+<span class="hl-comment">//</span><span class="hl-comment"> FROM `tbl_user`, `tbl_profile`</span>
+<span class="hl-identifier">from</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_user</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">tbl_profile</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+<span class="hl-comment">//</span><span class="hl-comment"> FROM `tbl_user`, (select * from tbl_profile) p</span>
+<span class="hl-identifier">from</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_user</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">(select * from tbl_profile) p</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span></pre></div></div>
+
+<h3 id="sec-4">where()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-var">$conditions</span><span class="hl-code">, </span><span class="hl-var">$params</span><span class="hl-code">=</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#where()">where()</a> method specifies the <code>WHERE</code> part of a query. The <code>$conditions</code> parameter specifies query conditions while <code>$params</code> specifies the parameters to be bound to the whole query. The <code>$conditions</code> parameter can be either a string (e.g. <code>id=1</code>) or an array of the format:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-identifier">operator</span><span class="hl-code">, </span><span class="hl-identifier">operand1</span><span class="hl-code">, </span><span class="hl-identifier">operand2</span><span class="hl-code">, ...</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>where <code>operator</code> can be any of the following:</p>
+
+<ul>
+<li><p><code>and</code>: the operands should be concatenated together using <code>AND</code>. For example, <code>array('and', 'id=1', 'id=2')</code> will generate <code>id=1 AND id=2</code>. If an operand is an array, it will be converted into a string using the same rules described here. For example, <code>array('and', 'type=1', array('or', 'id=1', 'id=2'))</code> will generate <code>type=1 AND (id=1 OR id=2)</code>. The method will NOT do any quoting or escaping.</p></li>
+<li><p><code>or</code>: similar as the <code>and</code> operator except that the operands are concatenated using OR.</p></li>
+<li><p><code>in</code>: operand 1 should be a column or DB expression, and operand 2 be an array representing the range of the values that the column or DB expression should be in. For example, <code>array('in', 'id', array(1,2,3))</code> will generate <code>id IN (1,2,3)</code>. The method will properly quote the column name and escape values in the range.</p></li>
+<li><p><code>not in</code>: similar as the <code>in</code> operator except that <code>IN</code> is replaced with <code>NOT IN</code> in the generated condition.</p></li>
+<li><p><code>like</code>: operand 1 should be a column or DB expression, and operand 2 be a string or an array representing the range of the values that the column or DB expression should be like. For example, <code>array('like', 'name', '%tester%')</code> will generate <code>name LIKE '%tester%'</code>. When the value range is given as an array, multiple <code>LIKE</code> predicates will be generated and concatenated using <code>AND</code>. For example, <code>array('like', 'name', array('%test%', '%sample%'))</code> will generate <code>name LIKE '%test%' AND name LIKE '%sample%'</code>. The method will properly quote the column name and escape values in the range.</p></li>
+<li><p><code>not like</code>: similar as the <code>like</code> operator except that <code>LIKE</code> is replaced with <code>NOT LIKE</code> in the generated condition.</p></li>
+<li><p><code>or like</code>: similar as the <code>like</code> operator except that <code>OR</code> is used to concatenated several <code>LIKE</code> predicates.</p></li>
+<li><p><code>or not like</code>: similar as the <code>not like</code> operator except that <code>OR</code> is used to concatenated several <code>NOT LIKE</code> predicates.</p></li>
+</ul>
+
+<p>Below are some examples of using <code>where</code>:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> WHERE id=1 or id=2</span>
+<span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">id=1 or id=2</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span>
+<span class="hl-comment">//</span><span class="hl-comment"> WHERE id=:id1 or id=:id2</span>
+<span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">id=:id1 or id=:id2</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">:id1</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-number">1</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">:id2</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-number">2</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+<span class="hl-comment">//</span><span class="hl-comment"> WHERE id=1 OR id=2</span>
+<span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">or</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">id=1</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">id=2</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+<span class="hl-comment">//</span><span class="hl-comment"> WHERE id=1 AND (type=2 OR type=3)</span>
+<span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">and</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">id=1</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">or</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">type=2</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">type=3</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+<span class="hl-comment">//</span><span class="hl-comment"> WHERE `id` IN (1, 2)</span>
+<span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">in</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">id</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-number">1</span><span class="hl-code">, </span><span class="hl-number">2</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+<span class="hl-comment">//</span><span class="hl-comment"> WHERE `id` NOT IN (1, 2)</span>
+<span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">not in</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">id</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-number">1</span><span class="hl-code">,</span><span class="hl-number">2</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+<span class="hl-comment">//</span><span class="hl-comment"> WHERE `name` LIKE '%Qiang%'</span>
+<span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">like</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">name</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">%Qiang%</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+<span class="hl-comment">//</span><span class="hl-comment"> WHERE `name` LIKE '%Qiang' AND `name` LIKE '%Xue'</span>
+<span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">like</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">name</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">%Qiang</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">%Xue</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+<span class="hl-comment">//</span><span class="hl-comment"> WHERE `name` LIKE '%Qiang' OR `name` LIKE '%Xue'</span>
+<span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">or like</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">name</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">%Qiang</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">%Xue</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+<span class="hl-comment">//</span><span class="hl-comment"> WHERE `name` NOT LIKE '%Qiang%'</span>
+<span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">not like</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">name</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">%Qiang%</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+<span class="hl-comment">//</span><span class="hl-comment"> WHERE `name` NOT LIKE '%Qiang%' OR `name` NOT LIKE '%Xue%'</span>
+<span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">or not like</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">name</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">%Qiang%</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">%Xue%</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>Please note that when the operator contains <code>like</code>, we have to explicitly specify the wildcard characters (such as <code>%</code> and <code>_</code>) in the patterns. If the patterns are from user input, we should also use the following code to escape the special characters to prevent them from being treated as wildcards:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$keyword</span><span class="hl-code">=</span><span class="hl-var">$_GET</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">q</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-code">;
+</span><span class="hl-comment">//</span><span class="hl-comment"> escape % and _ characters</span>
+<span class="hl-var">$keyword</span><span class="hl-code">=</span><span class="hl-identifier">strtr</span><span class="hl-brackets">(</span><span class="hl-var">$keyword</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">%</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">\%</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">_</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">\_</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$command</span><span class="hl-code">-&gt;</span><span class="hl-identifier">where</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">like</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">title</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">%</span><span class="hl-quotes">'</span><span class="hl-code">.</span><span class="hl-var">$keyword</span><span class="hl-code">.</span><span class="hl-quotes">'</span><span class="hl-string">%</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<h3 id="sec-5">andWhere()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">andWhere</span><span class="hl-brackets">(</span><span class="hl-var">$conditions</span><span class="hl-code">, </span><span class="hl-var">$params</span><span class="hl-code">=</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#andWhere()">andWhere()</a> method appends given condition to the <code>WHERE</code> part of a query with <code>AND</code> operator. Behavior of this method is almost the same as <a href="/doc/api/1.1/CDbCommand#where()">where()</a> except it appends condition not replaces it. Refer to the <a href="/doc/api/1.1/CDbCommand#where()">where()</a> documentation for more information on parameters of this method.</p>
+
+<h3 id="sec-6">orWhere()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">orWhere</span><span class="hl-brackets">(</span><span class="hl-var">$conditions</span><span class="hl-code">, </span><span class="hl-var">$params</span><span class="hl-code">=</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#orWhere()">orWhere()</a> method appends given condition to the <code>WHERE</code> part of a query with <code>OR</code> operator. Behavior of this method is almost the same as <a href="/doc/api/1.1/CDbCommand#where()">where()</a> except it appends condition not replaces it. Refer to the <a href="/doc/api/1.1/CDbCommand#where()">where()</a> documentation for more information on parameters of this method.</p>
+
+<h3 id="sec-7">order()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">order</span><span class="hl-brackets">(</span><span class="hl-var">$columns</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#order()">order()</a> method specifies the <code>ORDER BY</code> part of a query.
+The <code>$columns</code> parameter specifies the columns to be ordered by, which can be either a string representing comma-separated columns and order directions (<code>ASC</code> or <code>DESC</code>), or an array of columns and order directions. Column names can contain table prefixes. The method will automatically quote the column names unless a column contains some parenthesis (which means the column is given as a DB expression).</p>
+
+<p>Below are some examples:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> ORDER BY `name`, `id` DESC</span>
+<span class="hl-identifier">order</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">name, id desc</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span>
+<span class="hl-comment">//</span><span class="hl-comment"> ORDER BY `tbl_profile`.`name`, `id` DESC</span>
+<span class="hl-identifier">order</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_profile.name</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">id desc</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span></pre></div></div>
+
+<h3 id="sec-8">limit() and offset()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">limit</span><span class="hl-brackets">(</span><span class="hl-var">$limit</span><span class="hl-code">, </span><span class="hl-var">$offset</span><span class="hl-code">=</span><span class="hl-reserved">null</span><span class="hl-brackets">)</span>
+<span class="hl-reserved">function</span> <span class="hl-identifier">offset</span><span class="hl-brackets">(</span><span class="hl-var">$offset</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#limit()">limit()</a> and <a href="/doc/api/1.1/CDbCommand#offset()">offset()</a> methods specify the <code>LIMIT</code> and <code>OFFSET</code> part of a query. Note that some DBMS may not support <code>LIMIT</code> and <code>OFFSET</code> syntax. In this case, the Query Builder will rewrite the whole SQL statement to simulate the function of limit and offset.</p>
+
+<p>Below are some examples:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> LIMIT 10</span>
+<span class="hl-identifier">limit</span><span class="hl-brackets">(</span><span class="hl-number">10</span><span class="hl-brackets">)</span>
+<span class="hl-comment">//</span><span class="hl-comment"> LIMIT 10 OFFSET 20</span>
+<span class="hl-identifier">limit</span><span class="hl-brackets">(</span><span class="hl-number">10</span><span class="hl-code">, </span><span class="hl-number">20</span><span class="hl-brackets">)</span>
+<span class="hl-comment">//</span><span class="hl-comment"> OFFSET 20</span>
+<span class="hl-identifier">offset</span><span class="hl-brackets">(</span><span class="hl-number">20</span><span class="hl-brackets">)</span></pre></div></div>
+
+<h3 id="sec-9">join() and its variants</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">join</span><span class="hl-brackets">(</span><span class="hl-var">$table</span><span class="hl-code">, </span><span class="hl-var">$conditions</span><span class="hl-code">, </span><span class="hl-var">$params</span><span class="hl-code">=</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+<span class="hl-reserved">function</span> <span class="hl-identifier">leftJoin</span><span class="hl-brackets">(</span><span class="hl-var">$table</span><span class="hl-code">, </span><span class="hl-var">$conditions</span><span class="hl-code">, </span><span class="hl-var">$params</span><span class="hl-code">=</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+<span class="hl-reserved">function</span> <span class="hl-identifier">rightJoin</span><span class="hl-brackets">(</span><span class="hl-var">$table</span><span class="hl-code">, </span><span class="hl-var">$conditions</span><span class="hl-code">, </span><span class="hl-var">$params</span><span class="hl-code">=</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+<span class="hl-reserved">function</span> <span class="hl-identifier">crossJoin</span><span class="hl-brackets">(</span><span class="hl-var">$table</span><span class="hl-brackets">)</span>
+<span class="hl-reserved">function</span> <span class="hl-identifier">naturalJoin</span><span class="hl-brackets">(</span><span class="hl-var">$table</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#join()">join()</a> method and its variants specify how to join with other tables using <code>INNER JOIN</code>, <code>LEFT OUTER JOIN</code>, <code>RIGHT OUTER JOIN</code>, <code>CROSS JOIN</code>, or <code>NATURAL JOIN</code>. The <code>$table</code> parameter specifies which table to be joined with. The table name can contain schema prefix and/or alias. The method will quote the table name unless it contains a parenthesis meaning it is either a DB expression or sub-query. The <code>$conditions</code> parameter specifies the join condition. Its syntax is the same as that in <a href="/doc/api/1.1/CDbCommand#where()">where()</a>. And <code>$params</code> specifies the parameters to be bound to the whole query.</p>
+
+<p>Note that unlike other query builder methods, each call of a join method will be appended to the previous ones.</p>
+
+<p>Below are some examples:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> JOIN `tbl_profile` ON user_id=id</span>
+<span class="hl-identifier">join</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_profile</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">user_id=id</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span>
+<span class="hl-comment">//</span><span class="hl-comment"> LEFT JOIN `pub`.`tbl_profile` `p` ON p.user_id=id AND type=1</span>
+<span class="hl-identifier">leftJoin</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">pub.tbl_profile p</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">p.user_id=id AND type=:type</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">:type</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-number">1</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span></pre></div></div>
+
+<h3 id="sec-10">group()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">group</span><span class="hl-brackets">(</span><span class="hl-var">$columns</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#group()">group()</a> method specifies the <code>GROUP BY</code> part of a query.
+The <code>$columns</code> parameter specifies the columns to be grouped by, which can be either a string representing comma-separated columns, or an array of columns. Column names can contain table prefixes. The method will automatically quote the column names unless a column contains some parenthesis (which means the column is given as a DB expression).</p>
+
+<p>Below are some examples:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> GROUP BY `name`, `id`</span>
+<span class="hl-identifier">group</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">name, id</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span>
+<span class="hl-comment">//</span><span class="hl-comment"> GROUP BY `tbl_profile`.`name`, `id`</span>
+<span class="hl-identifier">group</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_profile.name</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">id</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span></pre></div></div>
+
+<h3 id="sec-11">having()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">having</span><span class="hl-brackets">(</span><span class="hl-var">$conditions</span><span class="hl-code">, </span><span class="hl-var">$params</span><span class="hl-code">=</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#having()">having()</a> method specifies the <code>HAVING</code> part of a query. Its usage is the same as <a href="/doc/api/1.1/CDbCommand#where()">where()</a>.</p>
+
+<p>Below are some examples:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> HAVING id=1 or id=2</span>
+<span class="hl-identifier">having</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">id=1 or id=2</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span>
+<span class="hl-comment">//</span><span class="hl-comment"> HAVING id=1 OR id=2</span>
+<span class="hl-identifier">having</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">or</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">id=1</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">id=2</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span></pre></div></div>
+
+<h3 id="sec-12">union()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">union</span><span class="hl-brackets">(</span><span class="hl-var">$sql</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#union()">union()</a> method specifies the <code>UNION</code> part of a query. It appends <code>$sql</code> to the existing SQL using <code>UNION</code> operator. Calling <code>union()</code> multiple times will append multiple SQLs to the existing SQL.</p>
+
+<p>Below are some examples:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> UNION (select * from tbl_profile)</span>
+<span class="hl-identifier">union</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">select * from tbl_profile</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span></pre></div></div>
+
+<h3 id="executing-queries">Executing Queries</h3>
+
+<p>After calling the above query builder methods to build a query, we can call the DAO methods as described in <a href="/doc/guide/1.1/en/database.dao">Data Access Objects</a> to execute the query. For example, we can call <a href="/doc/api/1.1/CDbCommand#queryRow">CDbCommand::queryRow()</a> to obtain a row of result, or <a href="/doc/api/1.1/CDbCommand#queryAll">CDbCommand::queryAll()</a> to get all rows at once.
+Example:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$users</span><span class="hl-code"> = </span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">db</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createCommand</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">select</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">*</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">from</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_user</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">queryAll</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<h3 id="retrieving-sqls">Retrieving SQLs</h3>
+
+<p>Besides executing a query built by the Query Builder, we can also retrieve the corresponding SQL statement. This can be done by calling <a href="/doc/api/1.1/CDbCommand#getText">CDbCommand::getText()</a>.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$sql</span><span class="hl-code"> = </span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">db</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createCommand</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">select</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">*</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">from</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_user</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">
+    -&gt;</span><span class="hl-identifier">text</span><span class="hl-code">;</span></pre></div></div>
+
+<p>If there are any parameters to be bound to the query, they can be retrieved via the <a href="/doc/api/1.1/CDbCommand#params">CDbCommand::params</a> property.</p>
+
+<h3 id="alternative-syntax-for-building-queries">Alternative Syntax for Building Queries</h3>
+
+<p>Sometimes, using method chaining to build a query may not be the optimal choice. The Yii Query Builder allows a query to be built using simple object property assignments. In particular, for each query builder method, there is a corresponding property that has the same name. Assigning a value to the property is equivalent to calling the corresponding method. For example, the following two statements are equivalent, assuming <code>$command</code> represents a <a href="/doc/api/1.1/CDbCommand">CDbCommand</a> object:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$command</span><span class="hl-code">-&gt;</span><span class="hl-identifier">select</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">id</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">username</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$command</span><span class="hl-code">-&gt;</span><span class="hl-identifier">select</span><span class="hl-code"> = </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">id</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">username</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>Furthermore, the <a href="/doc/api/1.1/CDbConnection#createCommand">CDbConnection::createCommand()</a> method can take an array as the parameter. The name-value pairs in the array will be used to initialize the properties of the created <a href="/doc/api/1.1/CDbCommand">CDbCommand</a> instance. This means, we can use the following code to build a query:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$row</span><span class="hl-code"> = </span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">db</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createCommand</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+    <span class="hl-quotes">'</span><span class="hl-string">select</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">id</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">username</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">from</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">tbl_user</span><span class="hl-quotes">'</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">where</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">id=:id</span><span class="hl-quotes">'</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">params</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">:id</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-number">1</span><span class="hl-brackets">)</span><span class="hl-code">,
+</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">queryRow</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<h3 id="building-multiple-queries">Building Multiple Queries</h3>
+
+<p>A <a href="/doc/api/1.1/CDbCommand">CDbCommand</a> instance can be reused multiple times to build several queries. Before building a new query, however, the <a href="/doc/api/1.1/CDbCommand#reset">CDbCommand::reset()</a> method must be invoked to clean up the previous query. For example:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$command</span><span class="hl-code"> = </span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">db</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createCommand</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$users</span><span class="hl-code"> = </span><span class="hl-var">$command</span><span class="hl-code">-&gt;</span><span class="hl-identifier">select</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">*</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">from</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_users</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">queryAll</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$command</span><span class="hl-code">-&gt;</span><span class="hl-identifier">reset</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;  </span><span class="hl-comment">//</span><span class="hl-comment"> clean up the previous query</span>
+<span class="hl-var">$posts</span><span class="hl-code"> = </span><span class="hl-var">$command</span><span class="hl-code">-&gt;</span><span class="hl-identifier">select</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">*</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">from</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_posts</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">queryAll</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<h2 id="building-data-manipulation-queries">3. Building Data Manipulation Queries <a class="anchor" href="#building-data-manipulation-queries">¶</a></h2>
+
+<p>Data manipulation queries refer to SQL statements for inserting, updating and deleting data in a DB table. Corresponding to these queries, the query builder provides <code>insert</code>, <code>update</code> and <code>delete</code> methods, respectively. Unlike the SELECT query methods described above, each of these data manipulation query methods will build a complete SQL statement and execute it immediately.</p>
+
+<ul>
+<li><a href="/doc/api/1.1/CDbCommand#insert">insert()</a>: inserts a row into a table</li>
+<li><a href="/doc/api/1.1/CDbCommand#update">update()</a>: updates the data in a table</li>
+<li><a href="/doc/api/1.1/CDbCommand#delete">delete()</a>: deletes the data from a table</li>
+</ul>
+
+<p>Below we describe these data manipulation query methods.</p>
+
+<h3 id="sec-13">insert()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">insert</span><span class="hl-brackets">(</span><span class="hl-var">$table</span><span class="hl-code">, </span><span class="hl-var">$columns</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#insert">insert()</a> method builds and executes an <code>INSERT</code> SQL statement. The <code>$table</code> parameter specifies which table to be inserted into, while <code>$columns</code> is an array of name-value pairs specifying the column values to be inserted. The method will quote the table name properly and will use parameter-binding for the values to be inserted.</p>
+
+<p>Below is an example:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> build and execute the following SQL:</span>
+<span class="hl-comment">//</span><span class="hl-comment"> INSERT INTO `tbl_user` (`name`, `email`) VALUES (:name, :email)</span>
+<span class="hl-var">$command</span><span class="hl-code">-&gt;</span><span class="hl-identifier">insert</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_user</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+    <span class="hl-quotes">'</span><span class="hl-string">name</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">Tester</span><span class="hl-quotes">'</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">email</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">tester@example.com</span><span class="hl-quotes">'</span><span class="hl-code">,
+</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<h3 id="sec-14">update()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">update</span><span class="hl-brackets">(</span><span class="hl-var">$table</span><span class="hl-code">, </span><span class="hl-var">$columns</span><span class="hl-code">, </span><span class="hl-var">$conditions</span><span class="hl-code">=</span><span class="hl-quotes">'</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$params</span><span class="hl-code">=</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#update">update()</a> method builds and executes an <code>UPDATE</code> SQL statement. The <code>$table</code> parameter specifies which table to be updated; <code>$columns</code> is an array of name-value pairs specifying the column values to be updated; <code>$conditions</code> and <code>$params</code> are like in <a href="/doc/api/1.1/CDbCommand#where()">where()</a>, which specify the <code>WHERE</code> clause in the <code>UPDATE</code> statement. The method will quote the table name properly and will use parameter-binding for the values to be updated.</p>
+
+<p>Below is an example:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> build and execute the following SQL:</span>
+<span class="hl-comment">//</span><span class="hl-comment"> UPDATE `tbl_user` SET `name`=:name WHERE id=:id</span>
+<span class="hl-var">$command</span><span class="hl-code">-&gt;</span><span class="hl-identifier">update</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_user</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+    <span class="hl-quotes">'</span><span class="hl-string">name</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">Tester</span><span class="hl-quotes">'</span><span class="hl-code">,
+</span><span class="hl-brackets">)</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">id=:id</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">:id</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-number">1</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<h3 id="sec-15">delete()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">delete</span><span class="hl-brackets">(</span><span class="hl-var">$table</span><span class="hl-code">, </span><span class="hl-var">$conditions</span><span class="hl-code">=</span><span class="hl-quotes">'</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$params</span><span class="hl-code">=</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#delete">delete()</a> method builds and executes a <code>DELETE</code> SQL statement. The <code>$table</code> parameter specifies which table to delete from; <code>$conditions</code> and <code>$params</code> are like in <a href="/doc/api/1.1/CDbCommand#where()">where()</a>, which specify the <code>WHERE</code> clause in the <code>DELETE</code> statement. The method will quote the table name properly.</p>
+
+<p>Below is an example:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> build and execute the following SQL:</span>
+<span class="hl-comment">//</span><span class="hl-comment"> DELETE FROM `tbl_user` WHERE id=:id</span>
+<span class="hl-var">$command</span><span class="hl-code">-&gt;</span><span class="hl-identifier">delete</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_user</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">id=:id</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">:id</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-number">1</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<h2 id="building-schema-manipulation-queries">4. Building Schema Manipulation Queries <a class="anchor" href="#building-schema-manipulation-queries">¶</a></h2>
+
+<p>Besides normal data retrieval and manipulation queries, the query builder also offers a set of methods for building and executing SQL queries that can manipulate the schema of a database. In particular, it supports the following queries:</p>
+
+<ul>
+<li><a href="/doc/api/1.1/CDbCommand#createTable">createTable()</a>: creates a table</li>
+<li><a href="/doc/api/1.1/CDbCommand#renameTable">renameTable()</a>: renames a table</li>
+<li><a href="/doc/api/1.1/CDbCommand#dropTable">dropTable()</a>: drops a table</li>
+<li><a href="/doc/api/1.1/CDbCommand#truncateTable">truncateTable()</a>: truncates a table</li>
+<li><a href="/doc/api/1.1/CDbCommand#addColumn">addColumn()</a>: adds a table column</li>
+<li><a href="/doc/api/1.1/CDbCommand#renameColumn">renameColumn()</a>: renames a table column</li>
+<li><a href="/doc/api/1.1/CDbCommand#alterColumn">alterColumn()</a>: alters a table column</li>
+<li><a href="/doc/api/1.1/CDbCommand#addForeignKey">addForeignKey()</a>: adds a foreign key (available since 1.1.6)</li>
+<li><a href="/doc/api/1.1/CDbCommand#dropForeignKey">dropForeignKey()</a>: drops a foreign key (available since 1.1.6)</li>
+<li><a href="/doc/api/1.1/CDbCommand#dropColumn">dropColumn()</a>: drops a table column</li>
+<li><a href="/doc/api/1.1/CDbCommand#createIndex">createIndex()</a>: creates an index</li>
+<li><a href="/doc/api/1.1/CDbCommand#dropIndex">dropIndex()</a>: drops an index</li>
+</ul>
+
+<blockquote class="info">
+<p><strong>Info:</strong> Although the actual SQL statements for manipulating database schema vary widely across different DBMS, the query builder attempts to provide a uniform interface for building these queries. This simplifies the task of migrating a database from one DBMS to another.</p>
+</blockquote>
+
+<h3 id="abstract-data-types">Abstract Data Types</h3>
+
+<p>The query builder introduces a set of abstract data types that can be used in defining table columns. Unlike the physical data types that are specific to particular DBMS and are quite different in different DBMS, the abstract data types are independent of DBMS. When abstract data types are used in defining table columns, the query builder will convert them into the corresponding physical data types.</p>
+
+<p>The following abstract data types are supported by the query builder.</p>
+
+<ul>
+<li><code>pk</code>: a generic primary key type, will be converted into <code>int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY</code> for MySQL;</li>
+<li><code>string</code>: string type, will be converted into <code>varchar(255)</code> for MySQL;</li>
+<li><code>text</code>: text type (long string), will be converted into <code>text</code> for MySQL;</li>
+<li><code>integer</code>: integer type, will be converted into <code>int(11)</code> for MySQL;</li>
+<li><code>float</code>: floating number type, will be converted into <code>float</code> for MySQL;</li>
+<li><code>decimal</code>: decimal number type, will be converted into <code>decimal</code> for MySQL;</li>
+<li><code>datetime</code>: datetime type, will be converted into <code>datetime</code> for MySQL;</li>
+<li><code>timestamp</code>: timestamp type, will be converted into <code>timestamp</code> for MySQL;</li>
+<li><code>time</code>: time type, will be converted into <code>time</code> for MySQL;</li>
+<li><code>date</code>: date type, will be converted into <code>date</code> for MySQL;</li>
+<li><code>binary</code>: binary data type, will be converted into <code>blob</code> for MySQL;</li>
+<li><code>boolean</code>: boolean type, will be converted into <code>tinyint(1)</code> for MySQL;</li>
+<li><code>money</code>: money/currency type, will be converted into <code>decimal(19,4)</code> for MySQL. This type has been available since version 1.1.8.</li>
+</ul>
+
+<h3 id="sec-16">createTable()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">createTable</span><span class="hl-brackets">(</span><span class="hl-var">$table</span><span class="hl-code">, </span><span class="hl-var">$columns</span><span class="hl-code">, </span><span class="hl-var">$options</span><span class="hl-code">=</span><span class="hl-reserved">null</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#createTable">createTable()</a> method builds and executes a SQL statement for creating a table. The <code>$table</code> parameter specifies the name of the table to be created. The <code>$columns</code> parameter specifies the columns in the new table. They must be given as name-definition pairs (e.g. <code>'username'=&gt;'string'</code>). The <code>$options</code> parameter specifies any extra SQL fragment that should be appended to the generated SQL. The query builder will quote the table name as well as the column names properly.</p>
+
+<p>When specifying a column definition, one can use an abstract data type as described above. The query builder will convert the abstract data type into the corresponding physical data type, according to the currently used DBMS. For example, <code>string</code> will be converted into <code>varchar(255)</code> for MySQL.</p>
+
+<p>A column definition can also contain non-abstract data type or specifications. They will be put in the generated SQL without any change. For example, <code>point</code> is not an abstract data type, and if used in a column definition, it will appear as is in the resulting SQL; and <code>string NOT NULL</code> will be converted into <code>varchar(255) NOT NULL</code> (i.e., only the abstract type <code>string</code> is converted).</p>
+
+<p>Below is an example showing how to create a table:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> CREATE TABLE `tbl_user` (</span>
+<span class="hl-comment">//</span><span class="hl-comment">     `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,</span>
+<span class="hl-comment">//</span><span class="hl-comment">     `username` varchar(255) NOT NULL,</span>
+<span class="hl-comment">//</span><span class="hl-comment">     `location` point</span>
+<span class="hl-comment">//</span><span class="hl-comment"> ) ENGINE=InnoDB</span>
+<span class="hl-identifier">createTable</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_user</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+    <span class="hl-quotes">'</span><span class="hl-string">id</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">pk</span><span class="hl-quotes">'</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">username</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">string NOT NULL</span><span class="hl-quotes">'</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">location</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">point</span><span class="hl-quotes">'</span><span class="hl-code">,
+</span><span class="hl-brackets">)</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">ENGINE=InnoDB</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span></pre></div></div>
+
+<h3 id="sec-17">renameTable()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">renameTable</span><span class="hl-brackets">(</span><span class="hl-var">$table</span><span class="hl-code">, </span><span class="hl-var">$newName</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#renameTable">renameTable()</a> method builds and executes a SQL statement for renaming a table. The <code>$table</code> parameter specifies the name of the table to be renamed. The <code>$newName</code> parameter specifies the new name of the table. The query builder will quote the table names properly.</p>
+
+<p>Below is an example showing how to rename a table:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> RENAME TABLE `tbl_users` TO `tbl_user`</span>
+<span class="hl-identifier">renameTable</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_users</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">tbl_user</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span></pre></div></div>
+
+<h3 id="sec-18">dropTable()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">dropTable</span><span class="hl-brackets">(</span><span class="hl-var">$table</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#dropTable">dropTable()</a> method builds and executes a SQL statement for dropping a table. The <code>$table</code> parameter specifies the name of the table to be dropped. The query builder will quote the table name properly.</p>
+
+<p>Below is an example showing how to drop a table:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> DROP TABLE `tbl_user`</span>
+<span class="hl-identifier">dropTable</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_user</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span></pre></div></div>
+
+<h3 id="sec-19">truncateTable()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">truncateTable</span><span class="hl-brackets">(</span><span class="hl-var">$table</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#truncateTable">truncateTable()</a> method builds and executes a SQL statement for truncating a table. The <code>$table</code> parameter specifies the name of the table to be truncated. The query builder will quote the table name properly.</p>
+
+<p>Below is an example showing how to truncate a table:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> TRUNCATE TABLE `tbl_user`</span>
+<span class="hl-identifier">truncateTable</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_user</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span></pre></div></div>
+
+<h3 id="sec-20">addColumn()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">addColumn</span><span class="hl-brackets">(</span><span class="hl-var">$table</span><span class="hl-code">, </span><span class="hl-var">$column</span><span class="hl-code">, </span><span class="hl-var">$type</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#addColumn">addColumn()</a> method builds and executes a SQL statement for adding a new table column. The <code>$table</code> parameter specifies the name of the table that the new column will be added to. The <code>$column</code> parameter specifies the name of the new column. And <code>$type</code> specifies the definition of the new column. Column definition can contain abstract data type, as described in the subsection of "createTable". The query builder will quote the table name as well as the column name properly.</p>
+
+<p>Below is an example showing how to add a table column:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> ALTER TABLE `tbl_user` ADD `email` varchar(255) NOT NULL</span>
+<span class="hl-identifier">addColumn</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_user</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">email</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">string NOT NULL</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span></pre></div></div>
+
+<h3 id="sec-21">dropColumn()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">dropColumn</span><span class="hl-brackets">(</span><span class="hl-var">$table</span><span class="hl-code">, </span><span class="hl-var">$column</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#dropColumn">dropColumn()</a> method builds and executes a SQL statement for dropping a table column. The <code>$table</code> parameter specifies the name of the table whose column is to be dropped. The <code>$column</code> parameter specifies the name of the column to be dropped. The query builder will quote the table name as well as the column name properly.</p>
+
+<p>Below is an example showing how to drop a table column:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> ALTER TABLE `tbl_user` DROP COLUMN `location`</span>
+<span class="hl-identifier">dropColumn</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_user</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">location</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span></pre></div></div>
+
+<h3 id="sec-22">renameColumn()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">renameColumn</span><span class="hl-brackets">(</span><span class="hl-var">$table</span><span class="hl-code">, </span><span class="hl-var">$name</span><span class="hl-code">, </span><span class="hl-var">$newName</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#renameColumn">renameColumn()</a> method builds and executes a SQL statement for renaming a table column. The <code>$table</code> parameter specifies the name of the table whose column is to be renamed. The <code>$name</code> parameter specifies the old column name. And <code>$newName</code> specifies the new column name. The query builder will quote the table name as well as the column names properly.</p>
+
+<p>Below is an example showing how to rename a table column:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> ALTER TABLE `tbl_users` CHANGE `name` `username` varchar(255) NOT NULL</span>
+<span class="hl-identifier">renameColumn</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_user</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">name</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">username</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span></pre></div></div>
+
+<h3 id="sec-23">alterColumn()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">alterColumn</span><span class="hl-brackets">(</span><span class="hl-var">$table</span><span class="hl-code">, </span><span class="hl-var">$column</span><span class="hl-code">, </span><span class="hl-var">$type</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#alterColumn">alterColumn()</a> method builds and executes a SQL statement for altering a table column. The <code>$table</code> parameter specifies the name of the table whose column is to be altered. The <code>$column</code> parameter specifies the name of the column to be altered. And <code>$type</code> specifies the new definition of the column. Column definition can contain abstract data type, as described in the subsection of "createTable". The query builder will quote the table name as well as the column name properly.</p>
+
+<p>Below is an example showing how to alter a table column:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> ALTER TABLE `tbl_user` CHANGE `username` `username` varchar(255) NOT NULL</span>
+<span class="hl-identifier">alterColumn</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tbl_user</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">username</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">string NOT NULL</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span></pre></div></div>
+
+<h3 id="sec-24">addForeignKey()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">addForeignKey</span><span class="hl-brackets">(</span><span class="hl-var">$name</span><span class="hl-code">, </span><span class="hl-var">$table</span><span class="hl-code">, </span><span class="hl-var">$columns</span><span class="hl-code">,
+    </span><span class="hl-var">$refTable</span><span class="hl-code">, </span><span class="hl-var">$refColumns</span><span class="hl-code">, </span><span class="hl-var">$delete</span><span class="hl-code">=</span><span class="hl-reserved">null</span><span class="hl-code">, </span><span class="hl-var">$update</span><span class="hl-code">=</span><span class="hl-reserved">null</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#addForeignKey">addForeignKey()</a> method builds and executes a SQL statement for adding a foreign key constraint  to a table. The <code>$name</code> parameter specifies the name of the foreign key. The <code>$table</code> and <code>$columns</code> parameters specify the table name and column name that the foreign key is about. If there are multiple columns, they should be separated by comma characters. The <code>$refTable</code> and <code>$refColumns</code> parameters specify the table name and column name that the foreign key references. The <code>$delete</code> and <code>$update</code> parameters specify the <code>ON DELETE</code> and <code>ON UPDATE</code> options in the SQL statement, respectively. Most DBMS support these options: <code>RESTRICT</code>, <code>CASCADE</code>, <code>NO ACTION</code>, <code>SET DEFAULT</code>, <code>SET NULL</code>. The query builder will properly quote the table name, index name and column name(s).</p>
+
+<p>Below is an example showing how to add a foreign key constraint,</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> ALTER TABLE `tbl_profile` ADD CONSTRAINT `fk_profile_user_id`</span>
+<span class="hl-comment">//</span><span class="hl-comment"> FOREIGN KEY (`user_id`) REFERENCES `tbl_user` (`id`)</span>
+<span class="hl-comment">//</span><span class="hl-comment"> ON DELETE CASCADE ON UPDATE CASCADE</span>
+<span class="hl-identifier">addForeignKey</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">fk_profile_user_id</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">tbl_profile</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">user_id</span><span class="hl-quotes">'</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">tbl_user</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">id</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">CASCADE</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">CASCADE</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span></pre></div></div>
+
+<h3 id="sec-25">dropForeignKey()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">dropForeignKey</span><span class="hl-brackets">(</span><span class="hl-var">$name</span><span class="hl-code">, </span><span class="hl-var">$table</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#dropForeignKey">dropForeignKey()</a> method builds and executes a SQL statement for dropping a foreign key constraint. The <code>$name</code> parameter specifies the name of the foreign key constraint to be dropped. The <code>$table</code> parameter specifies the name of the table that the foreign key is on. The query builder will quote the table name as well as the constraint names properly.</p>
+
+<p>Below is an example showing how to drop a foreign key constraint:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> ALTER TABLE `tbl_profile` DROP FOREIGN KEY `fk_profile_user_id`</span>
+<span class="hl-identifier">dropForeignKey</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">fk_profile_user_id</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">tbl_profile</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span></pre></div></div>
+
+<h3 id="sec-26">createIndex()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">createIndex</span><span class="hl-brackets">(</span><span class="hl-var">$name</span><span class="hl-code">, </span><span class="hl-var">$table</span><span class="hl-code">, </span><span class="hl-var">$column</span><span class="hl-code">, </span><span class="hl-var">$unique</span><span class="hl-code">=</span><span class="hl-reserved">false</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#createIndex">createIndex()</a> method builds and executes a SQL statement for creating an index. The <code>$name</code> parameter specifies the name of the index to be created. The <code>$table</code> parameter specifies the name of the table that the index is on. The <code>$column</code> parameter specifies the name of the column to be indexed. And the <code>$unique</code> parameter specifies whether a unique index should be created. If the index consists of multiple columns, they must be separated by commas. The query builder will properly quote the table name, index name and column name(s).</p>
+
+<p>Below is an example showing how to create an index:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> CREATE INDEX `idx_username` ON `tbl_user` (`username`)</span>
+<span class="hl-identifier">createIndex</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">idx_username</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">tbl_user</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">username</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span></pre></div></div>
+
+<h3 id="sec-27">dropIndex()</h3>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">dropIndex</span><span class="hl-brackets">(</span><span class="hl-var">$name</span><span class="hl-code">, </span><span class="hl-var">$table</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/CDbCommand#dropIndex">dropIndex()</a> method builds and executes a SQL statement for dropping an index. The <code>$name</code> parameter specifies the name of the index to be dropped. The <code>$table</code> parameter specifies the name of the table that the index is on. The query builder will quote the table name as well as the index names properly.</p>
+
+<p>Below is an example showing how to drop an index:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> DROP INDEX `idx_username` ON `tbl_user`</span>
+<span class="hl-identifier">dropIndex</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">idx_username</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">tbl_user</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span></pre></div></div>
+
+<div class="revision"><div class="google-ad" style="margin:-60px 0 5px 200px;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "7116172008";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>$Id$</div>
+</div>
+                <div class="prev-next-nav">
+                            <div class="prev-topic"><a href="/doc/guide/1.1/en/database.dao">Database Access Objects</a></div>
+                                        <div class="next-topic"><a href="/doc/guide/1.1/en/database.ar">Active Record</a></div>
+                    </div>
+        
+		        <div class="widget-comment-list" id="comments">
+	<div class="comments">
+		<h3>Total 2 comments</h3>
+				<div class="comment alt-0">
+			<a class="cid" id="c12386" title="permalink to this comment" href="#c12386">#12386</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=12386"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=12386&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=12386&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/102268/">rajesh chaurasia</a> at 2013/03/18 01:01am</div>
+			<div class="title">truncate table </div>
+			<div class="content"><p>hi friends i am using</p>
+
+<pre>Yii::app()-&gt;db-&gt;createCommand()-&gt;truncateTable(model name::model()-&gt;tableName());</pre>
+
+<p>by using this you can easily truncate a table.</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c5372" title="permalink to this comment" href="#c5372">#5372</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=5372"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=5372&amp;vote=1"><span>11</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=5372&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link silver" href="/user/9/">Mike</a> at 2011/10/07 09:48am</div>
+			<div class="title">Create table only if it doesn&#039;t exist</div>
+			<div class="content"><p>Sometimes you only want to create a table, if it doesn't exist. You can do this with:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-code">!</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">dbConnection</span><span class="hl-code">-&gt;</span><span class="hl-identifier">schema</span><span class="hl-code">-&gt;</span><span class="hl-identifier">getTable</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tablename</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+    <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createTable</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">tablename</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$columns</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+</div>
+					</div>
+			</div>
+	<div id="comment-add">
+		<h3 id="add-comment">Leave a comment</h3>
+
+			<p>Please <a class="g-login" rel="/doc/guide/1.1/en/database.query-builder#add-comment" href="#">login</a> to leave your comment.</p>
+		</div>
+</div>
+           </div>
+</div>
+					</div>
+				
+								<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+					</div>
+	</div>
+
+	<div class="layout-main-footer">
+		<div class="container_12">
+			<div class="grid_6">
+				<ul class="menu">
+				<li class="main">About
+<ul class="sub">
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="main">Downloads
+<ul class="sub">
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="main">Documentation
+<ul class="sub">
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="main">Development
+<ul class="sub">
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="main">Community
+<ul class="sub">
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+				</ul>
+			</div>
+			<div class="grid_1">&nbsp;</div>
+			<div class="grid_5">
+				<h3>Yii Supporters</h3>
+				<ul class="g-list-none supporters">
+
+				</ul>
+			</div>
+
+			<div class="clear"></div>
+			<div class="grid_12 copyright">
+				<ul class="social">
+					<li class="twitter"><a href="https://twitter.com/yiiframework" target="_blank" rel="nofollow" title="follow us on twitter">Twitter</a></li>
+					<li class="facebook"><a href="https://www.facebook.com/groups/yiitalk/" target="_blank" rel="nofollow" title="join yii group at facebook">Facebook</a></li>
+					<li class="linkedin"><a href="http://www.linkedin.com/groups?gid=1483367" target="_blank" rel="nofollow" title="join yii group at linkedin">LinkedIn</a></li>
+					<li class="feeds"><a title="RSS feeds" href="/rss.xml/">RSS Feeds</a></li>
+				</ul>
+				<div class="clear"></div>
+				<a href="/tos/">Terms of Service</a> |
+				<a href="/license/">License</a> |
+				<a href="/contact/">Contact Us</a><br/>
+				Copyright &copy; 2015 by <a href="http://www.yiisoft.com">Yii Software LLC</a>.
+				All Rights Reserved.
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+    <script type="text/javascript" src="/js/site-20121004195728.js"></script>
+
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['site._setAccount', 'UA-5843896-1']);
+_gaq.push(['site._trackPageview']);
+
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+<script type="text/javascript">
+function trackClick(link, action, category) {
+	action=action || link.href;
+	category=category || 'Outbound Links';
+	try {
+		_gaq.push(['site._trackEvent', category, action]);
+		setTimeout('document.location = "' + link.href + '"', 250);
+	}catch(err){}
+	return false;
+}
+</script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+</body>
+</html>

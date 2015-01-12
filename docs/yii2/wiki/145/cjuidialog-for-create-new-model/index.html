@@ -1,0 +1,870 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    	<meta charset="UTF-8" />
+		<meta name="keywords" content="yii framework, wiki, Tutorials, juidialog, user interface, AJAX" />
+	<meta name="description" content="In this tutorial we will learn how to realize a create interface using a dialog." />
+    <link rel="shortcut icon" type="image/x-icon" href="http://static.yiiframework.com/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="http://static.yiiframework.com/css/site-20130404102234.css" />
+
+	<link title="Lives News for Yii Framework" rel="alternate" type="application/rss+xml" href="http://www.yiiframework.com/rss.xml/" />
+	<title>CJuiDialog for create new model | Wiki | Yii PHP Framework</title>
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii API Search" href="/search-api.xml" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii Site Search" href="/search-site.xml" />
+</head>
+
+<body class="mac">
+<div class="layout-main">
+
+	<div class="layout-main-shortcuts">
+		<div class="container_12">
+            <a style="color:darkred;" href="https://github.com/yiisoft/yii2">Github</a> &middot;
+            <a style="color:darkgreen;" href="https://twitter.com/yiiframework">Twitter</a> &middot;
+            <a style="color:darkblue;" href="https://www.facebook.com/groups/yiitalk/">Facebook</a> &middot;
+            <a href="/doc/guide/">Guide</a> &middot;
+            <a href="/doc/api/">Class Reference</a> &middot;
+            <a href="/doc-2.0/guide-index.html">Guide 2.0</a> &middot;
+            <a href="/doc-2.0/index.html">API 2.0</a> &middot;
+            <a href="/wiki/">Wiki</a> &middot;
+            <a href="/extensions/">Extensions</a> &middot;
+            <a href="/forum/">Forum</a> &middot;
+			<a href="/chat/">Live Chat</a> &middot;
+                            <a href="/login/">Login</a>            		</div>
+	</div>
+
+	<div class="layout-main-bg">
+		<div class="layout-main-header">
+			<div class="container_12">
+				<div class="grid_4">
+					<a class="logo" href="/"><img alt="Yii Logo" src="http://static.yiiframework.com/css/img/logo.png" title="Yii Framework" width="284" height="64" /></a>				</div>
+				<div class="grid_8 omega">
+					<div class="nav">
+						<ul class="menu" id="yw0">
+<li class="about"><a class="main" href="/about/">About</a>
+<ul>
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li class="last"><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="downloads"><a class="main" href="/download/">Downloads</a>
+<ul>
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li class="last"><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="documentation active"><a class="main" href="/doc/">Documentation</a>
+<ul>
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li class="active"><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li class="last"><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="development"><a class="main" href="https://github.com/yiisoft/yii/commits/master">Development</a>
+<ul>
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li class="last"><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="community last"><a class="main" href="/community/">Community</a>
+<ul>
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li class="last"><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+</ul>						<div class="search">
+							<form method="get" action="/search/">
+								<div class="keyword">
+	                                <input name="q" value="" />
+									<a href="#" title="search" class="global-search">search</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+
+		<div class="container_12">
+						<div class="grid_12">
+												<div class="layout-main-submenu">
+					<ul>
+						<li class="main">Documentation</li>
+												<li><a href="/tour/">Take the Tour</a></li>
+												<li><a href="/tutorials/">Tutorials</a></li>
+												<li><a href="/doc/api/">Class Reference</a></li>
+												<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+												<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+												<li class="active"><a href="/wiki/">Wiki</a></li>
+												<li><a href="/screencasts/">Screencasts</a></li>
+												<li><a href="/resources/">Resources</a></li>
+											</ul>
+				</div>
+				
+				
+				
+								<div class="grid_9 alpha">
+									<div class="layout-main-body">
+						<div class="wiki-view">
+        <h1>Yii 1.1: CJuiDialog for create new model <a href="https://twitter.com/yiiframework" class="twitter-follow-button" data-link-color="#0069D6" data-show-count="true">Follow @yiiframework</a></h1>
+
+	<div class="g-voter-reporter">
+		<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Wiki&amp;id=145"><span>report it</span></a>		<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Wiki&amp;id=145&amp;vote=1"><span>65</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Wiki&amp;id=145&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>	</div>
+	<div class="g-starring">
+		<span class="widget-follower"><a class="g-login" title="Click to follow" href="/site/star/?type=Wiki&amp;id=145&amp;v=1"><img alt="Click to follow" src="/images/star_off.gif" title="" width="15" height="15" /></a><span>74 followers</span></span>	</div>
+	<div class="clear"></div>
+
+    <div class="content g-markdown"><div class="google-ad" style="float:right;margin:0 0 1em 1em;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "3624755012";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+
+    
+        <div class="toc"><div class="ref level-2"><a href="#hh0">Introduction</a></div>
+<div class="ref level-2"><a href="#hh1">Scenario</a></div>
+<div class="ref level-2"><a href="#hh2">Preparation of the form</a></div>
+<div class="ref level-2"><a href="#hh3">Enhance the action create</a></div>
+<div class="ref level-2"><a href="#hh4">The dialog</a></div>
+<div class="ref level-2"><a href="#hh5">Summary</a></div></div>
+<h2 id="hh0">Introduction <a class="anchor" href="#hh0">¶</a></h2>
+
+<p>In this tutorial we will learn how to realize a create interface using a dialog.</p>
+
+<p><a href="http://www.yiiframework.com/wiki/72/cjuidialog-and-ajaxsubmitbutton" title="other tutorial">Here</a> is a similar tutorial that uses Ajax link to achieve the goal, but we will use a simpler and more effective approach: the event onSubmit of the form.</p>
+
+<h2 id="hh1">Scenario <a class="anchor" href="#hh1">¶</a></h2>
+
+<p>Let's imagine we have a classroom with many students. If the user fills in the form of the student and there is no classroom made, he will have to create a classroom first and lose the already inserted input.</p>
+
+<p>We want to allow the user to create the classroom from the form of the student, without changing pages.</p>
+
+<h2 id="hh2">Preparation of the form <a class="anchor" href="#hh2">¶</a></h2>
+
+<p>First of all we need a form for creating the classroom. We can generate a Crud for classroom with gii and adapt the code to our needs.</p>
+
+<p>Once we are satisfied with our form and it works with the usual submit, we can use it in a dialog.</p>
+
+<h2 id="hh3">Enhance the action create <a class="anchor" href="#hh3">¶</a></h2>
+
+<p>We need to enhance the action create of the classroom controller.</p>
+
+<p>Let's change it this way:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">actionCreate</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-var">$model</span><span class="hl-code">=</span><span class="hl-reserved">new</span> <span class="hl-identifier">Classroom</span><span class="hl-code">;
+ 
+        </span><span class="hl-comment">//</span><span class="hl-comment"> Uncomment the following line if AJAX validation is needed</span>
+        <span class="hl-comment">//</span><span class="hl-comment"> $this-&gt;performAjaxValidation($model);</span>
+ 
+        <span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-reserved">isset</span><span class="hl-brackets">(</span><span class="hl-var">$_POST</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">Classroom</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+        <span class="hl-brackets">{</span>
+            <span class="hl-var">$model</span><span class="hl-code">-&gt;</span><span class="hl-identifier">attributes</span><span class="hl-code">=</span><span class="hl-var">$_POST</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">Classroom</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-code">;
+            </span><span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-var">$model</span><span class="hl-code">-&gt;</span><span class="hl-identifier">save</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+            <span class="hl-brackets">{</span>
+                <span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">request</span><span class="hl-code">-&gt;</span><span class="hl-identifier">isAjaxRequest</span><span class="hl-brackets">)</span>
+                <span class="hl-brackets">{</span>
+                    <span class="hl-reserved">echo</span> <span class="hl-identifier">CJSON</span><span class="hl-code">::</span><span class="hl-identifier">encode</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+                        <span class="hl-quotes">'</span><span class="hl-string">status</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">success</span><span class="hl-quotes">'</span><span class="hl-code">, 
+                        </span><span class="hl-quotes">'</span><span class="hl-string">div</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">"</span><span class="hl-string">Classroom successfully added</span><span class="hl-quotes">"</span>
+                        <span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;
+                    </span><span class="hl-reserved">exit</span><span class="hl-code">;               
+                </span><span class="hl-brackets">}</span>
+                <span class="hl-reserved">else</span>
+                    <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">redirect</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">view</span><span class="hl-quotes">'</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">id</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-var">$model</span><span class="hl-code">-&gt;</span><span class="hl-identifier">id</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;
+            </span><span class="hl-brackets">}</span>
+        <span class="hl-brackets">}</span>
+ 
+        <span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">request</span><span class="hl-code">-&gt;</span><span class="hl-identifier">isAjaxRequest</span><span class="hl-brackets">)</span>
+        <span class="hl-brackets">{</span>
+            <span class="hl-reserved">echo</span> <span class="hl-identifier">CJSON</span><span class="hl-code">::</span><span class="hl-identifier">encode</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+                <span class="hl-quotes">'</span><span class="hl-string">status</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">failure</span><span class="hl-quotes">'</span><span class="hl-code">, 
+                </span><span class="hl-quotes">'</span><span class="hl-string">div</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">renderPartial</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">_form</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">model</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-var">$model</span><span class="hl-brackets">)</span><span class="hl-code">, </span><span class="hl-reserved">true</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;
+            </span><span class="hl-reserved">exit</span><span class="hl-code">;               
+        </span><span class="hl-brackets">}</span>
+        <span class="hl-reserved">else</span>
+            <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">render</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">create</span><span class="hl-quotes">'</span><span class="hl-code">,</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">model</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-var">$model</span><span class="hl-code">,</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span></pre></div></div>
+
+<p>We add some small changes: in case of ajax request we write a json encoded array.</p>
+
+<p>In this array we return a status (failure/success) and the whole form created with renderPartial.</p>
+
+<h2 id="hh4">The dialog <a class="anchor" href="#hh4">¶</a></h2>
+
+<p>Now the back-end is done, let's write the dialog itself.</p>
+
+<p>In the form of the student somewhere we add this code:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-inlinetags">&lt;?php</span> <span class="hl-reserved">echo</span> <span class="hl-identifier">CHtml</span><span class="hl-code">::</span><span class="hl-identifier">link</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">Create classroom</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">"</span><span class="hl-quotes">"</span><span class="hl-code">,  </span><span class="hl-comment">//</span><span class="hl-comment"> the link for open the dialog</span>
+    <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+        <span class="hl-quotes">'</span><span class="hl-string">style</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">cursor: pointer; text-decoration: underline;</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-quotes">'</span><span class="hl-string">onclick</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">"</span><span class="hl-string">{addClassroom(); $('#dialogClassroom').dialog('open');}</span><span class="hl-quotes">"</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;</span><span class="hl-inlinetags">?&gt;</span><span class="hl-code">
+ 
+&lt;?</span><span class="hl-identifier">php</span>
+<span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">beginWidget</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">zii.widgets.jui.CJuiDialog</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span> <span class="hl-comment">//</span><span class="hl-comment"> the dialog</span>
+    <span class="hl-quotes">'</span><span class="hl-string">id</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">dialogClassroom</span><span class="hl-quotes">'</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">options</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+        <span class="hl-quotes">'</span><span class="hl-string">title</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">Create classroom</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-quotes">'</span><span class="hl-string">autoOpen</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">false</span><span class="hl-code">,
+        </span><span class="hl-quotes">'</span><span class="hl-string">modal</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">true</span><span class="hl-code">,
+        </span><span class="hl-quotes">'</span><span class="hl-string">width</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-number">550</span><span class="hl-code">,
+        </span><span class="hl-quotes">'</span><span class="hl-string">height</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-number">470</span><span class="hl-code">,
+    </span><span class="hl-brackets">)</span><span class="hl-code">,
+</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;</span><span class="hl-inlinetags">?&gt;</span><span class="hl-code">
+&lt;</span><span class="hl-identifier">div</span> <span class="hl-reserved">class</span><span class="hl-code">=</span><span class="hl-quotes">"</span><span class="hl-string">divForForm</span><span class="hl-quotes">"</span><span class="hl-code">&gt;&lt;/</span><span class="hl-identifier">div</span><span class="hl-code">&gt;
+ 
+&lt;?</span><span class="hl-identifier">php</span> <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">endWidget</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;</span><span class="hl-inlinetags">?&gt;</span><span class="hl-code">
+ 
+&lt;</span><span class="hl-identifier">script</span> <span class="hl-identifier">type</span><span class="hl-code">=</span><span class="hl-quotes">"</span><span class="hl-string">text/javascript</span><span class="hl-quotes">"</span><span class="hl-code">&gt;
+</span><span class="hl-comment">//</span><span class="hl-comment"> here is the magic</span>
+<span class="hl-reserved">function</span> <span class="hl-identifier">addClassroom</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">{</span><span class="hl-code">
+    &lt;?</span><span class="hl-identifier">php</span> <span class="hl-reserved">echo</span> <span class="hl-identifier">CHtml</span><span class="hl-code">::</span><span class="hl-identifier">ajax</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">url</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">classroom/create</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">data</span><span class="hl-quotes">'</span><span class="hl-code">=&gt; </span><span class="hl-quotes">"</span><span class="hl-string">js:$(this).serialize()</span><span class="hl-quotes">"</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">type</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">post</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">dataType</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">json</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">success</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">"</span><span class="hl-string">function(data)
+            {
+                if (data.status == 'failure')
+                {
+                    $('#dialogClassroom div.divForForm').html(data.div);
+                          // Here is the trick: on submit-&gt; once again this function!
+                    $('#dialogClassroom div.divForForm form').submit(addClassroom);
+                }
+                else
+                {
+                    $('#dialogClassroom div.divForForm').html(data.div);
+                    setTimeout(</span><span class="hl-special">\"</span><span class="hl-string">$('#dialogClassroom').dialog('close') </span><span class="hl-special">\"</span><span class="hl-string">,3000);
+                }
+ 
+            } </span><span class="hl-quotes">"</span><span class="hl-code">,
+            </span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-inlinetags">?&gt;</span><span class="hl-default">;
+    return false; 
+ 
+}
+ 
+&lt;/script&gt;</span></pre></div></div>
+
+<p>And that's all. In this code we have:</p>
+
+<ul><li>A link for open the dialog</li>
+<li>the dialog itself, with a div inside that will be replaced with ajax</li>
+<li>the javascript function addClassroom().</li>
+</ul><p>This function fires an ajax request to the action create we prepared in the previous step.</p>
+
+<p>The returned form will be placed in the dialog (with eventually, all errors and so on) in case of status failure, in case of status success in the example we replace the div and we close the dialog after 3 seconds.</p>
+
+<p>If you use this system in the form for student, you can return, for example, the id of the newly inserted classroom and select it automatically in a drop down list.</p>
+
+<h2 id="hh5">Summary <a class="anchor" href="#hh5">¶</a></h2>
+
+<p>To make a long story short:</p>
+
+<ul><li>Prepare the usual creation with gii generated code</li>
+<li>Change the action create for answer to Ajax requests</li>
+<li>Place the link/dialog/js wherever you want.</li>
+</ul><p>This methodology is very comfortable because it changes anything in the code of the _form, so any eventually added field in classroom will be available in both standard and dialog insert.</p>
+    </div>
+
+    <div class="google-ad" style="margin:10px 0 10px 200px;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "6460822043";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div><div class="widget-comment-list" id="comments">
+	<div class="comments">
+		<h3>Total 20 comments</h3>
+				<div class="comment alt-0">
+			<a class="cid" id="c18779" title="permalink to this comment" href="#c18779">#18779</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=18779"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=18779&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=18779&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/7363/">xNicox</a> at 2015/01/05 07:40am</div>
+			<div class="title">refresh</div>
+			<div class="content"><p>Hi,@erand, I think what you need is a diferent approach.
+I have the same issue as you, and I use another tutorial that I don't find right know, but basically you have to return, on success, an HTML  tag.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-var">$model</span><span class="hl-code">-&gt;</span><span class="hl-identifier">save</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+                    <span class="hl-comment">//</span><span class="hl-comment">Return an &lt;option&gt; and select it</span>
+                            <span class="hl-reserved">echo</span> <span class="hl-identifier">CHtml</span><span class="hl-code">::</span><span class="hl-identifier">tag</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">option</span><span class="hl-quotes">'</span><span class="hl-code">,</span><span class="hl-reserved">array</span> <span class="hl-brackets">(</span>
+                                <span class="hl-quotes">'</span><span class="hl-string">value</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-var">$model</span><span class="hl-code">-&gt;</span><span class="hl-identifier">id</span><span class="hl-code">,
+                                </span><span class="hl-quotes">'</span><span class="hl-string">selected</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">true</span>
+                            <span class="hl-brackets">)</span><span class="hl-code">,</span><span class="hl-identifier">CHtml</span><span class="hl-code">::</span><span class="hl-identifier">encode</span><span class="hl-brackets">(</span><span class="hl-var">$model</span><span class="hl-code">-&gt;</span><span class="hl-identifier">ApellidoYNombrePapa</span><span class="hl-brackets">)</span><span class="hl-code">,</span><span class="hl-reserved">true</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+                </span><span class="hl-brackets">}</span></pre></div></div>
+
+<p>This routines return a text, in the JSON array.</p>
+
+<p>Also I have some issues with validations and error processing...
+If you can mix and figured out how to:
+   create a link to open a dialog
+   make this dialog refresh if some rule validation fails.
+   and on success add a new entry in the combo !</p>
+
+<p>please share,
+best regards</p>
+
+<p>PS: Sorry for my poor english.</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c18771" title="permalink to this comment" href="#c18771">#18771</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=18771"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=18771&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=18771&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/237260/">erand</a> at 2015/01/03 03:25pm</div>
+			<div class="title">Refresh...</div>
+			<div class="content"><p>The new element is added in db, but not in the dropdownlist...I have to refresh the page to see the new element in the droopdown...what could be the problem?</p>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c17692" title="permalink to this comment" href="#c17692">#17692</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=17692"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=17692&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=17692&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/82091/">seletar6</a> at 2014/07/15 04:08am</div>
+			<div class="title">zii.widgets.jui.CJuiDatePicker does not work on the Popup form</div>
+			<div class="content"><p>Just in case some of you encounter the same problem. Pls see following,</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">request</span><span class="hl-code">-&gt;</span><span class="hl-identifier">isAjaxRequest</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+            <span class="hl-reserved">echo</span> <span class="hl-identifier">CJSON</span><span class="hl-code">::</span><span class="hl-identifier">encode</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+                <span class="hl-quotes">'</span><span class="hl-string">status</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">failure</span><span class="hl-quotes">'</span><span class="hl-code">,
+                </span><span class="hl-quotes">'</span><span class="hl-string">div</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">renderPartial</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">_form</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">model</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-var">$model</span><span class="hl-brackets">)</span><span class="hl-code">, </span><span class="hl-reserved">true</span><span class="hl-code">, </span><span class="hl-reserved">true</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;
+            </span><span class="hl-reserved">exit</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span> <span class="hl-reserved">else</span>
+            <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">render</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">create</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+                <span class="hl-quotes">'</span><span class="hl-string">model</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-var">$model</span><span class="hl-code">,
+            </span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>http://stackoverflow.com/questions/13698645/cjuidatepicker-widget-in-yii-framework</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c16988" title="permalink to this comment" href="#c16988">#16988</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=16988"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=16988&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=16988&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/62404/">Rabb T.</a> at 2014/04/18 04:16pm</div>
+			<div class="title">When CSRF validation is enabled</div>
+			<div class="content"><p>I spent half a day figuring out why it was not working for me, so I'd like to share:
+Here is what works for me when CSRF is enabled:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">addClassroom</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">var</span> <span class="hl-identifier">theData</span><span class="hl-code"> = $</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">#dialogClassroom div.divForForm form</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">.</span><span class="hl-identifier">serializeArray</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-identifier">theData</span><span class="hl-code">.</span><span class="hl-identifier">push</span><span class="hl-brackets">(</span><span class="hl-brackets">{</span><span class="hl-identifier">name</span><span class="hl-code">:</span><span class="hl-quotes">'</span><span class="hl-string">&lt;?php echo Yii::app()-&gt;request-&gt;csrfTokenName ?&gt;</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-identifier">value</span><span class="hl-code">:</span><span class="hl-quotes">'</span><span class="hl-string">&lt;?php echo Yii::app()-&gt;request-&gt;csrfToken ?&gt;</span><span class="hl-quotes">'</span><span class="hl-brackets">}</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+    &lt;?</span><span class="hl-identifier">php</span> <span class="hl-reserved">echo</span> <span class="hl-identifier">CHtml</span><span class="hl-code">::</span><span class="hl-identifier">ajax</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">url</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">classroom/create</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">data</span><span class="hl-quotes">'</span><span class="hl-code">=&gt; </span><span class="hl-quotes">"</span><span class="hl-string">js:theData</span><span class="hl-quotes">"</span><span class="hl-code">,
+            ...</span></pre></div></div>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c16869" title="permalink to this comment" href="#c16869">#16869</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=16869"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=16869&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=16869&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/9004/">Bibi40k</a> at 2014/04/05 01:36am</div>
+			<div class="title">Giix Problem</div>
+			<div class="content"><p>If anyone uses Giix probably they get a blank popup so this is the trick:</p>
+
+<p>giix-components/GxController.php line 160</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">getRequest</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">getIsAjaxRequest</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code"> &amp;&amp; </span><span class="hl-brackets">(</span><span class="hl-brackets">(</span><span class="hl-var">$form</span><span class="hl-code"> === </span><span class="hl-reserved">null</span><span class="hl-brackets">)</span><span class="hl-code"> || </span><span class="hl-brackets">(</span><span class="hl-var">$_POST</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">ajax</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-code"> == </span><span class="hl-var">$form</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>change:
+($_POST['ajax'] == $form)
+to:
+<strong>(isset($_POST['ajax']) &amp;&amp; $_POST['ajax'] == $form)</strong></p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c14157" title="permalink to this comment" href="#c14157">#14157</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=14157"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=14157&amp;vote=1"><span>1</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=14157&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/78693/">Rolando Rocha</a> at 2013/07/23 11:15am</div>
+			<div class="title">Form Validation</div>
+			<div class="content"><p>Hi,
+First of all, thank you for share this tutorial! I have a question to make. What are supposed to happen when I don't respect the rules validations? In my case I was redirected to the normal action with the rules messages!
+I failed in some code?</p>
+
+<p>Thanks!</p>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c13648" title="permalink to this comment" href="#c13648">#13648</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=13648"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=13648&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=13648&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link silver" href="/user/2584/">zaccaria</a> at 2013/06/14 01:36am</div>
+			<div class="title">re arrigonfr</div>
+			<div class="content"><p>Check first of all the json response with firebug, probably you have an error in the controller.</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c13631" title="permalink to this comment" href="#c13631">#13631</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=13631"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=13631&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=13631&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/142906/">arrigonfr</a> at 2013/06/12 05:03pm</div>
+			<div class="title">something  doesn&#039;t work</div>
+			<div class="content"><p>I've practically copy/pasted the code, only changing "Classroom" for "People" where I should. The model window comes up, i type the code, i click the button, the dialog closes but the information won't save.</p>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c13623" title="permalink to this comment" href="#c13623">#13623</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=13623"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=13623&amp;vote=1"><span>2</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=13623&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/56540/">code4d1</a> at 2013/06/12 04:59am</div>
+			<div class="title">problem with dropdown dependent</div>
+			<div class="content"><p>thanks for tutorial,</p>
+
+<p>I was experiencing with my dropdown dependent. when click on the dropdown country, the cities is not shown.</p>
+
+<p>solve with change a little in actionCreate:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-quotes">'</span><span class="hl-string">div</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">renderPartial</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">_form</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">model</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-var">$model</span><span class="hl-brackets">)</span><span class="hl-code">, </span><span class="hl-reserved">true</span><span class="hl-brackets">)</span><span class="hl-code">));</span></pre></div></div>
+
+<p>to :</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-quotes">'</span><span class="hl-string">div</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">renderPartial</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">_form</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">model</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-var">$model</span><span class="hl-brackets">)</span><span class="hl-code">, </span><span class="hl-reserved">true</span><span class="hl-code">, </span><span class="hl-reserved">true</span><span class="hl-brackets">)</span><span class="hl-code">));</span></pre></div></div>
+
+<p>its work for me, hope help any body else.</p>
+
+<p>edit !!</p>
+
+<p>another issue come up after that change. "new classroom" link only working for first click, so the second click without refreshing the student form will not open the classroom dialog.</p>
+
+<p>solve with a little change again in actionCreate :</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">request</span><span class="hl-code">-&gt;</span><span class="hl-identifier">isAjaxRequest</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">{</span>                    
+   <span class="hl-reserved">echo</span> <span class="hl-identifier">CJSON</span><span class="hl-code">::</span><span class="hl-identifier">encode</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+      <span class="hl-quotes">'</span><span class="hl-string">status</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">failure</span><span class="hl-quotes">'</span><span class="hl-code">, 
+      </span><span class="hl-quotes">'</span><span class="hl-string">div</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">renderPartial</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">_form</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">model</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-var">$model</span><span class="hl-brackets">)</span><span class="hl-code">, </span><span class="hl-reserved">true</span><span class="hl-code">, </span><span class="hl-reserved">true</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;
+       </span><span class="hl-reserved">exit</span><span class="hl-code">;               
+</span><span class="hl-brackets">}</span></pre></div></div>
+
+<p>to:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">request</span><span class="hl-code">-&gt;</span><span class="hl-identifier">isAjaxRequest</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">{</span>                
+   <span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">clientScript</span><span class="hl-code">-&gt;</span><span class="hl-identifier">scriptMap</span><span class="hl-brackets">[</span><span class="hl-quotes">'</span><span class="hl-string">jquery.js</span><span class="hl-quotes">'</span><span class="hl-brackets">]</span><span class="hl-code"> = </span><span class="hl-reserved">false</span><span class="hl-code">;   
+   </span><span class="hl-reserved">echo</span> <span class="hl-identifier">CJSON</span><span class="hl-code">::</span><span class="hl-identifier">encode</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+      <span class="hl-quotes">'</span><span class="hl-string">status</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">failure</span><span class="hl-quotes">'</span><span class="hl-code">, 
+      </span><span class="hl-quotes">'</span><span class="hl-string">div</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">renderPartial</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">_form</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">model</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-var">$model</span><span class="hl-brackets">)</span><span class="hl-code">, </span><span class="hl-reserved">true</span><span class="hl-code">, </span><span class="hl-reserved">true</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;
+       </span><span class="hl-reserved">exit</span><span class="hl-code">;               
+</span><span class="hl-brackets">}</span></pre></div></div>
+
+<p>hope it help. please dont kick my ass if I do wrong...</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c12672" title="permalink to this comment" href="#c12672">#12672</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=12672"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=12672&amp;vote=1"><span>1</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=12672&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/98652/">nfdevil</a> at 2013/04/04 02:57pm</div>
+			<div class="title">Nesting forms isn&#039;t allowed</div>
+			<div class="content"><p>I didn't get this to work at first. The form element was being deleted by jquery's html() method in Chrome.
+So I went to the Yii IRC and we solved it there. Found out that nested forms aren't allowed ;)</p>
+
+<p>To fix this, just put the div where your 'classroom creation' form will be in</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-brackets">&lt;</span><span class="hl-reserved">div</span> <span class="hl-var">class</span><span class="hl-code">=</span><span class="hl-quotes">"</span><span class="hl-string">divForForm</span><span class="hl-quotes">"</span><span class="hl-brackets">&gt;</span><span class="hl-brackets">&lt;/</span><span class="hl-reserved">div</span><span class="hl-brackets">&gt;</span></pre></div></div>
+
+<p>at the END of the student's _form.php, so under the endWidget of the student form (where the form tag is being closed)</p>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c12222" title="permalink to this comment" href="#c12222">#12222</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=12222"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=12222&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=12222&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/82402/">Andrés</a> at 2013/03/07 08:56am</div>
+			<div class="title">Not working with CJuiAutocomplete</div>
+			<div class="content"><p>Thank you very much for this great article.
+I've been able to implement the code and I see the dialog and save a new record. However, in my create view I've two <strong>CJuiAutocomplete</strong> that aren't working and I don't know why. Thank you for any clue.</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c12220" title="permalink to this comment" href="#c12220">#12220</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=12220"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=12220&amp;vote=1"><span>1</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=12220&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/24021/">Alaa Abdelhaq</a> at 2013/03/07 08:05am</div>
+			<div class="title">Problem with &#039;data&#039;=&gt; &quot;js:$(this).serialize()&quot;,</div>
+			<div class="content"><p>I have a problem when I wanna send some variables to be displayed inside the form
+Instead of using</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-quotes">'</span><span class="hl-string">data</span><span class="hl-quotes">'</span><span class="hl-code">=&gt; </span><span class="hl-quotes">"</span><span class="hl-string">js:$(this).serialize()</span><span class="hl-quotes">"</span><span class="hl-code">,</span></pre></div></div>
+
+<p>I use this</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-quotes">'</span><span class="hl-string">data</span><span class="hl-quotes">'</span><span class="hl-code">=&gt; </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+                    <span class="hl-quotes">'</span><span class="hl-string">time_from</span><span class="hl-quotes">'</span><span class="hl-code">=&gt; </span><span class="hl-quotes">'</span><span class="hl-string">js:start.format("HH:MM:00")</span><span class="hl-quotes">'</span><span class="hl-code">, 
+                    </span><span class="hl-quotes">'</span><span class="hl-string">time_to</span><span class="hl-quotes">'</span><span class="hl-code">=&gt; </span><span class="hl-quotes">'</span><span class="hl-string">js:end.format("HH:MM:00")</span><span class="hl-quotes">'</span><span class="hl-code">, 
+                    </span><span class="hl-quotes">'</span><span class="hl-string">channel_id</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-var">$channel</span><span class="hl-code">-&gt;</span><span class="hl-identifier">id</span><span class="hl-code">,
+                    </span><span class="hl-quotes">'</span><span class="hl-string">schedule_date</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;  </span><span class="hl-quotes">'</span><span class="hl-string">js:start.format("yyyy-mm-dd")</span><span class="hl-quotes">'</span>
+                <span class="hl-brackets">)</span><span class="hl-code">,</span></pre></div></div>
+
+<p>Its working fine but whne I submit the form in the dialog it takes me to the full page instead in reloading form inside the dialog!
+How can I fix this? Thanks!</p>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c11825" title="permalink to this comment" href="#c11825">#11825</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=11825"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=11825&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=11825&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/62151/">broker</a> at 2013/02/06 08:15am</div>
+			<div class="title">dialog options</div>
+			<div class="content"><p>Hi,
+In order to set dialog options this line formDialog.js#13 has to be changed like following.
+dialog.dialog(); ==&gt; dialog.dialog(options);</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c11507" title="permalink to this comment" href="#c11507">#11507</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=11507"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=11507&amp;vote=1"><span>1</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=11507&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/94013/">Hesam</a> at 2013/01/17 09:40am</div>
+			<div class="title">Re: to use () or not to use ()</div>
+			<div class="content"><p>It's getting funny since we're trying to interpret sb's else code :). The one million dollar answer to your question is the way JavaScript handles functions. If you do not use the parantheses, the same way in the above example, you're passing the function itself to .submit, let's say the object of the addClassroom function. However, if you use (), you're telling Javascript that you're interested in the result of the function, the function return value, not the function itself. Hence, if you use (), the function is called and unknown return value is returned to .submit as handler, which won't work eventually. I hope it helped.</p>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c11499" title="permalink to this comment" href="#c11499">#11499</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=11499"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=11499&amp;vote=1"><span>1</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=11499&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/2827/">Sukhwinder</a> at 2013/01/17 12:47am</div>
+			<div class="title">ok i got the point</div>
+			<div class="content"><p>By reading the jquery API at<a href="http://api.jquery.com/submit/" title="Jquery API .submit()"> http://api.jquery.com/submit/</a> I under stood that actually the line</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-code">$</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">#dialogClassroom div.divForForm form</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">.</span><span class="hl-identifier">submit</span><span class="hl-brackets">(</span><span class="hl-identifier">addClassroom</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>is binding an handler to submit event. But on thing still not clear, as per Jquery API we need to pass handler function to .submit(), can we pass a function without parenthesis?
+Thanks</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c11498" title="permalink to this comment" href="#c11498">#11498</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=11498"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=11498&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=11498&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/2827/">Sukhwinder</a> at 2013/01/17 12:42am</div>
+			<div class="title">Thanks</div>
+			<div class="content"><p>Thank you Hesam, for your reply</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-identifier">data</span><span class="hl-code">.</span><span class="hl-identifier">status</span><span class="hl-code"> == </span><span class="hl-quotes">'</span><span class="hl-string">failure</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span>
+                <span class="hl-brackets">{</span><span class="hl-code">
+                    $</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">#dialogClassroom div.divForForm</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">.</span><span class="hl-identifier">html</span><span class="hl-brackets">(</span><span class="hl-identifier">data</span><span class="hl-code">.</span><span class="hl-identifier">div</span><span class="hl-brackets">)</span><span class="hl-code">;
+                          </span><span class="hl-comment">//</span><span class="hl-comment"> Here is the trick: on submit-&gt; once again this function!</span><span class="hl-code">
+                    $</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">#dialogClassroom div.divForForm form</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">.</span><span class="hl-identifier">submit</span><span class="hl-brackets">(</span><span class="hl-identifier">addClassroom</span><span class="hl-brackets">)</span><span class="hl-code">;
+                </span><span class="hl-brackets">}</span></pre></div></div>
+
+<p>so when no form is submitted and the statement</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-identifier">data</span><span class="hl-code">.</span><span class="hl-identifier">status</span><span class="hl-code"> == </span><span class="hl-quotes">'</span><span class="hl-string">failure</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>returns true, so the empty form is loaded by the line</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-code">$</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">#dialogClassroom div.divForForm</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">.</span><span class="hl-identifier">html</span><span class="hl-brackets">(</span><span class="hl-identifier">data</span><span class="hl-code">.</span><span class="hl-identifier">div</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>at this point the next line</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-code">$</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">#dialogClassroom div.divForForm form</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">.</span><span class="hl-identifier">submit</span><span class="hl-brackets">(</span><span class="hl-identifier">addClassroom</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>will also get executed because it is in the same "if" statement, so will this line not submit the form?</p>
+
+<p>but as per ur reply , this line will get executed when the form is submittd by the user.</p>
+
+<p>This thing is confusing me
+Thanks</p>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c11496" title="permalink to this comment" href="#c11496">#11496</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=11496"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=11496&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=11496&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/72784/">pod2g</a> at 2013/01/16 09:14pm</div>
+			<div class="title">Re: why the same function is called again</div>
+			<div class="content"><p>Thanks Hesam for the explanation !</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c11492" title="permalink to this comment" href="#c11492">#11492</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=11492"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=11492&amp;vote=1"><span>1</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=11492&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/94013/">Hesam</a> at 2013/01/16 12:36pm</div>
+			<div class="title">Re: why the same function is called again</div>
+			<div class="content"><p>It works like this. First, when the form the dialogue is opened by clicking on the link produced in the from. However, it's empty and then actionCreate is called through addClassroom JavaScript function. Since create form is not processed yet in the actionCreate and there is no $_Post variable, the JSON return two data: 1-it's failure status, and 2- the whole create form html by this line:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-quotes">'</span><span class="hl-string">div</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">renderPartial</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">_form</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">model</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-var">$model</span><span class="hl-brackets">)</span><span class="hl-code">, </span><span class="hl-reserved">true</span><span class="hl-brackets">)</span><span class="hl-code">));</span></pre></div></div>
+
+<p>Only now the user can see the actual form on the JDialogue window. So far, addClassroom JavaScript function has been run once to only load the from. That's why the form needs the second addClassroom in submit function to actually pass the data from the dialogue to the actionCreate. I'm not expert in javascript, but I believe that's how it works.</p>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c11483" title="permalink to this comment" href="#c11483">#11483</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=11483"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=11483&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=11483&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/2827/">Sukhwinder</a> at 2013/01/16 06:35am</div>
+			<div class="title">why the same function is called again</div>
+			<div class="content"><p>After digging for long time i could not under stand the line</p>
+
+<hr /><p>$('#dialogClassroom div.divForForm form').submit(addClassroom);</p>
+
+<hr /><p>why the same function is again called?
+and why the argument in the .submit() is not passed like .submit(addClassroom()) because addClassroom is a function?</p>
+
+<p>Please elaborate</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c11412" title="permalink to this comment" href="#c11412">#11412</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=11412"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=11412&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=11412&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/94013/">Hesam</a> at 2013/01/11 03:01pm</div>
+			<div class="title">Reply to renathy question</div>
+			<div class="content"><p>Hi Renathy,
+I had a very same problem, and initially I thought that it was Ajax problem, as some other users reported it. However, since you can see the rendered form initially in your dialog box, it means that the isajax function worked properly and returned status=failure, so the from is loaded in dialog box. However, if you have a typo, as I had, when you hit the submit button nothing happens. My typo was in model _form--&gt;, and I hadn't replaced the classroom to author, see below:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-code">$</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">#dialogAuthor div.divForForm form</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">.</span><span class="hl-identifier">submit</span><span class="hl-brackets">(</span><span class="hl-identifier">addClassroom</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+</div>
+					</div>
+			</div>
+	<div id="comment-add">
+		<h3 id="add-comment">Leave a comment</h3>
+
+			<p>Please <a class="g-login" rel="/wiki/145/cjuidialog-for-create-new-model/#add-comment" href="#">login</a> to leave your comment.</p>
+		</div>
+</div>
+</div>
+					</div>
+								</div>
+				
+								<div class="grid_3 omega">
+					<div class="layout-main-right">
+						<div class="wiki-portlets">
+	<a href="/wiki/create/" class="btn btn-success btn-large action">Write new article</a>
+<div class="widget-search-box">
+    <form method="get" action="/search/">
+        <strong>Search Wiki</strong>
+		<input type="text" name="q" class="keyword g-text" />
+        <input type="hidden" name="type" value="wiki" />
+        <input type="hidden" name="lang" value="" />
+        <input type="submit" value="Find" class="btn btn-info" />
+	</form>
+</div><ul class="widget-action-links actions g-list-none"><li><strong>View current article</strong></li><li><a href="/wiki/update/?id=145">Update this article</a></li><li><a href="/wiki/history/?id=145">View history</a></li><li class="inactive">View revision</li></ul><ul class="info g-list-none">
+    <li><b>Written by</b>: <a class="g-user-rank-link silver" href="/user/2584/">zaccaria</a></li>
+        <li><b>Updated by</b>: <a class="g-user-rank-link silver" href="/user/2650/">Maurizio Domba Cerin</a></li>
+        <li><b>Category</b>: <a href="/wiki/?category=3">Tutorials</a></li>
+    <li><b>Yii Version</b>: <b>1.1</b></li>
+    <li><b>Votes</b>: <span class="g-vote plus" title="65 votes up">+65</span></li>
+    <li><b>Viewed</b>: 81,499 times</li>
+    <li><b>Created on</b>: Feb 17, 2011</li>
+    <li><b>Last updated</b>: Mar 7, 2011</li>
+        <li><b>Tags</b>: <a href="/wiki/?tag=juidialog">juidialog</a>, <a href="/wiki/?tag=user+interface">user interface</a>, <a href="/wiki/?tag=AJAX">AJAX</a></li>
+    </ul>
+<div class="widget-related-contents">
+<strong>Related Articles</strong><ul><li><a class="" href="/wiki/665/overcoming-removal-of-client-helpers-e-g-ajaxlink-and-clientscript-in-yii-2-0/">Overcoming removal of client helpers (e.g. ajaxLink) and ClientScript in Yii 2.0</a></li>
+<li><a class="" href="/wiki/70/display-an-ajax-tree-from-your-db-using-ctreeview/">Display an AJAX tree from your DB using CTreeView</a></li>
+<li><a class="" href="/wiki/464/open-dialog-from-ajax-content/">Open Dialog from ajax content</a></li>
+<li><a class="" href="/wiki/24/creating-a-dependent-dropdown/">Creating a dependent dropdown</a></li>
+<li><a class="" href="/wiki/388/ajax-form-submiting-in-yii/">Ajax form submiting in Yii</a></li>
+</ul>
+</div>
+	<div class="google-ad" style="margin:100px 0 0 10px;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "9245442339";
+google_ad_width = 160;
+google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+</div>					</div>
+				</div>
+								<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+					</div>
+	</div>
+
+	<div class="layout-main-footer">
+		<div class="container_12">
+			<div class="grid_6">
+				<ul class="menu">
+				<li class="main">About
+<ul class="sub">
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="main">Downloads
+<ul class="sub">
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="main">Documentation
+<ul class="sub">
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="main">Development
+<ul class="sub">
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="main">Community
+<ul class="sub">
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+				</ul>
+			</div>
+			<div class="grid_1">&nbsp;</div>
+			<div class="grid_5">
+				<h3>Yii Supporters</h3>
+				<ul class="g-list-none supporters">
+
+				</ul>
+			</div>
+
+			<div class="clear"></div>
+			<div class="grid_12 copyright">
+				<ul class="social">
+					<li class="twitter"><a href="https://twitter.com/yiiframework" target="_blank" rel="nofollow" title="follow us on twitter">Twitter</a></li>
+					<li class="facebook"><a href="https://www.facebook.com/groups/yiitalk/" target="_blank" rel="nofollow" title="join yii group at facebook">Facebook</a></li>
+					<li class="linkedin"><a href="http://www.linkedin.com/groups?gid=1483367" target="_blank" rel="nofollow" title="join yii group at linkedin">LinkedIn</a></li>
+					<li class="feeds"><a title="RSS feeds" href="/rss.xml/">RSS Feeds</a></li>
+				</ul>
+				<div class="clear"></div>
+				<a href="/tos/">Terms of Service</a> |
+				<a href="/license/">License</a> |
+				<a href="/contact/">Contact Us</a><br/>
+				Copyright &copy; 2015 by <a href="http://www.yiisoft.com">Yii Software LLC</a>.
+				All Rights Reserved.
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+    <script type="text/javascript" src="/js/site-20121004195728.js"></script>
+
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['site._setAccount', 'UA-5843896-1']);
+_gaq.push(['site._trackPageview']);
+
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+<script type="text/javascript">
+function trackClick(link, action, category) {
+	action=action || link.href;
+	category=category || 'Outbound Links';
+	try {
+		_gaq.push(['site._trackEvent', category, action]);
+		setTimeout('document.location = "' + link.href + '"', 250);
+	}catch(err){}
+	return false;
+}
+</script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+<script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+</body>
+</html>

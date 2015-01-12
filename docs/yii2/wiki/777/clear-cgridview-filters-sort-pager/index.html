@@ -1,0 +1,392 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    	<meta charset="UTF-8" />
+		<meta name="keywords" content="yii framework, wiki, How-tos, CGridView, filter, filters, filtering, clear filters, clear, gridview, reset, remember" />
+	<meta name="description" content="Clearing CGridView filters and sort orders from the web pages, is usefull for the end user.  Yii does not seem to propose a standard method.  Furthermore, this is especially usefull when filters are &quot;remembered&quot; in the user&#039;s session." />
+    <link rel="shortcut icon" type="image/x-icon" href="http://static.yiiframework.com/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="http://static.yiiframework.com/css/site-20130404102234.css" />
+
+	<link title="Lives News for Yii Framework" rel="alternate" type="application/rss+xml" href="http://www.yiiframework.com/rss.xml/" />
+	<title>Clear CGridView Filters, Sort &amp; Pager | Wiki | Yii PHP Framework</title>
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii API Search" href="/search-api.xml" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii Site Search" href="/search-site.xml" />
+</head>
+
+<body class="mac">
+<div class="layout-main">
+
+	<div class="layout-main-shortcuts">
+		<div class="container_12">
+            <a style="color:darkred;" href="https://github.com/yiisoft/yii2">Github</a> &middot;
+            <a style="color:darkgreen;" href="https://twitter.com/yiiframework">Twitter</a> &middot;
+            <a style="color:darkblue;" href="https://www.facebook.com/groups/yiitalk/">Facebook</a> &middot;
+            <a href="/doc/guide/">Guide</a> &middot;
+            <a href="/doc/api/">Class Reference</a> &middot;
+            <a href="/doc-2.0/guide-index.html">Guide 2.0</a> &middot;
+            <a href="/doc-2.0/index.html">API 2.0</a> &middot;
+            <a href="/wiki/">Wiki</a> &middot;
+            <a href="/extensions/">Extensions</a> &middot;
+            <a href="/forum/">Forum</a> &middot;
+			<a href="/chat/">Live Chat</a> &middot;
+                            <a href="/login/">Login</a>            		</div>
+	</div>
+
+	<div class="layout-main-bg">
+		<div class="layout-main-header">
+			<div class="container_12">
+				<div class="grid_4">
+					<a class="logo" href="/"><img alt="Yii Logo" src="http://static.yiiframework.com/css/img/logo.png" title="Yii Framework" width="284" height="64" /></a>				</div>
+				<div class="grid_8 omega">
+					<div class="nav">
+						<ul class="menu" id="yw0">
+<li class="about"><a class="main" href="/about/">About</a>
+<ul>
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li class="last"><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="downloads"><a class="main" href="/download/">Downloads</a>
+<ul>
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li class="last"><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="documentation active"><a class="main" href="/doc/">Documentation</a>
+<ul>
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li class="active"><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li class="last"><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="development"><a class="main" href="https://github.com/yiisoft/yii/commits/master">Development</a>
+<ul>
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li class="last"><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="community last"><a class="main" href="/community/">Community</a>
+<ul>
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li class="last"><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+</ul>						<div class="search">
+							<form method="get" action="/search/">
+								<div class="keyword">
+	                                <input name="q" value="" />
+									<a href="#" title="search" class="global-search">search</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+
+		<div class="container_12">
+						<div class="grid_12">
+												<div class="layout-main-submenu">
+					<ul>
+						<li class="main">Documentation</li>
+												<li><a href="/tour/">Take the Tour</a></li>
+												<li><a href="/tutorials/">Tutorials</a></li>
+												<li><a href="/doc/api/">Class Reference</a></li>
+												<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+												<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+												<li class="active"><a href="/wiki/">Wiki</a></li>
+												<li><a href="/screencasts/">Screencasts</a></li>
+												<li><a href="/resources/">Resources</a></li>
+											</ul>
+				</div>
+				
+				
+				
+								<div class="grid_9 alpha">
+									<div class="layout-main-body">
+						<div class="wiki-view">
+        <h1>Yii 1.1: Clear CGridView Filters, Sort &amp; Pager <a href="https://twitter.com/yiiframework" class="twitter-follow-button" data-link-color="#0069D6" data-show-count="true">Follow @yiiframework</a></h1>
+
+	<div class="g-voter-reporter">
+		<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Wiki&amp;id=777"><span>report it</span></a>		<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Wiki&amp;id=777&amp;vote=1"><span>1</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Wiki&amp;id=777&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>	</div>
+	<div class="g-starring">
+		<span class="widget-follower"><a class="g-login" title="Click to follow" href="/site/star/?type=Wiki&amp;id=777&amp;v=1"><img alt="Click to follow" src="/images/star_off.gif" title="" width="15" height="15" /></a><span>3 followers</span></span>	</div>
+	<div class="clear"></div>
+
+    <div class="content g-markdown"><div class="google-ad" style="float:right;margin:0 0 1em 1em;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "3624755012";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+
+    
+        <p>Clearing CGridView filters and sort orders from the web pages, is usefull for the end user.  Yii does not seem to propose a standard method.  Furthermore, this is especially usefull when filters are "remembered" in the user's session.</p>
+
+<p>To remember filters, I use <a href="http://www.yiiframework.com/extension/remember-filters-gridview" title="RememberFiltersBehavior">ERememberFiltersBehavior</a> and a previous wiki also shows a method to remember filters.</p>
+
+<p>Prior to developing an method, I looked at what existed already.
+To clear filters, <a href="http://www.yiiframework.com/extension/clear-filters-gridview" title="Clear Filters GridView">EButtonColumnWithClearFilters</a> supposedly does the job, and a <a href="http://hafiznor.wordpress.com/2013/01/10/yii-reset-filter-on-gridview/" title="Yii Reset Filter On GridView">web page</a> / <a href="http://www.yiiframework.com/forum/index.php/topic/14242-modifying-cgridviews-default-filtersearch-behaviour/page__view__findpost__p__70802" title="forum entry">forum entry</a> also explain a method.</p>
+
+<p>They did not meet my "requirements", so I worked out another method.</p>
+
+<p>The code is not perfect yet (I would like to not use 'window.location.href'), but I thought sharing this is usefull for you.  If you work out a better way, share it here!</p>
+
+<p>The code basically goes like this:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> The usual pre-initialisation code for a CGridView.</span>
+<span class="hl-var">$model</span><span class="hl-code">=</span><span class="hl-reserved">new</span> <span class="hl-identifier">MyModel</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">search</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;  </span><span class="hl-comment">//</span><span class="hl-comment"> Code to set filters not shown.</span>
+<span class="hl-var">$gridId</span><span class="hl-code">=</span><span class="hl-quotes">'</span><span class="hl-string">gridId</span><span class="hl-quotes">'</span><span class="hl-code">; </span><span class="hl-comment">//</span><span class="hl-comment"> Id of the grid</span>
+<span class="hl-var">$dataProvider</span><span class="hl-code">=</span><span class="hl-var">$model</span><span class="hl-code">-&gt;</span><span class="hl-identifier">search</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-comment">//</span><span class="hl-comment"> Setup of data provider, may be more complex.</span>
+ 
+<span class="hl-comment">//</span><span class="hl-comment"> Determine the JavaScript to reset the filters.</span>
+<span class="hl-comment">//</span><span class="hl-comment"> 'window.location.href' should be improved upon but is ok in most cases.</span>
+<span class="hl-var">$clearFilterData</span><span class="hl-code">=</span><span class="hl-identifier">CJavaScript</span><span class="hl-code">::</span><span class="hl-identifier">encode</span><span class="hl-brackets">(</span>
+        <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+                <span class="hl-quotes">'</span><span class="hl-string">data</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+                        <span class="hl-identifier">get_class</span><span class="hl-brackets">(</span><span class="hl-var">$model</span><span class="hl-brackets">)</span><span class="hl-code"> . </span><span class="hl-quotes">'</span><span class="hl-string">[]</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-quotes">'</span><span class="hl-code">,
+                        </span><span class="hl-var">$dataProvider</span><span class="hl-code">-&gt;</span><span class="hl-identifier">sort</span><span class="hl-code">-&gt;</span><span class="hl-identifier">sortVar</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span> <span class="hl-quotes">'</span><span class="hl-code">,
+                        </span><span class="hl-var">$dataProvider</span><span class="hl-code">-&gt;</span><span class="hl-identifier">pagination</span><span class="hl-code">-&gt;</span><span class="hl-identifier">pageVar</span><span class="hl-code"> =&gt; </span><span class="hl-number">1</span> 
+                <span class="hl-brackets">)</span><span class="hl-code">,
+                </span><span class="hl-quotes">'</span><span class="hl-string">url</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-reserved">new</span> <span class="hl-identifier">CJavaScriptExpression</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">window.location.href</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span> 
+        <span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$jsClear</span><span class="hl-code">=</span><span class="hl-reserved">new</span> <span class="hl-identifier">CJavaScriptExpression</span><span class="hl-brackets">(</span><span class="hl-quotes">"</span><span class="hl-string">jQuery('#</span><span class="hl-var">$gridId</span><span class="hl-string">').yiiGridView('update',</span><span class="hl-var">$clearFilterData</span><span class="hl-string">);</span><span class="hl-quotes">"</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+</span><span class="hl-var">$clearButton</span><span class="hl-code">=</span><span class="hl-identifier">CHtml</span><span class="hl-code">::</span><span class="hl-identifier">link</span><span class="hl-brackets">(</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">t</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">app</span><span class="hl-quotes">'</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">bt.clear.filter</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-quotes">'</span><span class="hl-code">,</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">onclick</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-var">$jsClear</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">widget</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">zii.widgets.grid.CGridView</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+        <span class="hl-quotes">'</span><span class="hl-string">id</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-var">$gridId</span><span class="hl-code">,
+        </span><span class="hl-comment">//</span><span class="hl-comment">...</span>
+        <span class="hl-quotes">'</span><span class="hl-string">columns</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+                <span class="hl-comment">//</span><span class="hl-comment">...</span>
+                <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+                        <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">CButtonColumn</span><span class="hl-quotes">'</span><span class="hl-code">,
+                        </span><span class="hl-quotes">'</span><span class="hl-string">header</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-var">$clearButton</span><span class="hl-code">,
+                        </span><span class="hl-quotes">'</span><span class="hl-string">filterHtmlOptions</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+                              <span class="hl-quotes">'</span><span class="hl-string">onclick</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-var">$jsClear</span><span class="hl-code">,
+                              </span><span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">clearFilter</span><span class="hl-quotes">'</span>
+                         <span class="hl-brackets">)</span><span class="hl-code">,
+                </span><span class="hl-brackets">)</span><span class="hl-code">,
+         </span><span class="hl-brackets">)</span><span class="hl-code">,
+     </span><span class="hl-brackets">)</span>
+<span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>The resulting JavaScript code looks like this, in case you want to write it more directly:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-identifier">jQuery</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">#gridId</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">.</span><span class="hl-identifier">yiiGridView</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">update</span><span class="hl-quotes">'</span><span class="hl-code">,</span><span class="hl-brackets">{</span><span class="hl-identifier">data</span><span class="hl-code">:</span><span class="hl-brackets">{</span><span class="hl-quotes">'</span><span class="hl-string">MyModel[]</span><span class="hl-quotes">'</span><span class="hl-code">:</span><span class="hl-quotes">'</span><span class="hl-quotes">'</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">MyModel_sort</span><span class="hl-quotes">'</span><span class="hl-code">:</span><span class="hl-quotes">'</span> <span class="hl-quotes">'</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">MyModel_page</span><span class="hl-quotes">'</span><span class="hl-code">:</span><span class="hl-number">1</span><span class="hl-brackets">}</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">url</span><span class="hl-quotes">'</span><span class="hl-code">:</span><span class="hl-builtin">window</span><span class="hl-code">.</span><span class="hl-identifier">location</span><span class="hl-code">.</span><span class="hl-identifier">href</span><span class="hl-brackets">}</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>This seems less complex and more flexible than the other code I have seen.
+It also uses the actual sortVar and pageVar values (rather than supposing that they use the Model class name).</p>
+
+<p>You can use the '$jsClear' JavaScript code any way you like (in the above, I use it to define a link (used in the CGridView header here), and to make the CButtonColumn filter zone clickable.</p>
+
+<p>By setting the 'clearFilter' class on the 'filter' area of the CButtonColumn, you can suggest the clear filter function by attaching a background to it in your CSS.</p>
+    </div>
+
+    <div class="google-ad" style="margin:10px 0 10px 200px;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "6460822043";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div><div class="widget-comment-list" id="comments">
+	<div id="comment-add">
+		<h3 id="add-comment">Be the first person to leave a comment</h3>
+
+			<p>Please <a class="g-login" rel="/wiki/777/clear-cgridview-filters-sort-pager/#add-comment" href="#">login</a> to leave your comment.</p>
+		</div>
+</div>
+</div>
+					</div>
+								</div>
+				
+								<div class="grid_3 omega">
+					<div class="layout-main-right">
+						<div class="wiki-portlets">
+	<a href="/wiki/create/" class="btn btn-success btn-large action">Write new article</a>
+<div class="widget-search-box">
+    <form method="get" action="/search/">
+        <strong>Search Wiki</strong>
+		<input type="text" name="q" class="keyword g-text" />
+        <input type="hidden" name="type" value="wiki" />
+        <input type="hidden" name="lang" value="" />
+        <input type="submit" value="Find" class="btn btn-info" />
+	</form>
+</div><ul class="widget-action-links actions g-list-none"><li><strong>View current article</strong></li><li><a href="/wiki/update/?id=777">Update this article</a></li><li><a href="/wiki/history/?id=777">View history</a></li><li class="inactive">View revision</li></ul><ul class="info g-list-none">
+    <li><b>Written by</b>: <a class="g-user-rank-link silver" href="/user/5458/">le_top</a></li>
+        <li><b>Category</b>: <a href="/wiki/?category=2">How-tos</a></li>
+    <li><b>Yii Version</b>: <b>1.1</b></li>
+    <li><b>Votes</b>: <span class="g-vote plus" title="1 votes up">+1</span></li>
+    <li><b>Viewed</b>: 2,652 times</li>
+    <li><b>Created on</b>: Nov 23, 2014</li>
+    <li><b>Last updated</b>: Nov 26, 2014</li>
+        <li><b>Tags</b>: <a href="/wiki/?tag=CGridView">CGridView</a>, <a href="/wiki/?tag=filter">filter</a>, <a href="/wiki/?tag=filters">filters</a>, <a href="/wiki/?tag=filtering">filtering</a>, <a href="/wiki/?tag=clear+filters">clear filters</a>, <a href="/wiki/?tag=clear">clear</a>, <a href="/wiki/?tag=gridview">gridview</a>, <a href="/wiki/?tag=reset">reset</a>, <a href="/wiki/?tag=remember">remember</a></li>
+    </ul>
+<div class="widget-related-contents">
+<strong>Related Articles</strong><ul><li><a class="" href="/wiki/237/force-a-user-to-change-their-password-changepasswordfilter/">Force a User to Change Their Password (ChangePasswordFilter)</a></li>
+<li><a class="" href="/wiki/309/cgridview-keep-focus-on-the-control-after-filtering/">CGridView keep focus on the control after filtering</a></li>
+<li><a class="" href="/wiki/472/use-a-form-and-cgridview-in-separate-cjuitabs-with-same-or-multiple-models-and-submit-all-cjuitabs-simultaneously/">Use a form and CGridview in separate CJuiTabs (with same or multiple models) and submit all CJuiTabs simultaneously.</a></li>
+<li><a class="" href="/wiki/262/cgridview-display-the-full-record-actionview-in-a-cjuidialog/">CGridView: Display the full record (actionView) in a CJuiDialog</a></li>
+<li><a class="" href="/wiki/319/searching-and-sorting-by-count-of-related-items-in-cgridview/">Searching and Sorting by Count of Related Items in CGridView</a></li>
+</ul>
+</div>
+	<div class="google-ad" style="margin:100px 0 0 10px;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "9245442339";
+google_ad_width = 160;
+google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+</div>					</div>
+				</div>
+								<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+					</div>
+	</div>
+
+	<div class="layout-main-footer">
+		<div class="container_12">
+			<div class="grid_6">
+				<ul class="menu">
+				<li class="main">About
+<ul class="sub">
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="main">Downloads
+<ul class="sub">
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="main">Documentation
+<ul class="sub">
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="main">Development
+<ul class="sub">
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="main">Community
+<ul class="sub">
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+				</ul>
+			</div>
+			<div class="grid_1">&nbsp;</div>
+			<div class="grid_5">
+				<h3>Yii Supporters</h3>
+				<ul class="g-list-none supporters">
+
+				</ul>
+			</div>
+
+			<div class="clear"></div>
+			<div class="grid_12 copyright">
+				<ul class="social">
+					<li class="twitter"><a href="https://twitter.com/yiiframework" target="_blank" rel="nofollow" title="follow us on twitter">Twitter</a></li>
+					<li class="facebook"><a href="https://www.facebook.com/groups/yiitalk/" target="_blank" rel="nofollow" title="join yii group at facebook">Facebook</a></li>
+					<li class="linkedin"><a href="http://www.linkedin.com/groups?gid=1483367" target="_blank" rel="nofollow" title="join yii group at linkedin">LinkedIn</a></li>
+					<li class="feeds"><a title="RSS feeds" href="/rss.xml/">RSS Feeds</a></li>
+				</ul>
+				<div class="clear"></div>
+				<a href="/tos/">Terms of Service</a> |
+				<a href="/license/">License</a> |
+				<a href="/contact/">Contact Us</a><br/>
+				Copyright &copy; 2015 by <a href="http://www.yiisoft.com">Yii Software LLC</a>.
+				All Rights Reserved.
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+    <script type="text/javascript" src="/js/site-20121004195728.js"></script>
+
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['site._setAccount', 'UA-5843896-1']);
+_gaq.push(['site._trackPageview']);
+
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+<script type="text/javascript">
+function trackClick(link, action, category) {
+	action=action || link.href;
+	category=category || 'Outbound Links';
+	try {
+		_gaq.push(['site._trackEvent', category, action]);
+		setTimeout('document.location = "' + link.href + '"', 250);
+	}catch(err){}
+	return false;
+}
+</script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+<script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+</body>
+</html>

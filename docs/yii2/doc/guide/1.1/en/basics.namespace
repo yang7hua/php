@@ -1,0 +1,782 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    	<meta charset="UTF-8" />
+		<meta name="keywords" content="yii framework, tutorial, guide, version 1.1" />
+	<meta name="description" content="Yii uses path aliases extensively. A path alias is associated with a
+directory or file path. It is specified in dot syntax, similar to that of
+widely adopted namespace format:" />
+    <link rel="shortcut icon" type="image/x-icon" href="http://static.yiiframework.com/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="http://static.yiiframework.com/css/site-20130404102234.css" />
+
+	<link title="Lives News for Yii Framework" rel="alternate" type="application/rss+xml" href="http://www.yiiframework.com/rss.xml/" />
+	<title>Fundamentals: Path Alias and Namespace | The Definitive Guide to Yii | Yii PHP Framework</title>
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii API Search" href="/search-api.xml" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii Site Search" href="/search-site.xml" />
+</head>
+
+<body class="mac">
+<div class="layout-main">
+
+	<div class="layout-main-shortcuts">
+		<div class="container_12">
+            <a style="color:darkred;" href="https://github.com/yiisoft/yii2">Github</a> &middot;
+            <a style="color:darkgreen;" href="https://twitter.com/yiiframework">Twitter</a> &middot;
+            <a style="color:darkblue;" href="https://www.facebook.com/groups/yiitalk/">Facebook</a> &middot;
+            <a href="/doc/guide/">Guide</a> &middot;
+            <a href="/doc/api/">Class Reference</a> &middot;
+            <a href="/doc-2.0/guide-index.html">Guide 2.0</a> &middot;
+            <a href="/doc-2.0/index.html">API 2.0</a> &middot;
+            <a href="/wiki/">Wiki</a> &middot;
+            <a href="/extensions/">Extensions</a> &middot;
+            <a href="/forum/">Forum</a> &middot;
+			<a href="/chat/">Live Chat</a> &middot;
+                            <a href="/login/">Login</a>            		</div>
+	</div>
+
+	<div class="layout-main-bg">
+		<div class="layout-main-header">
+			<div class="container_12">
+				<div class="grid_4">
+					<a class="logo" href="/"><img alt="Yii Logo" src="http://static.yiiframework.com/css/img/logo.png" title="Yii Framework" width="284" height="64" /></a>				</div>
+				<div class="grid_8 omega">
+					<div class="nav">
+						<ul class="menu" id="yw0">
+<li class="about"><a class="main" href="/about/">About</a>
+<ul>
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li class="last"><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="downloads"><a class="main" href="/download/">Downloads</a>
+<ul>
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li class="last"><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="documentation active"><a class="main" href="/doc/">Documentation</a>
+<ul>
+<li><a href="/tour/">Take the Tour</a></li>
+<li class="active"><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li class="last"><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="development"><a class="main" href="https://github.com/yiisoft/yii/commits/master">Development</a>
+<ul>
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li class="last"><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="community last"><a class="main" href="/community/">Community</a>
+<ul>
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li class="last"><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+</ul>						<div class="search">
+							<form method="get" action="/search/">
+								<div class="keyword">
+	                                <input name="q" value="" />
+									<a href="#" title="search" class="global-search">search</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+
+		<div class="container_12">
+						<div class="grid_12">
+												<div class="layout-main-submenu">
+					<ul>
+						<li class="main">Documentation</li>
+												<li><a href="/tour/">Take the Tour</a></li>
+												<li class="active"><a href="/tutorials/">Tutorials</a></li>
+												<li><a href="/doc/api/">Class Reference</a></li>
+												<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+												<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+												<li><a href="/wiki/">Wiki</a></li>
+												<li><a href="/screencasts/">Screencasts</a></li>
+												<li><a href="/resources/">Resources</a></li>
+											</ul>
+				</div>
+				
+				
+				
+									<div class="layout-main-body">
+						<div class="tutorial-view">
+    <div class="grid_3 alpha">
+        <div class="nav-toc">
+    		<div class="title">The Definitive Guide to Yii</div>
+    		<div class="langver">
+	            <strong>Language &amp; version</strong>
+	    		<div class="languages g-dropdown">
+	    		<span>English<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.1/de/basics.namespace">Deutsch</a></li>
+<li><a href="/doc/guide/1.1/es/basics.namespace">Español</a></li>
+<li><a href="/doc/guide/1.1/fr/basics.namespace">Français</a></li>
+<li><a href="/doc/guide/1.1/he/basics.namespace">עִבְרִית</a></li>
+<li><a href="/doc/guide/1.1/id/basics.namespace">Bahasa Indonesia</a></li>
+<li><a href="/doc/guide/1.1/it/basics.namespace">Italiano</a></li>
+<li><a href="/doc/guide/1.1/ja/basics.namespace">日本語</a></li>
+<li><a href="/doc/guide/1.1/pl/basics.namespace">Polski</a></li>
+<li><a href="/doc/guide/1.1/pt/basics.namespace">Português</a></li>
+<li><a href="/doc/guide/1.1/pt_br/basics.namespace">Português brasileiro</a></li>
+<li><a href="/doc/guide/1.1/ro/basics.namespace">România</a></li>
+<li><a href="/doc/guide/1.1/ru/basics.namespace">Русский</a></li>
+<li><a href="/doc/guide/1.1/sv/basics.namespace">Svenska</a></li>
+<li><a href="/doc/guide/1.1/uk/basics.namespace">украї́нська</a></li>
+<li><a href="/doc/guide/1.1/zh_cn/basics.namespace">简体中文</a></li>
+</ul>
+	    		</div>
+				<div class="versions g-dropdown">
+	    		<span>1.1<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.0/en/basics.namespace">1.0</a></li>
+</ul>
+				</div>
+				<div class="clear"></div>
+			</div>
+            <div class="widget-search-box">
+    <form method="get" action="/search/">
+        <strong>Search in this tutorial</strong>
+		<input type="text" name="q" class="keyword g-text" />
+        <input type="hidden" name="type" value="guide" />
+        <input type="hidden" name="lang" value="en" />
+        <input type="submit" value="Find" class="btn btn-info" />
+	</form>
+</div>
+			<ul class="toc">
+						    <li class="chapter"><strong>Getting Started</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/index">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/changes">New Features</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/upgrade">Upgrading from 1.0 to 1.1</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.what-is-yii">What is Yii</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.installation">Installation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.apache-nginx-config">Apache and Nginx configurations</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app">Creating First Yii Application</a>			            </li>
+			        			    						    <li class="chapter"><strong>Fundamentals</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.mvc">Model-View-Controller (MVC)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.entry">Entry Script</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.application">Application</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.controller">Controller</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.model">Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.view">View</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.component">Component</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.module">Module</a>			            </li>
+			        			    			        			            <li class="active">
+			                &raquo; Path Alias and Namespace &laquo;
+			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.convention">Conventions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.workflow">Development Workflow</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.best-practices">Best MVC Practices</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Forms</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.model">Creating Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.action">Creating Action</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.view">Creating Form</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.table">Collecting Tabular Input</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.builder">Using Form Builder</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Databases</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.dao">Database Access Objects</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.query-builder">Query Builder</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.ar">Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.arr">Relational Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.migration">Database Migration</a>			            </li>
+			        			    						    <li class="chapter"><strong>Caching</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.data">Data Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.fragment">Fragment Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.page">Page Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.dynamic">Dynamic Content</a>			            </li>
+			        			    						    <li class="chapter"><strong>Extending Yii</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.use">Using Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.create">Creating Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.integration">Using 3rd-Party Libraries</a>			            </li>
+			        			    						    <li class="chapter"><strong>Testing</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.fixture">Defining Fixtures</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.unit">Unit Testing</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.functional">Functional Testing</a>			            </li>
+			        			    						    <li class="chapter"><strong>Special Topics</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.gii">Automatic Code Generation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.url">URL Management</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.auth">Authentication and Authorization</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.theming">Theming and Skin</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.logging">Logging</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.error">Error Handling</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.webservice">Web Service</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.i18n">Internationalization (I18N)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.prado">Alternative Template Syntax</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.console">Console Applications</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.security">Security</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.performance">Performance Tuning</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app-yiic">Code Generation using Command Line Tools (deprecated)</a>			            </li>
+			        			    						</ul>
+        </div>
+    </div>
+    <div class="grid_9 omega">
+    	<div class="g-markdown"><h1 id="path-alias-and-namespace">Path Alias and Namespace</h1>
+<div class="google-ad" style="float:right;margin:0 0 1em 1em;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "2830391674";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+<div class="toc"><ol><li><a href="#root-alias">Root Alias</a></li>
+<li><a href="#importing-classes">Importing Classes</a></li>
+<li><a href="#importing-directories">Importing Directories</a></li>
+<li><a href="#namespace">Namespace</a></li>
+<li><a href="#namespaced-classes">Namespaced Classes</a></li>
+<li><a href="#namespaced-controllers">Namespaced Controllers</a></li>
+<li><a href="#namespaced-modules">Namespaced Modules</a></li></ol></div>
+
+
+<p>Yii uses path aliases extensively. A path alias is associated with a
+directory or file path. It is specified in dot syntax, similar to that of
+widely adopted namespace format:</p>
+
+<pre>RootAlias.path.to.target
+</pre>
+
+<p>where <code>RootAlias</code> is the alias of some existing directory.</p>
+
+<p>By using <a href="/doc/api/1.1/YiiBase#getPathOfAlias">YiiBase::getPathOfAlias()</a>, an alias can be translated to its
+corresponding path. For example, <code>system.web.CController</code> would be
+translated as <code>yii/framework/web/CController</code>.</p>
+
+<p>We can also use <a href="/doc/api/1.1/YiiBase#setPathOfAlias">YiiBase::setPathOfAlias()</a> to define new root path aliases.</p>
+
+<h2 id="root-alias">1. Root Alias <a class="anchor" href="#root-alias">¶</a></h2>
+
+<p>For convenience, Yii predefines the following root aliases:</p>
+
+<ul>
+<li><code>system</code>: refers to the Yii framework directory;</li>
+<li><code>zii</code>: refers to the <a href="/doc/guide/1.1/en/extension.use#zii-extensions">Zii library</a> directory;</li>
+<li><code>application</code>: refers to the application's <a href="/doc/guide/1.1/en/basics.application#application-base-directory">base directory</a>;</li>
+<li><code>webroot</code>: refers to the directory containing the <a href="/doc/guide/1.1/en/basics.entry">entry script</a> file.</li>
+<li><code>ext</code>: refers to the directory containing all third-party <a href="/doc/guide/1.1/en/extension.overview">extensions</a>.</li>
+</ul>
+
+<p>Additionally, if an application uses <a href="/doc/guide/1.1/en/basics.module">modules</a>, each module will have a predefined
+root alias that has the same name as the module ID and refers to the module's base path. For example,
+if an application uses a module whose ID is <code>users</code>, a root alias named <code>users</code> will be predefined.</p>
+
+<h2 id="importing-classes">2. Importing Classes <a class="anchor" href="#importing-classes">¶</a></h2>
+
+<p>Using aliases, it is very convenient to include the definition of a class.
+For example, if we want to include the <a href="/doc/api/1.1/CController">CController</a> class, we can call the following:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">import</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">system.web.CController</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>The <a href="/doc/api/1.1/YiiBase#import">import</a> method differs from <code>include</code> and <code>require</code>
+in that it is more efficient. The class definition being imported is
+actually not included until it is referenced for the first time (implemented
+via PHP autoloading mechanism). Importing the same namespace multiple times
+is also much faster than <code>include_once</code> and <code>require_once</code>. Note that importing
+a directory does not import any of its subdirectories.</p>
+
+<blockquote class="tip">
+<p><strong>Tip:</strong> When referring to a class defined by the Yii framework, we do not
+  need to import or include it. All core Yii classes are pre-imported.</p>
+</blockquote>
+
+<h3 id="using-class-map">Using Class Map</h3>
+
+<p>Starting from version 1.1.5, Yii allows user classes to be pre-imported via
+a class mapping mechanism that is also used by core Yii classes. Pre-imported
+classes can be used anywhere in a Yii application without being explicitly
+imported or included. This feature is most useful for a framework or library
+that is built on top of Yii.</p>
+
+<p>To pre-import a set of classes, the following code must be executed before
+<a href="/doc/api/1.1/CWebApplication#run">CWebApplication::run()</a> is invoked:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-var">$classMap</span><span class="hl-code">=</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+    <span class="hl-quotes">'</span><span class="hl-string">ClassName1</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">path/to/ClassName1.php</span><span class="hl-quotes">'</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">ClassName2</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">path/to/ClassName2.php</span><span class="hl-quotes">'</span><span class="hl-code">,
+    ......
+</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<h2 id="importing-directories">3. Importing Directories <a class="anchor" href="#importing-directories">¶</a></h2>
+
+<p>We can also use the following syntax to import a whole directory so that
+the class files under the directory can be automatically included when
+needed.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">import</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">system.web.*</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>Besides <a href="/doc/api/1.1/YiiBase#import">import</a>, aliases are also used in many other
+places to refer to classes. For example, an alias can be passed to
+<a href="/doc/api/1.1/Yii#createComponent">Yii::createComponent()</a> to create an instance of the corresponding class,
+even if the class file was not included previously.</p>
+
+<h2 id="namespace">4. Namespace <a class="anchor" href="#namespace">¶</a></h2>
+
+<p>A namespace refers to a logical grouping of some class names so that
+they can be differentiated from other class names even if their names
+are the same. Do not confuse path alias with namespace. A path alias
+is merely a convenient way of naming a file or directory. It has nothing
+to do with a namespace.</p>
+
+<blockquote class="tip">
+<p><strong>Tip:</strong> Because PHP prior to 5.3.0 does not support namespace
+  intrinsically, you cannot create instances of two classes who have the same
+  name but with different definitions. For this reason, all Yii framework
+  classes are prefixed with a letter 'C' (meaning 'class') so that they can
+  be differentiated from user-defined classes. It is recommended that the
+  prefix 'C' be reserved for Yii framework use only, and user-defined classes
+  be prefixed with other letters.</p>
+</blockquote>
+
+<h2 id="namespaced-classes">5. Namespaced Classes <a class="anchor" href="#namespaced-classes">¶</a></h2>
+
+<p>A namespaced class refers to a class declared within a non-global namespace.
+For example, the <code>application\components\GoogleMap</code> class is declared within
+the namespace <code>application\components</code>. Using namespaced classes requires PHP 5.3.0 or above.</p>
+
+<p>Starting from version 1.1.5, it is possible to use a namespaced class without
+including it explicitly. For example, we can create a new instance of
+<code>application\components\GoogleMap</code> without including the corresponding class file
+explicitly. This is made possible with the enhanced Yii class autoloading mechanism.</p>
+
+<p>In order to be able to autoload a namespaced class, the namespace must be named in
+a way similar to naming a path alias. For example, the class <code>application\components\GoogleMap</code>
+must be stored in a file that can be aliased as <code>application.components.GoogleMap</code>.</p>
+
+<p>So to use custom namespace starting with, for example, <code>\mynamespace</code> where
+classes are located at <code>/var/www/common/mynamespace/</code>, the only thing you
+should do is to define a path alias like the following:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">setPathOfAlias</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">mynamespace</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">/var/www/common/mynamespace/</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<h2 id="namespaced-controllers">6. Namespaced Controllers <a class="anchor" href="#namespaced-controllers">¶</a></h2>
+
+<p>By default Yii uses controllers from the global namespace. These classes are
+located under <code>protected/controllers</code>. You can change this behavior in two
+different ways: using <code>controllerMap</code> and using <code>controllerNamespace</code>. The former
+allows you to use controllers from various namespaces. The latter requires less
+configuration while setting a common namespace for all controllers.</p>
+
+<h3 id="using-x-23x">Using <code>controllerMap</code></h3>
+
+<p>The best way to change controller map is to use the configuration file
+(<code>protected/config/main.php</code>):</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> adding &quot;mynamespace&quot; namespace</span>
+<span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">setPathOfAlias</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">mynamespace</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">/var/www/common/mynamespace/</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+</span><span class="hl-reserved">return</span> <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+    <span class="hl-quotes">'</span><span class="hl-string">basePath</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-identifier">dirname</span><span class="hl-brackets">(</span><span class="hl-reserved">__FILE__</span><span class="hl-brackets">)</span><span class="hl-code">.</span><span class="hl-reserved">DIRECTORY_SEPARATOR</span><span class="hl-code">.</span><span class="hl-quotes">'</span><span class="hl-string">..</span><span class="hl-quotes">'</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">name</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">My Web Application</span><span class="hl-quotes">'</span><span class="hl-code">,
+ 
+    </span><span class="hl-quotes">'</span><span class="hl-string">controllerMap</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+        <span class="hl-quotes">'</span><span class="hl-string">test</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">\mynamespace\controllers\TestController</span><span class="hl-quotes">'</span><span class="hl-code">,
+    </span><span class="hl-brackets">)</span><span class="hl-code">,</span></pre></div></div>
+
+<p>When user tries to load any of the controllers defined in <code>controllerMap</code>,
+Yii loads the specified classes, bypassing the normal controller loading method.
+In case of <code>test</code> Yii will load the namespaced class
+<code>\mynamespace\controllers\TestController</code> located at
+<code>/var/www/common/mynamespace/controllers/TestController.php</code>.</p>
+
+<p>Note that controller code should be properly namespaced:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> define namespace:</span>
+<span class="hl-identifier">namespace</span> <span class="hl-identifier">mynamespace</span><span class="hl-code">\</span><span class="hl-identifier">controllers</span><span class="hl-code">;
+ 
+</span><span class="hl-comment">//</span><span class="hl-comment"> since class is now under namespace, global namespace</span>
+<span class="hl-comment">//</span><span class="hl-comment"> should be referenced explicitly using &quot;\&quot;:</span>
+<span class="hl-reserved">class</span> <span class="hl-identifier">TestController</span> <span class="hl-reserved">extends</span><span class="hl-code"> \</span><span class="hl-identifier">CController</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">actionIndex</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-reserved">echo</span> <span class="hl-quotes">'</span><span class="hl-string">This is TestController from \mynamespace\controllers</span><span class="hl-quotes">'</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<h3 id="using-x-26x">Using <code>controllerNamespace</code></h3>
+
+<p>Since application is the module itself, you can use <code>controllerNamespace</code> property
+in the same way as described in "Namespaced Modules" below.</p>
+
+<h2 id="namespaced-modules">7. Namespaced Modules <a class="anchor" href="#namespaced-modules">¶</a></h2>
+
+<p>Sometimes it's useful to namespace the whole module. For example, if you
+want to put <code>testmodule</code> under <code>\mynamespace\modules\testmodule</code> pointing to
+<code>/var/www/common/mynamespace/modules/testmodule</code> you should first create the following
+file structure:</p>
+
+<pre>/var/www/common/mynamespace/modules
+  testmodule
+    controllers
+      DefaultController.php
+    views
+      default
+        index.php
+    TestmoduleModule.php
+</pre>
+
+<p><code>index.php</code> view is the same as in regular module. <code>TestmoduleModule.php</code> and
+<code>DefaultController.php</code> are namespaced.</p>
+
+<p><code>TestmoduleModule.php</code>:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> define namespace:</span>
+<span class="hl-identifier">namespace</span> <span class="hl-identifier">mynamespace</span><span class="hl-code">\</span><span class="hl-identifier">modules</span><span class="hl-code">\</span><span class="hl-identifier">testmodule</span><span class="hl-code">;
+ 
+</span><span class="hl-comment">//</span><span class="hl-comment"> since class is now under namespace, global namespace</span>
+<span class="hl-comment">//</span><span class="hl-comment"> should be referenced explicitly using &quot;\&quot;:</span>
+<span class="hl-reserved">class</span> <span class="hl-identifier">TestmoduleModule</span> <span class="hl-reserved">extends</span><span class="hl-code"> \</span><span class="hl-identifier">CWebModule</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-comment">//</span><span class="hl-comment"> setting non-global controllers namespace (also can be done via config)</span>
+    <span class="hl-reserved">public</span> <span class="hl-var">$controllerNamespace</span><span class="hl-code"> = </span><span class="hl-quotes">'</span><span class="hl-string">\mynamespace\modules\testmodule\controllers</span><span class="hl-quotes">'</span><span class="hl-code">;
+ 
+    </span><span class="hl-comment">//</span><span class="hl-comment"> usual module code</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p><code>DefaultController.php</code>:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-inlinetags">&lt;?php</span>
+<span class="hl-comment">//</span><span class="hl-comment"> define namespace:</span>
+<span class="hl-identifier">namespace</span> <span class="hl-identifier">mynamespace</span><span class="hl-code">\</span><span class="hl-identifier">modules</span><span class="hl-code">\</span><span class="hl-identifier">testmodule</span><span class="hl-code">\</span><span class="hl-identifier">controllers</span><span class="hl-code">;
+ 
+</span><span class="hl-comment">//</span><span class="hl-comment"> since class is now under namespace, global namespace</span>
+<span class="hl-comment">//</span><span class="hl-comment"> should be referenced explicitly using &quot;\&quot;:</span>
+<span class="hl-reserved">class</span> <span class="hl-identifier">DefaultController</span> <span class="hl-reserved">extends</span><span class="hl-code"> \</span><span class="hl-identifier">Controller</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">actionIndex</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">render</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">index</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>Now the only thing left is to add our module to the application. The best way
+to do it is to specify it in the application config file (<code>protected/config/main.php</code>):</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> adding &quot;mynamespace&quot; namespace</span>
+<span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">setPathOfAlias</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">mynamespace</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">/var/www/common/mynamespace/</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+</span><span class="hl-reserved">return</span> <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+    <span class="hl-quotes">'</span><span class="hl-string">basePath</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-identifier">dirname</span><span class="hl-brackets">(</span><span class="hl-reserved">__FILE__</span><span class="hl-brackets">)</span><span class="hl-code">.</span><span class="hl-reserved">DIRECTORY_SEPARATOR</span><span class="hl-code">.</span><span class="hl-quotes">'</span><span class="hl-string">..</span><span class="hl-quotes">'</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">name</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">My Web Application</span><span class="hl-quotes">'</span><span class="hl-code">,
+ 
+    </span><span class="hl-quotes">'</span><span class="hl-string">modules</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+        <span class="hl-quotes">'</span><span class="hl-string">testmodule</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-quotes">'</span><span class="hl-string">\mynamespace\modules\testmodule\TestModuleModule</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-brackets">)</span><span class="hl-code">,</span></pre></div></div>
+
+<div class="revision"><div class="google-ad" style="margin:-60px 0 5px 200px;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "7116172008";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>$Id$</div>
+</div>
+                <div class="prev-next-nav">
+                            <div class="prev-topic"><a href="/doc/guide/1.1/en/basics.module">Module</a></div>
+                                        <div class="next-topic"><a href="/doc/guide/1.1/en/basics.convention">Conventions</a></div>
+                    </div>
+        
+		        <div class="widget-comment-list" id="comments">
+	<div class="comments">
+		<h3>Total 2 comments</h3>
+				<div class="comment alt-0">
+			<a class="cid" id="c10572" title="permalink to this comment" href="#c10572">#10572</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=10572"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=10572&amp;vote=1"><span>6</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=10572&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/88503/">Webnet668</a> at 2012/11/05 12:17pm</div>
+			<div class="title">Using Yii::app() with namespaces</div>
+			<div class="content"><p>When using namespaces, you might see an error about the application not being able to find "Yii.php".  If you run into this, there are 2 solutions.</p>
+
+<p>1)  Instead of</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-identifier">namespace</span> <span class="hl-identifier">application</span><span class="hl-code">\</span><span class="hl-identifier">components</span><span class="hl-code">\</span><span class="hl-identifier">foo</span><span class="hl-code">;
+ 
+</span><span class="hl-reserved">class</span> <span class="hl-identifier">Controller</span> <span class="hl-reserved">extends</span><span class="hl-code"> \</span><span class="hl-identifier">CController</span> <span class="hl-brackets">{</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">actionIndex</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+         <span class="hl-var">$request</span><span class="hl-code"> = </span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">getRequest</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-comment">//</span><span class="hl-comment">Error: could not find Yii.php</span>
+    <span class="hl-brackets">}</span></pre></div></div>
+
+<p>Tell PHP you want it to look within the Yii namespace so it knows where to find any Yii objects...</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-identifier">namespace</span> <span class="hl-identifier">application</span><span class="hl-code">\</span><span class="hl-identifier">components</span><span class="hl-code">\</span><span class="hl-identifier">foo</span><span class="hl-code">;
+</span><span class="hl-identifier">use</span> <span class="hl-identifier">Yii</span><span class="hl-code">;
+ 
+</span><span class="hl-reserved">class</span> <span class="hl-identifier">Controller</span> <span class="hl-reserved">extends</span><span class="hl-code"> \</span><span class="hl-identifier">CController</span> <span class="hl-brackets">{</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">actionIndex</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+         <span class="hl-var">$request</span><span class="hl-code"> = </span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">getRequest</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-comment">//</span><span class="hl-comment">doesn't throw an error</span>
+    <span class="hl-brackets">}</span></pre></div></div>
+
+<p>2) Change all instances of</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>to</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-code">\</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>Though ideally you would use the first solution.</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c3341" title="permalink to this comment" href="#c3341">#3341</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=3341"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=3341&amp;vote=1"><span>9</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=3341&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/13167/">stefanos</a> at 2011/04/05 12:34am</div>
+			<div class="title">Namespaces in a nutshell</div>
+			<div class="content"><p>Namespaces in php are like directory paths in console (bash, dos etc)<br />
+When you use <code>namespace</code> php keyword like this</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-identifier">namespace</span> <span class="hl-identifier">a</span><span class="hl-code">\</span><span class="hl-identifier">random</span><span class="hl-code">\</span><span class="hl-identifier">namespace</span><span class="hl-code">;
+  </span><span class="hl-reserved">class</span> <span class="hl-identifier">Foo</span> <span class="hl-brackets">{</span>
+    <span class="hl-reserved">static</span> <span class="hl-reserved">function</span> <span class="hl-identifier">bar</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">{</span><span class="hl-brackets">}</span> 
+  <span class="hl-brackets">}</span></pre></div></div>
+
+<p>is like executing <code>cd a\specific\directory</code> except that the namespace is created if not exists.<br />
+Now everything follows is belonging to that namespace. This means that if you want to instantiate, extend or call a static method from eg <code>foo</code> class on another namespace you have to</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment">The leading backslash '\' here denotes the global namespace that</span>
+<span class="hl-comment">//</span><span class="hl-comment">is the root folder or C:\ counterpart from console environment </span>
+<span class="hl-var">$baz</span><span class="hl-code">= </span><span class="hl-reserved">new</span><span class="hl-code"> \</span><span class="hl-identifier">a</span><span class="hl-code">\</span><span class="hl-identifier">random</span><span class="hl-code">\</span><span class="hl-identifier">namespace</span><span class="hl-code">\</span><span class="hl-identifier">Foo</span><span class="hl-code">; 
+</span><span class="hl-reserved">class</span> <span class="hl-identifier">Fighter</span> <span class="hl-reserved">extends</span><span class="hl-code"> \</span><span class="hl-identifier">a</span><span class="hl-code">\</span><span class="hl-identifier">random</span><span class="hl-code">\</span><span class="hl-identifier">namespace</span><span class="hl-code">\</span><span class="hl-identifier">Foo</span> <span class="hl-brackets">{</span><span class="hl-brackets">}</span><span class="hl-code">
+\</span><span class="hl-identifier">a</span><span class="hl-code">\</span><span class="hl-identifier">random</span><span class="hl-code">\</span><span class="hl-identifier">namespace</span><span class="hl-code">\</span><span class="hl-identifier">Foo</span><span class="hl-code">::</span><span class="hl-identifier">bar</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>Yii imports a very intuitive convention here that the namespace structure (if implemented) should be reflected on the physical directory structure and additionally makes its Path Alias convenience available for that purpose.<br />
+Please be my guest to follow these steps:<br />
+1. Create a new web app
+2. Go to <code>protected\components</code> and create a folder <code>foo</code>
+3. Move <code>Controller.php</code> in <code>foo</code> folder and open it with an editor
+4. At line 6, at <code>Controller</code> class declaration import this:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-identifier">namespace</span> <span class="hl-identifier">application</span><span class="hl-code">\</span><span class="hl-identifier">components</span><span class="hl-code">\</span><span class="hl-identifier">foo</span><span class="hl-code">;
+</span><span class="hl-reserved">class</span> <span class="hl-identifier">Controller</span> <span class="hl-reserved">extends</span><span class="hl-code"> \</span><span class="hl-identifier">CController</span> <span class="hl-comment">//</span><span class="hl-comment">Note the leading backslash here</span></pre></div></div>
+
+<ol><li>Now open <code>protected\controllers\SiteController.php</code> for editing</li>
+<li>Replace the <code>SiteController</code> class declaration with this</li>
+</ol><div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">SiteController</span> <span class="hl-reserved">extends</span><span class="hl-code"> \</span><span class="hl-identifier">application</span><span class="hl-code">\</span><span class="hl-identifier">components</span><span class="hl-code">\</span><span class="hl-identifier">foo</span><span class="hl-code">\</span><span class="hl-identifier">Controller</span></pre></div></div>
+
+<p>As you will see, your new web app still working fine and <code>application</code> path alias will point properly at <code>protected</code> folder.<br />
+You can find more about php namespaces <a href="http://www.php.net/manual/en/language.namespaces.php">here</a><br />
+Enjoy coding :&gt;</p>
+</div>
+					</div>
+			</div>
+	<div id="comment-add">
+		<h3 id="add-comment">Leave a comment</h3>
+
+			<p>Please <a class="g-login" rel="/doc/guide/1.1/en/basics.namespace#add-comment" href="#">login</a> to leave your comment.</p>
+		</div>
+</div>
+           </div>
+</div>
+					</div>
+				
+								<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+					</div>
+	</div>
+
+	<div class="layout-main-footer">
+		<div class="container_12">
+			<div class="grid_6">
+				<ul class="menu">
+				<li class="main">About
+<ul class="sub">
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="main">Downloads
+<ul class="sub">
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="main">Documentation
+<ul class="sub">
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="main">Development
+<ul class="sub">
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="main">Community
+<ul class="sub">
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+				</ul>
+			</div>
+			<div class="grid_1">&nbsp;</div>
+			<div class="grid_5">
+				<h3>Yii Supporters</h3>
+				<ul class="g-list-none supporters">
+
+				</ul>
+			</div>
+
+			<div class="clear"></div>
+			<div class="grid_12 copyright">
+				<ul class="social">
+					<li class="twitter"><a href="https://twitter.com/yiiframework" target="_blank" rel="nofollow" title="follow us on twitter">Twitter</a></li>
+					<li class="facebook"><a href="https://www.facebook.com/groups/yiitalk/" target="_blank" rel="nofollow" title="join yii group at facebook">Facebook</a></li>
+					<li class="linkedin"><a href="http://www.linkedin.com/groups?gid=1483367" target="_blank" rel="nofollow" title="join yii group at linkedin">LinkedIn</a></li>
+					<li class="feeds"><a title="RSS feeds" href="/rss.xml/">RSS Feeds</a></li>
+				</ul>
+				<div class="clear"></div>
+				<a href="/tos/">Terms of Service</a> |
+				<a href="/license/">License</a> |
+				<a href="/contact/">Contact Us</a><br/>
+				Copyright &copy; 2015 by <a href="http://www.yiisoft.com">Yii Software LLC</a>.
+				All Rights Reserved.
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+    <script type="text/javascript" src="/js/site-20121004195728.js"></script>
+
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['site._setAccount', 'UA-5843896-1']);
+_gaq.push(['site._trackPageview']);
+
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+<script type="text/javascript">
+function trackClick(link, action, category) {
+	action=action || link.href;
+	category=category || 'Outbound Links';
+	try {
+		_gaq.push(['site._trackEvent', category, action]);
+		setTimeout('document.location = "' + link.href + '"', 250);
+	}catch(err){}
+	return false;
+}
+</script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+</body>
+</html>

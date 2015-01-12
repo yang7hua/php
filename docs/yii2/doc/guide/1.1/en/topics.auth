@@ -1,0 +1,1180 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    	<meta charset="UTF-8" />
+		<meta name="keywords" content="yii framework, tutorial, guide, version 1.1" />
+	<meta name="description" content="Authentication and authorization are required for a Web page that should
+be limited to certain users. Authentication is about verifying whether
+someone is who they claim to be." />
+    <link rel="shortcut icon" type="image/x-icon" href="http://static.yiiframework.com/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="http://static.yiiframework.com/css/site-20130404102234.css" />
+
+	<link title="Lives News for Yii Framework" rel="alternate" type="application/rss+xml" href="http://www.yiiframework.com/rss.xml/" />
+	<title>Special Topics: Authentication and Authorization | The Definitive Guide to Yii | Yii PHP Framework</title>
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii API Search" href="/search-api.xml" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii Site Search" href="/search-site.xml" />
+</head>
+
+<body class="mac">
+<div class="layout-main">
+
+	<div class="layout-main-shortcuts">
+		<div class="container_12">
+            <a style="color:darkred;" href="https://github.com/yiisoft/yii2">Github</a> &middot;
+            <a style="color:darkgreen;" href="https://twitter.com/yiiframework">Twitter</a> &middot;
+            <a style="color:darkblue;" href="https://www.facebook.com/groups/yiitalk/">Facebook</a> &middot;
+            <a href="/doc/guide/">Guide</a> &middot;
+            <a href="/doc/api/">Class Reference</a> &middot;
+            <a href="/doc-2.0/guide-index.html">Guide 2.0</a> &middot;
+            <a href="/doc-2.0/index.html">API 2.0</a> &middot;
+            <a href="/wiki/">Wiki</a> &middot;
+            <a href="/extensions/">Extensions</a> &middot;
+            <a href="/forum/">Forum</a> &middot;
+			<a href="/chat/">Live Chat</a> &middot;
+                            <a href="/login/">Login</a>            		</div>
+	</div>
+
+	<div class="layout-main-bg">
+		<div class="layout-main-header">
+			<div class="container_12">
+				<div class="grid_4">
+					<a class="logo" href="/"><img alt="Yii Logo" src="http://static.yiiframework.com/css/img/logo.png" title="Yii Framework" width="284" height="64" /></a>				</div>
+				<div class="grid_8 omega">
+					<div class="nav">
+						<ul class="menu" id="yw0">
+<li class="about"><a class="main" href="/about/">About</a>
+<ul>
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li class="last"><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="downloads"><a class="main" href="/download/">Downloads</a>
+<ul>
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li class="last"><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="documentation active"><a class="main" href="/doc/">Documentation</a>
+<ul>
+<li><a href="/tour/">Take the Tour</a></li>
+<li class="active"><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li class="last"><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="development"><a class="main" href="https://github.com/yiisoft/yii/commits/master">Development</a>
+<ul>
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li class="last"><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="community last"><a class="main" href="/community/">Community</a>
+<ul>
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li class="last"><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+</ul>						<div class="search">
+							<form method="get" action="/search/">
+								<div class="keyword">
+	                                <input name="q" value="" />
+									<a href="#" title="search" class="global-search">search</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+
+		<div class="container_12">
+						<div class="grid_12">
+												<div class="layout-main-submenu">
+					<ul>
+						<li class="main">Documentation</li>
+												<li><a href="/tour/">Take the Tour</a></li>
+												<li class="active"><a href="/tutorials/">Tutorials</a></li>
+												<li><a href="/doc/api/">Class Reference</a></li>
+												<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+												<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+												<li><a href="/wiki/">Wiki</a></li>
+												<li><a href="/screencasts/">Screencasts</a></li>
+												<li><a href="/resources/">Resources</a></li>
+											</ul>
+				</div>
+				
+				
+				
+									<div class="layout-main-body">
+						<div class="tutorial-view">
+    <div class="grid_3 alpha">
+        <div class="nav-toc">
+    		<div class="title">The Definitive Guide to Yii</div>
+    		<div class="langver">
+	            <strong>Language &amp; version</strong>
+	    		<div class="languages g-dropdown">
+	    		<span>English<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.1/de/topics.auth">Deutsch</a></li>
+<li><a href="/doc/guide/1.1/es/topics.auth">Español</a></li>
+<li><a href="/doc/guide/1.1/fr/topics.auth">Français</a></li>
+<li><a href="/doc/guide/1.1/he/topics.auth">עִבְרִית</a></li>
+<li><a href="/doc/guide/1.1/id/topics.auth">Bahasa Indonesia</a></li>
+<li><a href="/doc/guide/1.1/it/topics.auth">Italiano</a></li>
+<li><a href="/doc/guide/1.1/ja/topics.auth">日本語</a></li>
+<li><a href="/doc/guide/1.1/pl/topics.auth">Polski</a></li>
+<li><a href="/doc/guide/1.1/pt/topics.auth">Português</a></li>
+<li><a href="/doc/guide/1.1/pt_br/topics.auth">Português brasileiro</a></li>
+<li><a href="/doc/guide/1.1/ro/topics.auth">România</a></li>
+<li><a href="/doc/guide/1.1/ru/topics.auth">Русский</a></li>
+<li><a href="/doc/guide/1.1/sv/topics.auth">Svenska</a></li>
+<li><a href="/doc/guide/1.1/uk/topics.auth">украї́нська</a></li>
+<li><a href="/doc/guide/1.1/zh_cn/topics.auth">简体中文</a></li>
+</ul>
+	    		</div>
+				<div class="versions g-dropdown">
+	    		<span>1.1<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.0/en/topics.auth">1.0</a></li>
+</ul>
+				</div>
+				<div class="clear"></div>
+			</div>
+            <div class="widget-search-box">
+    <form method="get" action="/search/">
+        <strong>Search in this tutorial</strong>
+		<input type="text" name="q" class="keyword g-text" />
+        <input type="hidden" name="type" value="guide" />
+        <input type="hidden" name="lang" value="en" />
+        <input type="submit" value="Find" class="btn btn-info" />
+	</form>
+</div>
+			<ul class="toc">
+						    <li class="chapter"><strong>Getting Started</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/index">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/changes">New Features</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/upgrade">Upgrading from 1.0 to 1.1</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.what-is-yii">What is Yii</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.installation">Installation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.apache-nginx-config">Apache and Nginx configurations</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app">Creating First Yii Application</a>			            </li>
+			        			    						    <li class="chapter"><strong>Fundamentals</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.mvc">Model-View-Controller (MVC)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.entry">Entry Script</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.application">Application</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.controller">Controller</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.model">Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.view">View</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.component">Component</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.module">Module</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.namespace">Path Alias and Namespace</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.convention">Conventions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.workflow">Development Workflow</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.best-practices">Best MVC Practices</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Forms</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.model">Creating Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.action">Creating Action</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.view">Creating Form</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.table">Collecting Tabular Input</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.builder">Using Form Builder</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Databases</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.dao">Database Access Objects</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.query-builder">Query Builder</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.ar">Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.arr">Relational Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.migration">Database Migration</a>			            </li>
+			        			    						    <li class="chapter"><strong>Caching</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.data">Data Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.fragment">Fragment Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.page">Page Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.dynamic">Dynamic Content</a>			            </li>
+			        			    						    <li class="chapter"><strong>Extending Yii</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.use">Using Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.create">Creating Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.integration">Using 3rd-Party Libraries</a>			            </li>
+			        			    						    <li class="chapter"><strong>Testing</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.fixture">Defining Fixtures</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.unit">Unit Testing</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.functional">Functional Testing</a>			            </li>
+			        			    						    <li class="chapter"><strong>Special Topics</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.gii">Automatic Code Generation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.url">URL Management</a>			            </li>
+			        			    			        			            <li class="active">
+			                &raquo; Authentication and Authorization &laquo;
+			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.theming">Theming and Skin</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.logging">Logging</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.error">Error Handling</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.webservice">Web Service</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.i18n">Internationalization (I18N)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.prado">Alternative Template Syntax</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.console">Console Applications</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.security">Security</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.performance">Performance Tuning</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app-yiic">Code Generation using Command Line Tools (deprecated)</a>			            </li>
+			        			    						</ul>
+        </div>
+    </div>
+    <div class="grid_9 omega">
+    	<div class="g-markdown"><h1 id="authentication-and-authorization">Authentication and Authorization</h1>
+<div class="google-ad" style="float:right;margin:0 0 1em 1em;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "2830391674";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+<div class="toc"><ol><li><a href="#defining-identity-class">Defining Identity Class</a></li>
+<li><a href="#login-and-logout">Login and Logout</a></li>
+<li><a href="#cookie-based-login">Cookie-based Login</a></li>
+<li><a href="#access-control-filter">Access Control Filter</a></li>
+<li><a href="#handling-authorization-result">Handling Authorization Result</a></li>
+<li><a href="#role-based-access-control">Role-Based Access Control</a></li>
+<li><a href="#configuring-authorization-manager">Configuring Authorization Manager</a></li>
+<li><a href="#defining-authorization-hierarchy">Defining Authorization Hierarchy</a></li>
+<li><a href="#using-business-rules">Using Business Rules</a></li></ol></div>
+
+
+<p>Authentication and authorization are required for a Web page that should
+be limited to certain users. <em>Authentication</em> is about verifying whether
+someone is who they claim to be. It usually involves a username and a
+password, but may include any other methods of demonstrating identity, such
+as a smart card, fingerprints, etc. <em>Authorization</em> is finding out if the
+person, once identified (i.e. authenticated), is permitted to manipulate
+specific resources. This is usually determined by finding out if that
+person is of a particular role that has access to the resources.</p>
+
+<p>Yii has a built-in authentication/authorization (auth) framework which is
+easy to use and can be customized for special needs.</p>
+
+<p>The central piece in the Yii auth framework is a pre-declared <em>user
+application component</em> which is an object implementing the <a href="/doc/api/1.1/IWebUser">IWebUser</a>
+interface. The user component represents the persistent identity
+information for the current user. We can access it at any place using
+<code>Yii::app()-&gt;user</code>.</p>
+
+<p>Using the user component, we can check if a user is logged in or not via
+<a href="/doc/api/1.1/CWebUser#isGuest">CWebUser::isGuest</a>; we can <a href="/doc/api/1.1/CWebUser#login">login</a> and
+<a href="/doc/api/1.1/CWebUser#logout">logout</a> a user; we can check if the user can perform
+specific operations by calling <a href="/doc/api/1.1/CWebUser#checkAccess">CWebUser::checkAccess</a>; and we can also
+obtain the <a href="/doc/api/1.1/CWebUser#name">unique identifier</a> and other persistent identity
+information about the user.</p>
+
+<h2 id="defining-identity-class">1. Defining Identity Class <a class="anchor" href="#defining-identity-class">¶</a></h2>
+
+<p>As mentioned above, authentication is about validating the identity of the user. A typical Web application authentication implementation usually involves using a username and password combination to verify a user's identity. However, it may include other methods and different implementations may be required. To accommodate varying authentication methods, the Yii auth framework introduces the identity class.</p>
+
+<p>We define an identity class which contains the actual authentication logic. The identity class should implement the <a href="/doc/api/1.1/IUserIdentity">IUserIdentity</a> interface. Different identity classes can be
+implemented for different authentication approaches (e.g. OpenID, LDAP, Twitter OAuth, Facebook Connect). A good start when writing your own implementation is to extend <a href="/doc/api/1.1/CUserIdentity">CUserIdentity</a> which is a base class for the authentication approach using a username and password.</p>
+
+<p>The main work in defining an identity class is the implementation of the
+<a href="/doc/api/1.1/IUserIdentity#authenticate">IUserIdentity::authenticate</a> method. This is the method used to encapsulate the main details of the authentication approach. An identity class may also declare
+additional identity information that needs to be persistent during the user
+session.</p>
+
+<h4 id="an-example">An Example</h4>
+
+<p>In the following example, we use an identity class to demonstrate using a database approach to authentication. This is typical in Web applications. A user will enter their username and password into a login form, and then we validate these credentials, using <a href="/doc/guide/1.1/en/database.ar">ActiveRecord</a>, against a user table in the database . There are actually a few things being demonstrated in this single example:</p>
+
+<ol>
+<li>The implementation of the <code>authenticate()</code> method to use the database to validate credentials.</li>
+<li>Overriding the <code>CUserIdentity::getId()</code> method to return the <code>_id</code> property because the default implementation returns the username as the ID.</li>
+<li>Using the <code>setState()</code> (<a href="/doc/api/1.1/CBaseUserIdentity#setState">CBaseUserIdentity::setState</a>) method to demonstrate storing other information that can easily be retrieved upon subsequent requests.</li>
+</ol>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">UserIdentity</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CUserIdentity</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">private</span> <span class="hl-var">$_id</span><span class="hl-code">;
+    </span><span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">authenticate</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-var">$record</span><span class="hl-code">=</span><span class="hl-identifier">User</span><span class="hl-code">::</span><span class="hl-identifier">model</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">findByAttributes</span><span class="hl-brackets">(</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">username</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">username</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-var">$record</span><span class="hl-code">===</span><span class="hl-reserved">null</span><span class="hl-brackets">)</span>
+            <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">errorCode</span><span class="hl-code">=</span><span class="hl-identifier">self</span><span class="hl-code">::</span><span class="hl-identifier">ERROR_USERNAME_INVALID</span><span class="hl-code">;
+        </span><span class="hl-reserved">else</span> <span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-code">!</span><span class="hl-identifier">CPasswordHelper</span><span class="hl-code">::</span><span class="hl-identifier">verifyPassword</span><span class="hl-brackets">(</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">password</span><span class="hl-code">,</span><span class="hl-var">$record</span><span class="hl-code">-&gt;</span><span class="hl-identifier">password</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+            <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">errorCode</span><span class="hl-code">=</span><span class="hl-identifier">self</span><span class="hl-code">::</span><span class="hl-identifier">ERROR_PASSWORD_INVALID</span><span class="hl-code">;
+        </span><span class="hl-reserved">else</span>
+        <span class="hl-brackets">{</span>
+            <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">_id</span><span class="hl-code">=</span><span class="hl-var">$record</span><span class="hl-code">-&gt;</span><span class="hl-identifier">id</span><span class="hl-code">;
+            </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">setState</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">title</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$record</span><span class="hl-code">-&gt;</span><span class="hl-identifier">title</span><span class="hl-brackets">)</span><span class="hl-code">;
+            </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">errorCode</span><span class="hl-code">=</span><span class="hl-identifier">self</span><span class="hl-code">::</span><span class="hl-identifier">ERROR_NONE</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span>
+        <span class="hl-reserved">return</span><span class="hl-code"> !</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">errorCode</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+ 
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">getId</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-reserved">return</span> <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">_id</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>When we cover login and logout in the next section, we'll see that we pass this identity class into the login method for a user. Any information that we store in a state (by calling <a href="/doc/api/1.1/CBaseUserIdentity#setState">CBaseUserIdentity::setState</a>) will be passed to <a href="/doc/api/1.1/CWebUser">CWebUser</a>, which in turn will store them in a persistent storage, such as session.
+This information can then be accessed like properties of <a href="/doc/api/1.1/CWebUser">CWebUser</a>. In our example, we stored the user title information via <code>$this-&gt;setState('title', $record-&gt;title);</code>. Once we complete our login process, we can obtain the <code>title</code> information of the current user by simply using <code>Yii::app()-&gt;user-&gt;title</code>.</p>
+
+<blockquote class="info">
+<p><strong>Info:</strong> By default, <a href="/doc/api/1.1/CWebUser">CWebUser</a> uses session as persistent storage for user
+  identity information. If cookie-based login is enabled (by setting
+  <a href="/doc/api/1.1/CWebUser#allowAutoLogin">CWebUser::allowAutoLogin</a> to be true), the user identity information may
+  also be saved in cookie. Make sure you do not declare sensitive information
+  (e.g. password) to be persistent.</p>
+</blockquote>
+
+<h3 id="storing-passwords-in-the-database">Storing passwords in the database</h3>
+
+<p>Secure storage of user passwords in a database requires some care. An attacker that has stolen your user table (or a backup of it) can recover passwords using standard techniques if you don't protect against them. The above code example uses Yii built-in <a href="/doc/api/1.1/CPasswordHelper">CPasswordHelper</a> to hash the password and to validate it (since version 1.1.14). <a href="/doc/api/1.1/CPasswordHelper#hashPassword">CPasswordHelper::hashPassword</a> returns hashes that are very hard to crack.</p>
+
+<h2 id="login-and-logout">2. Login and Logout <a class="anchor" href="#login-and-logout">¶</a></h2>
+
+<p>Now that we have seen an example of creating a user identity, we use this to help ease the implementation of our needed login and logout actions. The following code demonstrates how this is accomplished:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> Login a user with the provided username and password.</span>
+<span class="hl-var">$identity</span><span class="hl-code">=</span><span class="hl-reserved">new</span> <span class="hl-identifier">UserIdentity</span><span class="hl-brackets">(</span><span class="hl-var">$username</span><span class="hl-code">,</span><span class="hl-var">$password</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-var">$identity</span><span class="hl-code">-&gt;</span><span class="hl-identifier">authenticate</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+    <span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">user</span><span class="hl-code">-&gt;</span><span class="hl-identifier">login</span><span class="hl-brackets">(</span><span class="hl-var">$identity</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-reserved">else</span>
+    <span class="hl-reserved">echo</span> <span class="hl-var">$identity</span><span class="hl-code">-&gt;</span><span class="hl-identifier">errorMessage</span><span class="hl-code">;
+......
+</span><span class="hl-comment">//</span><span class="hl-comment"> Logout the current user</span>
+<span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">user</span><span class="hl-code">-&gt;</span><span class="hl-identifier">logout</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>Here we are creating a new UserIdentity object and passing in the authentication credentials (i.e. the <code>$username</code> and <code>$password</code> values submitted by the user) to its constructor. We then simply call the <code>authenticate()</code> method. If successful, we pass the identity information into the <a href="/doc/api/1.1/CWebUser#login">CWebUser::login</a> method, which will store the identity information into persistent storage (PHP session by default) for retrieval upon subsequent requests. If the authentication fails, we can interrogate the <code>errorMessage</code> property for more information as to why it failed.</p>
+
+<p>Whether or not a user has been authenticated can easily be checked throughout the application by using <code>Yii::app()-&gt;user-&gt;isGuest</code>. If using persistent storage like session (the default) and/or a cookie (discussed below) to store the identity information, the user can remain logged in upon subsequent requests. In this case, we don't need to use the UserIdentity class and the entire login process upon each request. Rather CWebUser will automatically take care of loading the identity information from this persistent storage and will use it to determine whether <code>Yii::app()-&gt;user-&gt;isGuest</code> returns true or false.</p>
+
+<h2 id="cookie-based-login">3. Cookie-based Login <a class="anchor" href="#cookie-based-login">¶</a></h2>
+
+<p>By default, a user will be logged out after a certain period of inactivity,
+depending on the <a href="http://www.php.net/manual/en/session.configuration.php">session configuration</a>.
+To change this behavior, we can set the <a href="/doc/api/1.1/CWebUser#allowAutoLogin">allowAutoLogin</a>
+property of the user component to be true and pass a duration parameter to
+the <a href="/doc/api/1.1/CWebUser#login">CWebUser::login</a> method. The user will then remain logged in for
+the specified duration, even if he closes his browser window. Note that
+this feature requires the user's browser to accept cookies.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> Keep the user logged in for 7 days.</span>
+<span class="hl-comment">//</span><span class="hl-comment"> Make sure allowAutoLogin is set true for the user component.</span>
+<span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">user</span><span class="hl-code">-&gt;</span><span class="hl-identifier">login</span><span class="hl-brackets">(</span><span class="hl-var">$identity</span><span class="hl-code">,</span><span class="hl-number">3600</span><span class="hl-code">*</span><span class="hl-number">24</span><span class="hl-code">*</span><span class="hl-number">7</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>As we mentioned above, when cookie-based login is enabled, the states
+stored via <a href="/doc/api/1.1/CBaseUserIdentity#setState">CBaseUserIdentity::setState</a> will be saved in the cookie as well.
+The next time when the user is logged in, these states will be read from
+the cookie and made accessible via <code>Yii::app()-&gt;user</code>.</p>
+
+<p>Although Yii has measures to prevent the state cookie from being tampered
+on the client side, we strongly suggest that security sensitive information be not
+stored as states. Instead, these information should be restored on the server
+side by reading from some persistent storage on the server side (e.g. database).</p>
+
+<p>In addition, for any serious Web applications, we recommend using the following
+strategy to enhance the security of cookie-based login.</p>
+
+<ul>
+<li><p>When a user successfully logs in by filling out a login form, we generate and
+store a random key in both the cookie state and in persistent storage on server side
+(e.g. database).</p></li>
+<li><p>Upon a subsequent request, when the user authentication is being done via the cookie information, we compare the two copies
+of this random key and ensure a match before logging in the user.</p></li>
+<li><p>If the user logs in via the login form again, the key needs to be re-generated.</p></li>
+</ul>
+
+<p>By using the above strategy, we eliminate the possibility that a user may re-use
+an old state cookie which may contain outdated state information.</p>
+
+<p>To implement the above strategy, we need to override the following two methods:</p>
+
+<ul>
+<li><p><a href="/doc/api/1.1/CUserIdentity#authenticate">CUserIdentity::authenticate()</a>: this is where the real authentication is performed.
+If the user is authenticated, we should re-generate a new random key, and store it
+in the database as well as in the identity states via <a href="/doc/api/1.1/CBaseUserIdentity#setState">CBaseUserIdentity::setState</a>.</p></li>
+<li><p><a href="/doc/api/1.1/CWebUser#beforeLogin">CWebUser::beforeLogin()</a>: this is called when a user is being logged in.
+We should check if the key obtained from the state cookie is the same as the one
+from the database.</p></li>
+</ul>
+
+<h2 id="access-control-filter">4. Access Control Filter <a class="anchor" href="#access-control-filter">¶</a></h2>
+
+<p>Access control filter is a preliminary authorization scheme that checks if
+the current user can perform the requested controller action. The
+authorization is based on user's name, client IP address and request types.
+It is provided as a filter named as
+<a href="/doc/api/1.1/CController#filterAccessControl">"accessControl"</a>.</p>
+
+<blockquote class="tip">
+<p><strong>Tip:</strong> Access control filter is sufficient for simple scenarios. For more
+  complex access control you may use role-based access (RBAC), which we will cover in the next subsection.</p>
+</blockquote>
+
+<p>To control the access to actions in a controller, we install the access
+control filter by overriding <a href="/doc/api/1.1/CController#filters">CController::filters</a> (see
+<a href="/doc/guide/1.1/en/basics.controller#filter">Filter</a> for more details about
+installing filters).</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">PostController</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CController</span>
+<span class="hl-brackets">{</span><span class="hl-code">
+    ......
+    </span><span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">filters</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-reserved">return</span> <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">accessControl</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>In the above, we specify that the <a href="/doc/api/1.1/CController#filterAccessControl">access
+control</a> filter should be applied to every
+action of <code>PostController</code>. The detailed authorization rules used by the
+filter are specified by overriding <a href="/doc/api/1.1/CController#accessRules">CController::accessRules</a> in the
+controller class.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">PostController</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CController</span>
+<span class="hl-brackets">{</span><span class="hl-code">
+    ......
+    </span><span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">accessRules</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-reserved">return</span> <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">deny</span><span class="hl-quotes">'</span><span class="hl-code">,
+                </span><span class="hl-quotes">'</span><span class="hl-string">actions</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">create</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">edit</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+                </span><span class="hl-quotes">'</span><span class="hl-string">users</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">?</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+            </span><span class="hl-brackets">)</span><span class="hl-code">,
+            </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">allow</span><span class="hl-quotes">'</span><span class="hl-code">,
+                </span><span class="hl-quotes">'</span><span class="hl-string">actions</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">delete</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+                </span><span class="hl-quotes">'</span><span class="hl-string">roles</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">admin</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+            </span><span class="hl-brackets">)</span><span class="hl-code">,
+            </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">deny</span><span class="hl-quotes">'</span><span class="hl-code">,
+                </span><span class="hl-quotes">'</span><span class="hl-string">actions</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">delete</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+                </span><span class="hl-quotes">'</span><span class="hl-string">users</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">*</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+            </span><span class="hl-brackets">)</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>The above code specifies three rules, each represented as an array. The
+first element of the array is either <code>'allow'</code> or <code>'deny'</code> and the other
+name-value pairs specify the pattern parameters of the rule. The rules defined above are interpreted as follows: the <code>create</code> and <code>edit</code> actions cannot be executed by anonymous
+users; the <code>delete</code> action can be executed by users with <code>admin</code> role;
+and the <code>delete</code> action cannot be executed by anyone.</p>
+
+<p>The access rules are evaluated one by one in the order they are specified.
+The first rule that matches the current pattern (e.g. username, roles,
+client IP, address) determines the authorization result. If this rule is an <code>allow</code>
+rule, the action can be executed; if it is a <code>deny</code> rule, the action cannot
+be executed; if none of the rules matches the context, the action can still
+be executed.</p>
+
+<blockquote class="tip">
+<p><strong>Tip:</strong> To ensure an action does not get executed under certain contexts,
+  it is beneficial to always specify a matching-all <code>deny</code> rule at the end
+  of rule set, like the following:</p>
+  
+  <div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">return</span> <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+    <span class="hl-comment">//</span><span class="hl-comment"> ... other rules...</span>
+    <span class="hl-comment">//</span><span class="hl-comment"> the following rule denies 'delete' action for all contexts</span>
+    <span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">deny</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-quotes">'</span><span class="hl-string">actions</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">delete</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-brackets">)</span><span class="hl-code">,
+</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+  
+  <p>The reason for this rule is because if none of the rules matches a context, then the action will continue to be executed.</p>
+</blockquote>
+
+<p>An access rule can match the following context parameters:</p>
+
+<ul>
+<li><p><a href="/doc/api/1.1/CAccessRule#actions">actions</a>: specifies which actions this rule
+matches. This should be an array of action IDs. The comparison is case-insensitive.</p></li>
+<li><p><a href="/doc/api/1.1/CAccessRule#controllers">controllers</a>: specifies which controllers this rule
+matches. This should be an array of controller IDs. The comparison is case-insensitive.</p></li>
+<li><p><a href="/doc/api/1.1/CAccessRule#users">users</a>: specifies which users this rule matches.
+The current user's <a href="/doc/api/1.1/CWebUser#name">name</a> is used for matching. The comparison
+is case-insensitive. Three special characters can be used here:</p>
+
+<ul>
+<li><code>*</code>: any user, including both anonymous and authenticated users.</li>
+<li><code>?</code>: anonymous users.</li>
+<li><code>@</code>: authenticated users.</li>
+</ul></li>
+<li><p><a href="/doc/api/1.1/CAccessRule#roles">roles</a>: specifies which roles that this rule matches.
+This makes use of the <a href="/doc/guide/1.1/en/topics.auth#role-based-access-control">role-based access control</a>
+feature to be described in the next subsection. In particular, the rule
+is applied if <a href="/doc/api/1.1/CWebUser#checkAccess">CWebUser::checkAccess</a> returns true for one of the roles.
+Note, you should mainly use roles in an <code>allow</code> rule because by definition,
+a role represents a permission to do something. Also note, although we use the
+term <code>roles</code> here, its value can actually be any auth item, including roles,
+tasks and operations.</p></li>
+<li><p><a href="/doc/api/1.1/CAccessRule#ips">ips</a>: specifies which client IP addresses this rule
+matches.</p></li>
+<li><p><a href="/doc/api/1.1/CAccessRule#verbs">verbs</a>: specifies which request types (e.g.
+<code>GET</code>, <code>POST</code>) this rule matches. The comparison is case-insensitive.</p></li>
+<li><p><a href="/doc/api/1.1/CAccessRule#expression">expression</a>: specifies a PHP expression whose value
+indicates whether this rule matches. In the expression, you can use variable <code>$user</code>
+which refers to <code>Yii::app()-&gt;user</code>.</p></li>
+</ul>
+
+<h2 id="handling-authorization-result">5. Handling Authorization Result <a class="anchor" href="#handling-authorization-result">¶</a></h2>
+
+<p>When authorization fails, i.e., the user is not allowed to perform the
+specified action, one of the following two scenarios may happen:</p>
+
+<ul>
+<li><p>If the user is not logged in and if the <a href="/doc/api/1.1/CWebUser#loginUrl">loginUrl</a>
+property of the user component is configured to be the URL of the login
+page, the browser will be redirected to that page. Note that by default,
+<a href="/doc/api/1.1/CWebUser#loginUrl">loginUrl</a> points to the <code>site/login</code> page.</p></li>
+<li><p>Otherwise an HTTP exception will be displayed with error code 403.</p></li>
+</ul>
+
+<p>When configuring the <a href="/doc/api/1.1/CWebUser#loginUrl">loginUrl</a> property, one can
+provide a relative or absolute URL. One can also provide an array which
+will be used to generate a URL by calling <a href="/doc/api/1.1/CWebApplication#createUrl">CWebApplication::createUrl</a>. The
+first array element should specify the
+<a href="/doc/guide/1.1/en/basics.controller#route">route</a> to the login controller
+action, and the rest name-value pairs are GET parameters. For example,</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-code">
+    ......
+    </span><span class="hl-quotes">'</span><span class="hl-string">components</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+        <span class="hl-quotes">'</span><span class="hl-string">user</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-comment">//</span><span class="hl-comment"> this is actually the default value</span>
+            <span class="hl-quotes">'</span><span class="hl-string">loginUrl</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">site/login</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-brackets">)</span><span class="hl-code">,
+</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>If the browser is redirected to the login page and the login is
+successful, we may want to redirect the browser back to the page that
+caused the authorization failure. How do we know the URL for that page? We
+can get this information from the <a href="/doc/api/1.1/CWebUser#returnUrl">returnUrl</a> property
+of the user component. We can thus do the following to perform the
+redirection:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">request</span><span class="hl-code">-&gt;</span><span class="hl-identifier">redirect</span><span class="hl-brackets">(</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">user</span><span class="hl-code">-&gt;</span><span class="hl-identifier">returnUrl</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<h2 id="role-based-access-control">6. Role-Based Access Control <a class="anchor" href="#role-based-access-control">¶</a></h2>
+
+<p>Role-Based Access Control (RBAC) provides a simple yet powerful
+centralized access control. Please refer to the <a href="http://en.wikipedia.org/wiki/Role-based_access_control">Wiki
+article</a> for more
+details about comparing RBAC with other more traditional access control
+schemes.</p>
+
+<p>Yii implements a hierarchical RBAC scheme via its
+<a href="/doc/api/1.1/CWebApplication#authManager">authManager</a> application component. In the
+following ,we first introduce the main concepts used in this scheme; we
+then describe how to define authorization data; at the end we show how to
+make use of the authorization data to perform access checking.</p>
+
+<h3 id="overview">Overview</h3>
+
+<p>A fundamental concept in Yii's RBAC is <em>authorization item</em>. An
+authorization item is a permission to do something (e.g. creating new blog
+posts, managing users). According to its granularity and targeted audience,
+authorization items can be classified as <em>operations</em>,
+<em>tasks</em> and <em>roles</em>. A role consists of tasks, a task
+consists of operations, and an operation is a permission that is atomic.
+For example, we can have a system with <code>administrator</code> role which consists
+of <code>post management</code> task and <code>user management</code> task. The <code>user management</code>
+task may consist of <code>create user</code>, <code>update user</code> and <code>delete user</code>
+operations. For more flexibility, Yii also allows a role to consist of
+other roles or operations, a task to consist of other tasks, and an
+operation to consist of other operations.</p>
+
+<p>An authorization item is uniquely identified by its name.</p>
+
+<p>An authorization item may be associated with a <em>business rule</em>. A
+business rule is a piece of PHP code that will be executed when performing
+access checking with respect to the item. Only when the execution returns
+true, will the user be considered to have the permission represented by the
+item. For example, when defining an operation <code>updatePost</code>, we would like
+to add a business rule that checks if the user ID is the same as the post's
+author ID so that only the author himself can have the permission to update
+a post.</p>
+
+<p>Using authorization items, we can build up an <em>authorization
+hierarchy</em>. An item <code>A</code> is a parent of another item <code>B</code> in the
+hierarchy if <code>A</code> consists of <code>B</code> (or say <code>A</code> inherits the permission(s)
+represented by <code>B</code>). An item can have multiple child items, and it can also
+have multiple parent items. Therefore, an authorization hierarchy is a
+partial-order graph rather than a tree. In this hierarchy, role items sit
+on top levels, operation items on bottom levels, while task items in
+between.</p>
+
+<p>Once we have an authorization hierarchy, we can assign roles in this
+hierarchy to application users. A user, once assigned with a role, will
+have the permissions represented by the role. For example, if we assign the
+<code>administrator</code> role to a user, he will have the administrator permissions
+which include <code>post management</code> and <code>user management</code> (and the
+corresponding operations such as <code>create user</code>).</p>
+
+<p>Now the fun part starts. In a controller action, we want to check if the
+current user can delete the specified post. Using the RBAC hierarchy and
+assignment, this can be done easily as follows:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">user</span><span class="hl-code">-&gt;</span><span class="hl-identifier">checkAccess</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">deletePost</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-comment">//</span><span class="hl-comment"> delete the post</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<h2 id="configuring-authorization-manager">7. Configuring Authorization Manager <a class="anchor" href="#configuring-authorization-manager">¶</a></h2>
+
+<p>Before we set off to define an authorization hierarchy and perform access
+checking, we need to configure the
+<a href="/doc/api/1.1/CWebApplication#authManager">authManager</a> application component. Yii
+provides two types of authorization managers: <a href="/doc/api/1.1/CPhpAuthManager">CPhpAuthManager</a> and
+<a href="/doc/api/1.1/CDbAuthManager">CDbAuthManager</a>. The former uses a PHP script file to store authorization
+data, while the latter stores authorization data in database. When we
+configure the <a href="/doc/api/1.1/CWebApplication#authManager">authManager</a> application
+component, we need to specify which component class to use and what are the
+initial property values for the component. For example,</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">return</span> <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+    <span class="hl-quotes">'</span><span class="hl-string">components</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+        <span class="hl-quotes">'</span><span class="hl-string">db</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">CDbConnection</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">connectionString</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">sqlite:path/to/file.db</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">,
+        </span><span class="hl-quotes">'</span><span class="hl-string">authManager</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">CDbAuthManager</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">connectionID</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">db</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-brackets">)</span><span class="hl-code">,
+</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>We can then access the <a href="/doc/api/1.1/CWebApplication#authManager">authManager</a>
+application component using <code>Yii::app()-&gt;authManager</code>.</p>
+
+<h2 id="defining-authorization-hierarchy">8. Defining Authorization Hierarchy <a class="anchor" href="#defining-authorization-hierarchy">¶</a></h2>
+
+<p>Defining authorization hierarchy involves three steps: defining
+authorization items, establishing relationships between authorization
+items, and assigning roles to application users. The
+<a href="/doc/api/1.1/CWebApplication#authManager">authManager</a> application component provides a
+whole set of APIs to accomplish these tasks.</p>
+
+<p>To define an authorization item, call one of the following methods,
+depending on the type of the item:</p>
+
+<ul>
+<li><a href="/doc/api/1.1/CAuthManager#createRole">CAuthManager::createRole</a></li>
+<li><a href="/doc/api/1.1/CAuthManager#createTask">CAuthManager::createTask</a></li>
+<li><a href="/doc/api/1.1/CAuthManager#createOperation">CAuthManager::createOperation</a></li>
+</ul>
+
+<p>Once we have a set of authorization items, we can call the following
+methods to establish relationships between authorization items:</p>
+
+<ul>
+<li><a href="/doc/api/1.1/CAuthManager#addItemChild">CAuthManager::addItemChild</a></li>
+<li><a href="/doc/api/1.1/CAuthManager#removeItemChild">CAuthManager::removeItemChild</a></li>
+<li><a href="/doc/api/1.1/CAuthItem#addChild">CAuthItem::addChild</a></li>
+<li><a href="/doc/api/1.1/CAuthItem#removeChild">CAuthItem::removeChild</a></li>
+</ul>
+
+<p>And finally, we call the following methods to assign role items to
+individual users:</p>
+
+<ul>
+<li><a href="/doc/api/1.1/CAuthManager#assign">CAuthManager::assign</a></li>
+<li><a href="/doc/api/1.1/CAuthManager#revoke">CAuthManager::revoke</a></li>
+</ul>
+
+<p>Below we show an example about building an authorization hierarchy with
+the provided APIs:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$auth</span><span class="hl-code">=</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">authManager</span><span class="hl-code">;
+ 
+</span><span class="hl-var">$auth</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createOperation</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">createPost</span><span class="hl-quotes">'</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">create a post</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$auth</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createOperation</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">readPost</span><span class="hl-quotes">'</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">read a post</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$auth</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createOperation</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">updatePost</span><span class="hl-quotes">'</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">update a post</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$auth</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createOperation</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">deletePost</span><span class="hl-quotes">'</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">delete a post</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+</span><span class="hl-var">$bizRule</span><span class="hl-code">=</span><span class="hl-quotes">'</span><span class="hl-string">return Yii::app()-&gt;user-&gt;id==$params[&quot;post&quot;]-&gt;authID;</span><span class="hl-quotes">'</span><span class="hl-code">;
+</span><span class="hl-var">$task</span><span class="hl-code">=</span><span class="hl-var">$auth</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createTask</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">updateOwnPost</span><span class="hl-quotes">'</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">update a post by author himself</span><span class="hl-quotes">'</span><span class="hl-code">,</span><span class="hl-var">$bizRule</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$task</span><span class="hl-code">-&gt;</span><span class="hl-identifier">addChild</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">updatePost</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+</span><span class="hl-var">$role</span><span class="hl-code">=</span><span class="hl-var">$auth</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createRole</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">reader</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$role</span><span class="hl-code">-&gt;</span><span class="hl-identifier">addChild</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">readPost</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+</span><span class="hl-var">$role</span><span class="hl-code">=</span><span class="hl-var">$auth</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createRole</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">author</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$role</span><span class="hl-code">-&gt;</span><span class="hl-identifier">addChild</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">reader</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$role</span><span class="hl-code">-&gt;</span><span class="hl-identifier">addChild</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">createPost</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$role</span><span class="hl-code">-&gt;</span><span class="hl-identifier">addChild</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">updateOwnPost</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+</span><span class="hl-var">$role</span><span class="hl-code">=</span><span class="hl-var">$auth</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createRole</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">editor</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$role</span><span class="hl-code">-&gt;</span><span class="hl-identifier">addChild</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">reader</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$role</span><span class="hl-code">-&gt;</span><span class="hl-identifier">addChild</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">updatePost</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+</span><span class="hl-var">$role</span><span class="hl-code">=</span><span class="hl-var">$auth</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createRole</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">admin</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$role</span><span class="hl-code">-&gt;</span><span class="hl-identifier">addChild</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">editor</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$role</span><span class="hl-code">-&gt;</span><span class="hl-identifier">addChild</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">author</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$role</span><span class="hl-code">-&gt;</span><span class="hl-identifier">addChild</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">deletePost</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+</span><span class="hl-var">$auth</span><span class="hl-code">-&gt;</span><span class="hl-identifier">assign</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">reader</span><span class="hl-quotes">'</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">readerA</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$auth</span><span class="hl-code">-&gt;</span><span class="hl-identifier">assign</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">author</span><span class="hl-quotes">'</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">authorB</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$auth</span><span class="hl-code">-&gt;</span><span class="hl-identifier">assign</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">editor</span><span class="hl-quotes">'</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">editorC</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-var">$auth</span><span class="hl-code">-&gt;</span><span class="hl-identifier">assign</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">admin</span><span class="hl-quotes">'</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">adminD</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>Once we have established this hierarchy, the <a href="/doc/api/1.1/CWebApplication#authManager">authManager</a> component (e.g.
+<a href="/doc/api/1.1/CPhpAuthManager">CPhpAuthManager</a>, <a href="/doc/api/1.1/CDbAuthManager">CDbAuthManager</a>) will load the authorization
+items automatically. Therefore, we only need to run the above code one time, and NOT for every request.</p>
+
+<blockquote class="info">
+<p><strong>Info:</strong> While the above example looks long and tedious, it is mainly for
+  demonstrative purposes. Developers will usually need to develop some administrative user
+  interfaces so that end users can establish an authorization
+  hierarchy more intuitively.</p>
+</blockquote>
+
+<h2 id="using-business-rules">9. Using Business Rules <a class="anchor" href="#using-business-rules">¶</a></h2>
+
+<p>When we are defining the authorization hierarchy, we can associate a role, a task or an operation with a so-called <em>business rule</em>. We may also associate a business rule when we assign a role to a user. A business rule is a piece of PHP code that is executed when we perform access checking. The returning value of the code is used to determine if the role or assignment applies to the current user. In the example above, we associated a business rule with the <code>updateOwnPost</code> task. In the business rule we simply check if the current user ID is the same as the specified post's author ID. The post information in the <code>$params</code> array is supplied by developers when performing access checking.</p>
+
+<h3 id="access-checking">Access Checking</h3>
+
+<p>To perform access checking, we first need to know the name of the
+authorization item. For example, to check if the current user can create a
+post, we would check if he has the permission represented by the
+<code>createPost</code> operation. We then call <a href="/doc/api/1.1/CWebUser#checkAccess">CWebUser::checkAccess</a> to perform the
+access checking:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">user</span><span class="hl-code">-&gt;</span><span class="hl-identifier">checkAccess</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">createPost</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-comment">//</span><span class="hl-comment"> create post</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>If the authorization rule is associated with a business rule which
+requires additional parameters, we can pass them as well. For example, to
+check if a user can update a post, we would pass in the post data in the <code>$params</code>:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$params</span><span class="hl-code">=</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">post</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-var">$post</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">user</span><span class="hl-code">-&gt;</span><span class="hl-identifier">checkAccess</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">updateOwnPost</span><span class="hl-quotes">'</span><span class="hl-code">,</span><span class="hl-var">$params</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-comment">//</span><span class="hl-comment"> update post</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<h3 id="using-default-roles">Using Default Roles</h3>
+
+<p>Many Web applications need some very special roles that would be assigned to
+every or most of the system users. For example, we may want to assign some
+privileges to all authenticated users. It poses a lot of maintenance trouble
+if we explicitly specify and store these role assignments. We can exploit
+<em>default roles</em> to solve this problem.</p>
+
+<p>A default role is a role that is implicitly assigned to every user. We do not 
+need to explicitly assign it to a user.
+When <a href="/doc/api/1.1/CWebUser#checkAccess">CWebUser::checkAccess</a> is invoked, default roles will be checked first as if they are
+assigned to the user.</p>
+
+<p>Default roles must be declared in the <a href="/doc/api/1.1/CAuthManager#defaultRoles">CAuthManager::defaultRoles</a> property.
+For example, the following configuration declares two roles to be default roles: <code>authenticated</code> and <code>admin</code>.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">return</span> <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+    <span class="hl-quotes">'</span><span class="hl-string">components</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+        <span class="hl-quotes">'</span><span class="hl-string">authManager</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">CDbAuthManager</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">defaultRoles</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">authenticated</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">admin</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-brackets">)</span><span class="hl-code">,
+</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>Because a default role is assigned to every user, it usually needs to be
+associated with a business rule that determines whether the role
+really applies to the user. For example, the following code defines two
+roles, <code>authenticated</code> and <code>admin</code>, which effectively apply to authenticated
+users and users with the username <code>admin</code>, respectively.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$bizRule</span><span class="hl-code">=</span><span class="hl-quotes">'</span><span class="hl-string">return !Yii::app()-&gt;user-&gt;isGuest;</span><span class="hl-quotes">'</span><span class="hl-code">;
+</span><span class="hl-var">$auth</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createRole</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">authenticated</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">authenticated user</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$bizRule</span><span class="hl-brackets">)</span><span class="hl-code">;
+ 
+</span><span class="hl-var">$bizRule</span><span class="hl-code">=</span><span class="hl-quotes">'</span><span class="hl-string">return Yii::app()-&gt;user-&gt;name === &quot;admin&quot;;</span><span class="hl-quotes">'</span><span class="hl-code">;
+</span><span class="hl-var">$auth</span><span class="hl-code">-&gt;</span><span class="hl-identifier">createRole</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">admin</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">admin user</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-var">$bizRule</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<blockquote class="info">
+<p><strong>Info:</strong> Since version 1.1.11 the <code>$params</code> array passed to a business rule has a key named
+  <code>userId</code> whose value is the id of the user the business rule is checked for.
+  You would need this if you call <a href="/doc/api/1.1/CDbAuthManager#checkAccess">CDbAuthManager::checkAccess()</a> or <a href="/doc/api/1.1/CPhpAuthManager#checkAccess">CPhpAuthManager::checkAccess()</a> in places
+  where <code>Yii::app()-&gt;user</code> is not available or not the user you are checking access for.</p>
+</blockquote>
+
+<div class="revision"><div class="google-ad" style="margin:-60px 0 5px 200px;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "7116172008";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>$Id$</div>
+</div>
+                <div class="prev-next-nav">
+                            <div class="prev-topic"><a href="/doc/guide/1.1/en/topics.url">URL Management</a></div>
+                                        <div class="next-topic"><a href="/doc/guide/1.1/en/topics.theming">Theming and Skin</a></div>
+                    </div>
+        
+		        <div class="widget-comment-list" id="comments">
+	<div class="comments">
+		<h3>Total 8 comments</h3>
+				<div class="comment alt-0">
+			<a class="cid" id="c13147" title="permalink to this comment" href="#c13147">#13147</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=13147"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=13147&amp;vote=1"><span>4</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=13147&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/31653/">Fragoulas</a> at 2013/05/08 04:44am</div>
+			<div class="title">AccessRules and CheckAccess with parameters</div>
+			<div class="content"><p>If you want to pass parameters with the role/task/operation you can do so like this:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">allow</span><span class="hl-quotes">'</span><span class="hl-code">,
+ </span><span class="hl-quotes">'</span><span class="hl-string">actions</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">myaction</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+ </span><span class="hl-quotes">'</span><span class="hl-string">roles</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+  <span class="hl-quotes">'</span><span class="hl-string">myrole</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-comment">/*</span><span class="hl-comment"> params </span><span class="hl-comment">*/</span> <span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">param0</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-var">$param0</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">param1</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-var">$param1</span><span class="hl-brackets">)</span><span class="hl-code">,
+ </span><span class="hl-brackets">)</span><span class="hl-code">,
+</span><span class="hl-brackets">)</span><span class="hl-code">,</span></pre></div></div>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c7865" title="permalink to this comment" href="#c7865">#7865</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=7865"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=7865&amp;vote=1"><span>7</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=7865&amp;vote=0"><span>1</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/38716/">kiennguyen</a> at 2012/04/23 11:42pm</div>
+			<div class="title">checkAccess() and assign() use user ID!</div>
+			<div class="content"><p>I've been trying to implement authorization using access control but to my surprise, i've not been successful even to the simplest scenario. After some times, I realized that checkAccess() and assign() methods use user's ID instead of user's name to check.</p>
+
+<p>So:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$auth</span><span class="hl-code">-&gt;</span><span class="hl-identifier">assign</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">admin</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">adminstrator1</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>-&gt; Would not work!</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$auth</span><span class="hl-code">-&gt;</span><span class="hl-identifier">assign</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">admin</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-number">1</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>-&gt; Work!</p>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c5300" title="permalink to this comment" href="#c5300">#5300</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=5300"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=5300&amp;vote=1"><span>1</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=5300&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/39239/">alinmircea</a> at 2011/10/02 06:25pm</div>
+			<div class="title">When using UserIdentity with setState</div>
+			<div class="content"><p>If the value you are setting is null it will not be saved to the session scope.</p>
+
+<p>When you call CWebUser.login(UserIdentity), any state set in that UserIdentity will be passed to CWebUser to be saved to the session scope. However if the value of one of those states (variables) is null, it will NOT be saved to the session scope.</p>
+
+<p>Because of that you cannot combine the usage of CWebUser-&gt;setstate('thivariable','thisvalue') or UserIdentity-&gt;setState('thivariable','thisvalue') with CWebUser-&gt;thivariable = 'thisvalue'</p>
+
+<p>You need to either use CWebUser-&gt;setState('thisvariable') and CWebUser-&gt;getState('thisvariable') respectively or CWebUser-&gt;thisvariable but not both.</p>
+
+<p>If you set a null value using setState, remember that_variable will not be saved in the session scope , so if after that you call CWebUser-&gt;that_variable, it will throw an error or it may not return the same value.</p>
+
+<p>So, in conclusion, when using the UserIdentity functionality described above, only set user variables using setState() and only get them using getState()
+If you are not using UserIdentity, you can use either setState('thisvariable','') and getState() or CWebUser-&gt;thisvariable = '' but NOT both.</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c3915" title="permalink to this comment" href="#c3915">#3915</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=3915"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=3915&amp;vote=1"><span>4</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=3915&amp;vote=0"><span>1</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/2668/">ldg</a> at 2011/05/20 06:25pm</div>
+			<div class="title">beforeAction() requires argument</div>
+			<div class="content"><p>Note that you should use the $action argument when defining beforeAction() like:
+</p><pre><code>protected function beforeAction($action)
+    {
+    ...
+</code></pre>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c2553" title="permalink to this comment" href="#c2553">#2553</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=2553"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=2553&amp;vote=1"><span>11</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=2553&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/9208/">twocandles</a> at 2011/01/17 10:49am</div>
+			<div class="title">Reversed inheritance</div>
+			<div class="content"><p>As dcolly states in his first comment, the inheritance for rbac is <strong>the opposite</strong> of an Object Oriented inheritance: <strong>a parent role has all the permissions of his children</strong>.</p>
+
+<p>Example:</p>
+
+<p><em>Authenticated</em> role should have the <em>Guest</em> role as child, since an authenticated user can execute all the actions of a guest user.</p>
+
+<p>I've been struggling with this for several hours... :)</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c869" title="permalink to this comment" href="#c869">#869</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=869"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=869&amp;vote=1"><span>15</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=869&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/3261/">DerekC</a> at 2010/02/15 07:27am</div>
+			<div class="title">Top-down view...</div>
+			<div class="content"><p>Reading the code above really got me confused. Turning the authorisation tree 'right way up' was more helpful to me when understanding the parent-child relationships between updateOwnPost and updatePost.</p>
+
+<p><strong>(Person) "AuthorB"</strong></p>
+
+<ul><li>has (Role) author</li>
+</ul><p><strong>(Role) author</strong></p>
+
+<ul><li>has (Task) reader</li>
+<li>has (Task|Operation) createPost</li>
+<li>has (Task|Operation) updateOwnPost (i.e. where author_id = me) <em>(1)</em></li>
+</ul><p><strong>(Task) updateOwnPost</strong></p>
+
+<ul><li>has (Operation) updatePost <em>(2)</em></li>
+</ul><p>If you want users to be able update all posts, give them access to <b>updatePost</b></p>
+
+<p>If you want to allow users to update ONLY their OWN posts (i.e. via the Business Rule), then give them access to <b>updateOwnPost</b> <em>(2)</em></p>
+
+<p>So, traversing the access tree from the top you get through the <em>gate</em> called "updateOwnPost" if the condition is true. Note: you can't update anything yet. Only when you pass this <em>gate</em> do you fall through to "updatePost" - and this is where you get the actual permission to make an update.</p>
+
+<p>Hence the contoller only needs to grant permission for <b><em>update</em> action</b> to the <b><em>updatePost</em> role</b></p>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c1204" title="permalink to this comment" href="#c1204">#1204</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=1204"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=1204&amp;vote=1"><span>12</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=1204&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/981/">bas_vdl</a> at 2009/10/28 09:37am</div>
+			<div class="title">check acces with beforeAction()</div>
+			<div class="content"><p></p><pre><code>
+    protected function beforeAction()
+    {
+        if(Yii::app()-&gt;user-&gt;checkAccess(ucfirst($this-&gt;getId()) . ucfirst($this-&gt;getAction()-&gt;getId())))
+        {
+            return true;
+        } else {
+            Yii::app()-&gt;request-&gt;redirect(Yii::app()-&gt;user-&gt;returnUrl);
+        }
+    }
+</code></pre>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c1836" title="permalink to this comment" href="#c1836">#1836</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=1836"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=1836&amp;vote=1"><span>40</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=1836&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/713/">emix</a> at 2009/03/17 07:30pm</div>
+			<div class="title">RBAC Database Tables</div>
+			<div class="content"><p>If anyone is looking for RBAC table schemes, they can be found in:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-code">/</span><span class="hl-identifier">framework</span><span class="hl-code">/</span><span class="hl-identifier">web</span><span class="hl-code">/</span><span class="hl-identifier">auth</span><span class="hl-code">/</span><span class="hl-identifier">schema</span><span class="hl-code">-*.</span><span class="hl-identifier">sql</span></pre></div></div>
+</div>
+					</div>
+			</div>
+	<div id="comment-add">
+		<h3 id="add-comment">Leave a comment</h3>
+
+			<p>Please <a class="g-login" rel="/doc/guide/1.1/en/topics.auth#add-comment" href="#">login</a> to leave your comment.</p>
+		</div>
+</div>
+           </div>
+</div>
+					</div>
+				
+								<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+					</div>
+	</div>
+
+	<div class="layout-main-footer">
+		<div class="container_12">
+			<div class="grid_6">
+				<ul class="menu">
+				<li class="main">About
+<ul class="sub">
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="main">Downloads
+<ul class="sub">
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="main">Documentation
+<ul class="sub">
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="main">Development
+<ul class="sub">
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="main">Community
+<ul class="sub">
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+				</ul>
+			</div>
+			<div class="grid_1">&nbsp;</div>
+			<div class="grid_5">
+				<h3>Yii Supporters</h3>
+				<ul class="g-list-none supporters">
+
+				</ul>
+			</div>
+
+			<div class="clear"></div>
+			<div class="grid_12 copyright">
+				<ul class="social">
+					<li class="twitter"><a href="https://twitter.com/yiiframework" target="_blank" rel="nofollow" title="follow us on twitter">Twitter</a></li>
+					<li class="facebook"><a href="https://www.facebook.com/groups/yiitalk/" target="_blank" rel="nofollow" title="join yii group at facebook">Facebook</a></li>
+					<li class="linkedin"><a href="http://www.linkedin.com/groups?gid=1483367" target="_blank" rel="nofollow" title="join yii group at linkedin">LinkedIn</a></li>
+					<li class="feeds"><a title="RSS feeds" href="/rss.xml/">RSS Feeds</a></li>
+				</ul>
+				<div class="clear"></div>
+				<a href="/tos/">Terms of Service</a> |
+				<a href="/license/">License</a> |
+				<a href="/contact/">Contact Us</a><br/>
+				Copyright &copy; 2015 by <a href="http://www.yiisoft.com">Yii Software LLC</a>.
+				All Rights Reserved.
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+    <script type="text/javascript" src="/js/site-20121004195728.js"></script>
+
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['site._setAccount', 'UA-5843896-1']);
+_gaq.push(['site._trackPageview']);
+
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+<script type="text/javascript">
+function trackClick(link, action, category) {
+	action=action || link.href;
+	category=category || 'Outbound Links';
+	try {
+		_gaq.push(['site._trackEvent', category, action]);
+		setTimeout('document.location = "' + link.href + '"', 250);
+	}catch(err){}
+	return false;
+}
+</script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+</body>
+</html>

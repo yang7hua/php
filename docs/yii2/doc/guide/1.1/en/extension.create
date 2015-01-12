@@ -1,0 +1,777 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    	<meta charset="UTF-8" />
+		<meta name="keywords" content="yii framework, tutorial, guide, version 1.1" />
+	<meta name="description" content="Because an extension is meant to be used by third-party developers, it takes
+some additional efforts to create it. The followings are some general guidelines:" />
+    <link rel="shortcut icon" type="image/x-icon" href="http://static.yiiframework.com/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="http://static.yiiframework.com/css/site-20130404102234.css" />
+
+	<link title="Lives News for Yii Framework" rel="alternate" type="application/rss+xml" href="http://www.yiiframework.com/rss.xml/" />
+	<title>Extending Yii: Creating Extensions | The Definitive Guide to Yii | Yii PHP Framework</title>
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii API Search" href="/search-api.xml" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii Site Search" href="/search-site.xml" />
+</head>
+
+<body class="mac">
+<div class="layout-main">
+
+	<div class="layout-main-shortcuts">
+		<div class="container_12">
+            <a style="color:darkred;" href="https://github.com/yiisoft/yii2">Github</a> &middot;
+            <a style="color:darkgreen;" href="https://twitter.com/yiiframework">Twitter</a> &middot;
+            <a style="color:darkblue;" href="https://www.facebook.com/groups/yiitalk/">Facebook</a> &middot;
+            <a href="/doc/guide/">Guide</a> &middot;
+            <a href="/doc/api/">Class Reference</a> &middot;
+            <a href="/doc-2.0/guide-index.html">Guide 2.0</a> &middot;
+            <a href="/doc-2.0/index.html">API 2.0</a> &middot;
+            <a href="/wiki/">Wiki</a> &middot;
+            <a href="/extensions/">Extensions</a> &middot;
+            <a href="/forum/">Forum</a> &middot;
+			<a href="/chat/">Live Chat</a> &middot;
+                            <a href="/login/">Login</a>            		</div>
+	</div>
+
+	<div class="layout-main-bg">
+		<div class="layout-main-header">
+			<div class="container_12">
+				<div class="grid_4">
+					<a class="logo" href="/"><img alt="Yii Logo" src="http://static.yiiframework.com/css/img/logo.png" title="Yii Framework" width="284" height="64" /></a>				</div>
+				<div class="grid_8 omega">
+					<div class="nav">
+						<ul class="menu" id="yw0">
+<li class="about"><a class="main" href="/about/">About</a>
+<ul>
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li class="last"><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="downloads"><a class="main" href="/download/">Downloads</a>
+<ul>
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li class="last"><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="documentation active"><a class="main" href="/doc/">Documentation</a>
+<ul>
+<li><a href="/tour/">Take the Tour</a></li>
+<li class="active"><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li class="last"><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="development"><a class="main" href="https://github.com/yiisoft/yii/commits/master">Development</a>
+<ul>
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li class="last"><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="community last"><a class="main" href="/community/">Community</a>
+<ul>
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li class="last"><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+</ul>						<div class="search">
+							<form method="get" action="/search/">
+								<div class="keyword">
+	                                <input name="q" value="" />
+									<a href="#" title="search" class="global-search">search</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+
+		<div class="container_12">
+						<div class="grid_12">
+												<div class="layout-main-submenu">
+					<ul>
+						<li class="main">Documentation</li>
+												<li><a href="/tour/">Take the Tour</a></li>
+												<li class="active"><a href="/tutorials/">Tutorials</a></li>
+												<li><a href="/doc/api/">Class Reference</a></li>
+												<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+												<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+												<li><a href="/wiki/">Wiki</a></li>
+												<li><a href="/screencasts/">Screencasts</a></li>
+												<li><a href="/resources/">Resources</a></li>
+											</ul>
+				</div>
+				
+				
+				
+									<div class="layout-main-body">
+						<div class="tutorial-view">
+    <div class="grid_3 alpha">
+        <div class="nav-toc">
+    		<div class="title">The Definitive Guide to Yii</div>
+    		<div class="langver">
+	            <strong>Language &amp; version</strong>
+	    		<div class="languages g-dropdown">
+	    		<span>English<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.1/de/extension.create">Deutsch</a></li>
+<li><a href="/doc/guide/1.1/es/extension.create">Español</a></li>
+<li><a href="/doc/guide/1.1/fr/extension.create">Français</a></li>
+<li><a href="/doc/guide/1.1/he/extension.create">עִבְרִית</a></li>
+<li><a href="/doc/guide/1.1/id/extension.create">Bahasa Indonesia</a></li>
+<li><a href="/doc/guide/1.1/it/extension.create">Italiano</a></li>
+<li><a href="/doc/guide/1.1/ja/extension.create">日本語</a></li>
+<li><a href="/doc/guide/1.1/pl/extension.create">Polski</a></li>
+<li><a href="/doc/guide/1.1/pt/extension.create">Português</a></li>
+<li><a href="/doc/guide/1.1/pt_br/extension.create">Português brasileiro</a></li>
+<li><a href="/doc/guide/1.1/ro/extension.create">România</a></li>
+<li><a href="/doc/guide/1.1/ru/extension.create">Русский</a></li>
+<li><a href="/doc/guide/1.1/sv/extension.create">Svenska</a></li>
+<li><a href="/doc/guide/1.1/uk/extension.create">украї́нська</a></li>
+<li><a href="/doc/guide/1.1/zh_cn/extension.create">简体中文</a></li>
+</ul>
+	    		</div>
+				<div class="versions g-dropdown">
+	    		<span>1.1<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.0/en/extension.create">1.0</a></li>
+</ul>
+				</div>
+				<div class="clear"></div>
+			</div>
+            <div class="widget-search-box">
+    <form method="get" action="/search/">
+        <strong>Search in this tutorial</strong>
+		<input type="text" name="q" class="keyword g-text" />
+        <input type="hidden" name="type" value="guide" />
+        <input type="hidden" name="lang" value="en" />
+        <input type="submit" value="Find" class="btn btn-info" />
+	</form>
+</div>
+			<ul class="toc">
+						    <li class="chapter"><strong>Getting Started</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/index">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/changes">New Features</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/upgrade">Upgrading from 1.0 to 1.1</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.what-is-yii">What is Yii</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.installation">Installation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.apache-nginx-config">Apache and Nginx configurations</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app">Creating First Yii Application</a>			            </li>
+			        			    						    <li class="chapter"><strong>Fundamentals</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.mvc">Model-View-Controller (MVC)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.entry">Entry Script</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.application">Application</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.controller">Controller</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.model">Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.view">View</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.component">Component</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.module">Module</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.namespace">Path Alias and Namespace</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.convention">Conventions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.workflow">Development Workflow</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.best-practices">Best MVC Practices</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Forms</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.model">Creating Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.action">Creating Action</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.view">Creating Form</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.table">Collecting Tabular Input</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.builder">Using Form Builder</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Databases</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.dao">Database Access Objects</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.query-builder">Query Builder</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.ar">Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.arr">Relational Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.migration">Database Migration</a>			            </li>
+			        			    						    <li class="chapter"><strong>Caching</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.data">Data Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.fragment">Fragment Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.page">Page Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.dynamic">Dynamic Content</a>			            </li>
+			        			    						    <li class="chapter"><strong>Extending Yii</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.use">Using Extensions</a>			            </li>
+			        			    			        			            <li class="active">
+			                &raquo; Creating Extensions &laquo;
+			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.integration">Using 3rd-Party Libraries</a>			            </li>
+			        			    						    <li class="chapter"><strong>Testing</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.fixture">Defining Fixtures</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.unit">Unit Testing</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.functional">Functional Testing</a>			            </li>
+			        			    						    <li class="chapter"><strong>Special Topics</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.gii">Automatic Code Generation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.url">URL Management</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.auth">Authentication and Authorization</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.theming">Theming and Skin</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.logging">Logging</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.error">Error Handling</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.webservice">Web Service</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.i18n">Internationalization (I18N)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.prado">Alternative Template Syntax</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.console">Console Applications</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.security">Security</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.performance">Performance Tuning</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app-yiic">Code Generation using Command Line Tools (deprecated)</a>			            </li>
+			        			    						</ul>
+        </div>
+    </div>
+    <div class="grid_9 omega">
+    	<div class="g-markdown"><h1 id="creating-extensions">Creating Extensions</h1>
+<div class="google-ad" style="float:right;margin:0 0 1em 1em;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "2830391674";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+<div class="toc"><ol><li><a href="#application-component">Application Component</a></li>
+<li><a href="#behavior">Behavior</a></li>
+<li><a href="#widget">Widget</a></li>
+<li><a href="#action">Action</a></li>
+<li><a href="#filter">Filter</a></li>
+<li><a href="#controller">Controller</a></li>
+<li><a href="#validator">Validator</a></li>
+<li><a href="#console-command">Console Command</a></li>
+<li><a href="#module">Module</a></li>
+<li><a href="#generic-component">Generic Component</a></li></ol></div>
+
+
+<p>Because an extension is meant to be used by third-party developers, it takes
+some additional efforts to create it. The followings are some general guidelines:</p>
+
+<ul>
+<li>An extension should be self-contained. That is, its external dependency should
+be minimal. It would be a headache for its users if an extension requires
+installation of additional packages, classes or resource files.</li>
+<li>Files belonging to an extension should be organized under the same
+directory whose name is the extension name</li>
+<li>Classes in an extension should be prefixed with some letter(s) to avoid
+naming conflict with classes in other extensions.</li>
+<li>An extension should come with detailed installation and API documentation.
+This would reduce the time and effort needed by other developers when they
+use the extension.</li>
+<li>An extension should be using an appropriate license. If you want to make
+your extension to be used by both open-source and closed-source projects,
+you may consider using licenses such as BSD, MIT, etc., but not GPL as it
+requires its derived code to be open-source as well.</li>
+</ul>
+
+<p>In the following, we describe how to create a new extension, according to
+its categorization as described in <a href="/doc/guide/1.1/en/extension.overview">overview</a>.
+These descriptions also apply when you are creating a component mainly used
+in your own projects.</p>
+
+<h2 id="application-component">1. Application Component <a class="anchor" href="#application-component">¶</a></h2>
+
+<p>An <a href="/doc/guide/1.1/en/basics.application#application-component">application component</a>
+should implement the interface <a href="/doc/api/1.1/IApplicationComponent">IApplicationComponent</a> or extend
+from <a href="/doc/api/1.1/CApplicationComponent">CApplicationComponent</a>. The main method needed to be implemented is
+<a href="/doc/api/1.1/IApplicationComponent#init">IApplicationComponent::init</a> in which the component performs some initialization
+work. This method is invoked after the component is created and the initial property
+values (specified in <a href="/doc/guide/1.1/en/basics.application#application-configuration">application configuration</a>)
+are applied.</p>
+
+<p>By default, an application component is created and initialized only when it
+is accessed for the first time during request handling. If an application component
+needs to be created right after the application instance is created, it should
+require the user to list its ID in the <a href="/doc/api/1.1/CApplication#preload">CApplication::preload</a> property.</p>
+
+<h2 id="behavior">2. Behavior <a class="anchor" href="#behavior">¶</a></h2>
+
+<p>To create a behavior, one must implement the <a href="/doc/api/1.1/IBehavior">IBehavior</a> interface. For convenience,
+Yii provides a base class <a href="/doc/api/1.1/CBehavior">CBehavior</a> that already implements this interface and
+provides some additional convenient methods. Child classes mainly need to implement
+the extra methods that they intend to make available to the components being attached to.</p>
+
+<p>When developing behaviors for <a href="/doc/api/1.1/CModel">CModel</a> and <a href="/doc/api/1.1/CActiveRecord">CActiveRecord</a>, one can also extend
+<a href="/doc/api/1.1/CModelBehavior">CModelBehavior</a> and <a href="/doc/api/1.1/CActiveRecordBehavior">CActiveRecordBehavior</a>, respectively. These base classes offer
+additional features that are specifically made for <a href="/doc/api/1.1/CModel">CModel</a> and <a href="/doc/api/1.1/CActiveRecord">CActiveRecord</a>.
+For example, the <a href="/doc/api/1.1/CActiveRecordBehavior">CActiveRecordBehavior</a> class implements a set of methods to respond
+to the life cycle events raised in an ActiveRecord object. A child class can thus
+override these methods to put in customized code which will participate in the AR life cycles.</p>
+
+<p>The following code shows an example of an ActiveRecord behavior. When this behavior is
+attached to an AR object and when the AR object is being saved by calling <code>save()</code>, it will
+automatically sets the <code>create_time</code> and <code>update_time</code> attributes with the current timestamp.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">TimestampBehavior</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CActiveRecordBehavior</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">beforeSave</span><span class="hl-brackets">(</span><span class="hl-var">$event</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">owner</span><span class="hl-code">-&gt;</span><span class="hl-identifier">isNewRecord</span><span class="hl-brackets">)</span>
+            <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">owner</span><span class="hl-code">-&gt;</span><span class="hl-identifier">create_time</span><span class="hl-code">=</span><span class="hl-identifier">time</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-reserved">else</span>
+            <span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">owner</span><span class="hl-code">-&gt;</span><span class="hl-identifier">update_time</span><span class="hl-code">=</span><span class="hl-identifier">time</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<h2 id="widget">3. Widget <a class="anchor" href="#widget">¶</a></h2>
+
+<p>A <a href="/doc/guide/1.1/en/basics.view#widget">widget</a> should extend from <a href="/doc/api/1.1/CWidget">CWidget</a> or its
+child classes.</p>
+
+<p>The easiest way of creating a new widget is extending an existing widget and
+overriding its methods or changing its default property values. For example, if
+you want to use a nicer CSS style for <a href="/doc/api/1.1/CTabView">CTabView</a>, you could configure its
+<a href="/doc/api/1.1/CTabView#cssFile">CTabView::cssFile</a> property when using the widget. You can also extend <a href="/doc/api/1.1/CTabView">CTabView</a>
+as follows so that you no longer need to configure the property when using the widget.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">MyTabView</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CTabView</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">init</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">cssFile</span><span class="hl-code">===</span><span class="hl-reserved">null</span><span class="hl-brackets">)</span>
+        <span class="hl-brackets">{</span>
+            <span class="hl-var">$file</span><span class="hl-code">=</span><span class="hl-identifier">dirname</span><span class="hl-brackets">(</span><span class="hl-reserved">__FILE__</span><span class="hl-brackets">)</span><span class="hl-code">.</span><span class="hl-reserved">DIRECTORY_SEPARATOR</span><span class="hl-code">.</span><span class="hl-quotes">'</span><span class="hl-string">tabview.css</span><span class="hl-quotes">'</span><span class="hl-code">;
+            </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">cssFile</span><span class="hl-code">=</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">getAssetManager</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">publish</span><span class="hl-brackets">(</span><span class="hl-var">$file</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span>
+        <span class="hl-identifier">parent</span><span class="hl-code">::</span><span class="hl-identifier">init</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>In the above, we override the <a href="/doc/api/1.1/CWidget#init">CWidget::init</a> method and assign to
+<a href="/doc/api/1.1/CTabView#cssFile">CTabView::cssFile</a> the URL to our new default CSS style if the property
+is not set. We put the new CSS style file under the same directory
+containing the <code>MyTabView</code> class file so that they can be packaged as
+an extension. Because the CSS style file is not Web accessible, we need
+to publish as an asset.</p>
+
+<p>To create a new widget from scratch, we mainly need to implement two methods:
+<a href="/doc/api/1.1/CWidget#init">CWidget::init</a> and <a href="/doc/api/1.1/CWidget#run">CWidget::run</a>. The first method is called when we
+use <code>$this-&gt;beginWidget</code> to insert a widget in a view, and the
+second method is called when we call <code>$this-&gt;endWidget</code>.
+If we want to capture and process the content displayed between these two
+method invocations, we can start <a href="http://us3.php.net/manual/en/book.outcontrol.php">output buffering</a>
+in <a href="/doc/api/1.1/CWidget#init">CWidget::init</a> and retrieve the buffered output in <a href="/doc/api/1.1/CWidget#run">CWidget::run</a>
+for further processing.</p>
+
+<p>A widget often involves including CSS, JavaScript or other resource files
+in the page that uses the widget. We call these files <em>assets</em> because
+they stay together with the widget class file and are usually not accessible by
+Web users. In order to make these files Web accessible, we need to publish
+them using <a href="/doc/api/1.1/CWebApplication#assetManager">CWebApplication::assetManager</a>, as shown in the above code snippet.
+Besides, if we want to include a CSS or JavaScript file in the current page,
+we need to register it using <a href="/doc/api/1.1/CClientScript">CClientScript</a>:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">MyWidget</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CWidget</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">protected</span> <span class="hl-reserved">function</span> <span class="hl-identifier">registerClientScript</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-comment">//</span><span class="hl-comment"> ...publish CSS or JavaScript file here...</span>
+        <span class="hl-var">$cs</span><span class="hl-code">=</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">clientScript</span><span class="hl-code">;
+        </span><span class="hl-var">$cs</span><span class="hl-code">-&gt;</span><span class="hl-identifier">registerCssFile</span><span class="hl-brackets">(</span><span class="hl-var">$cssFile</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-var">$cs</span><span class="hl-code">-&gt;</span><span class="hl-identifier">registerScriptFile</span><span class="hl-brackets">(</span><span class="hl-var">$jsFile</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>A widget may also have its own view files. If so, create a directory named
+<code>views</code> under the directory containing the widget class file, and put all the
+view files there. In the widget class, in order to render a widget view, use
+<code>$this-&gt;render('ViewName')</code>, which is similar to what we do in a controller.</p>
+
+<h2 id="action">4. Action <a class="anchor" href="#action">¶</a></h2>
+
+<p>An <a href="/doc/guide/1.1/en/basics.controller#action">action</a> should extend from <a href="/doc/api/1.1/CAction">CAction</a>
+or its child classes. The main method that needs to be implemented for an action
+is <a href="/doc/api/1.1/IAction#run">IAction::run</a>.</p>
+
+<h2 id="filter">5. Filter <a class="anchor" href="#filter">¶</a></h2>
+
+<p>A <a href="/doc/guide/1.1/en/basics.controller#filter">filter</a> should extend from <a href="/doc/api/1.1/CFilter">CFilter</a>
+or its child classes. The main methods that need to be implemented for a filter
+are <a href="/doc/api/1.1/CFilter#preFilter">CFilter::preFilter</a> and <a href="/doc/api/1.1/CFilter#postFilter">CFilter::postFilter</a>. The former is invoked before
+the action is executed while the latter after.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">MyFilter</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CFilter</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">protected</span> <span class="hl-reserved">function</span> <span class="hl-identifier">preFilter</span><span class="hl-brackets">(</span><span class="hl-var">$filterChain</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-comment">//</span><span class="hl-comment"> logic being applied before the action is executed</span>
+        <span class="hl-reserved">return</span> <span class="hl-reserved">true</span><span class="hl-code">; </span><span class="hl-comment">//</span><span class="hl-comment"> false if the action should not be executed</span>
+    <span class="hl-brackets">}</span>
+ 
+    <span class="hl-reserved">protected</span> <span class="hl-reserved">function</span> <span class="hl-identifier">postFilter</span><span class="hl-brackets">(</span><span class="hl-var">$filterChain</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-comment">//</span><span class="hl-comment"> logic being applied after the action is executed</span>
+    <span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<p>The parameter <code>$filterChain</code> is of type <a href="/doc/api/1.1/CFilterChain">CFilterChain</a> which contains information
+about the action that is currently filtered.</p>
+
+<h2 id="controller">6. Controller <a class="anchor" href="#controller">¶</a></h2>
+
+<p>A <a href="/doc/guide/1.1/en/basics.controller">controller</a> distributed as an extension
+should extend from <a href="/doc/api/1.1/CExtController">CExtController</a>, instead of <a href="/doc/api/1.1/CController">CController</a>. The main reason
+is because <a href="/doc/api/1.1/CController">CController</a> assumes the controller view files are located under
+<code>application.views.ControllerID</code>, while <a href="/doc/api/1.1/CExtController">CExtController</a> assumes the view
+files are located under the <code>views</code> directory which is a subdirectory of
+the directory containing the controller class file. Therefore, it is easier
+to redistribute the controller since its view files are staying together
+with the controller class file.</p>
+
+<h2 id="validator">7. Validator <a class="anchor" href="#validator">¶</a></h2>
+
+<p>A validator should extend from <a href="/doc/api/1.1/CValidator">CValidator</a> and implement its
+<a href="/doc/api/1.1/CValidator#validateAttribute">CValidator::validateAttribute</a> method.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">MyValidator</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CValidator</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">protected</span> <span class="hl-reserved">function</span> <span class="hl-identifier">validateAttribute</span><span class="hl-brackets">(</span><span class="hl-var">$model</span><span class="hl-code">,</span><span class="hl-var">$attribute</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-var">$value</span><span class="hl-code">=</span><span class="hl-var">$model</span><span class="hl-code">-&gt;</span><span class="hl-var">$attribute</span><span class="hl-code">;
+        </span><span class="hl-reserved">if</span><span class="hl-brackets">(</span><span class="hl-var">$value</span> <span class="hl-identifier">has</span> <span class="hl-identifier">error</span><span class="hl-brackets">)</span>
+            <span class="hl-var">$model</span><span class="hl-code">-&gt;</span><span class="hl-identifier">addError</span><span class="hl-brackets">(</span><span class="hl-var">$attribute</span><span class="hl-code">,</span><span class="hl-var">$errorMessage</span><span class="hl-brackets">)</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<h2 id="console-command">8. Console Command <a class="anchor" href="#console-command">¶</a></h2>
+
+<p>A <a href="/doc/guide/1.1/en/topics.console">console command</a> should extend from
+<a href="/doc/api/1.1/CConsoleCommand">CConsoleCommand</a> and implement its <a href="/doc/api/1.1/CConsoleCommand#run">CConsoleCommand::run</a> method.
+Optionally, we can override <a href="/doc/api/1.1/CConsoleCommand#getHelp">CConsoleCommand::getHelp</a> to provide
+some nice help information about the command.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">class</span> <span class="hl-identifier">MyCommand</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CConsoleCommand</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">run</span><span class="hl-brackets">(</span><span class="hl-var">$args</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-comment">//</span><span class="hl-comment"> $args gives an array of the command-line arguments for this command</span>
+    <span class="hl-brackets">}</span>
+ 
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">getHelp</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-reserved">return</span> <span class="hl-quotes">'</span><span class="hl-string">Usage: how to use this command</span><span class="hl-quotes">'</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+
+<h2 id="module">9. Module <a class="anchor" href="#module">¶</a></h2>
+
+<p>Please refer to the section about <a href="/doc/guide/1.1/en/basics.module#creating-module">modules</a> on how to create a module.</p>
+
+<p>A general guideline for developing a module is that it should be self-contained. Resource files (such as CSS, JavaScript, images) that are used by a module should be distributed together with the module. And the module should publish them so that they can be Web-accessible.</p>
+
+<h2 id="generic-component">10. Generic Component <a class="anchor" href="#generic-component">¶</a></h2>
+
+<p>Developing a generic component extension is like writing a class. Again, the component
+should also be self-contained so that it can be easily used by other developers.</p>
+
+<div class="revision"><div class="google-ad" style="margin:-60px 0 5px 200px;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "7116172008";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>$Id$</div>
+</div>
+                <div class="prev-next-nav">
+                            <div class="prev-topic"><a href="/doc/guide/1.1/en/extension.use">Using Extensions</a></div>
+                                        <div class="next-topic"><a href="/doc/guide/1.1/en/extension.integration">Using 3rd-Party Libraries</a></div>
+                    </div>
+        
+		        <div class="widget-comment-list" id="comments">
+	<div class="comments">
+		<h3>Total 2 comments</h3>
+				<div class="comment alt-0">
+			<a class="cid" id="c2362" title="permalink to this comment" href="#c2362">#2362</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=2362"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=2362&amp;vote=1"><span>1</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=2362&amp;vote=0"><span>1</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/6556/">Bijay Rungta</a> at 2010/12/17 02:17am</div>
+			<div class="title">Theme View Path Support.</div>
+			<div class="content"><div class="hl-code"><div class="hl-main"><pre><span class="hl-inlinetags">&lt;?php</span>
+<span class="hl-comment">/*</span><span class="hl-comment">*
+ * Class GCWidget extends CWidget,
+ *
+ * This is a Wrapper for the YII's CWidget Class to support Widget's View Path.
+ *</span><span class="hl-inlinedoc"> @author </span><span class="hl-comment">Bijay Rungta
+ *
+ </span><span class="hl-comment">*/</span>
+<span class="hl-reserved">class</span> <span class="hl-identifier">GCWidget</span> <span class="hl-reserved">extends</span> <span class="hl-identifier">CWidget</span>
+<span class="hl-brackets">{</span>
+    <span class="hl-comment">/*</span><span class="hl-comment">*
+     * Returns the directory containing the view files for this widget.
+     * The default implementation returns the 'views' subdirectory of the directory containing the widget class file.
+     *</span><span class="hl-inlinedoc"> @return </span><span class="hl-comment">string the directory containing the view files for this widget.
+     </span><span class="hl-comment">*/</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">getThemeViewPath</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-var">$className</span><span class="hl-code"> = </span><span class="hl-identifier">get_class</span><span class="hl-brackets">(</span><span class="hl-var">$this</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-code">!</span><span class="hl-reserved">empty</span><span class="hl-brackets">(</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">theme</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+            <span class="hl-reserved">return</span> <span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">theme</span><span class="hl-code">-&gt;</span><span class="hl-identifier">basePath</span><span class="hl-code"> . </span><span class="hl-reserved">DIRECTORY_SEPARATOR</span><span class="hl-code"> . </span><span class="hl-quotes">'</span><span class="hl-string">views</span><span class="hl-quotes">'</span><span class="hl-code">
+                 . </span><span class="hl-reserved">DIRECTORY_SEPARATOR</span><span class="hl-code"> . </span><span class="hl-identifier">get_class</span><span class="hl-brackets">(</span><span class="hl-var">$this</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span>
+        <span class="hl-reserved">return</span> <span class="hl-reserved">null</span><span class="hl-code">;
+    </span><span class="hl-brackets">}</span>
+ 
+    <span class="hl-comment">/*</span><span class="hl-comment">*
+     * Looks for the view script file according to the view name.
+     * This method will look for the view under the widget's {@link getViewPath viewPath}.
+     * The view script file is named as "ViewName.php". A localized view file
+     * may be returned if internationalization is needed. See {@link CApplication::findLocalizedFile}
+     * for more details.
+     * Since version 1.0.2, the view name can also refer to a path alias
+     * if it contains dot characters.
+     *</span><span class="hl-inlinedoc"> @param </span><span class="hl-comment">string name of the view (without file extension)
+     *</span><span class="hl-inlinedoc"> @return </span><span class="hl-comment">string the view file path. False if the view file does not exist
+     *</span><span class="hl-inlinedoc"> @see </span><span class="hl-comment">CApplication::findLocalizedFile
+     </span><span class="hl-comment">*/</span>
+    <span class="hl-reserved">public</span> <span class="hl-reserved">function</span> <span class="hl-identifier">getViewFile</span><span class="hl-brackets">(</span><span class="hl-var">$viewName</span><span class="hl-brackets">)</span>
+    <span class="hl-brackets">{</span>
+        <span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-brackets">(</span><span class="hl-var">$renderer</span><span class="hl-code"> = </span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">getViewRenderer</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span><span class="hl-code"> !== </span><span class="hl-reserved">null</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+            <span class="hl-var">$extension</span><span class="hl-code"> = </span><span class="hl-var">$renderer</span><span class="hl-code">-&gt;</span><span class="hl-identifier">fileExtension</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span> <span class="hl-reserved">else</span> <span class="hl-brackets">{</span>
+            <span class="hl-var">$extension</span><span class="hl-code"> = </span><span class="hl-quotes">'</span><span class="hl-string">.php</span><span class="hl-quotes">'</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span>
+        <span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-identifier">strpos</span><span class="hl-brackets">(</span><span class="hl-var">$viewName</span><span class="hl-code">, </span><span class="hl-quotes">'</span><span class="hl-string">.</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+            <span class="hl-comment">//</span><span class="hl-comment"> a path alias</span>
+            <span class="hl-var">$viewFile</span><span class="hl-code"> = </span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">getPathOfAlias</span><span class="hl-brackets">(</span><span class="hl-var">$viewName</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span> <span class="hl-reserved">else</span> <span class="hl-brackets">{</span>
+            <span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-var">$themeViewPath</span><span class="hl-code"> = </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">getThemeViewPath</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+                <span class="hl-var">$viewFile</span><span class="hl-code"> = </span><span class="hl-var">$themeViewPath</span><span class="hl-code"> . </span><span class="hl-reserved">DIRECTORY_SEPARATOR</span><span class="hl-code"> . </span><span class="hl-var">$viewName</span><span class="hl-code">;
+                </span><span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-identifier">is_file</span><span class="hl-brackets">(</span><span class="hl-var">$viewFile</span><span class="hl-code"> . </span><span class="hl-var">$extension</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+                    <span class="hl-reserved">return</span> <span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">findLocalizedFile</span><span class="hl-brackets">(</span><span class="hl-var">$viewFile</span><span class="hl-code">.</span><span class="hl-var">$extension</span><span class="hl-brackets">)</span><span class="hl-code">;
+                </span><span class="hl-brackets">}</span> <span class="hl-reserved">elseif</span> <span class="hl-brackets">(</span><span class="hl-var">$extension</span><span class="hl-code"> !== </span><span class="hl-quotes">'</span><span class="hl-string">.php</span><span class="hl-quotes">'</span><span class="hl-code"> &amp;&amp; </span><span class="hl-identifier">is_file</span><span class="hl-brackets">(</span><span class="hl-var">$viewFile</span><span class="hl-code"> . </span><span class="hl-quotes">'</span><span class="hl-string">.php</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+                    <span class="hl-reserved">return</span> <span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">findLocalizedFile</span><span class="hl-brackets">(</span><span class="hl-var">$viewFile</span><span class="hl-code"> . </span><span class="hl-quotes">'</span><span class="hl-string">.php</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+                </span><span class="hl-brackets">}</span>
+            <span class="hl-brackets">}</span>
+            <span class="hl-var">$viewFile</span><span class="hl-code"> = </span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">getViewPath</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code"> . </span><span class="hl-reserved">DIRECTORY_SEPARATOR</span><span class="hl-code"> . </span><span class="hl-var">$viewName</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span>
+ 
+        <span class="hl-reserved">if</span> <span class="hl-brackets">(</span><span class="hl-identifier">is_file</span><span class="hl-brackets">(</span><span class="hl-var">$viewFile</span><span class="hl-code"> . </span><span class="hl-var">$extension</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+            <span class="hl-reserved">return</span> <span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">findLocalizedFile</span><span class="hl-brackets">(</span><span class="hl-var">$viewFile</span><span class="hl-code">.</span><span class="hl-var">$extension</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span> <span class="hl-reserved">elseif</span> <span class="hl-brackets">(</span><span class="hl-var">$extension</span><span class="hl-code"> !== </span><span class="hl-quotes">'</span><span class="hl-string">.php</span><span class="hl-quotes">'</span><span class="hl-code"> &amp;&amp; </span><span class="hl-identifier">is_file</span><span class="hl-brackets">(</span><span class="hl-var">$viewFile</span><span class="hl-code"> . </span><span class="hl-quotes">'</span><span class="hl-string">.php</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+            <span class="hl-reserved">return</span> <span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">findLocalizedFile</span><span class="hl-brackets">(</span><span class="hl-var">$viewFile</span><span class="hl-code"> . </span><span class="hl-quotes">'</span><span class="hl-string">.php</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span> <span class="hl-reserved">else</span> <span class="hl-brackets">{</span>
+            <span class="hl-reserved">return</span> <span class="hl-reserved">false</span><span class="hl-code">;
+        </span><span class="hl-brackets">}</span>
+    <span class="hl-brackets">}</span>
+<span class="hl-brackets">}</span></pre></div></div>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c2099" title="permalink to this comment" href="#c2099">#2099</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=2099"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=2099&amp;vote=1"><span>4</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=2099&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/5432/">Nayjest</a> at 2010/11/11 08:18am</div>
+			<div class="title">Widgets &amp; themes support</div>
+			<div class="content"><div class="hl-code"><div class="hl-main"><pre><span class="hl-identifier">In</span> <span class="hl-identifier">widgets</span> <span class="hl-identifier">better</span> <span class="hl-identifier">to</span> <span class="hl-identifier">use</span>
+<span class="hl-var">$file</span><span class="hl-code">=</span><span class="hl-var">$this</span><span class="hl-code">-&gt;</span><span class="hl-identifier">getViewPath</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">.</span><span class="hl-reserved">DIRECTORY_SEPARATOR</span><span class="hl-code">.</span><span class="hl-quotes">'</span><span class="hl-string">tabview.css</span><span class="hl-quotes">'</span>
+<span class="hl-identifier">instead</span> <span class="hl-identifier">of</span>
+<span class="hl-var">$file</span><span class="hl-code">=</span><span class="hl-identifier">dirname</span><span class="hl-brackets">(</span><span class="hl-reserved">__FILE__</span><span class="hl-brackets">)</span><span class="hl-code">.</span><span class="hl-reserved">DIRECTORY_SEPARATOR</span><span class="hl-code">.</span><span class="hl-quotes">'</span><span class="hl-string">tabview.css</span><span class="hl-quotes">'</span><span class="hl-code">;
+</span><span class="hl-identifier">to</span> <span class="hl-identifier">provide</span> <span class="hl-identifier">support</span> <span class="hl-identifier">of</span> <span class="hl-identifier">themes</span><span class="hl-code">.</span></pre></div></div>
+</div>
+					</div>
+			</div>
+	<div id="comment-add">
+		<h3 id="add-comment">Leave a comment</h3>
+
+			<p>Please <a class="g-login" rel="/doc/guide/1.1/en/extension.create#add-comment" href="#">login</a> to leave your comment.</p>
+		</div>
+</div>
+           </div>
+</div>
+					</div>
+				
+								<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+					</div>
+	</div>
+
+	<div class="layout-main-footer">
+		<div class="container_12">
+			<div class="grid_6">
+				<ul class="menu">
+				<li class="main">About
+<ul class="sub">
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="main">Downloads
+<ul class="sub">
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="main">Documentation
+<ul class="sub">
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="main">Development
+<ul class="sub">
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="main">Community
+<ul class="sub">
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+				</ul>
+			</div>
+			<div class="grid_1">&nbsp;</div>
+			<div class="grid_5">
+				<h3>Yii Supporters</h3>
+				<ul class="g-list-none supporters">
+
+				</ul>
+			</div>
+
+			<div class="clear"></div>
+			<div class="grid_12 copyright">
+				<ul class="social">
+					<li class="twitter"><a href="https://twitter.com/yiiframework" target="_blank" rel="nofollow" title="follow us on twitter">Twitter</a></li>
+					<li class="facebook"><a href="https://www.facebook.com/groups/yiitalk/" target="_blank" rel="nofollow" title="join yii group at facebook">Facebook</a></li>
+					<li class="linkedin"><a href="http://www.linkedin.com/groups?gid=1483367" target="_blank" rel="nofollow" title="join yii group at linkedin">LinkedIn</a></li>
+					<li class="feeds"><a title="RSS feeds" href="/rss.xml/">RSS Feeds</a></li>
+				</ul>
+				<div class="clear"></div>
+				<a href="/tos/">Terms of Service</a> |
+				<a href="/license/">License</a> |
+				<a href="/contact/">Contact Us</a><br/>
+				Copyright &copy; 2015 by <a href="http://www.yiisoft.com">Yii Software LLC</a>.
+				All Rights Reserved.
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+    <script type="text/javascript" src="/js/site-20121004195728.js"></script>
+
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['site._setAccount', 'UA-5843896-1']);
+_gaq.push(['site._trackPageview']);
+
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+<script type="text/javascript">
+function trackClick(link, action, category) {
+	action=action || link.href;
+	category=category || 'Outbound Links';
+	try {
+		_gaq.push(['site._trackEvent', category, action]);
+		setTimeout('document.location = "' + link.href + '"', 250);
+	}catch(err){}
+	return false;
+}
+</script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+</body>
+</html>

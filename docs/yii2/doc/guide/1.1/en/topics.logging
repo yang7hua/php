@@ -1,0 +1,802 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    	<meta charset="UTF-8" />
+		<meta name="keywords" content="yii framework, tutorial, guide, version 1.1" />
+	<meta name="description" content="Yii provides a flexible and extensible logging feature. Messages logged
+can be classified according to log levels and message categories." />
+    <link rel="shortcut icon" type="image/x-icon" href="http://static.yiiframework.com/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="http://static.yiiframework.com/css/site-20130404102234.css" />
+
+	<link title="Lives News for Yii Framework" rel="alternate" type="application/rss+xml" href="http://www.yiiframework.com/rss.xml/" />
+	<title>Special Topics: Logging | The Definitive Guide to Yii | Yii PHP Framework</title>
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii API Search" href="/search-api.xml" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii Site Search" href="/search-site.xml" />
+</head>
+
+<body class="mac">
+<div class="layout-main">
+
+	<div class="layout-main-shortcuts">
+		<div class="container_12">
+            <a style="color:darkred;" href="https://github.com/yiisoft/yii2">Github</a> &middot;
+            <a style="color:darkgreen;" href="https://twitter.com/yiiframework">Twitter</a> &middot;
+            <a style="color:darkblue;" href="https://www.facebook.com/groups/yiitalk/">Facebook</a> &middot;
+            <a href="/doc/guide/">Guide</a> &middot;
+            <a href="/doc/api/">Class Reference</a> &middot;
+            <a href="/doc-2.0/guide-index.html">Guide 2.0</a> &middot;
+            <a href="/doc-2.0/index.html">API 2.0</a> &middot;
+            <a href="/wiki/">Wiki</a> &middot;
+            <a href="/extensions/">Extensions</a> &middot;
+            <a href="/forum/">Forum</a> &middot;
+			<a href="/chat/">Live Chat</a> &middot;
+                            <a href="/login/">Login</a>            		</div>
+	</div>
+
+	<div class="layout-main-bg">
+		<div class="layout-main-header">
+			<div class="container_12">
+				<div class="grid_4">
+					<a class="logo" href="/"><img alt="Yii Logo" src="http://static.yiiframework.com/css/img/logo.png" title="Yii Framework" width="284" height="64" /></a>				</div>
+				<div class="grid_8 omega">
+					<div class="nav">
+						<ul class="menu" id="yw0">
+<li class="about"><a class="main" href="/about/">About</a>
+<ul>
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li class="last"><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="downloads"><a class="main" href="/download/">Downloads</a>
+<ul>
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li class="last"><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="documentation active"><a class="main" href="/doc/">Documentation</a>
+<ul>
+<li><a href="/tour/">Take the Tour</a></li>
+<li class="active"><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li class="last"><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="development"><a class="main" href="https://github.com/yiisoft/yii/commits/master">Development</a>
+<ul>
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li class="last"><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="community last"><a class="main" href="/community/">Community</a>
+<ul>
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li class="last"><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+</ul>						<div class="search">
+							<form method="get" action="/search/">
+								<div class="keyword">
+	                                <input name="q" value="" />
+									<a href="#" title="search" class="global-search">search</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+
+		<div class="container_12">
+						<div class="grid_12">
+												<div class="layout-main-submenu">
+					<ul>
+						<li class="main">Documentation</li>
+												<li><a href="/tour/">Take the Tour</a></li>
+												<li class="active"><a href="/tutorials/">Tutorials</a></li>
+												<li><a href="/doc/api/">Class Reference</a></li>
+												<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+												<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+												<li><a href="/wiki/">Wiki</a></li>
+												<li><a href="/screencasts/">Screencasts</a></li>
+												<li><a href="/resources/">Resources</a></li>
+											</ul>
+				</div>
+				
+				
+				
+									<div class="layout-main-body">
+						<div class="tutorial-view">
+    <div class="grid_3 alpha">
+        <div class="nav-toc">
+    		<div class="title">The Definitive Guide to Yii</div>
+    		<div class="langver">
+	            <strong>Language &amp; version</strong>
+	    		<div class="languages g-dropdown">
+	    		<span>English<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.1/de/topics.logging">Deutsch</a></li>
+<li><a href="/doc/guide/1.1/es/topics.logging">Español</a></li>
+<li><a href="/doc/guide/1.1/fr/topics.logging">Français</a></li>
+<li><a href="/doc/guide/1.1/he/topics.logging">עִבְרִית</a></li>
+<li><a href="/doc/guide/1.1/id/topics.logging">Bahasa Indonesia</a></li>
+<li><a href="/doc/guide/1.1/it/topics.logging">Italiano</a></li>
+<li><a href="/doc/guide/1.1/ja/topics.logging">日本語</a></li>
+<li><a href="/doc/guide/1.1/pl/topics.logging">Polski</a></li>
+<li><a href="/doc/guide/1.1/pt/topics.logging">Português</a></li>
+<li><a href="/doc/guide/1.1/pt_br/topics.logging">Português brasileiro</a></li>
+<li><a href="/doc/guide/1.1/ro/topics.logging">România</a></li>
+<li><a href="/doc/guide/1.1/ru/topics.logging">Русский</a></li>
+<li><a href="/doc/guide/1.1/sv/topics.logging">Svenska</a></li>
+<li><a href="/doc/guide/1.1/uk/topics.logging">украї́нська</a></li>
+<li><a href="/doc/guide/1.1/zh_cn/topics.logging">简体中文</a></li>
+</ul>
+	    		</div>
+				<div class="versions g-dropdown">
+	    		<span>1.1<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.0/en/topics.logging">1.0</a></li>
+</ul>
+				</div>
+				<div class="clear"></div>
+			</div>
+            <div class="widget-search-box">
+    <form method="get" action="/search/">
+        <strong>Search in this tutorial</strong>
+		<input type="text" name="q" class="keyword g-text" />
+        <input type="hidden" name="type" value="guide" />
+        <input type="hidden" name="lang" value="en" />
+        <input type="submit" value="Find" class="btn btn-info" />
+	</form>
+</div>
+			<ul class="toc">
+						    <li class="chapter"><strong>Getting Started</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/index">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/changes">New Features</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/upgrade">Upgrading from 1.0 to 1.1</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.what-is-yii">What is Yii</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.installation">Installation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.apache-nginx-config">Apache and Nginx configurations</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app">Creating First Yii Application</a>			            </li>
+			        			    						    <li class="chapter"><strong>Fundamentals</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.mvc">Model-View-Controller (MVC)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.entry">Entry Script</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.application">Application</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.controller">Controller</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.model">Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.view">View</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.component">Component</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.module">Module</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.namespace">Path Alias and Namespace</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.convention">Conventions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.workflow">Development Workflow</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.best-practices">Best MVC Practices</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Forms</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.model">Creating Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.action">Creating Action</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.view">Creating Form</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.table">Collecting Tabular Input</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.builder">Using Form Builder</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Databases</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.dao">Database Access Objects</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.query-builder">Query Builder</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.ar">Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.arr">Relational Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.migration">Database Migration</a>			            </li>
+			        			    						    <li class="chapter"><strong>Caching</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.data">Data Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.fragment">Fragment Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.page">Page Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.dynamic">Dynamic Content</a>			            </li>
+			        			    						    <li class="chapter"><strong>Extending Yii</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.use">Using Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.create">Creating Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.integration">Using 3rd-Party Libraries</a>			            </li>
+			        			    						    <li class="chapter"><strong>Testing</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.fixture">Defining Fixtures</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.unit">Unit Testing</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.functional">Functional Testing</a>			            </li>
+			        			    						    <li class="chapter"><strong>Special Topics</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.gii">Automatic Code Generation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.url">URL Management</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.auth">Authentication and Authorization</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.theming">Theming and Skin</a>			            </li>
+			        			    			        			            <li class="active">
+			                &raquo; Logging &laquo;
+			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.error">Error Handling</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.webservice">Web Service</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.i18n">Internationalization (I18N)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.prado">Alternative Template Syntax</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.console">Console Applications</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.security">Security</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.performance">Performance Tuning</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app-yiic">Code Generation using Command Line Tools (deprecated)</a>			            </li>
+			        			    						</ul>
+        </div>
+    </div>
+    <div class="grid_9 omega">
+    	<div class="g-markdown"><h1 id="logging">Logging</h1>
+<div class="google-ad" style="float:right;margin:0 0 1em 1em;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "2830391674";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+<div class="toc"><ol><li><a href="#message-logging">Message Logging</a></li>
+<li><a href="#message-routing">Message Routing</a></li>
+<li><a href="#message-filtering">Message Filtering</a></li>
+<li><a href="#logging-context-information">Logging Context Information</a></li>
+<li><a href="#performance-profiling">Performance Profiling</a></li>
+<li><a href="#profiling-sql-executions">Profiling SQL Executions</a></li></ol></div>
+
+
+<p>Yii provides a flexible and extensible logging feature. Messages logged
+can be classified according to log levels and message categories. Using
+level and category filters, selected messages can be further routed to
+different destinations, such as files, emails, browser windows, etc.</p>
+
+<h2 id="message-logging">1. Message Logging <a class="anchor" href="#message-logging">¶</a></h2>
+
+<p>Messages can be logged by calling either <a href="/doc/api/1.1/Yii#log">Yii::log</a> or <a href="/doc/api/1.1/Yii#trace">Yii::trace</a>. The
+difference between these two methods is that the latter logs a message only
+when the application is in <a href="/doc/guide/1.1/en/basics.entry#debug-mode">debug mode</a>.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">log</span><span class="hl-brackets">(</span><span class="hl-var">$message</span><span class="hl-code">, </span><span class="hl-var">$level</span><span class="hl-code">, </span><span class="hl-var">$category</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">trace</span><span class="hl-brackets">(</span><span class="hl-var">$message</span><span class="hl-code">, </span><span class="hl-var">$category</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>When logging a message, we need to specify its category and level.
+Category is a string in the format of <code>xxx.yyy.zzz</code> which resembles to the
+<a href="/doc/guide/1.1/en/basics.namespace">path alias</a>. For example, if a message is
+logged in <a href="/doc/api/1.1/CController">CController</a>, we may use the category <code>system.web.CController</code>.
+Message level should be one of the following values:</p>
+
+<ul>
+<li><p><code>trace</code>: this is the level used by <a href="/doc/api/1.1/Yii#trace">Yii::trace</a>. It is for tracing
+the execution flow of the application during development.</p></li>
+<li><p><code>info</code>: this is for logging general information.</p></li>
+<li><p><code>profile</code>: this is for performance profile which is to be described
+shortly.</p></li>
+<li><p><code>warning</code>: this is for warning messages.</p></li>
+<li><p><code>error</code>: this is for fatal error messages.</p></li>
+</ul>
+
+<h2 id="message-routing">2. Message Routing <a class="anchor" href="#message-routing">¶</a></h2>
+
+<p>Messages logged using <a href="/doc/api/1.1/Yii#log">Yii::log</a> or <a href="/doc/api/1.1/Yii#trace">Yii::trace</a> are kept in memory. We
+usually need to display them in browser windows, or save them in some
+persistent storage such as files, emails. This is called <em>message
+routing</em>, i.e., sending messages to different destinations.</p>
+
+<p>In Yii, message routing is managed by a <a href="/doc/api/1.1/CLogRouter">CLogRouter</a> application
+component. It manages a set of the so-called <em>log routes</em>. Each log
+route represents a single log destination. Messages sent along a log route
+can be filtered according to their levels and categories.</p>
+
+<p>To use message routing, we need to install and preload a <a href="/doc/api/1.1/CLogRouter">CLogRouter</a>
+application component. We also need to configure its
+<a href="/doc/api/1.1/CLogRouter#routes">routes</a> property with the log routes that we want. The
+following shows an example of the needed <a href="/doc/guide/1.1/en/basics.application#application-configuration">application
+configuration</a>:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-code">
+    ......
+    </span><span class="hl-quotes">'</span><span class="hl-string">preload</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">log</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">components</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-code">
+        ......
+        </span><span class="hl-quotes">'</span><span class="hl-string">log</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">CLogRouter</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">routes</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+                <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+                    <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">CFileLogRoute</span><span class="hl-quotes">'</span><span class="hl-code">,
+                    </span><span class="hl-quotes">'</span><span class="hl-string">levels</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">trace, info</span><span class="hl-quotes">'</span><span class="hl-code">,
+                    </span><span class="hl-quotes">'</span><span class="hl-string">categories</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">system.*</span><span class="hl-quotes">'</span><span class="hl-code">,
+                </span><span class="hl-brackets">)</span><span class="hl-code">,
+                </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+                    <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">CEmailLogRoute</span><span class="hl-quotes">'</span><span class="hl-code">,
+                    </span><span class="hl-quotes">'</span><span class="hl-string">levels</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">error, warning</span><span class="hl-quotes">'</span><span class="hl-code">,
+                    </span><span class="hl-quotes">'</span><span class="hl-string">emails</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">admin@example.com</span><span class="hl-quotes">'</span><span class="hl-code">,
+                </span><span class="hl-brackets">)</span><span class="hl-code">,
+            </span><span class="hl-brackets">)</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-brackets">)</span><span class="hl-code">,
+</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>In the above example, we have two log routes. The first route is
+<a href="/doc/api/1.1/CFileLogRoute">CFileLogRoute</a> which saves messages in a file under the application
+runtime directory. Only messages whose level is <code>trace</code> or <code>info</code> and whose
+category starts with <code>system.</code> are saved. The second route is
+<a href="/doc/api/1.1/CEmailLogRoute">CEmailLogRoute</a> which sends messages to the specified email addresses.
+Only messages whose level is <code>error</code> or <code>warning</code> are sent.</p>
+
+<p>In a more advanced example (using an exclude feature available in Yii 1.1.13+),
+we can prevent certain categories from appearing in our logs:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-quotes">'</span><span class="hl-string">routes</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+        <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">CEmailLogRoute</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">levels</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">error, warning</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">except</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">system.CModule.*</span><span class="hl-quotes">'</span> <span class="hl-comment">//</span><span class="hl-comment"> Will email everything except any CModule logs</span>
+            <span class="hl-quotes">'</span><span class="hl-string">emails</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">admin@example.com</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">,
+        </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">CWebLogRoute</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">categories</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">system.db.*</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">except</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">system.db.ar.*</span><span class="hl-quotes">'</span><span class="hl-code">, </span><span class="hl-comment">//</span><span class="hl-comment"> shows all db level logs but nothing in the ar category</span>
+        <span class="hl-brackets">)</span><span class="hl-code">,</span></pre></div></div>
+
+<p>The following log routes are available in Yii:</p>
+
+<ul>
+<li><a href="/doc/api/1.1/CDbLogRoute">CDbLogRoute</a>: saves messages in a database table.</li>
+<li><a href="/doc/api/1.1/CEmailLogRoute">CEmailLogRoute</a>: sends messages to specified email addresses.</li>
+<li><a href="/doc/api/1.1/CFileLogRoute">CFileLogRoute</a>: saves messages in a file under the application runtime directory.</li>
+<li><a href="/doc/api/1.1/CWebLogRoute">CWebLogRoute</a>: displays messages at the end of the current Web page.</li>
+<li><a href="/doc/api/1.1/CProfileLogRoute">CProfileLogRoute</a>: displays profiling messages at the end of the current Web page.</li>
+</ul>
+
+<blockquote class="info">
+<p><strong>Info:</strong> Message routing occurs at the end of the current request cycle
+  when the <a href="/doc/api/1.1/CApplication#onEndRequest">onEndRequest</a> event is raised. To explicitly
+  terminate the processing of the current request, call <a href="/doc/api/1.1/CApplication#end">CApplication::end()</a> instead
+  of <code>die()</code> or <code>exit()</code>, because <a href="/doc/api/1.1/CApplication#end">CApplication::end()</a> will raise the
+  <a href="/doc/api/1.1/CApplication#onEndRequest">onEndRequest</a> event so that the messages can
+  be properly logged.</p>
+</blockquote>
+
+<h2 id="message-filtering">3. Message Filtering <a class="anchor" href="#message-filtering">¶</a></h2>
+
+<p>As we mentioned, messages can be filtered according to their levels and
+categories before they are sent long a log route. This is done by setting
+the <a href="/doc/api/1.1/CLogRoute#levels">levels</a> and <a href="/doc/api/1.1/CLogRoute#categories">categories</a>
+properties of the corresponding log route. Multiple levels or categories
+should be concatenated by commas.</p>
+
+<p>Because message categories are in the format of <code>xxx.yyy.zzz</code>, we may
+treat them as a category hierarchy. In particular, we say <code>xxx</code> is the
+parent of <code>xxx.yyy</code> which is the parent of <code>xxx.yyy.zzz</code>. We can then use
+<code>xxx.*</code> to represent category <code>xxx</code> and all its child and grandchild
+categories.</p>
+
+<h2 id="logging-context-information">4. Logging Context Information <a class="anchor" href="#logging-context-information">¶</a></h2>
+
+<p>We can log additional context information, such as PHP predefined variables (e.g. <code>$_GET</code>, <code>$_SERVER</code>), session ID, user name, etc.
+This is accomplished by specifying the <a href="/doc/api/1.1/CLogRoute#filter">CLogRoute::filter</a> property of a log route to be
+a suitable log filter.</p>
+
+<p>The framework comes with the convenient <a href="/doc/api/1.1/CLogFilter">CLogFilter</a> that may be used as the needed log
+filter in most cases. By default, <a href="/doc/api/1.1/CLogFilter">CLogFilter</a> will log a message with variables like
+<code>$_GET</code>, <code>$_SERVER</code> which often contains valuable system context information.
+<a href="/doc/api/1.1/CLogFilter">CLogFilter</a> can also be configured to prefix each logged message with session ID, username, etc.,
+which may greatly simplifying the global search when we are checking the numerous logged messages.</p>
+
+<p>The following configuration shows how to enable logging context information. Note that each
+log route may have its own log filter. And by default, a log route does not have a log filter.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-code">
+    ......
+    </span><span class="hl-quotes">'</span><span class="hl-string">preload</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">log</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">components</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-code">
+        ......
+        </span><span class="hl-quotes">'</span><span class="hl-string">log</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">CLogRouter</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">routes</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+                <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+                    <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">CFileLogRoute</span><span class="hl-quotes">'</span><span class="hl-code">,
+                    </span><span class="hl-quotes">'</span><span class="hl-string">levels</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">error</span><span class="hl-quotes">'</span><span class="hl-code">,
+                    </span><span class="hl-quotes">'</span><span class="hl-string">filter</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">CLogFilter</span><span class="hl-quotes">'</span><span class="hl-code">,
+                </span><span class="hl-brackets">)</span><span class="hl-code">,
+                ...</span><span class="hl-identifier">other</span> <span class="hl-identifier">log</span> <span class="hl-identifier">routes</span><span class="hl-code">...
+            </span><span class="hl-brackets">)</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-brackets">)</span><span class="hl-code">,
+</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>Yii supports logging call stack information in the messages that are
+logged by calling <code>Yii::trace</code>. This feature is disabled by default because it lowers performance.
+To use this feature, simply define a constant named <code>YII_TRACE_LEVEL</code> at the beginning of the entry
+script (before including <code>yii.php</code>) to be an integer greater than 0. Yii will then append to
+every trace message with the file name and line number of the call stacks belonging to application
+code. The number <code>YII_TRACE_LEVEL</code> determines how many layers of each call stack should be recorded.
+This information is particularly useful during development stage as it can help us identify the
+places that trigger the trace messages.</p>
+
+<h2 id="performance-profiling">5. Performance Profiling <a class="anchor" href="#performance-profiling">¶</a></h2>
+
+<p>Performance profiling is a special type of message logging. Performance
+profiling can be used to measure the time needed for the specified code
+blocks and find out what the performance bottleneck is.</p>
+
+<p>To use performance profiling, we need to identify which code blocks need
+to be profiled. We mark the beginning and the end of each code block by
+inserting the following methods:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">beginProfile</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">blockID</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;
+...</span><span class="hl-identifier">code</span> <span class="hl-identifier">block</span> <span class="hl-identifier">being</span> <span class="hl-identifier">profiled</span><span class="hl-code">...
+</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">endProfile</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">blockID</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>where <code>blockID</code> is an ID that uniquely identifies the code block.</p>
+
+<p>Note, code blocks need to be nested properly. That is, a code block cannot
+intersect with another. It must be either at a parallel level or be
+completely enclosed by the other code block.</p>
+
+<p>To show profiling result, we need to install a <a href="/doc/api/1.1/CLogRouter">CLogRouter</a> application
+component with a <a href="/doc/api/1.1/CProfileLogRoute">CProfileLogRoute</a> log route. This is the same as we do
+with normal message routing. The <a href="/doc/api/1.1/CProfileLogRoute">CProfileLogRoute</a> route will display the
+performance results at the end of the current page.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-code">
+    ......
+    </span><span class="hl-quotes">'</span><span class="hl-string">preload</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">log</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">components</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span><span class="hl-code">
+        ......
+        </span><span class="hl-quotes">'</span><span class="hl-string">log</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">CLogRouter</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">routes</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+                <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+                    <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">CProfileLogRoute</span><span class="hl-quotes">'</span><span class="hl-code">,
+                    </span><span class="hl-quotes">'</span><span class="hl-string">report</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">summary</span><span class="hl-quotes">'</span><span class="hl-code">,
+                    </span><span class="hl-comment">//</span><span class="hl-comment"> lists execution time of every marked code block</span>
+                    <span class="hl-comment">//</span><span class="hl-comment"> report can also be set to callstack</span>
+                <span class="hl-brackets">)</span><span class="hl-code">,
+                ...</span><span class="hl-identifier">other</span> <span class="hl-identifier">log</span> <span class="hl-identifier">routes</span><span class="hl-code">...
+            </span><span class="hl-brackets">)</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-brackets">)</span><span class="hl-code">,
+</span><span class="hl-brackets">)</span></pre></div></div>
+
+<h2 id="profiling-sql-executions">6. Profiling SQL Executions <a class="anchor" href="#profiling-sql-executions">¶</a></h2>
+
+<p>Profiling is especially useful when working with database since SQL executions
+are often the main performance bottleneck of an application. While we can manually
+insert <code>beginProfile</code> and <code>endProfile</code> statements at appropriate places to measure
+the time spent in each SQL execution, Yii provides
+a more systematic approach to solve this problem.</p>
+
+<p>By setting <a href="/doc/api/1.1/CDbConnection#enableProfiling">CDbConnection::enableProfiling</a> to be true in the application configuration,
+every SQL statement being executed will be profiled. The results can be readily displayed
+using the aforementioned <a href="/doc/api/1.1/CProfileLogRoute">CProfileLogRoute</a>, which can show us how much time is spent
+in executing what SQL statement. We can also call <a href="/doc/api/1.1/CDbConnection#getStats">CDbConnection::getStats()</a> to retrieve
+the total number SQL statements executed and their total execution time.</p>
+
+<div class="revision"><div class="google-ad" style="margin:-60px 0 5px 200px;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "7116172008";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>$Id$</div>
+</div>
+                <div class="prev-next-nav">
+                            <div class="prev-topic"><a href="/doc/guide/1.1/en/topics.theming">Theming and Skin</a></div>
+                                        <div class="next-topic"><a href="/doc/guide/1.1/en/topics.error">Error Handling</a></div>
+                    </div>
+        
+		        <div class="widget-comment-list" id="comments">
+	<div class="comments">
+		<h3>Total 5 comments</h3>
+				<div class="comment alt-0">
+			<a class="cid" id="c12219" title="permalink to this comment" href="#c12219">#12219</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=12219"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=12219&amp;vote=1"><span>2</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=12219&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link bronze" href="/user/54420/">c@cba</a> at 2013/03/07 07:50am</div>
+			<div class="title">enabling/disabling a log route</div>
+			<div class="content"><p>I think the <code>enabled</code> property of the CLogRoute class is worth mentioning here.<br />
+If you for example want a log route to be enabled ONLY IF the constant YII_DEBUG is true, you could to this:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-quotes">'</span><span class="hl-string">log</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+    <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">CLogRouter</span><span class="hl-quotes">'</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">routes</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+        <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">CWebLogRoute</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">levels</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">error, warning, info</span><span class="hl-quotes">'</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">,
+        </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">CWebLogRoute</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">levels</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">trace</span><span class="hl-quotes">'</span><span class="hl-code">,
+            </span><span class="hl-quotes">'</span><span class="hl-string">enabled</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-identifier">YII_DEBUG</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-brackets">)</span><span class="hl-code">,
+</span><span class="hl-brackets">)</span><span class="hl-code">,</span></pre></div></div>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c10983" title="permalink to this comment" href="#c10983">#10983</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=10983"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=10983&amp;vote=1"><span>4</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=10983&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/48528/">yasen</a> at 2012/12/08 01:26am</div>
+			<div class="title">Calling die after log</div>
+			<div class="content"><div class="hl-code"><div class="hl-main"><pre><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">log</span><span class="hl-brackets">(</span><span class="hl-number">123</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-reserved">die</span><span class="hl-code">; </span><span class="hl-comment">//</span><span class="hl-comment"> does not log</span>
+ 
+<span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">log</span><span class="hl-brackets">(</span><span class="hl-number">123</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">end</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-comment">//</span><span class="hl-comment"> does</span></pre></div></div>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c2955" title="permalink to this comment" href="#c2955">#2955</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=2955"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=2955&amp;vote=1"><span>7</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=2955&amp;vote=0"><span>2</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/10001/">idrozd</a> at 2011/03/02 01:04am</div>
+			<div class="title">logging in unit tests</div>
+			<div class="content"><p>Logs don't work by default inside unit tests, so to enable them you need to add the following lines to the bootstrap.php inside "protected/tests" folder</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">function</span> <span class="hl-identifier">shutdown</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span> <span class="hl-brackets">{</span>
+    <span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">end</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">;
+</span><span class="hl-brackets">}</span>
+<span class="hl-identifier">register_shutdown_function</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">shutdown</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>I got this from <a href="http://www.yiiframework.com/forum/index.php?/topic/5319-logging-inside-phpunit-test-cases/page__p__27441__hl__log+in+ide+te+t#entry27441" title="I got this from here">here</a></p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c2227" title="permalink to this comment" href="#c2227">#2227</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=2227"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=2227&amp;vote=1"><span>2</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=2227&amp;vote=0"><span>1</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link silver" href="/user/7012/">Steve Friedl</a> at 2010/11/28 07:51pm</div>
+			<div class="title">Moving the application.log file</div>
+			<div class="content"><p>By default, logging is saved to the file <code>protected/runtime/application.log</code>, but some users may wish to move the runtime area (which includes the log, the application <code>state.bin</code>, Gii support files, and other things) to a separate folder so that the protected area is not directly written to by the running webserver.</p>
+
+<p>This can be configured in the <code>config/main.php</code> file with the <code>runtimePath</code> attribute. This example assumes this directory structure:</p>
+
+<pre>.../webroot/...
+.../protected/...
+.../runtime/...</pre>
+
+<p>and of course must be adjusted for the local environment.</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-comment">//</span><span class="hl-comment"> .. protected/config/main.php</span>
+<span class="hl-reserved">return</span> <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+ 
+    <span class="hl-quotes">'</span><span class="hl-string">basePath</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-identifier">dirname</span><span class="hl-brackets">(</span><span class="hl-reserved">__FILE__</span><span class="hl-brackets">)</span><span class="hl-code">.</span><span class="hl-reserved">DIRECTORY_SEPARATOR</span><span class="hl-code">.</span><span class="hl-quotes">'</span><span class="hl-string">..</span><span class="hl-quotes">'</span><span class="hl-code">,
+ 
+    </span><span class="hl-comment">//</span><span class="hl-comment"> override the default</span>
+    <span class="hl-quotes">'</span><span class="hl-string">runtimePath</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-identifier">dirname</span><span class="hl-brackets">(</span><span class="hl-reserved">__FILE__</span><span class="hl-brackets">)</span><span class="hl-code">.</span><span class="hl-reserved">DIRECTORY_SEPARATOR</span><span class="hl-code">.</span><span class="hl-quotes">'</span><span class="hl-string">..</span><span class="hl-quotes">'</span><span class="hl-code">
+                                      .</span><span class="hl-reserved">DIRECTORY_SEPARATOR</span><span class="hl-code">.</span><span class="hl-quotes">'</span><span class="hl-string">..</span><span class="hl-quotes">'</span><span class="hl-code">
+                                      .</span><span class="hl-reserved">DIRECTORY_SEPARATOR</span><span class="hl-code">.</span><span class="hl-quotes">'</span><span class="hl-string">runtime</span><span class="hl-quotes">'</span><span class="hl-code">,
+    ...</span></pre></div></div>
+
+<p>It is kind of a mess with all the ../.. but it does work well and works when the project is moved (or deployed from a test environment to a production one).</p>
+
+<p>Be sure the newly-moved <code>runtime</code> area is writable by the webserver, as well as any files copied from the old area to the new.</p>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c1187" title="permalink to this comment" href="#c1187">#1187</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=1187"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=1187&amp;vote=1"><span>3</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=1187&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/1834/">cshehadi</a> at 2009/11/06 11:29am</div>
+			<div class="title">how to turn on database profiling</div>
+			<div class="content"><p>You can turn on database profiling in your main.php when setting up your database configuration for the application... as in:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-quotes">'</span><span class="hl-string">db</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span> 
+     <span class="hl-quotes">'</span><span class="hl-string">class</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">CDbConnection</span><span class="hl-quotes">'</span><span class="hl-code">, 
+     </span><span class="hl-quotes">'</span><span class="hl-string">connectionString</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">mysql:host=localhost;dbname=foo</span><span class="hl-quotes">'</span><span class="hl-code">, 
+     </span><span class="hl-quotes">'</span><span class="hl-string">username</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">bar</span><span class="hl-quotes">'</span><span class="hl-code">, 
+     </span><span class="hl-quotes">'</span><span class="hl-string">password</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">baz</span><span class="hl-quotes">'</span><span class="hl-code">,
+     </span><span class="hl-quotes">'</span><span class="hl-string">enableProfiling</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">true</span><span class="hl-code">, 
+</span><span class="hl-brackets">)</span><span class="hl-code">,</span></pre></div></div>
+</div>
+					</div>
+			</div>
+	<div id="comment-add">
+		<h3 id="add-comment">Leave a comment</h3>
+
+			<p>Please <a class="g-login" rel="/doc/guide/1.1/en/topics.logging#add-comment" href="#">login</a> to leave your comment.</p>
+		</div>
+</div>
+           </div>
+</div>
+					</div>
+				
+								<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+					</div>
+	</div>
+
+	<div class="layout-main-footer">
+		<div class="container_12">
+			<div class="grid_6">
+				<ul class="menu">
+				<li class="main">About
+<ul class="sub">
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="main">Downloads
+<ul class="sub">
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="main">Documentation
+<ul class="sub">
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="main">Development
+<ul class="sub">
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="main">Community
+<ul class="sub">
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+				</ul>
+			</div>
+			<div class="grid_1">&nbsp;</div>
+			<div class="grid_5">
+				<h3>Yii Supporters</h3>
+				<ul class="g-list-none supporters">
+
+				</ul>
+			</div>
+
+			<div class="clear"></div>
+			<div class="grid_12 copyright">
+				<ul class="social">
+					<li class="twitter"><a href="https://twitter.com/yiiframework" target="_blank" rel="nofollow" title="follow us on twitter">Twitter</a></li>
+					<li class="facebook"><a href="https://www.facebook.com/groups/yiitalk/" target="_blank" rel="nofollow" title="join yii group at facebook">Facebook</a></li>
+					<li class="linkedin"><a href="http://www.linkedin.com/groups?gid=1483367" target="_blank" rel="nofollow" title="join yii group at linkedin">LinkedIn</a></li>
+					<li class="feeds"><a title="RSS feeds" href="/rss.xml/">RSS Feeds</a></li>
+				</ul>
+				<div class="clear"></div>
+				<a href="/tos/">Terms of Service</a> |
+				<a href="/license/">License</a> |
+				<a href="/contact/">Contact Us</a><br/>
+				Copyright &copy; 2015 by <a href="http://www.yiisoft.com">Yii Software LLC</a>.
+				All Rights Reserved.
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+    <script type="text/javascript" src="/js/site-20121004195728.js"></script>
+
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['site._setAccount', 'UA-5843896-1']);
+_gaq.push(['site._trackPageview']);
+
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+<script type="text/javascript">
+function trackClick(link, action, category) {
+	action=action || link.href;
+	category=category || 'Outbound Links';
+	try {
+		_gaq.push(['site._trackEvent', category, action]);
+		setTimeout('document.location = "' + link.href + '"', 250);
+	}catch(err){}
+	return false;
+}
+</script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+</body>
+</html>

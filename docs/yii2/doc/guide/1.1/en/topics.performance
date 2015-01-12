@@ -1,0 +1,663 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    	<meta charset="UTF-8" />
+		<meta name="keywords" content="yii framework, tutorial, guide, version 1.1" />
+	<meta name="description" content="Performance of Web applications is affected by many factors. Database
+access, file system operations, network bandwidth are all potential
+affecting factors." />
+    <link rel="shortcut icon" type="image/x-icon" href="http://static.yiiframework.com/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="http://static.yiiframework.com/css/site-20130404102234.css" />
+
+	<link title="Lives News for Yii Framework" rel="alternate" type="application/rss+xml" href="http://www.yiiframework.com/rss.xml/" />
+	<title>Special Topics: Performance Tuning | The Definitive Guide to Yii | Yii PHP Framework</title>
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii API Search" href="/search-api.xml" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Yii Site Search" href="/search-site.xml" />
+</head>
+
+<body class="mac">
+<div class="layout-main">
+
+	<div class="layout-main-shortcuts">
+		<div class="container_12">
+            <a style="color:darkred;" href="https://github.com/yiisoft/yii2">Github</a> &middot;
+            <a style="color:darkgreen;" href="https://twitter.com/yiiframework">Twitter</a> &middot;
+            <a style="color:darkblue;" href="https://www.facebook.com/groups/yiitalk/">Facebook</a> &middot;
+            <a href="/doc/guide/">Guide</a> &middot;
+            <a href="/doc/api/">Class Reference</a> &middot;
+            <a href="/doc-2.0/guide-index.html">Guide 2.0</a> &middot;
+            <a href="/doc-2.0/index.html">API 2.0</a> &middot;
+            <a href="/wiki/">Wiki</a> &middot;
+            <a href="/extensions/">Extensions</a> &middot;
+            <a href="/forum/">Forum</a> &middot;
+			<a href="/chat/">Live Chat</a> &middot;
+                            <a href="/login/">Login</a>            		</div>
+	</div>
+
+	<div class="layout-main-bg">
+		<div class="layout-main-header">
+			<div class="container_12">
+				<div class="grid_4">
+					<a class="logo" href="/"><img alt="Yii Logo" src="http://static.yiiframework.com/css/img/logo.png" title="Yii Framework" width="284" height="64" /></a>				</div>
+				<div class="grid_8 omega">
+					<div class="nav">
+						<ul class="menu" id="yw0">
+<li class="about"><a class="main" href="/about/">About</a>
+<ul>
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li class="last"><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="downloads"><a class="main" href="/download/">Downloads</a>
+<ul>
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li class="last"><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="documentation active"><a class="main" href="/doc/">Documentation</a>
+<ul>
+<li><a href="/tour/">Take the Tour</a></li>
+<li class="active"><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li class="last"><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="development"><a class="main" href="https://github.com/yiisoft/yii/commits/master">Development</a>
+<ul>
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li class="last"><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="community last"><a class="main" href="/community/">Community</a>
+<ul>
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li class="last"><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+</ul>						<div class="search">
+							<form method="get" action="/search/">
+								<div class="keyword">
+	                                <input name="q" value="" />
+									<a href="#" title="search" class="global-search">search</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+
+		<div class="container_12">
+						<div class="grid_12">
+												<div class="layout-main-submenu">
+					<ul>
+						<li class="main">Documentation</li>
+												<li><a href="/tour/">Take the Tour</a></li>
+												<li class="active"><a href="/tutorials/">Tutorials</a></li>
+												<li><a href="/doc/api/">Class Reference</a></li>
+												<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+												<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+												<li><a href="/wiki/">Wiki</a></li>
+												<li><a href="/screencasts/">Screencasts</a></li>
+												<li><a href="/resources/">Resources</a></li>
+											</ul>
+				</div>
+				
+				
+				
+									<div class="layout-main-body">
+						<div class="tutorial-view">
+    <div class="grid_3 alpha">
+        <div class="nav-toc">
+    		<div class="title">The Definitive Guide to Yii</div>
+    		<div class="langver">
+	            <strong>Language &amp; version</strong>
+	    		<div class="languages g-dropdown">
+	    		<span>English<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.1/de/topics.performance">Deutsch</a></li>
+<li><a href="/doc/guide/1.1/es/topics.performance">Español</a></li>
+<li><a href="/doc/guide/1.1/fr/topics.performance">Français</a></li>
+<li><a href="/doc/guide/1.1/he/topics.performance">עִבְרִית</a></li>
+<li><a href="/doc/guide/1.1/id/topics.performance">Bahasa Indonesia</a></li>
+<li><a href="/doc/guide/1.1/it/topics.performance">Italiano</a></li>
+<li><a href="/doc/guide/1.1/ja/topics.performance">日本語</a></li>
+<li><a href="/doc/guide/1.1/pl/topics.performance">Polski</a></li>
+<li><a href="/doc/guide/1.1/pt/topics.performance">Português</a></li>
+<li><a href="/doc/guide/1.1/pt_br/topics.performance">Português brasileiro</a></li>
+<li><a href="/doc/guide/1.1/ro/topics.performance">România</a></li>
+<li><a href="/doc/guide/1.1/ru/topics.performance">Русский</a></li>
+<li><a href="/doc/guide/1.1/sv/topics.performance">Svenska</a></li>
+<li><a href="/doc/guide/1.1/uk/topics.performance">украї́нська</a></li>
+<li><a href="/doc/guide/1.1/zh_cn/topics.performance">简体中文</a></li>
+</ul>
+	    		</div>
+				<div class="versions g-dropdown">
+	    		<span>1.1<i></i></span>
+<ul>
+<li><a href="/doc/guide/1.0/en/topics.performance">1.0</a></li>
+</ul>
+				</div>
+				<div class="clear"></div>
+			</div>
+            <div class="widget-search-box">
+    <form method="get" action="/search/">
+        <strong>Search in this tutorial</strong>
+		<input type="text" name="q" class="keyword g-text" />
+        <input type="hidden" name="type" value="guide" />
+        <input type="hidden" name="lang" value="en" />
+        <input type="submit" value="Find" class="btn btn-info" />
+	</form>
+</div>
+			<ul class="toc">
+						    <li class="chapter"><strong>Getting Started</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/index">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/changes">New Features</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/upgrade">Upgrading from 1.0 to 1.1</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.what-is-yii">What is Yii</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.installation">Installation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.apache-nginx-config">Apache and Nginx configurations</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app">Creating First Yii Application</a>			            </li>
+			        			    						    <li class="chapter"><strong>Fundamentals</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.mvc">Model-View-Controller (MVC)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.entry">Entry Script</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.application">Application</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.controller">Controller</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.model">Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.view">View</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.component">Component</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.module">Module</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.namespace">Path Alias and Namespace</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.convention">Conventions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.workflow">Development Workflow</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/basics.best-practices">Best MVC Practices</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Forms</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.model">Creating Model</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.action">Creating Action</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.view">Creating Form</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.table">Collecting Tabular Input</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/form.builder">Using Form Builder</a>			            </li>
+			        			    						    <li class="chapter"><strong>Working with Databases</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.dao">Database Access Objects</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.query-builder">Query Builder</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.ar">Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.arr">Relational Active Record</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/database.migration">Database Migration</a>			            </li>
+			        			    						    <li class="chapter"><strong>Caching</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.data">Data Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.fragment">Fragment Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.page">Page Caching</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/caching.dynamic">Dynamic Content</a>			            </li>
+			        			    						    <li class="chapter"><strong>Extending Yii</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.use">Using Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.create">Creating Extensions</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/extension.integration">Using 3rd-Party Libraries</a>			            </li>
+			        			    						    <li class="chapter"><strong>Testing</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.overview">Overview</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.fixture">Defining Fixtures</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.unit">Unit Testing</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/test.functional">Functional Testing</a>			            </li>
+			        			    						    <li class="chapter"><strong>Special Topics</strong></li>
+			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.gii">Automatic Code Generation</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.url">URL Management</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.auth">Authentication and Authorization</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.theming">Theming and Skin</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.logging">Logging</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.error">Error Handling</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.webservice">Web Service</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.i18n">Internationalization (I18N)</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.prado">Alternative Template Syntax</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.console">Console Applications</a>			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/topics.security">Security</a>			            </li>
+			        			    			        			            <li class="active">
+			                &raquo; Performance Tuning &laquo;
+			            </li>
+			        			    			        			            <li>
+			                <a href="/doc/guide/1.1/en/quickstart.first-app-yiic">Code Generation using Command Line Tools (deprecated)</a>			            </li>
+			        			    						</ul>
+        </div>
+    </div>
+    <div class="grid_9 omega">
+    	<div class="g-markdown"><h1 id="performance-tuning">Performance Tuning</h1>
+<div class="google-ad" style="float:right;margin:0 0 1em 1em;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-3732587985864947";
+google_ad_slot = "2830391674";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+<div class="toc"><ol><li><a href="#enabling-apc-extension">Enabling APC Extension</a></li>
+<li><a href="#disabling-debug-mode">Disabling Debug Mode</a></li>
+<li><a href="#using-x-9x">Using <code>yiilite.php</code></a></li>
+<li><a href="#using-caching-techniques">Using Caching Techniques</a></li>
+<li><a href="#database-optimization">Database Optimization</a></li>
+<li><a href="#minimizing-script-files">Minimizing Script Files</a></li>
+<li><a href="#symlinking-assets">Symlinking assets</a></li></ol></div>
+
+
+<p>Performance of Web applications is affected by many factors. Database
+access, file system operations, network bandwidth are all potential
+affecting factors. Yii has tried in every aspect to reduce the performance
+impact caused by the framework. But still, there are many places in the
+user application that can be improved to boost performance.</p>
+
+<h2 id="enabling-apc-extension">1. Enabling APC Extension <a class="anchor" href="#enabling-apc-extension">¶</a></h2>
+
+<p>Enabling the <a href="http://www.php.net/manual/en/book.apc.php">PHP APC
+extension</a> is perhaps the
+easiest way to improve the overall performance of an application. The
+extension caches and optimizes PHP intermediate code and avoids the time
+spent in parsing PHP scripts for every incoming request.</p>
+
+<h2 id="disabling-debug-mode">2. Disabling Debug Mode <a class="anchor" href="#disabling-debug-mode">¶</a></h2>
+
+<p>Disabling debug mode is another easy way to improve performance. A Yii
+application runs in debug mode if the constant <code>YII_DEBUG</code> is defined as
+true. Debug mode is useful during development stage, but it would impact
+performance because some components cause extra burden in debug mode. For
+example, the message logger may record additional debug information for
+every message being logged.</p>
+
+<h2 id="using-x-9x">3. Using <code>yiilite.php</code> <a class="anchor" href="#using-x-9x">¶</a></h2>
+
+<p>When the <a href="http://www.php.net/manual/en/book.apc.php">PHP APC extension</a> is
+enabled, we can replace <code>yii.php</code> with a different Yii bootstrap file named
+<code>yiilite.php</code> to further boost the performance of a Yii-powered application.</p>
+
+<p>The file <code>yiilite.php</code> comes with every Yii release. It is the result of
+merging some commonly used Yii class files. Both comments and trace
+statements are stripped from the merged file. Therefore, using
+<code>yiilite.php</code> would reduce the number of files being included and avoid
+execution of trace statements.</p>
+
+<p>Note, using <code>yiilite.php</code> without APC may actually reduce performance,
+because <code>yiilite.php</code> contains some classes that are not necessarily used
+in every request and would take extra parsing time. It is also observed that
+using <code>yiilite.php</code> is slower with some server configurations, even when
+APC is turned on. The best way to judge whether to use <code>yiilite.php</code> or not
+is to run a benchmark using the included <code>hello world</code> demo.</p>
+
+<h2 id="using-caching-techniques">4. Using Caching Techniques <a class="anchor" href="#using-caching-techniques">¶</a></h2>
+
+<p>As described in the <a href="/doc/guide/1.1/en/caching.overview">Caching</a> section, Yii
+provides several caching solutions that may improve the performance of a
+Web application significantly. If the generation of some data takes long
+time, we can use the <a href="/doc/guide/1.1/en/caching.data">data caching</a> approach to
+reduce the data generation frequency; If a portion of page remains
+relatively static, we can use the <a href="/doc/guide/1.1/en/caching.fragment">fragment
+caching</a> approach to reduce its rendering
+frequency; If a whole page remains relative static, we can use the <a href="/doc/guide/1.1/en/caching.page">page
+caching</a> approach to save the rendering cost for
+the whole page.</p>
+
+<p>If the application is using <a href="/doc/guide/1.1/en/database.ar">Active Record</a>, we
+should turn on the schema caching to save the time of parsing database
+schema. This can be done by configuring the
+<a href="/doc/api/1.1/CDbConnection#schemaCachingDuration">CDbConnection::schemaCachingDuration</a> property to be a value greater than 0.</p>
+
+<p>Besides these application-level caching techniques, we can also use
+server-level caching solutions to boost the application performance. As a
+matter of fact, the <a href="/doc/guide/1.1/en/topics.performance#enabling-apc-extension">APC caching</a> we
+described earlier belongs to this category. There are other server
+techniques, such as <a href="http://www.zend.com/en/products/guard/zend-optimizer">Zend Optimizer</a>,
+<a href="http://eaccelerator.net/">eAccelerator</a>,
+<a href="http://www.squid-cache.org/">Squid</a>, to name a few.</p>
+
+<h2 id="database-optimization">5. Database Optimization <a class="anchor" href="#database-optimization">¶</a></h2>
+
+<p>Fetching data from database is often the main performance bottleneck in a
+Web application. Although using caching may alleviate the performance hit,
+it does not fully solve the problem. When the database contains enormous
+data and the cached data is invalid, fetching the latest data could be
+prohibitively expensive without proper database and query design.</p>
+
+<p>Design index wisely in a database. Indexing can make <code>SELECT</code> queries much
+faster, but it may slow down <code>INSERT</code>, <code>UPDATE</code> or <code>DELETE</code> queries.</p>
+
+<p>For complex queries, it is recommended to create a database view for it
+instead of issuing the queries inside the PHP code and asking DBMS to parse
+them repetitively.</p>
+
+<p>Do not overuse <a href="/doc/guide/1.1/en/database.ar">Active Record</a>. Although <a href="/doc/guide/1.1/en/database.ar">Active
+Record</a> is good at modelling data in an OOP
+fashion, it actually degrades performance due to the fact that it needs to
+create one or several objects to represent each row of query result. For
+data intensive applications, using <a href="/doc/guide/1.1/en/database.dao">DAO</a> or
+database APIs at lower level could be a better choice.</p>
+
+<p>Last but not least, use <code>LIMIT</code> in your <code>SELECT</code> queries. This avoids
+fetching overwhelming data from database and exhausting the memory
+allocated to PHP.</p>
+
+<h2 id="minimizing-script-files">6. Minimizing Script Files <a class="anchor" href="#minimizing-script-files">¶</a></h2>
+
+<p>Complex pages often need to include many external JavaScript and CSS files. Because each file would cause one extra round trip to the server and back, we should minimize the number of script files by merging them into fewer ones. We should also consider reducing the size of each script file to reduce the network transmission time. There are many tools around to help on these two aspects.</p>
+
+<p>For a page generated by Yii, chances are that some script files are rendered by components that we do not want to modify (e.g. Yii core components, third-party components). In order to minimizing these script files, we need two steps.</p>
+
+<p>First, we declare the scripts to be minimized by configuring the <a href="/doc/api/1.1/CClientScript#scriptMap">scriptMap</a> property of the <a href="/doc/api/1.1/CWebApplication#clientScript">clientScript</a> application component. This can be done either in the application configuration or in code. For example,</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$cs</span><span class="hl-code">=</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">clientScript</span><span class="hl-code">;
+</span><span class="hl-var">$cs</span><span class="hl-code">-&gt;</span><span class="hl-identifier">scriptMap</span><span class="hl-code">=</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+    <span class="hl-quotes">'</span><span class="hl-string">jquery.js</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">/js/all.js</span><span class="hl-quotes">'</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">jquery.ajaxqueue.js</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">/js/all.js</span><span class="hl-quotes">'</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">jquery.metadata.js</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-quotes">'</span><span class="hl-string">/js/all.js</span><span class="hl-quotes">'</span><span class="hl-code">,
+    ......
+</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>What the above code does is that it maps those JavaScript files to the URL <code>/js/all.js</code>. If any of these JavaScript files need to be included by some components, Yii will include the URL (once) instead of the individual script files.</p>
+
+<p>Second, we need to use some tools to merge (and perhaps compress) the JavaScript files into a single one and save it as <code>js/all.js</code>.</p>
+
+<p>The same trick also applies to CSS files.</p>
+
+<p>We can also improve page loading speed with the help of <a href="http://code.google.com/apis/ajaxlibs/">Google AJAX Libraries API</a>. For example, we can include <code>jquery.js</code> from Google servers instead of our own server. To do so, we first configure the <code>scriptMap</code> as follows,</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-var">$cs</span><span class="hl-code">=</span><span class="hl-identifier">Yii</span><span class="hl-code">::</span><span class="hl-identifier">app</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">-&gt;</span><span class="hl-identifier">clientScript</span><span class="hl-code">;
+</span><span class="hl-var">$cs</span><span class="hl-code">-&gt;</span><span class="hl-identifier">scriptMap</span><span class="hl-code">=</span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+    <span class="hl-quotes">'</span><span class="hl-string">jquery.js</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">false</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">jquery.ajaxqueue.js</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">false</span><span class="hl-code">,
+    </span><span class="hl-quotes">'</span><span class="hl-string">jquery.metadata.js</span><span class="hl-quotes">'</span><span class="hl-code">=&gt;</span><span class="hl-reserved">false</span><span class="hl-code">,
+    ......
+</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>By mapping these script files to false, we prevent Yii from generating the code to include these files. Instead, we write the following code in our pages to explicitly include the script files from Google,</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-code">&lt;</span><span class="hl-identifier">head</span><span class="hl-code">&gt;
+&lt;?</span><span class="hl-identifier">php</span> <span class="hl-reserved">echo</span> <span class="hl-identifier">CGoogleApi</span><span class="hl-code">::</span><span class="hl-identifier">init</span><span class="hl-brackets">(</span><span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-inlinetags">?&gt;</span><span class="hl-code">
+ 
+&lt;?</span><span class="hl-identifier">php</span> <span class="hl-reserved">echo</span> <span class="hl-identifier">CHtml</span><span class="hl-code">::</span><span class="hl-identifier">script</span><span class="hl-brackets">(</span>
+    <span class="hl-identifier">CGoogleApi</span><span class="hl-code">::</span><span class="hl-identifier">load</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">jquery</span><span class="hl-quotes">'</span><span class="hl-code">,</span><span class="hl-quotes">'</span><span class="hl-string">1.3.2</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code"> . </span><span class="hl-quotes">&quot;</span><span class="hl-special">\n</span><span class="hl-quotes">&quot;</span><span class="hl-code"> .
+    </span><span class="hl-identifier">CGoogleApi</span><span class="hl-code">::</span><span class="hl-identifier">load</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">jquery.ajaxqueue.js</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span><span class="hl-code"> . </span><span class="hl-quotes">&quot;</span><span class="hl-special">\n</span><span class="hl-quotes">&quot;</span><span class="hl-code"> .
+    </span><span class="hl-identifier">CGoogleApi</span><span class="hl-code">::</span><span class="hl-identifier">load</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">jquery.metadata.js</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span>
+<span class="hl-brackets">)</span><span class="hl-code">; </span><span class="hl-inlinetags">?&gt;</span><span class="hl-code">
+......
+&lt;/</span><span class="hl-identifier">head</span><span class="hl-code">&gt;</span></pre></div></div>
+
+<h2 id="symlinking-assets">7. Symlinking assets <a class="anchor" href="#symlinking-assets">¶</a></h2>
+
+<p>If your project uses assets a lot you can improve its performance slightly by
+using <a href="http://en.wikipedia.org/wiki/Symbolic_link">symbolic links</a> instead of
+file copies. In order to turn it on you should configure
+<a href="/doc/api/1.1/CAssetManager#linkAssets">linkAssets</a> property of <code>assetManager</code>
+application component using <code>protected/config/main.php</code> config file:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-reserved">return</span> <span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+    <span class="hl-comment">//</span><span class="hl-comment"> ...</span>
+    <span class="hl-quotes">'</span><span class="hl-string">components</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+        <span class="hl-comment">//</span><span class="hl-comment"> ...</span>
+        <span class="hl-quotes">'</span><span class="hl-string">assetManager</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-reserved">array</span><span class="hl-brackets">(</span>
+            <span class="hl-quotes">'</span><span class="hl-string">linkAssets</span><span class="hl-quotes">'</span><span class="hl-code"> =&gt; </span><span class="hl-reserved">true</span><span class="hl-code">,
+        </span><span class="hl-brackets">)</span><span class="hl-code">,
+    </span><span class="hl-brackets">)</span><span class="hl-code">,
+</span><span class="hl-brackets">)</span><span class="hl-code">;</span></pre></div></div>
+
+<p>Note that it <a href="/doc/api/1.1/CAssetManager#linkAssets">may require additional configuration</a>.</p>
+</div>
+                <div class="prev-next-nav">
+                            <div class="prev-topic"><a href="/doc/guide/1.1/en/topics.security">Security</a></div>
+                                        <div class="next-topic"><a href="/doc/guide/1.1/en/quickstart.first-app-yiic">Code Generation using Command Line Tools (deprecated)</a></div>
+                    </div>
+        
+		        <div class="widget-comment-list" id="comments">
+	<div class="comments">
+		<h3>Total 4 comments</h3>
+				<div class="comment alt-0">
+			<a class="cid" id="c8232" title="permalink to this comment" href="#c8232">#8232</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=8232"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=8232&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=8232&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/10821/">pligor</a> at 2012/05/20 11:51am</div>
+			<div class="title">jquery ui</div>
+			<div class="content"><p>to load jquery.ui with google api try this:</p>
+
+<div class="hl-code"><div class="hl-main"><pre><span class="hl-identifier">CGoogleApi</span><span class="hl-code">::</span><span class="hl-identifier">load</span><span class="hl-brackets">(</span><span class="hl-quotes">'</span><span class="hl-string">jqueryui</span><span class="hl-quotes">'</span><span class="hl-brackets">)</span></pre></div></div>
+
+<p>More can be found here: <a href="https://developers.google.com/speed/libraries/devguide" title="Google Libraries Api">Google Libraries Api</a></p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c7411" title="permalink to this comment" href="#c7411">#7411</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=7411"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=7411&amp;vote=1"><span>0</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=7411&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link bronze" href="/user/6843/">marcovtwout</a> at 2012/03/21 10:19am</div>
+			<div class="title">Note about yiilite and trace statements</div>
+			<div class="content"><p>If you are wondering why some of your logroutes are not working after switching to yiilite, read again this part:</p>
+
+<blockquote>
+  <p>"Both comments and trace statements are stripped from the merged file. Therefore, using yiilite.php would reduce the number of files being included and avoid execution of trace statements."</p>
+</blockquote>
+</div>
+					</div>
+				<div class="comment alt-0">
+			<a class="cid" id="c509" title="permalink to this comment" href="#c509">#509</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=509"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=509&amp;vote=1"><span>5</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=509&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link" href="/user/119/">Maxximus</a> at 2010/05/10 03:15pm</div>
+			<div class="title">scriptMap: jquery.js and YII_DEBUG true/false</div>
+			<div class="content"><p>Be careful, if you set scriptMap to false for jquery.js, do this for jquery.min.js too.
+If you set YII_DEBUG to false Yii will include the latter.</p>
+</div>
+					</div>
+				<div class="comment alt-1">
+			<a class="cid" id="c596" title="permalink to this comment" href="#c596">#596</a>
+			<a class="widget-reporter" title="Please report to us if you find any inappropriate content." href="/site/report/?type=Comment&amp;id=596"><span>report it</span></a>			<div class="widget-voter"><ul>
+	<li class="vote up"><a title="Thumb up" class="g-login" href="/site/vote/?type=Comment&amp;id=596&amp;vote=1"><span>6</span></a></li>
+	<li class="vote down"><a title="Thumb down" class="g-login" href="/site/vote/?type=Comment&amp;id=596&amp;vote=0"><span>0</span></a></li>
+</ul>
+<div class="clear"></div></div>			<div class="meta"><a class="g-user-rank-link silver" href="/user/59/">schmunk</a> at 2010/04/14 10:02am</div>
+			<div class="title">yiilite and APC</div>
+			<div class="content"><p>I really want to underline that section. I just tried this with a server under heavy load, which had problems regarding memory size and CPU load.</p>
+
+<p>Using APC with yiilite really saves a significant amount of RAM and CPU-cycles.</p>
+</div>
+					</div>
+			</div>
+	<div id="comment-add">
+		<h3 id="add-comment">Leave a comment</h3>
+
+			<p>Please <a class="g-login" rel="/doc/guide/1.1/en/topics.performance#add-comment" href="#">login</a> to leave your comment.</p>
+		</div>
+</div>
+           </div>
+</div>
+					</div>
+				
+								<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+					</div>
+	</div>
+
+	<div class="layout-main-footer">
+		<div class="container_12">
+			<div class="grid_6">
+				<ul class="menu">
+				<li class="main">About
+<ul class="sub">
+<li><a href="/about/">About Yii</a></li>
+<li><a href="/features/">Features</a></li>
+<li><a href="/performance/">Performance</a></li>
+<li><a href="/license/">License</a></li>
+<li><a href="/contact/">Contact Us</a></li>
+</ul>
+</li>
+<li class="main">Downloads
+<ul class="sub">
+<li><a href="/download/">Framework</a></li>
+<li><a href="/extensions/">Extensions</a></li>
+<li><a href="/demos/">Demos</a></li>
+<li><a href="/logo/">Logo</a></li>
+</ul>
+</li>
+<li class="main">Documentation
+<ul class="sub">
+<li><a href="/tour/">Take the Tour</a></li>
+<li><a href="/tutorials/">Tutorials</a></li>
+<li><a href="/doc/api/">Class Reference</a></li>
+<li><a href="/doc-2.0/guide-index.html">Guide 2.0</a></li>
+<li><a href="/doc-2.0/index.html">Class Reference 2.0</a></li>
+<li><a href="/wiki/">Wiki</a></li>
+<li><a href="/screencasts/">Screencasts</a></li>
+<li><a href="/resources/">Resources</a></li>
+</ul>
+</li>
+<li class="main">Development
+<ul class="sub">
+<li><a href="/contribute/">Contribute to Yii</a></li>
+<li><a href="https://github.com/yiisoft/yii/commits/master">Latest Updates</a></li>
+<li><a href="https://github.com/yiisoft/yii/issues/new">Report a Bug</a></li>
+<li><a href="/security/">Report a Security Issue</a></li>
+</ul>
+</li>
+<li class="main">Community
+<ul class="sub">
+<li><a href="/forum/">Forum</a></li>
+<li><a href="/chat/">Live Chat</a></li>
+<li><a href="/news/">News</a></li>
+<li><a href="/user/halloffame/">Hall of Fame</a></li>
+<li><a href="/badges/">Badges</a></li>
+</ul>
+</li>
+				</ul>
+			</div>
+			<div class="grid_1">&nbsp;</div>
+			<div class="grid_5">
+				<h3>Yii Supporters</h3>
+				<ul class="g-list-none supporters">
+
+				</ul>
+			</div>
+
+			<div class="clear"></div>
+			<div class="grid_12 copyright">
+				<ul class="social">
+					<li class="twitter"><a href="https://twitter.com/yiiframework" target="_blank" rel="nofollow" title="follow us on twitter">Twitter</a></li>
+					<li class="facebook"><a href="https://www.facebook.com/groups/yiitalk/" target="_blank" rel="nofollow" title="join yii group at facebook">Facebook</a></li>
+					<li class="linkedin"><a href="http://www.linkedin.com/groups?gid=1483367" target="_blank" rel="nofollow" title="join yii group at linkedin">LinkedIn</a></li>
+					<li class="feeds"><a title="RSS feeds" href="/rss.xml/">RSS Feeds</a></li>
+				</ul>
+				<div class="clear"></div>
+				<a href="/tos/">Terms of Service</a> |
+				<a href="/license/">License</a> |
+				<a href="/contact/">Contact Us</a><br/>
+				Copyright &copy; 2015 by <a href="http://www.yiisoft.com">Yii Software LLC</a>.
+				All Rights Reserved.
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+    <script type="text/javascript" src="/js/site-20121004195728.js"></script>
+
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['site._setAccount', 'UA-5843896-1']);
+_gaq.push(['site._trackPageview']);
+
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+<script type="text/javascript">
+function trackClick(link, action, category) {
+	action=action || link.href;
+	category=category || 'Outbound Links';
+	try {
+		_gaq.push(['site._trackEvent', category, action]);
+		setTimeout('document.location = "' + link.href + '"', 250);
+	}catch(err){}
+	return false;
+}
+</script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+</body>
+</html>
