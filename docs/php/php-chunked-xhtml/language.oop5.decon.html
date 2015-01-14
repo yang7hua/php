@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>构造函数和析构函数</title>
+
+ </head>
+ <body><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="language.oop5.autoload.html">自动加载类</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="language.oop5.visibility.html">访问控制（可见性）</a></div>
+ <div class="up"><a href="language.oop5.html">类与对象</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div><hr /><div id="language.oop5.decon" class="sect1">
+ <h2 class="title">构造函数和析构函数</h2>
+
+ <div class="sect2" id="language.oop5.decon.constructor">
+  <h3 class="title">构造函数</h3>
+   <div class="methodsynopsis dc-description" id="object.construct">
+    <span class="type"><span class="type void">void</span></span> <span class="methodname"><strong>__construct</strong></span>
+     ([ <span class="methodparam"><span class="type"><a href="language.pseudo-types.html#language.types.mixed" class="type mixed">mixed</a></span> <code class="parameter">$args</code></span>
+    [, <span class="methodparam"> <code class="parameter">$...</code></span>
+   ]] )</div>
+
+  <p class="para">
+   PHP 5 允行开发者在一个类中定义一个方法作为构造函数。具有构造函数的类会在每次创建新对象时先调用此方法，所以非常适合在使用对象之前做一些初始化工作。
+  </p>
+  <blockquote class="note"><p><strong class="note">Note</strong>: 
+   <span class="simpara">
+    如果子类中定义了构造函数则不会隐式调用其父类的构造函数。要执行父类的构造函数，需要在子类的构造函数中调用
+    <span class="function"><strong>parent::__construct()</strong></span>。如果子类没有定义构造函数则会如同一个普通的类方法一样从父类继承（假如没有被定义为
+    private 的话）。
+   </span>
+  </p></blockquote>
+  <div class="example" id="example-199">
+   <p><strong>Example #1 使用新标准的构造函数</strong></p>
+   <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">BaseClass&nbsp;</span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">__construct</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #DD0000">"In&nbsp;BaseClass&nbsp;constructor\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;}<br />}<br /><br />class&nbsp;</span><span style="color: #0000BB">SubClass&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">BaseClass&nbsp;</span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">__construct</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">parent</span><span style="color: #007700">::</span><span style="color: #0000BB">__construct</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #DD0000">"In&nbsp;SubClass&nbsp;constructor\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;}<br />}<br /><br />class&nbsp;</span><span style="color: #0000BB">OtherSubClass&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">BaseClass&nbsp;</span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;inherits&nbsp;BaseClass's&nbsp;constructor<br /></span><span style="color: #007700">}<br /><br /></span><span style="color: #FF8000">//&nbsp;In&nbsp;BaseClass&nbsp;constructor<br /></span><span style="color: #0000BB">$obj&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">BaseClass</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;In&nbsp;BaseClass&nbsp;constructor<br />//&nbsp;In&nbsp;SubClass&nbsp;constructor<br /></span><span style="color: #0000BB">$obj&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">SubClass</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;In&nbsp;BaseClass&nbsp;constructor<br /></span><span style="color: #0000BB">$obj&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">OtherSubClass</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   </div>
+
+  </div>
+  <p class="para">
+   为了实现向后兼容性，如果 PHP 5 在类中找不到 <a href="language.oop5.decon.html#object.construct" class="link">__construct()</a>
+   函数并且也没有从父类继承一个的话，它就会尝试寻找旧式的构造函数，也就是和类同名的函数。因此唯一会产生兼容性问题的情况是：类中已有一个名为
+   <span class="function"><strong>__construct()</strong></span> 的方法却被用于其它用途时。
+  </p>
+  <p class="para">
+   与其它方法不同，当 <a href="language.oop5.decon.html#object.construct" class="link">__construct()</a>
+   被与父类 <a href="language.oop5.decon.html#object.construct" class="link">__construct()</a>
+   具有不同参数的方法覆盖时，PHP 不会产生一个 <strong><code>E_STRICT</code></strong> 错误信息。
+  </p>
+  <p class="para">
+   自 PHP 5.3.3 起，在命名空间中，与类名同名的方法不再作为构造函数。这一改变不影响不在命名空间中的类。
+  </p>
+  <div class="example" id="example-200">
+   <p><strong>Example #2 Constructors in namespaced classes</strong></p>
+   <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">namespace&nbsp;</span><span style="color: #0000BB">Foo</span><span style="color: #007700">;<br />class&nbsp;</span><span style="color: #0000BB">Bar&nbsp;</span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;function&nbsp;</span><span style="color: #0000BB">Bar</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;treated&nbsp;as&nbsp;constructor&nbsp;in&nbsp;PHP&nbsp;5.3.0-5.3.2<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;treated&nbsp;as&nbsp;regular&nbsp;method&nbsp;as&nbsp;of&nbsp;PHP&nbsp;5.3.3<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   </div>
+
+  </div>
+ </div>
+
+ <div class="sect2" id="language.oop5.decon.destructor">
+  <h3 class="title">析构函数</h3>
+   <div class="methodsynopsis dc-description" id="object.destruct">
+    <span class="type"><span class="type void">void</span></span> <span class="methodname"><strong>__destruct</strong></span>
+     ( <span class="methodparam">void</span>
+    )</div>
+
+  <p class="para">
+   PHP 5 引入了析构函数的概念，这类似于其它面向对象的语言，如
+   C++。析构函数会在到某个对象的所有引用都被删除或者当对象被显式销毁时执行。
+  </p>
+  <div class="example" id="example-201">
+   <p><strong>Example #3 析构函数示例</strong></p>
+   <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">MyDestructableClass&nbsp;</span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">__construct</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #DD0000">"In&nbsp;constructor\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">name&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"MyDestructableClass"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">__destruct</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;</span><span style="color: #DD0000">"Destroying&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">name&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;}<br />}<br /><br /></span><span style="color: #0000BB">$obj&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">MyDestructableClass</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   </div>
+
+  </div>
+  <p class="para">
+   和构造函数一样，父类的析构函数不会被引擎暗中调用。要执行父类的析构函数，必须在子类的析构函数体中显式调用
+   <span class="function"><strong>parent::__destruct()</strong></span>。此外也和构造函数一样，子类如果自己没有定义析构函数则会继承父类的。
+  </p>
+  <p class="para">
+   析构函数即使在使用 <span class="function"><a href="function.exit.html" class="function">exit()</a></span>
+   终止脚本运行时也会被调用。在析构函数中调用
+   <span class="function"><a href="function.exit.html" class="function">exit()</a></span> 将会中止其余关闭操作的运行。
+  </p>
+  <blockquote class="note"><p><strong class="note">Note</strong>: 
+   <p class="para">
+    析构函数在脚本关闭时调用，此时所有的 HTTP
+    头信息已经发出。脚本关闭时的工作目录有可能和在 SAPI（如 apache）中时不同。
+   </p>
+  </p></blockquote>
+  <blockquote class="note"><p><strong class="note">Note</strong>: 
+   <p class="para">
+    试图在析构函数（在脚本终止时被调用）中抛出一个异常会导致致命错误。
+   </p>
+  </p></blockquote>
+ </div>
+
+</div><hr /><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="language.oop5.autoload.html">自动加载类</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="language.oop5.visibility.html">访问控制（可见性）</a></div>
+ <div class="up"><a href="language.oop5.html">类与对象</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div></body></html>

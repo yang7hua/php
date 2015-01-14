@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>引用做什么</title>
+
+ </head>
+ <body><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="language.references.whatare.html">引用是什么</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="language.references.arent.html">引用不是什么</a></div>
+ <div class="up"><a href="language.references.html">引用的解释</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div><hr /><div id="language.references.whatdo" class="sect1">
+  <h2 class="title">引用做什么</h2>
+  <p class="para">
+   PHP 的引用允许用两个变量来指向同一个内容。意思是，当这样做时：
+   <div class="informalexample">
+    <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$a&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$b</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+    </div>
+
+   </div>
+   这意味着 <var class="varname"><var class="varname">$a</var></var> 和 <var class="varname"><var class="varname">$b</var></var> 指向了同一个变量。
+   <blockquote class="note"><p><strong class="note">Note</strong>: 
+    <p class="para">
+     <var class="varname"><var class="varname">$a</var></var> 和 <var class="varname"><var class="varname">$b</var></var> 在这里是完全相同的，这并不是
+     <var class="varname"><var class="varname">$a</var></var> 指向了 <var class="varname"><var class="varname">$b</var></var> 或者相反，而是
+     <var class="varname"><var class="varname">$a</var></var> 和 <var class="varname"><var class="varname">$b</var></var> 指向了同一个地方。
+    </p>
+   </p></blockquote>
+  </p>
+  <blockquote class="note"><p><strong class="note">Note</strong>: 
+   <p class="para">
+    如果具有引用的数组被拷贝，其值不会解除引用。对于数组传值给函数也是如此。
+   </p>
+  </p></blockquote>
+   <blockquote class="note"><p><strong class="note">Note</strong>: 
+    <p class="para">
+    如果对一个未定义的变量进行引用赋值、引用参数传递或引用返回，则会自动创建该变量。
+     <div class="example" id="example-294">
+      <p><strong>Example #1 对未定义的变量使用引用</strong></p>
+      <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(&amp;</span><span style="color: #0000BB">$var</span><span style="color: #007700">)&nbsp;{&nbsp;}<br /><br /></span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$a</span><span style="color: #007700">);&nbsp;</span><span style="color: #FF8000">//&nbsp;$a&nbsp;is&nbsp;"created"&nbsp;and&nbsp;assigned&nbsp;to&nbsp;null<br /><br /></span><span style="color: #0000BB">$b&nbsp;</span><span style="color: #007700">=&nbsp;array();<br /></span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$b</span><span style="color: #007700">[</span><span style="color: #DD0000">'b'</span><span style="color: #007700">]);<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">array_key_exists</span><span style="color: #007700">(</span><span style="color: #DD0000">'b'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$b</span><span style="color: #007700">));&nbsp;</span><span style="color: #FF8000">//&nbsp;bool(true)<br /><br /></span><span style="color: #0000BB">$c&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">StdClass</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$c</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">d</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">property_exists</span><span style="color: #007700">(</span><span style="color: #0000BB">$c</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'d'</span><span style="color: #007700">));&nbsp;</span><span style="color: #FF8000">//&nbsp;bool(true)<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+      </div>
+
+     </div>
+    </p>
+   </p></blockquote>  
+  <p class="para">
+   同样的语法可以用在函数中，它返回引用，以及用在 <em>new</em>
+   运算符中（PHP 4.0.4 以及以后版本）：
+   <div class="informalexample">
+    <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$bar&nbsp;</span><span style="color: #007700">=&amp;&nbsp;new&nbsp;</span><span style="color: #0000BB">fooclass</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">$foo&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">find_var</span><span style="color: #007700">(</span><span style="color: #0000BB">$bar</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+    </div>
+
+   </div>
+   自 PHP 5 起，<a href="language.oop5.basic.html#language.oop5.basic.new" class="link">new</a>
+   自动返回引用，因此在此使用 <em>=&amp;</em> 已经过时了并且会产生
+   E_STRICT 级别的消息。
+  </p>
+  <blockquote class="note"><p><strong class="note">Note</strong>: 
+   <p class="para">
+    不用 <em>&amp;</em> 运算符导致对象生成了一个拷贝。如果在类中用
+    <em>$this</em>，它将作用于该类当前的实例。没有用 <em>&amp;</em>
+    的赋值将拷贝这个实例（例如对象）并且 <em>$this</em>
+    将作用于这个拷贝上，这并不总是想要的结果。由于性能和内存消耗的问题，通常只想工作在一个实例上面。
+   </p>
+   <p class="para">
+    尽管可以用 <em>@</em> 运算符来<em class="emphasis">抑制</em>构造函数中的任何错误信息，例如用
+    <em>@new</em>，但用 <em>&amp;new</em> 语句时这不起效果。这是
+    Zend 引擎的一个限制并且会导致一个解析错误。
+   </p>
+  </p></blockquote>
+  <div class="warning"><strong class="warning">Warning</strong>
+   <p class="para">
+    如果在一个函数内部给一个声明为 <em>global</em>
+    的变量赋于一个引用，该引用只在函数内部可见。可以通过使用
+    <var class="varname"><var class="varname"><a href="reserved.variables.globals.html" class="classname">$GLOBALS</a></var></var> 数组避免这一点。
+    <div class="example" id="example-295">
+     <p><strong>Example #2 在函数内引用全局变量</strong></p>
+     <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$var1&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"Example&nbsp;variable"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$var2&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">""</span><span style="color: #007700">;<br /><br />function&nbsp;</span><span style="color: #0000BB">global_references</span><span style="color: #007700">(</span><span style="color: #0000BB">$use_globals</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;global&nbsp;</span><span style="color: #0000BB">$var1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$var2</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(!</span><span style="color: #0000BB">$use_globals</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$var2&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$var1</span><span style="color: #007700">;&nbsp;</span><span style="color: #FF8000">//&nbsp;visible&nbsp;only&nbsp;inside&nbsp;the&nbsp;function<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$GLOBALS</span><span style="color: #007700">[</span><span style="color: #DD0000">"var2"</span><span style="color: #007700">]&nbsp;=&amp;&nbsp;</span><span style="color: #0000BB">$var1</span><span style="color: #007700">;&nbsp;</span><span style="color: #FF8000">//&nbsp;visible&nbsp;also&nbsp;in&nbsp;global&nbsp;context<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">}<br />}<br /><br /></span><span style="color: #0000BB">global_references</span><span style="color: #007700">(</span><span style="color: #0000BB">false</span><span style="color: #007700">);<br />echo&nbsp;</span><span style="color: #DD0000">"var2&nbsp;is&nbsp;set&nbsp;to&nbsp;'</span><span style="color: #0000BB">$var2</span><span style="color: #DD0000">'\n"</span><span style="color: #007700">;&nbsp;</span><span style="color: #FF8000">//&nbsp;var2&nbsp;is&nbsp;set&nbsp;to&nbsp;''<br /></span><span style="color: #0000BB">global_references</span><span style="color: #007700">(</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br />echo&nbsp;</span><span style="color: #DD0000">"var2&nbsp;is&nbsp;set&nbsp;to&nbsp;'</span><span style="color: #0000BB">$var2</span><span style="color: #DD0000">'\n"</span><span style="color: #007700">;&nbsp;</span><span style="color: #FF8000">//&nbsp;var2&nbsp;is&nbsp;set&nbsp;to&nbsp;'Example&nbsp;variable'<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+     </div>
+
+    </div>
+    把 <em>global $var;</em> 当成是 <em>$var
+    =&amp; $GLOBALS[&#039;var&#039;];</em> 的简写。从而将其它引用赋给
+    <em>$var</em> 只改变了本地变量的引用。
+   </p>
+  </div>
+  <blockquote class="note"><p><strong class="note">Note</strong>: 
+   <p class="para">
+    如果在 <a href="control-structures.foreach.html" class="link">foreach</a>
+    语句中给一个具有引用的变量赋值，被引用的对象也被改变。
+    <div class="example" id="example-296">
+     <p><strong>Example #3 引用与 foreach 语句</strong></p>
+     <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$ref&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$row&nbsp;</span><span style="color: #007700">=&amp;&nbsp;</span><span style="color: #0000BB">$ref</span><span style="color: #007700">;<br />foreach&nbsp;(array(</span><span style="color: #0000BB">1</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">3</span><span style="color: #007700">)&nbsp;as&nbsp;</span><span style="color: #0000BB">$row</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;do&nbsp;something<br /></span><span style="color: #007700">}<br />echo&nbsp;</span><span style="color: #0000BB">$ref</span><span style="color: #007700">;&nbsp;</span><span style="color: #FF8000">//&nbsp;3&nbsp;-&nbsp;last&nbsp;element&nbsp;of&nbsp;the&nbsp;iterated&nbsp;array<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+     </div>
+
+    </div>
+   </p>
+  </p></blockquote>
+  <p class="para">
+   引用做的第二件事是用引用传递变量。这是通过在函数内建立一个本地变量并且该变量在呼叫范围内引用了同一个内容来实现的。例如：
+   <div class="informalexample">
+    <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">(&amp;</span><span style="color: #0000BB">$var</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$var</span><span style="color: #007700">++;<br />}<br /><br /></span><span style="color: #0000BB">$a</span><span style="color: #007700">=</span><span style="color: #0000BB">5</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">foo</span><span style="color: #007700">(</span><span style="color: #0000BB">$a</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+    </div>
+
+   </div>
+   将使 <var class="varname"><var class="varname">$a</var></var> 变成 6。这是因为在 <var class="varname"><var class="varname">foo</var></var> 函数中变量
+   <var class="varname"><var class="varname">$var</var></var> 指向了和 <var class="varname"><var class="varname">$a</var></var> 指向的同一个内容。更多详细解释见<a href="language.references.pass.html" class="link">引用传递</a>。
+  </p>
+  <p class="simpara">
+   引用做的第三件事是<a href="language.references.return.html" class="link">引用返回</a>。
+  </p>
+ </div><hr /><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="language.references.whatare.html">引用是什么</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="language.references.arent.html">引用不是什么</a></div>
+ <div class="up"><a href="language.references.html">引用的解释</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div></body></html>

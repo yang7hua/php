@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>关闭魔术引号</title>
+
+ </head>
+ <body><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="security.magicquotes.whynot.html">为什么不用魔术引号</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="security.hiding.html">隐藏 PHP</a></div>
+ <div class="up"><a href="security.magicquotes.html">魔术引号</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div><hr /><div id="security.magicquotes.disabling" class="sect1">
+  <h2 class="title">关闭魔术引号</h2>
+  <p class="para">
+   <a href="info.configuration.html#ini.magic-quotes-gpc" class="link">magic_quotes_gpc</a>
+   指令只能在系统级关闭，不能在运行时。也就是说不能用
+   <span class="function"><a href="function.ini-set.html" class="function">ini_set()</a></span>。
+  </p>
+  <p class="para">
+   <div class="example" id="example-359">
+    <p><strong>Example #1 在服务器端关闭魔术引号</strong></p>
+    <div class="example-contents"><p>
+     下面是一个通过 <var class="filename">php.ini</var> 文件把这些选项设为 <em>Off</em>
+     的范例。更多信息请参见本手册的<a href="configuration.changes.html" class="link">怎样修改配置设定</a>。
+    </p></div>
+    <div class="example-contents screen">
+<div class="cdata"><pre>
+; Magic quotes
+;
+
+; Magic quotes for incoming GET/POST/Cookie data.
+magic_quotes_gpc = Off
+
+; Magic quotes for runtime-generated data, e.g. data from SQL, from exec(), etc.
+magic_quotes_runtime = Off
+
+; Use Sybase-style magic quotes (escape &#039; with &#039;&#039; instead of \&#039;).
+magic_quotes_sybase = Off
+</pre></div>
+    </div>
+    <div class="example-contents"><p>
+     如果不能修改服务器端的配置文件，使用
+     <var class="filename">.htaccess</var> 也可以。范例如下：
+    </p></div>
+    <div class="example-contents screen">
+<div class="cdata"><pre>
+php_flag magic_quotes_gpc Off
+</pre></div>
+    </div>
+   </div>
+  </p>
+  <p class="para">
+   为了能写出移植性较强的代码（可以运行于任何环境），例如不能修改服务器配置的情况，下面的例子可以在运行时关闭
+   <a href="info.configuration.html#ini.magic-quotes-gpc" class="link">magic_quotes_gpc</a>。但是这样做比较低效，适当的修改配置才是更好的办法。
+  </p>
+  <p class="para">
+   <div class="example" id="example-360">
+    <p><strong>Example #2 在运行时关闭魔术引号</strong></p>
+    <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">if&nbsp;(</span><span style="color: #0000BB">get_magic_quotes_gpc</span><span style="color: #007700">())&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">stripslashes_deep</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">)<br />&nbsp;&nbsp;&nbsp;&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$value&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">is_array</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">)&nbsp;?<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">array_map</span><span style="color: #007700">(</span><span style="color: #DD0000">'stripslashes_deep'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$value</span><span style="color: #007700">)&nbsp;:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">stripslashes</span><span style="color: #007700">(</span><span style="color: #0000BB">$value</span><span style="color: #007700">);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$value</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$_POST&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">array_map</span><span style="color: #007700">(</span><span style="color: #DD0000">'stripslashes_deep'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$_POST</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$_GET&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">array_map</span><span style="color: #007700">(</span><span style="color: #DD0000">'stripslashes_deep'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$_GET</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$_COOKIE&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">array_map</span><span style="color: #007700">(</span><span style="color: #DD0000">'stripslashes_deep'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$_COOKIE</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$_REQUEST&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">array_map</span><span style="color: #007700">(</span><span style="color: #DD0000">'stripslashes_deep'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$_REQUEST</span><span style="color: #007700">);<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+    </div>
+
+   </div>
+  </p>
+ </div><hr /><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="security.magicquotes.whynot.html">为什么不用魔术引号</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="security.hiding.html">隐藏 PHP</a></div>
+ <div class="up"><a href="security.magicquotes.html">魔术引号</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div></body></html>

@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>范围解析操作符（::）</title>
+
+ </head>
+ <body><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="oop4.constructor.html">构造函数</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="keyword.parent.html">parent</a></div>
+ <div class="up"><a href="oop4.html">类与对象（PHP 4）</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div><hr /><div id="keyword.paamayim-nekudotayim" class="sect1">
+   <h2 class="title">范围解析操作符（<em>::</em>）</h2>
+
+   <div class="caution"><strong class="caution">Caution</strong>
+    <p class="simpara">
+     下列内容仅在 PHP 4 及以后版本中有效。
+    </p>
+   </div>
+
+   <p class="para">
+    有时，在没有声明任何实例的情况下访问类中的函数或者基类中的函数和变量很有用处。而
+    :: 运算符即用于此情况。
+   </p>
+
+   <div class="informalexample">
+    <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">A&nbsp;</span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">example</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"I&nbsp;am&nbsp;the&nbsp;original&nbsp;function&nbsp;A::example().&lt;br&nbsp;/&gt;\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /><br />class&nbsp;</span><span style="color: #0000BB">B&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">A&nbsp;</span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">example</span><span style="color: #007700">()&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"I&nbsp;am&nbsp;the&nbsp;redefined&nbsp;function&nbsp;B::example().&lt;br&nbsp;/&gt;\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">A</span><span style="color: #007700">::</span><span style="color: #0000BB">example</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;A&nbsp;类没有对象，这将输出<br />//&nbsp;&nbsp;&nbsp;I&nbsp;am&nbsp;the&nbsp;original&nbsp;function&nbsp;A::example().&lt;br&nbsp;/&gt;<br /></span><span style="color: #0000BB">A</span><span style="color: #007700">::</span><span style="color: #0000BB">example</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;建立一个&nbsp;B&nbsp;类的对象<br /></span><span style="color: #0000BB">$b&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">B</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;这将输出<br />//&nbsp;&nbsp;&nbsp;I&nbsp;am&nbsp;the&nbsp;redefined&nbsp;function&nbsp;B::example().&lt;br&nbsp;/&gt;<br />//&nbsp;&nbsp;&nbsp;I&nbsp;am&nbsp;the&nbsp;original&nbsp;function&nbsp;A::example().&lt;br&nbsp;/&gt;<br /></span><span style="color: #0000BB">$b</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">example</span><span style="color: #007700">();<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+    </div>
+
+   </div>
+
+   <p class="para">
+    上面的例子调用了 A 类的函数 example()，但是这里并不存在 A
+    类的对象，因此不能这样用 $a-&gt;example() 或者类似的方法调用
+    example()。反而我们将 example()
+    作为一个类函数来调用，也就是说，作为一个类自身的函数来调用，而不是这个类的任何对象。
+   </p>
+
+   <p class="para">
+    这里有类函数，但没有类的变量。实际上，在调用函数时完全没有任何对象。因而一个类的函数可以不使用任何对象（但可以使用局部或者全局变量），并且可以根本不使用
+    <var class="varname"><var class="varname">$this</var></var> 变量。
+   </p>
+
+   <p class="para">
+    上面的例子中，类 B 重新定义了函数 example()。A
+    类中原始定义的函数 example()
+    将被屏蔽并且不再生效，除非使用 ::
+    运算符来访问 A 类中的 example() 函数。如：A::example()（实际上，应该写为
+    parent::example()，下一章介绍该内容）。
+   </p>
+
+   <p class="para">
+    就此而论，对于当前对象，它可能有对象变量。因此可以在对象函数的内部使用
+    <var class="varname"><var class="varname">$this</var></var> 和对象变量。
+   </p>
+
+ </div><hr /><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="oop4.constructor.html">构造函数</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="keyword.parent.html">parent</a></div>
+ <div class="up"><a href="oop4.html">类与对象（PHP 4）</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div></body></html>

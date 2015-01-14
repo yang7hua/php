@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>教程</title>
+
+ </head>
+ <body><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="mongo.manual.html">手册</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="mongo.tutorial.connecting.html">连接数据库</a></div>
+ <div class="up"><a href="mongo.manual.html">手册</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div><hr /><div id="mongo.tutorial" class="chapter">
+ <h1>教程</h1>
+<h2>Table of Contents</h2><ul class="chunklist chunklist_chapter"><li><a href="mongo.tutorial.connecting.html">连接数据库</a></li><li><a href="mongo.tutorial.selectdb.html">获取数据库实例</a></li><li><a href="mongo.tutorial.collection.html">获取集合实例</a></li><li><a href="mongo.tutorial.insert.html">插入一个文档</a></li><li><a href="mongo.tutorial.findone.html">使用 MongoCollection::findOne 方法</a></li><li><a href="mongo.tutorial.insert.multiple.html">添加多个文档</a></li><li><a href="mongo.tutorial.counting.html">计算文档数量</a></li><li><a href="mongo.tutorial.cursor.html">使用游标获取所有文档</a></li><li><a href="mongo.tutorial.criteria.html">设置查询条件</a></li><li><a href="mongo.tutorial.multi.query.html">获取一个子集</a></li><li><a href="mongo.tutorial.indexes.html">建立索引</a></li></ul>
+
+ <p class="para">
+  这个驱动是由 10gen 公司官方支持的 MongoDB 驱动
+ </p>
+ <p class="para">这是一个示例程序，它包含 连接数据库、插入文档、查询文档、遍历查询结果、断开链接。
+  实例中的每一步都有更详细的说明（注释）。
+ </p>
+ <div class="example" id="mongo.tutorial.basics">
+  <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /><br /></span><span style="color: #FF8000">//&nbsp;链接服务器<br /></span><span style="color: #0000BB">$m&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">MongoClient</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;选择一个数据库<br /></span><span style="color: #0000BB">$db&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$m</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">comedy</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;选择一个集合（&nbsp;Mongo&nbsp;的“集合”相当于关系型数据库的“表”）<br /></span><span style="color: #0000BB">$collection&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">cartoons</span><span style="color: #007700">;<br /><br /></span><span style="color: #FF8000">//&nbsp;插入一个文档（译注：“文档”相当于关系型数据库的“行”）<br /></span><span style="color: #0000BB">$document&nbsp;</span><span style="color: #007700">=&nbsp;array(&nbsp;</span><span style="color: #DD0000">"title"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">"Calvin&nbsp;and&nbsp;Hobbes"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"author"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">"Bill&nbsp;Watterson"&nbsp;</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$collection</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">insert</span><span style="color: #007700">(</span><span style="color: #0000BB">$document</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;添加另一个文档，它的结构与之前的不同<br /></span><span style="color: #0000BB">$document&nbsp;</span><span style="color: #007700">=&nbsp;array(&nbsp;</span><span style="color: #DD0000">"title"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">"XKCD"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"online"&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #0000BB">true&nbsp;</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$collection</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">insert</span><span style="color: #007700">(</span><span style="color: #0000BB">$document</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;查询集合中的所有文档<br /></span><span style="color: #0000BB">$cursor&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$collection</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">find</span><span style="color: #007700">();<br /><br /></span><span style="color: #FF8000">//&nbsp;遍历查询结果<br /></span><span style="color: #007700">foreach&nbsp;(</span><span style="color: #0000BB">$cursor&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$document</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$document</span><span style="color: #007700">[</span><span style="color: #DD0000">"title"</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+  </div>
+
+  <div class="example-contents"><p>以上例程会输出：</p></div>
+  <div class="example-contents screen">
+<div class="cdata"><pre>
+Calvin and Hobbes
+XKCD
+</pre></div>
+  </div>
+ </div>
+
+
+ 
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</div>
+<hr /><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="mongo.manual.html">手册</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="mongo.tutorial.connecting.html">连接数据库</a></div>
+ <div class="up"><a href="mongo.manual.html">手册</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div></body></html>

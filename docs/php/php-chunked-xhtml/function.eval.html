@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>把字符串作为PHP代码执行</title>
+
+ </head>
+ <body><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="function.die.html">die</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="function.exit.html">exit</a></div>
+ <div class="up"><a href="ref.misc.html">杂项 函数</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div><hr /><div id="function.eval" class="refentry">
+ <div class="refnamediv">
+  <h1 class="refname">eval</h1>
+  <p class="verinfo">(PHP 4, PHP 5)</p><p class="refpurpose"><span class="refname">eval</span> &mdash; <span class="dc-title">把字符串作为PHP代码执行</span></p>
+
+ </div>
+ 
+ <div class="refsect1 description" id="refsect1-function.eval-description">
+  <h3 class="title">说明</h3>
+   <div class="methodsynopsis dc-description">
+   <span class="type"><a href="language.pseudo-types.html#language.types.mixed" class="type mixed">mixed</a></span> <span class="methodname"><strong>eval</strong></span>
+    ( <span class="methodparam"><span class="type">string</span> <code class="parameter">$code</code></span>
+   )</div>
+
+  <p class="para rdfs-comment">
+   把字符串 <code class="parameter">code</code> 作为PHP代码执行。
+  </p>
+  
+  <div class="caution"><strong class="caution">Caution</strong>
+  <p class="para">
+   The <span class="function"><strong>eval()</strong></span> language construct is <em class="emphasis">very dangerous</em>
+    because it allows execution of arbitrary PHP code. <em class="emphasis">Its use thus is
+    discouraged.</em> If you have carefully verified that there is no other option
+    than to use this construct, pay special attention <em class="emphasis">not to pass any user
+    provided data</em> into it without properly validating it beforehand.
+  </p>
+  </div>
+ </div>
+
+
+ <div class="refsect1 parameters" id="refsect1-function.eval-parameters">
+  <h3 class="title">参数</h3>
+  <p class="para">
+   <dl>
+
+    
+     <dt>
+<code class="parameter">code</code></dt>
+
+     <dd>
+
+      <p class="para">
+       需要被执行的字符串
+      </p>
+      <p class="para">
+      代码不能包含打开/关闭 <a href="language.basic-syntax.phpmode.html" class="link">PHP tags</a>。比如，<em>&#039;echo &quot;Hi!&quot;;&#039;</em> must be passed instead of
+       <em>&#039;&lt;? echo &quot;Hi!&quot;; &gt;&#039;</em>. It is still possible to leave and
+       reenter PHP mode though using the appropriate PHP tags, e.g.
+       <em>&#039;echo &quot;In PHP mode!&quot;; ?&gt;In HTML mode!&lt;? echo &quot;Back in PHP mode!&quot;;&#039;</em>.
+      </p>
+      <p class="para">
+       Apart from that the passed code must be valid PHP. This includes that all statements
+       must be properly terminated using a semicolon.
+       <em>&#039;echo &quot;Hi!&quot;&#039;</em> for example will cause a parse error, whereas
+       <em>&#039;echo &quot;Hi!&quot;;&#039;</em> will work.
+      </p>
+      <p class="para">
+       <em>return</em> 语句会立即中止当前字符串的执行。
+      </p>
+      <p class="para">
+       The code will be executed in the scope of the code calling <span class="function"><strong>eval()</strong></span>. Thus any
+       variables defined or changed in the <span class="function"><strong>eval()</strong></span> call will remain visible after
+       it terminates.
+      </p>
+     </dd>
+
+    
+   </dl>
+
+  </p>
+ </div>
+
+
+ <div class="refsect1 returnvalues" id="refsect1-function.eval-returnvalues">
+  <h3 class="title">返回值</h3>
+  <p class="para">
+   <span class="function"><strong>eval()</strong></span> 返回 <strong><code>NULL</code></strong>，除非在执行的代码中 <em>return</em> 了一个值，函数返回传递给 <em>return</em> 的值。
+   如果在执行的代码中有一个解析错误，<span class="function"><strong>eval()</strong></span> 返回
+   <strong><code>FALSE</code></strong>，之后的代码将正常执行。无法使用 <span class="function"><a href="function.set-error-handler.html" class="function">set_error_handler()</a></span> 捕获 <span class="function"><strong>eval()</strong></span> 中的解析错误。
+  </p>
+ </div>
+
+
+ <div class="refsect1 examples" id="refsect1-function.eval-examples">
+  <h3 class="title">范例</h3>
+  <p class="para">
+   <div class="example" id="example-3790">
+    <p><strong>Example #1 <span class="function"><strong>eval()</strong></span> 例子 - 简单的文本合并</strong></p>
+    <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$string&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'cup'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$name&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'coffee'</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">$str&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'This&nbsp;is&nbsp;a&nbsp;$string&nbsp;with&nbsp;my&nbsp;$name&nbsp;in&nbsp;it.'</span><span style="color: #007700">;<br />echo&nbsp;</span><span style="color: #0000BB">$str</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />eval(</span><span style="color: #DD0000">"\$str&nbsp;=&nbsp;\"</span><span style="color: #0000BB">$str</span><span style="color: #DD0000">\";"</span><span style="color: #007700">);<br />echo&nbsp;</span><span style="color: #0000BB">$str</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+    </div>
+
+    <div class="example-contents"><p>以上例程会输出：</p></div>
+    <div class="example-contents screen">
+<div class="cdata"><pre>
+This is a $string with my $name in it.
+This is a cup with my coffee in it.
+</pre></div>
+    </div>
+   </div>
+  </p>
+ </div>
+
+
+ <div class="refsect1 notes" id="refsect1-function.eval-notes">
+  <h3 class="title">注释</h3>
+
+  <blockquote class="note"><p><strong class="note">Note</strong>: <span class="simpara">因为是一个语言构造器而不是一个函数，不能被
+<a href="functions.variable-functions.html" class="link">可变函数</a> 调用。
+</span>
+</p></blockquote>
+
+  <div class="tip"><strong class="tip">Tip</strong><p class="simpara">和直接将结果输出到浏览器一样，可使用<a href="book.outcontrol.html" class="link">输出控制函数</a>来捕获当前函数的输出，然后(例如)保存到一个 <span class="type"><a href="language.types.string.html" class="type string">string</a></span> 中。</p></div>
+  <blockquote class="note"><p><strong class="note">Note</strong>: 
+   <p class="para">
+    如果在执行的代码中产生了一个致命的错误（fatal error），整个脚本会退出。
+   </p>
+  </p></blockquote>
+ </div>
+
+
+ <div class="refsect1 seealso" id="refsect1-function.eval-seealso">
+  <h3 class="title">参见</h3>
+  <p class="para">
+   <ul class="simplelist">
+    <li class="member"><span class="function"><a href="function.call-user-func.html" class="function" rel="rdfs-seeAlso">call_user_func()</a> - 把第一个参数作为回调函数调用</span></li>
+   </ul>
+  </p>
+ </div>
+
+</div><hr /><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="function.die.html">die</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="function.exit.html">exit</a></div>
+ <div class="up"><a href="ref.misc.html">杂项 函数</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div></body></html>

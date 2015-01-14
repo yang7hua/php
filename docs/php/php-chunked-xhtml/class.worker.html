@@ -1,0 +1,228 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Worker 类</title>
+
+ </head>
+ <body><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="thread.start.html">Thread::start</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="worker.getstacked.html">Worker::getStacked</a></div>
+ <div class="up"><a href="book.pthreads.html">pthreads</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div><hr /><div id="class.worker" class="reference">
+
+ <h1 class="title">Worker 类</h1>
+ 
+
+ <div class="partintro"><p class="verinfo">(PECL pthreads &gt;= 2.0.0)</p>
+
+
+  <div class="section" id="worker.intro">
+   <h2 class="title">简介</h2>
+   <p class="para">
+    Worker 是一个具有持久化上下文的线程对象，通常用来重复使用线程。
+   </p>
+   <p class="para">
+    当一个 Worker 对象开始之后，会执行它的 run 方法，但是即使 run 方法执行完毕，线程本身也不会消亡，除非遇到以下情况：
+   </p>
+   <ul class="itemizedlist">
+    <li class="listitem">
+    <p class="para">Worker 对象超出作用范围（没有指向它的引用了）</p>
+    </li>
+    <li class="listitem">
+    <p class="para">代码调用了 Worker 对象的 shutdown 方法</p>
+    </li>
+    <li class="listitem">
+    <p class="para">整个脚本终止了</p>
+    </li>
+   </ul>
+   <p class="para">
+    这意味着程序员可以在程序执行过程中重用这个线程上下文：在 Worker 对象的栈中添加对象会激活 Worker 对象执行被加入对象的 run 方法。
+   </p>
+   <div class="warning"><strong class="warning">Warning</strong>
+   <p class="para">
+    程序员必须保持入栈对象的引用，直到它执行完毕或者出栈。Pool 类提供了 Worker 对象的高层抽象，
+    它可以帮助程序员管理这些引用。
+   </p>
+   </div>
+  </div>
+
+
+  <div class="section" id="worker.synopsis">
+   <h2 class="title">类摘要</h2>
+
+
+   <div class="classsynopsis">
+    <div class="ooclass"></div>
+
+
+    <div class="classsynopsisinfo">
+     <span class="ooclass">
+      <strong class="classname">Worker</strong>
+     </span>
+     
+     <span class="ooclass">
+      <span class="modifier">extends</span>
+      <a href="class.thread.html" class="classname">Thread</a>
+     </span>
+     
+     <span class="oointerface">implements 
+      <span class="interfacename"><strong class="interfacename">Traversable</strong></span>
+     </span>
+
+     <span class="oointerface">, 
+      <span class="interfacename"><a href="class.countable.html" class="interfacename">Countable</a></span>
+     </span>
+     
+     <span class="oointerface">, 
+      <span class="interfacename"><strong class="interfacename">ArrayAccess</strong></span>
+     </span>
+     {</div>
+
+    
+    <div class="classsynopsisinfo classsynopsisinfo_comment">/* 方法 */</div>
+    <div class="methodsynopsis dc-description">
+   <span class="modifier">public</span> <span class="type">integer</span> <span class="methodname"><a href="worker.getstacked.html" class="methodname">getStacked</a></span>
+    ( <span class="methodparam">void</span>
+   )</div>
+<div class="methodsynopsis dc-description">
+   <span class="modifier">public</span> <span class="type">boolean</span> <span class="methodname"><a href="worker.isshutdown.html" class="methodname">isShutdown</a></span>
+    ( <span class="methodparam">void</span>
+   )</div>
+<div class="methodsynopsis dc-description">
+   <span class="modifier">public</span> <span class="type">boolean</span> <span class="methodname"><a href="worker.isworking.html" class="methodname">isWorking</a></span>
+    ( <span class="methodparam">void</span>
+   )</div>
+<div class="methodsynopsis dc-description">
+   <span class="modifier">public</span> <span class="type">boolean</span> <span class="methodname"><a href="worker.shutdown.html" class="methodname">shutdown</a></span>
+    ( <span class="methodparam">void</span>
+   )</div>
+<div class="methodsynopsis dc-description">
+   <span class="modifier">public</span> <span class="type">integer</span> <span class="methodname"><a href="worker.stack.html" class="methodname">stack</a></span>
+    ( <span class="methodparam"><span class="type"><a href="class.threaded.html" class="type Threaded">Threaded</a></span> <code class="parameter reference">&$work</code></span>
+   )</div>
+<div class="methodsynopsis dc-description">
+   <span class="modifier">public</span> <span class="type">integer</span> <span class="methodname"><a href="worker.unstack.html" class="methodname">unstack</a></span>
+    ([ <span class="methodparam"><span class="type"><a href="class.threaded.html" class="type Threaded">Threaded</a></span> <code class="parameter reference">&$work</code></span>
+  ] )</div>
+
+    
+    <div class="classsynopsisinfo classsynopsisinfo_comment">/* 继承的方法 */</div>
+    <div class="methodsynopsis dc-description">
+   <span class="modifier">public</span> <span class="type">void</span> <span class="methodname"><a href="thread.detach.html" class="methodname">Thread::detach</a></span>
+    ( <span class="methodparam">void</span>
+   )</div>
+<div class="methodsynopsis dc-description">
+   <span class="modifier">public</span> <span class="type">integer</span> <span class="methodname"><a href="thread.getcreatorid.html" class="methodname">Thread::getCreatorId</a></span>
+    ( <span class="methodparam">void</span>
+   )</div>
+<div class="methodsynopsis dc-description">
+   <span class="modifier">public</span> <span class="modifier">static</span> <span class="type">Thread</span> <span class="methodname"><a href="thread.getcurrentthread.html" class="methodname">Thread::getCurrentThread</a></span>
+    ( <span class="methodparam">void</span>
+   )</div>
+<div class="methodsynopsis dc-description">
+   <span class="modifier">public</span> <span class="modifier">static</span> <span class="type">integer</span> <span class="methodname"><a href="thread.getcurrentthreadid.html" class="methodname">Thread::getCurrentThreadId</a></span>
+    ( <span class="methodparam">void</span>
+   )</div>
+<div class="methodsynopsis dc-description">
+   <span class="modifier">public</span> <span class="type">integer</span> <span class="methodname"><a href="thread.getthreadid.html" class="methodname">Thread::getThreadId</a></span>
+    ( <span class="methodparam">void</span>
+   )</div>
+<div class="methodsynopsis dc-description">
+   <span class="modifier">public</span> <span class="modifier">static</span> <span class="type">mixed</span> <span class="methodname"><a href="thread.globally.html" class="methodname">Thread::globally</a></span>
+    ( <span class="methodparam">void</span>
+   )</div>
+<div class="methodsynopsis dc-description">
+   <span class="modifier">public</span> <span class="type">boolean</span> <span class="methodname"><a href="thread.isjoined.html" class="methodname">Thread::isJoined</a></span>
+    ( <span class="methodparam">void</span>
+   )</div>
+<div class="methodsynopsis dc-description">
+   <span class="modifier">public</span> <span class="type">boolean</span> <span class="methodname"><a href="thread.isstarted.html" class="methodname">Thread::isStarted</a></span>
+    ( <span class="methodparam">void</span>
+   )</div>
+<div class="methodsynopsis dc-description">
+   <span class="modifier">public</span> <span class="type">boolean</span> <span class="methodname"><a href="thread.join.html" class="methodname">Thread::join</a></span>
+    ( <span class="methodparam">void</span>
+   )</div>
+<div class="methodsynopsis dc-description">
+   <span class="modifier">public</span> <span class="type">void</span> <span class="methodname"><a href="thread.kill.html" class="methodname">Thread::kill</a></span>
+    ( <span class="methodparam">void</span>
+   )</div>
+<div class="methodsynopsis dc-description">
+   <span class="modifier">public</span> <span class="type">boolean</span> <span class="methodname"><a href="thread.start.html" class="methodname">Thread::start</a></span>
+    ([ <span class="methodparam"><span class="type">integer</span> <code class="parameter">$options</code></span>
+  ] )</div>
+
+
+   }</div>
+
+
+  </div>
+
+ </div>
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2>Table of Contents</h2><ul class="chunklist chunklist_reference"><li><a href="worker.getstacked.html">Worker::getStacked</a> — 栈分析</li><li><a href="worker.isshutdown.html">Worker::isShutdown</a> — 状态检测</li><li><a href="worker.isworking.html">Worker::isWorking</a> — 状态检测</li><li><a href="worker.shutdown.html">Worker::shutdown</a> — 同步</li><li><a href="worker.stack.html">Worker::stack</a> — 栈操作</li><li><a href="worker.unstack.html">Worker::unstack</a> — 栈操作</li></ul>
+</div>
+<hr /><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="thread.start.html">Thread::start</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="worker.getstacked.html">Worker::getStacked</a></div>
+ <div class="up"><a href="book.pthreads.html">pthreads</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div></body></html>

@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>继承</title>
+
+ </head>
+ <body><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="keyword.class.html">类</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="oop4.constructor.html">构造函数</a></div>
+ <div class="up"><a href="oop4.html">类与对象（PHP 4）</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div><hr /><div id="keyword.extends" class="sect1">
+  <h2 class="title"><em>继承</em></h2>
+
+  <p class="para">
+   通常需要这样一些类，这些类与其它现有的类拥有相同变量和函数。实际上，定义一个通用类用于所有的项目，并且不断丰富这个类以适应每个具体项目将是一个不错的练习。为了使这一点变得更加容易，类可以从其它的类中扩展出来。扩展或派生出来的类拥有其基类（这称为“继承”，只不过没人死）的所有变量和函数，并包含所有派生类中定义的部分。类中的元素不可能减少，就是说，不可以注销任何存在的函数或者变量。一个扩充类总是依赖一个单独的基类，也就是说，不支持多继承。使用关键字“extends”来扩展一个类。
+  </p>
+
+  <div class="informalexample">
+   <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">Named_Cart&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">Cart&nbsp;</span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;</span><span style="color: #0000BB">$owner</span><span style="color: #007700">;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">set_owner&nbsp;</span><span style="color: #007700">(</span><span style="color: #0000BB">$name</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">owner&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$name</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   </div>
+
+  </div>
+
+  <p class="para">
+   上述示例定义了名为 Named_Cart 的类，该类拥有 Cart
+   类的所有变量和函数，加上附加的变量 <var class="varname"><var class="varname">$owner</var></var> 和一个附加函数
+   set_owner()。现在，以正常的方式创建了一个有名字的购物车，并且可以设置并取得该购物车的主人。而正常的购物车类的函数依旧可以在有名字的购物车类中使用：
+  </p>
+
+  <div class="informalexample">
+   <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$ncart&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Named_Cart</span><span style="color: #007700">;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;新建一个有名字的购物车<br /></span><span style="color: #0000BB">$ncart</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">set_owner</span><span style="color: #007700">(</span><span style="color: #DD0000">"kris"</span><span style="color: #007700">);&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;给该购物车命名<br /></span><span style="color: #007700">print&nbsp;</span><span style="color: #0000BB">$ncart</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">owner</span><span style="color: #007700">;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;输出该购物车主人的名字<br /></span><span style="color: #0000BB">$ncart</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">add_item</span><span style="color: #007700">(</span><span style="color: #DD0000">"10"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">);&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;（从购物车类中继承来的功能）<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+   </div>
+
+  </div>
+
+  <p class="para">
+   这个也可以叫做“父－子”关系。创建一个类，父类，并使用 <em>extends</em>
+   来创建一个<em class="emphasis">基于</em>父类的新类：子类。甚至可以使用这个新的子类来创建另外一个基于这个子类的类。
+  </p>
+  <blockquote class="note"><p><strong class="note">Note</strong>: 
+   <p class="para">
+    类只有在定义后才可以使用！如果需要类 <em>Named_Cart</em>
+    继承类 <em>Cart</em>，必须首先定义 <em>Cart</em>
+    类。如果需要创建另一个基于 <em>Named_Cart</em>
+    类的 <em>Yellow_named_cart </em> 类，必须首先定义
+    <em>Named_Cart</em> 类。简捷的说：类定义的顺序是非常重要的。
+   </p>
+  </p></blockquote>
+ </div><hr /><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="keyword.class.html">类</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="oop4.constructor.html">构造函数</a></div>
+ <div class="up"><a href="oop4.html">类与对象（PHP 4）</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div></body></html>

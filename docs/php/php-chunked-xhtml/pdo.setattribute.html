@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>设置属性</title>
+
+ </head>
+ <body><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="pdo.rollback.html">PDO::rollBack</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="class.pdostatement.html">PDOStatement</a></div>
+ <div class="up"><a href="class.pdo.html">PDO</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div><hr /><div id="pdo.setattribute" class="refentry">
+ <div class="refnamediv">
+  <h1 class="refname">PDO::setAttribute</h1>
+  <p class="verinfo">(PHP 5 &gt;= 5.1.0, PECL pdo &gt;= 0.1.0)</p><p class="refpurpose"><span class="refname">PDO::setAttribute</span> &mdash; <span class="dc-title">
+   设置属性
+  </span></p>
+
+ </div>
+ <div class="refsect1 description" id="refsect1-pdo.setattribute-description">
+  <h3 class="title">说明</h3>
+  <div class="methodsynopsis dc-description">
+   <span class="type">bool</span> <span class="methodname"><strong>PDO::setAttribute</strong></span>
+    ( <span class="methodparam"><span class="type">int</span> <code class="parameter">$attribute</code></span>
+   , <span class="methodparam"><span class="type"><a href="language.pseudo-types.html#language.types.mixed" class="type mixed">mixed</a></span> <code class="parameter">$value</code></span>
+   )</div>
+
+
+  <p class="para rdfs-comment">
+   设置数据库句柄属性。下面列出了一些可用的通用属性；有些驱动可能使用另外的特定属性。
+   <ul class="itemizedlist">
+    <li class="listitem"><p class="para">
+     <em>PDO::ATTR_CASE</em>：强制列名为指定的大小写。
+     <ul class="itemizedlist">
+      <li class="listitem"><p class="para">
+       <em>PDO::CASE_LOWER</em>：强制列名小写。
+      </p></li>
+      <li class="listitem"><p class="para">
+       <em>PDO::CASE_NATURAL</em>：保留数据库驱动返回的列名。
+      </p></li>
+      <li class="listitem"><p class="para">
+       <em>PDO::CASE_UPPER</em>：强制列名大写。
+      </p></li>
+     </ul>
+    </p></li>
+    <li class="listitem"><p class="para"><em>PDO::ATTR_ERRMODE</em>：错误报告。
+     <ul class="itemizedlist">
+      <li class="listitem"><p class="para"><em>PDO::ERRMODE_SILENT</em>：
+       仅设置错误代码。</p></li>
+      <li class="listitem"><p class="para"><em>PDO::ERRMODE_WARNING</em>:
+       引发 <a href="" class="link">E_WARNING</a> 错误</p></li>
+      <li class="listitem"><p class="para"><em>PDO::ERRMODE_EXCEPTION</em>:
+       抛出 <a href="class.pdoexception.html" class="link">exceptions</a> 异常。</p></li>
+     </ul>
+    </p></li>
+    <li class="listitem"><p class="para"><em>PDO::ATTR_ORACLE_NULLS</em>
+    （在所有驱动中都可用，不仅限于Oracle）：
+     转换 NULL 和空字符串。
+     <ul class="itemizedlist">
+      <li class="listitem"><p class="para"><em>PDO::NULL_NATURAL</em>:
+       不转换。</p></li>
+      <li class="listitem"><p class="para"><em>PDO::NULL_EMPTY_STRING</em>：
+       将空字符串转换成 <strong><code>NULL</code></strong>。</p></li>
+      <li class="listitem"><p class="para"><em>PDO::NULL_TO_STRING</em>:
+       将 NULL 转换成空字符串。</p></li>
+     </ul>
+    </p></li>
+    <li class="listitem"><p class="para"><em>PDO::ATTR_STRINGIFY_FETCHES</em>:
+     提取的时候将数值转换为字符串。
+     Requires <span class="type"><a href="language.types.boolean.html" class="type bool">bool</a></span>.
+    </p></li>
+    <li class="listitem"><p class="para"><em>PDO::ATTR_STATEMENT_CLASS</em>：
+    设置从PDOStatement派生的用户提供的语句类。
+     不能用于持久的PDO实例。
+     需要 <em>array(string 类名, array(mixed 构造函数的参数))</em>。
+    </p></li>
+    <li class="listitem"><p class="para"><em>PDO::ATTR_TIMEOUT</em>：
+     指定超时的秒数。并非所有驱动都支持此选项，这意味着驱动和驱动之间可能会有差异。比如，SQLite等待的时间达到此值后就放弃获取可写锁，但其他驱动可能会将此值解释为一个连接或读取超时的间隔。 
+     需要 <span class="type"><a href="language.types.integer.html" class="type int">int</a></span> 类型。
+    </p></li>
+    <li class="listitem"><p class="para"><em>PDO::ATTR_AUTOCOMMIT</em>
+     （在OCI，Firebird 以及 MySQL中可用）：
+     是否自动提交每个单独的语句。
+    </p></li>
+    <li class="listitem"><p class="para"><em>PDO::ATTR_EMULATE_PREPARES</em>
+     启用或禁用预处理语句的模拟。 有些驱动不支持或有限度地支持本地预处理。使用此设置强制PDO总是模拟预处理语句（如果为 <strong><code>TRUE</code></strong> ），或试着使用本地预处理语句（如果为 <strong><code>FALSE</code></strong>）。如果驱动不能成功预处理当前查询，它将总是回到模拟预处理语句上。
+     需要 <span class="type"><a href="language.types.boolean.html" class="type bool">bool</a></span> 类型。
+     </p></li>
+    <li class="listitem"><p class="para"><em>PDO::MYSQL_ATTR_USE_BUFFERED_QUERY</em>
+   （在MySQL中可用）：
+    使用缓冲查询。
+    </p></li>
+    <li class="listitem"><p class="para"><em>PDO::ATTR_DEFAULT_FETCH_MODE</em>：
+    设置默认的提取模式。关于模式的说明可以在 <span class="function"><a href="pdostatement.fetch.html" class="function">PDOStatement::fetch()</a></span> 文档找到。
+    </p></li>
+   </ul>
+  </p>
+ </div>
+
+
+ <div class="refsect1 returnvalues" id="refsect1-pdo.setattribute-returnvalues">
+  <h3 class="title">返回值</h3>
+  <p class="para">
+   成功时返回 <strong><code>TRUE</code></strong>， 或者在失败时返回 <strong><code>FALSE</code></strong>。
+  </p>
+ </div>
+
+
+</div><hr /><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="pdo.rollback.html">PDO::rollBack</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="class.pdostatement.html">PDOStatement</a></div>
+ <div class="up"><a href="class.pdo.html">PDO</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div></body></html>

@@ -1,0 +1,188 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>检查一个断言是否为 FALSE</title>
+
+ </head>
+ <body><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="function.assert-options.html">assert_options</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="function.cli-get-process-title.html">cli_get_process_title</a></div>
+ <div class="up"><a href="ref.info.html">PHP 选项/信息 函数</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div><hr /><div id="function.assert" class="refentry">
+ <div class="refnamediv">
+  <h1 class="refname">assert</h1>
+  <p class="verinfo">(PHP 4, PHP 5)</p><p class="refpurpose"><span class="refname">assert</span> &mdash; <span class="dc-title">检查一个断言是否为 <strong><code>FALSE</code></strong></span></p>
+
+ </div>
+ 
+ <div class="refsect1 description" id="refsect1-function.assert-description">
+  <h3 class="title">说明</h3>
+  <div class="methodsynopsis dc-description">
+   <span class="type">bool</span> <span class="methodname"><strong>assert</strong></span>
+    ( <span class="methodparam"><span class="type"><a href="language.pseudo-types.html#language.types.mixed" class="type mixed">mixed</a></span> <code class="parameter">$assertion</code></span>
+   [, <span class="methodparam"><span class="type">string</span> <code class="parameter">$description</code></span>
+  ] )</div>
+
+  <p class="para rdfs-comment">
+   <span class="function"><strong>assert()</strong></span> 会检查指定的
+   <code class="parameter">assertion</code> 并在结果为 <strong><code>FALSE</code></strong> 时采取适当的行动。 
+  </p>
+  <p class="para">
+   如果 <code class="parameter">assertion</code> 是字符串，它将会被 <span class="function"><strong>assert()</strong></span> 当做 PHP 代码来执行。
+   <code class="parameter">assertion</code> 是字符串的优势是当禁用断言时它的开销会更小，并且在断言失败时消息会包含 <code class="parameter">assertion</code> 表达式。
+   这意味着如果你传入了 boolean 的条件作为 <code class="parameter">assertion</code>，这个条件将不会显示为断言函数的参数；在调用你定义的  <span class="function"><a href="function.assert-options.html" class="function">assert_options()</a></span> 处理函数时，条件会转换为字符串，而布尔值 <strong><code>FALSE</code></strong> 会被转换成空字符串。
+  </p>
+  <p class="para">
+   断言这个功能应该只被用来调试。
+   你应该用于完整性检查时测试条件是否始终应该为 <strong><code>TRUE</code></strong>，来指示某些程序错误，或者检查具体功能的存在（类似扩展函数或特定的系统限制和功能）。
+  </p>
+  <p class="para">
+   断言不应该用于普通运行时操作，类似输入参数的检查。
+   作为一个经验法则，在断言禁用时你的代码也应该能够正确地运行。
+  </p>
+  <p class="para">
+   <span class="function"><strong>assert()</strong></span> 的行为可以通过 <span class="function"><a href="function.assert-options.html" class="function">assert_options()</a></span> 来配置，或者手册页面上描述的 .ini 设置。
+  </p>
+  <p class="para">
+   <span class="function"><a href="function.assert-options.html" class="function">assert_options()</a></span> <strong><code>ASSERT_CALLBACK</code></strong> 配置指令允许设置回调函数来处理失败的断言。
+  </p>
+  <p class="para">
+   <span class="function"><strong>assert()</strong></span> 回调函数在构建自动测试套件的时候尤其有用，因为它们允许你简易地捕获传入断言的代码，并包含断言的位置信息。
+   当信息能够被其他方法捕获，使用断言可以让它更快更方便！
+  </p>
+  <p class="para">
+   回调函数应该接受三个参数。
+   第一个参数包括了断言失败所在的文件。
+   第二个参数包含了断言失败所在的行号，第三个参数包含了失败的表达式（如有任意 — 字面值例如 1 或者 &quot;two&quot; 将不会传递到这个参数）。
+   PHP 5.4.8 及更高版本的用户也可以提供第四个可选参数，如果设置了，用于将 <code class="parameter">description</code> 指定到 <span class="function"><strong>assert()</strong></span>。
+  </p>
+ </div>
+
+
+ <div class="refsect1 parameters" id="refsect1-function.assert-parameters">
+  <h3 class="title">参数</h3>
+  <p class="para">
+   <dl>
+
+    
+     <dt>
+<code class="parameter">assertion</code></dt>
+
+     <dd>
+
+      <p class="para">
+       断言。
+      </p>
+     </dd>
+
+    
+    
+     <dt>
+<code class="parameter">description</code></dt>
+
+     <dd>
+
+      <p class="para">
+       如果 <code class="parameter">assertion</code> 失败了，选项 description 将会包括在失败信息里。
+      </p>
+     </dd>
+
+    
+   </dl>
+
+  </p>
+ </div>
+
+
+ <div class="refsect1 returnvalues" id="refsect1-function.assert-returnvalues">
+  <h3 class="title">返回值</h3>
+  <p class="para">
+   assertion 是 false 则返回 <strong><code>FALSE</code></strong>，否则是 <strong><code>TRUE</code></strong>。
+  </p>
+ </div>
+
+
+ <div class="refsect1 changelog" id="refsect1-function.assert-changelog">
+  <h3 class="title">更新日志</h3>
+  <p class="para">
+   <table class="doctable informaltable">
+    
+     <thead>
+      <tr>
+       <th>版本</th>
+       <th>说明</th>
+      </tr>
+
+     </thead>
+
+     <tbody class="tbody">
+      <tr>
+       <td>5.4.8</td>
+       <td>
+        增加了参数 <code class="parameter">description</code>。
+        <code class="parameter">description</code> 现在也作为第四个参数提供给 <strong><code>ASSERT_CALLBACK</code></strong> 模式里的回调函数。
+       </td>
+      </tr>
+
+     </tbody>
+    
+   </table>
+
+  </p>
+ </div>
+
+
+ <div class="refsect1 examples" id="refsect1-function.assert-examples">
+  <h3 class="title">范例</h3>
+  <p class="para">
+   <div class="example" id="example-471">
+    <p><strong>Example #1 使用自定义处理程序处理失败的断言</strong></p>
+    <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;激活断言，并设置它为&nbsp;quiet<br /></span><span style="color: #0000BB">assert_options</span><span style="color: #007700">(</span><span style="color: #0000BB">ASSERT_ACTIVE</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">assert_options</span><span style="color: #007700">(</span><span style="color: #0000BB">ASSERT_WARNING</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">assert_options</span><span style="color: #007700">(</span><span style="color: #0000BB">ASSERT_QUIET_EVAL</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//创建处理函数<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">my_assert_handler</span><span style="color: #007700">(</span><span style="color: #0000BB">$file</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$line</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$code</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"&lt;hr&gt;Assertion&nbsp;Failed:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;File&nbsp;'</span><span style="color: #0000BB">$file</span><span style="color: #DD0000">'&lt;br&nbsp;/&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Line&nbsp;'</span><span style="color: #0000BB">$line</span><span style="color: #DD0000">'&lt;br&nbsp;/&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Code&nbsp;'</span><span style="color: #0000BB">$code</span><span style="color: #DD0000">'&lt;br&nbsp;/&gt;&lt;hr&nbsp;/&gt;"</span><span style="color: #007700">;<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;设置回调函数<br /></span><span style="color: #0000BB">assert_options</span><span style="color: #007700">(</span><span style="color: #0000BB">ASSERT_CALLBACK</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'my_assert_handler'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;让一则断言失败<br /></span><span style="color: #0000BB">assert</span><span style="color: #007700">(</span><span style="color: #DD0000">'mysql_query("")'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+    </div>
+
+   </div>
+  </p>
+  <p class="para">
+   <div class="example" id="example-472">
+    <p><strong>Example #2 使用自定义处理器打印描述信息</strong></p>
+    <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">//&nbsp;激活断言，并设置它为&nbsp;quiet<br /></span><span style="color: #0000BB">assert_options</span><span style="color: #007700">(</span><span style="color: #0000BB">ASSERT_ACTIVE</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">assert_options</span><span style="color: #007700">(</span><span style="color: #0000BB">ASSERT_WARNING</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">assert_options</span><span style="color: #007700">(</span><span style="color: #0000BB">ASSERT_QUIET_EVAL</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//创建处理函数<br /></span><span style="color: #007700">function&nbsp;</span><span style="color: #0000BB">my_assert_handler</span><span style="color: #007700">(</span><span style="color: #0000BB">$file</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$line</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$code</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$desc&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">null</span><span style="color: #007700">)<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Assertion&nbsp;failed&nbsp;at&nbsp;</span><span style="color: #0000BB">$file</span><span style="color: #DD0000">:</span><span style="color: #0000BB">$line</span><span style="color: #DD0000">:&nbsp;</span><span style="color: #0000BB">$code</span><span style="color: #DD0000">"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$desc</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">":&nbsp;</span><span style="color: #0000BB">$desc</span><span style="color: #DD0000">"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"\n"</span><span style="color: #007700">;<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;设置回调函数<br /></span><span style="color: #0000BB">assert_options</span><span style="color: #007700">(</span><span style="color: #0000BB">ASSERT_CALLBACK</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'my_assert_handler'</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;Make&nbsp;an&nbsp;assertion&nbsp;that&nbsp;should&nbsp;fail<br /></span><span style="color: #0000BB">assert</span><span style="color: #007700">(</span><span style="color: #DD0000">'2&nbsp;&lt;&nbsp;1'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">assert</span><span style="color: #007700">(</span><span style="color: #DD0000">'2&nbsp;&lt;&nbsp;1'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'Two&nbsp;is&nbsp;less&nbsp;than&nbsp;one'</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+    </div>
+
+    <div class="example-contents"><p>以上例程会输出：</p></div>
+    <div class="example-contents screen">
+<div class="cdata"><pre>
+Assertion failed at test.php:21: 2 &lt; 1
+Assertion failed at test.php:22: 2 &lt; 1: Two is less than one
+</pre></div>
+    </div>
+   </div>
+  </p>
+ </div>
+
+
+ <div class="refsect1 seealso" id="refsect1-function.assert-seealso">
+  <h3 class="title">参见</h3>
+  <p class="para">
+   <ul class="simplelist">
+    <li class="member"><span class="function"><a href="function.assert-options.html" class="function" rel="rdfs-seeAlso">assert_options()</a> - 设置/获取断言的各种标志</span></li>
+   </ul>
+  </p>
+ </div>
+
+
+</div><hr /><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="function.assert-options.html">assert_options</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="function.cli-get-process-title.html">cli_get_process_title</a></div>
+ <div class="up"><a href="ref.info.html">PHP 选项/信息 函数</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div></body></html>

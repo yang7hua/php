@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>使用命名空间：基础</title>
+
+ </head>
+ <body><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="language.namespaces.definitionmultiple.html">在同一个文件中定义多个命名空间</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="language.namespaces.dynamic.html">命名空间和动态语言特征</a></div>
+ <div class="up"><a href="language.namespaces.html">命名空间</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div><hr /><div id="language.namespaces.basics" class="sect1">
+  <h2 class="title">使用命名空间：基础</h2>
+  <p class="para">
+   在讨论如何使用命名空间之前，必须了解 PHP
+   是如何知道要使用哪一个命名空间中的元素的。可以将 PHP 
+   命名空间与文件系统作一个简单的类比。在文件系统中访问一个文件有三种方式：
+   <ol type="1">
+    <li class="listitem">
+     <span class="simpara">
+     相对文件名形式如<em>foo.txt</em>。它会被解析为
+     <em>currentdirectory/foo.txt</em>，其中 currentdirectory
+     表示当前目录。因此如果当前目录是
+     <em>/home/foo</em>，则该文件名被解析为<em>/home/foo/foo.txt</em>。
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+      相对路径名形式如<em>subdirectory/foo.txt</em>。它会被解析为
+      <em>currentdirectory/subdirectory/foo.txt</em>。
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+     绝对路径名形式如<em>/main/foo.txt</em>。它会被解析为<em>/main/foo.txt</em>。
+     </span>
+    </li>
+   </ol>
+   PHP 命名空间中的元素使用同样的原理。例如，类名可以通过三种方式引用：
+   <ol type="1">
+    <li class="listitem">
+     <span class="simpara">
+     非限定名称，或不包含前缀的类名称，例如
+     <em>$a=new foo();</em> 或
+     <em>foo::staticmethod();</em>。如果当前命名空间是
+     <em>currentnamespace</em>，foo 将被解析为
+     <em>currentnamespace\foo</em>。如果使用 foo
+     的代码是全局的，不包含在任何命名空间中的代码，则 foo 
+     会被解析为<em>foo</em>。
+     </span>
+     <span class="simpara">
+     警告：如果命名空间中的函数或常量未定义，则该非限定的函数名称或常量名称会被解析为全局函数名称或常量名称。详情参见
+     <a href="language.namespaces.fallback.html" class="link">使用命名空间：后备全局函数名称/常量名称</a>。
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+     限定名称,或包含前缀的名称，例如
+     <em>$a = new subnamespace\foo();</em> 或
+     <em>subnamespace\foo::staticmethod();</em>。如果当前的命名空间是
+     <em>currentnamespace</em>，则 foo 会被解析为
+     <em>currentnamespace\subnamespace\foo</em>。如果使用
+     foo 的代码是全局的，不包含在任何命名空间中的代码，foo
+     会被解析为<em>subnamespace\foo</em>。
+     </span>
+    </li>
+    <li class="listitem">
+     <span class="simpara">
+     完全限定名称，或包含了全局前缀操作符的名称，例如，
+     <em>$a = new \currentnamespace\foo();</em> 或
+     <em>\currentnamespace\foo::staticmethod();</em>。在这种情况下，foo 
+     总是被解析为代码中的文字名(literal name)<em>currentnamespace\foo</em>。
+     </span>
+    </li>
+   </ol>
+  </p>
+  <p class="para">
+   下面是一个使用这三种方式的实例：
+   <div class="informalexample">
+    <p class="simpara">file1.php</p>
+    <div class="example-contents">
+     <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">namespace&nbsp;</span><span style="color: #0000BB">Foo</span><span style="color: #007700">\</span><span style="color: #0000BB">Bar</span><span style="color: #007700">\</span><span style="color: #0000BB">subnamespace</span><span style="color: #007700">;<br /><br />const&nbsp;</span><span style="color: #0000BB">FOO&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">;<br />function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">()&nbsp;{}<br />class&nbsp;</span><span style="color: #0000BB">foo<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;function&nbsp;</span><span style="color: #0000BB">staticmethod</span><span style="color: #007700">()&nbsp;{}<br />}<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+    </div>
+
+    <p class="simpara">file2.php</p>
+    <div class="example-contents">
+     <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">namespace&nbsp;</span><span style="color: #0000BB">Foo</span><span style="color: #007700">\</span><span style="color: #0000BB">Bar</span><span style="color: #007700">;<br />include&nbsp;</span><span style="color: #DD0000">'file1.php'</span><span style="color: #007700">;<br /><br />const&nbsp;</span><span style="color: #0000BB">FOO&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">;<br />function&nbsp;</span><span style="color: #0000BB">foo</span><span style="color: #007700">()&nbsp;{}<br />class&nbsp;</span><span style="color: #0000BB">foo<br /></span><span style="color: #007700">{<br />&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;function&nbsp;</span><span style="color: #0000BB">staticmethod</span><span style="color: #007700">()&nbsp;{}<br />}<br /><br /></span><span style="color: #FF8000">/*&nbsp;非限定名称&nbsp;*/<br /></span><span style="color: #0000BB">foo</span><span style="color: #007700">();&nbsp;</span><span style="color: #FF8000">//&nbsp;解析为&nbsp;Foo\Bar\foo&nbsp;resolves&nbsp;to&nbsp;function&nbsp;Foo\Bar\foo<br /></span><span style="color: #0000BB">foo</span><span style="color: #007700">::</span><span style="color: #0000BB">staticmethod</span><span style="color: #007700">();&nbsp;</span><span style="color: #FF8000">//&nbsp;解析为类&nbsp;Foo\Bar\foo的静态方法staticmethod。resolves&nbsp;to&nbsp;class&nbsp;Foo\Bar\foo,&nbsp;method&nbsp;staticmethod<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">FOO</span><span style="color: #007700">;&nbsp;</span><span style="color: #FF8000">//&nbsp;resolves&nbsp;to&nbsp;constant&nbsp;Foo\Bar\FOO<br /><br />/*&nbsp;限定名称&nbsp;*/<br /></span><span style="color: #0000BB">subnamespace</span><span style="color: #007700">\</span><span style="color: #0000BB">foo</span><span style="color: #007700">();&nbsp;</span><span style="color: #FF8000">//&nbsp;解析为函数&nbsp;Foo\Bar\subnamespace\foo<br /></span><span style="color: #0000BB">subnamespace</span><span style="color: #007700">\</span><span style="color: #0000BB">foo</span><span style="color: #007700">::</span><span style="color: #0000BB">staticmethod</span><span style="color: #007700">();&nbsp;</span><span style="color: #FF8000">//&nbsp;解析为类&nbsp;Foo\Bar\subnamespace\foo,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;以及类的方法&nbsp;staticmethod<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">subnamespace</span><span style="color: #007700">\</span><span style="color: #0000BB">FOO</span><span style="color: #007700">;&nbsp;</span><span style="color: #FF8000">//&nbsp;解析为常量&nbsp;Foo\Bar\subnamespace\FOO<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />/*&nbsp;完全限定名称&nbsp;*/<br /></span><span style="color: #007700">\</span><span style="color: #0000BB">Foo</span><span style="color: #007700">\</span><span style="color: #0000BB">Bar</span><span style="color: #007700">\</span><span style="color: #0000BB">foo</span><span style="color: #007700">();&nbsp;</span><span style="color: #FF8000">//&nbsp;解析为函数&nbsp;Foo\Bar\foo<br /></span><span style="color: #007700">\</span><span style="color: #0000BB">Foo</span><span style="color: #007700">\</span><span style="color: #0000BB">Bar</span><span style="color: #007700">\</span><span style="color: #0000BB">foo</span><span style="color: #007700">::</span><span style="color: #0000BB">staticmethod</span><span style="color: #007700">();&nbsp;</span><span style="color: #FF8000">//&nbsp;解析为类&nbsp;Foo\Bar\foo,&nbsp;以及类的方法&nbsp;staticmethod<br /></span><span style="color: #007700">echo&nbsp;\</span><span style="color: #0000BB">Foo</span><span style="color: #007700">\</span><span style="color: #0000BB">Bar</span><span style="color: #007700">\</span><span style="color: #0000BB">FOO</span><span style="color: #007700">;&nbsp;</span><span style="color: #FF8000">//&nbsp;解析为常量&nbsp;Foo\Bar\FOO<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+    </div>
+
+   </div>
+  </p>
+  <p class="para">
+   注意访问任意全局类、函数或常量，都可以使用完全限定名称，例如
+   <span class="function"><strong>\strlen()</strong></span> 或 <strong class="classname">\Exception</strong> 或
+   <em>\INI_ALL</em>。
+
+   <div class="example" id="example-256">
+    <p><strong>Example #1 在命名空间内部访问全局类、函数和常量</strong></p>
+    <div class="example-contents">
+     <div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #007700">namespace&nbsp;</span><span style="color: #0000BB">Foo</span><span style="color: #007700">;<br /><br />function&nbsp;</span><span style="color: #0000BB">strlen</span><span style="color: #007700">()&nbsp;{}<br />const&nbsp;</span><span style="color: #0000BB">INI_ALL&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">3</span><span style="color: #007700">;<br />class&nbsp;</span><span style="color: #0000BB">Exception&nbsp;</span><span style="color: #007700">{}<br /><br /></span><span style="color: #0000BB">$a&nbsp;</span><span style="color: #007700">=&nbsp;\</span><span style="color: #0000BB">strlen</span><span style="color: #007700">(</span><span style="color: #DD0000">'hi'</span><span style="color: #007700">);&nbsp;</span><span style="color: #FF8000">//&nbsp;调用全局函数strlen<br /></span><span style="color: #0000BB">$b&nbsp;</span><span style="color: #007700">=&nbsp;\</span><span style="color: #0000BB">INI_ALL</span><span style="color: #007700">;&nbsp;</span><span style="color: #FF8000">//&nbsp;访问全局常量&nbsp;INI_ALL<br /></span><span style="color: #0000BB">$c&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;\</span><span style="color: #0000BB">Exception</span><span style="color: #007700">(</span><span style="color: #DD0000">'error'</span><span style="color: #007700">);&nbsp;</span><span style="color: #FF8000">//&nbsp;实例化全局类&nbsp;Exception<br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+    </div>
+
+   </div>
+  </p>
+ </div><hr /><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="language.namespaces.definitionmultiple.html">在同一个文件中定义多个命名空间</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="language.namespaces.dynamic.html">命名空间和动态语言特征</a></div>
+ <div class="up"><a href="language.namespaces.html">命名空间</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div></body></html>
