@@ -9,6 +9,7 @@ class Log
 	{
 		$texts = [
 			'apply'	=>	'贷款申请成功',
+			'edit_loan_sketch'	=>	'编辑贷款信息',
 			'face'	=>	'初审完成',
 			'visit'	=>	'实地外访完成',
 			'car'	=>	'车评完成',
@@ -17,6 +18,9 @@ class Log
 			'rc_refuse'		=>	'全国风控中心拒绝案件',
 			'sign'	=>	'签署合同',
 			'gps'	=>	'GPS安装',
+			'carkey'	=>	'车钥匙',
+			'pledgenotary'	=>	'抵押公证',
+			'runconfirm'	=>	'确认放款',
 			'remit_certify'	=>	'汇款成功、汇款凭证上传'		
 		];
 

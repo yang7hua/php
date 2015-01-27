@@ -182,12 +182,12 @@ EOT;
 		$attrs['name'] = $field;
 		if (isset($options['validator']))
 			$attrs['class'] = self::getClass($options['validator']);
-		if (isset($this->data[$field]) and in_array($type, ['text']))
-			$attrs['value'] = $this->data[$field];
-
 		$input = '<textarea ';
 		$input .= self::getAttrs($attrs);
 		$input .= '/>';
+
+		if (isset($this->data[$field]))
+			$input .= $this->data[$field];
 
 		$input .= '</textarea>';
 
@@ -431,7 +431,10 @@ class Validator
 
 	public function getData($field)
 	{
-		$data = isset($this->data[$field]) ? $this->data[$field] : $this->getRule($field)['default'];
+		$rule = $this->getRule($field);
+		$data = isset($this->data[$field]) ? $this->data[$field] : $rule['default'];
+		if (isset($rule['safe']) and $rule['safe'])
+			return $data;
 		return htmlspecialchars(strip_tags($data), ENT_QUOTES);
 	}
 

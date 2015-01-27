@@ -97,6 +97,7 @@ class RoleForm extends ModelForm
 			],
 			'auth'	=>	[
 				'type'	=>	'checkbox',
+				'safe'	=>	true
 			]
 		]
 		

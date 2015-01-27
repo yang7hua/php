@@ -11,6 +11,9 @@ class Controller extends \Base\Controller
 					'_operator'	=>	self::operator()
 				]);
 		}
+		$this->view->setVars([
+			'advise'	=>	Advise::getAdvisesByOid($this->getOperatorId())
+		]);
 	}
 
 	public function isLogin()
@@ -31,10 +34,13 @@ class Controller extends \Base\Controller
 		return $session;
 	}
 
+	public function expire()
+	{
+		return self::operator('expire');
+	}
+
 	/**
 	 * 检查操作权限
-	 * sysadm: adm_auth
-	 * loansys: o_auth
 	 */
 	public function checkAuth()
 	{
@@ -102,6 +108,14 @@ class Controller extends \Base\Controller
 			return [];
 	}
 
+	public function getOperatorAuth()
+	{
+		$auth = $this->operator('auth');
+		if ($auth[APP_NAME] and is_array($auth[APP_NAME]))
+			$auth = $auth[APP_NAME];
+		return $auth;
+	}
+
 	/**
 	 * 获取控制器下的操作
 	 */
@@ -149,7 +163,33 @@ class Controller extends \Base\Controller
 			$actions = array_merge($actions, $controllerActions[$val]);
 		}	
 
+		if (method_exists($this, 'specialsActions')) {
+			$authes  = $this->getOperatorAuth();
+			$specials = $this->specialsActions();
+			if (key_exists($actionName, $specials)) {
+				$specials = $specials[$actionName];
+				if (is_string($specials['controller'])) {
+					if (array_key_exists($specials['controller'], $authes) || $specials['controller'] == '*') {
+						$auth_actions = $authes[$specials['controller']];
+						if ($specials['action'] == '*')
+							return true;
+						else if (is_string($specials['action']) and in_array($specials['action'], $auth_actions))
+							return true;
+						else if (is_array($specials['action'])) {
+							$as = array_intersect($auth_actions, $specials['action']);
+							return count($as);
+						}
+					}
+				}
+			}
+		}
+
 		return array_key_exists($actionName, $actions);
+	}
+
+	public function logout()
+	{
+		$this->session->remove('operator');
 	}
 
 }

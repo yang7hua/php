@@ -26,7 +26,7 @@ class FaceForm extends ModelForm
 					]
 				],
 				'debt_amount'	=>	[
-					'label'	=>	'负债总额',
+					'label'	=>	'借款人及配偶负债',
 					'type'	=>	'textarea',
 					'default'	=>	'',
 					'inputOptions'	=>	[
@@ -59,7 +59,7 @@ class FaceForm extends ModelForm
 					]
 				],
 				'debt_info'	=>	[
-					'label'	=>	'预期情况说明',
+					'label'	=>	'逾期情况说明',
 					'type'	=>	'textarea',
 					'default'	=>	'',
 					'inputOptions'	=>	[
@@ -70,7 +70,7 @@ class FaceForm extends ModelForm
 					]
 				],
 				'debt_car_info'	=>	[
-					'label'	=>	'按揭车还款情况',
+					'label'	=>	'车辆情况说明',
 					'type'	=>	'textarea',
 					'default'	=>	'',
 					'inputOptions'	=>	[
@@ -92,7 +92,7 @@ class FaceForm extends ModelForm
 					]
 				],
 				'info_income'	=>	[
-					'label'	=>	'收入情况说明',
+					'label'	=>	'借款人及配偶收入说明',
 					'type'	=>	'textarea',
 					'default'	=>	'',
 					'inputOptions'	=>	[
@@ -103,7 +103,7 @@ class FaceForm extends ModelForm
 					]
 				],
 				'use_info'	=>	[
-					'label'	=>	'借款用途说明',
+					'label'	=>	'借款用途',
 					'type'	=>	'textarea',
 					'default'	=>	'',
 					'inputOptions'	=>	[
@@ -114,7 +114,7 @@ class FaceForm extends ModelForm
 					]
 				],
 				'repay_source'	=>	[
-					'label'	=>	'还款来源核实',
+					'label'	=>	'还款来源情况说明',
 					'type'	=>	'textarea',
 					'default'	=>	'',
 					'inputOptions'	=>	[
@@ -141,9 +141,12 @@ class FaceForm extends ModelForm
 		];
 	}
 
-	public function face()
+	public function face($uid = false)
 	{
-		return (new Face())->add($this->data);
+		if ($uid)
+			return Face::edit($uid, $this->data);
+		else
+			return (new Face())->add($this->data);
 	}
 
 	public function reface()

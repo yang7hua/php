@@ -133,6 +133,7 @@ class Authority
 			}
 			$allowed_actions[$controller] = $allowed_controller_actions;
 		}
+		$_exists = [];
 		if (!empty($allowed_actions))
 		{
 			foreach ($allowed_actions as $controller=>$actions)
@@ -141,12 +142,13 @@ class Authority
 				{
 					if (is_null($text))
 						continue;
-					if (is_array($text) and $text['link']) {
+					if (is_array($text) and $text['link'] and !in_array($text['text'], $_exists)) {
 						$action == 'index' and $action = '';
 						$links[] = [
 							'url'	=>	\Func\url("$controller/$action"), 
 							'text'	=>	$text['text']
-							];
+						];
+						$_exists[] = $text['text'];
 					}
 				}
 			}

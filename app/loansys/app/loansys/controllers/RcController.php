@@ -27,7 +27,8 @@ class RcController extends Controller
 				'list'	=>	['text'	=>	'案件列表',	'link'	=>	true ],
 				'detail'=>	['text'	=>	'已处理案件详情' ],
 				'case'	=>	['text'	=>	'案件详情'],
-				'deal'	=>	['text'	=>	'处理', 'operate'	=>	true ]
+				'deal'	=>	['text'	=>	'处理', 'operate'	=>	true ],
+				'advise'	=>	[]
 			]
 		];
 	}
@@ -96,63 +97,24 @@ class RcController extends Controller
 	/**
 	 * 案件详情
 	 */
-	public function caseAction()
+	public function caseAction($uid)
 	{
-		$uid = $this->urlParam();
 		empty($uid) and $this->pageError('param');
 
-		$infos = $this->loanSketch($uid);
+		$infos = User::infos($uid);
 		!$infos and $this->redirect(\Func\url('rc/list', true));
+		$infos['advise_types'] = \App\Config\Loan::adviseTypes();
+		$infos['can_modify_actions'] = $this->canModifyActions($uid, $infos['loansketch']['status']);
 
 		$this->view->setVars($infos);
 	}
 
-	public function detailAction()
+	public function detailAction($uid)
 	{
-		$uid = $this->urlParam();
 		empty($uid) and $this->pageError('param');
 
-		$loan = Loan::findByUid($uid);
-		$user = User::findFirst($uid)->toArray();
-		/*
-		$face = Face::findByUid($uid);
-		$visit = Visit::findByUid($uid);
-		$carassess = Car::findByUid($uid);
-		 */
-
-		$this->view->setVars([
-			'loan'	=>	$loan,
-			'user'	=>	$user,
-			/*
-			'face'	=>	$face,
-			'visit'	=>	$visit,
-			'carassess'	=>	$carassess
-			 */
-		]);
-	}
-
-	/**
-	 * 获待处理案件所有信息
-	 */
-	private function loanSketch($uid)
-	{
-		//贷款信息
-		$LoanSketch = LoanSketch::findByUid($uid);
-		if (!$LoanSketch || !\App\LoanStatus::isCase($LoanSketch['status']))
-			return false;
-
-		$user = User::findFirst($uid)->toArray();
-		$face = Face::findByUid($uid);
-		$visit = Visit::findByUid($uid);
-		$carassess = Car::findByUid($uid);
-
-		return [
-			'loan'	=>	$LoanSketch,
-			'user'	=>	$user,
-			'face'	=>	$face,
-			'visit'	=>	$visit,
-			'carassess'	=>	$carassess
-		];
+		$infos = User::infos($uid);
+		$this->view->setVars($infos);
 	}
 
 	/**
@@ -194,4 +156,43 @@ class RcController extends Controller
 			exit();
 		}
 	}
+
+	public function adviseAction($uid)
+	{
+		$data = $this->request->getPost();	
+		$adviseTypes = \App\Config\Loan::adviseTypes();
+
+		$adviseType = $data['advisetype'];
+		$reason = $data['reason'];
+		if (!array_key_exists($adviseType, $adviseTypes) || empty($reason)) {
+			$this->error('参数错误');
+		}
+		$foid = $this->getOperatorId();
+		if (Loan::advise($uid, $foid, $adviseType, $reason))
+			$this->success('操作成功');
+		$this->error('操作失败');
+	}
+
+	private function canModifyActions($uid, $status)
+	{
+		$advises = Advise::formatByType(Advise::getAdvisesByUid($uid));
+
+		$actions = [
+			'loansketch'=>0, 
+			'visit'	=>	0,
+			'car'	=>	0,
+			'face'	=>	0,
+			'rc'	=>	0
+		];
+		$advises_undo = array_intersect_key($advises, $actions);
+		if ($advises_undo) {
+			$this->view->setVars([
+				'advises'	=>	$advises_undo
+			]);
+		} else if (\App\LoanStatus::needRc($status)) {
+			$actions['rc'] = true;
+		}
+		return $actions;
+	}
+
 }

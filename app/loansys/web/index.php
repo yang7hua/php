@@ -4,6 +4,8 @@ define('WEB_PATH', __DIR__);
 define('ROOT_PATH', realpath(WEB_PATH . '/../'));
 define('PUBLIC_PATH', '/public');
 
+define('APP_ONLINE', $_SERVER['HTTP_HOST'] == 'loansys.yiqihao.com');
+
 define('ADM_NAME', 'sysadm');
 define('FRONT_NAME', 'loansys');
 

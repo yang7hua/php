@@ -9,6 +9,8 @@ class AuthorityController extends Controller
 	public static function toArray($auth)
 	{
 		$return = [];
+		if (empty($auth))
+			return [];
 		$json = json_decode($auth);
 		function analyse($obj) {
 			$return = [];

@@ -8,6 +8,7 @@ class FinanceController extends Controller
 		return [
 			'finance'	=>	[
 				'name'	=>	'财务',
+				'nationwide'	=>	true,
 				'authorities'	=>	[
 					'operate'	=>	'汇款凭证等操作'
 				]

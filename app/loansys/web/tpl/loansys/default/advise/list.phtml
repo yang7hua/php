@@ -1,0 +1,56 @@
+<?php 
+
+if ($advises['loansketch'] and $can_modify_actions['apply']) {
+	$show_advises = true;
+	$advises = $advises['loansketch'];
+} else if ($advises['visit'] and $can_modify_actions['visit']) {
+	$show_advises = true;
+	$advises = $advises['visit'];
+} else if ($advises['car'] and $can_modify_actions['car']) {
+	$show_advises = true;	
+	$advises = $advises['face'];
+} else if ($advises['face'] and $can_modify_actions['face']) {
+	$show_advises = true;
+	$advises = $advises['face'];
+}
+
+if ($show_advises):?>
+<h5 class="task task-undo">待处理任务</h5>
+<div class="task-list">
+<ul>
+<?php foreach ($advises as $advise):?>
+	<li><?=$advise['reason']?></li>	
+<?php endforeach;?>
+</ul>
+<a data-toggle="modal" href="#" data-target="#doAdvises">完成</a>
+</div>
+<?php else:?>
+<h6 class="task task-undo">有待处理任务, 不能进行后续操作</h6>
+<?php endif; ?>
+
+<div class="modal fade" id="doAdvises">
+	<div class="modal-dialog modal-l">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5>处理任务</h5>
+			</div>
+			<div class="modal-body">
+			<form action="<?=$doadvises_url?>" method="post" class="form-horizontal">
+<table style="width:100%" class="table">
+	<tr><th width=5%></th><th width=20%>编号</th><th>说明</th></tr>
+<?php foreach ($advises as $advise):?>
+<tr><td><?=\Util\Html::checkbox('ids[]', [$advise['id']=>''])?></td><td><?=$advise['id']?></td><th><?=$advise['reason']?></th></tr>
+<?php endforeach;?>
+</table>
+	<div class="form-group">
+		<div class="col-lg-12 text-center">
+			<button type="submit" class="btn btn-primary">提交</button>
+		</div>
+	</div>
+			</form>
+			</div>
+			<div class="modal-footer"></div>
+		</div>
+	</div>
+</div>
+<?php \Func\loadJsFile('loan.js', ['depends'=>'\Assert\validate'], APP_NAME)?>

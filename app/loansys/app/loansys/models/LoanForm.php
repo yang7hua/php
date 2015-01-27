@@ -56,6 +56,14 @@ class LoanForm extends ModelForm
 				'uid'	=>	null,
 				'gps'	=>	['required'	=>	true]
 			],
+			'car_key'	=>	[
+				'uid'	=>	null,
+				'car_key'	=>	['required'	=>	true]
+			],
+			'pledge_notary'	=>	[
+				'uid'	=>	null,
+				'pledge_notary'	=>	['required'	=>	true]
+			],
 			//上传汇款凭证
 			'remit'	=>	[
 				'uid'	=>	null,
@@ -76,6 +84,24 @@ class LoanForm extends ModelForm
 	public function sign()
 	{
 		unset($this->data['bank_card_confirm']);
+		$uid = $this->data['uid'];
+		unset($this->data['uid']);
+
+		return Loan::updateByUid($uid, $this->data);
+	}
+
+	//车钥匙
+	public function carkey()
+	{
+		$uid = $this->data['uid'];
+		unset($this->data['uid']);
+
+		return Loan::updateByUid($uid, $this->data);
+	}
+
+	//抵押公证
+	public function pledgenotary()
+	{
 		$uid = $this->data['uid'];
 		unset($this->data['uid']);
 

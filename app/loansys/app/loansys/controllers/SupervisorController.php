@@ -4,7 +4,7 @@
  * 督导
  */
 
-class SupervisorController extends Controller
+class SupervisorController extends AfterRcController
 {
 	public static function authorities()
 	{
@@ -13,7 +13,8 @@ class SupervisorController extends Controller
 				'name'	=>	'督导',
 				//'nationwide'	=>	true,
 				'authorities'	=>	[
-					'contract'	=>	'合同签署'
+					'contract'	=>	'合同签署',
+					'pledgenotary'	=>	'抵押公证'
 				]
 			]
 		];
@@ -25,6 +26,10 @@ class SupervisorController extends Controller
 			'contract'	=>	[
 				'list'	=>	['text'	=>	'客户列表', 'link'	=>	true],
 				'sign'	=>	['text'	=>	'合同签署'],
+			],
+			'pledgenotary'	=>	[
+				'list'	=>	['text'	=>	'客户列表', 'link'	=>	true],
+				'pledgenotary'	=>	['text'	=>	'抵押公证'],
 			]
 		];
 	}
@@ -54,7 +59,7 @@ class SupervisorController extends Controller
 			if ($post['deal'] == 1)
 			{
 				$conditions[] = '{Loan}.bank!=\'\'';
-				$conditions[] = '{Loan}.status='.\App\LoanStatus::getStatusRepay();
+				$conditions[] = '{Loan}.status>='.\App\LoanStatus::getStatusRcAgree();
 			}
 			else
 			{
@@ -97,13 +102,12 @@ class SupervisorController extends Controller
 			!$uid and $this->error('参数错误');
 
 			$data['begintime'] = strtotime(date('Y-m-d 23:59:59', time()));//还款开始时间,签署合同当天23:59:59秒计时
-			$data['status']	= \App\LoanStatus::getStatusRepay();
+			//$data['status']	= \App\LoanStatus::getStatusRepay();
 			$data['return_num'] = 0;
 			$data['return_amount'] = 0;
 			$data['last_repay_time'] = $data['begintime'];
 			$data['next_repay_time'] = strtotime('+1 month', $data['begintime']);
-			$data['gps'] = 0;
-			$data['remit_certify'] = 0;
+			$data['endtime'] = 0;
 
 			$model = new LoanForm('contractSign');
 			if ($result = $model->validate($data))
@@ -134,5 +138,39 @@ class SupervisorController extends Controller
 			'loan'	=>	$loan,
 			'user'	=>	$user,
 		]);
+		$this->view->pick('afterrc/detail');
+	}
+
+	/**
+	 * 抵押公证
+	 */
+	public function pledgenotaryAction()
+	{
+		if ($this->isAjax())
+		{
+			$data = $this->request->getPost();
+			$uid = $data['uid'];
+			!$uid and $this->error('参数错误');
+
+			$model = new LoanForm('pledge_notary');
+			$data['pledge_notary'] = 1;
+			if ($result = $model->validate($data))
+			{
+				if ($model->pledgenotary())
+				{
+					Log::add($data['uid'], $this->getOperatorId(), \App\Config\Log::loanOperate('pledgenotary'));
+					$this->success('操作成功');
+				}
+				else
+				{
+					$this->error('操作失败');
+				}
+			}
+			else
+			{
+				$this->error('验证失败');
+			}
+			exit();
+		}
 	}
 }

@@ -72,4 +72,14 @@ class Face extends Model
 		}
 		return true;
 	}
+
+	public static function edit($uid, $data)
+	{
+		$Face = self::findFirst("uid=$uid");
+		unset($data['uid']);
+		foreach ($data as $field=>$value) {
+			$Face->$field = $value;
+		}
+		return $Face->update();
+	}
 }

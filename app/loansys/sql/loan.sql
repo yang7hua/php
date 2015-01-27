@@ -1,4 +1,4 @@
-drop table if exists `sys_loan`;
+/*drop table if exists `sys_loan`;
 create table if not exists `sys_loan`(
 	`lid` int unsigned not null auto_increment,
     `uid` int unsigned NOT NULL COMMENT '贷款人UID',
@@ -31,6 +31,7 @@ create table if not exists `sys_loan`(
 	`bank_card` varchar(20) default '' comment '银行卡号',
 	`contract` tinyint unsigned default 0 comment '合同签署',
 	`gps` tinyint unsigned default 0 comment 'GPS安装状况',
+	`car_key` tinyint unsigned default 0 comment '车钥匙',
 	`remit_certify` varchar(200) default '' comment '汇款凭证',
 
     `status` tinyint unsigned DEFAULT 0 COMMENT '状态',
@@ -42,3 +43,6 @@ create table if not exists `sys_loan`(
 	key status(`status`),
 	key oid(`oid`)
 )engine=InnoDB default charset=utf8 auto_increment=100001 comment='贷款表';
+*/
+alter table `sys_loan` add `car_key` tinyint unsigned default 0 COMMENT '车钥匙';
+alter table `sys_loan` add `pledge_notary` tinyint unsigned default 0 COMMENT '抵押公证';

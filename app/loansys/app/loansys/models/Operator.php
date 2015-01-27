@@ -2,6 +2,9 @@
 
 class Operator extends Model
 {
+
+	const STATUS_FREEZE = 10;
+
 	public static function findById($id)
 	{
 		$info = self::findFirst($id)->toArray();

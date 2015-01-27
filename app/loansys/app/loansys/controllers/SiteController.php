@@ -5,7 +5,6 @@ class SiteController extends Controller
 	public function indexAction()
 	{
 		$this->autoGuide();	
-		exit();
 	}
 
 	/**
@@ -27,6 +26,8 @@ class SiteController extends Controller
 			$u = 'finance/list';
 		else if ($this->authHasAction('list', 'afterloan'))
 			$u = 'afterloan/overdue';
+		else if ($this->authHasAction('list', 'run'))
+			$u = 'run/list';
 
 		isset($u) and $this->redirect(\Func\url($u, true));
 	}

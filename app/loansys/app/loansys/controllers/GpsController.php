@@ -4,7 +4,7 @@
  * 督导
  */
 
-class GpsController extends Controller
+class GpsController extends AfterRcController
 {
 	public static function authorities()
 	{
@@ -13,7 +13,8 @@ class GpsController extends Controller
 				'name'	=>	'GPS',
 				//'nationwide'	=>	true,
 				'authorities'	=>	[
-					'gps'	=>	'GPS安装'
+					'gps'	=>	'GPS安装',
+					'carkey'	=>	'车钥匙'
 				]
 			]
 		];
@@ -25,6 +26,10 @@ class GpsController extends Controller
 			'gps'	=>	[
 				'list'	=>	['text'	=>	'客户列表', 'link'	=>	true],
 				'gps'	=>	['text'	=>	'GPS安装'],
+			],
+			'carkey'	=>	[
+				'list'	=>	['text'	=>	'客户列表', 'link'	=>	true],
+				'carkey'	=>	['text'	=>	'车钥匙']
 			]
 		];
 	}
@@ -49,13 +54,12 @@ class GpsController extends Controller
 				$conditions[] = '{User}.realname = \'' . $keyword . '\'';
 		}
 
-		$conditions[] = '{Loan}.status='.\App\LoanStatus::getStatusRepay();
+		$conditions[] = '{Loan}.status>='.\App\LoanStatus::getStatusRcAgree();
 
 		if (isset($post['deal']) and in_array($post['deal'], [1, -1]))
 		{
 			$conditions[] = '{Loan}.gps' . ($post['deal'] == 1 ? '=1' : '!=1');
 		}
-		$conditions[] = '{Loan}.contract=1';
 
 		return $conditions;
 	}
@@ -121,5 +125,39 @@ class GpsController extends Controller
 			'loan'	=>	$loan,
 			'user'	=>	$user,
 		]);
+		$this->view->pick('afterrc/detail');
+	}
+
+	/**
+	 * GPS安装
+	 */
+	public function carkeyAction()
+	{
+		if ($this->isAjax())
+		{
+			$data = $this->request->getPost();
+			$uid = $data['uid'];
+			!$uid and $this->error('参数错误');
+			$data['car_key'] = 1;
+
+			$model = new LoanForm('car_key');
+			if ($result = $model->validate($data))
+			{
+				if ($model->carkey())
+				{
+					Log::add($uid, $this->getOperatorId(), \App\Config\Log::loanOperate('carkey'));
+					$this->success('操作成功');
+				}
+				else
+				{
+					$this->error('操作失败');
+				}
+			}
+			else
+			{
+				$this->error('验证失败');
+			}
+			exit();
+		}
 	}
 }

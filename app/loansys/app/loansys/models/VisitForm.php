@@ -38,8 +38,13 @@ class VisitForm extends ModelForm
 				'invest_rate'	=>	[],
 				'job_company'	=>	[],
 				'visit_address'	=>	[],
-				'house_live_address'	=>	[],
-				'house_live_ofter'	=>	[],
+				'house_live_address'	=>	[
+					'default'	=>	0
+				],
+				'house_live_address_info'	=>	[],
+				'house_live_often'	=>	[
+					'default'	=>	0
+				],
 				'job_company'	=>	[],
 			],
 			'car'	=>	[

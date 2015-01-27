@@ -37,12 +37,12 @@ class LoanSketch extends Model
 		{
 		}
 		//实地外访
-		else if ($status == \App\LoanStatus::getStatusVisit() and \App\LoanStatus::hasCarAssess($info->status))
+		else if ($status == \App\LoanStatus::getStatusVisit() and Car::hasDone($uid))
 		{
 			$status = \App\LoanStatus::getStatusChecked();
 		}
 		//车评
-		else if ($status == \App\LoanStatus::getStatusCarAssess() and \App\LoanStatus::hasVisit($info->status))
+		else if ($status == \App\LoanStatus::getStatusCarAssess() and Visit::hasDone($uid))
 		{
 			$status = \App\LoanStatus::getStatusChecked();
 		}
@@ -99,4 +99,16 @@ class LoanSketch extends Model
 		return Loan::format([$info->toArray()])[0];
 	}
 
+	public function edit($uid, $data)
+	{
+		$LoanSketch = self::findFirst("uid=$uid");
+		$LoanSketch->uptime = time();
+		unset($data['uid'], $data['status']);
+		foreach ($data as $field=>$value) {
+			$LoanSketch->{$field} = $value;
+		}
+		if (!$LoanSketch->update())
+			$this->outputErrors($LoanSketch);
+		return true;
+	}
 }

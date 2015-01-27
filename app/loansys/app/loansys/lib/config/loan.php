@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 贷款相关配置
  */
@@ -70,8 +69,9 @@ class Loan
 			'22'	=>	'车评',
 			'29'	=>	'核查完毕',
 			'35'	=>	'复审',
+			'38'	=>	'拒绝',
 			'40'	=>	'审核通过',
-			'45'	=>	'拒绝',
+			'45'	=>	'同意放款',
 			'50'	=>	'还款中',
 			'60'	=>	'还款完成',
 			'99'	=>	'贷款失败',
@@ -90,4 +90,36 @@ class Loan
 		}
 		return $options;
 	}
+
+	public static function uploadTypes($type = null)
+	{
+		$types = [
+			'car'	=>	1,
+			'loan'	=>	10,
+			'face'	=>	20
+		];
+		return $type ? (array_key_exists($type, $types) ? $types[$type] : null) : $types;
+	}
+
+	public static function adviseTypes($types = '*')
+	{
+		$adviseTypes = [
+			'loansketch'	=>	'用户及贷款信息',
+			'visit'	=>	'实地外访',
+			'car'	=>	'车辆评估',
+			'face'	=>	'面审'
+		];
+		if ($types === '*')
+			return $adviseTypes;
+		if (is_string($types))
+			return array_key_exists($types, $adviseTypes) ? [$types=>$adviseTypes[$types]] : null;
+		if (is_array($types)) {
+			$return = [];
+			foreach ($types as $type) {
+				$return[$type] = $adviseTypes[$type] ? $adviseTypes[$type] : null;
+			}	
+			return $return;
+		}
+	}
+
 }

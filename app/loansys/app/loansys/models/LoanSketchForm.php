@@ -64,4 +64,9 @@ class LoanSketchForm extends ModelForm
 	{
 		return LoanSketch::add($this->data, true);
 	}
+
+	public function edit($uid)
+	{
+		return (new LoanSketch)->edit($uid, $this->data);
+	}
 }

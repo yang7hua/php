@@ -23,6 +23,9 @@ class PublicController extends Controller
 			$modelForm = new AdminiForm('login');
 			if ($result = $modelForm->validate($data)) {
 				if ($info = $modelForm->login()) {
+					if ($info['is_freeze'])
+						$this->error('该账号已冻结');
+					$info['expire'] = time() + $this->getConfig('session', 'expire');
 					$this->session->set('adm', $info);
 					$this->success([
 						'msg'=>'登录成功', 
@@ -46,7 +49,7 @@ class PublicController extends Controller
 
 	public function logoutAction()
 	{
-		$this->session->remove('adm');
+		$this->logout();
 		$this->pageSuccess('退出成功', \Func\url('/'), 1);
 	}
 

@@ -25,6 +25,8 @@ class Loan extends Model
 			$row['amount'] = str_replace('.00', '', $row['amount']);
 			$row['contract_text']	=	$row['contract'] ? '已签' : ' - ';
 			$row['gps_text']	=	$row['gps'] ? '已安装' : ' - ';
+			$row['car_key_text']	=	$row['car_key'] ? '已拿' : ' - ';
+			$row['pledge_notary_text']	=	$row['pledge_notary'] ? '是' : ' - ';
 			if ($row['begintime'])
 				$row['begintime'] = date('Y-m-d', $row['begintime']);
 		}
@@ -38,13 +40,23 @@ class Loan extends Model
 		if (!$loanSketch)
 			return false;
 
-		if (Loan::findFirst("uid=$uid"))
-			return false;
+		$loan = findFirst("uid=$uid");
+		$update = false;
 
-		$loan = new Loan();
-
+		if ($loan)
+			$update = true;
+		$loan->gps = 0;
+		$loan->contract = 0;
+		$loan->car_key = 0;
+		$loan->pledge_notary = 0;
+		$loan->remit_certify = 0;
+		$loan->bank = '';
+		$loan->bank_card = '';
 		$data = array_merge($loanSketch, $data);
-		$data['addtime'] = time();
+
+		if (!$update)
+			$data['addtime'] = time();
+		$data['uptime'] = time();
 
 		$fields = ['uid', 'oid', 'amount', 'loan_type', 'deadline', 'repay_method', 'loan_type',
 			'use_type', 'use_type_info', 'deadline_type', 'days', 'apr', 'repay_source', 'description',
@@ -54,7 +66,7 @@ class Loan extends Model
 			if (in_array($field, $fields))
 				$loan->$field = $value;
 		}
-		if ($loan->create())
+		if ($loan->save())
 			return true;
 
 		$loan->outputErrors($loan);
@@ -69,7 +81,7 @@ class Loan extends Model
 
 		$repay = 'Loan.begintime, Loan.endtime, Loan.return_num, Loan.return_amount, Loan.remain_amount, Loan.last_repay_time,
 			Loan.next_repay_time';
-		$other = 'Loan.bank, Loan.bank_card, Loan.contract, Loan.gps, Loan.remit_certify';
+		$other = 'Loan.bank, Loan.bank_card, Loan.contract, Loan.gps, Loan.remit_certify, Loan.car_key, Loan.pledge_notary';
 
 		$branch = 'B.name bname';
 
@@ -196,4 +208,59 @@ class Loan extends Model
 		return $loan->update();
 	}
 
+	public static function updateStatus($uid, $status)
+	{
+		$loan = self::findFirst("uid=$uid");
+		if (!$loan)
+			return false;
+		$loan->status = $status;
+		return $loan->update();
+	}
+
+	public static function infos($uid)
+	{
+		$infos = User::infos($uid);
+		$infos['loan'] = Loan::findByUid($uid);
+
+		return $infos;
+	}
+
+	//反馈
+	public static function advise($uid, $foid, $adviseType, $reason, $loan = false)
+	{
+		$isLoanSketch = false;
+		switch ($adviseType) {
+		case 'loansketch':
+			$status = \App\LoanStatus::getStatusSketch();
+			$oid = User::findFirst("uid=$uid")->oid;
+			$isLoanSketch = true;
+			break;
+		case 'visit':
+			$status = \App\LoanStatus::getStatusCarAssess();
+			$oid = Visit::findFirst("uid=$uid")->oid;
+			$isLoanSketch = true;
+			break;
+		case 'car':
+			$status = \App\LoanStatus::getStatusVisit();
+			$oid = Car::findFirst("uid=$uid")->oid;
+			$isLoanSketch = true;
+			break;
+		case 'face':
+			$status = \App\LoanStatus::getStatusReface();
+			$oid = Face::findFirst("uid=$uid")->oid;
+			$isLoanSketch = true;
+			break;
+		}
+	
+		if (empty($oid))
+			return false;
+
+		if ($isLoanSketch) {
+			$model = LoanSketch::findFirst("uid=$uid");
+			$model->status = $status;
+			$model->update();
+		}
+		Advise::add($uid, $oid, $foid, $adviseType, $reason);
+		return true;
+	}
 }

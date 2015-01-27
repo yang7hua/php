@@ -68,6 +68,9 @@ class UserForm extends ModelForm
 				'spouse_name'	=>	[
 					'default'	=>	''
 				],
+				'spouse_mobile'	=>	[
+					'default'	=>	'',
+				],
 				'spouse_idcard'	=>	[
 					'default'	=>	'',
 				],
@@ -103,4 +106,10 @@ class UserForm extends ModelForm
 	{
 		return User::add($this->data, true);
 	}
+
+	public function edit($uid)
+	{
+		return User::edit($uid, $this->data);
+	}
+
 }

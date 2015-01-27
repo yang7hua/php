@@ -64,7 +64,7 @@ class OperatorController extends Controller
 	{
 		$username = $this->request->get('username');
 		echo Operator::exist($username) ? 'false' : 'true';
-		$this->view->disable();
+		exit();
 	}
 
 	public function editAction()
@@ -102,5 +102,30 @@ class OperatorController extends Controller
 				'data'	=>	$operator
 			]);
 		$this->view->pick('operator/add');
+	}
+
+	public function freezeAction()
+	{
+		$this->changeStatus(Admini::STATUS_FREEZE);
+	}
+
+	public function unfreezeAction()
+	{
+		$this->changeStatus(Admini::STATUS_NORMAL);
+	}
+
+	public function changeStatus($status)
+	{
+		$oid = intval($this->urlParam());
+		empty($oid) and $this->error('参数错误');
+
+		$info = Operator::findFirst($oid);	
+		empty($info) and $this->error('该账号不存在');
+
+		$info->status = $status; 
+		if ($info->update())
+			$this->success('操作成功');
+		else
+			$this->error('操作失败');
 	}
 }

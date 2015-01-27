@@ -1,0 +1,35 @@
+<?php 
+$needModal = [];
+if (!$gps)
+	$needModal[] = 'gps';
+if (!$contract)
+	$needModal[] = 'contract';
+if (!$carkey)
+	$needModal[] = 'carkey';
+if (!$pledgenotary)
+	$needModal[] = 'pledgenotary';
+$needModal = array_intersect($needModal, $auth_actions);
+$modalText = [
+	'gps'	=>	'GPS安装',
+	'contract'	=>	'合同签署',
+	'carkey'	=>	'车钥匙',
+	'pledgenotary'	=>	'抵押公证'
+];
+	if (!empty($needModal)):
+		foreach ($needModal as $modal): 
+			echo $this->partial('afterrc/modal/'.$modal);
+		endforeach;
+	endif;
+?>
+<div class="rc-footerbar">
+<?php
+	if (!empty($needModal)):
+		foreach ($needModal as $modal): 
+?>
+<span class="btn btn-primary" data-toggle="modal" data-target="#<?=$modal?>"><?=$modalText[$modal]?></span>
+<?php
+		endforeach;
+	endif;
+?>
+</div>
+<?php \Func\loadJsFile(null, ['depends'=>'\Assert\validate'])?>

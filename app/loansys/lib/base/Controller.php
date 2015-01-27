@@ -2,7 +2,7 @@
 
 namespace Base;
 
-class Controller extends \Phf\Mvc\Controller implements BaseInterface
+abstract class Controller extends \Phf\Mvc\Controller implements BaseInterface
 {
 	protected $view = null;
 
@@ -24,7 +24,6 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 
 	//无需登录的板块
 	protected static $allowed_controllers = [
-		//controllerName =>	[actionName]
 		'public'	=>	'*'
 	];
 
@@ -48,14 +47,31 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 		}
 	}
 
+	//退出登录
+	abstract function logout();
+
+	//获取登录者过期时间
+	abstract function expire();
+
 	/**
 	 * 检查需要登陆的板块 
 	 * 如果需要登陆但是又没登录则跳转到登录界面
 	 */
 	private function checkAllowed()
 	{
-		if ($this->needLogin() and !$this->isLogin())
-			$this->redirect(\Func\url('/public/login', true));
+		if (!$this->needLogin())
+			return true;
+
+		if (!$this->isLogin())
+			$this->login();
+
+		/*
+		if ($this->expire() < time())
+		{
+			$this->logout();
+			$this->login();
+		}
+		 */
 
 		return true;
 	}
@@ -77,6 +93,12 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 		}
 		
 		return $needLogin;	
+	}
+
+	//登录
+	function login()
+	{
+		$this->redirect(\Func\url('/public/login', true));
 	}
 
 	public function checkAuth()
@@ -115,6 +137,10 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 
 	public function emptyAction()
 	{
+		if ($this->isAjax())
+		{
+			exit('request error .');
+		}
 		echo 'base Controller .';
 	}
 
@@ -257,7 +283,8 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 				$dir = $dir ? ($baseDir . trim($dir, '/')) : $baseDir;
 				if (!is_dir($dir))
 					mkdir($dir);
-				$filename = trim($dir, '/') . '/' . $file->getName();
+				$name = date('YmdHis').'_'.mt_rand(1000,9999).'_'.$file->getName();
+				$filename = trim($dir, '/') . '/' . $name;
 
 				if ($filesize > $maxSize)
 				{
@@ -277,8 +304,11 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 			}
 
 			return $files;
-		}
-		return null;
+		} 
+		return [[
+			'success'	=>	0,
+			'errmsg'	=>	'文件不能为空'
+		]];
 	}
 
 	/**
@@ -294,4 +324,5 @@ class Controller extends \Phf\Mvc\Controller implements BaseInterface
 		global $config;
 		return $config->$type->$param;
 	}
+
 }

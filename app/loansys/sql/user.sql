@@ -1,4 +1,4 @@
-drop table if exists `sys_user`;
+/*drop table if exists `sys_user`;
 create table if not exists `sys_user`(
 	`uid` int auto_increment comment '用户ID',
 	`oid` int unsigned not null COMMENT '操作者ID',	
@@ -14,7 +14,7 @@ create table if not exists `sys_user`(
     `province` int(6) unsigned NOT NULL DEFAULT '0' COMMENT '居住省份',
     `city` int(6) unsigned NOT NULL DEFAULT '0' COMMENT '居住城市',
     `address` varchar(150) NOT NULL DEFAULT '' COMMENT '详细居住地址',
-    `mobile` varchar(50) DEFAULT NULL DEFAULT '' COMMENT '联系电话 多个用;分隔',
+    `mobile` varchar(50) NOT NULL DEFAULT '' COMMENT '联系电话 多个用;分隔',
     `contact_info` varchar(100) DEFAULT '' COMMENT '紧急联系人',
 	`info` varchar(1000) not null default '' COMMENT '基本情况说明',
 
@@ -36,3 +36,5 @@ create table if not exists `sys_user`(
 	key idcard(`idcard`),
 	key realname(`realname`),
 )engine=InnoDB default charset=utf8 auto_increment=100000 comment='用户表';
+*/
+alter table `sys_user` add `spouse_mobile` varchar(50) not null default '' comment '配偶电话' after `spouse_name`;

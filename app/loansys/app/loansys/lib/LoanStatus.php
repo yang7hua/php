@@ -10,7 +10,7 @@ class LoanStatus
 	static function needFace($status)
 	{
 		$status_face = self::getStatusFace();
-		return $status < $status_face;
+		return $status <= $status_face;
 	}
 
 	/**
@@ -21,7 +21,9 @@ class LoanStatus
 		$status_face = self::getStatusFace();
 		$status_checked = self::getStatusChecked();
 		$status_visit = self::getStatusVisit();
-		return $status >= $status_face and $status < $status_checked and $status != $status_visit;
+		$status_reface = self::getStatusReface();
+		//return $status >= $status_face and $status < $status_checked and $status != $status_visit;
+		return $status >= $status_face and $status < $status_reface;
 	}
 
 	/**
@@ -32,7 +34,16 @@ class LoanStatus
 		$status_car = self::getStatusCarAssess();
 		$status_checked = self::getStatusChecked();
 		$status_face = self::getStatusFace();
-		return $status >= $status_face and $status < $status_checked and $status != $status_car;
+		$status_reface = self::getStatusReface();
+		//return $status >= $status_face and $status < $status_checked and $status != $status_car;
+		return $status >= $status_face and $status < $status_reface;
+	}
+
+	static function needRunConfirm($status)
+	{
+		$status_rcagree = self::getStatusRcAgree();
+		$status_runconfirm = self::getStatusRunConfirm();
+		return $status >= $status_rcagree and $status < $status_runconfirm;
 	}
 
 	/**
@@ -41,7 +52,14 @@ class LoanStatus
 	static function needReface($status)
 	{
 		$status_checked = self::getStatusChecked();
-		return $status == $status_checked;
+		$status_reface = self::getStatusReface();
+		return $status >= $status_checked and $status <= $status_reface;
+	}
+
+	static function needRc($status)
+	{
+		$status_reface = self::getStatusRc();
+		return $status == $status_reface;
 	}
 
 	/**
@@ -79,6 +97,11 @@ class LoanStatus
 		static  $status = null;
 		!$status and ($status = \App\Config\Loan::status());
 		return \Func\getArrayValue($status, $_status);
+	}
+
+	static function getStatusSketch()
+	{
+		return self::getStatus('草稿');
 	}
 
 	static function getStatusFace()
@@ -125,6 +148,12 @@ class LoanStatus
 	static function getStatusRcRefuse()
 	{
 		return self::getStatus('拒绝');
+	}
+
+	//同意放款
+	static function getStatusRunConfirm()
+	{
+		return self::getStatus('同意放款');
 	}
 
 	//还款中

@@ -2,6 +2,20 @@
 
 class Controller extends \Base\Controller
 {
+
+	public function initialize()
+	{
+		parent::initialize();
+
+		if (!$this->isAjax())
+		{
+			$sess = $this->getOperator();
+			$this->view->setVars([
+				'_sess'	=>	$sess
+			]);
+		}
+	}
+
 	/**
 	 * 检测是否登录
 	 */
@@ -12,15 +26,6 @@ class Controller extends \Base\Controller
 
 	public function checkAuth()
 	{
-	}
-
-	public function initialize()
-	{
-		parent::initialize();
-		$sess = $this->session->get('adm');
-		$this->view->setVars([
-				'_sess'	=>	$sess
-			]);
 	}
 
 	//是否是全国中心操作员
@@ -43,6 +48,16 @@ class Controller extends \Base\Controller
 	public function getOperator()
 	{
 		return $this->session->get('adm');
+	}
+
+	public function expire()
+	{
+		return $this->getOperator()['expire'];
+	}
+
+	public function logout()
+	{
+		$this->session->remove('adm');
 	}
 
 	/**

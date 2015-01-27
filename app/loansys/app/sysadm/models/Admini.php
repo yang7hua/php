@@ -2,6 +2,10 @@
 
 class Admini extends Model
 {
+
+	const STATUS_NORMAL = 1;
+	const STATUS_FREEZE = 10;
+
 	public static function exist($username)
 	{
 		return self::findFirst("username='$username'");
@@ -36,9 +40,12 @@ class Admini extends Model
 	private static function format($data)
 	{
 		$branches = Branch::all(['key'=>true, 'all'=>true]);
+
 		foreach ($data as $key=>&$row)
 		{
 			$row['bname'] = $branches[$row['bid']]['name'];
+			$row['is_freeze'] = $row['status'] == self::STATUS_FREEZE;
+			$row['status_text'] = $row['is_freeze'] ? '已冻结' : '正常';
 		}
 		return $data;
 	}

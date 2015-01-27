@@ -51,11 +51,11 @@ class OperatorForm extends ModelForm
 					'validator'	=>	[
 						'required'	=>	true,
 						'minlength'	=>	3,
-						'maxlength'	=>	10,
+						'maxlength'	=>	20,
 						'regex'	=>	'^[\\\\w_]+$',
 						'remote'	=>	\Func\url('/operator/exist')
 					],
-					'remark'	=>	'用户名在3-10个字符之间, 字母数字或下划线组成',
+					'remark'	=>	'用户名在3-20个字符之间, 字母数字或下划线组成',
 					'remarkOptions'	=>	[
 						'class'	=>	'col-lg-4'
 					]

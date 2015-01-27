@@ -66,7 +66,7 @@ class App
 }
 
 try{
-	$config = new Phf\Config\Adapter\Ini(CONF_PATH . '/web.php');
+	$config = new Phf\Config(include CONF_PATH . ($_SERVER['HTTP_HOST'] == 'loan.local.com' ? '/web_local.php' : '/web.php'));
 	$config_app = new Phf\Config(include APP_PATH . '/config/config.php');
 	$config->merge($config_app);
 
@@ -79,6 +79,7 @@ try{
 				APP_PATH . '/controllers',
 				APP_PATH . '/models',
 				APP_PATH . '/lib',
+				APP_PATH . '/lib/config',
 				APP::getPathByApp(ADM_NAME) . '/controllers',
 				APP::getPathByApp(FRONT_NAME) . '/controllers'
 				)
@@ -88,6 +89,7 @@ try{
 					'Util'	=>	LIB_PATH . '/util',
 					'Base'	=>	LIB_PATH . '/base',
 					'App'	=>	APP_PATH . '/lib',
+					'App\Config'	=>	APP_PATH . '/lib/config',
 					'Apps'	=>	LIB_PATH	
 					)
 				)
@@ -102,6 +104,7 @@ try{
 			});
 	$di->set('url', function(){
 			$url = new Phf\Mvc\Url();
+			$url->setBaseUri('/');
 			$url->setStaticBaseUri('/public/');
 			return $url;
 			});
@@ -125,7 +128,7 @@ try{
 	$router->handle();
 
 	include 'app.php';
-
+	
 }catch(Exception $e){
 
 	if(APP_DEBUG){

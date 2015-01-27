@@ -4,6 +4,10 @@ class Operator extends Model
 {
 	const SUPER_ID = 1;
 
+	const STATUS_NORMAL = 1;
+
+	const STATUS_FREEZE = 10;
+
 	public static function findById($oid)
 	{
 		$info = self::findFirst($oid)->toArray();
@@ -44,6 +48,8 @@ class Operator extends Model
 			$role = $roles[$row['rid']];
 			$row['rname'] = $role['name'];
 			$row['dname'] = $role['dname'];
+			$row['is_freeze'] = $row['status'] == self::STATUS_FREEZE;
+			$row['status_text'] = $row['is_freeze'] ? '已冻结' : '正常';
 		}
 		return $single ? $data[0] : $data;
 	}

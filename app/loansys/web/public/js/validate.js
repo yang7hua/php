@@ -37,14 +37,28 @@ $(function(){
 			}
 			location.href = data.redirect.url;
 		}
+		if (res.msg)
+			util.setCookie('msg', escape(res.msg));
 		location.reload();
 	}
 
+	//表单提交
 	$.validator.setDefaults({
 			debug : true,
 			ignore : ".ignore",
 			submitHandler : function(form){
-				$(form).ajaxSubmit(ajaxSubmitCallback);
+				var Form = $(form),
+					btn = Form.find("[type=submit]");
+				$(form).ajaxSubmit({
+					beforeSubmit : function(){
+						btn.addClass("disabled");		
+					},
+					success : function(res){
+						btn.removeClass("disabled");	
+						ajaxSubmitCallback(res);
+					},
+					timeout : 3000
+				});
 				return false;
 			},
 			errorPlacement : function(error, element) {

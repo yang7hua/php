@@ -116,4 +116,44 @@ $(function(){
 	$(".captcha").on("click", function(){
 		util.reloadCaptcha($(this));
 	});
+
+	//msg tips
+	if (util.getCookie('msg'))
+	{
+		if ($(".tips").size() > 0)
+		{
+			setTimeout(function(){
+				$(".tips").animate({
+					height:0,
+					padding:0,
+					opacity :0
+				}, 200, function(){
+					$(this).remove();
+				});
+			}, 3000);
+		}
+		util.delCookie('msg');
+	}
+
+	$("[ajax=true]").each(function(){
+		var $this = $(this);
+		$this.on("click", function(){
+			var action = $this.attr("ajax-action");
+			if (!action)
+				return false;
+			$.ajax({
+				url : action,
+				dataType : "json",
+				type : "post",
+				success : function(res){
+					if (res.ret < 1) {
+						alert(res.msg);
+						return false;
+					}
+					location.reload();
+				}
+			});
+			return false;
+		})
+	});
 });

@@ -15,7 +15,11 @@ $(function(){
 				auth : auth
 			},
 			success : function(res) {
-				console.log(res);
+				if (res.ret > 0)
+				{
+					util.setCookie('msg', escape(res.msg));
+					location.reload();
+				}
 			}
 		});
 		return false;

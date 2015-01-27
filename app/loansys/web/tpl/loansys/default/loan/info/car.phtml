@@ -1,0 +1,166 @@
+<?php 
+if ($action == 'edit' and $can_modify_actions['car']):
+	$this->partial('loan/partial/carassess');
+else:
+	$form = new CarForm('assess', ['uid'=>$uid]);
+	extract($car);
+?>
+<div class="panel panel-default check disabled">
+<div class="panel-heading">车评
+<?php 
+	if ($can_modify_actions['car']):
+?>
+<a class="pull-right" href="/loan/car/<?=$user['uid']?>/edit">修改</a>
+<?php
+	endif;
+?>
+</div>
+	<div class="panel-body ">
+		<?=$form->beginForm(['action'=>'/loan/car'])?>
+		<input type="hidden" name="uid" value="<?=$uid?>">
+	<div class="detailInfo">
+	<ul>
+		<li><label>车主</label><value><?=$car_owner?></value></li>
+		<li><label>电话</label><value><?=$mobile?></value></li>
+		<li><label>所有性质</label><value><?=\App\Config\Car::carNature()[$car_nature]?></value></li>
+		<div class="clear"></div>
+	</ul>
+	<p><label>居住地址</label><value><?=$home_address?></value></p>
+	<br/>
+	<h6>原始情况</h6>	
+	<hr>
+	<ul>
+		<li><label>品牌车系</label><value><?=$car_brand?> - <?=$car_type?></value></li>
+		<li><label>牌照</label><value><?=$car_number?></value></li>
+		<li><label>车身颜色</label><value><?=$car_color?></value></li>
+		<li><label>识别代码（VIN）</label><value><?=$car_vin?></value></li>
+		<li><label>发动机号</label><value><?=$car_engine_number?></value></li>
+		<li><label>座位/排量</label><value><?=$car_seat_count?></value></li>
+		<li><label>登记日期</label><value><?=date('Y-m-d',$car_register_date)?></value></li>
+		<li><label>累计行驶里程</label><value><?=$car_mileage?>公里</value></li>
+		<li><label>已使用年限</label><value><?=$car_age?>年</value></li>
+		<li><label>使用用途</label><value><?=$car_use?></value></li>
+		<div class="clear"></div>
+	</ul>
+	</div>
+	<br/>
+	<h6>检车核对交易证件</h6>	
+	<hr>
+	<div class="form-group disabled">
+		<label class="col-lg-2 control-label">证件</label>
+		<div class="col-lg-8">
+			<div class="checkbox">
+			<label><?=\Util\Html::checkbox('car_bill', [1=>'原始发票'], $car_bill)?></label>
+			<label><?=\Util\Html::checkbox('car_register_license', [1=>'机动车登记证书'], $car_register_license)?></label>
+			<label><?=\Util\Html::checkbox('car_legal_idcard', [1=>'法人代码或身份证'], $car_legal_idcard)?></label>
+			<label><?=\Util\Html::checkbox('car_other_license', [1=>'其它证件'], $car_other_license)?></label>
+			</div>
+		</div>
+		<div class="col-lg-2 help-block"></div>
+	</div>
+	<div class="form-group">
+		<label class="col-lg-2 control-label">税费</label>
+		<div class="col-lg-8">
+			<div class="checkbox disabled">
+			<label><?=\Util\Html::checkbox('car_tax_addition', [1=>'购置税附加税'], $car_tax_addition)?></label>
+			<label><?=\Util\Html::checkbox('car_tax_use', [1=>'车船使用税'], $car_tax_use)?></label>
+			<label><?=\Util\Html::checkbox('car_insure', [1=>'交强险'], $car_insure)?></label>
+			<label><?=\Util\Html::checkbox('car_other_tax', [1=>'车船使用税'], $car_other_tax)?></label>
+			</div>
+		</div>
+		<div class="col-lg-2 help-block"></div>
+	</div>
+	<br/>
+	<h6>调整系数（取值）</h6>	
+	<hr>
+	<div class="form-group">
+		<label class="col-lg-2 control-label">技术状况</label>
+		<div class="col-lg-8">
+			<div class="radio">
+			<?=\Util\Html::radio('car_status_tech', \App\Config\Car::statusTech(), $car['car_status_tech'] ? $car['car_status_tech'] : 1)?>
+			</div>
+		</div>
+		<div class="col-lg-2 help-block"></div>
+	</div>
+	<div class="form-group">
+		<label class="col-lg-2 control-label">维修保养</label>
+		<div class="col-lg-8">
+			<div class="radio">
+			<?=\Util\Html::radio('car_status_maintain', \App\Config\Car::statusMaintain(), $car['car_status_maintain'] ? $car['car_status_maintain'] : 1)?>
+			</div>
+		</div>
+		<div class="col-lg-2 help-block"></div>
+	</div>
+	<div class="form-group">
+		<label class="col-lg-2 control-label">制造质量</label>
+		<div class="col-lg-8">
+			<div class="radio">
+			<?=\Util\Html::radio('car_make_quality', \App\Config\Car::makeQuality(), $car['car_make_quality'] ? $car['car_make_quality'] : 1)?>
+			</div>
+		</div>
+		<div class="col-lg-2 help-block"></div>
+	</div>
+	<div class="form-group">
+		<label class="col-lg-2 control-label">工作性质</label>
+		<div class="col-lg-8">
+			<div class="radio">
+			<?=\Util\Html::radio('car_work_nature', \App\Config\Car::workNature(), $car['car_work_nature'] ? $car['car_work_nature'] : 1)?>
+			</div>
+		</div>
+		<div class="col-lg-2 help-block"></div>
+	</div>
+	<div class="form-group">
+		<label class="col-lg-2 control-label">工作条件</label>
+		<div class="col-lg-8">
+			<div class="radio">
+			<?=\Util\Html::radio('car_work_status', \App\Config\Car::workStatus(), $car['car_work_status'] ? $car['car_work_status'] : 1)?>
+			</div>
+		</div>
+		<div class="col-lg-2 help-block"></div>
+	</div>
+	<br/>
+	<h6>价值反映</h6>	
+	<hr>
+	<div class="detailInfo">
+		<ul>
+		<li><label>购买价格</label><value><?=$car_price?>万元</value></li>
+		<li><label>现价</label><value><?=$car_price_now?>万元</value></li>
+		<li><label>每月掉价</label><value><?=$car_fall_price?>元</value></li>
+		<li><label>重置成本</label><value><?=$car_reset_capital?>万元</value></li>
+		<li><label>成新率</label><value><?=$car_new_rate?>成新</value></li>
+		<li><label>评估价格</label><value><?=$car_assess_price?>万元</value></li>
+		<div class="clear"></div>
+		</ul>
+		<p><label>车辆贷款说明</label><value><?=$car_loan_info?></value></p>
+		<p><label>鉴定评估说明</label><value><?=$car_assess_remark?></value></p>
+	</div>
+	<br/>
+	<h6>相关照片</h6>	
+	<hr>
+	<div>
+<?php 
+if ($car_files):
+	foreach ($car_files as $file):
+		if ($file['is_img']):
+			echo '<img src="'.$file['path'].'" class="img">';
+		endif;
+	endforeach;
+else:
+	echo '<p class="empty">没有数据</p>';
+endif;
+if ($can_modify_actions['car']):
+	echo '<br/><br/><a href="/loan/upload/car/'.$uid.'">添加图片</a>';
+endif;
+?>
+	</div>
+		<?=$form->endForm()?>
+	</div>
+</div>
+<?php
+endif;
+?>
+<?php 
+\Func\loadJsFile(null, ['depends'=>'\Assert\validate']);
+\Func\loadJsFile(null, ['depends'=>'\Assert\cars'], APP_NAME);
+\Func\loadJsFile(null, ['depends'=>'\Assert\address'], APP_NAME);
+?>

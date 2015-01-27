@@ -5,7 +5,7 @@ $(function(){
 			url : url,
 			fileElementId : fileElementId,
 			type : "post",
-			dataType : "json",
+			dataType : "JSON",
 			data : {
 				filename : filename
 			},
@@ -17,15 +17,21 @@ $(function(){
 					alert(res.msg);	
 					return;
 				}
+			},
+			error: function (data, status, e) {//服务器响应失败处理函数 {
+				alert(e);
 			}
 		});
+		return false;
 	}
 	$(".btn-fileupload").each(function(){
 		var url = $(this).attr("fileupload-url"),
 			fileElementId = $(this).attr("fileupload-elementid"),
 			filename = $(this).attr("fileupload-filename"),
 			hiddeninput = $(this).attr("fileupload-hiddeninput"),
-			trigger = $(this).attr("fileupload-trigger");
+			trigger = $(this).attr("fileupload-trigger"),
+			_alert = $(this).attr("fileupload-alert"),
+			reload = $(this).attr("fileupload-reload");
 
 		function func()
 		{
@@ -37,11 +43,17 @@ $(function(){
 					alert(res.msg);
 					return false;
 				}
-				if (hiddeninput)
-				{
+				if (hiddeninput) {
 					$("[name="+hiddeninput+"]").val(res.data.filename);
 				}
+				if (_alert) {
+					alert('上传成功');
+				}
+				if (reload) {
+					location.reload();
+				}
 			});
+			return false;
 		}
 		if (trigger && trigger == 'change')
 			$(this).on("change", func)

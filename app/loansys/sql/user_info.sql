@@ -3,6 +3,7 @@
 -- 此表由面审人员完成
 --
 
+/*
 DROP TABLE IF EXISTS `sys_userinfo`;
 CREATE TABLE IF NOT EXISTS `sys_userinfo` (
 	`id` int unsigned not NULL auto_increment,
@@ -44,3 +45,4 @@ CREATE TABLE IF NOT EXISTS `sys_userinfo` (
 	key uid(`uid`),
 	key oid(`oid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+*/

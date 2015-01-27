@@ -41,7 +41,7 @@ function getAssert($key)
 					'lib/jquery.validate.min.js',
 					'lib/messages_zh.js',
 					'lib/jquery.form.js',
-					'validate.js'
+					'validate.js?v=2014121602'
 				],
 				'depends'	=>	'\Assert\app'
 			]

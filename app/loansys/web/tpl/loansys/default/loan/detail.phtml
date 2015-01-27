@@ -19,60 +19,28 @@ default:
 }
 $heads['title'] = $title;
 
+if ($can_modify_actions['apply']) {
+	echo '<a href="/loan/apply/'.$user['uid'].'" class="advise">修改</a>';
+}
 ?>
 <div class="loan-detail">
 <?php
+
+if ($advises) {
+	$this->partial('advise/list');
+}
+
 //客户信息展示 
-$this->partial('loan/partial/baseinfo');
+$this->partial('loan/info/user');
+//贷款资料
+$this->partial('loan/info/loansketch');
 
-//面审信息
-if (isset($faceinfo))
-{
-	if (empty($faceinfo))
-	{
-		if ($operate['face'] and \App\LoanStatus::needFace($detailInfo['status']))
-			$this->partial('loan/partial/face');
-	}
-	else
-	{
-		$this->partial('loan/partial/faceinfo');
-	}
-}
+$this->partial('loan/info/face');
+$this->partial('loan/info/visit');
+$this->partial('loan/info/reface');
 
-//实地外访信息
-if (isset($visitinfo))
-{
-	if (empty($visitinfo))
-	{
-		if ($operate['visit'] and \App\LoanStatus::needVisit($detailInfo['status']))
-			$this->partial('loan/partial/visit');
-	}
-	else
-	{
-		$this->partial('loan/partial/visitinfo');
-	}
-}
-
-//车评
-if (isset($carinfo))
-{
-	if (empty($carinfo) and $operate['car'] and \App\LoanStatus::needCarAssess($detailInfo['status']))
-	{
-		$this->partial('loan/partial/carassess');
-	}
-}
-
-//复审
-if (isset($refaceinfo))
-{
-	if (empty($refaceinfo) and $operate['reface'] and \App\LoanStatus::needReface($detailInfo['status']))
-	{
-		$this->partial('loan/partial/reface');
-	}
-	else if (!empty($refaceinfo))
-	{
-		$this->partial('loan/partial/refaceinfo');
-	}
+if (isset($adviseTypes) and is_array($adviseTypes)) {
+	$this->partial('loan/modal/advise');
 }
 
 \Func\loadJsFile(null, ['depends'=>'\Assert\address'], APP_NAME);

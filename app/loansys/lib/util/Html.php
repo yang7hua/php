@@ -74,4 +74,10 @@ class Html
 		}
 		return $attrs_str;
 	}
+
+	public static function tips($str, $type = 'success')
+	{
+		return '<p class="tips text-center bg-'.$type.'">'.$str.'</p>';
+	}
+
 }

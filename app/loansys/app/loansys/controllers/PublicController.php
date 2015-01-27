@@ -20,6 +20,8 @@ class PublicController extends Controller
 			$modelForm = new OperatorForm('login');
 			if ($result = $modelForm->validate($data)) {
 				if ($info = $modelForm->login()) {
+					if ($info->status == Operator::STATUS_FREEZE)
+						$this->error('该账号已冻结');
 					$_sess = [
 						'oid'	=>	$info->oid,
 						'username'	=>	$info->username,
@@ -27,13 +29,14 @@ class PublicController extends Controller
 						'rname'	=>	Role::getNameById($info->rid),
 						'bname'	=>	Branch::getNameById($info->bid),	
 						'bid'	=>	$info->bid,
-						'auth'	=>	Operator::getAuthByRid($info->rid)
+						'auth'	=>	Operator::getAuthByRid($info->rid),
+						'expire'	=>	time() + $this->getConfig('session', 'expire')
 						];
 					$this->session->set('operator', $_sess);
 					$this->success([
 						'msg'=>'登录成功', 
 						'redirect'=>[
-							'url'=>\Func\url('/loan/list'),
+							'url'=>\Func\url('/'),
 							'seconds'	=>	0	
 						]
 					]);
@@ -52,8 +55,7 @@ class PublicController extends Controller
 
 	public function logoutAction()
 	{
-		//session_destroy();
-		$this->session->remove('operator');
+		$this->logout();
 		$this->pageSuccess('退出成功', \Func\url('/'), 1);
 	}
 

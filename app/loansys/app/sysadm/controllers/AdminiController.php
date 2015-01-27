@@ -30,6 +30,7 @@ class AdminiController extends AdmController
 		$this->view->setVars([
 			'formparams'	=>	[
 				'event'	=>	'add',
+				'action'	=>	\Func\url('/admini/add')	
 			]
 			]);
 	}
@@ -38,7 +39,7 @@ class AdminiController extends AdmController
 	{
 		$username = $this->request->get('username');
 		echo Admini::exist($username) ? 'false' : 'true';
-		$this->view->disable();
+		exit();
 	}
 
 	public function editAction()
@@ -77,4 +78,30 @@ class AdminiController extends AdmController
 			]);
 		$this->view->pick('admini/add');
 	}
+
+	public function freezeAction()
+	{
+		$this->changeStatus(Admini::STATUS_FREEZE);
+	}
+
+	public function unfreezeAction()
+	{
+		$this->changeStatus(Admini::STATUS_NORMAL);
+	}
+
+	public function changeStatus($status)
+	{
+		$aid = intval($this->urlParam());
+		empty($aid) and $this->error('参数错误');
+
+		$info = Admini::findFirst($aid);	
+		empty($info) and $this->error('该账号不存在');
+
+		$info->status = $status; 
+		if ($info->update())
+			$this->success('操作成功');
+		else
+			$this->error('操作失败');
+	}
+
 }
