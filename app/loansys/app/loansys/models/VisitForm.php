@@ -7,7 +7,6 @@ class VisitForm extends ModelForm
 		return [
 			'visit'	=>	[
 				'oid'	=>	null,
-				'addtime'	=>	null,
 				'uid'	=>	null,
 				'visit_company_address'	=>	[
 					'validator'	=>	[
@@ -69,8 +68,8 @@ class VisitForm extends ModelForm
 	/**
 	 * 上门审核
 	 */
-	public function visit()
+	public function visit($uid)
 	{
-		return (new Visit())->add($this->data);
+		return (new Visit())->_visit($uid, $this->data);
 	}
 }

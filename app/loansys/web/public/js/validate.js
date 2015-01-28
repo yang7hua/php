@@ -39,7 +39,20 @@ $(function(){
 		}
 		if (res.msg)
 			util.setCookie('msg', escape(res.msg));
-		location.reload();
+		var paths = location.pathname.split('/');
+
+		//贷款相关编辑后直接跳转到详情页面
+		if (paths[1] == 'loan' && paths[2] == 'apply' && /^\d{6}$/.test(paths[3])) {
+			var uid = paths[3];
+			location.href = location.origin+ '/loan/detail/' + uid;
+		} else if (/^\d{6}$/.test(paths[3]) && paths[4] == 'edit' && paths[1] == 'loan') {
+			var uid = paths[3];
+			location.href = location.origin+ '/loan/detail/' + uid;
+		} else if (/^\d{6}$/.test(paths[3]) && paths[2] == 'case' && paths[1] == 'rc') {
+			location.href = location.origin+ '/rc/list/';
+		} else {
+			location.reload();
+		}
 	}
 
 	//表单提交

@@ -6,11 +6,6 @@ class LoanSketchForm extends ModelForm
 	{
 		return [
 			'apply'	=>	[
-				'uid'	=>	[
-					'validator'	=>	[
-						'required'	=>	1
-					]
-				],
 				'loan_type'	=>	[
 					'default'	=>	1
 				],
@@ -60,13 +55,9 @@ class LoanSketchForm extends ModelForm
 		];
 	}
 
-	public function apply()
+	public function apply($uid)
 	{
-		return LoanSketch::add($this->data, true);
+		return (new LoanSketch)->add($uid, $this->data, true);
 	}
 
-	public function edit($uid)
-	{
-		return (new LoanSketch)->edit($uid, $this->data);
-	}
 }

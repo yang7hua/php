@@ -12,6 +12,12 @@ function url($url, $host = false)
 	return $base . '/' . trim($url, '/');
 }
 
+function redirect($url)
+{
+	$url = url($url);
+	header('Location:'.$url);
+}
+
 /**
  * 加载js文件到assert中
  * @fresh: true则直接返回

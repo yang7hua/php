@@ -167,7 +167,7 @@ class LoanController extends Controller
 	/**
 	 * 贷款申请
 	 */
-	public function applyAction()
+	public function applyAction($uid = 0)
 	{
 		$uid = $this->urlParam();
 		if ($this->isAjax()) {
@@ -175,27 +175,13 @@ class LoanController extends Controller
 			$data['oid'] = $this->getOperatorId();
 			$data['bid'] = $this->getOperatorBid();
 
-			if ($uid and !$this->canLoanEdit(false, $uid)) {
-				$this->error('无权限修改');
-			}
 			$User = new User();
 			$modelForm = new UserForm('apply');
 			if ($modelForm->validate($data)) 
 			{
-				if ($uid) {
-					if ($modelForm->edit($uid)) {
-						$modelForm = new LoanSketchForm('apply');
-						if ($modelForm->validate($data) and $modelForm->edit($uid)) {
-							Log::add($uid, $data['oid'], \App\Config\Log::loanOperate('edit_loan_sketch') . ',uid:' . $uid);
-							$this->success('修改成功');
-						} 
-						$this->error('修改失败');
-					}
-					$this->error('修改失败');
-				} else if ($uid = $modelForm->apply()) {
-					$data['uid'] = $uid;
+				if ($uid = $modelForm->apply($uid)) {
 					$modelForm = new LoanSketchForm('apply');
-					if ($modelForm->validate($data) and $modelForm->apply()) {
+					if ($modelForm->validate($data) and $modelForm->apply($uid)) {
 						Log::add($uid, $data['oid'], \App\Config\Log::loanOperate('apply'));
 						$this->success('操作成功');
 					} else {
@@ -289,7 +275,7 @@ class LoanController extends Controller
 			$this->pageError('param');
 		$infos['doadvises_url'] = '/loan/doadvises/';
 		$infos['can_modify_actions'] = $this->canModifyActions($uid, $infos['loansketch']['status']);
-		$infos['adviseTypes'] = $this->adviseTypes();
+		$infos['adviseTypes'] = $this->adviseTypes($infos['can_modify_actions']);
 
 		$this->view->setVars($infos);
 		$this->view->pick('loan/detail');
@@ -304,11 +290,8 @@ class LoanController extends Controller
 		if ($this->isAjax())
 		{
 			$data = $this->request->getPost();
-			if (empty($data['uid']))
-				$this->error('参数错误');
 
 			$data['oid'] = $this->getOperatorId();
-			$data['addtime'] = time();
 
 			$model = new FaceForm('face');
 			if ($model->validate($data))
@@ -316,8 +299,8 @@ class LoanController extends Controller
 				if ($model->face($uid))
 				{
 					//更新状态
-					LoanSketch::updateStatus($data['uid'], \App\LoanStatus::getStatusFace());	
-					Log::add($data['uid'], $data['oid'], \App\Config\Log::loanOperate('face'));
+					LoanSketch::updateStatus($uid, \App\LoanStatus::getStatusFace());	
+					Log::add($uid, $data['oid'], \App\Config\Log::loanOperate('face'));
 					$this->success('操作成功');
 				}
 				else
@@ -363,12 +346,11 @@ class LoanController extends Controller
 				$this->error('参数错误');
 
 			$data['oid'] = $this->getOperatorId();
-			$data['addtime'] = time();
 
 			$model = new VisitForm('visit');
 			if ($model->validate($data))
 			{
-				if ($model->visit($action))
+				if ($model->visit($uid))
 				{
 					//更新状态
 					LoanSketch::updateStatus($data['uid'], \App\LoanStatus::getStatusVisit());
@@ -555,7 +537,7 @@ class LoanController extends Controller
 		$files = Files::getFilesByUid($uid, $typeid);
 		$detail['uid'] = $uid;
 		$detail['files'] = $files;
-		$detail['upload_auth'] = $this->authHasAction($type);
+		$detail['can_modify_actions'] = $this->canModifyActions($uid);
 		$this->view->setVars($detail);
 		$this->view->pick('loan/files/'.$type);
 	}
@@ -620,9 +602,19 @@ class LoanController extends Controller
 	/**
 	 * 获取可以提反馈意见、修改的
 	 */
-	private function adviseTypes()
+	private function adviseTypes($can_modify_actions = '*')
 	{
-		return \App\Config\Loan::adviseTypes(['loansketch', 'visit', 'car']);
+		$adviseTypes = \App\Config\Loan::adviseTypes(['loansketch', 'visit', 'car']);
+		if ($can_modify_actions === '*')
+			return $adviseTypes;
+		if ($can_modify_actions['reface'])
+			return $adviseTypes;
+		if ($can_modify_actions['face']) {
+			unset($adviseTypes['visit'], $adviseTypes['car']);
+			return $adviseTypes;
+		}
+		if ($can_modify_actions['apply'] || $can_modify_actions['visit'] || $can_modify_actions['car'])
+			return null;
 	}
 
 	/**
@@ -679,22 +671,36 @@ class LoanController extends Controller
 			'reface'	=>	false
 		];
 		$advises = Advise::formatByType(Advise::getAdvisesByUid($uid));
-		if ($apply and ($status == \App\LoanStatus::getStatusSketch() || array_key_exists('loansketch', $advises)))
+
+		if (array_key_exists('loansketch', $advises))
+			$do = 'apply';
+		else if (\App\LoanStatus::needVisit($status) || \App\LoanStatus::needCarAssess($status)
+			|| array_key_exists('visit', $advises) || array_key_exists('car', $advises))
+			$do = ['visit', 'car'];
+		else if (\App\LoanStatus::needReface($status) || array_key_exists('face', $advises))
+			$do = 'reface';
+		else if (\App\LoanStatus::needFace($status) || array_key_exists('face', $advises))
+			$do = 'face';
+		else if (\App\LoanStatus::needRc($status))
+			$do = 'rc';
+
+		if ($apply and $status == \App\LoanStatus::getStatusSketch())
 			$actions['apply'] = true;
-		if ($face and (\App\LoanStatus::needFace($status) || array_key_exists('face', $advises)) and !array_key_exists('loansketch', $advises))
+		if ($face and $do == 'face')
 			$actions['face'] = true;
-		if ($visit and (\App\LoanStatus::needVisit($status) || array_key_exists('visit', $advises)))
-			$actions['visit'] = true;
-		if ($car and (\App\LoanStatus::needCarAssess($status) || array_key_exists('car', $advises)))
-			$actions['car'] = true;
-		if ($face and (\App\LoanStatus::needReface($status) || array_key_exists('reface', $advises)))
+		else if (($visit || $car) and $do == ['visit', 'car']) {
+			$actions['visit'] = $visit;
+			$actions['car'] = $car;
+		} else if ($face and $do == 'reface')
 			$actions['reface'] = true;
 
 		if ($type) {
 			return array_key_exists($type, $actions) ? $actions[$type] : false;
 		}
+
 		$this->view->setVars([
-			'advises'	=>	$advises
+			'advises'	=>	$advises,
+			'do'	=>	$do
 		]);
 
 		return $actions;

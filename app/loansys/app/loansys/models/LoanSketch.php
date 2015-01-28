@@ -9,15 +9,21 @@ class LoanSketch extends Model
 		return $config->database->prefix . 'loan_sketch';
 	}
 
-	public static function add($data, $lastInsId = false)
+	public function add($uid, $data, $lastInsId = false)
 	{
-		$Loan = new LoanSketch();
-		$data['addtime'] = time();
+		$uid = intval($uid);
+		$Loan = LoanSketch::findFirst("uid=$uid");
+		if (!$Loan) {
+			$Loan = new LoanSketch();
+			$Loan->addtime = time();
+		}
+		$Loan->uid = $uid;
+		$Loan->uptime = time();
 		foreach ($data as $field=>$value)
 		{
 			$Loan->{$field} = $value;
 		}
-		if ($Loan->create())
+		if ($Loan->save())
 		{
 			return $lastInsId ? $Loan->lid : true;
 		}

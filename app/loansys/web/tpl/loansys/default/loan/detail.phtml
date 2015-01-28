@@ -22,6 +22,33 @@ $heads['title'] = $title;
 if ($can_modify_actions['apply']) {
 	echo '<a href="/loan/apply/'.$user['uid'].'" class="advise">修改</a>';
 }
+function outputNext($next, $can_modify_actions, $uid)
+{
+	$next_text = [
+		'face'	=>	'初审',
+		'visit'	=>	'实地外访',
+		'car'	=>	'车辆评估',
+		'reface'	=>	'复审'
+	];
+	if (is_string($next)) {
+		$text = $next_text[$next];
+		if ($can_modify_actions[$next]) {
+			$text = '<a href="/loan/'.$next.'/'.$uid.'/edit">'.$text.'</a>';
+		}
+		echo '<p>下一步：'.$text.'</p>';
+	} else if (is_array($next)) {
+		$str = '<p>下一步：';
+		foreach ($next as $key) {
+			if ($can_modify_actions[$key]) {
+				$str .= '<a href="/loan/'.$key.'/'.$uid.'/edit">'.$next_text[$key].'</a>&nbsp;';
+			} else {
+				$str .= $next_text[$key].'&nbsp;';
+			}
+		}
+		$str .= '</p>';
+		echo $str;
+	}
+}
 ?>
 <div class="loan-detail">
 <?php
@@ -35,9 +62,25 @@ $this->partial('loan/info/user');
 //贷款资料
 $this->partial('loan/info/loansketch');
 
-$this->partial('loan/info/face');
-$this->partial('loan/info/visit');
-$this->partial('loan/info/reface');
+if ($do == 'apply') {
+	outputNext('face', $can_modify_actions, $user['uid']);
+} else {
+	if ($do == 'face') {
+		outputNext('face', $can_modify_actions, $user['uid']);
+	} else {
+		$this->partial('loan/info/face');
+		if ($do == ['visit', 'car']) {
+			outputNext(['visit', 'car'], $can_modify_actions, $user['uid']);
+		} else {
+			$this->partial('loan/info/visit');
+			if ($do != 'reface') {
+				$this->partial('loan/info/reface');
+			} else {
+				outputNext('reface', $can_modify_actions, $user['uid']);
+			}
+		}
+	}
+}
 
 if (isset($adviseTypes) and is_array($adviseTypes)) {
 	$this->partial('loan/modal/advise');

@@ -10,7 +10,7 @@ class LoanStatus
 	static function needFace($status)
 	{
 		$status_face = self::getStatusFace();
-		return $status <= $status_face;
+		return $status < $status_face;
 	}
 
 	/**
@@ -23,7 +23,7 @@ class LoanStatus
 		$status_visit = self::getStatusVisit();
 		$status_reface = self::getStatusReface();
 		//return $status >= $status_face and $status < $status_checked and $status != $status_visit;
-		return $status >= $status_face and $status < $status_reface;
+		return $status >= $status_face and $status < $status_checked;
 	}
 
 	/**
@@ -36,7 +36,7 @@ class LoanStatus
 		$status_face = self::getStatusFace();
 		$status_reface = self::getStatusReface();
 		//return $status >= $status_face and $status < $status_checked and $status != $status_car;
-		return $status >= $status_face and $status < $status_reface;
+		return $status >= $status_face and $status < $status_checked;
 	}
 
 	static function needRunConfirm($status)
@@ -53,7 +53,7 @@ class LoanStatus
 	{
 		$status_checked = self::getStatusChecked();
 		$status_reface = self::getStatusReface();
-		return $status >= $status_checked and $status <= $status_reface;
+		return $status == $status_checked;
 	}
 
 	static function needRc($status)

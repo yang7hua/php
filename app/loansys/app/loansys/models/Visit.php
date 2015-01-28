@@ -12,20 +12,16 @@ class Visit extends Model
 		return $info->toArray();
 	}
 	
-	public function add($data)
+	public function _visit($uid, $data)
 	{
-		$uid = intval($data['uid']);
+		$uid = intval($uid);
 		$info = Visit::findFirst("uid=$uid");
-		$exist = false;
-		if ($info)
-			$exist = true;
-		foreach ($data as $field=>$value) {
-			$info->$field = $value;
-		}
-		if (!$exist)
+		if (!$info) {
+			$info = new Visit();
 			$info->addtime = time();
+		}
 		$info->uptime = time();
-		$result = $info->save();
+		$result = $info->save($data);
 		if (!$result) 
 		{
 			$this->outputErrors($info);

@@ -11,9 +11,11 @@ class Controller extends \Base\Controller
 					'_operator'	=>	self::operator()
 				]);
 		}
+		/*
 		$this->view->setVars([
 			'advise'	=>	Advise::getAdvisesByOid($this->getOperatorId())
 		]);
+		 */
 	}
 
 	public function isLogin()

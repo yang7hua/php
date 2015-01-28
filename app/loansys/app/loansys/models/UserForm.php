@@ -102,14 +102,9 @@ class UserForm extends ModelForm
 		];
 	}
 
-	public function apply()
+	public function apply($uid)
 	{
-		return User::add($this->data, true);
-	}
-
-	public function edit($uid)
-	{
-		return User::edit($uid, $this->data);
+		return User::add($uid, $this->data, true);
 	}
 
 }

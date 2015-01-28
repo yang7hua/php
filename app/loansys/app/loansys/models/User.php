@@ -9,15 +9,20 @@ class User extends Model
 		return [];
 	}
 
-	public static function add($data, $lastInsID = false)
+	public static function add($uid, $data, $lastInsID = false)
 	{
-		$user = new User();
-		$data['addtime'] = time();
-		foreach ($data as $key=>$val) {
-			$user->{$key}	=	$val;
+		$uid = intval($uid);
+		$info = User::findFirst("uid=$uid");
+		if (!$info) {
+			$info = new User();
+			$info->addtime = time();
 		}
-		if ($user->create()) {
-			return $lastInsID ? $user->uid : true;
+		$info->uptime = time();
+		foreach ($data as $key=>$val) {
+			$info->{$key}	=	$val;
+		}
+		if ($info->save()) {
+			return $lastInsID ? $info->uid : true;
 		}
 		return false;
 	}
@@ -177,13 +182,4 @@ class User extends Model
 		return $infos;
 	}
 
-	public static function edit($uid, $data)
-	{
-		$User = User::findFirst("uid=$uid");
-		$User->uptime = time();
-		foreach ($data as $field=>$value) {
-			$User->$field = $value;
-		}
-		return $User->update();
-	}
 }

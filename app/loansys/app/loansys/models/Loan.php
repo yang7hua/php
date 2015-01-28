@@ -40,11 +40,13 @@ class Loan extends Model
 		if (!$loanSketch)
 			return false;
 
-		$loan = findFirst("uid=$uid");
-		$update = false;
+		$loan = Loan::findFirst("uid=$uid");
 
-		if ($loan)
-			$update = true;
+		if (!$loan) {
+			$loan = new Loan();
+			$loan->addtime = time();
+		}
+		$loan->uptime = time();
 		$loan->gps = 0;
 		$loan->contract = 0;
 		$loan->car_key = 0;
@@ -54,13 +56,9 @@ class Loan extends Model
 		$loan->bank_card = '';
 		$data = array_merge($loanSketch, $data);
 
-		if (!$update)
-			$data['addtime'] = time();
-		$data['uptime'] = time();
-
 		$fields = ['uid', 'oid', 'amount', 'loan_type', 'deadline', 'repay_method', 'loan_type',
 			'use_type', 'use_type_info', 'deadline_type', 'days', 'apr', 'repay_source', 'description',
-			'reason', 'remark', 'addtime', 'status'];
+			'reason', 'remark', 'status'];
 		foreach ($data as $field=>$value)
 		{
 			if (in_array($field, $fields))
@@ -246,7 +244,7 @@ class Loan extends Model
 			$isLoanSketch = true;
 			break;
 		case 'face':
-			$status = \App\LoanStatus::getStatusReface();
+			$status = \App\LoanStatus::getStatusChecked();
 			$oid = Face::findFirst("uid=$uid")->oid;
 			$isLoanSketch = true;
 			break;

@@ -7,10 +7,6 @@ class FaceForm extends ModelForm
 		return [
 			'face'	=>	[
 				'oid'	=>	null,
-				'addtime'	=>	null,
-				'uid'	=>	[
-					'type'	=>	'hidden'
-				],
 				'loan_type'	=>	[
 					'label'	=>	'贷款方式',
 					'type'	=>	'radio',
@@ -141,12 +137,9 @@ class FaceForm extends ModelForm
 		];
 	}
 
-	public function face($uid = false)
+	public function face($uid)
 	{
-		if ($uid)
-			return Face::edit($uid, $this->data);
-		else
-			return (new Face())->add($this->data);
+		return (new Face())->_face($uid, $this->data);
 	}
 
 	public function reface()

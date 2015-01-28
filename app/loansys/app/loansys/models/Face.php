@@ -38,14 +38,21 @@ class Face extends Model
 	}
 
 	//初审
-	public function add($data)
+	public function _face($uid, $data)
 	{
-		$info = new Face();
+		$uid = intval($uid);
+		$info = Face::findFirst("uid=$uid");
+		if (!$info) {
+			$info = new Face();
+			$info->addtime = time();
+		}
+		$info->uptime = time();
+		$info->uid = $uid;
 		foreach ($data as $field=>$value)
 		{
 			$info->$field = $value;
 		}
-		$result = $info->create();
+		$result = $info->save();
 		if (!$result)
 			$this->outputErrors($info);
 		return true;
@@ -73,13 +80,4 @@ class Face extends Model
 		return true;
 	}
 
-	public static function edit($uid, $data)
-	{
-		$Face = self::findFirst("uid=$uid");
-		unset($data['uid']);
-		foreach ($data as $field=>$value) {
-			$Face->$field = $value;
-		}
-		return $Face->update();
-	}
 }

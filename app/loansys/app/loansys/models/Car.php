@@ -23,14 +23,16 @@ class Car extends Model
 	{
 		$uid = intval($data['uid']);
 		$info = Car::findFirst("uid=$uid");
-		$exist = $info ? true : false;
+		if (!$info) {
+			$info = new Car();
+			$info->addtime = time();
+			$info->uid = $uid;
+		}
+		$info->uptime = time();
 		foreach ($data as $field=>$value)
 		{
 			$info->$field = $value;
 		}
-		if (!$exist)
-			$info->addtime = time();
-		$info->uptime = time();
 		$result = $info->save();
 		if (!$result) 
 		{
