@@ -22,7 +22,7 @@ class Hao_Bi
 
 	static function getTimeAreaOfDate($date = null, $end_date = null)
 	{
-		$begin_time = is_null($date) ? time() : strtotime($date);
+		$begin_time = is_null($date) ? time() : (self::isTime($date) ? $date : strtotime($date));
 		$begin = strtotime(date('Y-m-d', $begin_time));
 
 		if (is_null($end_date))
@@ -43,6 +43,15 @@ class Hao_Bi
 		} else {
 			return ['between', self::getTimeAreaOfDate($date, $end)];
 		}
+	}
+
+	static function getValuesOfListByField($list, $field)
+	{
+		$values = [];
+		foreach ($list as $row) {
+			$values[] = $row[$field];
+		}
+		return $values;
 	}
 
 	/**
@@ -106,6 +115,31 @@ class Hao_Bi
 		$date and $map['addtime'] = self::whereOfTimeArea($date, $end);
 
 		return $M_recharge->where($map)->sum('money');
+	}
+
+	/**
+	 * 注册且充值的用户
+	 */
+	static function newUserAndRechargeUserCount($date = null, $end = null)
+	{
+		$timearea = self::whereOfTimeArea($date, $end);
+		$user_map['addtime'] = $timearea;
+
+		$recharge_map['status'] = ['in', [
+			Hao_Status::$recharge['充值中'], 
+			Hao_Status::$recharge['待确认'], 
+			Hao_Status::$recharge['充值成功']
+		]];
+		$recharge_map['addtime'] = $timearea;
+
+		$user_uids = M('user')->where($user_map)->field('uid')->select();
+		$recharge_uids = M('recharge')->where($recharge_map)->distinct(true)->field('uid')->select();
+
+		$user_uids = self::getValuesOfListByField($user_uids, 'uid');
+		$recharge_uids = self::getValuesOfListByField($recharge_uids, 'uid');
+
+		$uids = array_intersect($user_uids, $recharge_uids);
+		return count($uids);
 	}
 
 	/**
@@ -173,8 +207,11 @@ class Hao_Bi
 	 */
 	static function arpu($date = null)
 	{
-		$arpu = self::bidAmount($date) / self::bidUserCount(self::onlineDate(), self::getTimeAreaOfDate($date)[1]);
-		return sprintf('%.2f', $arpu);
+		$bidUserCount = self::bidUserCount(self::onlineDate(), self::getTimeAreaOfDate($date)[1]);
+		if ($bidUserCount < 1)
+			return 0;
+		$bidAmount = self::bidAmount($date);
+		return sprintf('%.2f', $bidAmount/$bidUserCount);
 	}
 
 	/**
@@ -183,8 +220,11 @@ class Hao_Bi
 	static function arpuOfRecharge($date = null)
 	{
 		$date or $date = date('Y-m-d');
-		$arpu = self::rechargeAmount($date) / self::rechargeUserCount(self::onlineDate(), self::getTimeAreaOfDate($date)[1]);
-		return sprintf('%.2f', $arpu);
+		$rechargeUserCount = self::rechargeUserCount(self::onlineDate(), self::getTimeAreaOfDate($date)[1]);
+		if ($rechargeUserCount < 1)
+			return 0;
+		$rechargeAmount = self::rechargeAmount($date);
+		return sprintf('%.2f', $rechargeAmount / $rechargeUserCount);
 	}
 
 	/**
@@ -193,7 +233,10 @@ class Hao_Bi
 	static function arpuOfUserBid($date = null)
 	{
 		$date or $date = date('Y-m-d');
-		$arpu = self::bidAmount($date) / self::newUserCount(self::onlineDate(), self::getTimeAreaOfDate($date)[1]);
+	   	$newUserCount = self::newUserCount(self::onlineDate(), self::getTimeAreaOfDate($date)[1]);
+		if ($newUserCount < 1)
+			return 0;
+		$bidAmount = self::bidAmount($date);
 		return sprintf('%.2f', $arpu);
 	}
 
@@ -211,7 +254,29 @@ class Hao_Bi
 	static function singleUserCount()
 	{
 		$total = self::newUserCount();
+		if ($total < 1)
+			return 0;
 		$single_count = M('user')->where('login_time = 0')->count();
 		return sprintf('%.2f', $single_count / $total);
+	}
+
+	/**
+	 * 注册转换率: 时间范围内新增的注册用户数/第一次启动应用、web访问的用户数
+	 */
+	static function regConvertRate($date = null, $end = null)
+	{
+	}
+
+	/**
+	 * 充值转换率: 时间范围内新增的注册用户数/第一次启动应用、web访问的用户数
+	 */
+	static function rechargeConvertRate($date = null, $end = null)
+	{
+		$newUserAndRechargeUserCount = self::newUserAndRechargeUserCount($date, $end);
+		$newUserCount = self::newUserCount($date, $end);
+
+		if ($newUserCount < 1)
+			return 0;
+		return sprintf('%.2f', $newUserAndRechargeUserCount / $newUserCount);
 	}
 }
