@@ -1,0 +1,59 @@
+<include file="public:header" />
+<div style="width:100%;">
+	<div class="opsui-tabs" id="tab" plain="false" style="width:100%; padding-top:10px;">
+		<div title="累计数据" name="total">
+			<div class="tab-box">
+				<include file="tpl/total"/>
+			</div>
+		</div>
+		<div title="基础数据" name="base">
+			<div class="tab-box">
+				<include file="tpl/base"/>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	opsui.init();
+
+	var tab = opsui.get("tab");
+	console.log(tab.getTab('total'));
+
+	var grid = opsui.get("base");
+	grid.load({
+		sdate	: "{$base['sdate']}",
+		edate	: "{$base['edate']}"
+	});
+
+	$(function(){
+		$(".search").on("click", function(){
+			var form = $(this).closest("form"),
+				url = form.attr("action");
+				data_str = form.serialize();
+				
+			data_arr = data_str.split("&");
+			var data = {};
+			if (data_arr.length > 0) {
+				for (var i=0; i<data_arr.length; i++) {
+					var kv = data_arr[i].split("=");
+					data[kv[0]] = kv[1];
+				}
+			}
+			grid.load(data, function(res){
+				if (res["return"] < 1) {
+					alert(res.errmsg);
+					return false;
+				}
+			});
+			return false;
+		});
+	});
+
+</script>
+
+<style type="text/css">
+	.opsui-grid-footer{
+		display:none;
+	}
+</style>
+<include file="public:footer" />
