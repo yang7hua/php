@@ -29,6 +29,20 @@ class Hao_Bi
 					]];
 				break;
 
+			case 'loan':
+				return ['in', [
+					Hao_Status::$loan['招标中'],
+					Hao_Status::$loan['流标中'],
+					Hao_Status::$loan['已流标'],
+					Hao_Status::$loan['满标待审'],
+					Hao_Status::$loan['还款中'],
+					Hao_Status::$loan['还款成功'],
+					Hao_Status::$loan['提前还款'],
+					Hao_Status::$loan['系统已代还'],
+					Hao_Status::$loan['代还已回收'],
+					]];
+				break;
+
 			default:
 				return null;
 				break;
@@ -161,6 +175,21 @@ class Hao_Bi
 
 		$map['login_time'] = self::whereOfTimeArea($date, $end);
 		return $M_user_login->where($map)->count('distinct uid');
+	}
+
+	/**
+	 * 通过时间和余额范围查询用户数
+	 */
+	static function userCountByDateAndAmountArea($date = null, $end = null, $min = null, $max = null)
+	{
+		$map['addtime'] = self::whereOfTimeArea($date, $end);
+		if (!is_null($min) and !is_null($max))
+			$map['amount'] = ['between', [$min, $max]];
+		else if (!is_null($min))
+			$map['amount'] = ['egt', $min];
+		else if (!is_null($max))
+			$map['amount'] = ['lgt', $max];
+		return M('user')->where($map)->count();
 	}
 
 	/**
@@ -364,6 +393,23 @@ class Hao_Bi
 		return $recharge;
 	}
 
+	/**
+	 * 充值排名
+	 */
+	static function rechargeRanking($date = null, $end = null, $total = 100)
+	{
+		$map['R.status'] = self::status('recharge');
+		$map['R.addtime'] = self::whereOfTimeArea($date, $end);
+		return M('recharge')->alias('R')
+			->join(C('DB_PREFIX') . 'user U on U.uid=R.uid')
+			->where($map)
+			->field('sum(R.money) total,U.uname')
+			->group('R.uid')
+			->order('total desc')
+			->limit("0,$total")
+			->select();
+	}
+
 	static function newUserRechargeRate($date = null, $end = null)
 	{
 		$recharge = self::newUserRecharge($date, $end);
@@ -514,6 +560,23 @@ class Hao_Bi
 	}
 
 	/**
+	 * 投标排名
+	 */
+	static function bidRanking($date = null, $end = null, $total = 100)
+	{
+		$map['T.status'] = self::status('tender');
+		$map['T.bidtime'] = self::whereOfTimeArea($date, $end);
+		return M('tender')->alias('T')
+			->join(C('DB_PREFIX') . 'user U on U.uid=T.uid')
+			->where($map)
+			->field('sum(T.money) total,U.uname')
+			->group('T.uid')
+			->order('total desc')
+			->limit("0,$total")
+			->select();
+	}
+
+	/**
 	 * 提现用户
 	 */
 	static function drawcashUserCount($date = null, $end = null)
@@ -538,6 +601,23 @@ class Hao_Bi
 
 		$amount = $M_drawcash->where($map)->sum('money');
 		return $amount ? $amount : self::MONEY_ZERO;
+	}
+
+	/**
+	 * 提现排名
+	 */
+	static function drawcashRanking($date = null, $end = null, $total = 100)
+	{
+		$map['D.status'] = self::status('drawcash');
+		$map['D.addtime'] = self::whereOfTimeArea($date, $end);
+		return M('drawcash')->alias('D')
+			->join(C('DB_PREFIX') . 'user U on U.uid=D.uid')
+			->where($map)
+			->field('sum(D.money) total,U.uname')
+			->group('D.uid')
+			->order('total desc')
+			->limit("0,$total")
+			->select();
 	}
 
 	/**
@@ -662,6 +742,64 @@ class Hao_Bi
 
 		$bidUserCount = self::bidUserCount($date, $end);
 		return sprintf('%.2f', $bidUserCount / $newUserCount);
+	}
+
+	static function areas()
+	{
+		$list = M('user')->distinct(true)->field('province')->select();
+		return self::getValuesOfListByField($list, 'province');
+	}
+
+	/**
+	 * 按时间区域获取标信息、数量、已完成、进行中、已流标、耗时等
+	 */
+	static function loan($date = null, $end = null, $condition = null)
+	{
+		$map['status'] = self::status('loan');
+		$map['addtime'] = self::whereOfTimeArea($date, $end);
+
+		if (is_array($condition)) {
+			list($min, $max) = $condition['area'];
+			$where = ['between', [$min, $max]];
+			$map[$condition['field']] = $where;
+		}
+
+		$list = M('loan')->where($map)->select();
+
+		$count = $ok_count = $doing_count = $flow_count = 0;
+		$loan_tender_time = $tender_count = 0;
+
+		$count = count($list);
+		foreach ($list as $loan) {
+			if ($loan['endtime'])
+				$loan_tender_time += $loan['endtime'] - $loan['begintime'];
+			$tender_count += $loan['tender_count'];
+			switch ($loan['status']) {
+				case Hao_Status::$loan['招标中']:
+				case Hao_Status::$loan['满标待审']:
+				case Hao_Status::$loan['还款中']:
+					$doing_count++;
+					break;
+				case Hao_Status::$loan['流标中']:
+				case Hao_Status::$loan['已流标']:
+					$flow_count++;
+					break;
+				default:
+					$ok_count++;
+					break;
+			}
+		}
+		$tender_avgtime = 0;
+		if ($count)
+			$tender_avgtime = $loan_tender_time / $count;
+		return [
+			'count'	=>	$count,
+			'ok_count'	=>	$ok_count,
+			'doing_count'	=>	$doing_count,
+			'flow_count'	=>	$flow_count,
+			'tender_avgtime'	=>	$tender_avgtime,
+			'tender_count'	=>	$tender_count
+		];
 	}
 
 }

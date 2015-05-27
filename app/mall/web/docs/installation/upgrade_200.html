@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="utf-8" lang="utf-8">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+<title>从 1.7.3 升级到 2.0.0 - CodeIgniter 中文手册|用户手册|用户指南|Wiki文档</title>
+<link rel="shortcut icon" href="http://codeigniter.org.cn/user_guide/../images/design/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" type="text/css" media="all" href="http://codeigniter.org.cn/user_guide/userguide.css" />
+<link rel="search" href="http://codeigniter.org.cn/user_guide/../CodeIgniterSearch.xml" type="application/opensearchdescription+xml" title="CodeIgniter 搜索"/>
+<link rel="canonical" href="http://codeigniter.org.cn/user_guide/installation/upgrade_200.html" />
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/mootools.js?ver=20130324"></script>
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/mootools-more.js?ver=20130324"></script>
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/nav.js?ver=20130324"></script>
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/user_guide_menu.js?ver=20130324"></script>
+<meta name="robots" content="all" />
+<meta name="author" content="ExpressionEngine Dev Team" />
+<meta name="description" content="CodeIgniter 中文手册, CodeIgniter 用户指南, CodeIgniter User Guide, Wiki 文档" />
+</head>
+<body>
+<!-- START NAVIGATION -->
+<div id="nav">
+  <div id="nav_inner">
+    <script type="text/javascript">create_menu('http://codeigniter.org.cn/user_guide/');</script>
+  </div>
+</div>
+<script type="text/javascript">_setNavigation();</script>
+<div id="nav2"><a name="top"></a><a href="javascript:void(0);" onclick="myHeight.toggle();"><img src="http://codeigniter.org.cn/user_guide/images/nav_toggle_darker.jpg" width="154" height="43" border="0" title="切换目录" alt="切换目录" /></a></div>
+<div id="masthead" class="clearfix">
+    <div class="topbar-hd"><h1>CodeIgniter 用户指南 版本 2.2.2</h1></div>
+<div class="topbar-tip">编辑文档、查看近期更改请 <a href="http://codeigniter.org.cn/user_guide/auth/login">登录</a> 或 <a href="http://codeigniter.org.cn/user_guide/auth/register">注册</a> 　<a href="http://codeigniter.org.cn/user_guide/auth/forgotten_password">找回密码</a></div>      <div id="breadcrumb_right"><a href="http://codeigniter.org.cn/user_guide/toc.html">目录页</a></div>
+</div>
+<!-- END NAVIGATION -->
+<!-- START BREADCRUMB -->
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+  <tr>
+    <td id="breadcrumb">
+        <a href="http://codeigniter.org.cn/" target="_blank">CodeIgniter 中国首页</a>&nbsp;&#8250;&nbsp;
+<a href="http://codeigniter.org.cn/user_guide/index.html">用户指南首页</a>&nbsp;&#8250;&nbsp;<a href="http://codeigniter.org.cn/user_guide/installation/index.html">安装</a>&nbsp;&#8250;&nbsp;从 1.7.3 升级到 2.0.0    </td>
+    <td id="searchbox">
+        <form method="get" action="http://www.google.com.hk/search" target="google_window">
+        <input type="hidden" name="client" value="pub-0176846097796333"></input>
+        <input type="hidden" name="forid" value="1"></input>
+        <input type="hidden" name="ie" value="UTF-8"></input>
+        <input type="hidden" name="oe" value="UTF-8"></input>
+        <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="codeigniter.org.cn/user_guide/" />
+        搜索用户指南&nbsp;
+        <input type="text" class="input" style="width:200px;" name="q" id="q" size="31" maxlength="255" value="" />
+        &nbsp;
+        <input type="submit" class="submit" name="sa" value="Go" />
+      </form>
+    </td>
+  </tr>
+</table>
+<!-- END BREADCRUMB -->
+<div style="clear:both;text-align:right;padding: 6px 40px 0 0;">
+<a href="http://www.codeigniter.com/user_guide/installation/upgrade_200.html" target="_blank">查看原文</a>
+</div>
+<!--<br clear="all" />--><!-- START CONTENT -->
+<div id="content">
+<h1>从 1.7.3 升级到 2.0.0</h1>
+
+<p>在进行升级之前，你应该先通过替换 index.php 为静态页面的方式来使你的网站变为脱机状态。</p>
+
+
+
+<h2>第 1 步: 升级你的 CodeIgniter 文件</h2>
+
+<p>替换你的“system”目录下的所有文件，<strong>除了</strong>你的<kbd>application</kbd>目录。</p>
+
+<p class="important"><strong>说明：</strong>如果你在这些目录下有自己编写的文件，你应该先备份它们。</p>
+
+<h2>第 2 步：在必要的地方调整get_dir_file_info()函数</h2>
+
+<p>出于兼容性的考虑，2.0.0版将<kbd>get_dir_file_info()</kbd>函数改为无返回值，这个在<a href="../helpers/file_helper.html">文件辅助函数</a>中。在CodeIgniter中，出于兼容性而使用无返回值的改变是极其稀少的，但这次我们感觉是正确的，因为它使得创建安全的服务器运行输出变得简单。如果你<em>需要</em>
+
+同时输出子目录及其以下目录的文件信息，请更改调用，设置第二个参数<kbd>$top_level_only</kbd>为FALSE：</p>
+
+<code>get_dir_file_info('/path/to/directory', <kbd>FALSE</kbd>);</code>
+
+<h2>第 3 步：将你的插件转换成辅助函数</h2>
+
+<p>2.0.0版删除了插件系统，因为它的功能与辅助函数完全一样，但是它们缺乏扩展性。你需要将你的插件的文件名从“<var>文件名_pi.php</var>”改为“<var>文件名_helper.php</var>”，并且移动到你的<kbd>helpers</kbd>目录，然后更改所有的调用
+
+  <code>$this-&gt;load-&gt;plugin('foo');</code>
+
+为
+
+  <code>$this-&gt;load-&gt;helper('foo');</code>
+
+</p>
+
+<h2>第 4 步：升级存储的已加密数据</h2>
+
+<p class="important"><strong>说明：</strong>如果你的应用程序没有使用加密类库，没有保存永久加密数据，或者在一个不支持Mcrypt的环境，你可以跳过此步。</p>
+
+<p>加密类库进行了数量众多的更新，一些在加密强度方面和一些在执行方面，因此不可避免地导致了该类库前期版本的加密数据再也无法被解密。为了帮助转换，我们添加了一个新方法<kbd>encode_from_legacy()</kbd>，它将使用原来的算法解密数据并返回一个使用升级的算法重新加密后的数据。这样你可以轻松而快速地大量更新你的应用程序中的旧的加密数据。</p>
+
+<p>请在加密类库的文档中阅读<a href="../libraries/encryption.html#legacy">如何使用这个方法</a>。</p>
+
+<h2>第 5 步：删除对兼容性辅助函数的调用</h2>
+<p>兼容性辅助函数已经从CodeIgniter核心中删除。其中的所有方法都已被PHP原生支持。</p>
+
+<h2>第 6 步：升级类的继承方式</h2>
+<p>现在所有的核心类都使用了“<kbd>CI_</kbd>”前缀。请分别升级模型和控制器为继承CI_Model和CI_Controller。</p> 
+
+<h2>第 7 步：升级对父类构造函数的调用</h2>
+<p>现在所有的原生CodeIgniter类都使用了PHP 5的构造函数形式“<kbd>__construct()</kbd>”。请更改继承类的代码为调用“<kbd>parent::__construct()</kbd>”。</p>
+
+<h2>第 8 步: 升级你的用户手册</h2>
+<p>请将你的本地用户手册替换为新版本，包括图片文件。</p><p>&nbsp;</p>
+<div id="Contributors">
+翻译贡献者:
+bottom, Hex</div>
+<div id="DocDate">
+最后修改: 2013-10-29 13:51:20</div>
+</div>
+<!-- END CONTENT -->
+<div id="notes">
+<!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="installation/upgrade_200" data-title="从 1.7.3 升级到 2.0.0" data-url="http://codeigniter.org.cn/user_guide/installation/upgrade_200.html"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"codeigniter"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+<!-- 多说公共JS代码 end -->
+</div>
+<div id="footer">
+  <p>
+上一个主题:&nbsp;&nbsp;<a href="http://codeigniter.org.cn/user_guide/installation/index.html">安装指导</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="#top">页首</a>
+&nbsp;&middot;&nbsp;&nbsp;<a href="http://codeigniter.org.cn/user_guide/index.html">用户指南首页</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;下一个主题:&nbsp;&nbsp;<a href="http://codeigniter.org.cn/user_guide/installation/troubleshooting.html">疑难解答</a>  </p>
+  <p><a href="http://codeigniter.com">CodeIgniter</a> &nbsp;&middot;&nbsp; 版权所有 &#169; 2006-2013 &nbsp;&middot;&nbsp; <a href="http://ellislab.com/">Ellislab, Inc.</a></p>
+  <p>中文化: <a href="http://codeigniter.org.cn">CodeIgniter 中国</a> &nbsp;&middot;&nbsp; 制作: Hex &nbsp;&middot;&nbsp; 版本: 1.30 &nbsp;&middot;&nbsp; 鸣谢: 子非鱼</p>
+</div>
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-272152-3']);
+_gaq.push(['_addOrganic', 'baidu', 'word']);
+_gaq.push(['_addOrganic', 'soso', 'w']);
+_gaq.push(['_addOrganic', '3721', 'name']);
+_gaq.push(['_addOrganic', 'yodao', 'q']);
+_gaq.push(['_addOrganic', 'vnet', 'kw']);
+_gaq.push(['_addOrganic', 'sogou', 'query']);
+_gaq.push(['_addIgnoredOrganic', 'codeigniter.org.cn']);
+_gaq.push(['_trackPageview']);
+(function() {
+    var ga = document.createElement('script');
+    ga.src = (('https:' == document.location.protocol) ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+})();
+</script>
+<div style="display:none"><script language="javascript" type="text/javascript" src="http://js.users.51.la/3289908.js"></script>
+<noscript><a href="http://www.51.la/?3289908" target="_blank"><img alt="&#x6211;&#x8981;&#x5566;&#x514D;&#x8D39;&#x7EDF;&#x8BA1;" src="http://img.users.51.la/3289908.asp" style="border:none" /></a></noscript></div>
+</body>
+</html>

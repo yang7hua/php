@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="utf-8" lang="utf-8">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+<title>读取新闻条目 - CodeIgniter 中文手册|用户手册|用户指南|Wiki文档</title>
+<link rel="shortcut icon" href="http://codeigniter.org.cn/user_guide/../images/design/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" type="text/css" media="all" href="http://codeigniter.org.cn/user_guide/userguide.css" />
+<link rel="search" href="http://codeigniter.org.cn/user_guide/../CodeIgniterSearch.xml" type="application/opensearchdescription+xml" title="CodeIgniter 搜索"/>
+<link rel="canonical" href="http://codeigniter.org.cn/user_guide/tutorial/news_section.html" />
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/mootools.js?ver=20130324"></script>
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/mootools-more.js?ver=20130324"></script>
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/nav.js?ver=20130324"></script>
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/user_guide_menu.js?ver=20130324"></script>
+<meta name="robots" content="all" />
+<meta name="author" content="ExpressionEngine Dev Team" />
+<meta name="description" content="CodeIgniter 中文手册, CodeIgniter 用户指南, CodeIgniter User Guide, Wiki 文档" />
+</head>
+<body>
+<!-- START NAVIGATION -->
+<div id="nav">
+  <div id="nav_inner">
+    <script type="text/javascript">create_menu('http://codeigniter.org.cn/user_guide/');</script>
+  </div>
+</div>
+<script type="text/javascript">_setNavigation();</script>
+<div id="nav2"><a name="top"></a><a href="javascript:void(0);" onclick="myHeight.toggle();"><img src="http://codeigniter.org.cn/user_guide/images/nav_toggle_darker.jpg" width="154" height="43" border="0" title="切换目录" alt="切换目录" /></a></div>
+<div id="masthead" class="clearfix">
+    <div class="topbar-hd"><h1>CodeIgniter 用户指南 版本 2.2.2</h1></div>
+<div class="topbar-tip">编辑文档、查看近期更改请 <a href="http://codeigniter.org.cn/user_guide/auth/login">登录</a> 或 <a href="http://codeigniter.org.cn/user_guide/auth/register">注册</a> 　<a href="http://codeigniter.org.cn/user_guide/auth/forgotten_password">找回密码</a></div>      <div id="breadcrumb_right"><a href="http://codeigniter.org.cn/user_guide/toc.html">目录页</a></div>
+</div>
+<!-- END NAVIGATION -->
+<!-- START BREADCRUMB -->
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+  <tr>
+    <td id="breadcrumb">
+        <a href="http://codeigniter.org.cn/" target="_blank">CodeIgniter 中国首页</a>&nbsp;&#8250;&nbsp;
+<a href="http://codeigniter.org.cn/user_guide/index.html">用户指南首页</a>&nbsp;&#8250;&nbsp;<a href="http://codeigniter.org.cn/user_guide/tutorial/index.html">教程</a>&nbsp;&#8250;&nbsp;读取新闻条目    </td>
+    <td id="searchbox">
+        <form method="get" action="http://www.google.com.hk/search" target="google_window">
+        <input type="hidden" name="client" value="pub-0176846097796333"></input>
+        <input type="hidden" name="forid" value="1"></input>
+        <input type="hidden" name="ie" value="UTF-8"></input>
+        <input type="hidden" name="oe" value="UTF-8"></input>
+        <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="codeigniter.org.cn/user_guide/" />
+        搜索用户指南&nbsp;
+        <input type="text" class="input" style="width:200px;" name="q" id="q" size="31" maxlength="255" value="" />
+        &nbsp;
+        <input type="submit" class="submit" name="sa" value="Go" />
+      </form>
+    </td>
+  </tr>
+</table>
+<!-- END BREADCRUMB -->
+<div style="clear:both;text-align:right;padding: 6px 40px 0 0;">
+<a href="http://www.codeigniter.com/user_guide/tutorial/news_section.html" target="_blank">查看原文</a>
+</div>
+<!--<br clear="all" />--><!-- START CONTENT -->
+<div id="content">
+<h1>教程 &minus; 读取新闻条目</h1>
+
+<p>在上一节中，我们通过如何写出一个包含静态页面的类来了解了一些这个框架的基本概念。我们也根据自定义路由规则重新梳理了URI。现在是时候向大家介绍动态内容和如何使用数据库了。</p>
+
+<h2>创建你的数据模型</h2>
+
+<p>数据库的运算并不是在控制类中进行的，而是在数据模型中，这样他们就可以在后面很容易地被反复使用。数据模型就是对你的数据库或其他数据存储方式进行取回、插入和更新的地方，它们的功能是展示你的数据（They represent your data）。</p>
+
+<p>打开 <dfn>application/models</dfn> 文件夹新建一个文件 <dfn>News_model.php</dfn> ，代码如下。确保你已经按照 <a href="../database/configuration.html">这里</a>的说明配置了自己的数据库并且数据库服务器与PHP.ini有相应配置。</p>
+
+<pre>
+&lt;?php
+class News_model extends CI_Model &#123;
+
+  public function __construct()
+  &#123;
+    $this-&gt;load-&gt;database();
+  &#125;
+&#125;
+</pre>
+
+<p>这段代码和早前写过的控制器的代码类似。它创建了一个继承 CI_Model 的数据模型，并用来载入数据库。通过 <var>$this-&gt;db</var> 对象就可以使用数据库类了。</p>
+
+<p>在对数据库进行查询前，我们要先建一个数据表。连接你的数据库并执行下面的 SQL 命令，并在里面加些内容。</p>
+
+<pre>
+CREATE TABLE news (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  title varchar(128) NOT NULL,
+  slug varchar(128) NOT NULL,
+  text text NOT NULL,
+  PRIMARY KEY (id),
+  KEY slug (slug)
+);
+</pre>
+
+<p>现在数据库和数据模型都设置好了，我们需要一个方法来把我们的文章从数据库中读取出来。数据库抽象层已经包含在CodeIgniter的 <a href="../database/active_record.html">Active Record模式</a> 中了。这样可以确保只写一次查询就可以应用到 <a href="../general/requirements.html">所有的数据库系统</a>上。在你的数据库模型中添加如下代码。</p>
+
+<pre>
+public function get_news($slug = FALSE)&#123;
+  if ($slug === FALSE)
+  &#123;
+    $query = $this-&gt;db-&gt;get('news');
+    return $query-&gt;result_array();
+  &#125;
+  
+  $query = $this-&gt;db-&gt;get_where('news', array('slug' => $slug));
+  return $query-&gt;row_array();
+&#125;
+</pre>
+
+<p>通过上面的代码可以实现两个不同的查询，你可以得到所有的新闻纪录，也可以通过 <a href="#" title="a URL friendly version of a string">slug</a>得到某一篇新闻。你可能注意到了 <var>$slug</var> 变量在查询前并没有被检验过（sanitized），因为Active Record类已经把这个工作做完啦。</p>
+
+<h2>显示新闻</h2>
+
+<p>既然查询已经写完了，我们就要把这个数据模型和用来显示新闻内容的视图联系起来了。其实这个工作在我们之前写的pages控制类中就可以实现，但为了更清楚地向大家说明，我们来定义一个新的news控制类 <dfn>application/controllers/news.php</dfn>，代码如下。</p>
+
+<pre>
+&lt;?php
+class News extends CI_Controller &#123;
+
+  public function __construct()
+  &#123;
+    parent::__construct();
+    $this-&gt;load-&gt;model('news_model');
+  &#125;
+
+  public function index()
+  &#123;
+    $data['news'] = $this-&gt;news_model-&gt;get_news();
+  &#125;
+
+  public function view($slug)
+  &#123;
+    $data['news_item'] = $this-&gt;news_model-&gt;get_news($slug);
+  &#125;
+&#125;
+</pre>
+
+<p>看看上面的代码就会发现和我们之前写过的文件相似。首先，__construct方法是父级类 (<dfn>CI_Controller</dfn>) 的构造函数，并调用了数据模型，这样这个控制器中的其他方法就能使用那个数据模型了。</p>
+
+<p>其次，这里有两个方法分别用来显示所有的新闻和某一条。在第二个方法中可以看到 <var>$slug</var> 变量被传递给了数据模型中的方法。数据模型就是用这个slug来确定需要返回哪一篇文章的。</p>
+
+<p>现在通过数据模型，数据已经被控制器获得了，但还无法显示出来。下面我们就要把数据传递给视图了。</p>
+
+<pre>
+public function index()&#123;
+  $data['news'] = $this-&gt;news_model-&gt;get_news();
+  $data['title'] = 'News archive';
+
+  $this-&gt;load-&gt;view('templates/header', $data);
+  $this-&gt;load-&gt;view('news/index', $data);
+  $this-&gt;load-&gt;view('templates/footer');
+&#125;
+</pre>
+
+<p>上面的代码从数据模型中获得了所有新闻的记录，并把它们赋值给了一个变量。页面的标题也赋给了 <var>$data['title']</var> ，这些所有的数据都会传递给视图。现在你需要创建一个视图来显示这些新闻。新建 <dfn>application/views/news/index.php</dfn> 代码如下。</p>
+
+<pre>
+&lt;?php foreach ($news as $news_item): ?&gt;
+
+    &lt;h2&gt;&lt;?php echo $news_item['title'] ?&gt;&lt;/h2&gt;
+    &lt;div class="main"&gt;
+        &lt;?php echo $news_item['text'] ?&gt;
+    &lt;/div&gt;
+    &lt;p&gt;&lt;a href="http://[你的域名]/index.php/news/&lt;?php echo $news_item['slug'] ?&gt;"&gt;View article&lt;/a&gt;&lt;/p&gt;
+
+&lt;?php endforeach ?&gt;
+</pre>
+
+<p>在这里，每条新闻都被循环出来展示给读者了。你可以看到我们的模板是用PHP和HTML混着写的，如果你更喜欢用模板语言的话，你可以用CodeIgniter的 <a href="../libraries/parser.html">模板解析器类</a> 或者第三方模板解析器（模板引擎）。</p>
+
+<p>新闻概述页面已经做好了，现在还缺少每一篇文章的页面。之前写好的数据模型现在就可以非常简单地用来实现这个功能啦。你只需要添加一些代码到控制器并且创建一个视图。把下面的代码添加到news控制器中。</p>
+
+<pre>
+public function view($slug)&#123;
+  $data['news_item'] = $this-&gt;news_model-&gt;get_news($slug);
+
+  if (empty($data['news_item']))
+  &#123;
+    show_404();
+  &#125;
+
+  $data['title'] = $data['news_item']['title'];
+
+  $this-&gt;load-&gt;view('templates/header', $data);
+  $this-&gt;load-&gt;view('news/view', $data);
+  $this-&gt;load-&gt;view('templates/footer');
+&#125;
+</pre>
+
+<p>这里，<var>$slug</var> 变量作为参数传递给了 <var>get_news()</var> 方法，这样就可以返回特定的某一篇文章了。现在剩下的一件事就是创建视图 <dfn>application/views/news/view.php</dfn>了，代码如下。</p>
+
+<pre>
+&lt;?php
+echo '&lt;h2&gt;'.$news_item['title'].'&lt;/h2&gt;';
+echo $news_item['text'];
+</pre>
+
+<h2>设置路由</h2>
+<p>因为之前设置了通配符路由规则，现在你需要额外的路由来显示刚刚写的控制器。按照下面的代码修改你的路由文件 &#40;<dfn>application/config/routes.php</dfn>&#41; ，这样就确保了请求调用的是news控制器而不是之前设置的pages控制器。第一行代码表示的是控制器中通过slug读取的那条新闻。</p>
+
+<pre>
+$route['news/(:any)'] = 'news/view/$1';
+$route['news'] = 'news';
+$route['(:any)'] = 'pages/view/$1';
+$route['default_controller'] = 'pages/view';
+</pre>
+
+<p>把浏览器的地址改回根目录，在后面加上 <dfn>index.php/news</dfn> 来看看你的新闻页面吧。</p><p>&nbsp;</p>
+<div id="Contributors">
+翻译贡献者:
+250351515, csfhc, Hex, irini, kphcdr, odissey, scncpb, tongjingcheng, 就是欠揍</div>
+<div id="DocDate">
+最后修改: 2015-05-18 11:03:37</div>
+</div>
+<!-- END CONTENT -->
+<div id="notes">
+<!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="tutorial/news_section" data-title="读取新闻条目" data-url="http://codeigniter.org.cn/user_guide/tutorial/news_section.html"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"codeigniter"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+<!-- 多说公共JS代码 end -->
+</div>
+<div id="footer">
+  <p>
+上一个主题:&nbsp;&nbsp;<a href="http://codeigniter.org.cn/user_guide/tutorial/static_pages.html">加载静态内容</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="#top">页首</a>
+&nbsp;&middot;&nbsp;&nbsp;<a href="http://codeigniter.org.cn/user_guide/index.html">用户指南首页</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;下一个主题:&nbsp;&nbsp;<a href="http://codeigniter.org.cn/user_guide/tutorial/create_news_items.html">创建新闻条目</a>  </p>
+  <p><a href="http://codeigniter.com">CodeIgniter</a> &nbsp;&middot;&nbsp; 版权所有 &#169; 2006-2013 &nbsp;&middot;&nbsp; <a href="http://ellislab.com/">Ellislab, Inc.</a></p>
+  <p>中文化: <a href="http://codeigniter.org.cn">CodeIgniter 中国</a> &nbsp;&middot;&nbsp; 制作: Hex &nbsp;&middot;&nbsp; 版本: 1.30 &nbsp;&middot;&nbsp; 鸣谢: 子非鱼</p>
+</div>
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-272152-3']);
+_gaq.push(['_addOrganic', 'baidu', 'word']);
+_gaq.push(['_addOrganic', 'soso', 'w']);
+_gaq.push(['_addOrganic', '3721', 'name']);
+_gaq.push(['_addOrganic', 'yodao', 'q']);
+_gaq.push(['_addOrganic', 'vnet', 'kw']);
+_gaq.push(['_addOrganic', 'sogou', 'query']);
+_gaq.push(['_addIgnoredOrganic', 'codeigniter.org.cn']);
+_gaq.push(['_trackPageview']);
+(function() {
+    var ga = document.createElement('script');
+    ga.src = (('https:' == document.location.protocol) ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+})();
+</script>
+<div style="display:none"><script language="javascript" type="text/javascript" src="http://js.users.51.la/3289908.js"></script>
+<noscript><a href="http://www.51.la/?3289908" target="_blank"><img alt="&#x6211;&#x8981;&#x5566;&#x514D;&#x8D39;&#x7EDF;&#x8BA1;" src="http://img.users.51.la/3289908.asp" style="border:none" /></a></noscript></div>
+</body>
+</html>

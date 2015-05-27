@@ -17,6 +17,15 @@ class Adm_Action_Bi extends Adm_Action
 			'behavior_newuser'	=>	['sdate' =>	$last7days, 'edate'	=> $today],
 			'behavior_lively'	=>	['sdate' => $today],
 			'behavior_recharge_type'	=>	['sdate' =>	$last7days, 'edate'	=> $today],
+			'behavior_trade_ranking'	=>	['sdate' => $last7days, 'edate' => $today],
+			'behavior_account_amount'	=>	['edate' => $today],
+			'character_loan'	=>	[
+				'sdate' => $last7days, 
+				'edate' => $today, 
+				'type'	=>	json_encode([['id'=>'amount','text'=>'金额'], ['id'=>'apr','text'=>'利率'], 
+					['id'	=>	'deadline', 'text'	=>	'贷款期限'], 
+					['id'	=>	'type', 'text'	=>	'贷款方式']])
+			],
 		];
 		return ($key and array_key_exists($key, $conditions)) ? $conditions[$key] : $conditions;
 	}
@@ -32,9 +41,9 @@ class Adm_Action_Bi extends Adm_Action
 		$this->base();
 	}
 
-	private function checkDate($action = null)
+	private function checkDate($action = null, $nodatelimit = false)
 	{
-		$params = $_POST;
+		$params = $_REQUEST;
 		$sdate = $params['sdate'];
 		$edate = $params['edate'];
 
@@ -47,7 +56,7 @@ class Adm_Action_Bi extends Adm_Action
 		$dates = [];
 		if (!$edate) {
 			$dates[] = $sdate;
-		} else {
+		} else if (!$nodatelimit) {
 			$diff_days = ceil((strtotime($edate) - strtotime($sdate)) / 86400);
 			for ($i=$diff_days; $i>0; $i--) {
 				if (count($dates) >= 15)
@@ -92,14 +101,7 @@ class Adm_Action_Bi extends Adm_Action
 			$data[] = $row;
 		}
 		$data[] = $total;
-		if ($this->isAjax()) {
-			$this->output([
-				'data'	=>	$data
-			]);
-		}
-
-		$this->assign($data);
-		$this->display();
+		$this->_output($data);
 	}
 
 	/**
@@ -120,13 +122,7 @@ class Adm_Action_Bi extends Adm_Action
 				'drawcash_user_count'	=>	Hao_Bi::drawcashUserCount(null, $edate),
 				'drawcash_amount'	=>	Hao_Bi::drawcashAmount(null, $edate),
 		];
-		if ($this->isAjax()) {
-			$this->output([
-				'data'	=>	$data
-			]);
-		}
-		$this->assign($data);
-		$this->display();
+		$this->_output($data);
 	}
 
 	/**
@@ -150,13 +146,7 @@ class Adm_Action_Bi extends Adm_Action
 				'bid_lively_rate'	=>	Hao_Bi::bidLivelyRate($date[0], $date[1]),
 			];
 		}
-		if ($this->isAjax()) {
-			$this->output([
-				'data'	=>	$data
-			]);
-		}
-		$this->assign($data);
-		$this->display();
+		$this->_output($data);
 	}
 
 	/**
@@ -193,11 +183,7 @@ class Adm_Action_Bi extends Adm_Action
 			$data[] = $row;
 		}
 		$data[] = $total;
-		$this->output([
-			'data'	=>	$data
-		]);
-		$this->assign($data);
-		$this->display();
+		$this->_output($data);
 	}
 
 	/**
@@ -244,13 +230,7 @@ class Adm_Action_Bi extends Adm_Action
 			$data[] = $row;
 		}
 		$data[] = $total;
-		if ($this->isAjax()) {
-			$this->output([
-				'data'	=>	$data
-			]);
-		}
-		$this->assign($data);
-		$this->display();
+		$this->_output($data);
 	}
 
 	/**
@@ -279,13 +259,7 @@ class Adm_Action_Bi extends Adm_Action
 			'recharge'	=>	Hao_Bi::rechargeUserCount('this month', $sdate) / $user_count,	
 			'bid'	=>	Hao_Bi::bidUserCount('this month', $sdate) / $user_count
 		];
-		if ($this->isAjax()) {
-			$this->output([
-				'data'	=>	$data
-			]);
-		}
-		$this->assign($data);
-		$this->display();
+		$this->_output($data);
 	}
 
 	/**
@@ -318,6 +292,146 @@ class Adm_Action_Bi extends Adm_Action
 			$data[] = $row;
 		}
 		$data[] = $total;
+		$this->_output($data);
+	}
+
+	/**
+	 * 时段分析
+	 */
+	function behavior_analyse_hourly()
+	{
+	}
+
+	/**
+	 * 地区分布
+	 * user表province加索引
+	 * 目前很多用户没有province值
+	 */
+	function behavior_analyse_area()
+	{
+	}
+
+	/**
+	 * 交易排行
+	 */
+	function behavior_trade_ranking()
+	{
+		list($sdate, $edate) = $this->checkDate(null, true);
+		$total = $_REQUEST['total'] ? intval($_REQUEST['total']) : 100;
+		//充值排行
+		$recharge_ranking = Hao_Bi::rechargeRanking($sdate, $edate, $total);
+		//投标排行
+		$bid_ranking = Hao_Bi::bidRanking($sdate, $edate, $total);
+		//提现排行
+		$drawcash_ranking = Hao_Bi::drawcashRanking($sdate, $edate, $total);
+
+		$data = [];
+		for ($i=0; $i<$total; $i++) {
+			$data[] = [
+				'rank'	=>	$i,
+				'recharge_uname'	=>	$recharge_ranking[$i]['uname'],
+				'recharge_amount'	=>	$recharge_ranking[$i]['total'],
+				'bid_uname'	=>	$bid_ranking[$i]['uname'],
+				'bid_amount'	=>	$bid_ranking[$i]['total'],
+				'drawcash_uname'	=>	$drawcash_ranking[$i]['uname'],
+				'drawcash_amount'	=>	$drawcash_ranking[$i]['total'],
+			];
+		}
+		$this->_output($data);
+	}
+
+	/**
+	 * 账户余额
+	 */
+	function behavior_account_amount()
+	{
+		list($sdate, $edate) = $this->checkDate(null, true);
+		$areas = [
+			'y1'	=>	[0,0.99], 
+			'y100'	=>	[1, 100], 
+			'y500'	=>	[101, 500], 
+			'y1000'	=>	[501, 1000], 
+			'y2000'	=>	[1001, 2000], 
+			'y5000'	=>	[2001, 5000], 
+			'y10000'	=>	[5001, 10000], 
+			'y10000+'	=>	[10001]
+		];
+		$row = [
+			'total'	=>	Hao_Bi::newUserCount(null, $edate)
+		];
+		foreach ($areas as $key=>$area) {
+			$row[$key] = Hao_Bi::userCountByDateAndAmountArea($sdate, $edate, $area[0], $area[1]);
+		}
+		$data[] = $row;
+		$this->_output($data);
+	}
+
+	/**
+	 * 标的数据: 按标的金额、利率、期限、标类型、耗时查询
+	 */
+	function character_loan()
+	{
+		list($sdate, $edate) = $this->checkDate(null, true);
+		$field = $_REQUEST['type'];
+		$field or $field = 'amount';
+		switch ($field) {
+			case 'amount':
+				$areas = [
+					'5000及以下'	=>	[0, 5000],
+					'5001-10000'	=>	[5001, 10000],
+					'10001-20000'	=>	[10001, 20000],
+					'20001-50000'	=>	[20001, 50000],
+					'50001-100000'	=>	[50001, 100000],
+					'100001-200000'	=>	[100001, 200000],
+					'200001-300000'	=>	[200001, 300000],
+					'300001-500000'	=>	[300001, 500000],
+					'500001及以上'	=>	[500001],
+					];
+				break;
+			case 'apr':
+				$areas = [
+					'16.7%及以下'	=>	[0, 16.7],
+					'16.8%-17.9%'	=>	[16.7, 17.9],
+					'18%-19.1%'	=>	[18, 19.1],
+					'19.2%-20.3%'	=>	[19.2, 20.3],
+					'20.4%以上'	=>	[20.4]
+				];
+				break;
+		}
+
+		$data = [];
+		$total = [];
+		$recharge_user_count = Hao_Bi::rechargeUserCount($sdate, $edate);
+		$recharge_amount = Hao_Bi::rechargeAmount($sdate, $edate);
+		$bid_user_count = Hao_Bi::bidUserCount($sdate, $edate);
+		$bid_amount = Hao_Bi::bidAmount($sdate, $edate);
+		foreach ($areas as $key=>$area) {
+			$loan = Hao_Bi::loan($sdate, $edate, [
+				'field'	=>	$field,
+				'area'	=>	[$area[0], $area[1]]
+			]);
+			$row = [
+				'area'	=>	$key,
+				'count'	=>	$loan['count'],
+				'ok_count'	=>	$loan['ok_count'],
+				'doing_count'	=>	$loan['doing_count'],
+				'flow_count'	=>	$loan['flow_count'],
+				'done_rate'	=>	$loan['count'] ? ($loan['ok_count'] / $loan['count']) : 0,
+				'flow_rate'	=>	$loan['count'] ? ($loan['flow_count'] / $loan['count']) : 0,
+				'loan_tender_time' => $loan['tender_avgtime'],
+				'bid_count'	=>	$loan['tender_count'],
+				'recharge_user_count'	=>	$recharge_user_count,
+				'recharge_amount'	=>	$recharge_amount,
+				'bid_convert_rate'	=>	$recharge_user_count ? ($bid_user_count / $recharge_user_count) : 0,
+				'bid_arpu'	=> $bid_user_count ? ($bid_amount / $bid_user_count) : 0,	
+			];
+			$data[] = $row;
+		}
+		$this->_output($data);
+	}
+
+	private function _output($data)
+	{
 		if ($this->isAjax()) {
 			$this->output([
 				'data'	=>	$data

@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="utf-8" lang="utf-8">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+<title>安全类 - CodeIgniter 中文手册|用户手册|用户指南|Wiki文档</title>
+<link rel="shortcut icon" href="http://codeigniter.org.cn/user_guide/../images/design/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" type="text/css" media="all" href="http://codeigniter.org.cn/user_guide/userguide.css" />
+<link rel="search" href="http://codeigniter.org.cn/user_guide/../CodeIgniterSearch.xml" type="application/opensearchdescription+xml" title="CodeIgniter 搜索"/>
+<link rel="canonical" href="http://codeigniter.org.cn/user_guide/libraries/security.html" />
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/mootools.js?ver=20130324"></script>
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/mootools-more.js?ver=20130324"></script>
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/nav.js?ver=20130324"></script>
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/user_guide_menu.js?ver=20130324"></script>
+<meta name="robots" content="all" />
+<meta name="author" content="ExpressionEngine Dev Team" />
+<meta name="description" content="CodeIgniter 中文手册, CodeIgniter 用户指南, CodeIgniter User Guide, Wiki 文档" />
+</head>
+<body>
+<!-- START NAVIGATION -->
+<div id="nav">
+  <div id="nav_inner">
+    <script type="text/javascript">create_menu('http://codeigniter.org.cn/user_guide/');</script>
+  </div>
+</div>
+<script type="text/javascript">_setNavigation();</script>
+<div id="nav2"><a name="top"></a><a href="javascript:void(0);" onclick="myHeight.toggle();"><img src="http://codeigniter.org.cn/user_guide/images/nav_toggle_darker.jpg" width="154" height="43" border="0" title="切换目录" alt="切换目录" /></a></div>
+<div id="masthead" class="clearfix">
+    <div class="topbar-hd"><h1>CodeIgniter 用户指南 版本 2.2.2</h1></div>
+<div class="topbar-tip">编辑文档、查看近期更改请 <a href="http://codeigniter.org.cn/user_guide/auth/login">登录</a> 或 <a href="http://codeigniter.org.cn/user_guide/auth/register">注册</a> 　<a href="http://codeigniter.org.cn/user_guide/auth/forgotten_password">找回密码</a></div>      <div id="breadcrumb_right"><a href="http://codeigniter.org.cn/user_guide/toc.html">目录页</a></div>
+</div>
+<!-- END NAVIGATION -->
+<!-- START BREADCRUMB -->
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+  <tr>
+    <td id="breadcrumb">
+        <a href="http://codeigniter.org.cn/" target="_blank">CodeIgniter 中国首页</a>&nbsp;&#8250;&nbsp;
+<a href="http://codeigniter.org.cn/user_guide/index.html">用户指南首页</a>&nbsp;&#8250;&nbsp;安全类    </td>
+    <td id="searchbox">
+        <form method="get" action="http://www.google.com.hk/search" target="google_window">
+        <input type="hidden" name="client" value="pub-0176846097796333"></input>
+        <input type="hidden" name="forid" value="1"></input>
+        <input type="hidden" name="ie" value="UTF-8"></input>
+        <input type="hidden" name="oe" value="UTF-8"></input>
+        <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="codeigniter.org.cn/user_guide/" />
+        搜索用户指南&nbsp;
+        <input type="text" class="input" style="width:200px;" name="q" id="q" size="31" maxlength="255" value="" />
+        &nbsp;
+        <input type="submit" class="submit" name="sa" value="Go" />
+      </form>
+    </td>
+  </tr>
+</table>
+<!-- END BREADCRUMB -->
+<div style="clear:both;text-align:right;padding: 6px 40px 0 0;">
+<a href="http://www.codeigniter.com/user_guide/libraries/security.html" target="_blank">查看原文</a>
+</div>
+<!--<br clear="all" />--><!-- START CONTENT -->
+<div id="content">
+<h1>安全类</h1>
+
+<p>安全类包含一些方法，能帮助您创建安全的应用程序，对输入的数据进行安全方面的处理.</p>
+
+<h2>XSS 过滤</h2>
+
+<p> CodeIgniter 包含了跨站脚本攻击的防御机制，它可以自动地对所有POST以及COOKIE数据进行过滤，或者您也可以针对单个项目来运行它。默认情况下，它 <strong>不会</strong>
+全局运行，因为这样也需要一些执行开销，况且您也不一定在所有情况下都用得到它.</p>
+
+<p>XSS过滤器会查找那些常被用来触发JavaScript或者其他类型的企图劫持cookie或进行其它恶意行为的代码. 如果发现任何不允许的内容，它将把那些内容转换为字符实体，以确保安全.
+</p>
+
+<p>
+注意: 此函数只应该用来处理那些提交过来的数据. 它不适合在常规运行时使用，因为它执行时的开销也是不容忽视的.</p>
+
+
+<p>要使用XSS过滤器对数据进行过滤，请使用此函数:</p>
+
+<h2>$this-&gt;security-&gt;xss_clean()</h2>
+
+<p>下面是一个使用实例:</p>
+
+<code>$data = $this-&gt;security-&gt;xss_clean($data);</code>
+
+<p>如果你希望过滤器能自动过滤所有被访问到的POST或者COOKIE数据，请打开你的 <kbd>application/config/config.php</kbd> 文件，进行如下设置即可启用自动过滤:</p>
+
+<code>$config['global_xss_filtering'] = TRUE;</code>
+
+<p>说明: 如果你使用表单验证类，同样也有XSS过滤的选项.</p>
+
+<p>第二个可选的参数, <dfn>is_image</dfn>, 允许此函数对图片进行检测以发现那些潜在的 XSS 攻击, 这对于保证文件上传的安全非常有用. 当此参数被设置为 <dfn>TRUE</dfn> 时, 此函数的返回值不是一个修改过的字符串而是一个布尔值, 如果图片是安全的则返回 TRUE, 相反, 如果图片中包含有潜在的、可能会被浏览器尝试运行的恶意信息, 函数将返回FALSE.</p>
+
+<code>if ($this-&gt;security-&gt;xss_clean($file, TRUE) === FALSE)<br />
+&#123;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;// file failed the XSS test<br />
+&#125;</code>
+
+
+<h2>$this-&gt;security-&gt;sanitize_filename()</h2>
+
+<p>当接受用户所输入的文件名时, 最好是对它们进行一下“消毒”, 这样能避免目录被遍历以及其它安全相关的问题. 要完成这项工作, 请使用安全类中的  <dfn>sanitize_filename()</dfn> 方法. 下面是一个实例:</p>
+
+<code>$filename = $this-&gt;security-&gt;sanitize_filename($this-&gt;input-&gt;post('filename'));</code>
+
+<p>如果你允许用户所输入的内容中包含有相对路径，例如 <kbd>file/in/some/approved/folder.txt</kbd>, 你可以把第二个可选参数 <samp>$relative_path</samp> 设置为TRUE.</p>
+
+<code>$filename = $this-&gt;security-&gt;sanitize_filename($this-&gt;input-&gt;post('filename'), TRUE);</code>
+
+<h2>跨站请求伪造(Cross-site request forgery,CSRF)</h2>
+
+<p>打开你的 <kbd>application/config/config.php</kbd> 文件，进行如下设置，即可启用 csrf 保护:</p>
+<code>$config['csrf_protection'] = TRUE;</code>
+
+<p>如果你使用 <a href="../helpers/form_helper.html">表单辅助函数</a>,  <var>form_open()</var> 函数将会自动地在你的表单中插入一个隐藏的csrf字段.</p><p>&nbsp;</p>
+<div id="Contributors">
+翻译贡献者:
+Hex, yinzhili</div>
+<div id="DocDate">
+最后修改: 2011-02-13 08:21:49</div>
+</div>
+<!-- END CONTENT -->
+<div id="notes">
+<!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="libraries/security" data-title="安全类" data-url="http://codeigniter.org.cn/user_guide/libraries/security.html"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"codeigniter"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+<!-- 多说公共JS代码 end -->
+</div>
+<div id="footer">
+  <p>
+上一个主题:&nbsp;&nbsp;<a href="http://codeigniter.org.cn/user_guide/libraries/pagination.html">分页类</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="#top">页首</a>
+&nbsp;&middot;&nbsp;&nbsp;<a href="http://codeigniter.org.cn/user_guide/index.html">用户指南首页</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;下一个主题:&nbsp;&nbsp;<a href="http://codeigniter.org.cn/user_guide/libraries/sessions.html">Session 类</a>  </p>
+  <p><a href="http://codeigniter.com">CodeIgniter</a> &nbsp;&middot;&nbsp; 版权所有 &#169; 2006-2013 &nbsp;&middot;&nbsp; <a href="http://ellislab.com/">Ellislab, Inc.</a></p>
+  <p>中文化: <a href="http://codeigniter.org.cn">CodeIgniter 中国</a> &nbsp;&middot;&nbsp; 制作: Hex &nbsp;&middot;&nbsp; 版本: 1.30 &nbsp;&middot;&nbsp; 鸣谢: 子非鱼</p>
+</div>
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-272152-3']);
+_gaq.push(['_addOrganic', 'baidu', 'word']);
+_gaq.push(['_addOrganic', 'soso', 'w']);
+_gaq.push(['_addOrganic', '3721', 'name']);
+_gaq.push(['_addOrganic', 'yodao', 'q']);
+_gaq.push(['_addOrganic', 'vnet', 'kw']);
+_gaq.push(['_addOrganic', 'sogou', 'query']);
+_gaq.push(['_addIgnoredOrganic', 'codeigniter.org.cn']);
+_gaq.push(['_trackPageview']);
+(function() {
+    var ga = document.createElement('script');
+    ga.src = (('https:' == document.location.protocol) ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+})();
+</script>
+<div style="display:none"><script language="javascript" type="text/javascript" src="http://js.users.51.la/3289908.js"></script>
+<noscript><a href="http://www.51.la/?3289908" target="_blank"><img alt="&#x6211;&#x8981;&#x5566;&#x514D;&#x8D39;&#x7EDF;&#x8BA1;" src="http://img.users.51.la/3289908.asp" style="border:none" /></a></noscript></div>
+</body>
+</html>

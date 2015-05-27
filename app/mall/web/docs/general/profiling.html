@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="utf-8" lang="utf-8">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+<title>调试你的应用程序 - CodeIgniter 中文手册|用户手册|用户指南|Wiki文档</title>
+<link rel="shortcut icon" href="http://codeigniter.org.cn/user_guide/../images/design/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" type="text/css" media="all" href="http://codeigniter.org.cn/user_guide/userguide.css" />
+<link rel="search" href="http://codeigniter.org.cn/user_guide/../CodeIgniterSearch.xml" type="application/opensearchdescription+xml" title="CodeIgniter 搜索"/>
+<link rel="canonical" href="http://codeigniter.org.cn/user_guide/general/profiling.html" />
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/mootools.js?ver=20130324"></script>
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/mootools-more.js?ver=20130324"></script>
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/nav.js?ver=20130324"></script>
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/user_guide_menu.js?ver=20130324"></script>
+<meta name="robots" content="all" />
+<meta name="author" content="ExpressionEngine Dev Team" />
+<meta name="description" content="CodeIgniter 中文手册, CodeIgniter 用户指南, CodeIgniter User Guide, Wiki 文档" />
+</head>
+<body>
+<!-- START NAVIGATION -->
+<div id="nav">
+  <div id="nav_inner">
+    <script type="text/javascript">create_menu('http://codeigniter.org.cn/user_guide/');</script>
+  </div>
+</div>
+<script type="text/javascript">_setNavigation();</script>
+<div id="nav2"><a name="top"></a><a href="javascript:void(0);" onclick="myHeight.toggle();"><img src="http://codeigniter.org.cn/user_guide/images/nav_toggle_darker.jpg" width="154" height="43" border="0" title="切换目录" alt="切换目录" /></a></div>
+<div id="masthead" class="clearfix">
+    <div class="topbar-hd"><h1>CodeIgniter 用户指南 版本 2.2.2</h1></div>
+<div class="topbar-tip">编辑文档、查看近期更改请 <a href="http://codeigniter.org.cn/user_guide/auth/login">登录</a> 或 <a href="http://codeigniter.org.cn/user_guide/auth/register">注册</a> 　<a href="http://codeigniter.org.cn/user_guide/auth/forgotten_password">找回密码</a></div>      <div id="breadcrumb_right"><a href="http://codeigniter.org.cn/user_guide/toc.html">目录页</a></div>
+</div>
+<!-- END NAVIGATION -->
+<!-- START BREADCRUMB -->
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+  <tr>
+    <td id="breadcrumb">
+        <a href="http://codeigniter.org.cn/" target="_blank">CodeIgniter 中国首页</a>&nbsp;&#8250;&nbsp;
+<a href="http://codeigniter.org.cn/user_guide/index.html">用户指南首页</a>&nbsp;&#8250;&nbsp;调试你的应用程序    </td>
+    <td id="searchbox">
+        <form method="get" action="http://www.google.com.hk/search" target="google_window">
+        <input type="hidden" name="client" value="pub-0176846097796333"></input>
+        <input type="hidden" name="forid" value="1"></input>
+        <input type="hidden" name="ie" value="UTF-8"></input>
+        <input type="hidden" name="oe" value="UTF-8"></input>
+        <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="codeigniter.org.cn/user_guide/" />
+        搜索用户指南&nbsp;
+        <input type="text" class="input" style="width:200px;" name="q" id="q" size="31" maxlength="255" value="" />
+        &nbsp;
+        <input type="submit" class="submit" name="sa" value="Go" />
+      </form>
+    </td>
+  </tr>
+</table>
+<!-- END BREADCRUMB -->
+<div style="clear:both;text-align:right;padding: 6px 40px 0 0;">
+<a href="http://www.codeigniter.com/user_guide/general/profiling.html" target="_blank">查看原文</a>
+</div>
+<!--<br clear="all" />--><!-- START CONTENT -->
+<div id="content">
+<h1>调试你的应用程序</h1>
+
+<p>该分析器将在页面下方显示基准测试结果，运行过的 SQL 语句，以及 $_POST 数据。这些信息有助于开发过程中的调试和优化。</p>
+
+
+<h2>初始化类</h2>
+
+<p class="important"><strong>注意:</strong>&nbsp; 此分析器<kbd>无须</kbd>手动初始化.如果已按照下面的方式激活,他将被<a href="../libraries/output.html">输出类</a>自动装载。</p>
+
+<h2>激活分析器</h2>
+
+<p>在<a href="controllers.html">控制器</a>中设置以下方法以激活该分析器</p>
+<code>$this-&gt;output-&gt;enable_profiler(TRUE);</code>
+
+<p>分析器激活后将产生一个报告并插入您的页面底部</p>
+
+<p>使用以下方法禁用该分析器:</p>
+<code>$this-&gt;output-&gt;enable_profiler(FALSE);</code>
+
+<h2>设定基准点</h2>
+
+<p>为了让该分析器编译和显示你的测试数据，你必须使用特定的语法命名基准点。</p>
+
+<p>请在<a href="../libraries/benchmark.html">基准测试类</a>部分阅读关于设置基准点的资料。</p>
+
+<h2>启用和禁用分析数据中的字段</h2>
+
+<p>分析数据中的每个字段可通过设置相应的控制变量<var>TRUE</var> or <var>FALSE</var>来启用和禁用. 其中的一个方法是：你可以在<dfn>application/config/profiler.php</dfn> 配置文件里设置整个程序的全局默认值.</p>
+
+  <code>$config['config']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= FALSE;<br />
+  $config['queries']&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= FALSE;<br /></code>
+
+  <p>另一种方法是：你可以在控制器中通过调用<kbd>set_profiler_sections()</kbd> 来覆盖全局设置和默认设置，详细可见： <a href="../libraries/output.html">Output class</a>:</p>
+
+  <code>$sections = array(<br />
+  &nbsp;&nbsp;&nbsp;&nbsp;'config' &nbsp;=> TRUE,<br />
+  &nbsp;&nbsp;&nbsp;&nbsp;'queries' => TRUE<br />
+  &nbsp;&nbsp;&nbsp;&nbsp;);<br />
+  <br />
+  $this-&gt;output-&gt;set_profiler_sections($sections);</code>
+
+  <p>下表列出了可用的分析器数据字段和用来访问这些字段的key。</p>
+
+  <table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+    <tr>
+    <th>Key</th>
+    <th>Description</th>
+    <th>Default</th>
+    </tr>
+    <tr>
+    <td class="td"><strong>benchmarks</strong></td>
+    <td class="td">在各个计时点花费的时间以及总时间</td>
+    <td class="td">TRUE</td>
+    </tr>
+    <tr>
+    <td class="td"><strong>config</strong></td>
+    <td class="td">CodeIgniter 配置变量</td>
+    <td class="td">TRUE</td>
+    </tr>
+    <tr>
+    <td class="td"><strong>controller_info</strong></td>
+    <td class="td">被调用的method及其所属的控制器类</td>
+    <td class="td">TRUE</td>
+    </tr>
+    <tr>
+    <td class="td"><strong>get</strong></td>
+    <td class="td">在request中传递的所有GET参数</td>
+    <td class="td">TRUE</td>
+    </tr>
+    <tr>
+    <td class="td"><strong>http_headers</strong></td>
+    <td class="td">本次请求的 HTTP 头</td>
+    <td class="td">TRUE</td>
+    </tr>
+    <tr>
+    <td class="td"><strong>memory_usage</strong></td>
+    <td class="td">本次请求消耗的内存（byte为单位）</td>
+    <td class="td">TRUE</td>
+    </tr>
+    <tr>
+    <td class="td"><strong>post</strong></td>
+    <td class="td">在request中传递的所有POST参数</td>
+    <td class="td">TRUE</td>
+    </tr>
+    <tr>
+    <td class="td"><strong>queries</strong></td>
+    <td class="td">列出执行的数据库操作语句及其消耗的时间</td>
+    <td class="td">TRUE</td>
+    </tr>
+    <tr>
+    <td class="td"><strong>uri_string</strong></td>
+    <td class="td">本次请求的URI</td>
+    <td class="td">TRUE</td>
+    </tr>
+    <tr>
+      <td class="td"><strong>query_toggle_count</strong></td>
+      <td class="td">指定显示多少个数据库查询语句，剩下的则默认折叠起来。</td>
+      <td class="td">25</td>
+    </tr>
+  </table><p>&nbsp;</p>
+<div id="Contributors">
+翻译贡献者:
+amos, chouqiuqiu, Hex, teamoustar</div>
+<div id="DocDate">
+最后修改: 2013-03-23 03:19:52</div>
+</div>
+<!-- END CONTENT -->
+<div id="notes">
+<!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="general/profiling" data-title="调试你的应用程序" data-url="http://codeigniter.org.cn/user_guide/general/profiling.html"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"codeigniter"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+<!-- 多说公共JS代码 end -->
+</div>
+<div id="footer">
+  <p>
+上一个主题:&nbsp;&nbsp;<a href="http://codeigniter.org.cn/user_guide/general/caching.html">缓存</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="#top">页首</a>
+&nbsp;&middot;&nbsp;&nbsp;<a href="http://codeigniter.org.cn/user_guide/index.html">用户指南首页</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;下一个主题:&nbsp;&nbsp;<a href="http://codeigniter.org.cn/user_guide/general/managing_apps.html">管理应用程序</a>  </p>
+  <p><a href="http://codeigniter.com">CodeIgniter</a> &nbsp;&middot;&nbsp; 版权所有 &#169; 2006-2013 &nbsp;&middot;&nbsp; <a href="http://ellislab.com/">Ellislab, Inc.</a></p>
+  <p>中文化: <a href="http://codeigniter.org.cn">CodeIgniter 中国</a> &nbsp;&middot;&nbsp; 制作: Hex &nbsp;&middot;&nbsp; 版本: 1.30 &nbsp;&middot;&nbsp; 鸣谢: 子非鱼</p>
+</div>
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-272152-3']);
+_gaq.push(['_addOrganic', 'baidu', 'word']);
+_gaq.push(['_addOrganic', 'soso', 'w']);
+_gaq.push(['_addOrganic', '3721', 'name']);
+_gaq.push(['_addOrganic', 'yodao', 'q']);
+_gaq.push(['_addOrganic', 'vnet', 'kw']);
+_gaq.push(['_addOrganic', 'sogou', 'query']);
+_gaq.push(['_addIgnoredOrganic', 'codeigniter.org.cn']);
+_gaq.push(['_trackPageview']);
+(function() {
+    var ga = document.createElement('script');
+    ga.src = (('https:' == document.location.protocol) ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+})();
+</script>
+<div style="display:none"><script language="javascript" type="text/javascript" src="http://js.users.51.la/3289908.js"></script>
+<noscript><a href="http://www.51.la/?3289908" target="_blank"><img alt="&#x6211;&#x8981;&#x5566;&#x514D;&#x8D39;&#x7EDF;&#x8BA1;" src="http://img.users.51.la/3289908.asp" style="border:none" /></a></noscript></div>
+</body>
+</html>

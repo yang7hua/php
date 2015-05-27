@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="utf-8" lang="utf-8">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+<title>安全 - CodeIgniter 中文手册|用户手册|用户指南|Wiki文档</title>
+<link rel="shortcut icon" href="http://codeigniter.org.cn/user_guide/../images/design/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" type="text/css" media="all" href="http://codeigniter.org.cn/user_guide/userguide.css" />
+<link rel="search" href="http://codeigniter.org.cn/user_guide/../CodeIgniterSearch.xml" type="application/opensearchdescription+xml" title="CodeIgniter 搜索"/>
+<link rel="canonical" href="http://codeigniter.org.cn/user_guide/general/security.html" />
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/mootools.js?ver=20130324"></script>
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/mootools-more.js?ver=20130324"></script>
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/nav.js?ver=20130324"></script>
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/user_guide_menu.js?ver=20130324"></script>
+<meta name="robots" content="all" />
+<meta name="author" content="ExpressionEngine Dev Team" />
+<meta name="description" content="CodeIgniter 中文手册, CodeIgniter 用户指南, CodeIgniter User Guide, Wiki 文档" />
+</head>
+<body>
+<!-- START NAVIGATION -->
+<div id="nav">
+  <div id="nav_inner">
+    <script type="text/javascript">create_menu('http://codeigniter.org.cn/user_guide/');</script>
+  </div>
+</div>
+<script type="text/javascript">_setNavigation();</script>
+<div id="nav2"><a name="top"></a><a href="javascript:void(0);" onclick="myHeight.toggle();"><img src="http://codeigniter.org.cn/user_guide/images/nav_toggle_darker.jpg" width="154" height="43" border="0" title="切换目录" alt="切换目录" /></a></div>
+<div id="masthead" class="clearfix">
+    <div class="topbar-hd"><h1>CodeIgniter 用户指南 版本 2.2.2</h1></div>
+<div class="topbar-tip">编辑文档、查看近期更改请 <a href="http://codeigniter.org.cn/user_guide/auth/login">登录</a> 或 <a href="http://codeigniter.org.cn/user_guide/auth/register">注册</a> 　<a href="http://codeigniter.org.cn/user_guide/auth/forgotten_password">找回密码</a></div>      <div id="breadcrumb_right"><a href="http://codeigniter.org.cn/user_guide/toc.html">目录页</a></div>
+</div>
+<!-- END NAVIGATION -->
+<!-- START BREADCRUMB -->
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+  <tr>
+    <td id="breadcrumb">
+        <a href="http://codeigniter.org.cn/" target="_blank">CodeIgniter 中国首页</a>&nbsp;&#8250;&nbsp;
+<a href="http://codeigniter.org.cn/user_guide/index.html">用户指南首页</a>&nbsp;&#8250;&nbsp;安全    </td>
+    <td id="searchbox">
+        <form method="get" action="http://www.google.com.hk/search" target="google_window">
+        <input type="hidden" name="client" value="pub-0176846097796333"></input>
+        <input type="hidden" name="forid" value="1"></input>
+        <input type="hidden" name="ie" value="UTF-8"></input>
+        <input type="hidden" name="oe" value="UTF-8"></input>
+        <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="codeigniter.org.cn/user_guide/" />
+        搜索用户指南&nbsp;
+        <input type="text" class="input" style="width:200px;" name="q" id="q" size="31" maxlength="255" value="" />
+        &nbsp;
+        <input type="submit" class="submit" name="sa" value="Go" />
+      </form>
+    </td>
+  </tr>
+</table>
+<!-- END BREADCRUMB -->
+<div style="clear:both;text-align:right;padding: 6px 40px 0 0;">
+<a href="http://www.codeigniter.com/user_guide/general/security.html" target="_blank">查看原文</a>
+</div>
+<!--<br clear="all" />--><!-- START CONTENT -->
+<div id="content">
+<h1>安全</h1>
+
+<p>本页描述了一些关于 Web 安全的“最佳实践”，并详细说明了 CodeIgniter 的内部安全特性。</p>
+
+
+<h2>URI 安全</h2>
+
+<p>CodeIgniter 严格限制 URI 中所能包含的字符，以此帮助你设计的程序减少被恶意数据入侵的可能。URI 一般只包含下列内容：
+</p>
+
+<ul>
+<li>字母和数字（Alpha-numeric text）</li>
+<li>波浪符（Tilde）： ~ </li>
+<li>句号（Period）： .</li>
+<li>冒号（Colon）： :</li>
+<li>下划线（Underscore）： _</li>
+<li>破折号（Dash）： -</li>
+</ul>
+
+
+<h2>Register_globals</h2>
+
+<p>系统初始化期间所有的全局变量都被 unset，除了那些在 $_GET、$_POST 和 $_COOKIE 数组中的数据。实际上 unsetting 实例程序的作用与register_globals = off 相同。</p>
+
+<a name="error_reporting"></a>
+<h2>error_reporting</h2>
+
+<p>
+  在生产环境中，往往有必要通过设置内部的error_reporting值为0来禁用PHP错误报告。
+  这可以防止可能含有敏感信息的原始PHP错误报告输出。
+</p>
+
+<p>
+  在 index.php 设置CodeIgniter的 <kbd>ENVIRONMENT</kbd> 常量为 '<kbd>production</kbd>' 
+  将会关闭这些错误(报告)。在开发模式下，推荐设为 '<kbd>development</kbd>'。
+  更多关于各环境间区别的信息可以在<a href="environments.html">处理多环境</a>一章找到。
+</p>
+
+
+<h2>magic_quotes_runtime</h2>
+
+<p>在系统初始化期间 magic_quotes_runtime 指令被关闭以便在数据库检索数据时不必去掉反斜线。</p>
+
+<h1>最佳实践</h1>
+
+<p>在接收任何数据到你的程序之前，不管是表单提交的 POST 数据、COOKIE 数据、URI 数据、XML-RPC 数据、还是 SERVER 数组中的数据，我们都推荐你实践下面的三个步骤：</p>
+
+<ol>
+
+<li>过滤不良数据.</li>
+<li>验证数据以确保符合正确的类型, 长度, 大小等. (有时这一步骤也可取代第一步骤)</li>
+<li>在提交数据到你的数据库之前将其转换.</li>
+
+</ol>
+
+<p>CodeIgniter 提供了下列函数以辅助这个过程:</p>
+
+<ul>
+
+<li><h2>XSS 过滤</h2>
+
+<p>CodeIgniter带有一个跨站脚本过滤器. 这个过滤器会查找那些用通常手段嵌入到你数据中恶意的Javascript,或其它一些试图欺骗cookie类型的或者做其它恶意事情的代码. XSS Filter的详细描述在 <a href="../libraries/security.html">这里</a>.
+</p>
+</li>
+
+<li><h2>验证数据</h2>
+
+<p>CodeIgniter 有一个<a href="../libraries/form_validation.html">表单验证类</a>用来帮助验证、过滤和预处理数据。</p>
+</li>
+
+<li><h2>插入数据库之前转义所有数据</h2>
+
+<p>不要插入未转义的信息到你的数据库中。要了解更多信息请参阅<a href="../database/queries.html">查询</a>章节。</p>
+
+</li>
+
+</ul><p>&nbsp;</p>
+<div id="Contributors">
+翻译贡献者:
+Hex, IT不倒翁, lishen2, shnwqshnwq, xwjie</div>
+<div id="DocDate">
+最后修改: 2012-02-11 00:35:08</div>
+</div>
+<!-- END CONTENT -->
+<div id="notes">
+<!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="general/security" data-title="安全" data-url="http://codeigniter.org.cn/user_guide/general/security.html"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"codeigniter"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+<!-- 多说公共JS代码 end -->
+</div>
+<div id="footer">
+  <p>
+上一个主题:&nbsp;&nbsp;<a href="http://codeigniter.org.cn/user_guide/general/alternative_php.html">PHP 替代语法</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="#top">页首</a>
+&nbsp;&middot;&nbsp;&nbsp;<a href="http://codeigniter.org.cn/user_guide/index.html">用户指南首页</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;下一个主题:&nbsp;&nbsp;<a href="http://codeigniter.org.cn/user_guide/general/styleguide.html">开发规范</a>  </p>
+  <p><a href="http://codeigniter.com">CodeIgniter</a> &nbsp;&middot;&nbsp; 版权所有 &#169; 2006-2013 &nbsp;&middot;&nbsp; <a href="http://ellislab.com/">Ellislab, Inc.</a></p>
+  <p>中文化: <a href="http://codeigniter.org.cn">CodeIgniter 中国</a> &nbsp;&middot;&nbsp; 制作: Hex &nbsp;&middot;&nbsp; 版本: 1.30 &nbsp;&middot;&nbsp; 鸣谢: 子非鱼</p>
+</div>
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-272152-3']);
+_gaq.push(['_addOrganic', 'baidu', 'word']);
+_gaq.push(['_addOrganic', 'soso', 'w']);
+_gaq.push(['_addOrganic', '3721', 'name']);
+_gaq.push(['_addOrganic', 'yodao', 'q']);
+_gaq.push(['_addOrganic', 'vnet', 'kw']);
+_gaq.push(['_addOrganic', 'sogou', 'query']);
+_gaq.push(['_addIgnoredOrganic', 'codeigniter.org.cn']);
+_gaq.push(['_trackPageview']);
+(function() {
+    var ga = document.createElement('script');
+    ga.src = (('https:' == document.location.protocol) ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+})();
+</script>
+<div style="display:none"><script language="javascript" type="text/javascript" src="http://js.users.51.la/3289908.js"></script>
+<noscript><a href="http://www.51.la/?3289908" target="_blank"><img alt="&#x6211;&#x8981;&#x5566;&#x514D;&#x8D39;&#x7EDF;&#x8BA1;" src="http://img.users.51.la/3289908.asp" style="border:none" /></a></noscript></div>
+</body>
+</html>

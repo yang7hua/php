@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="utf-8" lang="utf-8">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+<title>加密类 - CodeIgniter 中文手册|用户手册|用户指南|Wiki文档</title>
+<link rel="shortcut icon" href="./../images/design/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" type="text/css" media="all" href="./userguide.css" />
+<link rel="search" href="./../CodeIgniterSearch.xml" type="application/opensearchdescription+xml" title="CodeIgniter 搜索"/>
+<link rel="canonical" href="./libraries/encryption.html" />
+<script type="text/javascript" src="./nav/mootools.js?ver=20130324"></script>
+<script type="text/javascript" src="./nav/mootools-more.js?ver=20130324"></script>
+<script type="text/javascript" src="./nav/nav.js?ver=20130324"></script>
+<script type="text/javascript" src="./nav/user_guide_menu.js?ver=20130324"></script>
+<meta name="robots" content="all" />
+<meta name="author" content="ExpressionEngine Dev Team" />
+<meta name="description" content="CodeIgniter 中文手册, CodeIgniter 用户指南, CodeIgniter User Guide, Wiki 文档" />
+</head>
+<body>
+<!-- START NAVIGATION -->
+<div id="nav">
+  <div id="nav_inner">
+    <script type="text/javascript">create_menu('./');</script>
+  </div>
+</div>
+<script type="text/javascript">_setNavigation();</script>
+<div id="nav2"><a name="top"></a><a href="javascript:void(0);" onclick="myHeight.toggle();"><img src="./images/nav_toggle_darker.jpg" width="154" height="43" border="0" title="切换目录" alt="切换目录" /></a></div>
+<div id="masthead" class="clearfix">
+    <div class="topbar-hd"><h1>CodeIgniter 用户指南 版本 2.2.2</h1></div>
+<div class="topbar-tip">编辑文档、查看近期更改请 <a href="./auth/login">登录</a> 或 <a href="./auth/register">注册</a> 　<a href="./auth/forgotten_password">找回密码</a></div>      <div id="breadcrumb_right"><a href="./toc.html">目录页</a></div>
+</div>
+<!-- END NAVIGATION -->
+<!-- START BREADCRUMB -->
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+  <tr>
+    <td id="breadcrumb">
+        <a href="http://codeigniter.org.cn/" target="_blank">CodeIgniter 中国首页</a>&nbsp;&#8250;&nbsp;
+<a href="./index.html">用户指南首页</a>&nbsp;&#8250;&nbsp;加密类    </td>
+    <td id="searchbox">
+        <form method="get" action="http://www.google.com.hk/search" target="google_window">
+        <input type="hidden" name="client" value="pub-0176846097796333"></input>
+        <input type="hidden" name="forid" value="1"></input>
+        <input type="hidden" name="ie" value="UTF-8"></input>
+        <input type="hidden" name="oe" value="UTF-8"></input>
+        <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="codeigniter.org.cn/user_guide/" />
+        搜索用户指南&nbsp;
+        <input type="text" class="input" style="width:200px;" name="q" id="q" size="31" maxlength="255" value="" />
+        &nbsp;
+        <input type="submit" class="submit" name="sa" value="Go" />
+      </form>
+    </td>
+  </tr>
+</table>
+<!-- END BREADCRUMB -->
+<div style="clear:both;text-align:right;padding: 6px 40px 0 0;">
+<a href="http://www.codeigniter.com/user_guide/libraries/encryption.html" target="_blank">查看原文</a>
+</div>
+<!--<br clear="all" />--><!-- START CONTENT -->
+<div id="content">
+<h1>加密类</h1>
+
+<p>数据加密类提供了双向数据加密方式。加密类使用 Mcrypt 库加密数据，所以需要 Mcrypt 扩展才能运行。</p>
+
+<h2>设置你的密钥</h2>
+
+<p><em>密钥</em>实际上是一些会控制密码加密过程并且允许被加密的字串被解码的信息片段。实际上，你选择的密钥会提供一个<strong>唯一</strong>的方法来解密一些被加密的数据，所以你需要非常谨慎的设置你的密钥，如果你想给一些固定的数据加密的话，你最好不要更改这个密钥。</p>
+
+<p>很自然，你需要非常小心的保存你的密钥。如果某人对您的密钥能够存取，那么数据将会很容易地被解码。如果您的服务器不完全在您的控制之下而想保证数据安全是不可能的，因此您可以在使用它之前仔细地想一下要求高安全存放信用卡数字对象的方法。</p>
+
+<p>为了发挥加密算法的最大优势，你的解密密钥需要被设置为 32 个字符长度（128 位）。你可以设置一个编造的随机字符串作为你的密钥，最好包括数字、大写字母、小写字母。你的密钥<strong>不能</strong>设置为一个简单的文本字符串。为了被安全可靠的加密，它也有一个随机的可能性。</p>
+
+<p>你的密钥可以放在 <dfn>application/config/config.php</dfn> 文件中，你也可以自己设置一个存储机制用于数据的加密和解密。</p>
+
+<p>为了在 <dfn>application/config/config.php</dfn> 文件中保存你的密钥，打开文件设置一下：</p>
+
+<code>$config['encryption_key'] = &quot;YOUR KEY&quot;;</code>
+
+
+<h2>消息长度</h2>
+
+<p>知道加密信息的长度会是原来函数长度的 2.6 倍是很重要的。如果你加密这个字符串&ldquo;my super secret data&rdquo;，它的长度是 21 个字符，所以你加密后的字符串的长度大概是 55 个字符（我们说它大概是，因为编码的字符串长度增量 64 位并非是线性增长的），当你选择你的数据存储机制的时候一定要记住这一点。例如，Cookie 可以占用 4k 的数据空间。</p>
+
+
+<h2>初始化类</h2>
+
+<p>在 Codeigniter 中，像大多数其他的类一样，加密类也需要在你的控制器函数中用 <dfn>$this-&gt;load-&gt;library</dfn> 函数加载：</p>
+
+<code>$this-&gt;load-&gt;library('encrypt');</code>
+
+<p>一旦被加载，加密类库就可以这样使用：<dfn>$this-&gt;encrypt</dfn></p>
+
+
+<h2>$this-&gt;encrypt-&gt;encode()</h2>
+
+
+<p>执行数据加密并返回一个字符串。例如：</p>
+
+<code>$msg = 'My secret message';<br />
+<br />
+$encrypted_string = $this-&gt;encrypt-&gt;encode($msg);</code>
+
+<p>如果你不想使用配置文件中的密钥，你可以通过可选的第二个参数随意设置你的密钥。</p>
+
+<code>$msg = 'My secret message';<br />
+$key = 'super-secret-key';<br />
+<br />
+$encrypted_string = $this-&gt;encrypt-&gt;encode($msg, $key);</code>
+
+<h2>$this-&gt;encrypt-&gt;decode()</h2>
+
+<p>解密一个已加密的字符串。例如：</p>
+<code>$encrypted_string = 'APANtByIGI1BpVXZTJgcsAG8GZl8pdwwa84';<br />
+<br />
+$plaintext_string = $this-&gt;encrypt-&gt;decode($encrypted_string);</code>
+
+<p>如果你不想使用配置文件中的密钥，你可以通过可选的第二个参数随意设置你的密钥。</p>
+
+<code>
+$msg = 'My secret message';<br />
+$key = 'super-secret-key';<br />
+<br />
+$encrypted_string = $this-&gt;encrypt-&gt;decode($msg, $key);</code>
+
+<h2>$this-&gt;encrypt-&gt;set_cipher();</h2>
+
+<p>允许你设置一个 Mcrypt 算法。默认使用 <samp>MCRYPT_RIJNDAEL_256</samp>。例如：</p>
+
+<code>$this-&gt;encrypt-&gt;set_cipher(MCRYPT_BLOWFISH);</code>
+
+<p>请访问 php.net 看一下<a href="http://php.net/mcrypt">可用的算法</a>。</p>
+
+<p>如果你想手动测试一下你的服务器是否支持 Mcrypt，你可以使用：</p>
+
+<code>echo ( ! function_exists('mcrypt_encrypt')) ? 'Nope' : 'Yup';</code>
+
+
+<h2>$this-&gt;encrypt-&gt;set_mode();</h2>
+
+<p>允许你设置一个 Mcrypt 模式。默认使用 <samp>MCRYPT_MODE_CBC</samp>。例如：</p>
+
+<code>$this-&gt;encrypt-&gt;set_mode(MCRYPT_MODE_CFB);</code>
+
+<p>请访问 php.net 看一下<a href="http://php.net/mcrypt">可用的模式</a>。</p>
+
+
+<h2>$this-&gt;encrypt-&gt;sha1();</h2>
+
+<p>SHA1 编码函数。提供一个字符串，然后它返回一个 160 位的 Hash 信息。说明：SHA1，就像 MD5 一样不可解密。例如：</p>
+
+<code>$hash = $this-&gt;encrypt-&gt;sha1('Some string');</code>
+
+<p>许多 PHP 安装程序默认都支持 SHA1，所以你可以很简单的使用它的原始函数进行加密：</p>
+
+<code>$hash = sha1('Some string');</code>
+
+<p>如果你的服务器不支持 SHA1，你可以使用别人提供的函数。</p>
+
+<h2 id="legacy">$this-&gt;encrypt-&gt;encode_from_legacy(<kbd>$orig_data</kbd>, <kbd>$legacy_mode</kbd> = MCRYPT_MODE_ECB, <kbd>$key</kbd> = '');</h2>
+<p>允许你重新加密由Codeigniter 1.x版本加密过的数据，以便与CodeIgniter 2.x中的加密类匹配。只有当加密过的数据已经在数据库或者文件当中存储，同时所在服务器支持Mcrypt的时候才会用到这个函数。"Light" use encryption
+  such as encrypted session data or transitory encrypted flashdata require no intervention on your part.  However, 已经存在的加密session会被销毁 since data encrypted prior to 2.x will not be decoded.</p>
+
+<p class="important"><strong>为什么只有重新加密的方式而不是继续支持原有的加密和解密方式呢？</strong>CodeIgniter 2.x中的加密库算法无论是性能还是安全性都有了很大的进步，因此我们不希望继续支持大家使用原有的加密方法。当然，如果你有需求，可以自行扩展加密库并添加原来的加密方式以便无缝兼容CodeIgniter 1.x，但作为一个开发者，这样的决定还是谨慎点，多想想好啊。</p>
+
+<code>$new_data = $this-&gt;encrypt-&gt;encode_from_legacy(<kbd>$old_encrypted_string</kbd>);</code>
+
+<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+<tr>
+  <th>参数</th>
+  <th>默认值</th>
+  <th>介绍</th>
+</tr>
+<tr>
+  <td class="td"><strong>$orig_data</strong></td>
+  <td class="td">n/a</td>
+  <td class="td">原始数据，用CodeIgniter 1.x加密过的</td>
+</tr>
+<tr>
+  <td class="td"><strong>$legacy_mode</strong></td>
+  <td class="td">MCRYPT_MODE_ECB</td>
+  <td class="td">生成原始数据的Mcrypt加密模式。CodeIgniter 1.x的默认加密方式是MCRYPT_MODE_ECB, 在没有通过参数设定方式的时候就会默认采用这个方式。</td>
+</tr>
+<tr>
+  <td class="td"><strong>$key</strong></td>
+  <td class="td">n/a</td>
+  <td class="td">加密密钥.  这个值通常在配置文件里面。</td>
+</tr>
+</table><p>&nbsp;</p>
+<div id="Contributors">
+翻译贡献者:
+baiyuxiong, binota, csfhc, Hex, Jacklee, popcorner, qixingyue, zhupeng, 志明</div>
+<div id="DocDate">
+最后修改: 2014-08-25 16:18:27</div>
+</div>
+<!-- END CONTENT -->
+<div id="notes">
+<!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="libraries/encryption" data-title="加密类" data-url="./libraries/encryption.html"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"codeigniter"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+<!-- 多说公共JS代码 end -->
+</div>
+<div id="footer">
+  <p>
+上一个主题:&nbsp;&nbsp;<a href="./libraries/email.html">Email 类</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="#top">页首</a>
+&nbsp;&middot;&nbsp;&nbsp;<a href="./index.html">用户指南首页</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;下一个主题:&nbsp;&nbsp;<a href="./libraries/file_uploading.html">文件上传类</a>  </p>
+  <p><a href="http://codeigniter.com">CodeIgniter</a> &nbsp;&middot;&nbsp; 版权所有 &#169; 2006-2013 &nbsp;&middot;&nbsp; <a href="http://ellislab.com/">Ellislab, Inc.</a></p>
+  <p>中文化: <a href="http://codeigniter.org.cn">CodeIgniter 中国</a> &nbsp;&middot;&nbsp; 制作: Hex &nbsp;&middot;&nbsp; 版本: 1.30 &nbsp;&middot;&nbsp; 鸣谢: 子非鱼</p>
+</div>
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-272152-3']);
+_gaq.push(['_addOrganic', 'baidu', 'word']);
+_gaq.push(['_addOrganic', 'soso', 'w']);
+_gaq.push(['_addOrganic', '3721', 'name']);
+_gaq.push(['_addOrganic', 'yodao', 'q']);
+_gaq.push(['_addOrganic', 'vnet', 'kw']);
+_gaq.push(['_addOrganic', 'sogou', 'query']);
+_gaq.push(['_addIgnoredOrganic', 'codeigniter.org.cn']);
+_gaq.push(['_trackPageview']);
+(function() {
+    var ga = document.createElement('script');
+    ga.src = (('https:' == document.location.protocol) ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+})();
+</script>
+<div style="display:none"><script language="javascript" type="text/javascript" src="http://js.users.51.la/3289908.js"></script>
+<noscript><a href="http://www.51.la/?3289908" target="_blank"><img alt="&#x6211;&#x8981;&#x5566;&#x514D;&#x8D39;&#x7EDF;&#x8BA1;" src="http://img.users.51.la/3289908.asp" style="border:none" /></a></noscript></div>
+</body>
+</html>

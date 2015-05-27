@@ -1,0 +1,269 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="utf-8" lang="utf-8">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+<title>装载器类 - CodeIgniter 中文手册|用户手册|用户指南|Wiki文档</title>
+<link rel="shortcut icon" href="./../images/design/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" type="text/css" media="all" href="./userguide.css" />
+<link rel="search" href="./../CodeIgniterSearch.xml" type="application/opensearchdescription+xml" title="CodeIgniter 搜索"/>
+<link rel="canonical" href="./libraries/loader.html" />
+<script type="text/javascript" src="./nav/mootools.js?ver=20130324"></script>
+<script type="text/javascript" src="./nav/mootools-more.js?ver=20130324"></script>
+<script type="text/javascript" src="./nav/nav.js?ver=20130324"></script>
+<script type="text/javascript" src="./nav/user_guide_menu.js?ver=20130324"></script>
+<meta name="robots" content="all" />
+<meta name="author" content="ExpressionEngine Dev Team" />
+<meta name="description" content="CodeIgniter 中文手册, CodeIgniter 用户指南, CodeIgniter User Guide, Wiki 文档" />
+</head>
+<body>
+<!-- START NAVIGATION -->
+<div id="nav">
+  <div id="nav_inner">
+    <script type="text/javascript">create_menu('./');</script>
+  </div>
+</div>
+<script type="text/javascript">_setNavigation();</script>
+<div id="nav2"><a name="top"></a><a href="javascript:void(0);" onclick="myHeight.toggle();"><img src="./images/nav_toggle_darker.jpg" width="154" height="43" border="0" title="切换目录" alt="切换目录" /></a></div>
+<div id="masthead" class="clearfix">
+    <div class="topbar-hd"><h1>CodeIgniter 用户指南 版本 2.2.2</h1></div>
+<div class="topbar-tip">编辑文档、查看近期更改请 <a href="./auth/login">登录</a> 或 <a href="./auth/register">注册</a> 　<a href="./auth/forgotten_password">找回密码</a></div>      <div id="breadcrumb_right"><a href="./toc.html">目录页</a></div>
+</div>
+<!-- END NAVIGATION -->
+<!-- START BREADCRUMB -->
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+  <tr>
+    <td id="breadcrumb">
+        <a href="http://codeigniter.org.cn/" target="_blank">CodeIgniter 中国首页</a>&nbsp;&#8250;&nbsp;
+<a href="./index.html">用户指南首页</a>&nbsp;&#8250;&nbsp;装载器类    </td>
+    <td id="searchbox">
+        <form method="get" action="http://www.google.com.hk/search" target="google_window">
+        <input type="hidden" name="client" value="pub-0176846097796333"></input>
+        <input type="hidden" name="forid" value="1"></input>
+        <input type="hidden" name="ie" value="UTF-8"></input>
+        <input type="hidden" name="oe" value="UTF-8"></input>
+        <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="codeigniter.org.cn/user_guide/" />
+        搜索用户指南&nbsp;
+        <input type="text" class="input" style="width:200px;" name="q" id="q" size="31" maxlength="255" value="" />
+        &nbsp;
+        <input type="submit" class="submit" name="sa" value="Go" />
+      </form>
+    </td>
+  </tr>
+</table>
+<!-- END BREADCRUMB -->
+<div style="clear:both;text-align:right;padding: 6px 40px 0 0;">
+<a href="http://www.codeigniter.com/user_guide/libraries/loader.html" target="_blank">查看原文</a>
+</div>
+<!--<br clear="all" />--><!-- START CONTENT -->
+<div id="content">
+<h1>装载类</h1>
+<p>装载，顾名思义，是用来装载元素。这些元素可以是库 (类) <a href="../general/views.html">视图文件</a>， <a href="../general/helpers.html">辅助函数</a>， <a href="../general/models.html">模型</a>， 或者是你自己的文件。</p>
+<p class="important"><strong>提示：</strong> 这个类是由系统初始化的，所以，没有必要自己手动初始化。</p>
+<p>以下为这个类里面的函数：</p>
+
+<h2>$this-&gt;load-&gt;library('<var>class_name</var>', <samp>$config</samp>, <kbd>'object name'</kbd>)</h2>
+
+<p>这个函数是用来加载核心类。<var>class_name</var> 是你要加载的类的名称。 提示： &ldquo;类&rdquo;和&ldquo;库&rdquo;是可替换使用的。</p>
+<p>比如，你想用 CodeIgniter 来发送邮件，第一步就是在你的控制器里加载 email 类。</p>
+<code>$this-&gt;load-&gt;library('email');</code>
+<p>一旦被加载，就可以使用该类了，&nbsp;使用 <kbd>$this-&gt;email-&gt;</kbd><samp><em>some_function</em>()</samp>。</p>
+<p>类库文件可以被保存到主libraries目录的子目录下面，或者保存到个人的<dfn>application/libraries</dfn> 目录下。  
+要载入子目录下的文件，只需将路径包含进来就可以了，注意这里说的路径是指相对于libraries目录的路径。
+例如，当你有一个文件保存在下面这个位置:</p>
+
+<code>libraries/flavors/chocolate.php</code>
+
+<p>你应该使用下面的方式来载入它:</p>
+
+<code>$this-&gt;load-&gt;library('flavors/chocolate');</code>
+
+<p>你可以随心所欲地将文件保存到多层的子目录下。</p>
+
+<p>另外，你可以同时加载多个类（库），只要按照下面的代码为load方法传入一个包含所有要载入的类名的数组即可：</p>
+
+<code>$this-&gt;load-&gt;library(array('<var>email</var>', '<var>table</var>'));</code>
+
+<h3>设置选项</h3>
+
+<p>第二个参数是可选的，作用是允许你有选择性地传递配置参数。一般来说你可以将参数以数组的形式传递过去:</p>
+
+<code>
+$config = array (<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'mailtype' => 'html',<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'charset'&nbsp; => 'utf-8,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'priority' => '1'<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);<br />
+<br />
+$this-&gt;load-&gt;library('email', $config);</code>
+
+<p>配置参数通常也可以保存在一个配置文件中。每个类库在其各自的页面中都有详细的说明，所以在使用类库之前，你必须认真阅读它们的说明。</p>
+
+<p>请注意，当第一个参数使用数组来同时载入多个类时，每个类将获得相同的参数信息。</p>
+
+<h3>给类库分配不同的对象名</h3>
+
+<p>第三个参数也是可选的，如果为空，类库通常就会被赋值给一个与类库同名的对象。例如，如果类库名为 <dfn>Session</dfn>, 它将会被赋值给一个名为 <dfn>$this-&gt;session</dfn> 的变量。</p>
+
+<p>如果你希望使用你的自定义名称，你可以通过第三个参数把它传递过去:</p>
+
+<code>$this-&gt;load-&gt;library('session', '', 'my_session');<br /><br />
+
+// Session 类现在可以通过下面的方式访问:<br /><br />
+
+$this-&gt;my_session
+
+</code>
+
+<p>请注意，当第一个参数使用数组来同时载入多个类时，第三个参数将不起作用。</p>
+
+
+<h2>$this-&gt;load-&gt;view('<var>file_name</var>', <samp>$data</samp>, <kbd>true/false</kbd>)</h2>
+
+<p>这个函数是用来加载你的视图文件。 如果你尚未阅读本手册<a href="../general/views.html">视图</a> 章节的话，建议你先去阅读那里的内容，会有更详细的函数使用说明.</p>
+<p>第一个参数是必须的. 指定你要载入的视图文件的名称. &nbsp;注意: 无需加上 .php 扩展名，除非你使用了其他的扩展名。</p>
+<p>第二个参数 <strong>optional</strong> 允许你传入数组或对象, 传入的数组或对象将使用 php <a href="http://www.php.net/extract">extract</a> 函数导出，你可以在视图中任意使用这些导出的变量. 此外，请阅读 <a href="../general/views.html">视图</a> 章节了解该功能的更多用法.</p>
+<p>第三个参数是<strong>可选</strong>的，作用是改变函数的运行方式，将数据以字符串的形式返回，而不是发送给浏览器。当你希望用不同的方式处理数据时，这个参数就非常有用。如果你将这个参数设置为 <kbd>true</kbd> (布尔型)，函数就会返回数据。这个参数的默认值是 <kbd>false</kbd>, 也就是数据将会被发送给浏览器。如果你希望数据被返回，记得要将它赋值给一个变量:</p>
+<p><code>$string = $this-&gt;load-&gt;view('<var>myfile</var>', '', <kbd>true</kbd>);</code></p>
+
+<h2>$this-&gt;load-&gt;model('<var>Model_name</var>');</h2>
+<p><code>$this-&gt;load-&gt;model('<var>Model_name</var>');</code></p>
+<p>如果你的模型位于models目录的子目录下，那么，相对路径也必须被包含进来。例如，如果你有一个模型位于 application/models/blog/queries.php ，你应该使用下面的语句来载入它:</p>
+<p><code>$this-&gt;load-&gt;model('<var>blog/queries</var>');</code></p>
+<p>如果你希望给模型赋予一个你自定义的对象名，请在函数的第二个参数中给出你自定义的名称:</p>
+<code> $this-&gt;load-&gt;model('<var>Model_name</var>', '<kbd>fubar</kbd>');<br />
+<br />
+$this-&gt;<kbd>fubar</kbd>-&gt;function();</code>
+
+<h2>$this-&gt;load-&gt;database('<var>options</var>', <kbd>true/false</kbd>)</h2>
+<p>这个函数的作用是载入数据库类。这两个参数都是<strong>可选的</strong>。请查看 <a href="../database/index.html">数据库</a> 段落以获取更多信息。</p>
+
+<h2>$this-&gt;load-&gt;vars(<samp>$array</samp>)</h2>
+<p>这个函数以一个关联数组作为输入参数,将这个数组用PHP的<a href="http://www.php.net/extract">extract</a>函数转化成与之对应的变量。这个方法的结果与上面的<dfn>$this-&gt;load-&gt;view()</dfn>方法使用第二个参数的结果一样。在后面提到的情况下你可能需要单独使用这个函数：假如你想在控制器的构造函数中定义一些全局变量，并希望这些变量在控制器的每一个方法加载的视图文件中都可用。你可以多次调用该方法，数据将被缓存，并被合并为一个数组，以便转换成变量。</p>
+
+
+<h2>$this-&gt;load-&gt;get_var(<samp>$key</samp>)</h2>
+
+<p>该方法检查关联数组中的变量对你的视图是否可用。当一个变量在一个类（库）或者控制器的另一个方法里被以这样的方式定义时：$this-&gt;load-&gt;vars()，会做这样的检查。
+</p>
+
+
+<h2>$this-&gt;load-&gt;helper('<var>file_name</var>')</h2>
+<p>这个函数的作用是载入辅助函数， <var>file_name</var> 是辅助函数对应的文件名，不包括 <kbd>_helper.php</kbd> 扩展名。</p>
+
+<h2>$this-&gt;load-&gt;file&#40;'<var>filepath/filename</var>', <kbd>true/false</kbd>&#41;</h2>
+<p>这是一个通用的文件载入函数。在第一个参数中给出文件所在的路径和文件名，对应的文件将会被打开。默认情况下，数据会被发送给浏览器，就如同视图文件一样，但如果你将第二个参数设置为 <kbd>true</kbd> (布尔型) 那么数据就会以字符串的形式被返回，而不是发送给浏览器。</p>
+<h2>$this-&gt;load-&gt;language('<var>file_name</var>')</h2>
+<p>这个函数是 <a href="language.html">语言加载函数</a>: $this-&gt;lang-&gt;load() 的一个别名。</p>
+<h2>$this-&gt;load-&gt;config('<var>file_name</var>')</h2>
+<p>这个函数是 <a href="config.html">配置文件加载函数</a>: $this-&gt;config-&gt;load() 的一个别名。</p>
+
+
+<h2>应用程序包(Package)</h2>
+
+<p>应用程序包（Package）可以很便捷的将你的应用部署在独立的目录中，以实现自己整套的类库，模型，辅助函数，配置，文件和语言包。建议将这些应用程序包被放置在<dfn>application/third_party</dfn>文件夹。下面是一个简单应用程序包的目录</p>
+
+<h2>简单应用程序包"Foo Bar"的目录</h2>
+
+<p>下面是一个名为"Foo Bar"的应用程序包目录的例子。</p>
+
+<code>/application/third_party/foo_bar<br />
+<br />
+config/<br />
+helpers/<br />
+language/<br />
+libraries/<br />
+models/<br />
+</code>
+
+<p>无论应用程序包是为了实现什么样的目的，它都包含属于自己的配置文件、辅助函数、语言包、类库和模型。在你的控制器里使用这些资源，你首先需要告知加载器（Loader）从应用程序包加载资源、添加包路径。</p>
+
+<h3>$this-&gt;load-&gt;add_package_path()</h3>
+
+<p>添加包指示加载器类使用给定的路径用以请求后续的资源。例如, "Foo Bar"应用程序包里有一个名为<dfn>foo_bar.php</dfn>的类.在控制器中，我们可以按照如下的方法调用：</p>
+
+<code>$this-&gt;load-&gt;add_package_path(<var>APPPATH</var>.'third_party/<var>foo_bar</var>/');<br />
+$this-&gt;load-&gt;library('foo_bar');</code>
+
+<h3>$this-&gt;load-&gt;remove_package_path()</h3>
+
+<p>当你的控制器完成从应用程序包中调取资源，特别是如果你需要调用其他的应用程序包的资源，你会希望删除当前使用的包路径来让加载器不在使用这个文件夹中的资源。要删除的最后一个使用的包路径，你可以调用不带参数的方法。</p>
+
+<h3>$this-&gt;load-&gt;remove_package_path()</h3>
+
+<p>或者删除一个特定的包路径，指定与之前使用<kbd>add_package_path</kbd>所加载的包相同的路径。:</p>
+
+<code>$this-&gt;load-&gt;remove_package_path(<var>APPPATH</var>.'third_party/<var>foo_bar</var>/');</code>
+
+<h3>包的视图文件</h3>
+
+<p>默认情况下，包视图文件的路径是在<samp>add_package_path()</samp>方法被调用时就已经设置了。视图路径通过循环匹配来确定视图的加载。</p>
+<p>在这种情况下，它可能在包内产生视图命名冲突，并可能导致包被错误的加载。为了确保不会发生此类问题，在调用<samp>add_package_path()</samp>方法时可设置一个可选的第二个参数<var>FALSE</var></p>
+
+<code>
+$this-&gt;load-&gt;add_package_path(APPPATH.'my_app', TRUE);<br>
+$this-&gt;load-&gt;view('my_app_index'); // Loads<br>
+$this-&gt;load-&gt;view('welcome_message'); // Will not load the default welcome_message b/c the second param to add_package_path is TRUE<br>
+<br>
+// Reset things<br>
+$this-&gt;load-&gt;remove_package_path(APPPATH.'my_app');<br>
+<br>
+// Again without the second parameter:<br>
+$this-&gt;load-&gt;add_package_path(APPPATH.'my_app', TRUE);<br>
+$this-&gt;load-&gt;view('my_app_index'); // Loads<br>
+$this-&gt;load-&gt;view('welcome_message'); // Loads<br>
+</code><p>&nbsp;</p>
+<div id="Contributors">
+翻译贡献者:
+cookieu, Hex, Jacklee, soaringup, tg8866, weelia, Xwoder, yinzhili, 曜日晨阳</div>
+<div id="DocDate">
+最后修改: 2014-10-09 15:58:26</div>
+</div>
+<!-- END CONTENT -->
+<div id="notes">
+<!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="libraries/loader" data-title="装载器类" data-url="./libraries/loader.html"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"codeigniter"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+<!-- 多说公共JS代码 end -->
+</div>
+<div id="footer">
+  <p>
+上一个主题:&nbsp;&nbsp;<a href="./libraries/input.html">输入类</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="#top">页首</a>
+&nbsp;&middot;&nbsp;&nbsp;<a href="./index.html">用户指南首页</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;下一个主题:&nbsp;&nbsp;<a href="./libraries/language.html">语言类</a>  </p>
+  <p><a href="http://codeigniter.com">CodeIgniter</a> &nbsp;&middot;&nbsp; 版权所有 &#169; 2006-2013 &nbsp;&middot;&nbsp; <a href="http://ellislab.com/">Ellislab, Inc.</a></p>
+  <p>中文化: <a href="http://codeigniter.org.cn">CodeIgniter 中国</a> &nbsp;&middot;&nbsp; 制作: Hex &nbsp;&middot;&nbsp; 版本: 1.30 &nbsp;&middot;&nbsp; 鸣谢: 子非鱼</p>
+</div>
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-272152-3']);
+_gaq.push(['_addOrganic', 'baidu', 'word']);
+_gaq.push(['_addOrganic', 'soso', 'w']);
+_gaq.push(['_addOrganic', '3721', 'name']);
+_gaq.push(['_addOrganic', 'yodao', 'q']);
+_gaq.push(['_addOrganic', 'vnet', 'kw']);
+_gaq.push(['_addOrganic', 'sogou', 'query']);
+_gaq.push(['_addIgnoredOrganic', 'codeigniter.org.cn']);
+_gaq.push(['_trackPageview']);
+(function() {
+    var ga = document.createElement('script');
+    ga.src = (('https:' == document.location.protocol) ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+})();
+</script>
+<div style="display:none"><script language="javascript" type="text/javascript" src="http://js.users.51.la/3289908.js"></script>
+<noscript><a href="http://www.51.la/?3289908" target="_blank"><img alt="&#x6211;&#x8981;&#x5566;&#x514D;&#x8D39;&#x7EDF;&#x8BA1;" src="http://img.users.51.la/3289908.asp" style="border:none" /></a></noscript></div>
+</body>
+</html>

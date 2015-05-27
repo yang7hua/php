@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="utf-8" lang="utf-8">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+<title>创建新闻条目 - CodeIgniter 中文手册|用户手册|用户指南|Wiki文档</title>
+<link rel="shortcut icon" href="./../images/design/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" type="text/css" media="all" href="./userguide.css" />
+<link rel="search" href="./../CodeIgniterSearch.xml" type="application/opensearchdescription+xml" title="CodeIgniter 搜索"/>
+<link rel="canonical" href="./tutorial/create_news_items.html" />
+<script type="text/javascript" src="./nav/mootools.js?ver=20130324"></script>
+<script type="text/javascript" src="./nav/mootools-more.js?ver=20130324"></script>
+<script type="text/javascript" src="./nav/nav.js?ver=20130324"></script>
+<script type="text/javascript" src="./nav/user_guide_menu.js?ver=20130324"></script>
+<meta name="robots" content="all" />
+<meta name="author" content="ExpressionEngine Dev Team" />
+<meta name="description" content="CodeIgniter 中文手册, CodeIgniter 用户指南, CodeIgniter User Guide, Wiki 文档" />
+</head>
+<body>
+<!-- START NAVIGATION -->
+<div id="nav">
+  <div id="nav_inner">
+    <script type="text/javascript">create_menu('./');</script>
+  </div>
+</div>
+<script type="text/javascript">_setNavigation();</script>
+<div id="nav2"><a name="top"></a><a href="javascript:void(0);" onclick="myHeight.toggle();"><img src="./images/nav_toggle_darker.jpg" width="154" height="43" border="0" title="切换目录" alt="切换目录" /></a></div>
+<div id="masthead" class="clearfix">
+    <div class="topbar-hd"><h1>CodeIgniter 用户指南 版本 2.2.2</h1></div>
+<div class="topbar-tip">编辑文档、查看近期更改请 <a href="./auth/login">登录</a> 或 <a href="./auth/register">注册</a> 　<a href="./auth/forgotten_password">找回密码</a></div>      <div id="breadcrumb_right"><a href="./toc.html">目录页</a></div>
+</div>
+<!-- END NAVIGATION -->
+<!-- START BREADCRUMB -->
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+  <tr>
+    <td id="breadcrumb">
+        <a href="http://codeigniter.org.cn/" target="_blank">CodeIgniter 中国首页</a>&nbsp;&#8250;&nbsp;
+<a href="./index.html">用户指南首页</a>&nbsp;&#8250;&nbsp;<a href="./tutorial/index.html">教程</a>&nbsp;&#8250;&nbsp;创建新闻条目    </td>
+    <td id="searchbox">
+        <form method="get" action="http://www.google.com.hk/search" target="google_window">
+        <input type="hidden" name="client" value="pub-0176846097796333"></input>
+        <input type="hidden" name="forid" value="1"></input>
+        <input type="hidden" name="ie" value="UTF-8"></input>
+        <input type="hidden" name="oe" value="UTF-8"></input>
+        <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="codeigniter.org.cn/user_guide/" />
+        搜索用户指南&nbsp;
+        <input type="text" class="input" style="width:200px;" name="q" id="q" size="31" maxlength="255" value="" />
+        &nbsp;
+        <input type="submit" class="submit" name="sa" value="Go" />
+      </form>
+    </td>
+  </tr>
+</table>
+<!-- END BREADCRUMB -->
+<div style="clear:both;text-align:right;padding: 6px 40px 0 0;">
+<a href="http://www.codeigniter.com/user_guide/tutorial/create_news_items.html" target="_blank">查看原文</a>
+</div>
+<!--<br clear="all" />--><!-- START CONTENT -->
+<div id="content">
+<h1>教程 - 创建新闻条目</h1>
+
+<p>现在你已经知道了怎样用CodeIgniter从数据库中读取数据，但还不知道怎样往数据库中写入数据。在这一节中，你将学到通过怎么扩展之前写过的新闻控制器和数据模型来实现这一功能。</p>
+
+<h2>创建一个表单</h2>
+
+<p>为了向数据库里输入数据，你需要创建一个表单来输入需要被存储的信息。这就是说你需要一个带两个输入域的表单，一个用来输入标题，一个用来输入内容。另外，你可以通过数据模型中的标题来取得slug。在 <dfn>application/views/news/create.php</dfn> 创建一个新的视图。</p>
+
+<textarea class="textarea" style="width:100%" cols="50" rows="16">
+<h2>Create a news item</h2>
+
+&lt;?php echo validation_errors(); ?&gt;
+
+&lt;?php echo form_open('news/create') ?&gt;
+
+  <label for="title">Title</label> 
+  &lt;input type="input" name="title" /&gt;&lt;br />
+
+  <label for="text">Text</label>
+  <textarea name="text">&lt;/textarea><br />
+  
+  &lt;input type="submit" name="submit" value="Create news item" /&gt; 
+
+&lt;/form>
+</textarea>
+
+<p>这里只有两个东西可能你不熟悉，一个是 <dfn>form_open()</dfn> 函数，一个是 <dfn>validation_errors()</dfn> 函数。</p>
+
+<p>第一个由 <a href="../helpers/form_helper.html">表单辅助函数</a> 提供，用来提供表单元素和一些额外功能，例如添加隐藏的 <a href="../libraries/security.html">安全类</a>。第二个用来报告表单验证中出现的错误信息。</p>
+
+<p>回到新闻控制器，在这里你需要做两件事，一件是检查表单是否被提交了，另一件是检查提交的数据是否能够通过验证规则。你需要用到 <a href="../libraries/form_validation.html">表单验证</a> 库来做这些。</p>
+
+<pre>
+public function create()
+&#123;
+  $this-&gt;load-&gt;helper('form');
+  $this-&gt;load-&gt;library('form_validation');
+  
+  $data['title'] = 'Create a news item';
+  
+  $this-&gt;form_validation-&gt;set_rules('title', 'Title', 'required');
+  $this-&gt;form_validation-&gt;set_rules('text', 'text', 'required');
+  
+  if ($this-&gt;form_validation-&gt;run() === FALSE)
+  &#123;
+    $this-&gt;load-&gt;view('templates/header', $data);  
+    $this-&gt;load-&gt;view('news/create');
+    $this-&gt;load-&gt;view('templates/footer');
+    
+  &#125;
+  else
+  &#123;
+    $this-&gt;news_model-&gt;set_news();
+    $this-&gt;load-&gt;view('news/success');
+  &#125;
+&#125;
+</pre>
+
+<p>上面的代码中添加了一些功能，前几行载入了表单辅助函数和表单验证库，这样，表单验证的规则就被设定好了。 <var>set_rules()</var> 方法包含三个参数，第一个是输入域的名称，第二个是错误信息的名称，第三个是错误信息的规则——在这里的规则是输入内容的文本域必填。</p>
+
+<p>正如上面所展示的，CodeIgniter拥有一个强大的表单验证库。你可以 <a href="../libraries/form_validation.html">从这里了解到这个库的更多内容</a>。</p>
+
+<p>继续，你会看到一个用来检查表单验证是否运行成功的条件。如果没有成功，显示表单，如果提交成功<strong>并且</strong>通过了验证，则会调用数据模型。这之后会加载一个显示成功信息的视图。在这里 <dfn>application/views/news/success.php</dfn> 创建一个新的视图用来显示成功信息。</p>
+
+<h2>数据模型</h2>
+
+<p>现在只剩一件事要做了，那就是写一个方法用来向数据库中写入数据。你将用到Acitve Record类来插入信息，并用到输入类来获得post数据。打开之前创建的数据模型加入下面的代码：</p>
+
+<pre>
+public function set_news()
+&#123;
+  $this-&gt;load-&gt;helper('url');
+  
+  $slug = url_title($this-&gt;input-&gt;post('title'), 'dash', TRUE);
+  
+  $data = array(
+    'title' => $this-&gt;input-&gt;post('title'),
+    'slug' => $slug,
+    'text' => $this-&gt;input-&gt;post('text')
+  );
+  
+  return $this-&gt;db-&gt;insert('news', $data);
+&#125;
+</pre>
+
+<p>这个新的方法是用来维护向数据库插入新闻条目的。第三行包含了一个新的函数<dfn>url_title()</dfn>。这个函数是由 <a href="../helpers/url_helper.html">URL辅助函数</a> 提供的，用来组织（strips down）你输入的字符串，将空格的地方替换成横线（-），确保其中全都是小写字母。这样之后剩下的就是一个漂亮的slug，可以很好地用来创建URI。</p>
+  
+<p>我们来继续准备一会儿要向<var>$data</var>数组输入的记录。这里的每个元素都对应着早前创建的数据表中的每一列。你可能注意到了这里有个新的方法叫 <dfn>post()</dfn> ，它是由 <a href="../libraries/input.html">输入类</a>提供的。这个方法可以确保数据是被过滤过（sanitized）的，从而保护你不被其他人恶意攻击。这个输入类是默认加载的。最后，就是将 <var>$data</var> 数组插入到我们的数据库。</p>
+
+<h2>设置路由</h2>
+
+<p>在你向你的CI程序添加新闻条目之前，你还要向 <dfn>config/routes.php</dfn> 里添加一个额外的规则。确保你的文件包含下列代码。这样可以保证CodeIginter将“create”看做一个方法来正确显示，而不是把它显示成一个slug为“create”的新闻页面。</p>
+  
+<pre>
+$route['news/create'] = 'news/create';
+$route['news/(:any)'] = 'news/view/$1';
+$route['news'] = 'news';
+$route['(:any)'] = 'pages/view/$1';
+$route['default_controller'] = 'pages/view';
+</pre>
+
+<p>现在在你的浏览器输入你本地CI程序的地址并在后面加上 <dfn>index.php/news/create</dfn> 。恭喜你，你刚刚完成了你的第一个CI程序！添加些新闻来看看其他你创造的页面吧！</p><p>&nbsp;</p>
+<div id="Contributors">
+翻译贡献者:
+cinewer, csfhc, Hex, irini</div>
+<div id="DocDate">
+最后修改: 2015-05-11 15:32:59</div>
+</div>
+<!-- END CONTENT -->
+<div id="notes">
+<!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="tutorial/create_news_items" data-title="创建新闻条目" data-url="./tutorial/create_news_items.html"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"codeigniter"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+<!-- 多说公共JS代码 end -->
+</div>
+<div id="footer">
+  <p>
+上一个主题:&nbsp;&nbsp;<a href="./tutorial/news_section.html">读取新闻条目</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="#top">页首</a>
+&nbsp;&middot;&nbsp;&nbsp;<a href="./index.html">用户指南首页</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;下一个主题:&nbsp;&nbsp;<a href="./tutorial/conclusion.html">结束语</a>  </p>
+  <p><a href="http://codeigniter.com">CodeIgniter</a> &nbsp;&middot;&nbsp; 版权所有 &#169; 2006-2013 &nbsp;&middot;&nbsp; <a href="http://ellislab.com/">Ellislab, Inc.</a></p>
+  <p>中文化: <a href="http://codeigniter.org.cn">CodeIgniter 中国</a> &nbsp;&middot;&nbsp; 制作: Hex &nbsp;&middot;&nbsp; 版本: 1.30 &nbsp;&middot;&nbsp; 鸣谢: 子非鱼</p>
+</div>
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-272152-3']);
+_gaq.push(['_addOrganic', 'baidu', 'word']);
+_gaq.push(['_addOrganic', 'soso', 'w']);
+_gaq.push(['_addOrganic', '3721', 'name']);
+_gaq.push(['_addOrganic', 'yodao', 'q']);
+_gaq.push(['_addOrganic', 'vnet', 'kw']);
+_gaq.push(['_addOrganic', 'sogou', 'query']);
+_gaq.push(['_addIgnoredOrganic', 'codeigniter.org.cn']);
+_gaq.push(['_trackPageview']);
+(function() {
+    var ga = document.createElement('script');
+    ga.src = (('https:' == document.location.protocol) ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+})();
+</script>
+<div style="display:none"><script language="javascript" type="text/javascript" src="http://js.users.51.la/3289908.js"></script>
+<noscript><a href="http://www.51.la/?3289908" target="_blank"><img alt="&#x6211;&#x8981;&#x5566;&#x514D;&#x8D39;&#x7EDF;&#x8BA1;" src="http://img.users.51.la/3289908.asp" style="border:none" /></a></noscript></div>
+</body>
+</html>

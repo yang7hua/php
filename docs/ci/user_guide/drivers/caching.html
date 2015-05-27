@@ -1,0 +1,239 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="utf-8" lang="utf-8">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+<title>缓存适配器 - CodeIgniter 中文手册|用户手册|用户指南|Wiki文档</title>
+<link rel="shortcut icon" href="./../images/design/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" type="text/css" media="all" href="./userguide.css" />
+<link rel="search" href="./../CodeIgniterSearch.xml" type="application/opensearchdescription+xml" title="CodeIgniter 搜索"/>
+<link rel="canonical" href="./drivers/caching.html" />
+<script type="text/javascript" src="./nav/mootools.js?ver=20130324"></script>
+<script type="text/javascript" src="./nav/mootools-more.js?ver=20130324"></script>
+<script type="text/javascript" src="./nav/nav.js?ver=20130324"></script>
+<script type="text/javascript" src="./nav/user_guide_menu.js?ver=20130324"></script>
+<meta name="robots" content="all" />
+<meta name="author" content="ExpressionEngine Dev Team" />
+<meta name="description" content="CodeIgniter 中文手册, CodeIgniter 用户指南, CodeIgniter User Guide, Wiki 文档" />
+</head>
+<body>
+<!-- START NAVIGATION -->
+<div id="nav">
+  <div id="nav_inner">
+    <script type="text/javascript">create_menu('./');</script>
+  </div>
+</div>
+<script type="text/javascript">_setNavigation();</script>
+<div id="nav2"><a name="top"></a><a href="javascript:void(0);" onclick="myHeight.toggle();"><img src="./images/nav_toggle_darker.jpg" width="154" height="43" border="0" title="切换目录" alt="切换目录" /></a></div>
+<div id="masthead" class="clearfix">
+    <div class="topbar-hd"><h1>CodeIgniter 用户指南 版本 2.2.2</h1></div>
+<div class="topbar-tip">编辑文档、查看近期更改请 <a href="./auth/login">登录</a> 或 <a href="./auth/register">注册</a> 　<a href="./auth/forgotten_password">找回密码</a></div>      <div id="breadcrumb_right"><a href="./toc.html">目录页</a></div>
+</div>
+<!-- END NAVIGATION -->
+<!-- START BREADCRUMB -->
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+  <tr>
+    <td id="breadcrumb">
+        <a href="http://codeigniter.org.cn/" target="_blank">CodeIgniter 中国首页</a>&nbsp;&#8250;&nbsp;
+<a href="./index.html">用户指南首页</a>&nbsp;&#8250;&nbsp;<a href="./drivers/index.html">适配器</a>&nbsp;&#8250;&nbsp;缓存适配器    </td>
+    <td id="searchbox">
+        <form method="get" action="http://www.google.com.hk/search" target="google_window">
+        <input type="hidden" name="client" value="pub-0176846097796333"></input>
+        <input type="hidden" name="forid" value="1"></input>
+        <input type="hidden" name="ie" value="UTF-8"></input>
+        <input type="hidden" name="oe" value="UTF-8"></input>
+        <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="codeigniter.org.cn/user_guide/" />
+        搜索用户指南&nbsp;
+        <input type="text" class="input" style="width:200px;" name="q" id="q" size="31" maxlength="255" value="" />
+        &nbsp;
+        <input type="submit" class="submit" name="sa" value="Go" />
+      </form>
+    </td>
+  </tr>
+</table>
+<!-- END BREADCRUMB -->
+<div style="clear:both;text-align:right;padding: 6px 40px 0 0;">
+<a href="http://www.codeigniter.com/user_guide/drivers/caching.html" target="_blank">查看原文</a>
+</div>
+<!--<br clear="all" />--><!-- START CONTENT -->
+<div id="content">
+<h1>缓存适配器</h1>
+<p>注：在2.0.3以前有bug，请下载最新版本的CI。</p>
+<p>CodeIgniter提供了多种目前业界流行的快速动态缓存组件的封装类。除了基于纯文本的缓存（文件缓存）外，其他缓存组件均需对服务器环境进行正确配置才能使用，否则程序会抛出致命异常(Fatal Exception)错误。</p>
+
+<p></p>
+
+<h2>目录</h2>
+<ul>
+  <li><a href="#example_usage" title="Example Usage">用法举例</a></li>
+  <li><a href="#function_reference" title="Function Reference">函数速查</a></li>
+
+</ul>
+
+<h3>支持的缓存适配器</h3>
+<ul>
+  <li><a href="#apc" title="APC Cache">Alternative PHP Cache (APC) 缓存</a></li>
+  <li><a href="#file" title="File Caching">纯文本缓存</a></li>
+  <li><a href="#memcached" title="Memcached">Memcached缓存</a></li>
+  <li><a href="#dummy" title="Dummy Caching">虚拟缓存</a></li>
+
+</ul>
+
+<h2 id="example_usage">用法举例</h2>
+
+<p>下面这个例子：首先加载缓存适配器，然后指定 <a href="#apc" title="APC">APC</a> 作为适配器优先使用的缓存实现，同时，我们指定文本缓存作为替代方案。这样，在一些服务器不支持APC的情况下（如国内的虚拟主机），我们可以使用替代方案保证程序正常运行。</p>
+
+<code>
+$this-&gt;load-&gt;driver('cache', array('adapter' => 'apc', 'backup' => 'file'));<br />
+<br />
+if ( ! $foo = $this-&gt;cache-&gt;get('foo'))<br />
+
+&#123;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo 'Saving to the cache!&lt;br />';<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$foo = 'foobarbaz!';<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Save into the cache for 5 minutes<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$this-&gt;cache-&gt;save('foo', $foo, 300);<br />
+&#125;<br />
+<br />
+echo $foo;
+</code>
+
+<p><strong>译者注：为了便于理解上面的代码，我们不妨举个例子。缓存适配器，我们可以理解为一个“通电的插座”；而APC缓存，相当于我们希望插在插座上使用的空调；文本缓存我们可以理解与空调功能相同但效率却完全不同的电风扇。</strong></p>
+
+<h1 id="function_reference">函数参考</h1>
+
+<h2>is_supported(<var>driver</var>['string'])</h2>
+
+<p>如果你通过 <samp>$this-&gt;cache-&gt;get()</samp> 来访问缓存适配器，此函数将自动触发。但是，如果你希望有针对性的使用某个具体的缓存实现（如下例中的 APC），请确保调用此函数，用来检查服务器环境是否支持这种缓存类型。</p>
+
+<code>
+if ($this-&gt;cache-&gt;apc-&gt;is_supported())<br />
+
+&#123;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if ($data = $this-&gt;cache-&gt;apc-&gt;get('my_cache'))<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#123;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// do things.<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#125;<br />
+&#125;
+</code>
+
+<h2>get(<var>id</var>['string'])</h2>
+
+<p>此函数将尝试从缓存系统中获取指定的缓存项。如果缓存不存在，或者超过缓存期限，则返回 <samp>FALSE</samp>。</p>
+<code>$foo = $this-&gt;cache-&gt;get('my_cached_item');</code>
+
+<h2>save(<var>id</var>['string'], <var>data</var>['mixed'], <var>ttl</var>['int'])</h2>
+
+<p>此函数尝试将一个缓存项存储到对应的缓存系统中。如果存储失败，则返回<samp>FALSE</samp>。</p>
+<p>第三个参数（可选项）指定了缓存的存活时间，默认为60秒。</p>
+<code>$this-&gt;cache-&gt;save('cache_item_id', 'data_to_cache');</code>
+
+<h2>delete(<var>id</var>['string'])</h2>
+
+<p>此函数尝试从缓存系统中删除某个指定的缓存项。如果删除失败，则返回<samp>FALSE</samp>。</p>
+
+<code>$this-&gt;cache-&gt;delete('cache_item_id');</code>
+
+<h2>clean()</h2>
+
+<p>此函数用来清空所有缓存。如果清空失败，则返回 <samp>FALSE</samp>.</p>
+
+<code>$this-&gt;cache-&gt;clean();</code>
+
+<h2>cache_info()</h2>
+
+<p>此函数将返回所有缓存信息.</p>
+
+<code>var_dump($this-&gt;cache-&gt;cache_info());</code>
+
+<h2>get_metadata(<var>id</var>['string'])</h2>
+
+<p>此函数将返回缓存系统中指定缓存项的详细信息。</p>
+
+<code>var_dump($this-&gt;cache-&gt;get_metadata('my_cached_item'));</code>
+
+<h1>支持的缓存适配器</h1>
+
+<h2 id="apc">Alternative PHP Cache (APC) 缓存</h2>
+
+<p>以上列举的所有方法可直接访问，不需传递特定的适配器实现给适配器加载器，如下：</p>
+<code>$this-&gt;load-&gt;driver('cache');<br />
+  $this-&gt;cache-&gt;apc-&gt;save('foo', 'bar', 10);</code>
+<p>若想了解更多关于 APC的信息, 请参考 <a href="http://php.net/apc">http://php.net/apc</a></p>
+
+<h2 id="file">基于文件的缓存</h2>
+
+<p>不同于从输出类（Output Class）缓存, 基于文件的缓存可以对view页面分块缓存。不过使用时需要小心，应该通过对程序进行评测，以确保由于磁盘I/O增加所导致的性能下降相对于缓存所带来的性能提升是值得的。</p>
+
+<p>以上列举的所有方法可直接访问，不需传递特定的适配器实现给适配器加载器，如下：</p>
+<code>$this-&gt;load-&gt;driver('cache');<br />
+  $this-&gt;cache-&gt;file-&gt;save('foo', 'bar', 10);</code>
+
+<h2 id="memcached">Memcached 缓存</h2>
+
+<p>使用分布式 Memcached 服务器 可以通过配置文件： memcached.php 来配置,该文件在 <samp>application/config/</samp> 目录下.
+
+<p>以上列举的所有方法可直接访问，不需传递特定的适配器实现给适配器加载器，如下：</p>
+<code>$this-&gt;load-&gt;driver('cache');<br />
+  $this-&gt;cache-&gt;memcached-&gt;save('foo', 'bar', 10);</code>
+
+<p>若想了解更多关于 Memcached的信息, 请参考 <a href="http://php.net/memcached">http://php.net/memcached</a></p>
+
+<h2 id="dummy">虚拟缓存（Dummy Cache）</h2>
+
+<p>虚拟缓存是一种总是被忽略的后台缓存。它不存储数据，但是如果环境不支持你选择的缓存机制时，它可以让你的缓存代码能正常的执行。</p><p>&nbsp;</p>
+<div id="Contributors">
+翻译贡献者:
+amos, cnsaturn, Hex, Jacklee, LSvKing, qixingyue, tangjianft, wdlth, zhkzyth, zxuqian, 曜日晨阳</div>
+<div id="DocDate">
+最后修改: 2014-09-15 23:45:42</div>
+</div>
+<!-- END CONTENT -->
+<div id="notes">
+<!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="drivers/caching" data-title="缓存适配器" data-url="./drivers/caching.html"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"codeigniter"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+<!-- 多说公共JS代码 end -->
+</div>
+<div id="footer">
+  <p>
+上一个主题:&nbsp;&nbsp;<a href="./libraries/zip.html">Zip 编码类</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="#top">页首</a>
+&nbsp;&middot;&nbsp;&nbsp;<a href="./index.html">用户指南首页</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;下一个主题:&nbsp;&nbsp;<a href="./database/index.html">数据库类库</a>  </p>
+  <p><a href="http://codeigniter.com">CodeIgniter</a> &nbsp;&middot;&nbsp; 版权所有 &#169; 2006-2013 &nbsp;&middot;&nbsp; <a href="http://ellislab.com/">Ellislab, Inc.</a></p>
+  <p>中文化: <a href="http://codeigniter.org.cn">CodeIgniter 中国</a> &nbsp;&middot;&nbsp; 制作: Hex &nbsp;&middot;&nbsp; 版本: 1.30 &nbsp;&middot;&nbsp; 鸣谢: 子非鱼</p>
+</div>
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-272152-3']);
+_gaq.push(['_addOrganic', 'baidu', 'word']);
+_gaq.push(['_addOrganic', 'soso', 'w']);
+_gaq.push(['_addOrganic', '3721', 'name']);
+_gaq.push(['_addOrganic', 'yodao', 'q']);
+_gaq.push(['_addOrganic', 'vnet', 'kw']);
+_gaq.push(['_addOrganic', 'sogou', 'query']);
+_gaq.push(['_addIgnoredOrganic', 'codeigniter.org.cn']);
+_gaq.push(['_trackPageview']);
+(function() {
+    var ga = document.createElement('script');
+    ga.src = (('https:' == document.location.protocol) ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+})();
+</script>
+<div style="display:none"><script language="javascript" type="text/javascript" src="http://js.users.51.la/3289908.js"></script>
+<noscript><a href="http://www.51.la/?3289908" target="_blank"><img alt="&#x6211;&#x8981;&#x5566;&#x514D;&#x8D39;&#x7EDF;&#x8BA1;" src="http://img.users.51.la/3289908.asp" style="border:none" /></a></noscript></div>
+</body>
+</html>

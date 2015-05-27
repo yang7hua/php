@@ -1,0 +1,297 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="utf-8" lang="utf-8">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+<title>查询结果 - CodeIgniter 中文手册|用户手册|用户指南|Wiki文档</title>
+<link rel="shortcut icon" href="./../images/design/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" type="text/css" media="all" href="./userguide.css" />
+<link rel="search" href="./../CodeIgniterSearch.xml" type="application/opensearchdescription+xml" title="CodeIgniter 搜索"/>
+<link rel="canonical" href="./database/results.html" />
+<script type="text/javascript" src="./nav/mootools.js?ver=20130324"></script>
+<script type="text/javascript" src="./nav/mootools-more.js?ver=20130324"></script>
+<script type="text/javascript" src="./nav/nav.js?ver=20130324"></script>
+<script type="text/javascript" src="./nav/user_guide_menu.js?ver=20130324"></script>
+<meta name="robots" content="all" />
+<meta name="author" content="ExpressionEngine Dev Team" />
+<meta name="description" content="CodeIgniter 中文手册, CodeIgniter 用户指南, CodeIgniter User Guide, Wiki 文档" />
+</head>
+<body>
+<!-- START NAVIGATION -->
+<div id="nav">
+  <div id="nav_inner">
+    <script type="text/javascript">create_menu('./');</script>
+  </div>
+</div>
+<script type="text/javascript">_setNavigation();</script>
+<div id="nav2"><a name="top"></a><a href="javascript:void(0);" onclick="myHeight.toggle();"><img src="./images/nav_toggle_darker.jpg" width="154" height="43" border="0" title="切换目录" alt="切换目录" /></a></div>
+<div id="masthead" class="clearfix">
+    <div class="topbar-hd"><h1>CodeIgniter 用户指南 版本 2.2.2</h1></div>
+<div class="topbar-tip">编辑文档、查看近期更改请 <a href="./auth/login">登录</a> 或 <a href="./auth/register">注册</a> 　<a href="./auth/forgotten_password">找回密码</a></div>      <div id="breadcrumb_right"><a href="./toc.html">目录页</a></div>
+</div>
+<!-- END NAVIGATION -->
+<!-- START BREADCRUMB -->
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+  <tr>
+    <td id="breadcrumb">
+        <a href="http://codeigniter.org.cn/" target="_blank">CodeIgniter 中国首页</a>&nbsp;&#8250;&nbsp;
+<a href="./index.html">用户指南首页</a>&nbsp;&#8250;&nbsp;<a href="./database/index.html">数据库类</a>&nbsp;&#8250;&nbsp;查询结果    </td>
+    <td id="searchbox">
+        <form method="get" action="http://www.google.com.hk/search" target="google_window">
+        <input type="hidden" name="client" value="pub-0176846097796333"></input>
+        <input type="hidden" name="forid" value="1"></input>
+        <input type="hidden" name="ie" value="UTF-8"></input>
+        <input type="hidden" name="oe" value="UTF-8"></input>
+        <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="codeigniter.org.cn/user_guide/" />
+        搜索用户指南&nbsp;
+        <input type="text" class="input" style="width:200px;" name="q" id="q" size="31" maxlength="255" value="" />
+        &nbsp;
+        <input type="submit" class="submit" name="sa" value="Go" />
+      </form>
+    </td>
+  </tr>
+</table>
+<!-- END BREADCRUMB -->
+<div style="clear:both;text-align:right;padding: 6px 40px 0 0;">
+<a href="http://www.codeigniter.com/user_guide/database/results.html" target="_blank">查看原文</a>
+</div>
+<!--<br clear="all" />--><!-- START CONTENT -->
+<div id="content">
+<h1>生成查询记录集</h1>
+
+
+<p>支持使用以下方法生成记录集</p>
+
+ <h2>result()</h2>
+ 
+ <p>该方法执行成功返回一个<strong>对象数组</strong>，失败则返回一个<strong>空数组</strong>。
+ 
+ 一般情况下，我们使用下面的方法遍历结果，代码就像这样：</p>
+ 
+ <code>
+ $query = $this-&gt;db-&gt;query("要执行的 SQL");<br />
+ <br />
+
+ foreach ($query-&gt;result() as $row)<br />
+ &#123;<br />
+ &nbsp;&nbsp;&nbsp;echo $row-&gt;title;<br />
+ &nbsp;&nbsp;&nbsp;echo $row-&gt;name;<br />
+ &nbsp;&nbsp;&nbsp;echo $row-&gt;body;<br />
+ &#125;</code>
+ 
+ <p>本函数的别名是 <dfn>result_object()</dfn>。</p>
+
+ <p>如果当前所执行的 SQL 可能<strong>不会</strong>返回记录集，我们可以使用如下方法进行判断：</p>
+ 
+ <code>
+
+ $query = $this-&gt;db-&gt;query("要执行的 SQL");<br />
+ <br />
+ if ($query-&gt;num_rows() > 0)<br />
+ &#123;<br />
+ &nbsp;&nbsp;&nbsp;foreach ($query-&gt;result() as $row)<br />
+ &nbsp;&nbsp;&nbsp;&#123;<br />
+
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo $row-&gt;title;<br />
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo $row-&gt;name;<br />
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo $row-&gt;body;<br />
+ &nbsp;&nbsp;&nbsp;&#125;<br />
+ &#125;
+ </code>
+
+ <p>你可以传递一个字符串给result()函数，该字符串代表着某个类为每一个result对象进行实例化 （注意：该类必须已经被加载）。</p>
+
+ <code>
+ $query = $this-&gt;db-&gt;query("SELECT * FROM users;");<br />
+ <br />
+ foreach ($query-&gt;result('User') as $row)<br />
+ &#123;<br />
+ &nbsp;&nbsp;&nbsp;echo $row-&gt;name; // call attributes<br />
+ &nbsp;&nbsp;&nbsp;echo $row-&gt;reverse_name(); // or methods defined on the 'User' class<br />
+ &#125;
+ </code>
+
+
+ <h2>result_array()</h2>
+
+ <p>该方法执行成功时将记录集作为<strong>关联数组</strong>返回。失败时返回<strong>空数组</strong>。一般情况下，我们使用下面的方法遍历结果，代码就像这样：</p>
+ <code>
+ $query = $this-&gt;db-&gt;query("要执行的 SQL");<br />
+ <br />
+ foreach ($query-&gt;result_array() as $row)<br />
+ &#123;<br />
+ &nbsp;&nbsp;&nbsp;echo $row['title'];<br />
+
+ &nbsp;&nbsp;&nbsp;echo $row['name'];<br />
+ &nbsp;&nbsp;&nbsp;echo $row['body'];<br />
+ &#125;</code>
+
+
+ <h2>row()</h2>
+ 
+ <p>该函数将当前请求的第一行数据作为 <strong>object</strong> 返回。这里是示例代码：</p>
+
+ <code>
+ $query = $this-&gt;db-&gt;query("要执行的 SQL");<br />
+ <br />
+ if ($query-&gt;num_rows() > 0)<br />
+ &#123;<br />
+ &nbsp;&nbsp;&nbsp;$row = $query-&gt;row();
+ <br /><br />
+ &nbsp;&nbsp;&nbsp;echo $row-&gt;title;<br />
+
+ &nbsp;&nbsp;&nbsp;echo $row-&gt;name;<br />
+ &nbsp;&nbsp;&nbsp;echo $row-&gt;body;<br />
+ &#125;
+ </code>
+ 
+ <p>你可以传递参数(参数是行的索引)以便获得某一行的数据。比如我们要获得第 <dfn>5</dfn> 行的数据：</p>
+ 
+ <code>$row = $query-&gt;row(<dfn>4</dfn>);</code>
+<p>如果传入的参数超出行索引，则返回第一行(索引为0)数据</p>
+
+ <p>你也可以添加一个字符串参数，它是一个类在row()函数下实例化的名字：</p>
+
+ <code>
+ $query = $this-&gt;db-&gt;query("SELECT * FROM users LIMIT 1;");<br />
+ <br />
+ $query-&gt;row(0, 'User')<br />
+ echo $row-&gt;name; // call attributes<br />
+ echo $row-&gt;reverse_name(); // or methods defined on the 'User' class<br />
+ </code>
+
+ <h2>row_array()</h2>
+
+ <p>功能与 <var>row()</var> 一样, 区别在于该函数返回的是一个数组：</p>
+
+ <code>
+ $query = $this-&gt;db-&gt;query("要执行的 SQL");<br />
+
+ <br />
+ if ($query-&gt;num_rows() > 0)<br />
+ &#123;<br />
+ &nbsp;&nbsp;&nbsp;$row = $query-&gt;row_array();
+ <br /><br />
+ &nbsp;&nbsp;&nbsp;echo $row['title'];<br />
+ &nbsp;&nbsp;&nbsp;echo $row['name'];<br />
+
+ &nbsp;&nbsp;&nbsp;echo $row['body'];<br />
+ &#125;
+ </code>
+
+ 
+ <p>你可以传递参数(参数是行的索引)以便获得某一行的数据。比如我们要获得第 <dfn>5</dfn> 行的数据：</p>
+ 
+ <code>$row = $query-&gt;row_array(<dfn>4</dfn>);</code>
+
+ <p>如果传入的参数超出行索引，则返回第一行(索引为0)数据</P>
+
+  <p>除此以外, 我们还可以使用下面的方法通过游标的方式获取记录：</p>
+
+<p>
+ <strong>$row = $query-&gt;first_row()</strong><br />
+ <strong>$row = $query-&gt;last_row()</strong><br />
+ <strong>$row = $query-&gt;next_row()</strong><br />
+ <strong>$row = $query-&gt;previous_row()</strong>
+</p>
+
+<p>默认情况下他们将返回一个 <strong>object</strong>，同时你也可以传递参数 "array" 以便使用 <strong>array</strong> 的方式获取数据</p>
+
+<p>
+ <strong>$row = $query-&gt;first_row('array')</strong><br />
+ <strong>$row = $query-&gt;last_row('array')</strong><br />
+ <strong>$row = $query-&gt;next_row('array')</strong><br />
+ <strong>$row = $query-&gt;previous_row('array')</strong>
+</p>
+
+
+<h1>结果集辅助函数</h1>
+
+
+<h2>$query-&gt;num_rows()</h2>
+<p>该函数将会返回当前请求的行数。在本例子中, <dfn>$query</dfn> 表示当前 SQL 所产生的请求结果对象：</p>
+
+<code>$query = $this-&gt;db-&gt;query('SELECT * FROM my_table');<br /><br />
+echo $query-&gt;num_rows();
+</code>
+
+<h2>$query-&gt;num_fields()</h2>
+<p>该函数返回当前请求的字段数（列数）：</p>
+
+<code>$query = $this-&gt;db-&gt;query('SELECT * FROM my_table');<br /><br />
+echo $query-&gt;num_fields();
+</code>
+
+
+
+<h2>$query-&gt;free_result()</h2>
+<p>该函数将会释放当前查询所占用的内存并删除其关联的资源标识。通常来说，PHP 将会脚本执行结束后自动释放内存。如果当前执行的请求将要花很长时间并且占用比较大的资源时,该函数可以在一定程度上降低资源的消耗：
+</p>
+
+<code>$query = $this-&gt;db-&gt;query('SELECT title FROM my_table');<br /><br />
+foreach ($query-&gt;result() as $row)<br />
+&#123;<br />
+&nbsp;&nbsp;&nbsp;echo $row-&gt;title;<br />
+&#125;<br />
+$query-&gt;free_result();  // $query 将不再可用<br />
+<br />
+$query2 = $this-&gt;db-&gt;query('SELECT name FROM some_table');<br /><br />
+$row = $query2-&gt;row();<br />
+
+echo $row-&gt;name;<br />
+$query2-&gt;free_result();  // $query2 将不再可用
+</code><p>&nbsp;</p>
+<div id="Contributors">
+翻译贡献者:
+Hex, kakera, lishen2, loiynet, wangjunjie871111</div>
+<div id="DocDate">
+最后修改: 2012-10-25 16:51:16</div>
+</div>
+<!-- END CONTENT -->
+<div id="notes">
+<!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="database/results" data-title="查询结果" data-url="./database/results.html"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"codeigniter"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+<!-- 多说公共JS代码 end -->
+</div>
+<div id="footer">
+  <p>
+上一个主题:&nbsp;&nbsp;<a href="./database/queries.html">查询</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="#top">页首</a>
+&nbsp;&middot;&nbsp;&nbsp;<a href="./index.html">用户指南首页</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;下一个主题:&nbsp;&nbsp;<a href="./database/helpers.html">查询助手函数</a>  </p>
+  <p><a href="http://codeigniter.com">CodeIgniter</a> &nbsp;&middot;&nbsp; 版权所有 &#169; 2006-2013 &nbsp;&middot;&nbsp; <a href="http://ellislab.com/">Ellislab, Inc.</a></p>
+  <p>中文化: <a href="http://codeigniter.org.cn">CodeIgniter 中国</a> &nbsp;&middot;&nbsp; 制作: Hex &nbsp;&middot;&nbsp; 版本: 1.30 &nbsp;&middot;&nbsp; 鸣谢: 子非鱼</p>
+</div>
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-272152-3']);
+_gaq.push(['_addOrganic', 'baidu', 'word']);
+_gaq.push(['_addOrganic', 'soso', 'w']);
+_gaq.push(['_addOrganic', '3721', 'name']);
+_gaq.push(['_addOrganic', 'yodao', 'q']);
+_gaq.push(['_addOrganic', 'vnet', 'kw']);
+_gaq.push(['_addOrganic', 'sogou', 'query']);
+_gaq.push(['_addIgnoredOrganic', 'codeigniter.org.cn']);
+_gaq.push(['_trackPageview']);
+(function() {
+    var ga = document.createElement('script');
+    ga.src = (('https:' == document.location.protocol) ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+})();
+</script>
+<div style="display:none"><script language="javascript" type="text/javascript" src="http://js.users.51.la/3289908.js"></script>
+<noscript><a href="http://www.51.la/?3289908" target="_blank"><img alt="&#x6211;&#x8981;&#x5566;&#x514D;&#x8D39;&#x7EDF;&#x8BA1;" src="http://img.users.51.la/3289908.asp" style="border:none" /></a></noscript></div>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="utf-8" lang="utf-8">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+<title>加载静态内容 - CodeIgniter 中文手册|用户手册|用户指南|Wiki文档</title>
+<link rel="shortcut icon" href="http://codeigniter.org.cn/user_guide/../images/design/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" type="text/css" media="all" href="http://codeigniter.org.cn/user_guide/userguide.css" />
+<link rel="search" href="http://codeigniter.org.cn/user_guide/../CodeIgniterSearch.xml" type="application/opensearchdescription+xml" title="CodeIgniter 搜索"/>
+<link rel="canonical" href="http://codeigniter.org.cn/user_guide/tutorial/static_pages.html" />
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/mootools.js?ver=20130324"></script>
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/mootools-more.js?ver=20130324"></script>
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/nav.js?ver=20130324"></script>
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/user_guide_menu.js?ver=20130324"></script>
+<meta name="robots" content="all" />
+<meta name="author" content="ExpressionEngine Dev Team" />
+<meta name="description" content="CodeIgniter 中文手册, CodeIgniter 用户指南, CodeIgniter User Guide, Wiki 文档" />
+</head>
+<body>
+<!-- START NAVIGATION -->
+<div id="nav">
+  <div id="nav_inner">
+    <script type="text/javascript">create_menu('http://codeigniter.org.cn/user_guide/');</script>
+  </div>
+</div>
+<script type="text/javascript">_setNavigation();</script>
+<div id="nav2"><a name="top"></a><a href="javascript:void(0);" onclick="myHeight.toggle();"><img src="http://codeigniter.org.cn/user_guide/images/nav_toggle_darker.jpg" width="154" height="43" border="0" title="切换目录" alt="切换目录" /></a></div>
+<div id="masthead" class="clearfix">
+    <div class="topbar-hd"><h1>CodeIgniter 用户指南 版本 2.2.2</h1></div>
+<div class="topbar-tip">编辑文档、查看近期更改请 <a href="http://codeigniter.org.cn/user_guide/auth/login">登录</a> 或 <a href="http://codeigniter.org.cn/user_guide/auth/register">注册</a> 　<a href="http://codeigniter.org.cn/user_guide/auth/forgotten_password">找回密码</a></div>      <div id="breadcrumb_right"><a href="http://codeigniter.org.cn/user_guide/toc.html">目录页</a></div>
+</div>
+<!-- END NAVIGATION -->
+<!-- START BREADCRUMB -->
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+  <tr>
+    <td id="breadcrumb">
+        <a href="http://codeigniter.org.cn/" target="_blank">CodeIgniter 中国首页</a>&nbsp;&#8250;&nbsp;
+<a href="http://codeigniter.org.cn/user_guide/index.html">用户指南首页</a>&nbsp;&#8250;&nbsp;<a href="http://codeigniter.org.cn/user_guide/tutorial/index.html">教程</a>&nbsp;&#8250;&nbsp;加载静态内容    </td>
+    <td id="searchbox">
+        <form method="get" action="http://www.google.com.hk/search" target="google_window">
+        <input type="hidden" name="client" value="pub-0176846097796333"></input>
+        <input type="hidden" name="forid" value="1"></input>
+        <input type="hidden" name="ie" value="UTF-8"></input>
+        <input type="hidden" name="oe" value="UTF-8"></input>
+        <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="codeigniter.org.cn/user_guide/" />
+        搜索用户指南&nbsp;
+        <input type="text" class="input" style="width:200px;" name="q" id="q" size="31" maxlength="255" value="" />
+        &nbsp;
+        <input type="submit" class="submit" name="sa" value="Go" />
+      </form>
+    </td>
+  </tr>
+</table>
+<!-- END BREADCRUMB -->
+<div style="clear:both;text-align:right;padding: 6px 40px 0 0;">
+<a href="http://www.codeigniter.com/user_guide/tutorial/static_pages.html" target="_blank">查看原文</a>
+</div>
+<!--<br clear="all" />--><!-- START CONTENT -->
+<div id="content">
+<h1>教程 &minus; 加载静态内容</h1>
+
+<p class="important"><strong>注意:</strong> 本教程假定你已经下载和<a href="../installation/index.html">安装</a>了CodeIgniter开发环境。</p>
+
+<p>首先，你需要创建一个可以处理静态内容请求的<strong>控制器</strong>类。控制器，是一个用来代理完成某项任务的PHP类，它充当基于MVC架构应用程序的“粘合剂”（译者注：控制器用来粘合/协调不同模型和视图。随着教程的深入，你会更深刻的理解这一点）。</p>
+
+<p>举例来说，假设存在某个针对如下URL的请求: <code>http://example.com/news/latest/10</code> 仔细观察此URL地址，我们可以猜测它所完成的任务：存在某个类名为&quot;news&quot;的控制器，调用此类下的&quot;latest&quot;方法用来提取10条最新新闻，然后解析显示在最终浏览器页面上。在基于MVC架构思想的应用程序中，我们经常会见到如下典型URL格式：
+<code>http://example.com/[控制器类名]/[控制器方法名]/[所需参数]</code>
+
+在实际项目中，以上典型格式可能会存在变化趋于复杂。但到目前为止，了解这一典型格式已然足够。</p>
+
+<p>创建一个控制器文件<dfn>application/controllers/pages.php</dfn>，并编写如下代码：</p>
+
+<textarea class="textarea" style="width:100%" cols="50" rows="10">
+&lt;?php
+
+class Pages extends CI_Controller &#123;
+
+  public function view($page = 'home')
+  &#123;
+
+  &#125;
+&#125;
+</textarea>
+
+<p>你已经创建了一个名为&quot;pages&quot;的类, 包含一个名为&quot;view&quot;的方法，并定义了一个名为 <var>$page</var> 的参数。
+这个pages类继承了CI_Controller类。这就意味着
+这个新的pages类可以继承CI_Controller 
+(<dfn>system/core/Controller.php</dfn>) 类里面定义的方法和变量。</p>
+
+<p><strong>这个控制器会成为你的网站程序每次请求的中心</strong>。
+在非常技术性的CodeIgniter的讨论中，我们把它称为 <em>超级对象</em>。就像任何php类一样，在你自己的控制器中，使用$this来调用它，这样就可以实现用 <var>$this</var> 来加载所有变量、视图和对这个框架进行一般操作。
+
+<p>现在你已经创建了自己的第一个方法，是时候来做几个基础的页面模板了。我们将要创建两个 &quot;视图&quot; (模板页面) ，也就是页面的页头（header）和页脚（footer）。</p>
+
+<p>创建页头文件 <dfn>application/views/templates/header.php</dfn> ，代码如下。</p>
+
+<textarea class="textarea" style="width:100%" cols="50" rows="8">
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;&lt;?php echo $title ?&gt; - CodeIgniter 2 Tutorial&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  <h1>CodeIgniter 2 Tutorial</h1>
+  
+</textarea>
+
+<p>页头文件包括在正式加载视图前需要的基本的HTML代码。同时，这里还输出了 <var>$title</var> 变量，一会儿我们会在控制器中对它进行定义。现在我们来创建一个页脚 <dfn>application/views/templates/footer.php</dfn> ，代码如下:</p>
+  
+<textarea class="textarea" style="width:100%" cols="50" rows="4">
+<strong>&#38;copy; 2011</strong>  
+&lt;/body&gt;
+&lt;/html&gt;
+</textarea>
+
+<h2>为控制器添加逻辑结构 (Adding logic to the controller)</h2>
+
+<p>之前你创建了一个控制器并定义了一个方法view()。这个方法里定义了一个参数，它的值是即将加载的页面的名称。静态页面的模板将被放在 <dfn>application/views/pages/</dfn> 文件夹中。</p>
+
+<p>在那个文件夹中需要创建两个文件，分别为 <dfn>home.php</dfn> 和 <dfn>about.php</dfn>。在这两个文件中敲一些任何你喜欢的内容进去并保存。如果你喜欢特别不寻常的内容，可以试试敲“Hello World!”。</p>
+
+<p>为了能加载那些页面，你需要检查一下它们是否存在：</p>
+
+<pre>
+public function view($page = 'home')
+&#123;
+      
+  if ( ! file_exists(APPPATH.'/views/pages/'.$page.'.php'))
+  &#123;
+    // 页面不存在
+    show_404();
+  &#125;
+  
+  $data['title'] = ucfirst($page); // 将title中的第一个字符大写
+  
+  $this-&gt;load-&gt;view('templates/header', $data);
+  $this-&gt;load-&gt;view('pages/'.$page, $data);
+  $this-&gt;load-&gt;view('templates/footer', $data);
+
+&#125;
+</pre>
+
+<p>此时，如果页面存在，它将被加载，同时，页头和页脚也会显示出来。如果页面不存在，那么就会显示404错误页面。</p>
+
+<p>这个方法中的第一行是检查文件是否存在的，使用的是PHP自带的函数 <var>file_exists()</var> 。<var>show_404()</var> 是CodeIgniter中的函数，用来调用404错误页面。</p>
+
+<p>在页头模板（header.php）中，我们用 <var>$title</var> 变量来自定义页面标题（&lt;title&gt;）。而这个变量的值，我们现在在这个方法中对它进行了定义。不过，我们并没有将这个值直接赋给变量，而是将它作为一个元素赋给了 <var>$data</var> 数组。</p>
+
+<p>最后一项，按照需要显示的顺序来加载那些视图。 <var>view()</var> 方法中的第二个参数是用来传递值给视图的。数组中的每个值都被定义成与它关键字相同的一个变量，如控制器中 <var>$data['title']</var> 的值就等同于视图中变量$title。<p>
+  
+<h2>设置路由（Routing）</h2>
+
+<p>这个控制器现在可以工作了，在浏览器中键入后面的地址 <dfn>[你的网址]index.php/pages/view</dfn> 就可以看到Home页面。输入 <dfn>index.php/pages/view/about</dfn> 也可以看到about页面，也是带页头和页脚的哦。</p>
+
+<p>根据自定义路由的规则，你也可以自己定义任何控制器和方法的URI，这样就可以摆脱下面的既定规则了。
+<code>http://example.com/[controller-class]/[controller-method]/[arguments]</code></p>
+
+<p>我们来试试吧。打开路由文件 <dfn>application/config/routes.php</dfn> ，并添加下面两行代码，并删除 <var>$route</var> 数组中的其他代码。</p>
+  
+<pre>
+$route['default_controller'] = 'pages/view';
+$route['(:any)'] = 'pages/view/$1';
+</pre>
+
+<p>CodeIgniter由上而下读取路由规则然后将请求路由至第一个匹配的规则。每一个规则都是一个正则表达式（左侧）映射到一个由斜线分隔的控制器和方法名（右侧）。当有请求到来时，CodeIgniter寻找第一个匹配的路由规则，然后调用相应的控制器和方法，通常还带着参数。</p>
+
+<p>更多关于路由设置的信息都在 URI 路由 <a href="../general/routing.html">文档</a> 里。</p>
+
+<p>回到上面的代码，第二行是指利用通配符 <dfn>(:any)</dfn> 可以使任何请求都能匹配到 <var>$routes</var> 数组，并且通过参数传递给pages类的view()方法。</p>
+
+<p>现在，访问下 <dfn>index.php/about</dfn>. 看看是不是已经能正确地显示页面了呢？赞！</p><p>&nbsp;</p>
+<div id="Contributors">
+翻译贡献者:
+aolinks, borisauschina, changekale, cnsaturn, csfhc, Hex, irini, kpmving, lionskys, liuzhengyi, ljhljh235, syrdxb, wenxiao795, zzdjk6</div>
+<div id="DocDate">
+最后修改: 2015-05-11 14:52:11</div>
+</div>
+<!-- END CONTENT -->
+<div id="notes">
+<!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="tutorial/static_pages" data-title="加载静态内容" data-url="http://codeigniter.org.cn/user_guide/tutorial/static_pages.html"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"codeigniter"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+<!-- 多说公共JS代码 end -->
+</div>
+<div id="footer">
+  <p>
+上一个主题:&nbsp;&nbsp;<a href="http://codeigniter.org.cn/user_guide/tutorial/index.html">内容提要</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="#top">页首</a>
+&nbsp;&middot;&nbsp;&nbsp;<a href="http://codeigniter.org.cn/user_guide/index.html">用户指南首页</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;下一个主题:&nbsp;&nbsp;<a href="http://codeigniter.org.cn/user_guide/tutorial/news_section.html">读取新闻条目</a>  </p>
+  <p><a href="http://codeigniter.com">CodeIgniter</a> &nbsp;&middot;&nbsp; 版权所有 &#169; 2006-2013 &nbsp;&middot;&nbsp; <a href="http://ellislab.com/">Ellislab, Inc.</a></p>
+  <p>中文化: <a href="http://codeigniter.org.cn">CodeIgniter 中国</a> &nbsp;&middot;&nbsp; 制作: Hex &nbsp;&middot;&nbsp; 版本: 1.30 &nbsp;&middot;&nbsp; 鸣谢: 子非鱼</p>
+</div>
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-272152-3']);
+_gaq.push(['_addOrganic', 'baidu', 'word']);
+_gaq.push(['_addOrganic', 'soso', 'w']);
+_gaq.push(['_addOrganic', '3721', 'name']);
+_gaq.push(['_addOrganic', 'yodao', 'q']);
+_gaq.push(['_addOrganic', 'vnet', 'kw']);
+_gaq.push(['_addOrganic', 'sogou', 'query']);
+_gaq.push(['_addIgnoredOrganic', 'codeigniter.org.cn']);
+_gaq.push(['_trackPageview']);
+(function() {
+    var ga = document.createElement('script');
+    ga.src = (('https:' == document.location.protocol) ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+})();
+</script>
+<div style="display:none"><script language="javascript" type="text/javascript" src="http://js.users.51.la/3289908.js"></script>
+<noscript><a href="http://www.51.la/?3289908" target="_blank"><img alt="&#x6211;&#x8981;&#x5566;&#x514D;&#x8D39;&#x7EDF;&#x8BA1;" src="http://img.users.51.la/3289908.asp" style="border:none" /></a></noscript></div>
+</body>
+</html>

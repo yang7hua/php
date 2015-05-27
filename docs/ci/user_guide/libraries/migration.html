@@ -1,0 +1,212 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="utf-8" lang="utf-8">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+<title>迁移类 - CodeIgniter 中文手册|用户手册|用户指南|Wiki文档</title>
+<link rel="shortcut icon" href="./../images/design/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" type="text/css" media="all" href="./userguide.css" />
+<link rel="search" href="./../CodeIgniterSearch.xml" type="application/opensearchdescription+xml" title="CodeIgniter 搜索"/>
+<link rel="canonical" href="./libraries/migration.html" />
+<script type="text/javascript" src="./nav/mootools.js?ver=20130324"></script>
+<script type="text/javascript" src="./nav/mootools-more.js?ver=20130324"></script>
+<script type="text/javascript" src="./nav/nav.js?ver=20130324"></script>
+<script type="text/javascript" src="./nav/user_guide_menu.js?ver=20130324"></script>
+<meta name="robots" content="all" />
+<meta name="author" content="ExpressionEngine Dev Team" />
+<meta name="description" content="CodeIgniter 中文手册, CodeIgniter 用户指南, CodeIgniter User Guide, Wiki 文档" />
+</head>
+<body>
+<!-- START NAVIGATION -->
+<div id="nav">
+  <div id="nav_inner">
+    <script type="text/javascript">create_menu('./');</script>
+  </div>
+</div>
+<script type="text/javascript">_setNavigation();</script>
+<div id="nav2"><a name="top"></a><a href="javascript:void(0);" onclick="myHeight.toggle();"><img src="./images/nav_toggle_darker.jpg" width="154" height="43" border="0" title="切换目录" alt="切换目录" /></a></div>
+<div id="masthead" class="clearfix">
+    <div class="topbar-hd"><h1>CodeIgniter 用户指南 版本 2.2.2</h1></div>
+<div class="topbar-tip">编辑文档、查看近期更改请 <a href="./auth/login">登录</a> 或 <a href="./auth/register">注册</a> 　<a href="./auth/forgotten_password">找回密码</a></div>      <div id="breadcrumb_right"><a href="./toc.html">目录页</a></div>
+</div>
+<!-- END NAVIGATION -->
+<!-- START BREADCRUMB -->
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+  <tr>
+    <td id="breadcrumb">
+        <a href="http://codeigniter.org.cn/" target="_blank">CodeIgniter 中国首页</a>&nbsp;&#8250;&nbsp;
+<a href="./index.html">用户指南首页</a>&nbsp;&#8250;&nbsp;迁移类    </td>
+    <td id="searchbox">
+        <form method="get" action="http://www.google.com.hk/search" target="google_window">
+        <input type="hidden" name="client" value="pub-0176846097796333"></input>
+        <input type="hidden" name="forid" value="1"></input>
+        <input type="hidden" name="ie" value="UTF-8"></input>
+        <input type="hidden" name="oe" value="UTF-8"></input>
+        <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="codeigniter.org.cn/user_guide/" />
+        搜索用户指南&nbsp;
+        <input type="text" class="input" style="width:200px;" name="q" id="q" size="31" maxlength="255" value="" />
+        &nbsp;
+        <input type="submit" class="submit" name="sa" value="Go" />
+      </form>
+    </td>
+  </tr>
+</table>
+<!-- END BREADCRUMB -->
+<div style="clear:both;text-align:right;padding: 6px 40px 0 0;">
+<a href="http://www.codeigniter.com/user_guide/libraries/migration.html" target="_blank">查看原文</a>
+</div>
+<!--<br clear="all" />--><!-- START CONTENT -->
+<div id="content">
+<h1>迁移类</h1>
+
+<p>迁移是一种结构化与有组织的方式来更改数据库的方便方法。你可以手动编辑 SQL 的片段，然后告知其他开发人员他们需要运行这些片段。你还得保持追踪他们的变化，追踪那些下次部署时那些需要运行但是会与生产设备冲突的变化。</p>
+
+<p>数据库表的 <var>迁移</var> 追踪那些已经运行的迁移信息，你需要做的就是更新你的应用文件并执行 <dfn>$this-&gt;migrate-&gt;current()</dfn> 来计算出哪个迁移信息是需要被运行的。迁移信息的当前版本可以在这里 <var>config/migration.php</var> 找到。</p>
+
+<h2>创建一个迁移信息</h2>
+
+<p>这将是一个 blog 站点的第一个迁移信息。所有的迁移信息都在文件夹 <var>application/migrations/</var> 里，并且具有这样的名称，例如：<kbd>001_add_blog.php</kbd>.</p>
+
+<pre>
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Migration_Add_blog extends CI_Migration &#123;
+
+  public function up()
+  &#123;
+    $this-&gt;dbforge-&gt;add_field(array(
+      'blog_id' => array(
+        'type' => 'INT',
+        'constraint' => 5,
+        'unsigned' => TRUE,
+        'auto_increment' => TRUE
+      ),
+      'blog_title' => array(
+        'type' => 'VARCHAR',
+        'constraint' => '100',
+      ),
+      'blog_description' => array(
+        'type' => 'TEXT',
+        'null' => TRUE,
+      ),
+    ));
+    
+    $this-&gt;dbforge-&gt;create_table('blog');
+  &#125;
+
+  public function down()
+  &#123;
+    $this-&gt;dbforge-&gt;drop_table('blog');
+  &#125;
+</pre>
+
+<p>然后在文件 <var>application/config/migration.php</var> 中设置 <dfn>$config['migration_version'] = 1;</dfn>。
+
+<h2>使用范例</h2>
+
+<p>在该范例中，一些简单的代码被放置在 <var>application/controllers/migrate.php</var> 以更新架构(schema)。</p>
+
+<pre>
+$this-&gt;load-&gt;library('migration');
+
+if ( ! $this-&gt;migration-&gt;current())
+&#123;
+  show_error($this-&gt;migration-&gt;error_string());
+&#125;
+</pre>
+
+
+<h1>方法参考</h1>
+
+<h2>$this-&gt;migration-&gt;current()</h2>
+
+<p>当前的迁移信息是什么，被设置于 <dfn>$config['migration_version']</dfn> 在文件 <var>application/config/migration.php</var> 中。</p>
+
+
+<h2>$this-&gt;migration-&gt;latest()</h2>
+
+<p>这个方法的工作方式和 current() 很像，但是不会从 <dfn>$config['migration_version']</dfn> 寻找迁移信息，而是在文件系统中寻找最新的迁移信息。</p>
+
+<h2>$this-&gt;migration-&gt;version()</h2>
+
+<p>迁移版本可以用来回滚或前进到特定版本。它工作起来像是 current() 但是会忽略 <dfn>$config['migration_version']</dfn> 的设置。</p>
+
+<pre>
+$this-&gt;load-&gt;library('migration');
+
+$this-&gt;migration-&gt;version(5);
+</pre>
+
+<h2>迁移参数</h2>
+
+<p>以下是迁移类的配置选项列表。</p>
+
+
+<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+<tr>
+<th>参数</th>
+<th>默认值</th>
+<th>可选项</th>
+<th>描述</th>
+</tr><tr>
+<td class="td"><strong>migration_enabled</strong></td><td class="td">FALSE</td><td class="td">TRUE / FALSE</td><td class="td">启用或禁用迁移。</td>
+</tr><tr>
+<td class="td"><strong>migration_version</strong></td><td class="td">0</td><td class="td">无</td><td class="td">当前数据库所使用的版本。</td>
+</tr><tr>
+<td class="td"><strong>migration_path</strong></td><td class="td">APPPATH.'migrations/'</td><td class="td">无</td><td class="td">迁移信息所在路径。</td>
+</tr>
+</table><p>&nbsp;</p>
+<div id="Contributors">
+翻译贡献者:
+csfhc, Hex, huboo</div>
+<div id="DocDate">
+最后修改: 2013-11-29 10:20:55</div>
+</div>
+<!-- END CONTENT -->
+<div id="notes">
+<!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="libraries/migration" data-title="迁移类" data-url="./libraries/migration.html"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"codeigniter"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+<!-- 多说公共JS代码 end -->
+</div>
+<div id="footer">
+  <p>
+上一个主题:&nbsp;&nbsp;<a href="./libraries/form_validation.html">表单验证类</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="#top">页首</a>
+&nbsp;&middot;&nbsp;&nbsp;<a href="./index.html">用户指南首页</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;下一个主题:&nbsp;&nbsp;<a href="./libraries/table.html">HTML 表格类</a>  </p>
+  <p><a href="http://codeigniter.com">CodeIgniter</a> &nbsp;&middot;&nbsp; 版权所有 &#169; 2006-2013 &nbsp;&middot;&nbsp; <a href="http://ellislab.com/">Ellislab, Inc.</a></p>
+  <p>中文化: <a href="http://codeigniter.org.cn">CodeIgniter 中国</a> &nbsp;&middot;&nbsp; 制作: Hex &nbsp;&middot;&nbsp; 版本: 1.30 &nbsp;&middot;&nbsp; 鸣谢: 子非鱼</p>
+</div>
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-272152-3']);
+_gaq.push(['_addOrganic', 'baidu', 'word']);
+_gaq.push(['_addOrganic', 'soso', 'w']);
+_gaq.push(['_addOrganic', '3721', 'name']);
+_gaq.push(['_addOrganic', 'yodao', 'q']);
+_gaq.push(['_addOrganic', 'vnet', 'kw']);
+_gaq.push(['_addOrganic', 'sogou', 'query']);
+_gaq.push(['_addIgnoredOrganic', 'codeigniter.org.cn']);
+_gaq.push(['_trackPageview']);
+(function() {
+    var ga = document.createElement('script');
+    ga.src = (('https:' == document.location.protocol) ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+})();
+</script>
+<div style="display:none"><script language="javascript" type="text/javascript" src="http://js.users.51.la/3289908.js"></script>
+<noscript><a href="http://www.51.la/?3289908" target="_blank"><img alt="&#x6211;&#x8981;&#x5566;&#x514D;&#x8D39;&#x7EDF;&#x8BA1;" src="http://img.users.51.la/3289908.asp" style="border:none" /></a></noscript></div>
+</body>
+</html>

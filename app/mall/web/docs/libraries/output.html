@@ -1,0 +1,214 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="utf-8" lang="utf-8">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+<title>输出类 - CodeIgniter 中文手册|用户手册|用户指南|Wiki文档</title>
+<link rel="shortcut icon" href="http://codeigniter.org.cn/user_guide/../images/design/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" type="text/css" media="all" href="http://codeigniter.org.cn/user_guide/userguide.css" />
+<link rel="search" href="http://codeigniter.org.cn/user_guide/../CodeIgniterSearch.xml" type="application/opensearchdescription+xml" title="CodeIgniter 搜索"/>
+<link rel="canonical" href="http://codeigniter.org.cn/user_guide/libraries/output.html" />
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/mootools.js?ver=20130324"></script>
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/mootools-more.js?ver=20130324"></script>
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/nav.js?ver=20130324"></script>
+<script type="text/javascript" src="http://codeigniter.org.cn/user_guide/nav/user_guide_menu.js?ver=20130324"></script>
+<meta name="robots" content="all" />
+<meta name="author" content="ExpressionEngine Dev Team" />
+<meta name="description" content="CodeIgniter 中文手册, CodeIgniter 用户指南, CodeIgniter User Guide, Wiki 文档" />
+</head>
+<body>
+<!-- START NAVIGATION -->
+<div id="nav">
+  <div id="nav_inner">
+    <script type="text/javascript">create_menu('http://codeigniter.org.cn/user_guide/');</script>
+  </div>
+</div>
+<script type="text/javascript">_setNavigation();</script>
+<div id="nav2"><a name="top"></a><a href="javascript:void(0);" onclick="myHeight.toggle();"><img src="http://codeigniter.org.cn/user_guide/images/nav_toggle_darker.jpg" width="154" height="43" border="0" title="切换目录" alt="切换目录" /></a></div>
+<div id="masthead" class="clearfix">
+    <div class="topbar-hd"><h1>CodeIgniter 用户指南 版本 2.2.2</h1></div>
+<div class="topbar-tip">编辑文档、查看近期更改请 <a href="http://codeigniter.org.cn/user_guide/auth/login">登录</a> 或 <a href="http://codeigniter.org.cn/user_guide/auth/register">注册</a> 　<a href="http://codeigniter.org.cn/user_guide/auth/forgotten_password">找回密码</a></div>      <div id="breadcrumb_right"><a href="http://codeigniter.org.cn/user_guide/toc.html">目录页</a></div>
+</div>
+<!-- END NAVIGATION -->
+<!-- START BREADCRUMB -->
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+  <tr>
+    <td id="breadcrumb">
+        <a href="http://codeigniter.org.cn/" target="_blank">CodeIgniter 中国首页</a>&nbsp;&#8250;&nbsp;
+<a href="http://codeigniter.org.cn/user_guide/index.html">用户指南首页</a>&nbsp;&#8250;&nbsp;输出类    </td>
+    <td id="searchbox">
+        <form method="get" action="http://www.google.com.hk/search" target="google_window">
+        <input type="hidden" name="client" value="pub-0176846097796333"></input>
+        <input type="hidden" name="forid" value="1"></input>
+        <input type="hidden" name="ie" value="UTF-8"></input>
+        <input type="hidden" name="oe" value="UTF-8"></input>
+        <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="codeigniter.org.cn/user_guide/" />
+        搜索用户指南&nbsp;
+        <input type="text" class="input" style="width:200px;" name="q" id="q" size="31" maxlength="255" value="" />
+        &nbsp;
+        <input type="submit" class="submit" name="sa" value="Go" />
+      </form>
+    </td>
+  </tr>
+</table>
+<!-- END BREADCRUMB -->
+<div style="clear:both;text-align:right;padding: 6px 40px 0 0;">
+<a href="http://www.codeigniter.com/user_guide/libraries/output.html" target="_blank">查看原文</a>
+</div>
+<!--<br clear="all" />--><!-- START CONTENT -->
+<div id="content">
+<h1>输出类</h1>
+
+<p>输出类是只有一个主要功能的简单的类:  发送最终的Web页面到所请求的浏览器。如果您开启<a href="../general/caching.html">缓存</a>功能，他还负责缓存您的网页文件。</p>
+<p>输出类虽然很简单，但是它实现的功能却很重要咯:  输出最后的执行结果给发送请示的浏览器.  如果你选择了使用<a href="../general/caching.html">缓存</a> ，这块也归它管.</p>
+
+
+<p class="important"><strong>注意：</strong>输出类的初始化操作是由系统自动完成的，基本上不用你操心.</p>
+
+<p>在一般的情况下你是感觉不到它的存在的（也用不着去关心），对于你来说它就是透明的，不用去干预，它就能正常的工作.
+比如说, 你使用<a href="../libraries/loader.html">装载器类</a>加载了一个视图文件, 这个视图文件的内容会自动传递给输出类对象, 然后呢，在方法执行完毕后会自动调用输出类对象将执行的结果输出.
+但是呢，实际开发的过程当中会遇见一些特殊的情况需要我们干预输出，接管输出的控制权(像是客户要求将数据导出成Excel，提供下载)，这种时候，下面的这些个方法就有用啦:</p>
+
+<h2>$this-&gt;output-&gt;set_output();</h2>
+
+<p>告诉CodeIgniter方法执行完毕后，用给定的数据作为输出。例如：</p>
+
+<code>$this-&gt;output-&gt;set_output($data);</code>
+
+<p><strong>重要：</strong>使用这个方法有一点很重要，就要将它放在最后一句，千万要注意啊，到时候出了错，不要怪我没提醒你.</p>
+
+
+<h2>$this-&gt;output-&gt;set_content_type();</h2>
+
+<p>允许你设置页面的mime类型以便于输出 JSON , JPEG, XML 等类型的数据.</p>
+
+<code>$this-&gt;output<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;-&gt;set_content_type('application/json')<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;-&gt;set_output(json_encode(array('foo' => 'bar')));<br/>
+<br/>
+$this-&gt;output<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;-&gt;set_content_type('jpeg') // 你也可以用".jpeg"，它在查找 config/mimes.php 文件之前会移除句号<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;-&gt;set_output(file_get_contents&#40;'files/something.jpg'&#41;);</code>
+
+<p><strong>重要:</strong> 确保你传递到此方法的非mime字符串在 config/mimes.php 存在，否则设置不起作用。</p>
+
+
+<h2>$this-&gt;output-&gt;get_output();</h2>
+
+<p>使用这个方法，你可以得到将要输出的数据，并把它保存起来，留着它用（我们做新闻类型网站的时候，常常需要生成静态的HTML文件）.  例如：</p>
+<code>$string = $this-&gt;output-&gt;get_output();</code>
+
+<p>注意，如果先前的数据已经被一个类似 <var>$this-&gt;load-&gt;view()</var> 的 CodeIgniter 函数送到了输出类，那么只能取得那个函数之后的输出。</p>
+
+<h2>$this-&gt;output-&gt;append_output();</h2>
+
+<p>在输出字符串后附加数据。例如：</p>
+
+<code>$this-&gt;output-&gt;append_output($data);</code>
+
+<h2>$this-&gt;output-&gt;set_header();</h2>
+
+<p>使用此方法，允许你设置将会被发送到浏览器的HTTP协议的标头，作用相当于php的标准函数: header()。例如：</p>
+
+<code>
+$this-&gt;output-&gt;set_header("HTTP/1.0 200 OK");<br />
+$this-&gt;output-&gt;set_header("HTTP/1.1 200 OK");<br />
+$this-&gt;output-&gt;set_header('Last-Modified: '.gmdate('D, d M Y H:i:s', $last_update).' GMT');<br />
+$this-&gt;output-&gt;set_header("Cache-Control: no-store, no-cache, must-revalidate");<br />
+$this-&gt;output-&gt;set_header("Cache-Control: post-check=0, pre-check=0");<br />
+$this-&gt;output-&gt;set_header("Pragma: no-cache"); </code>
+
+
+<h2>$this-&gt;output-&gt;set_status_header(<var>code</var>, '<var>text</var>');</h2>
+
+<p>允许你手动设置服务器状态头(header)。例如：</p>
+
+<code>$this-&gt;output-&gt;set_status_header('401');<br />
+// 将header设置为:  Unauthorized</code>
+
+<p><a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">单击这里</a>查看全部的 header 列表。</p>
+
+
+<h2>$this-&gt;output-&gt;enable_profiler();</h2>
+
+<p>允许你开启或禁用<a href="../general/profiling.html">评测器</a>，评测器将在页的底部显示测试基准点或调试、优化需要的其他数据。</p>
+
+<p>在<a href="../general/controllers.html">控制器</a>函数的任何位置放置以下函数，可以开启评测器：</p>
+<code>$this-&gt;output-&gt;enable_profiler(TRUE);</code>
+
+<p>当开启评测器功能，会在您的页面底部生成一个报告。</p>
+
+<p>你可以用以下语句禁用评测器：</p>
+<code>$this-&gt;output-&gt;enable_profiler(FALSE);</code>
+
+<h2>$this-&gt;output-&gt;set_profiler_sections();</h2>
+
+<p>允许你在评测器启用时控制(开/关)其特定部分。请参考<a href="../general/profiling.html">评测器</a>了解详细信息。</p>
+
+<h2>$this-&gt;output-&gt;cache();</h2>
+<p>CodeIgniter的输出类同样也控制缓存。要获取更多信息，请阅读 <a href="../general/caching.html">缓存文档</a>.</p>
+
+<h2>Parsing Execution Variables</h2>
+
+  <p>默认情况下，CodeIgniter总会在输出中解析伪变量<var>&#123;elapsed_time&#125;</var>和<var>&#123;memory_usage&#125;</var>。 如需禁用，在控制器中将类属性<var>$parse_exec_vars</var>设为<var>FALSE</var>。
+
+  <code>$this-&gt;output-&gt;parse_exec_vars = FALSE;</code>
+    <p class="important">译者注：此处存在源码级错误，直接应用此代码会报错“Fatal error:  Cannot access protected property CI_Output::$parse_exec_vars ”。建议用以下代码：
+    <code>public $parse_exec_vars    = TRUE;</code>
+    替换掉源文件systerm/core/Output.php第86行（CI版本2.1.3）的此句代码：
+    <code>protected $parse_exec_vars    = TRUE;</code>
+      </p><p>&nbsp;</p>
+<div id="Contributors">
+翻译贡献者:
+billycui, crazyfriday, csfhc, Glen, Hex, hk_yuhe, Jacklee, lishen2, Raidal, xwjie, yinzhili</div>
+<div id="DocDate">
+最后修改: 2014-11-22 16:56:13</div>
+</div>
+<!-- END CONTENT -->
+<div id="notes">
+<!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="libraries/output" data-title="输出类" data-url="http://codeigniter.org.cn/user_guide/libraries/output.html"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"codeigniter"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+<!-- 多说公共JS代码 end -->
+</div>
+<div id="footer">
+  <p>
+上一个主题:&nbsp;&nbsp;<a href="http://codeigniter.org.cn/user_guide/libraries/language.html">语言类</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="#top">页首</a>
+&nbsp;&middot;&nbsp;&nbsp;<a href="http://codeigniter.org.cn/user_guide/index.html">用户指南首页</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;下一个主题:&nbsp;&nbsp;<a href="http://codeigniter.org.cn/user_guide/libraries/pagination.html">分页类</a>  </p>
+  <p><a href="http://codeigniter.com">CodeIgniter</a> &nbsp;&middot;&nbsp; 版权所有 &#169; 2006-2013 &nbsp;&middot;&nbsp; <a href="http://ellislab.com/">Ellislab, Inc.</a></p>
+  <p>中文化: <a href="http://codeigniter.org.cn">CodeIgniter 中国</a> &nbsp;&middot;&nbsp; 制作: Hex &nbsp;&middot;&nbsp; 版本: 1.30 &nbsp;&middot;&nbsp; 鸣谢: 子非鱼</p>
+</div>
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-272152-3']);
+_gaq.push(['_addOrganic', 'baidu', 'word']);
+_gaq.push(['_addOrganic', 'soso', 'w']);
+_gaq.push(['_addOrganic', '3721', 'name']);
+_gaq.push(['_addOrganic', 'yodao', 'q']);
+_gaq.push(['_addOrganic', 'vnet', 'kw']);
+_gaq.push(['_addOrganic', 'sogou', 'query']);
+_gaq.push(['_addIgnoredOrganic', 'codeigniter.org.cn']);
+_gaq.push(['_trackPageview']);
+(function() {
+    var ga = document.createElement('script');
+    ga.src = (('https:' == document.location.protocol) ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+})();
+</script>
+<div style="display:none"><script language="javascript" type="text/javascript" src="http://js.users.51.la/3289908.js"></script>
+<noscript><a href="http://www.51.la/?3289908" target="_blank"><img alt="&#x6211;&#x8981;&#x5566;&#x514D;&#x8D39;&#x7EDF;&#x8BA1;" src="http://img.users.51.la/3289908.asp" style="border:none" /></a></noscript></div>
+</body>
+</html>

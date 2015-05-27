@@ -1,0 +1,203 @@
+<include file="public:header" />
+<div style="width:100%;">
+	<div class="opsui-tabs" id="tab" plain="false" style="width:100%; padding-top:10px;">
+		<div title="特性数据 - 标的数据" name="character_loan">
+			<div class="tab-box">
+				<include file="tpl/character_loan"/>
+			</div>
+		</div>
+		<div title="累计数据" name="total">
+			<div class="tab-box">
+				<include file="tpl/total"/>
+			</div>
+		</div>
+		<div title="基础数据" name="base">
+			<div class="tab-box">
+				<include file="tpl/base"/>
+			</div>
+		</div>
+		<div title="转换率数据" name="rate">
+			<div class="tab-box">
+				<include file="tpl/rate"/>
+			</div>
+		</div>
+		<div title="充值细分数据" name="recharge">
+			<div class="tab-box">
+				<include file="tpl/recharge"/>
+			</div>
+		</div>
+		<div title="行为数据 - 新增用户行为" name="behavior_newuser">
+			<div class="tab-box">
+				<include file="tpl/behavior_newuser"/>
+			</div>
+		</div>
+		<div title="行为数据 - 活跃数据" name="behavior_lively">
+			<div class="tab-box">
+				<include file="tpl/behavior_lively"/>
+			</div>
+		</div>
+		<div title="行为数据 - 充值渠道" name="behavior_recharge_type">
+			<div class="tab-box">
+				<include file="tpl/behavior_recharge_type"/>
+			</div>
+		</div>
+		<div title="行为数据 - 交易排行" name="behavior_trade_ranking">
+			<div class="tab-box">
+				<include file="tpl/behavior_trade_ranking"/>
+			</div>
+		</div>
+		<div title="行为数据 - 账户余额" name="behavior_account_amount">
+			<div class="tab-box">
+				<include file="tpl/behavior_account_amount"/>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	opsui.init();
+
+	var tab = opsui.get("tab"),
+		tab_total = tab.getTab("total"),
+		grid;
+
+	var defaultCondition = {
+		base : {
+			sdate	: "{$base['sdate']}",
+			edate	: "{$base['edate']}"
+		},
+		rate : {
+			sdate : "{$rate['sdate']}"
+		},
+		recharge : {
+			sdate : "{$recharge['sdate']}",
+			edate : "{$recharge['edate']}"
+		},
+		behavior_newuser : {
+			sdate : "{$behavior_newuser['sdate']}",
+			edate : "{$behavior_newuser['edate']}"
+		},
+		behavior_lively : {
+			sdate : "{$behavior_lively['sdate']}"
+		},
+		behavior_recharge_type : {
+			sdate : "{$behavior_recharge_type['sdate']}",
+			edate : "{$behavior_recharge_type['edate']}",
+			type : "{$behavior_recharge_type['type']}"
+		},
+		behavior_trade_ranking : {
+			sdate : "{$behavior_trade_ranking['sdate']}",
+			edate : "{$behavior_trade_ranking['edate']}"
+		},
+		behavior_account_amount : {
+			edate : "{$behavior_account_amount['edate']}"
+		},
+		character_loan : {
+			sdate : "{$character_loan['sdate']}",
+			edate : "{$character_loan['edate']}",
+			type : 'amount'
+		},
+	};
+
+	var load = {
+		total : false,
+		base : false,
+		rate : false,
+		recharge : false,
+		behavior_newuser : false, 
+		behavior_lively : false,
+		behavior_recharge_type : false,
+		behavior_analyse_hourly : false,
+		behavior_analyse_area : false,
+		behavior_trade_ranking : false,
+		character_loan : false,
+	};
+
+	$(function(){
+
+		function loadTotal()
+		{
+			$.ajax({
+				url : "{:u('bi/total')}",
+				type : "post",
+				dataType : "json",
+				data : {
+					edate : $("form[for=total]").find("[name=edate]").val()
+				},
+				success : function(res){
+					if (res["return"] < 1) {
+						alert(res.errmsg);
+						return;
+					}
+					var box = $("#box-total");
+					for (var i in res.data) {
+						box.find("[name="+i+"]").text(res.data[i]);
+					}
+				}
+			});
+		}
+
+		tab.on("activechanged", function(e){
+			var tab_name = e.tab.name;
+			switch (tab_name) {
+				case "total":
+					if (!load["load_total"]) {
+						loadTotal();
+						load["load_total"] = true;
+					}
+					break;
+				case "character_loan":
+					grid = opsui.get(tab_name);
+					grid.on("load", function(){
+						//grid.mergeColumns(["recharge_user_count", "recharge_amount"]);
+					});
+					if (!load[tab_name]) {
+						grid.load(defaultCondition[tab_name]);
+						load[tab_name]= true;
+					}
+					break;
+				default:
+					grid = opsui.get(tab_name);
+					if (!load[tab_name]) {
+						grid.load(defaultCondition[tab_name]);
+						load[tab_name]= true;
+					}
+					break;
+			}
+		});
+
+		$(".search").on("click", function(){
+			var form = $(this).closest("form"),
+				url = form.attr("action");
+				data_str = form.serialize();
+				
+			data_arr = data_str.split("&");
+			var data = {};
+			if (data_arr.length > 0) {
+				for (var i=0; i<data_arr.length; i++) {
+					var kv = data_arr[i].split("=");
+					data[kv[0]] = kv[1];
+				}
+			}
+			var f = form.attr("for");
+			if (f && f=="total") {
+				loadTotal();
+			} else {
+				grid.load(data, function(res){
+					if (res["return"] < 1) {
+						alert(res.errmsg);
+						return false;
+					}
+				});
+			}
+			return false;
+		});
+	});
+
+</script>
+
+<style type="text/css">
+	.opsui-grid-footer{
+		display:none;
+	}
+</style>
+<include file="public:footer" />

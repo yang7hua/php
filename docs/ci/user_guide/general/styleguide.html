@@ -1,0 +1,682 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="utf-8" lang="utf-8">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+<title>开发规范 - CodeIgniter 中文手册|用户手册|用户指南|Wiki文档</title>
+<link rel="shortcut icon" href="./../images/design/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" type="text/css" media="all" href="./userguide.css" />
+<link rel="search" href="./../CodeIgniterSearch.xml" type="application/opensearchdescription+xml" title="CodeIgniter 搜索"/>
+<link rel="canonical" href="./general/styleguide.html" />
+<script type="text/javascript" src="./nav/mootools.js?ver=20130324"></script>
+<script type="text/javascript" src="./nav/mootools-more.js?ver=20130324"></script>
+<script type="text/javascript" src="./nav/nav.js?ver=20130324"></script>
+<script type="text/javascript" src="./nav/user_guide_menu.js?ver=20130324"></script>
+<meta name="robots" content="all" />
+<meta name="author" content="ExpressionEngine Dev Team" />
+<meta name="description" content="CodeIgniter 中文手册, CodeIgniter 用户指南, CodeIgniter User Guide, Wiki 文档" />
+</head>
+<body>
+<!-- START NAVIGATION -->
+<div id="nav">
+  <div id="nav_inner">
+    <script type="text/javascript">create_menu('./');</script>
+  </div>
+</div>
+<script type="text/javascript">_setNavigation();</script>
+<div id="nav2"><a name="top"></a><a href="javascript:void(0);" onclick="myHeight.toggle();"><img src="./images/nav_toggle_darker.jpg" width="154" height="43" border="0" title="切换目录" alt="切换目录" /></a></div>
+<div id="masthead" class="clearfix">
+    <div class="topbar-hd"><h1>CodeIgniter 用户指南 版本 2.2.2</h1></div>
+<div class="topbar-tip">编辑文档、查看近期更改请 <a href="./auth/login">登录</a> 或 <a href="./auth/register">注册</a> 　<a href="./auth/forgotten_password">找回密码</a></div>      <div id="breadcrumb_right"><a href="./toc.html">目录页</a></div>
+</div>
+<!-- END NAVIGATION -->
+<!-- START BREADCRUMB -->
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+  <tr>
+    <td id="breadcrumb">
+        <a href="http://codeigniter.org.cn/" target="_blank">CodeIgniter 中国首页</a>&nbsp;&#8250;&nbsp;
+<a href="./index.html">用户指南首页</a>&nbsp;&#8250;&nbsp;开发规范    </td>
+    <td id="searchbox">
+        <form method="get" action="http://www.google.com.hk/search" target="google_window">
+        <input type="hidden" name="client" value="pub-0176846097796333"></input>
+        <input type="hidden" name="forid" value="1"></input>
+        <input type="hidden" name="ie" value="UTF-8"></input>
+        <input type="hidden" name="oe" value="UTF-8"></input>
+        <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="codeigniter.org.cn/user_guide/" />
+        搜索用户指南&nbsp;
+        <input type="text" class="input" style="width:200px;" name="q" id="q" size="31" maxlength="255" value="" />
+        &nbsp;
+        <input type="submit" class="submit" name="sa" value="Go" />
+      </form>
+    </td>
+  </tr>
+</table>
+<!-- END BREADCRUMB -->
+<div style="clear:both;text-align:right;padding: 6px 40px 0 0;">
+<a href="http://www.codeigniter.com/user_guide/general/styleguide.html" target="_blank">查看原文</a>
+</div>
+<!--<br clear="all" />--><style type="text/css" media="screen">code {white-space: pre;}</style><!-- START CONTENT -->
+<div id="content">
+<h1>常用风格和语法</h1>
+
+<p>下面将描述采用CI开发中的编码的规范.</p>
+
+
+<h2>内容列表</h2>
+<ul class="minitoc">
+ <li><a href="#file_format">文件格式</a></li>
+ <li><a href="#php_closing_tag">PHP 闭合标签</a></li>
+ <li><a href="#class_and_method_naming">类和方法的命名</a></li>
+ <li><a href="#variable_names">变量命名</a></li>
+ <li><a href="#commenting">注释</a></li>
+ <li><a href="#constants">常量</a></li>
+ <li><a href="#true_false_and_null">TRUE, FALSE, 和NULL</a></li>
+ <li><a href="#logical_operators">逻辑运算符</a></li>
+ <li><a href="#comparing_return_values_and_typecasting">比较返回值和类型映射</a></li>
+ <li><a href="#debugging_code">调试代码</a></li>
+ <li><a href="#whitespace_in_files">空行分割</a></li>
+ <li><a href="#compatibility">兼容性</a></li>
+ <li><a href="#class_and_file_names_using_common_words">用常规词做类名和文件名</a></li> 
+ <li><a href="#database_table_names">数据库表名</a></li>
+ <li><a href="#one_file_per_class">一个文件一个类</a></li>
+ <li><a href="#whitespace">空白</a></li>
+ <li><a href="#line_breaks">断行</a></li>
+ <li><a href="#code_indenting">代码缩进</a></li>
+  <li><a href="#bracket_spacing">方括号及圆括号内的空格符</a></li>
+ <li><a href="#localized_text">本地化文本</a></li>
+ <li><a href="#private_methods_and_variables">私有方法和变量</a></li>
+ <li><a href="#php_errors">PHP 错误</a></li>
+ <li><a href="#short_open_tags">短标签</a></li>
+ <li><a href="#one_statement_per_line">每行一条语句</a></li>
+ <li><a href="#strings">字符串</a></li>
+ <li><a href="#sql_queries">SQL 查询</a></li>
+ <li><a href="#default_function_arguments">缺省函数参数</a></li>
+</ul>
+
+
+  <h2><a name="file_format"></a>文件格式</h2>
+  <div class="guidelineDetails">
+   <p>文件应该使用 Unicode (UTF-8) 编码保存。同时<strong>不要</strong>使用 <abbr title="BOM(Byte Order Mark)">字节序标记(BOM)</abbr>
+    。与 UTF-16 和 UTF-32 不同，UTF-8 编码的文件不需要指明字节序，而且 <abbr title="BOM(Byte Order Mark)">字节序标记(BOM)</abbr> 在PHP中会产生预期之外的输出，阻止了应用程序设置它自己的<abbr title="header">头信息</abbr>。应该使用Unix 格式的行结束符(LF)。</p>
+   
+   <p>以下是在一些常见的文本编辑器中更改这些设置的方法。针对你的编辑器，方法也许会有所不同；请参考你的编辑器的说明。</p>
+  
+   <h5>TextMate</h5>
+  
+   <ol>
+    <li>Open the Application Preferences</li>
+    <li>Click Advanced, and then the "Saving" tab</li>
+    <li>In "File Encoding", select "UTF-8 (recommended)"</li>
+    <li>In "Line Endings", select "LF (recommended)"</li>
+    <li><em>Optional:</em> Check "Use for existing files as well" if you wish to modify the line
+     endings of files you open to your new preference.</li>
+   </ol>
+  
+   <h5>BBEdit</h5>
+  
+   <ol>
+    <li>Open the Application Preferences</li>
+    <li>Select "Text Encodings" on the left.</li>
+    <li>In "Default text encoding for new documents", select "Unicode (UTF-8, no BOM)"</li>
+    <li><em>Optional:</em> In "If file's encoding can't be guessed, use", select
+     "Unicode (UTF-8, no BOM)"</li>
+    <li>Select "Text Files" on the left.</li>
+    <li>In "Default line breaks", select "Mac OS X and Unix (LF)"</li>
+   </ol>
+  </div>
+
+  <h2><a name="php_closing_tag"></a>PHP 闭合标签</h2>
+  <div class="guidelineDetails">
+   <p>PHP闭合标签“?&gt;”在PHP中对PHP的分析器是可选的。 但是，如果使用闭合标签，任何由开发者，用户，或者FTP应用程序插入闭合标签后面的空格都有可能会引起多余的输出、php错误、之后的输出无法显示、空白页。因此，所有的php文件应该<strong>省略</strong>这个php闭合标签，并插入一段注释来标明这是文件的底部并定位这个文件在这个应用的相对路径。这样有利于你确定这个文件已经结束而不是被删节的。</p>
+<code><strong>不当的</strong>:
+&lt;?php
+
+echo "Here's my code!";
+
+?&gt;
+
+<strong>适当的</strong>:
+&lt;?php
+
+echo "Here's my code!";
+
+/* End of file myfile.php */
+/* Location: ./system/modules/mymodule/myfile.php */
+</code>
+  </div>
+
+ 
+  <h2><a name="class_and_method_naming"></a>类和方法（函数）的命名规则</h2>
+  <div class="guidelineDetails">
+   <p>类名的首字母应该大写。如果名称由多个词组成，词之间要用下划线分隔，不要使用骆驼命名法。类中所有其他方法的名称应该完全小写并且名称能明确指明这个函数的用途，最好用动词开头。尽量避免过长和冗余的名称</p>
+
+ <code><strong>不当的</strong>:
+class superclass
+class SuperClass
+
+<strong>适当的</strong>:
+class Super_class</code>
+
+ <code>class Super_class &#123;
+
+ function __construct()
+ &#123;
+
+ &#125;
+&#125;</code>
+
+   <p>不当的和适当的方法名称的示例：</p>
+
+ <code><strong>不当的</strong>:
+function fileproperties()  // 方法名没有清晰的描述以及下划线分割单词
+function fileProperties()  // 方法名没有清晰的描述以及使用了驼峰法命名
+function getfileproperties()  // 还可以!但是忘记了下划线分割单词
+function getFileProperties()  // 使用了驼峰法命名
+function get_the_file_properties_from_the_file&#40;&#41; // 方法名太冗长
+
+<strong>适当的</strong>:
+function get_file_properties() // 清晰的方法名描述，下划线分割单词，全部使用小写字母</code>
+
+  </div>
+ 
+ 
+  <h2><a name="variable_names"></a>变量命名</h2>
+  <div class="guidelineDetails">
+   <p>变量的命名规则与方法的命名规则十分相似。就是说，变量名应该只包含小写字母，用下划线分隔，并且能适当地指明变量的用途和内容。那些短的、无意义的变量名应该只作为迭代器用在for()循环里。</p>
+<code><strong>不当的</strong>:
+$j = &apos;foo&apos;;  // 单字符变量应该只作为for()的循环变量使用
+$Str   // 使用了大写字母
+$bufferedText  // 使用了驼峰命名，而且变量名应该更短，并有清晰的语法含义
+$groupid  // 多个词组，应该使用下划线分割
+$name_of_last_city_used // 太长了
+
+<strong>适当的</strong>:
+for ($j = 0; $j &lt; 10; $j++)
+$str
+$buffer
+$group_id
+$last_city
+</code>
+  </div>
+ 
+ 
+  <h2><a name="commenting"></a>注释</h2>
+  <div class="guidelineDetails">
+   <p>通常，代码应该被详细地注释。这不仅仅有助于给缺乏经验的程序员描述代码的流程和意图，而且有助于给你提供丰富的内容以让你在几个月后再看自己的代码时仍能很好的理解。 注释没有强制规定的格式，但是我们建议以下的形式。</p>
+
+   <p><a href="http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_phpDocumentor.howto.pkg.html#basics.docblock">文档块(DocBlock)</a> 式的注释要写在类和方法的声明前，这样它们就能被集成开发环境(IDE)捕获：</p>
+
+<code>/**
+ * Super Class
+ *
+ * @package Package Name
+ * @subpackage Subpackage
+ * @category Category
+ * @author Author Name
+ * @link http://example.com
+ */
+class Super_class &#123;</code>
+
+<code>/**
+ * Encodes string for use in XML
+ *
+ * @access public
+ * @param string
+ * @return string
+ */
+function xml_encode($str)</code>
+
+   <p>使用行注释时，在大的注释块和代码间留一个空行。</p>
+
+<code>// break up the string by newlines
+$parts = explode("\n", $str);
+
+// A longer comment that needs to give greater detail on what is
+// occurring and why can use multiple single-line comments.  Try to
+// keep the width reasonable, around 70 characters is the easiest to
+// read.  Don't hesitate to link to permanent external resources
+// that may provide greater detail:
+//
+// http://example.com/information_about_something/in_particular/
+
+$parts = $this-&gt;foo($parts);
+</code>
+  </div>
+ 
+ 
+  <h2><a name="constants"></a>常量</h2>
+  <div class="guidelineDetails">
+   <p>常量命名除了要全部用大写外，其他的规则都和变量相同。<em>在适当的时候，始终使用CodeIgniter常量，例如LASH, LD, RD, PATH_CACHE等等.</em></p>
+<code><strong>不当的</strong>:
+myConstant // 未使用下划线分割单词，未全部使用大写字母
+N  // 不能使用单个字母作为常量
+S_C_VER  // 常量名没有清晰的含义
+$str = str_replace('&#123;foo&#125;', 'bar', $str); // should use LD and RD constants
+
+<strong>恰当的</strong>:
+MY_CONSTANT
+NEWLINE
+SUPER_CLASS_VERSION
+$str = str_replace(LD.'foo'.RD, 'bar', $str);
+</code>
+  </div>
+ 
+ 
+  <h2><a name="true_false_and_null"></a>TRUE, FALSE, 和 NULL</h2>
+  <div class="guidelineDetails">
+   <p><strong>TRUE</strong>, <strong>FALSE</strong>, 和 <strong>NULL</strong> 关键字应该总是完全大写的。</p>
+<code><strong>不当的</strong>:
+if ($foo == true)
+$bar = false;
+function foo($bar = null)
+
+<strong>恰当的</strong>:
+if ($foo == TRUE)
+$bar = FALSE;
+function foo($bar = NULL)</code>
+  </div>
+ 
+
+ 
+  <h2><a name="logical_operators"></a>逻辑操作符</h2>
+  <div class="guidelineDetails">
+   <p><strong>||</strong> 有时让人底气不足，不容易辨识，因为在某些输出设备上它不够清晰(可能看起来像数字11).
+    <strong>&amp;&amp;</strong> 要优先于 <strong>AND</strong> ,不过两者都可以被接受, 使用 <strong>!</strong> 时要在其前后都加一个空格。</p>
+<code><strong>不当的</strong>:
+if ($foo || $bar)
+if ($foo AND $bar)  // 可以，但有时不被常用的语法程序高亮推荐(高亮标识)
+if (!$foo)
+if (! is_array($foo))
+
+<strong>恰当的</strong>:
+if ($foo OR $bar)
+if ($foo && $bar) // 推荐
+if ( ! $foo)
+if ( ! is_array($foo))
+</code>
+  </div>
+ 
+ 
+ 
+  <h2><a name="comparing_return_values_and_typecasting"></a>比较返回值与类型映射</h2>
+  <div class="guidelineDetails">   
+    <p>部分PHP函数执行失败时返回 FALSE, 但也可能有一个有效的返回值 "" 或 0, 它在松散比较中会被计算为FALSE. 在条件语句中使用这些返回值的时候，为了确保返回值是你所预期的类型而不是一个有着松散类型的值，请进行显式的比较。</p>
+    <p>在返回和检查你自己的变量时也要遵循这种严格的方法，必要时使用<strong>===</strong> 和 <strong>!==</strong>。</p>
+
+<code><strong>不当的</strong>:
+// 如果 'foo' 位于此字符串的起始处，strpos将返回 0,
+// 此处条件判断的结果为TRUE
+if (strpos($str, 'foo') == FALSE)
+
+<strong>恰当的</strong>:
+if (strpos($str, 'foo') === FALSE)
+</code>
+
+<code><strong>不当的</strong>:
+function build_string($str = "")
+&#123;
+ if ($str == "") // uh-oh!  如果传递的参数是FALSE或者整数0那会怎么样?
+ &#123;
+
+ &#125;
+&#125;
+
+<strong>恰当的</strong>:
+function build_string($str = "")
+&#123;
+ if ($str === "")
+ &#123;
+
+ &#125;
+&#125;</code>
+
+  <p>See also information regarding <a href="http://us3.php.net/manual/en/language.types.type-juggling.php#language.types.typecasting">typecasting</a>, which can be quite useful.  Typecasting has a slightly different effect which may be desirable.  When casting a variable as a string, for instance, NULL and boolean FALSE variables become empty strings, 0 (and other numbers) become strings of digits, and boolean TRUE becomes "1":</p>
+    <p> <strong>试译：</strong>另见<a href="http://us3.php.net/manual/en/language.types.type-juggling.php#language.types.typecasting">类型映射</a>的信息，也会非常有用。类型映射的结果稍微有些不同，但也是可用的。比如，你把一个变量映射为字符串的时候，NULL以及布尔值FALSE会变成空字符串，0(以及其它数字)变成包含数字的字符串，布尔值TRUE变成 "1":</p>
+<code>$str = (string) $str; // 将 $str 映射为字符串</code>
+
+  </div>
+ 
+ 
+  <h2><a name="debugging_code"></a>调试代码</h2>
+  <div class="guidelineDetails">
+    <p>No debugging code can be left in place for submitted add-ons unless it is commented out, i.e. no var_dump(), print_r(), die(), and exit() calls that were used while creating the add-on, unless they are commented out.</p>
+   <p><strong>试译：</strong>在已提交的附加组件所在的地方不能有调试代码，它们被注释掉的情况除外，例如，创建附加组件时不能调用 var_dump(), print_r(), die(), 以及 exit() ，除非它们已经被注释掉了。</p>
+
+<code>// print_r($foo);</code>
+  </div>
+ 
+
+ 
+  <h2><a name="whitespace_in_files"></a>文件中的空格</h2>
+  <div class="guidelineDetails">
+   <p>No whitespace can precede the opening PHP tag or follow the closing PHP tag.  Output is buffered, so whitespace in your files can cause output to begin before CodeIgniter outputs its content, leading to errors and an inability for CodeIgniter to send proper headers.  In the examples below, select the text with your mouse to reveal the incorrect whitespace.</p>
+    <p><strong>试译：</strong>在PHP开始标记之前和结束标记之后都不能有空格。输出已经被缓存，所以文件中的空格会导致CodeIgniter在输出自己的内容之前就开始了输出，这会使CodeIgniter出错且无法输出正确的header。在下面的例子中，使用鼠标选中这些文本，你就能看到那些不应该有的空格。</p>
+
+   <p><strong>不当的</strong>:</p>
+<code>     
+&lt;?php
+ // ...在PHP开始标记上面有空格和换行符
+ // 并且在PHP结束标记后面也有空格
+?&gt;    
+</code>
+   <p><strong>恰当的</strong>:</p>
+<code>&lt;?php
+ // 本例中，PHP开始标记之前和结束标记之后就没有空格
+?&gt;</code>
+
+  </div>
+ 
+ 
+  <h2><a name="compatibility"></a>兼容性</h2>
+  <div class="guidelineDetails">
+   <p>Unless specifically mentioned in your add-on's documentation, all code must be compatible with PHP version 4.3+.  Additionally, do not use PHP functions that require non-default libraries to be installed unless your code contains an alternative method when the function is not available, or you implicitly document that your add-on requires said PHP libraries.</p>
+    <p> <strong>试译：</strong>除非你的附加组件的文档中有特别说明，否则所有代码必须与PHP 5.1以上版本兼容。此外，不要使用那些依赖于非默认安装的库的函数，除非你的代码中包含了该函数不可用时的替代方法，或者你在文档中明确说明了你的附加组件需要某些库。</p>
+  </div>
+  
+
+ 
+  <h2><a name="class_and_file_names_using_common_words"></a>使用常见词语来命名类和文件</h2>
+  <div class="guidelineDetails">
+   <p>When your class or filename is a common word, or might quite likely be identically named in another PHP script, provide a unique prefix to help prevent collision.  Always realize that your end users may be running other add-ons or third party PHP scripts.  Choose a prefix that is unique to your identity as a developer or company.</p>
+    <p><strong>试译：</strong>当你的类或文件名是一个常见词语时，或者是很可能与另一个PHP脚本同名时，使用一个唯一的前缀来避免冲突。你必须始终明白这一点：你的最终用户可能会运行其它第三方的附加组件或者PHP脚本。选择一个能够唯一标识开发者或公司的前缀。</p>
+
+<code><strong>不当的</strong>:
+class Email  pi.email.php
+class Xml  ext.xml.php
+class Import  mod.import.php
+
+<strong>恰当的</strong>:
+class Pre_email  pi.pre_email.php
+class Pre_xml  ext.pre_xml.php
+class Pre_import mod.pre_import.php
+</code>
+  </div>
+ 
+ 
+  <h2><a name="database_table_names"></a>数据库表名</h2>
+  <div class="guidelineDetails">
+   <p>Any tables that your add-on might use must use the 'exp_' prefix, followed by a prefix uniquely identifying you as the developer or company, and then a short descriptive table name.  You do not need to be concerned about the database prefix being used on the user's installation, as CodeIgniter's database class will automatically convert 'exp_' to what is actually being used.</p>
+    <p>你的附加组件所用到的任何表都必须使用 'exp_' 这个前缀，然后是一个能够唯一标识开发者或公司的前缀，最后才是一个简短的描述性的表名。你不需要担心用户安装时所使用的数据库前缀，因为CodeIgniter的数据库类将根据实际情况自动地对 'exp_' 进行转换。</p>
+
+<code><strong>不当的</strong>:
+email_addresses  // 缺少这两个前缀
+pre_email_addresses // 缺少 exp_ 前缀
+exp_email_addresses // 缺少唯一前缀
+
+<strong>恰当的</strong>:
+exp_pre_email_addresses
+</code>
+
+   <p class="important"><strong>NOTE:</strong> Be mindful that MySQL has a limit of 64 characters for table names.  This should not be an issue as table names that would exceed this would likely have unreasonable names.  For instance, the following table name exceeds this limitation by one character.  Silly, no? <strong>exp_pre_email_addresses_of_registered_users_in_seattle_washington</strong>
+     <p class="important"><strong>说明：</strong> 请注意MySQL对表名的限制是不能多于64个字符。会超出这个限制的那些表名都是不合理的，因此这应该不是问题。例如，下面的这个些表名比最大限制多出一个字符。这很傻，不是吗？  <strong>exp_pre_email_addresses_of_registered_users_in_seattle_washington</strong>
+
+       </div>
+ 
+
+ 
+  <h2><a name="one_file_per_class"></a>一个文件一个类</h2>
+  <div class="guidelineDetails">
+   <p>Use separate files for each class your add-on uses, unless the classes are <em>closely related</em>.  An example of CodeIgniter files that contains multiple classes is the Database class file, which contains both the DB class and the DB_Cache class, and the Magpie plugin, which contains both the Magpie and Snoopy classes.</p>
+    <p>对于你的附加组件所使用的类应当遵循一个文件一个类的原则，除非这些类是紧密相关的。CodeIgniter的文件中包含多个类的一个例子是数据库类文件，其中包含了DB类和DB_Cache类，还有Magpie插件，其中包含了Magpie和Snoopy类。</p>
+    
+
+  </div>
+ 
+
+ 
+  <h2><a name="whitespace"></a>空格</h2>
+  <div class="guidelineDetails">
+   <p>Use tabs for whitespace in your code, not spaces.  This may seem like a small thing, but using tabs instead of whitespace allows the developer looking at your code to have indentation at levels that they prefer and customize in whatever application they use.  And as a side benefit, it results in (slightly) more compact files, storing one tab character versus, say, four space characters.</p>
+    <p>在代码中使用tab代替空格。这虽然看起来像是小事，但是使用tab代替空格有利于那些阅读你的代码的开发者在他们各自所使用的应用程序中自定义缩进方式。此外还有一个好处是，使用这种方式保存的文件稍微紧凑一点。</p>
+  </div>
+ 
+
+ 
+  <h2><a name="line_breaks"></a>换行</h2>
+  <div class="guidelineDetails">
+   <p>文件必须使用Unix换行符保存。这对于那些在Windows下的开发者来说更为重要，但无论如何，确保你的文本编辑器已经设置为使用Unix换行符来保存文件。</p>
+  </div>
+ 
+
+ 
+  <h2><a name="code_indenting"></a>代码缩进</h2>
+  <div class="guidelineDetails">
+   <p>使用 Allman 风格缩进。除了类声明以外，括号总是独占一行，且缩进与“属于”它的控制语句同级。</p>
+
+
+<code><strong>不恰当的</strong>:
+function foo($bar) &#123;
+ // ...
+&#125;
+
+foreach ($arr as $key => $val) &#123;
+ // ...
+&#125;
+
+if ($foo == $bar) &#123;
+ // ...
+&#125; else &#123;
+ // ...
+&#125;
+
+for ($i = 0; $i &lt; 10; $i++)
+ &#123;
+ for ($j = 0; $j &lt; 10; $j++)
+  &#123;
+  // ...
+  &#125;
+ &#125;
+
+<strong>恰当的</strong>:
+function foo($bar)
+&#123;
+ // ...
+&#125;
+
+foreach ($arr as $key => $val)
+&#123;
+ // ...
+&#125;
+
+if ($foo == $bar)
+&#123;
+ // ...
+&#125;
+else
+&#123;
+ // ...
+&#125;
+
+for ($i = 0; $i &lt; 10; $i++)
+&#123;
+ for ($j = 0; $j &lt; 10; $j++)
+ &#123;
+  // ...
+ &#125;
+&#125;</code>
+  </div>
+ 
+
+ <h2><a name="bracket_spacing"></a>方括号及圆括号内的空格符</h2>
+  <div class="guidelineDetails">
+   <p>通常情况下，不要在方括号"[]"和圆括号"()"内增加任何空格符。唯一的例外就是为了提高可读性和区别开它们与函数，在接受参数的PHP语法控制结构所使用的括号里，需要增加空格符(declare, do-while, elseif, for, foreach, if, switch, while)。</p>
+    
+   
+<code>不恰当的:
+$arr[ $foo ] = 'foo';
+
+正确的:
+$arr[$foo] = 'foo'; // 数组键值的方括号内没有空格
+
+
+不恰当的:
+function foo ( $bar )
+&#123;
+ 
+&#125;
+
+正确的:
+function foo($bar) // 函数声明的圆括号内没有空格
+&#123;
+ 
+&#125;
+
+
+不恰当的:
+foreach( $query-&gt;result() as $row ) // PHP语法控制结构之后有空格，但不是在圆括号内
+
+正确的:
+foreach ($query-&gt;result() as $row)
+</code>
+  </div>
+ 
+ 
+ 
+  <h2><a name="localized_text"></a>本地化文本</h2>
+  <div class="guidelineDetails">
+   <p>Any text that is output in the control panel should use language variables in your lang file to allow localization.</p>
+   <p>所有在控制面板输出的文本都应该使用 lang 文件里的语言变量来允许本地化。</p>
+<code>INCORRECT:
+return "Invalid Selection";
+
+CORRECT:
+return $this-&gt;lang-&gt;line('invalid_selection');</code>
+  </div>
+ 
+
+ 
+  <h2><a name="private_methods_and_variables"></a>私有方法和变量</h2>
+  <div class="guidelineDetails">
+   <p>代码里像一些只是为了被类里其他公开函数所调用而封装的工具/辅助类方法，应该以一个下划线做前缀来命名。</p>
+
+<code>convert_text()  // 公开方法
+_convert_text()  // 私有方法</code>
+  </div>
+ 
+
+ 
+  <h2><a name="php_errors"></a>PHP Errors</h2>
+  <div class="guidelineDetails">
+   <p>Code must run error free and not rely on warnings and notices to be hidden to meet this requirement.  For instance, never access a variable that you did not set yourself (such as $_POST array keys) without first checking to see that it isset().</p>
+
+   <p>Make sure that while developing your add-on, error reporting is enabled for ALL users, and that display_errors is enabled in the PHP environment.  You can check this setting with:</p>
+
+<code>if (ini_get('display_errors') == 1)
+&#123;
+ exit "Enabled";
+&#125;</code>
+
+   <p>On some servers where display_errors is disabled, and you do not have the ability to change this in the php.ini, you can often enable it with:</p>
+
+<code>ini_set('display_errors', 1);</code>
+
+   <p class="important"><strong>NOTE:</strong> Setting the <a href="http://us.php.net/manual/en/ref.errorfunc.php#ini.display-errors">display_errors</a> setting with ini_set() at runtime is not identical to having it enabled in the PHP environment.  Namely, it will not have any effect if the script has fatal errors</p>
+  </div>
+ 
+
+ 
+  <h2><a name="short_open_tags"></a>短标记</h2>
+  <div class="guidelineDetails">
+   <p>一直使用 PHP 完整标记，以免服务器不支持短标记，也就是未打开 short_open_tag 。（IT不倒翁注释：这条已经不成立，因为新版本的 CI 已经解决了服务器不支持短标记的问题，不过还是建议使用完整标记）</p>
+
+<code><strong>不正确的</strong>:
+&lt;? echo $foo; ?&gt;
+
+&lt;?=$foo?&gt;
+
+<strong>正确的</strong>:
+&lt;?php echo $foo; ?&gt;</code>
+  </div>
+ 
+
+ 
+  <h2><a name="one_statement_per_line"></a>每行一条语句</h2>
+  <div class="guidelineDetails">
+   <p>切记不要在一行写多条语句</p>
+
+<code><strong>不正确</strong>:
+$foo = 'this'; $bar = 'that'; $bat = str_replace($foo, $bar, $bag);
+
+<strong>正确</strong>:
+    $foo = 'this';<br/>
+    $bar = 'that';<br />
+$bat = str_replace($foo, $bar, $bag);
+</code>
+  </div>
+ 
+
+ 
+  <h2><a name="strings"></a>字符串</h2>
+  <div class="guidelineDetails">
+   <p>一直使用单引号除非你需要解析变量（Jacklee注：CI核心代码未严格遵循此规范），如果需要解析变量请使用大括号， to prevent greedy token parsing.  如果字符串包含单引号的话你可以使用双引号，这样就不用转义了。</p>
+
+<code><strong>INCORRECT</strong>:
+"My String"     // 没有解析变量，不需要使用双引号
+"My string $foo"    // 解析变量需要使用括号
+'SELECT foo FROM bar WHERE baz = \'bag\'' // 需要转义单引号''时这样写比较难看，可以使用双引号
+
+<strong>CORRECT</strong>:
+'My String'
+"My string &#123;$foo&#125;"
+"SELECT foo FROM bar WHERE baz = 'bag'"</code>
+  </div>
+ 
+
+ 
+       <h2><a name="sql_queries"></a>SQL 查询</h2>     <div class="guidelineDetails">       <p>MySQL的关键词都是大写: SELECT, INSERT, UPDATE, WHERE, AS, JOIN, ON, IN, 等。</p>        <p>考虑到易读性，把长的查询分成多行，最好是每行只有一个从句或子从句。</p>  <code><strong>不正确的</strong>: //<br /> 关键词是小写并且一行中的查询太长（...表示行的继续）<br />  $query = $this-&gt;db-&gt;query("select foo, bar, baz, foofoo, foobar as raboof, foobaz from exp_pre_email_addresses ...where foo != 'oof' and baz != 'zab' order by foobaz limit 5, 100");  <br /><strong>正确的</strong>: <br />$query = $this-&gt;db-&gt;query("SELECT foo, bar, baz, foofoo, foobar AS raboof, foobaz<br />         FROM exp_pre_email_addresses<br />         WHERE foo != 'oof'<br />         AND baz != 'zab'<br />         ORDER BY foobaz<br />         LIMIT 5, 100");</code>     </div>
+     
+      <h2><a name="default_function_arguments"></a>缺省函数参数</h2>     <div class="guidelineDetails">       <p>适当的时候，提供函数参数的缺省值，这有助于防止因错误的函数调用引起的PHP错误，另外提供常见的备选值可以节省几行代码 例如:</p>  <code>function foo($bar = '', $baz = FALSE)</code>     </div><p>&nbsp;</p>
+<div id="Contributors">
+翻译贡献者:
+alsove, bnlt, chenshenghan, crazyfriday, fzdxstf, Hex, ianyang, IT不倒翁, Jacklee, levin, neversaylate, shallow, xxx1052, yinzhili, 杜建宇, 笼中</div>
+<div id="DocDate">
+最后修改: 2014-09-02 15:52:09</div>
+</div>
+<!-- END CONTENT -->
+<div id="notes">
+<!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="general/styleguide" data-title="开发规范" data-url="./general/styleguide.html"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"codeigniter"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+<!-- 多说公共JS代码 end -->
+</div>
+<div id="footer">
+  <p>
+上一个主题:&nbsp;&nbsp;<a href="./general/security.html">安全</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;<a href="#top">页首</a>
+&nbsp;&middot;&nbsp;&nbsp;<a href="./index.html">用户指南首页</a>  </p>
+  <p><a href="http://codeigniter.com">CodeIgniter</a> &nbsp;&middot;&nbsp; 版权所有 &#169; 2006-2013 &nbsp;&middot;&nbsp; <a href="http://ellislab.com/">Ellislab, Inc.</a></p>
+  <p>中文化: <a href="http://codeigniter.org.cn">CodeIgniter 中国</a> &nbsp;&middot;&nbsp; 制作: Hex &nbsp;&middot;&nbsp; 版本: 1.30 &nbsp;&middot;&nbsp; 鸣谢: 子非鱼</p>
+</div>
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-272152-3']);
+_gaq.push(['_addOrganic', 'baidu', 'word']);
+_gaq.push(['_addOrganic', 'soso', 'w']);
+_gaq.push(['_addOrganic', '3721', 'name']);
+_gaq.push(['_addOrganic', 'yodao', 'q']);
+_gaq.push(['_addOrganic', 'vnet', 'kw']);
+_gaq.push(['_addOrganic', 'sogou', 'query']);
+_gaq.push(['_addIgnoredOrganic', 'codeigniter.org.cn']);
+_gaq.push(['_trackPageview']);
+(function() {
+    var ga = document.createElement('script');
+    ga.src = (('https:' == document.location.protocol) ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+})();
+</script>
+<div style="display:none"><script language="javascript" type="text/javascript" src="http://js.users.51.la/3289908.js"></script>
+<noscript><a href="http://www.51.la/?3289908" target="_blank"><img alt="&#x6211;&#x8981;&#x5566;&#x514D;&#x8D39;&#x7EDF;&#x8BA1;" src="http://img.users.51.la/3289908.asp" style="border:none" /></a></noscript></div>
+</body>
+</html>
