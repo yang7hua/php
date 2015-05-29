@@ -158,4 +158,14 @@ class CI_Controller {
 		show_error($msg, null, '提示');
 	}
 
+	function get_controller()
+	{
+		return $this->controller;
+	}
+
+	function get_action()
+	{
+		return $this->action;
+	}
+
 }

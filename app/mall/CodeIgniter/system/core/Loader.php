@@ -114,6 +114,8 @@ class CI_Loader {
 	 */
 	protected $_ci_helpers =	array();
 
+	public $view = null;
+
 	/**
 	 * List of class name mappings
 	 *
@@ -137,6 +139,7 @@ class CI_Loader {
 	{
 		$this->_ci_ob_level = ob_get_level();
 		$this->_ci_classes =& is_loaded();
+		$this->view =& load_class('View', 'core');
 
 		log_message('info', 'Loader Class Initialized');
 	}
@@ -290,6 +293,16 @@ class CI_Loader {
 			load_class('Model', 'core');
 		}
 
+		$class_name = $model;
+
+		//命名空间
+		if (strpos($model, '\\') !== false)
+		{
+			$class_name = $model;
+			$fragments = explode('\\', trim($model, '\\'));
+			$model = array_pop($fragments);
+		}
+
 		$model = ucfirst(strtolower($model));
 
 		foreach ($this->_ci_model_paths as $mod_path)
@@ -302,7 +315,7 @@ class CI_Loader {
 			require_once($mod_path.'models/'.$path.$model.'.php');
 
 			$this->_ci_models[] = $name;
-			$CI->$name = new $model();
+			$CI->$name = new $class_name();
 			return $this;
 		}
 
@@ -442,7 +455,8 @@ class CI_Loader {
 	 */
 	public function view($view, $vars = array(), $return = FALSE)
 	{
-		return $this->_ci_load(array('_ci_view' => $view, '_ci_vars' => $this->_ci_object_to_array($vars), '_ci_return' => $return));
+		//return $this->_ci_load(array('_ci_view' => $view, '_ci_vars' => $this->_ci_object_to_array($vars), '_ci_return' => $return));
+		return $this->view->display($view, $vars, $return);
 	}
 
 	// --------------------------------------------------------------------
@@ -940,6 +954,10 @@ class CI_Loader {
 		else
 		{
 			$_ci_CI->output->append_output(ob_get_contents());
+			if (is_ajax())
+			{
+				exit(json_encode($this->_ci_cached_vars));
+			}
 			@ob_end_clean();
 		}
 

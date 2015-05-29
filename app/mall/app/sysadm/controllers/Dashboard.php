@@ -6,9 +6,11 @@ class Dashboard extends Controller
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->model('model_sysadm_node', 'node');
+		$this->load->model('\Models\Sysadm_node', 'node');
 		$nodes = $this->node->tree();
-		print_r($nodes);
+		$this->load->view->display('dashboard', [
+			'nodes'	=>	$nodes
+		]);
 	}
 
 	/**

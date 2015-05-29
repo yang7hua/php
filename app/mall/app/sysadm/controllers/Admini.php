@@ -5,7 +5,7 @@ class Admini extends Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('model_admini', 'admini');
+		$this->load->model('\Models\Admini', 'admini');
 	}
 
 	public function login()
