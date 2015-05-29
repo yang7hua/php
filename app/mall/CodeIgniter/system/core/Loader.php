@@ -1,4 +1,5 @@
 <?php
+namespace CI\Core;
 /**
  * CodeIgniter
  *
@@ -48,7 +49,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @author		EllisLab Dev Team
  * @link		http://codeigniter.com/user_guide/libraries/loader.html
  */
-class CI_Loader {
+class Loader 
+{
 
 	// All these are set automatically. Don't mess with them.
 	/**
@@ -139,7 +141,7 @@ class CI_Loader {
 	{
 		$this->_ci_ob_level = ob_get_level();
 		$this->_ci_classes =& is_loaded();
-		$this->view =& load_class('View', 'core');
+		$this->view =& load_class('\CI\Core\View');
 
 		log_message('info', 'Loader Class Initialized');
 	}
@@ -293,7 +295,7 @@ class CI_Loader {
 			load_class('Model', 'core');
 		}
 
-		$class_name = $model;
+		$class_name = '\Models\\'.$model;
 
 		//命名空间
 		if (strpos($model, '\\') !== false)
@@ -1073,7 +1075,7 @@ class CI_Loader {
 	 */
 	protected function _ci_load_stock_library($library_name, $file_path, $params, $object_name)
 	{
-		$prefix = 'CI_';
+		$prefix = '';
 
 		if (class_exists($prefix.$library_name, FALSE))
 		{
@@ -1209,7 +1211,7 @@ class CI_Loader {
 			}
 		}
 
-		$class_name = $prefix.$class;
+		$class_name = '\CI\Lib\\'.$prefix.$class;
 
 		// Is the class name valid?
 		if ( ! class_exists($class_name, FALSE))

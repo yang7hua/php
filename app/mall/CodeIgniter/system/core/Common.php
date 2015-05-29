@@ -148,7 +148,26 @@ if ( ! function_exists('load_class'))
 			return $_classes[$class];
 		}
 
-		$name = FALSE;
+		$name = $class;
+
+		//echo $class,"<br/>";
+
+		##命名空间方式加载的类
+		if (strrpos($class, '\\') !== false)
+		{
+			$fragments = explode('\\', trim(strtolower($class), '\\'));
+			$class = ucfirst(array_pop($fragments));
+			if (strtoupper($fragments[0]) == 'CI')
+				array_shift($fragments);
+			foreach ($fragments as &$frag)
+			{
+				if ($frag == 'lib')
+				{
+					$frag = 'libraries';
+				}
+			}
+			$directory = implode('/', $fragments);
+		}
 
 		// Look for the class first in the local application/libraries folder
 		// then in the native system/libraries folder
@@ -156,7 +175,8 @@ if ( ! function_exists('load_class'))
 		{
 			if (file_exists($path.$directory.'/'.$class.'.php'))
 			{
-				$name = 'CI_'.$class;
+				$name = $path == BASEPATH ? '\\CI' : '';
+				$name .= '\\'.ucfirst($directory == 'libraries' ? 'lib' : $directory).'\\'.$class;
 
 				if (class_exists($name, FALSE) === FALSE)
 				{
@@ -170,7 +190,7 @@ if ( ! function_exists('load_class'))
 		// Is the request a class extension? If so we load it too
 		if (file_exists(APPPATH.$directory.'/'.config_item('subclass_prefix').$class.'.php'))
 		{
-			$name = config_item('subclass_prefix').$class;
+			$name = '\\'.ucfirst($directory == 'libraries' ? 'lib' : $directory).'\\'.config_item('subclass_prefix').$class;
 
 			if (class_exists($name, FALSE) === FALSE)
 			{

@@ -2,7 +2,7 @@
 
 namespace Models;
 
-class Sysadm_node extends \CI_Model
+class Sysadm_node extends Model
 {
 	const STATUS_OK = 1;
 	/**

@@ -1,4 +1,5 @@
 <?php
+namespace CI\Core;
 /**
  * CodeIgniter
  *
@@ -46,7 +47,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @author		EllisLab Dev Team
  * @link		http://codeigniter.com/user_guide/libraries/security.html
  */
-class CI_Security {
+class Security 
+{
 
 	/**
 	 * List of sanitize filename strings

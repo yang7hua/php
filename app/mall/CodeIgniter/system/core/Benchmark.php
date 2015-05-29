@@ -1,4 +1,6 @@
 <?php
+
+namespace CI\Core;
 /**
  * CodeIgniter
  *
@@ -49,7 +51,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @author		EllisLab Dev Team
  * @link		http://codeigniter.com/user_guide/libraries/benchmark.html
  */
-class CI_Benchmark {
+class Benchmark {
 
 	/**
 	 * List of all benchmark markers

@@ -1,4 +1,5 @@
 <?php
+namespace CI\Lib;
 /**
  * CodeIgniter
  *
@@ -46,7 +47,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @author		Andrey Andreev
  * @link		http://codeigniter.com/user_guide/libraries/sessions.html
  */
-class CI_Session {
+class Session 
+{
 
 	/**
 	 * Userdata array

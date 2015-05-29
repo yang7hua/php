@@ -243,10 +243,12 @@ $(function(){
 		})
 	});
 
-	$(".datepicker").datetimepicker({
-		format:'yyyy-mm-dd',
-		autoclose:true,
-		minView:2
-	});
+	if (typeof(datetimepicker) != 'undefined') {
+		$(".datepicker").datetimepicker({
+			format:'yyyy-mm-dd',
+			autoclose:true,
+			minView:2
+		});
+	}
 
 });

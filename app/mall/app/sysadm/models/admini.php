@@ -2,7 +2,7 @@
 
 namespace Models;
 
-class Admini extends \CI_Model
+class Admini extends Model
 {
 	const STATUS_OK = 1;
 

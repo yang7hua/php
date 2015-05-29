@@ -1,4 +1,5 @@
 <?php
+namespace CI\Core;
 /**
  * CodeIgniter
  *
@@ -48,7 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @author		EllisLab Dev Team
  * @link		http://codeigniter.com/user_guide/libraries/encryption.html
  */
-class CI_Hooks {
+class Hooks {
 
 	/**
 	 * Determines whether hooks are enabled

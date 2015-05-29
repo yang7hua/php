@@ -1,16 +1,22 @@
 <?php
 
-class CI_View
+namespace CI\Core;
+
+class View
 {
 
-	protected $_ci_view_paths = [VIEWPATH];
+	protected $_view_paths = [VIEWPATH];
 
-	protected $_ci_cached_vars = [];
+	protected $_cached_vars = [];
 
-	protected $_ci_ext = '.php';
+	protected $_ext = '.php';
+
+	##模板常量替换
+	protected $_parse_strs = [];
 
 	public function __construct()
 	{
+		$this->parse_strs = config_item('parse_strs');
 	}
 
 	protected function layout($layout = 'index')
@@ -18,7 +24,7 @@ class CI_View
 		$flag = false;
 		foreach ([VIEWPATH.'layout/'] as $path)
 		{
-			$view_file = $path.trim($layout,'/').$this->_ci_ext;
+			$view_file = $path.trim($layout,'/').$this->_ext;
 			if (file_exists($view_file))
 			{
 				$flag = true;
@@ -39,36 +45,36 @@ class CI_View
 			{
 				show_error('Assign argument 2 must be define.');
 			}
-			$this->_ci_cached_vars[$key] = $value;
+			$this->_cached_vars[$key] = $value;
 		}
 		if (is_array($key))
 		{
-			$this->_ci_cached_vars = array_merge($this->_ci_cached_vars, $key);
+			$this->_cached_vars = array_merge($this->_cached_vars, $key);
 		}
 		return $this;
 	}
 
-	public function display($view = null, $vars = null, $return = false, $ext = '.php')
+	public function display($view = null, $vars = null, $return = false)
 	{
-		$_CI =& get_instance();
+		$_INS =& get_instance();
 
-		foreach (get_object_vars($_CI) as $_ci_key=>$_ci_var)
+		foreach (get_object_vars($_INS) as $_key=>$_var)
 		{
-			if (!isset($this->$_ci_key))
+			if (!isset($this->$_key))
 			{
-				$this->$_ci_key =& $_CI->$_ci_key;
+				$this->$_key =& $_INS->$_key;
 			}
 		}
 
 		if (is_null($view))
 		{
-			$view = $_CI->get_controller() . '/' . $_CI->get_action();
+			$view = $_INS->get_controller() . '/' . $_INS->get_action();
 		}
 
 		$file_exists = false;
-		foreach ($this->_ci_view_paths as $path)
+		foreach ($this->_view_paths as $path)
 		{
-			$view_file = $path . $view . $this->_ci_ext;
+			$view_file = $path . $view . $this->_ext;
 			if (file_exists($view_file))
 			{
 				$file_exists = true;
@@ -76,7 +82,7 @@ class CI_View
 			}
 		}
 
-		$buffer = $this->pick($view_file, $vars, $ext);
+		$buffer = $this->pick($view_file, $vars);
 
 		if ($return)
 		{
@@ -84,49 +90,77 @@ class CI_View
 		}
 		else
 		{
-			$_CI->output->append_output($buffer);
+			$_INS->output->append_output($buffer);
 			if (is_ajax())
 			{
-				exit(json_encode($this->_ci_cached_vars));
+				exit(json_encode($this->_cached_vars));
 			}
 		}
 
 		return $this;
 	}
 
-	public function pick($view = null, $vars = null, $ext = '.php')
+	public function pick($file = null, $vars = null)
 	{
-		file_exists($view) or show_error('Unable to load the requested file: '.$view);
+		file_exists($file) or show_error('Unable to load the requested file: '.$file);
 
 		if (is_array($vars))
 		{
-			$this->_ci_cached_vars = array_merge($this->_ci_cached_vars, $vars);
+			$this->_cached_vars = array_merge($this->_cached_vars, $vars);
 		}
-		extract($this->_ci_cached_vars);
+		extract($this->_cached_vars);
 
 		ob_start();
 
-		include($view); // include() vs include_once() allows for multiple views with the same name
+		include($file); // include() vs include_once() allows for multiple views with the same name
 
-		log_message('info', 'File loaded: '.$view);
+		log_message('info', 'File loaded: '.$file);
 
 		$buffer = ob_get_contents();
 		@ob_end_clean();
 
+		##layout
 		if (preg_match('/{Layout(#([\w\/]+))?}/', $buffer, $matches))
 		{
 			$buffer = str_replace('{Layout#'.$matches[2].'}','',$buffer);
 			$layout = $this->layout(strtolower($matches[2]));
 			$buffer = str_replace('{Content}', $buffer, $layout);
 		}
+		##include
 		if (preg_match('/{Include(#([\w\/]+))?}/', $buffer, $matches))
 		{
 			$include = $this->display($matches[2], [], true);
 			$buffer = str_replace('{Include#'.$matches[2].'}', $include, $buffer);
 		}
+		$buffer = str_replace(array_keys($this->parse_strs), array_values($this->parse_strs), $buffer);
 
 		return $buffer;
 	}
 
+	/**
+	 * 加载js文件到assert中
+	 * @fresh: true则直接返回
+	 */
+	function loadJsFile($filename, $fresh = false)
+	{
+		$str = null;
+		static $loaded = [];
+
+		if ($filename) 
+		{
+			if (strpos($filename, '.') === false)
+				$filename .= '.js';
+
+			$file = _PUBLIC . '/js/' . $filename;
+			if ($loaded and isset($loaded[$file]))	
+				return;
+			$str .= '<script type="text/javascript" src="' . $file . '"></script>';
+			$loaded[$file] = true;
+		}
+
+		if ($fresh)
+			return $str;
+		echo $str;
+	}
 
 }

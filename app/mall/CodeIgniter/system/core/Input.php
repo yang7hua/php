@@ -1,4 +1,5 @@
 <?php
+namespace CI\Core;
 /**
  * CodeIgniter
  *
@@ -48,7 +49,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @author		EllisLab Dev Team
  * @link		http://codeigniter.com/user_guide/libraries/input.html
  */
-class CI_Input {
+class Input 
+{
 
 	/**
 	 * IP address of the current user
