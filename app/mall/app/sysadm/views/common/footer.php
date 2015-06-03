@@ -1,6 +1,10 @@
 <footer>
 </footer>
+</div>
+</div>
 <?php
+$this->assert->app();
+$this->assert->datagrid();
 $this->assert->validate();
 $this->assert->output();
 ?>

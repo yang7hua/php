@@ -21,6 +21,14 @@ class Assert
 				]
 			],
 
+			'datagrid'	=>	[
+				'jsfiles'	=>	[
+					'files'	=>	[
+						'data-grid.js'
+					]
+				]
+			],
+
 			'validate'	=>	[
 				'jsfiles'	=>	[
 					'basedir'	=> null,

@@ -398,6 +398,10 @@ if ( ! is_php('5.4'))
 	$e404 = FALSE;
 	$class = ucfirst($RTR->class);
 	$method = $RTR->method;
+	if (in_array($method, ['list']))
+	{
+		$method = '_'.$method;
+	}
 
 	if (empty($class) OR ! file_exists(APPPATH.'controllers/'.$RTR->directory.$class.'.php'))
 	{
@@ -406,8 +410,7 @@ if ( ! is_php('5.4'))
 	else
 	{
 		require_once(APPPATH.'controllers/'.$RTR->directory.$class.'.php');
-
-		if ( ! class_exists($class, FALSE) OR $method[0] === '_' OR method_exists('CI_Controller', $method))
+		if ( ! class_exists($class, FALSE) /*OR $method[0] === '_'*/ OR method_exists('CI_Controller', $method))
 		{
 			$e404 = TRUE;
 		}

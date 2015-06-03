@@ -13,6 +13,10 @@ class Admini extends Controller
 		if ($this->has_login())
 			$this->go_home();
 
+		$request = $this->input->request();
+		if (!$request)
+			return $this->load->view->display();
+
 		$this->check_captcha();
 		$username = $this->input->request('username');
 		$password = $this->input->request('password');
@@ -22,12 +26,13 @@ class Admini extends Controller
 		$admini->password == password($password) or $this->error('密码错误');
 		$this->admini->is_ok($admini->status) or $this->error('账号异常，无法登录');
 
-		$this->session->set_userdata([
-			'admini'	=>	[
-				'aname'	=>	$admini->aname,
-				'role_id'	=>	$admini->role_id,
-			]
-		]);
+		$_SESSION['admini']	=	[
+			'aname'	=>	$admini->aname,
+			'role_id'	=>	$admini->role_id,
+			'aid'	=>	$admini->aid,
+			'login_time'	=>	time(),
+		];
+		$this->aid = $admini->aid;
 		$this->success('登录成功');
 	}
 

@@ -875,9 +875,7 @@ if (!function_exists('is_ajax'))
 {
 	function is_ajax()
 	{
-		if (isset($_REQUEST['HTTP_X_REQUESTED_WITH']) 
-			and strtolower($_REQUEST['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
-		)
+		if (get_instance()->input->is_ajax_request())
 		{
 			return true;
 		}

@@ -21,7 +21,7 @@ $(function(){
 	function ajaxSubmitCallback(res)
 	{
 		res = eval('(' + res + ')');
-		if (res['ret'] < 1) {
+		if (res['result'] < 1) {
 			alert(res['msg']);
 			util.reloadCaptcha();
 			return;
@@ -53,7 +53,7 @@ $(function(){
 		} /*else if (/^\d{6}$/.test(paths[3]) && paths[2] == 'case' && paths[1] == 'rc') {
 			location.href = location.origin+ '/rc/list/';
 		}*/ else {
-			location.reload();
+			//location.reload();
 		}
 	}
 
@@ -101,6 +101,7 @@ $(function(){
 	$("body").delegate("form", "click", function(){
 		var form = $(this),
 			fields = form.find("[name]");
+		console.log(1);
 		if (fields.size() < 1)
 			return;
 		if (form.hasClass("search"))

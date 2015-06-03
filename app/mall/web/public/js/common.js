@@ -13,7 +13,8 @@ var util = {
 			}, 500);
 	},
 	reloadCaptcha : function(obj) {
-		var src = obj && obj.attr("baseurl") || "/public/captcha";
+		var src = obj && obj.attr("src") || '/site/captcha';
+		src = src.split('?')[0];
 		src += "?v=" + Math.random();	
 		if (typeof obj == 'object')
 			obj.attr("src", src);
@@ -248,6 +249,42 @@ $(function(){
 			format:'yyyy-mm-dd',
 			autoclose:true,
 			minView:2
+		});
+	}
+
+	var frame_box_header = $("#frame-box-header"),
+		frame_box_body = $("#frame-box-body");
+	function create_iframe(id, src, name)
+	{
+		if ($(".iframe[iframe-id="+id+"]").size() < 1)
+		{
+			frame_box_body.append("<iframe class='iframe' iframe-id='"+id+"' src='"+src+"'></iframe>");
+			frame_box_header.append("<span class='iframe-title' iframe-id='"+id+"'>"+name+"</span>");
+		}
+		activie_iframe(id);
+	}
+	function activie_iframe(id)
+	{
+		$(".iframe").hide();
+		frame_box_body.find(".iframe[iframe-id="+id+"]").show();
+		$(".iframe-title").removeClass("iframe-title-active");
+		frame_box_header.find(".iframe-title[iframe-id="+id+"]").addClass("iframe-title-active");
+	}
+
+	var sysadm_menu = $("#sysadm-menu");
+	if (sysadm_menu.size() > 0) {
+		frame_box_header.delegate("span.iframe-title", "click", function(){
+			activie_iframe($(this).attr("iframe-id"));
+		})
+		$(".node").on("click", function(){
+			var $this = $(this),
+				href = $this.attr("href"),
+				controller = $this.attr("controller"),
+				action = $this.attr("action"),
+				name = $this.attr("name");
+			var iframe = "iframe-"+controller+"-"+action;
+			create_iframe(iframe, href, name);
+			return false;
 		});
 	}
 

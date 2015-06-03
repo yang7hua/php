@@ -4,6 +4,7 @@ namespace CI\Core;
 
 class View
 {
+	protected $CI;
 
 	protected $_view_paths = [VIEWPATH];
 
@@ -17,6 +18,7 @@ class View
 	public function __construct()
 	{
 		$this->parse_strs = config_item('parse_strs');
+		$this->CI =& get_instance();
 	}
 
 	protected function layout($layout = 'index')

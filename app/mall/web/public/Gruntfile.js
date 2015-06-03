@@ -12,7 +12,9 @@ module.exports = function(grunt){
 					paths : ['less']
 				},
 				files : [
+					{dest : 'css/base.css', src: ['less/base.less']},
 					{dest : 'css/site.css', src: ['less/site.less']},
+					{dest : 'css/adm.css', src: ['less/adm.less']},
 				]
 			}
 		},

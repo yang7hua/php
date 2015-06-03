@@ -10,8 +10,7 @@ class Sysadm_node extends Model
 	 */
 	function tree()
 	{
-		$map['status'] = self::STATUS_OK;
-		$result = $this->db->from('sysadm_node')->where($map)->get()->result();
+		$result = $this->ok_select();
 
 		$nodes = [];
 		foreach ($result as $node) 
@@ -22,14 +21,50 @@ class Sysadm_node extends Model
 					'name'	=>	$node->name,
 					'nodes'	=>	[]
 				];
-				continue;
 			}
-			else
+			else if (array_key_exists($node->pid, $nodes))
 			{
-				$nodes[$node->pid]['nodes'][] = (array) $node;
+				$nodes[$node->pid]['nodes'][$node->id] = (array) $node;
+			} 
+			else 
+			{
+				foreach ($nodes as &$row)		
+				{
+					foreach ($row['nodes'] as $pid=>$r)
+					{
+						if ($pid == $node->pid)
+						{
+							$row['nodes'][$pid]['nodes'][$node->id] = (array) $node;	
+							break;
+						}	
+					}
+				}
 			}
 		}
 		return $nodes;
+	}
+
+	function total($status = null)
+	{
+		return $this->db->select('id')->from('sysadm_node')->count_all_results();
+	}
+
+	function all()
+	{
+		return $this->db->from('sysadm_node')->get()->result();
+	}
+
+	function select($offset = 0, $size = 10)
+	{
+		return $this->db->from('sysadm_node')->limit($size, $offset)
+			->order_by('id', 'desc')->get()->result();
+	}
+
+	function ok_select($offset = 0, $size = 10)
+	{
+		$map['status'] = self::STATUS_OK;
+		return $this->db->from('sysadm_node')->where($map)->limit($size, $offset)
+			->order_by('pid asc, sortno asc')->get()->result();
 	}
 
 	function create($data)

@@ -1,5 +1,7 @@
 <?php
 
+namespace Ci\Lib;
+
 class Captcha 
 {
     
@@ -19,7 +21,7 @@ class Captcha
         }
 
         if (!empty($captchaName)) {
-            $_SESSION['captcha'] = md5(strtolower($code));
+            $_SESSION['captcha'] = strtolower($code);
             $_SESSION['captcha_time'] = time();
         }
 

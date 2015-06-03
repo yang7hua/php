@@ -18,12 +18,13 @@ class Controller extends CI_Controller
 
 	function __construct()
 	{
+		if (isset($_SESSION['admini']))
+			$this->aid = $_SESSION['admini']['aid'];
 		parent::__construct();
 	}
 
 	function has_login()
 	{
-		return true;
 		return is_null($this->aid) ? false : true;
 	}
 
@@ -33,14 +34,16 @@ class Controller extends CI_Controller
 		redirect(base_url('/sysadm.php?/'.ltrim($url, '/')));
 	}
 
-	function check_captcha($value = null)
-	{
-		is_null($value) and $value = $this->input->request('captcha');
-	}
-
 	function go_home()
 	{
 		$this->redirect('/');
+	}
+
+	function url($url, $flag = false)
+	{
+		if ($flag)
+			return base_url($url);
+		return base_url('/sysadm.php?'.$url);
 	}
 
 }

@@ -252,10 +252,10 @@ class Input
 		return $this->_fetch_from_array($_POST, $index, $xss_clean);
 	}
 
-	public function request($index = NULL, $xss_clean = NULL)
+	public function request($index = NULL, $default = null, $xss_clean = NULL)
 	{
 		$request = array_merge($this->get(NULL, $xss_clean), $this->post(NULL, $xss_clean));
-		return is_null($index) ? $request : @$request[$index];
+		return is_null($index) ? $request : (isset($request[$index]) ? $request[$index] : $default);
 	}
 
 	// --------------------------------------------------------------------

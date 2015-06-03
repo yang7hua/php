@@ -49,7 +49,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @author		EllisLab Dev Team
  * @link		http://codeigniter.com/user_guide/general/controllers.html
  */
-class CI_Controller {
+class CI_Controller 
+{
 
 	/**
 	 * Reference to the CI singleton
@@ -127,11 +128,6 @@ class CI_Controller {
 		}
 	}
 
-	function has_login()
-	{
-		return true;
-	}
-
 	function success($data)
 	{
 		$data = [
@@ -166,6 +162,25 @@ class CI_Controller {
 	function get_action()
 	{
 		return $this->action;
+	}
+
+	function check_captcha()
+	{
+		$captcha = strtolower($this->input->request('captcha'));
+		if ($_SESSION['captcha_time'] + 60 < time())
+			$this->error('验证码已过期');
+		if ($captcha != $_SESSION['captcha'])
+			$this->error('验证码错误');
+	}
+
+	function limit()
+	{
+		$p = $this->input->request('p', 1);
+		$p = intval($p);
+		$page_size = $this->input->request('size', 10);
+		$page_size = intval($page_size);
+		$offset = ($p-1)*$page_size;
+		return [$offset, $page_size, $p];
 	}
 
 }
