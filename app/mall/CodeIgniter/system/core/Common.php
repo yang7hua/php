@@ -879,7 +879,8 @@ if (!function_exists('is_ajax'))
 		{
 			return true;
 		}
-		if (isset($_REQUEST['format']) and $_REQUEST['format'] == 'json')
+		$request = get_instance()->input->request();
+		if (isset($request['format']) and $request['format'] == 'json')
 		{
 			return true;
 		}

@@ -7,21 +7,31 @@ $(function(){
 		data : null,
 		selected : [],
 		multi_select : false,
+		dbclick : true,
+
+		modal : {},
 
 		init : function(grid) {
 			this.grid = grid;
 			this.src = this.grid.attr("src");
 			this.get_fields();
+			if (grid.attr("dbclick") == "false")
+				this.dbclick = false;
+			if (grid.attr("modal-edit"))
+				this.modal["edit"] = $(grid.attr("modal-edit"));
 			return this;
 		},
 		
 		load : function(data, callback) {
+			var o = this.grid;
+			util.loading(o, true);	
 			$.ajax({
 				url : this.src,
 				data : data,
 				type : "post",
 				dataType : "json",
 				success : function(res) {
+					util.loading(o, false);	
 					if (typeof callback == "function") {
 						callback(res);
 					}
@@ -124,6 +134,23 @@ $(function(){
 			}
 			this.selected = selected;
 			return this;
+		},
+
+		edit : function(row) {
+			var modal = this.modal.edit;
+			if (modal == undefined) {
+				return;
+			}
+			modal.find("form")[0].reset();
+			var row = row || grid.selected[0];
+			var data = grid.data[row];
+			for (var i in data) {
+				var f = modal.find("[name="+i+"]");
+				if (f) {
+					f.val(data[i]);
+				}
+			}
+			modal.modal();
 		}
 	};
 
@@ -153,6 +180,12 @@ $(function(){
 	});
 
 	//选中行
+	if (grid.dbclick) {
+		grid.grid.delegate("table tbody tr", "dblclick", function() {
+			var row = $(this).attr("row");
+			grid.edit(row);
+		});
+	}
 	grid.grid.delegate("table tbody tr", "click", function() {
 		$(this).toggleClass("selected");
 		var flag = $(this).hasClass("selected");
@@ -168,22 +201,14 @@ $(function(){
 			alert("请先选择要编辑的行");
 			return;
 		}
-		var modal = $("#modal-edit");
-		modal.find("form")[0].reset();
-		var row = grid.selected[0],
-			data = grid.data[row];
-		for (var i in data) {
-			var f = modal.find("[name="+i+"]");
-			if (f) {
-				f.val(data[i]);
-			}
-		}
-		modal.modal();
+		grid.edit();
 	});
 	$("[data-action=add]").on("click", function(){
 		var modal = $("#modal-edit");
 		modal.find("[name]").each(function(){
-			$(this).val("");
+			var type = $(this)[0]["tagName"].toLowerCase();
+			if (type == "input" || type == "textarea" || type == "hidden")
+				$(this).val("");
 		});
 		modal.modal();
 	});

@@ -101,7 +101,6 @@ $(function(){
 	$("body").delegate("form", "click", function(){
 		var form = $(this),
 			fields = form.find("[name]");
-		console.log(1);
 		if (fields.size() < 1)
 			return;
 		if (form.hasClass("search"))

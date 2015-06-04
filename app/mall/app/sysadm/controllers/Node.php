@@ -8,12 +8,6 @@ class Node extends Controller
 		$this->load->model('\Models\Sysadm_node', 'node');
 	}
 
-	function create()
-	{
-		$data = $this->input->request();
-		//$this->node->create($data);
-	}
-
 	function _list()
 	{
 		if (is_ajax())
@@ -30,6 +24,23 @@ class Node extends Controller
 			]);
 		}
 		return $this->load->view('node/list');
+	}
+
+	function create()
+	{
+		$data = $this->input->request();
+		if (isset($data['id']) and $data['id'])
+		{
+			$id = intval($data['id']);
+			$res = $this->node->update($id, $data);
+		}
+		else 
+		{
+			$res = $this->node->create($data);
+		}
+		if ($res === false)
+			$this->error('操作失败');
+		$this->success('操作成功');
 	}
 
 }

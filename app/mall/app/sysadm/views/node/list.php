@@ -7,7 +7,7 @@
 		<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>添加
 	</span>
 </div>
-<div class="data-grid" src="<?=$this->CI->url('/node/list')?>">
+<div class="data-grid" src="<?=$this->CI->url('/node/list')?>" dbclick=true modal-edit="#modal-edit">
 		<div field="id">ID</div>
 		<div field="name">导航名称</div>
 		<div field="controller_name">模块名称</div>
@@ -51,7 +51,7 @@
 			<div class="help-block"></div>
 		</td>
 		<td class="form-group">
-			<input name="controller_name" class="form-control" >
+			<input name="controller_code" class="form-control" >
 			<div class="help-block"></div>
 		</td>
 		<td class="form-group">

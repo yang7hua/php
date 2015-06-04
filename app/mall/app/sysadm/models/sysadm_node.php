@@ -10,7 +10,7 @@ class Sysadm_node extends Model
 	 */
 	function tree()
 	{
-		$result = $this->ok_select();
+		$result = $this->ok_select(0, 30);
 
 		$nodes = [];
 		foreach ($result as $node) 
@@ -69,7 +69,14 @@ class Sysadm_node extends Model
 
 	function create($data)
 	{
+		unset($data['id']);
+		$data['sortno'] or $data['sortno'] = 0;
 		return $this->db->insert('sysadm_node', $data);
+	}
+
+	function update($id, $data)
+	{
+		return $this->db->update('sysadm_node', $data, "id=$id");
 	}
 
 }
