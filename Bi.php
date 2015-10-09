@@ -42,7 +42,7 @@ class Hao_Bi
 					Hao_Status::$loan['代还已回收'],
 					]];
 				break;
-
+//............................................practice............
 			default:
 				return null;
 				break;
