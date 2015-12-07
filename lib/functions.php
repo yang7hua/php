@@ -412,3 +412,72 @@ function getIpArea($ip = null)
 		'area'	=>	$res->area1
 	];
 }
+
+function getGenderByIDCard($idcard)	
+{
+	if (!preg_match('/^[\dxX]+$/', $idcard))
+		return 0;
+	$strlen = strlen($idcard);
+	if ($strlen == 15) {
+		return substr($idcard, 14)%2 == 0 ? 2 : 1;
+	}
+	if ($strlen == 18) {
+		return substr($idcard, 16, 1)%2 == 0 ? 2 : 1;
+	}
+	return 0;
+}
+
+function getAgeByIDCard($idcard)
+{
+	$strlen = strlen($idcard);
+	if ($strlen != 15 and $strlen != 18)
+		return 0;
+	if ($strlen == 15)
+		$birthday = substr($idcard, 6, 6);
+	else 
+		$birthday = substr($idcard, 6, 8);
+	$age = floor((time() - strtotime($birthday))/31104000);
+	return $age > 0 ? $age : 0;
+}
+
+function getProvinceByIDCard($idcard)
+{
+	$provinces = array(
+		'11'	=>	'北京市',
+		'12'	=>	'天津市',
+		'13'	=>	'河北省',
+		'14'	=>	'山西省',
+		'15'	=>	'内蒙古自治区',
+		'21'	=>	'辽宁省',
+		'22'	=>	'吉林省',
+		'23'	=>	'黑龙江省',
+		'31'	=>	'上海市',
+		'32'	=>	'江苏省',
+		'33'	=>	'浙江省',
+		'34'	=>	'安徽省',
+		'35'	=>	'福建省',
+		'36'	=>	'江西省',
+		'37'	=>	'山东省',
+		'41'	=>	'河南省',
+		'42'	=>	'湖北省',
+		'43'	=>	'湖南省',
+		'44'	=>	'广东省',
+		'45'	=>	'广西壮族自治区',
+		'46'	=>	'海南省',
+		'50'	=>	'重庆市',
+		'51'	=>	'四川省',
+		'52'	=>	'贵州省',
+		'53'	=>	'云南省',
+		'54'	=>	'西藏自治区',
+		'61'	=>	'陕西省',
+		'62'	=>	'甘肃省',
+		'63'	=>	'青海省',
+		'64'	=>	'宁夏回族自治区',
+		'65'	=>	'新疆维吾尔族自治区',
+		'71'	=>	'台湾省',
+		'81'	=>	'香港特别行政区',
+		'82'	=>	'澳门特别行政区',
+	);
+	$id = substr($idcard, 0, 2);
+	return array_key_exists($id, $provinces) ? $provinces[$id] : 0;
+}
