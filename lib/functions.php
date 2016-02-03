@@ -1,127 +1,5 @@
 <?php
 
-namespace Func;
-
-function redirect($url)
-{
-	$url = url($url);
-	header('Location:'.$url);
-}
-
-/**
- * 加载js文件到assert中
- * @fresh: true则直接返回
- */
-function loadJsFile($filename, $opts = ['depends'=>'\Assert\app'], $appname = 'adm', $fresh = false)
-{
-	$str = null;
-
-	if (isset($opts['depends']) and is_callable($opts['depends']))
-		$str .= $opts['depends']();
-
-	if ($filename) {
-		if (strpos($filename, '.') === false)
-			$filename .= '.js';
-
-		$file = getJsPath($appname) . '/' . $filename;
-		if (!\Assert\loadedStatic($file))
-			$str .= '<script type="text/javascript" src="' . $file . '"></script>';
-		else
-			\Assert\loadedStatic($file, false);
-	}
-
-	if ($fresh)
-		return $str;
-	\Assert\output($str);
-}
-
-/**
- * 注册js代码到assert中
- */
-function registerJs($jscode)
-{
-	$code = '<script type="text/javascript">'.$jscode.'</script>';
-	\Assert\output($code);
-}
-
-function getJsPath($appname = '')
-{
-	return rtrim(PUBLIC_PATH . '/js/' . $appname, '/');
-}
-
-function getCssPath($appname = '')
-{
-	return rtrim(PUBLIC_PATH . '/css/' . $appname, '/');
-}
-
-function password($password, $salt = 'loansys')
-{
-	return md5(md5($password . $salt));
-}
-
-function uniqidByTime()
-{
-	return date('YmdHis') . mt_rand(1000,9999);
-}
-
-function getArrayValue(array $array, $key, $value = false)
-{
-	if (empty($array) || empty($key))
-		return $array;
-	if ($value)
-	{
-		$array = array_flip($array);
-	}
-	return array_key_exists($key, $array) ? $array[$key] : null;
-}
-
-function getArrayKey(array $array, $value)
-{
-	return getArrayValue($array, $value, true);
-}
-
-function verifyCaptcha($value)
-{
-	$sess_verify = \App::session('verify');
-	$sess_verify_time = \App::session('verify_time');
-	if (empty($sess_verify) || empty($sess_verify_time))
-	{
-		return [0, '已失效'];
-	}
-	if (time() > $sess_verify_time + 60)
-	{
-		return [0, '已过期'];
-	}
-	if (md5(strtolower($value)) != $sess_verify)
-	{
-		return [0, '错误'];
-	}
-
-	return true;
-}
-
-/**
- * 生成待还款期数数组
- */
-function remainDeadlines($deadline, $returnNum)
-{
-	$remainNum = $deadline-$returnNum;
-	if (!$remainNum)
-		return [];
-
-	$remainDeadlines = [];
-	for ($i=1; $i<=$remainNum; $i++)
-	{
-		$no = $returnNum + $i;
-		$remainDeadlines[$no] = $no;
-	}
-	return $remainDeadlines;	
-}
-
-function isAjax()
-{
-}
-
 function ajaxReturn($data, $success = true)
 {
 	$return = array();
@@ -174,65 +52,11 @@ function isImg($filename)
 	return in_array(strtolower(pathinfo($filename, PATHINFO_EXTENSION)), ['jpg', 'gif', 'png', 'jpeg']);
 }
 
-/**
- * @param date: 20130101
- */
-function getBeginAndEndTime($date)
-{
-	$len = strlen($date);
-	if ($len == 8) {
-		$begin_time = strtotime($date.' 00:00:00');
-		$end_time = strtotime($date.' 23:59:59');
-	} else if ($len == 6) {
-		$begin_time = strtotime($date.'01 00:00:00');
-		$end_time = strtotime($date.'01 23:59:59 +1month -1day');
-	} else if ($len == 4) {
-		$begin_time = strtotime($date.'0101 00:00:00');
-		$end_time = strtotime($date.'0101 23:59:59 +1year -1day');
-	}
-	return [
-		$begin_time,
-		$end_time
-	];
-}
-
 function formatMoney($money, $decimals = 2, $separator = ',', $decimalpoint = '.')
 {
 	return number_format($money, $decimals, $decimalpoint, $separator);
 }
 
-function buildCondition($conditions)
-{
-	$condition_str = null;
-	$connectors = ['>', '<', '>=', '<=', '!=', 'in'];
-	if (is_array($conditions)) {
-		foreach ($conditions as $field=>$condition) {
-			$connector = 'and';
-			if (is_string($condition))
-				$condition = "$field='$condition'";
-			else if (is_numeric($condition))
-				$condition = "$field=$condition";
-			else if (is_array($condition)) {
-				$s = trim($condition[0]);
-				if ($s == 'in')
-					$condition = "$field in ($condition[1])";
-				else if ($s == 'between')
-					$condition = "$field between {$condition[1]} and {$condition[2]}";
-				else if (in_array($s, $connectors))
-					$condition = "$field $s $condition[1]";
-			}
-			if (is_null($condition_str)) {
-				$condition_str = $condition;
-				continue;
-			}
-			if ($connector == 'or')
-				$condition_str = "($condition_str) or $condition";
-			else
-				$condition_str .= " and $condition";
-		}
-	}
-	return $condition_str;
-}
 
 function getDawnByDate($date = null)
 {
@@ -258,24 +82,7 @@ function getDawnByDate($date = null)
 	}
 }
 
-function isContractNo($no = null)
-{
-	if (is_null($no))
-		return 'HT'.date('Ymd').mt_rand(1000,9999);
-	$rule = C('contract_no_rule');
-	return preg_match($rule, $no);
-}
-
-function extsArray2Swftypes(array $exts = [])
-{
-	$str = '';
-	foreach ($exts as $ext) {
-		$str .= '*.'.$ext.'; ';
-	}
-	return $str;
-}
-
-function getIp()
+function ip()
 {
 	$ip = null;
 	if (getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'),'unknown')) 
